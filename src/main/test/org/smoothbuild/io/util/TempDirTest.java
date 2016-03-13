@@ -6,8 +6,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
-import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -100,7 +100,7 @@ public class TempDirTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    given(createFile(fileSystem, rootPath.append(path), content));
+    given(writeAndClose(fileSystem.openOutputStream(rootPath.append(path)), content));
     when(tempDir.readFiles());
     thenReturned(contains(file(valuesDb, path, content)));
   }
@@ -114,14 +114,14 @@ public class TempDirTest {
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
-    given(createFile(fileSystem, rootPath.append(path), content));
+    given(writeAndClose(fileSystem.openOutputStream(rootPath.append(path)), content));
     when(tempDir).readContent(path);
     thenReturned(blobContains(content));
   }
 
   @Test
   public void reading_content_after_destroy_throws_exception() throws Exception {
-    given(createFile(fileSystem, path, content));
+    given(writeAndClose(fileSystem.openOutputStream(path), content));
     given(tempDir).destroy();
     when(tempDir).readContent(path);
     thenThrown(IllegalStateException.class);
