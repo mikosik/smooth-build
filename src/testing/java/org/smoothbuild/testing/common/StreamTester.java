@@ -3,7 +3,6 @@ package org.smoothbuild.testing.common;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,13 +13,7 @@ import com.google.common.io.ByteStreams;
 public class StreamTester {
 
   public static InputStream inputStreamContaining(String content) {
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    try {
-      writeAndClose(stream, content);
-    } catch (IOException e) {
-      throw new RuntimeException("IOException should never be thrown by ByteArrayOutputStream.", e);
-    }
-    return new ByteArrayInputStream(stream.toByteArray());
+    return new ByteArrayInputStream(content.getBytes());
   }
 
   public static Void writeAndClose(OutputStream outputStream, String content) throws IOException {
