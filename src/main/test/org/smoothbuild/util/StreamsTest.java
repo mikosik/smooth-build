@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Test;
-import org.testory.Closure;
 
 public class StreamsTest {
   byte[] bytes = new byte[] { 1, 2, 3 };
@@ -108,7 +107,7 @@ public class StreamsTest {
   @Test
   public void bytes_are_copied_from_input_stream_to_output_stream() throws Exception {
     given(inputStream = new ByteArrayInputStream(bytes));
-    when($copy(inputStream, outputStream));
+    when(() -> copy(inputStream, outputStream));
     thenEqual(((ByteArrayOutputStream) outputStream).toByteArray(), bytes);
   }
 
@@ -116,7 +115,7 @@ public class StreamsTest {
   public void input_stream_is_closed_by_copy() throws IOException {
     given(inputStream = mock(InputStream.class));
     given(willReturn(-1), inputStream).read(any(byte[].class));
-    when($copy(inputStream, outputStream));
+    when(() -> copy(inputStream, outputStream));
     thenCalled(inputStream).close();
   }
 
@@ -124,7 +123,7 @@ public class StreamsTest {
   public void output_stream_is_closed_by_copy() throws IOException {
     given(outputStream = mock(ByteArrayOutputStream.class));
     given(inputStream = new ByteArrayInputStream(bytes));
-    when($copy(inputStream, outputStream));
+    when(() -> copy(inputStream, outputStream));
     thenCalled(outputStream).close();
   }
 
@@ -152,12 +151,5 @@ public class StreamsTest {
     given(outputStream = new ByteArrayOutputStream());
     when(writeAndClose(outputStream, content));
     thenEqual(outputStream.toString(), content);
-  }
-
-  private static Closure $copy(InputStream inputStream, OutputStream outputStream) {
-    return () -> {
-      copy(inputStream, outputStream);
-      return null;
-    };
   }
 }
