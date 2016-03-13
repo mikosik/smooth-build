@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 public class RecursiveFilesIterableTest {
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
+
   @Test
   public void test() throws IOException {
     doTestIterable("abc", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
@@ -58,7 +60,7 @@ public class RecursiveFilesIterableTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    writeAndClose(fileSystem.openOutputStream(path("my/file")), "content");
+    writeAndClose(fileSystem.openOutputStream(path("my/file")), bytes);
     try {
       recursiveFilesIterable(fileSystem, path("my/file"));
       fail("exception should be thrown");
@@ -72,7 +74,7 @@ public class RecursiveFilesIterableTest {
     FileSystem fileSystem = new MemoryFileSystem();
     for (String name : names) {
       Path path = path(rootDir).append(path(name));
-      writeAndClose(fileSystem.openOutputStream(path), "content");
+      writeAndClose(fileSystem.openOutputStream(path), bytes);
     }
 
     List<Path> created = new ArrayList<>();

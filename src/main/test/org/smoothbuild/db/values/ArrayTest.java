@@ -19,6 +19,7 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
 public class ArrayTest {
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
   private ValuesDb valuesDb;
   private Blob blob;
   private SString sstring;
@@ -50,7 +51,7 @@ public class ArrayTest {
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = valuesDb.arrayBuilder(SString.class));
-    given(blob = blob(memoryValuesDb(), "content"));
+    given(blob = blob(memoryValuesDb(), bytes));
     when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }

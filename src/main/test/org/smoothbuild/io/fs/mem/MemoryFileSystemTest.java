@@ -23,10 +23,10 @@ public class MemoryFileSystemTest extends GenericFileSystemTestCase {
   }
 
   protected void createEmptyFile(Path path) throws IOException {
-    createFile(path, "");
+    createFile(path, new byte[] {});
   }
 
-  protected void createFile(Path path, String content) throws IOException {
+  protected void createFile(Path path, byte[] content) throws IOException {
     OutputStream outputStream = fileSystem.openOutputStream(path);
     writeAndClose(outputStream, content);
   }

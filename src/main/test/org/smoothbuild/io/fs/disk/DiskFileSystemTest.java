@@ -47,14 +47,14 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   }
 
   protected void createEmptyFile(String stringPath) throws IOException {
-    createFile(stringPath, "");
+    createFile(stringPath, new byte[] {});
   }
 
-  protected void createFile(Path path, String content) throws IOException {
+  protected void createFile(Path path, byte[] content) throws IOException {
     createFile(path.value(), content);
   }
 
-  private void createFile(String stringPath, String content) throws IOException {
+  private void createFile(String stringPath, byte[] content) throws IOException {
     File file = stringPathToFile(stringPath);
     file.getParentFile().mkdirs();
     FileOutputStream outputStream = new FileOutputStream(file);
