@@ -1,8 +1,8 @@
 package org.smoothbuild.db.hashed;
 
+import static com.google.common.io.ByteStreams.toByteArray;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -62,7 +62,7 @@ public class HashedDbTest {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(bytes1);
   }
 
@@ -71,7 +71,7 @@ public class HashedDbTest {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[] { 1, 2, 3, 4, 5 }, 1, 3);
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(new byte[] { 2, 3, 4 });
   }
 
@@ -79,7 +79,7 @@ public class HashedDbTest {
   public void written_empty_byte_array_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(new byte[] {});
   }
 
@@ -119,7 +119,7 @@ public class HashedDbTest {
     given(marshaller = hashedDb.newMarshaller(hashId));
     given(marshaller).write(bytes1);
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(bytes1);
   }
 
@@ -131,7 +131,7 @@ public class HashedDbTest {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(bytes1);
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(bytes1);
   }
 
@@ -143,7 +143,7 @@ public class HashedDbTest {
     given(marshaller = hashedDb.newMarshaller(marshaller.hash()));
     given(marshaller).write(bytes2);
     given(marshaller).close();
-    when(inputStreamToBytes(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
     thenReturned(bytes1);
   }
 
