@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
-import static org.smoothbuild.testing.io.fs.base.FileSystems.createFile;
+import static org.smoothbuild.util.Streams.writeAndClose;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
 public class RecursiveFilesIterableTest {
-
   @Test
   public void test() throws IOException {
     doTestIterable("abc", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
@@ -59,11 +58,9 @@ public class RecursiveFilesIterableTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    Path path = path("my/file");
-    createFile(fileSystem, path, "content");
-
+    writeAndClose(fileSystem.openOutputStream(path("my/file")), "content");
     try {
-      recursiveFilesIterable(fileSystem, path);
+      recursiveFilesIterable(fileSystem, path("my/file"));
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -74,7 +71,8 @@ public class RecursiveFilesIterableTest {
       String[] expectedNames) throws IOException {
     FileSystem fileSystem = new MemoryFileSystem();
     for (String name : names) {
-      createFile(fileSystem, path(rootDir).append(path(name)), "content");
+      Path path = path(rootDir).append(path(name));
+      writeAndClose(fileSystem.openOutputStream(path), "content");
     }
 
     List<Path> created = new ArrayList<>();
