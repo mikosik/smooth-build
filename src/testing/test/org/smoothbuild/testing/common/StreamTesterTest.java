@@ -1,7 +1,5 @@
 package org.smoothbuild.testing.common;
 
-import static org.junit.Assert.fail;
-import static org.smoothbuild.testing.common.StreamTester.assertContent;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
@@ -56,28 +54,6 @@ public class StreamTesterTest {
     given(outputStream = new ByteArrayOutputStream());
     when(writeAndClose(outputStream, content));
     thenEqual(outputStream.toString(), content);
-  }
-
-  @Test
-  public void assert_content_succeeds_when_content_is_equal() throws Exception {
-    String content = "content";
-    InputStream inputStream = inputStreamContaining(content);
-
-    assertContent(inputStream, content);
-  }
-
-  @Test
-  public void assert_content_fails_when_content_is_not_equal() throws Exception {
-    String content = "content";
-    InputStream inputStream = inputStreamContaining(content + "suffix");
-
-    try {
-      assertContent(inputStream, content);
-    } catch (AssertionError e) {
-      // expected
-      return;
-    }
-    fail("exception should be thrown");
   }
 
   // inputStreamToBytes()
