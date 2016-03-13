@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
@@ -34,9 +33,9 @@ public class Streams {
     }
   }
 
-  public static Void writeAndClose(OutputStream outputStream, String content) throws IOException {
-    try (OutputStreamWriter writer = new OutputStreamWriter(outputStream)) {
-      writer.write(content);
+  public static Void writeAndClose(OutputStream outputStream, byte[] bytes) throws IOException {
+    try (OutputStream os = outputStream) {
+      os.write(bytes);
     }
     return null;
   }

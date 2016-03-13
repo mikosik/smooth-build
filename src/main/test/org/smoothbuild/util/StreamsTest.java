@@ -26,10 +26,10 @@ import java.io.OutputStream;
 import org.junit.Test;
 
 public class StreamsTest {
-  byte[] bytes = new byte[] { 1, 2, 3 };
-  String content = "content";
-  OutputStream outputStream = new ByteArrayOutputStream();
-  InputStream inputStream;
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private String content = "content";
+  private OutputStream outputStream = new ByteArrayOutputStream();
+  private InputStream inputStream;
 
   // inputStreamToString()
 
@@ -131,25 +131,22 @@ public class StreamsTest {
 
   @Test
   public void write_and_close() throws IOException {
-    given(content = "content");
     given(outputStream = new ByteArrayOutputStream());
-    when(writeAndClose(outputStream, content));
-    thenEqual(outputStream.toString(), content);
+    when(writeAndClose(outputStream, bytes));
+    thenEqual(((ByteArrayOutputStream) outputStream).toByteArray(), bytes);
   }
 
   @Test
   public void write_and_close_closes_stream() throws IOException {
-    given(content = "content");
     given(outputStream = mock(ByteArrayOutputStream.class));
-    when(writeAndClose(outputStream, content));
+    when(writeAndClose(outputStream, bytes));
     thenCalled(outputStream).close();
   }
 
   @Test
   public void write_and_close_empty() throws IOException {
-    given(content = "");
     given(outputStream = new ByteArrayOutputStream());
-    when(writeAndClose(outputStream, content));
-    thenEqual(outputStream.toString(), content);
+    when(writeAndClose(outputStream, bytes));
+    thenEqual(((ByteArrayOutputStream) outputStream).toByteArray(), bytes);
   }
 }

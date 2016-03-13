@@ -6,7 +6,7 @@ import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public abstract class GenericFileSystemTestCase {
   protected FileSystem fileSystem;
-  protected String content = "file content";
+  protected byte[] bytes = new byte[] { 1, 2, 3 };
   protected Path path = path("some/dir/myFile");
   protected Path path2 = path("other/dir/otherFile");
 
@@ -102,9 +102,9 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void open_input_stream_reads_file_content() throws Exception {
-    given(this).createFile(path, content);
-    when(inputStreamToString(fileSystem.openInputStream(path)));
-    thenReturned(content);
+    given(this).createFile(path, bytes);
+    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
+    thenReturned(bytes);
   }
 
   @Test
@@ -127,17 +127,18 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void data_written_via_open_output_stream_can_be_read_by_open_input_stream()
       throws Exception {
-    writeAndClose(fileSystem.openOutputStream(path), content);
-    when(inputStreamToString(fileSystem.openInputStream(path)));
-    thenReturned(content);
+    writeAndClose(fileSystem.openOutputStream(path), bytes);
+    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
+    thenReturned(bytes);
   }
 
   @Test
   public void open_output_stream_overwrites_existing_file() throws Exception {
-    writeAndClose(fileSystem.openOutputStream(path), "different " + content);
-    writeAndClose(fileSystem.openOutputStream(path), content);
-    when(inputStreamToString(fileSystem.openInputStream(path)));
-    thenReturned(content);
+    given(bytes = new byte[] { 1, 2, 3 });
+    writeAndClose(fileSystem.openOutputStream(path), new byte[] { 4, 5, 6, 7, 8 });
+    writeAndClose(fileSystem.openOutputStream(path), bytes);
+    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
+    thenReturned(bytes);
   }
 
   @Test
@@ -194,29 +195,29 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void moved_file_is_copied_to_target() throws Exception {
-    given(this).createFile(path("source"), "content");
+    given(this).createFile(path("source"), bytes);
     when(fileSystem).move(path("source"), path("target"));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(inputStreamToString(fileSystem.openInputStream(path("target"))));
-    thenReturned("content");
+    when(inputStreamToByteArray(fileSystem.openInputStream(path("target"))));
+    thenReturned(bytes);
   }
 
   @Test
   public void moved_file_overwrites_target_file() throws Exception {
-    given(this).createFile(path("source"), "content");
+    given(this).createFile(path("source"), bytes);
     given(this).createEmptyFile(path("target"));
     when(fileSystem).move(path("source"), path("target"));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(inputStreamToString(fileSystem.openInputStream(path("target"))));
-    thenReturned("content");
+    when(inputStreamToByteArray(fileSystem.openInputStream(path("target"))));
+    thenReturned(bytes);
   }
 
   @Test
   public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
-    given(this).createFile(path("source"), "content");
+    given(this).createFile(path("source"), bytes);
     when(fileSystem).move(path("source"), path("dir/target"));
-    when(inputStreamToString(fileSystem.openInputStream(path("dir/target"))));
-    thenReturned("content");
+    when(inputStreamToByteArray(fileSystem.openInputStream(path("dir/target"))));
+    thenReturned(bytes);
   }
 
   // delete()
@@ -255,21 +256,21 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void link_contains_data_from_target() throws Exception {
-    given(this).createFile(path, content);
+    given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path);
-    thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath)), content);
+    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(linkPath)), bytes);
   }
 
   @Test
   public void creating_links_creates_missing_dirs() throws Exception {
-    given(this).createFile(path, content);
+    given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path);
     thenEqual(fileSystem.pathState(linkPath), FILE);
   }
 
   @Test
   public void deleted_link_is_removed() throws Exception {
-    given(this).createFile(path, content);
+    given(this).createFile(path, bytes);
     given(fileSystem).createLink(linkPath, path);
     when(fileSystem).delete(linkPath);
     thenEqual(fileSystem.pathState(linkPath), NOTHING);
@@ -277,7 +278,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void deleting_link_to_file_does_not_delete_target() throws Exception {
-    given(this).createFile(path, content);
+    given(this).createFile(path, bytes);
     given(fileSystem).createLink(linkPath, path);
     when(fileSystem).delete(linkPath);
     thenEqual(fileSystem.pathState(path), FILE);
@@ -285,10 +286,10 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void link_to_dir_can_be_used_to_access_its_file() throws Exception {
-    given(this).createFile(path, content);
+    given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path.parent());
-    thenEqual(inputStreamToString(fileSystem.openInputStream(linkPath.append(path.lastPart()))),
-        content);
+    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(linkPath.append(path.lastPart()))),
+        bytes);
   }
 
   @Test
@@ -348,5 +349,5 @@ public abstract class GenericFileSystemTestCase {
 
   protected abstract void createEmptyFile(Path path) throws IOException;
 
-  protected abstract void createFile(Path path, String content) throws IOException;
+  protected abstract void createFile(Path path, byte[] content) throws IOException;
 }

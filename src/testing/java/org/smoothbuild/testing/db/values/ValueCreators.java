@@ -29,10 +29,6 @@ public class ValueCreators {
     return file(valuesDb, path, path.value().getBytes(SmoothConstants.CHARSET));
   }
 
-  public static SFile file(ValuesDb valuesDb, Path path, String content) {
-    return file(valuesDb, path, content.getBytes(SmoothConstants.CHARSET));
-  }
-
   public static SFile file(ValuesDb valuesDb, Path path, byte[] content) {
     SString string = string(valuesDb, path.value());
     Blob blob = blob(valuesDb, content);
@@ -41,10 +37,6 @@ public class ValueCreators {
 
   public static SString string(ValuesDb valuesDb, String string) {
     return valuesDb.string(string);
-  }
-
-  public static Blob blob(ValuesDb valuesDb, String content) {
-    return blob(valuesDb, content.getBytes(SmoothConstants.CHARSET));
   }
 
   public static Blob blob(ValuesDb valuesDb, byte[] bytes) {

@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
+import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
@@ -20,8 +21,8 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import com.google.common.hash.HashCode;
 
 public class BlobTest {
-  private final String string = "abc";
-  private final String otherString = "def";
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final byte[] otherBytes = new byte[] { 4, 5, 6 };
   private ValuesDb valuesDb;
   private BlobBuilder blobBuilder;
   private Blob blob;
@@ -43,7 +44,7 @@ public class BlobTest {
 
   @Test
   public void type_of_blob_is_blob() throws Exception {
-    given(blob = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
     when(blob).type();
     thenReturned(BLOB);
   }
@@ -59,9 +60,9 @@ public class BlobTest {
 
   @Test
   public void blob_has_content_passed_to_builder() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    when(inputStreamToString(blob.openInputStream()));
-    thenReturned(string);
+    given(blob = createBlob(valuesDb, bytes));
+    when(inputStreamToByteArray(blob.openInputStream()));
+    thenReturned(bytes);
   }
 
   @Test
@@ -93,55 +94,55 @@ public class BlobTest {
 
   @Test
   public void blobs_with_equal_content_are_equal() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, bytes));
     when(blob);
     thenReturned(blob2);
   }
 
   @Test
   public void blobs_with_different_content_are_not_equal() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, otherString));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, otherBytes));
     when(blob);
     thenReturned(not(blob2));
   }
 
   @Test
   public void hash_of_blobs_with_equal_content_is_the_same() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, bytes));
     when(blob.hash());
     thenReturned(blob2.hash());
   }
 
   @Test
   public void hash_of_blobs_with_different_content_is_not_the_same() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, otherString));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, otherBytes));
     when(blob.hash());
     thenReturned(not(blob2.hash()));
   }
 
   @Test
   public void hash_code_of_blob_with_equal_content_is_the_same() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, bytes));
     when(blob.hashCode());
     thenReturned(blob2.hashCode());
   }
 
   @Test
   public void hash_code_of_blobs_with_different_values_is_not_the_same() throws Exception {
-    given(blob = createBlob(valuesDb, string));
-    given(blob2 = createBlob(valuesDb, otherString));
+    given(blob = createBlob(valuesDb, bytes));
+    given(blob2 = createBlob(valuesDb, otherBytes));
     when(blob.hashCode());
     thenReturned(not(blob2.hashCode()));
   }
 
   @Test
   public void blob_can_be_fetch_by_hash() throws Exception {
-    given(blob = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
     when(valuesDb.read(BLOB, hash));
     thenReturned(blob);
@@ -149,7 +150,7 @@ public class BlobTest {
 
   @Test
   public void blob_fetched_by_hash_has_same_content() throws Exception {
-    given(blob = createBlob(valuesDb, string));
+    given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
     when(inputStreamToString(((Blob) valuesDb.read(BLOB, hash)).openInputStream()));
     thenReturned(inputStreamToString(blob.openInputStream()));
@@ -157,12 +158,12 @@ public class BlobTest {
 
   @Test
   public void to_string_contains_type_name_and_bytes_count() throws Exception {
-    given(blob = createBlob(valuesDb, "abc"));
+    given(blob = createBlob(valuesDb, new byte[] { 1, 2, 3 }));
     when(blob).toString();
     thenReturned("Blob(3 bytes)");
   }
 
-  private static Blob createBlob(ValuesDb valuesDb, String content) throws Exception {
+  private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
     writeAndClose(blobBuilder, content);
     return blobBuilder.build();

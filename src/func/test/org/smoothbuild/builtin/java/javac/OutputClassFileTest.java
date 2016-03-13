@@ -20,7 +20,7 @@ import org.smoothbuild.util.Streams;
 public class OutputClassFileTest {
   private final Container container = containerImpl();
   private final Path path = Path.path("my/path");
-  private final String content = "content";
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
 
   private ArrayBuilder<SFile> fileArrayBuilder;
   private OutputClassFile outputClassFile;
@@ -29,9 +29,9 @@ public class OutputClassFileTest {
   public void open_output_stream() throws IOException {
     given(fileArrayBuilder = container.create().arrayBuilder(SFile.class));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
-    Streams.writeAndClose(outputClassFile.openOutputStream(), content);
+    Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
     when(fileArrayBuilder).build();
-    thenReturned(contains(file(memoryValuesDb(), path, content)));
+    thenReturned(contains(file(memoryValuesDb(), path, bytes)));
   }
 
   @Test

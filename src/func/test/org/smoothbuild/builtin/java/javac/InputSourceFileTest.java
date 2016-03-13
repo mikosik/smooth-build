@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
@@ -24,7 +25,7 @@ public class InputSourceFileTest {
   public void get_char_content_returns_file_content() throws IOException {
     given(path = path("my/path"));
     given(content = "some content");
-    given(file = file(valuesDb, path, content));
+    given(file = file(valuesDb, path, content.getBytes(CHARSET)));
     when(new InputSourceFile(file)).getCharContent(true);
     thenReturned(content);
   }

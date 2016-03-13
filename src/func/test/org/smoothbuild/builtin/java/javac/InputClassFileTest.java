@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -17,10 +17,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.SFile;
 
 public class InputClassFileTest {
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final ValuesDb valuesDb = memoryValuesDb();
   private InputClassFile inputClassFile;
   private final Path path = path("a/b/MyClass.class");
-  private String content;
   private SFile file;
 
   @Test(expected = IllegalArgumentException.class)
@@ -29,15 +29,16 @@ public class InputClassFileTest {
   }
 
   @Test
-  public void input_class_files_with_equal_paths_are_equal() throws Exception {
-    when(new InputClassFile(file(valuesDb, path, "content")));
-    thenReturned(new InputClassFile(file(valuesDb, path, "other content")));
+  public void input_class_files_with_equal_paths_but_different_content_are_equal()
+      throws Exception {
+    when(new InputClassFile(file(valuesDb, path, new byte[] { 1, 2, 3 })));
+    thenReturned(new InputClassFile(file(valuesDb, path, new byte[] { 4, 5, 6 })));
   }
 
   @Test
   public void input_class_files_with_different_paths_are_not_equal() throws Exception {
-    when(new InputClassFile(file(valuesDb, path("a/b/MyClass.class"), "content")));
-    thenReturned(not(new InputClassFile(file(valuesDb, path("a/b/OtherClass.class"), "content"))));
+    when(new InputClassFile(file(valuesDb, path("a/b/MyClass.class"), bytes)));
+    thenReturned(not(new InputClassFile(file(valuesDb, path("a/b/OtherClass.class"), bytes))));
   }
 
   @Test
@@ -92,11 +93,10 @@ public class InputClassFileTest {
 
   @Test
   public void open_input_stream_returns_file_content() throws Exception {
-    given(content = "some content");
-    given(file = file(valuesDb, path, content));
+    given(file = file(valuesDb, path, bytes));
     given(inputClassFile = new InputClassFile(file));
-    when(inputStreamToString(inputClassFile.openInputStream()));
-    thenReturned(content);
+    when(inputStreamToByteArray(inputClassFile.openInputStream()));
+    thenReturned(bytes);
   }
 
   private InputClassFile inputClassFile(String path) {
