@@ -1,7 +1,7 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
+import static org.smoothbuild.util.Streams.writeAndClose;
 
 import java.io.IOException;
 import java.io.OutputStream;

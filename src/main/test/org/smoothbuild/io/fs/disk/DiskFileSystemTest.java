@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.util.Streams;
 
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private File tempDir;
@@ -58,7 +58,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
     File file = stringPathToFile(stringPath);
     file.getParentFile().mkdirs();
     FileOutputStream outputStream = new FileOutputStream(file);
-    StreamTester.writeAndClose(outputStream, content);
+    Streams.writeAndClose(outputStream, content);
   }
 
   private File stringPathToFile(String stringPath) {
