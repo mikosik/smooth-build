@@ -1,17 +1,12 @@
 package org.smoothbuild.testing.common;
 
 import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
 import static org.smoothbuild.util.Streams.inputStreamToString;
-import static org.testory.Testory.any;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,32 +49,5 @@ public class StreamTesterTest {
     given(outputStream = new ByteArrayOutputStream());
     when(writeAndClose(outputStream, content));
     thenEqual(outputStream.toString(), content);
-  }
-
-  // inputStreamToBytes()
-
-  @Test
-  public void input_stream_to_bytes() throws Exception {
-    given(content = "content");
-    given(inputStream = inputStreamContaining(content));
-    when(inputStreamToBytes(inputStream));
-    thenReturned(content.getBytes());
-  }
-
-  @Test
-  public void empty_input_stream_to_bytes() throws Exception {
-    given(content = "");
-    given(inputStream = inputStreamContaining(content));
-    when(inputStreamToBytes(inputStream));
-    thenReturned(content.getBytes());
-  }
-
-  @Test
-  public void input_stream_to_bytes_closes_stream() throws Exception {
-    InputStream inputStream = mock(InputStream.class);
-    given(willReturn(-1), inputStream).read(any(byte[].class));
-
-    inputStreamToBytes(inputStream);
-    thenCalled(inputStream).close();
   }
 }

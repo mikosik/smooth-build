@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
-import com.google.common.io.ByteStreams;
-
 public class StreamTester {
 
   public static InputStream inputStreamContaining(String content) {
@@ -19,13 +17,5 @@ public class StreamTester {
       writer.write(content);
     }
     return null;
-  }
-
-  public static byte[] inputStreamToBytes(InputStream inputStream) throws IOException {
-    try {
-      return ByteStreams.toByteArray(inputStream);
-    } finally {
-      inputStream.close();
-    }
   }
 }

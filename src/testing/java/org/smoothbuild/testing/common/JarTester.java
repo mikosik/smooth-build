@@ -1,7 +1,7 @@
 package org.smoothbuild.testing.common;
 
+import static com.google.common.io.ByteStreams.toByteArray;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamToBytes;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 
 import java.io.ByteArrayOutputStream;
@@ -28,7 +28,7 @@ public class JarTester {
   private static void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {
     JarEntry entry = new JarEntry(file.path().value());
     jarOutputStream.putNextEntry(entry);
-    jarOutputStream.write(inputStreamToBytes(file.content().openInputStream()));
+    jarOutputStream.write(toByteArray(file.content().openInputStream()));
     jarOutputStream.closeEntry();
   }
 }
