@@ -6,12 +6,12 @@ import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.testing.common.StreamTester;
+import org.smoothbuild.util.Streams;
 
 public class FileSystems {
   public static Path createFile(FileSystem fileSystem, Path path, String content)
       throws IOException {
-    StreamTester.writeAndClose(fileSystem.openOutputStream(path), content);
+    Streams.writeAndClose(fileSystem.openOutputStream(path), content);
     return path;
   }
 

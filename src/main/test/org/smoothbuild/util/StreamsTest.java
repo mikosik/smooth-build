@@ -3,6 +3,9 @@ package org.smoothbuild.util;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Streams.copy;
+import static org.smoothbuild.util.Streams.inputStreamToByteArray;
+import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -26,7 +29,7 @@ import org.testory.Closure;
 public class StreamsTest {
   byte[] bytes = new byte[] { 1, 2, 3 };
   String content = "content";
-  ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+  OutputStream outputStream = new ByteArrayOutputStream();
   InputStream inputStream;
 
   // inputStreamToString()
@@ -34,7 +37,7 @@ public class StreamsTest {
   @Test
   public void input_stream_to_string() throws Exception {
     given(inputStream = new ByteArrayInputStream(content.getBytes(CHARSET)));
-    when(Streams.inputStreamToString(inputStream));
+    when(inputStreamToString(inputStream));
     thenReturned(content);
   }
 
@@ -42,7 +45,7 @@ public class StreamsTest {
   public void empty_input_stream_to_string() throws Exception {
     given(content = "");
     given(inputStream = new ByteArrayInputStream(content.getBytes(CHARSET)));
-    when(Streams.inputStreamToString(inputStream));
+    when(inputStreamToString(inputStream));
     thenReturned(content);
   }
 
@@ -51,7 +54,7 @@ public class StreamsTest {
     given(inputStream = mock(InputStream.class));
     given(willThrow(new IOException()), inputStream).read(any(byte[].class));
     try {
-      Streams.inputStreamToString(inputStream);
+      inputStreamToString(inputStream);
       fail("exception should be thrown");
     } catch (IOException e) {
       // expected
@@ -61,7 +64,7 @@ public class StreamsTest {
   @Test
   public void input_stream_to_string_closes_stream() throws Exception {
     given(inputStream = spy(new ByteArrayInputStream(content.getBytes(CHARSET))));
-    when(Streams.inputStreamToString(inputStream));
+    when(inputStreamToString(inputStream));
     thenCalled(inputStream).close();
   }
 
@@ -70,14 +73,14 @@ public class StreamsTest {
   @Test
   public void input_stream_to_byte_array() throws Exception {
     given(inputStream = new ByteArrayInputStream(bytes.clone()));
-    when(Streams.inputStreamToByteArray(inputStream));
+    when(inputStreamToByteArray(inputStream));
     thenReturned(bytes);
   }
 
   @Test
   public void empty_input_stream_to_byt_array() throws Exception {
     given(inputStream = new ByteArrayInputStream(new byte[] {}));
-    when(Streams.inputStreamToByteArray(inputStream));
+    when(inputStreamToByteArray(inputStream));
     thenReturned(new byte[] {});
   }
 
@@ -86,7 +89,7 @@ public class StreamsTest {
     inputStream = mock(InputStream.class);
     given(willThrow(new IOException()), inputStream).read(any(byte[].class));
     try {
-      Streams.inputStreamToByteArray(inputStream);
+      inputStreamToByteArray(inputStream);
       fail("exception should be thrown");
     } catch (IOException e) {
       // expected
@@ -96,7 +99,7 @@ public class StreamsTest {
   @Test
   public void input_stream_to_byte_array_closes_stream() throws Exception {
     given(inputStream = spy(new ByteArrayInputStream(bytes)));
-    when(Streams.inputStreamToByteArray(inputStream));
+    when(inputStreamToByteArray(inputStream));
     thenCalled(inputStream).close();
   }
 
@@ -106,7 +109,7 @@ public class StreamsTest {
   public void bytes_are_copied_from_input_stream_to_output_stream() throws Exception {
     given(inputStream = new ByteArrayInputStream(bytes));
     when($copy(inputStream, outputStream));
-    thenEqual(outputStream.toByteArray(), bytes);
+    thenEqual(((ByteArrayOutputStream) outputStream).toByteArray(), bytes);
   }
 
   @Test
@@ -123,6 +126,32 @@ public class StreamsTest {
     given(inputStream = new ByteArrayInputStream(bytes));
     when($copy(inputStream, outputStream));
     thenCalled(outputStream).close();
+  }
+
+  // writeAndClose
+
+  @Test
+  public void write_and_close() throws IOException {
+    given(content = "content");
+    given(outputStream = new ByteArrayOutputStream());
+    when(writeAndClose(outputStream, content));
+    thenEqual(outputStream.toString(), content);
+  }
+
+  @Test
+  public void write_and_close_closes_stream() throws IOException {
+    given(content = "content");
+    given(outputStream = mock(ByteArrayOutputStream.class));
+    when(writeAndClose(outputStream, content));
+    thenCalled(outputStream).close();
+  }
+
+  @Test
+  public void write_and_close_empty() throws IOException {
+    given(content = "");
+    given(outputStream = new ByteArrayOutputStream());
+    when(writeAndClose(outputStream, content));
+    thenEqual(outputStream.toString(), content);
   }
 
   private static Closure $copy(InputStream inputStream, OutputStream outputStream) {
