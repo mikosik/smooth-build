@@ -1,7 +1,7 @@
 package org.smoothbuild.util;
 
 import static org.junit.Assert.fail;
-import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Streams.copy;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
@@ -33,7 +33,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string() throws Exception {
-    given(inputStream = inputStreamContaining(content));
+    given(inputStream = new ByteArrayInputStream(content.getBytes(CHARSET)));
     when(Streams.inputStreamToString(inputStream));
     thenReturned(content);
   }
@@ -41,7 +41,7 @@ public class StreamsTest {
   @Test
   public void empty_input_stream_to_string() throws Exception {
     given(content = "");
-    given(inputStream = inputStreamContaining(content));
+    given(inputStream = new ByteArrayInputStream(content.getBytes(CHARSET)));
     when(Streams.inputStreamToString(inputStream));
     thenReturned(content);
   }
@@ -60,7 +60,7 @@ public class StreamsTest {
 
   @Test
   public void input_stream_to_string_closes_stream() throws Exception {
-    given(inputStream = spy(inputStreamContaining(content)));
+    given(inputStream = spy(new ByteArrayInputStream(content.getBytes(CHARSET))));
     when(Streams.inputStreamToString(inputStream));
     thenCalled(inputStream).close();
   }

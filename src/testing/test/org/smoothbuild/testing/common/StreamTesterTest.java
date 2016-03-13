@@ -1,39 +1,18 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.testing.common.StreamTester.inputStreamContaining;
 import static org.smoothbuild.testing.common.StreamTester.writeAndClose;
-import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.junit.Test;
 
 public class StreamTesterTest {
   private String content;
-  private InputStream inputStream;
   private ByteArrayOutputStream outputStream;
-
-  @Test
-  public void input_stream_containing_string() throws Exception {
-    given(content = "content");
-    given(inputStream = inputStreamContaining(content));
-    when(inputStreamToString(inputStream));
-    thenReturned(content);
-  }
-
-  @Test
-  public void input_stream_containing_empty_string() throws Exception {
-    given(content = "");
-    given(inputStream = inputStreamContaining(content));
-    when(inputStreamToString(inputStream));
-    thenReturned(content);
-  }
 
   @Test
   public void write_and_close() throws IOException {
