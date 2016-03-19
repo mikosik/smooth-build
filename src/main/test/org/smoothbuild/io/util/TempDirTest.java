@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
-import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
@@ -68,19 +67,6 @@ public class TempDirTest {
   public void writing_file_after_destroy_throws_exception() throws Exception {
     given(tempDir).destroy();
     when(tempDir).writeFile(file(valuesDb, path, bytes));
-    thenThrown(IllegalStateException.class);
-  }
-
-  @Test
-  public void path_and_content_are_written_to_file_system() throws Exception {
-    when(tempDir).writeFile(path, blob(valuesDb, bytes));
-    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
-  }
-
-  @Test
-  public void writing_content_after_destroy_throws_exception() throws Exception {
-    given(tempDir).destroy();
-    when(tempDir).writeFile(path, blob(valuesDb, bytes));
     thenThrown(IllegalStateException.class);
   }
 
