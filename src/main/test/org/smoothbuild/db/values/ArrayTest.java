@@ -5,8 +5,8 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
-import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -19,7 +19,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
 public class ArrayTest {
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
   private ValuesDb valuesDb;
   private Blob blob;
   private SString sstring;
@@ -51,7 +50,7 @@ public class ArrayTest {
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(rawArrayBuilder = valuesDb.arrayBuilder(SString.class));
-    given(blob = blob(memoryValuesDb(), bytes));
+    given(blob = mock(Blob.class));
     when(rawArrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }
