@@ -61,13 +61,9 @@ public class TempDir {
   }
 
   public void writeFile(SFile file) {
-    writeFile(path(file.path().value()), file.content());
-  }
-
-  public void writeFile(Path path, Blob content) {
     assertNotDestroyed();
     try {
-      writeFileImpl(path, content);
+      writeFileImpl(path(file.path().value()), file.content());
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
