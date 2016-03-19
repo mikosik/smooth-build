@@ -30,13 +30,9 @@ public class ValueCreators {
   }
 
   public static SFile file(ValuesDb valuesDb, Path path, byte[] content) {
-    SString string = string(valuesDb, path.value());
+    SString string = valuesDb.string(path.value());
     Blob blob = blob(valuesDb, content);
     return valuesDb.file(string, blob);
-  }
-
-  public static SString string(ValuesDb valuesDb, String string) {
-    return valuesDb.string(string);
   }
 
   public static Blob blob(ValuesDb valuesDb, byte[] bytes) {
