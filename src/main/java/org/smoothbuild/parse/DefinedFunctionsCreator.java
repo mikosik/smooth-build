@@ -70,9 +70,11 @@ public class DefinedFunctionsCreator {
 
   public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
       List<Name> sorted) {
-    Worker worker = new Worker(console, functions, functionContexts, sorted,
-        valuesDb, argumentExpressionCreator, implicitConverter);
-    worker.run();
+    Worker worker = new Worker(console, functions, valuesDb, argumentExpressionCreator,
+        implicitConverter);
+    for (Name name : sorted) {
+      functions.add(worker.build(functionContexts.get(name)));
+    }
     if (console.isErrorReported()) {
       throw new ParsingException();
     }
@@ -81,29 +83,17 @@ public class DefinedFunctionsCreator {
   private static class Worker {
     private final Console console;
     private final Functions functions;
-    private final Map<Name, FunctionContext> functionContexts;
-    private final List<Name> sorted;
     private final ValuesDb valuesDb;
     private final ArgumentExpressionCreator argumentExpressionCreator;
     private final ImplicitConverter implicitConverter;
 
-    public Worker(Console console, Functions functions, Map<Name, FunctionContext> functionContexts,
-        List<Name> sorted, ValuesDb valuesDb, ArgumentExpressionCreator argumentExpressionCreator,
-        ImplicitConverter implicitConverter) {
+    public Worker(Console console, Functions functions, ValuesDb valuesDb,
+        ArgumentExpressionCreator argumentExpressionCreator, ImplicitConverter implicitConverter) {
       this.console = console;
       this.functions = functions;
-      this.functionContexts = functionContexts;
-      this.sorted = sorted;
       this.valuesDb = valuesDb;
       this.argumentExpressionCreator = argumentExpressionCreator;
       this.implicitConverter = implicitConverter;
-    }
-
-    public void run() {
-      for (Name name : sorted) {
-        DefinedFunction definedFunction = build(functionContexts.get(name));
-        functions.add(definedFunction);
-      }
     }
 
     public DefinedFunction build(FunctionContext functionContext) {
