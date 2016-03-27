@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.lang.expr.Expressions.callExpression;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.def.Argument.namedArgument;
 import static org.smoothbuild.lang.function.def.Argument.namelessArgument;
@@ -243,7 +242,7 @@ public class DefinedFunctionsCreator {
       if (argumentExpressions == null) {
         return new InvalidExpression(function.type(), codeLocation);
       } else {
-        return callExpression(function, false, codeLocation, argumentExpressions);
+        return function.createCallExpression(argumentExpressions, false, codeLocation);
       }
     }
 

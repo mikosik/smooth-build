@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.expr;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import javax.inject.Inject;
 
@@ -28,7 +27,6 @@ public class ImplicitConverter {
 
     Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
     Function function = functions.get(functionName);
-
-    return callExpression(function, true, source.codeLocation(), asList(source));
+    return function.createCallExpression(asList(source), true, source.codeLocation());
   }
 }
