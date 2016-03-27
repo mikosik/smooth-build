@@ -2,15 +2,17 @@ package org.smoothbuild.lang.function.def;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Arrays.asList;
+import static org.smoothbuild.task.base.Computer.virtualComputer;
 
 import java.util.List;
 
-import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.task.base.Computer;
 
 /**
  * Smooth function defined in smooth language via smooth expression.
@@ -33,6 +35,10 @@ public class DefinedFunction extends AbstractFunction {
       CodeLocation codeLocation) {
     checkArgument(args.isEmpty());
     checkArgument(!isGenerated);
-    return new DefinedCallExpression(this, codeLocation);
+    return new Expression(type(), asList(root), codeLocation) {
+      public Computer createComputer() {
+        return virtualComputer(DefinedFunction.this, codeLocation());
+      }
+    };
   }
 }

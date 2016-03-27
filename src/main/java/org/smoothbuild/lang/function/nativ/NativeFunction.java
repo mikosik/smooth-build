@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.message.Messages.containsErrors;
+import static org.smoothbuild.task.base.Computer.nativeCallComputer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -16,6 +16,7 @@ import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -47,7 +48,11 @@ public class NativeFunction extends AbstractFunction {
 
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
       CodeLocation codeLocation) {
-    return new NativeCallExpression(this, isGenerated, codeLocation, args);
+    return new Expression(type(), args, codeLocation) {
+      public Computer createComputer() {
+        return nativeCallComputer(NativeFunction.this, isGenerated, codeLocation);
+      }
+    };
   }
 
   public Value invoke(ContainerImpl container, List<Value> arguments) {
