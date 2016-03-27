@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.expr.Expressions.callExpression;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function function) {
     Expression expression =
-        callExpression(function, false, CodeLocation.commandLine(), asList());
+        function.createCallExpression(asList(), false, CodeLocation.commandLine());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 

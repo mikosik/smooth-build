@@ -11,6 +11,8 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.message.CodeLocation;
 
 public class AbstractFunctionTest {
   Name name;
@@ -52,6 +54,11 @@ public class AbstractFunctionTest {
   public static class MyAbstractFunction extends AbstractFunction {
     public MyAbstractFunction(Signature signature) {
       super(signature);
+    }
+
+    public Expression createCallExpression(List<Expression> args, boolean isGenerated,
+        CodeLocation codeLocation) {
+      return null;
     }
   }
 }
