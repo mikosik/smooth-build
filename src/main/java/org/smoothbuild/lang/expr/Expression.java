@@ -16,9 +16,9 @@ import com.google.common.collect.ImmutableList;
 public abstract class Expression {
   private final Type type;
   private final CodeLocation codeLocation;
-  private final ImmutableList<? extends Expression> dependencies;
+  private final ImmutableList<Expression> dependencies;
 
-  public Expression(Type type, List<? extends Expression> dependencies, CodeLocation codeLocation) {
+  public Expression(Type type, List<Expression> dependencies, CodeLocation codeLocation) {
     this.type = checkNotNull(type);
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.codeLocation = checkNotNull(codeLocation);
@@ -32,7 +32,7 @@ public abstract class Expression {
     return codeLocation;
   }
 
-  public ImmutableList<? extends Expression> dependencies() {
+  public ImmutableList<Expression> dependencies() {
     return dependencies;
   }
 

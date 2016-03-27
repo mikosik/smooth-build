@@ -13,7 +13,7 @@ public class NativeCallExpression extends Expression {
   private final boolean isGenerated;
 
   public NativeCallExpression(NativeFunction function, boolean isGenerated,
-      CodeLocation codeLocation, List<? extends Expression> args) {
+      CodeLocation codeLocation, List<Expression> args) {
     super(function.type(), args, codeLocation);
 
     this.function = function;
