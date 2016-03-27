@@ -11,7 +11,7 @@ import org.smoothbuild.task.base.Computer;
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;
 
-  public ArrayExpression(ArrayType arrayType, List<? extends Expression> elements,
+  public ArrayExpression(ArrayType arrayType, List<Expression> elements,
       CodeLocation codeLocation) {
     super(arrayType, elements, codeLocation);
     this.arrayType = arrayType;
