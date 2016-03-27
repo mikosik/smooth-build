@@ -8,7 +8,7 @@
 	<classpathentry kind="src" path="src/testing/java"/>
 	<classpathentry kind="src" path="src/testing/test"/>
 	<classpathentry kind="src" path="build/java"/>
-	<classpathentry kind="lib" path="lib/antlr-4.1-complete.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-4.1-complete.jar" sourcepath="lib/antlr4-4.1.zip"/>
 	<classpathentry kind="lib" path="lib/aopalliance.jar"/>
 	<classpathentry kind="lib" path="lib/guava-17.0.jar" sourcepath="lib/guava-17.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/guava-testlib-17.0.jar" sourcepath="lib/guava-testlib-17.0-sources.jar"/>
