@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
@@ -14,11 +15,13 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class TaskGraph {
   private final TaskExecutor taskExecutor;
+  private final ValuesDb valuesDb;
   private final List<Task> rootTasks;
 
   @Inject
-  public TaskGraph(TaskExecutor taskExecutor) {
+  public TaskGraph(TaskExecutor taskExecutor, ValuesDb valuesDb) {
     this.taskExecutor = taskExecutor;
+    this.valuesDb = valuesDb;
     this.rootTasks = new ArrayList<>();
   }
 
@@ -30,7 +33,7 @@ public class TaskGraph {
 
   private <T extends Value> Task createTasksImpl(Expression expression) {
     ImmutableList<Task> dependencies = createTasksImpl(expression.dependencies());
-    return new Task(expression.createComputer(), dependencies);
+    return new Task(expression.createComputer(valuesDb), dependencies);
   }
 
   private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Expression> expressions) {

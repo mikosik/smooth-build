@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Computer;
@@ -36,5 +37,5 @@ public abstract class Expression {
     return dependencies;
   }
 
-  public abstract Computer createComputer();
+  public abstract Computer createComputer(ValuesDb valuesDb);
 }
