@@ -4,6 +4,7 @@ import static org.smoothbuild.task.base.Computer.arrayComputer;
 
 import java.util.List;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.task.base.Computer;
@@ -17,7 +18,7 @@ public class ArrayExpression extends Expression {
     this.arrayType = arrayType;
   }
 
-  public Computer createComputer() {
+  public Computer createComputer(ValuesDb valuesDb) {
     return arrayComputer(arrayType, codeLocation());
   }
 }

@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
@@ -49,7 +50,7 @@ public class NativeFunction extends AbstractFunction {
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
       CodeLocation codeLocation) {
     return new Expression(type(), args, codeLocation) {
-      public Computer createComputer() {
+      public Computer createComputer(ValuesDb valuesDb) {
         return nativeCallComputer(NativeFunction.this, isGenerated, codeLocation);
       }
     };

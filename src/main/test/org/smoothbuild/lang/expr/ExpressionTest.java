@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Computer;
@@ -56,7 +57,7 @@ public class ExpressionTest {
       super(type, asList(), codeLocation);
     }
 
-    public Computer createComputer() {
+    public Computer createComputer(ValuesDb valuesDb) {
       return null;
     }
   }

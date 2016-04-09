@@ -7,6 +7,7 @@ import static org.smoothbuild.task.base.Computer.virtualComputer;
 
 import java.util.List;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
@@ -36,7 +37,7 @@ public class DefinedFunction extends AbstractFunction {
     checkArgument(args.isEmpty());
     checkArgument(!isGenerated);
     return new Expression(type(), asList(root), codeLocation) {
-      public Computer createComputer() {
+      public Computer createComputer(ValuesDb valuesDb) {
         return virtualComputer(DefinedFunction.this, codeLocation());
       }
     };
