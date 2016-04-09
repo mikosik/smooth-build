@@ -15,27 +15,23 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ImplicitConverter;
-import org.smoothbuild.lang.expr.ValueExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 
 public class ArgumentExpressionCreator {
-  private final ValuesDb valuesDb;
   private final ImplicitConverter implicitConverter;
 
   @Inject
-  public ArgumentExpressionCreator(ValuesDb valuesDb, ImplicitConverter implicitConverter) {
-    this.valuesDb = valuesDb;
+  public ArgumentExpressionCreator(ImplicitConverter implicitConverter) {
     this.implicitConverter = implicitConverter;
   }
 
@@ -73,8 +69,7 @@ public class ArgumentExpressionCreator {
         console.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
             + "assigned explicitly as type 'Nothing' doesn't have default value.");
       } else {
-        Value value = parameter.type().defaultValue(valuesDb);
-        Expression expression = new ValueExpression(value, codeLocation);
+        Expression expression = new DefaultValueExpression(parameter.type(), codeLocation);
         argumentExpressions.put(parameter.name(), expression);
       }
     }
