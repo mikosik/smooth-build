@@ -23,6 +23,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
@@ -68,12 +69,11 @@ public class ArgumentExpressionCreator {
 
     Map<String, Expression> argumentExpressions = convert(argumentMap);
     for (Parameter parameter : parametersPool.allOptional()) {
-      Value value = parameter.type().defaultValue(valuesDb);
-      if (value == null) {
-        console.error(codeLocation, "Parameter '" + parameter.name()
-            + "' has to be assigned explicitly as type '" + parameter.type().name()
-            + "' doesn't have default value.");
+      if (parameter.type() == Types.NOTHING) {
+        console.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
+            + "assigned explicitly as type 'Nothing' doesn't have default value.");
       } else {
+        Value value = parameter.type().defaultValue(valuesDb);
         Expression expression = new ValueExpression(value, codeLocation);
         argumentExpressions.put(parameter.name(), expression);
       }
