@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 0.12.0 (2016.12.14)
+---------------------------
+
+ * fixed 'junit' function implementation so it correctly sets context clas loader
  * fixed 'unzip' and 'unjar' functions to correctly report corrupted archives
  * renamed 'toFile' to 'File'
  * nothing is allowed type for parameter and function result
