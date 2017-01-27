@@ -4,12 +4,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
-import static org.smoothbuild.lang.function.base.Parameter.requiredParameter;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
+import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -20,13 +20,14 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Parameter;
 
 public class TypedParametersPoolTest {
-  private final Parameter string = optionalParameter(STRING, "string1");
-  private final Parameter blob = optionalParameter(BLOB, "blob");
-  private final Parameter stringRequired = requiredParameter(STRING, "stringRequired");
-  private final Parameter stringRequired2 = requiredParameter(STRING, "stringRequired2");
+  private final Parameter string = parameter(STRING, "string1", mock(Expression.class));
+  private final Parameter blob = parameter(BLOB, "blob", mock(Expression.class));
+  private final Parameter stringRequired = parameter(STRING, "stringRequired");
+  private final Parameter stringRequired2 = parameter(STRING, "stringRequired2");
 
   private Set<Parameter> optional;
   private Set<Parameter> required;

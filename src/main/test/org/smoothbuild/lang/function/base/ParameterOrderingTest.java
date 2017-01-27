@@ -2,7 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.ParameterOrdering.PARAMETER_ORDERING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
@@ -18,18 +18,18 @@ public class ParameterOrderingTest {
 
   @Test
   public void ordering_params() {
-    given(parameter1 = optionalParameter(STRING, "aaa"));
-    given(parameter2 = optionalParameter(STRING, "bbb"));
-    given(parameter3 = optionalParameter(STRING, "ccc"));
+    given(parameter1 = parameter(STRING, "aaa"));
+    given(parameter2 = parameter(STRING, "bbb"));
+    given(parameter3 = parameter(STRING, "ccc"));
     when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }
 
   @Test
   public void ordering_params_of_different_length() {
-    given(parameter1 = optionalParameter(STRING, "a"));
-    given(parameter2 = optionalParameter(STRING, "aa"));
-    given(parameter3 = optionalParameter(STRING, "aaa"));
+    given(parameter1 = parameter(STRING, "a"));
+    given(parameter2 = parameter(STRING, "aa"));
+    given(parameter3 = parameter(STRING, "aaa"));
     when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }

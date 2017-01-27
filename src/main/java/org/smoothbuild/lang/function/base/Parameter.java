@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
@@ -11,25 +12,21 @@ import com.google.common.hash.HashCode;
 public class Parameter {
   private final Type type;
   private final String name;
-  private final boolean isRequired;
+  private final Expression defaultValue;
   private final HashCode nameHash;
 
-  public static Parameter optionalParameter(Type type, String name) {
-    return parameter(type, name, false);
+  public static Parameter parameter(Type type, String name, Expression defaultValue) {
+    return new Parameter(type, name, defaultValue);
   }
 
-  public static Parameter requiredParameter(Type type, String name) {
-    return parameter(type, name, true);
+  public static Parameter parameter(Type type, String name) {
+    return parameter(type, name, null);
   }
 
-  public static Parameter parameter(Type type, String name, boolean isRequired) {
-    return new Parameter(type, name, isRequired);
-  }
-
-  protected Parameter(Type type, String name, boolean isRequired) {
+  private Parameter(Type type, String name, Expression defaultValue) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
-    this.isRequired = isRequired;
+    this.defaultValue = defaultValue;
     this.nameHash = Hash.string(name);
   }
 
@@ -42,7 +39,11 @@ public class Parameter {
   }
 
   public boolean isRequired() {
-    return isRequired;
+    return defaultValue == null;
+  }
+
+  public Expression defaultValueExpression() {
+    return defaultValue;
   }
 
   public HashCode nameHash() {
@@ -55,7 +56,7 @@ public class Parameter {
     }
     Parameter that = (Parameter) object;
     return this.type.equals(that.type) && this.name.equals(that.name)
-        && this.isRequired == that.isRequired;
+        && this.isRequired() == that.isRequired();
   }
 
   public final int hashCode() {
