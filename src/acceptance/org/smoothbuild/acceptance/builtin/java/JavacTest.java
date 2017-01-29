@@ -17,7 +17,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
     givenFile("MyClass.java", "public private class MyClass {}");
-    givenScript("result: [file('//MyClass.java')] | javac;");
+    givenScript("result = [file('//MyClass.java')] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("modifier private not allowed here"));
@@ -25,7 +25,7 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void zero_files_can_be_compiled() throws Exception {
-    givenScript("result: [] | javac;");
+    givenScript("result = [] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(output(), containsString("Param 'sources' is empty list."));
@@ -35,7 +35,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void one_file_can_be_compiled() throws Exception {
     givenFile("MyClass.java", "public class MyClass {\n"
         + "public static String myMethod() {return \"test-string\";}}");
-    givenScript("result: [file('//MyClass.java')] | javac;");
+    givenScript("result = [file('//MyClass.java')] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual("test-string", invoke(new File(artifact("result"), "MyClass.class"), "myMethod"));
@@ -61,8 +61,8 @@ public class JavacTest extends AcceptanceTestCase {
 
     givenFile("src/MyClass.java", classSource.toString());
     givenFile("srclib/library/LibraryClass.java", librarySource.toString());
-    givenScript("libraryJar: files('//srclib') | javac | jar;"
-        + "result: files('//src') | javac(libs=[libraryJar])"
+    givenScript("libraryJar = files('//srclib') | javac | jar;"
+        + "result = files('//src') | javac(libs=[libraryJar])"
         + " | concatenateFileArrays(with=javac(files('//srclib')));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -77,7 +77,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void duplicate_java_files_cause_error() throws Exception {
     givenFile("MyClass.java", "public class MyClass {}");
-    givenScript("result: [file('//MyClass.java'), file('//MyClass.java')] | javac;");
+    givenScript("result = [file('//MyClass.java'), file('//MyClass.java')] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("duplicate class: MyClass"));
@@ -86,7 +86,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void illegal_source_parameter_causes_error() throws Exception {
     givenFile("MyClass.java", "public class MyClass {}");
-    givenScript("result: [file('//MyClass.java')] | javac(source='0.9');");
+    givenScript("result = [file('//MyClass.java')] | javac(source='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Parameter source has illegal value = '0.9'."));
@@ -95,7 +95,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void illegal_target_parameter_causes_error() throws Exception {
     givenFile("MyClass.java", "public class MyClass {}");
-    givenScript("result: [file('//MyClass.java')] | javac(target='0.9');");
+    givenScript("result = [file('//MyClass.java')] | javac(target='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Parameter target has illegal value = '0.9'."));
@@ -105,7 +105,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
       throws Exception {
     givenFile("MyClass.java", "public enum MyClass { VALUE }");
-    givenScript("result: [file('//MyClass.java')] | javac(source='1.4', target='1.4');");
+    givenScript("result = [file('//MyClass.java')] | javac(source='1.4', target='1.4');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("enums are not supported in -source 1.4"));

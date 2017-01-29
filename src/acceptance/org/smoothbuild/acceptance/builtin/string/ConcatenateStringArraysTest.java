@@ -9,7 +9,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ConcatenateStringArraysTest extends AcceptanceTestCase {
   @Test
   public void concatenate_string_arrays_function() throws Exception {
-    givenScript("result: concatenateStringArrays(strings=['abc'], with=['def']);");
+    givenScript("result = concatenateStringArrays(strings=['abc'], with=['def']);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));

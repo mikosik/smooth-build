@@ -24,7 +24,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_without_function_argument_prints_error() throws Exception {
-    givenScript("result: 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild();
     thenFinishedWithError();
     thenEqual(output(), "error: Specify at least one function to be executed.\n");
@@ -32,7 +32,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_nonexistent_function_argument_prints_error() throws Exception {
-    givenScript("result: 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
     thenEqual(output(), "error: Unknown function 'nonexistentFunction'.\n");
@@ -40,7 +40,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void temp_file_is_deleted_after_build_execution() throws Exception {
-    givenScript("result: tempFilePath();");
+    givenScript("result = tempFilePath();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(new File(artifactContent("result")).exists(), false);
@@ -58,7 +58,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_illegal_function_name_prints_error() throws Exception {
-    givenScript("result: 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild("illegal^name");
     thenFinishedWithError();
     thenEqual(output(), "error: Illegal function name 'illegal^name' passed in command line.\n");
@@ -66,7 +66,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_function_specified_twice_prints_error() throws Exception {
-    givenScript("result: 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
     thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
@@ -74,7 +74,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   public void build_command_clears_temporary_dir() throws Exception {
     givenFile(TEMPORARY_PATH.append(path("file")).value(), "content");
-    givenScript("result: 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(!file(TEMPORARY_PATH.append(path("file")).value()).exists());

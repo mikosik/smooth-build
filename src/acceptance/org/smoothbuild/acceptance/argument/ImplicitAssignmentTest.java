@@ -12,7 +12,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_there_is_no_parameter_matching() throws Exception {
-    givenScript("result: blobIdentity('abc');");
+    givenScript("result = blobIdentity('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't find parameter(s) of proper type in 'blobIdentity'"
@@ -21,7 +21,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void assigns_to_parameter_with_same_type() throws Exception {
-    givenScript("result: stringIdentity('abc');");
+    givenScript("result = stringIdentity('abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -30,7 +30,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_to_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: blobIdentity(file('//file.txt'));");
+    givenScript("result = blobIdentity(file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -38,7 +38,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void fails_when_one_parameter_matches_two_arguments() throws Exception {
-    givenScript("result: stringIdentity('abc', 'def');");
+    givenScript("result = stringIdentity('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
@@ -48,7 +48,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void fails_when_two_parameters_match_argument() throws Exception {
-    givenScript("result: twoStrings('abc');");
+    givenScript("result = twoStrings('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
@@ -57,7 +57,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void fails_when_two_parameters_match_two_arguments() throws Exception {
-    givenScript("result: twoStrings('abc', 'def');");
+    givenScript("result = twoStrings('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
@@ -68,7 +68,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void assigns_most_specific_type_first() throws Exception {
     givenFile("file1.txt", "aaa");
     givenFile("file2.txt", "bbb");
-    givenScript("result: fileAndBlob(file('//file1.txt'), content(file('//file2.txt')));");
+    givenScript("result = fileAndBlob(file('//file1.txt'), content(file('//file2.txt')));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("aaa:bbb"));
@@ -77,7 +77,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_argument_matches_two_parameters_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: twoBlobs(file('//file.txt'));");
+    givenScript("result = twoBlobs(file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't decide unambiguously to which parameters in 'twoBlobs'"
@@ -87,7 +87,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_two_arguments_match_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: blobIdentity(file('//file.txt'), file('//file.txt'));");
+    givenScript("result = blobIdentity(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't decide unambiguously to which parameters in 'blobIdentity'"
@@ -98,7 +98,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void fails_when_two_arguments_match_parameter_and_other_parameter_with_supertype()
       throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result: fileAndBlob(file('//file.txt'), file('//file.txt'));");
+    givenScript("result = fileAndBlob(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Can't decide unambiguously to which parameters in 'fileAndBlob'"
@@ -107,7 +107,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void assigns_nil_to_string_array() throws Exception {
-    givenScript("result: stringArrayIdentity([]);");
+    givenScript("result = stringArrayIdentity([]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
@@ -117,7 +117,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void ambiguous_error_message() throws Exception {
     givenFile("file.txt", "abc");
     givenScript(
-        "result: file('//file.txt') | ambiguousArguments('abc', ['abc'], []);");
+        "result = file('//file.txt') | ambiguousArguments('abc', ['abc'], []);");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenEqual(output(), "build.smooth:1: error: Can't decide unambiguously to which parameters in "

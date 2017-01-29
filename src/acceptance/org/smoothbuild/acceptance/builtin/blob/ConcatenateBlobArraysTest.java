@@ -11,7 +11,7 @@ public class ConcatenateBlobArraysTest extends AcceptanceTestCase {
   public void concatenate_blob_arrays_function() throws Exception {
     givenFile("0", "abc");
     givenFile("1", "def");
-    givenScript("result: concatenateBlobArrays(blobs=[file('//0')], with=[file('//1')]);");
+    givenScript("result = concatenateBlobArrays(blobs=[file('//0')], with=[file('//1')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));

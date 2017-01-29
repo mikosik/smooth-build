@@ -20,7 +20,7 @@ public class ErrorTest extends AcceptanceTestCase {
   @Test
   public void file_system_exception_thrown_by_native_function_is_not_cached_as_error()
       throws IOException {
-    givenScript("result: throwFileSystemException('" + MY_MESSAGE + "');");
+    givenScript("result = throwFileSystemException('" + MY_MESSAGE + "');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     given(message = getMessageNumber(output()));
@@ -32,7 +32,7 @@ public class ErrorTest extends AcceptanceTestCase {
   @Test
   public void runtime_exception_thrown_by_native_function_is_not_cached_as_error()
       throws IOException {
-    givenScript("result: throwRuntimeException('" + MY_MESSAGE + "');");
+    givenScript("result = throwRuntimeException('" + MY_MESSAGE + "');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     given(message = getMessageNumber(output()));
