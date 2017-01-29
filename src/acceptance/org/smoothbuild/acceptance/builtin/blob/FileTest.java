@@ -13,7 +13,7 @@ public class FileTest extends AcceptanceTestCase {
   @Test
   public void file_function() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result: [File(path='newFile.txt', content=file('//file.txt'))];");
+    givenScript("result = [File(path='newFile.txt', content=file('//file.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));
@@ -21,7 +21,7 @@ public class FileTest extends AcceptanceTestCase {
 
   @Test
   public void illegal_path_causes_error() throws Exception {
-    givenScript("result: File('/filename', toBlob('abc'));");
+    givenScript("result = File('/filename', toBlob('abc'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(

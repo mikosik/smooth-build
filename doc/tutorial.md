@@ -6,7 +6,7 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release.jar: files("//src") | javac | jar;
+release.jar = files("//src") | javac | jar;
 ```
 
 This script defines `release.jar` function that performs following tasks:
@@ -62,7 +62,7 @@ initial example is just syntactic sugar for more standard function calls.
 Initial example can be refactored into:
 
 ```
-release.jar: jar(javac(files("//src")));
+release.jar = jar(javac(files("//src")));
 ```
 
 This version is less readable though it is more familiar to people
@@ -73,8 +73,8 @@ can be used the same way as builtin functions (like `javac`).
 We can refactor our initial example by splitting it into two functions:
 
 ```
-classes: files("//src") | javac;
-release.jar: jar(classes);
+classes = files("//src") | javac;
+release.jar = jar(classes);
 ```
 
 However smooth doesn't support specifying parameters yet
@@ -90,10 +90,10 @@ create vaue of `String[]`, `Blob[]` and `File[]` types.
 Array literal is comma separated list of expressions enclosed inside brackets `[]`.
 
 ```
-stringValue1: "README.md";
-stringValue2: "tutorial.md";
-fileArrayValue: [file(stringValue1), file(stringValue2)];
-docs.zip: zip(fileArrayValue);
+stringValue1 = "README.md";
+stringValue2 = "tutorial.md";
+fileArrayValue = [file(stringValue1), file(stringValue2)];
+docs.zip = zip(fileArrayValue);
 ```
 
 
@@ -116,7 +116,7 @@ In the following example we need to explicitly name `source` parameter, as
 without it, smooth wouldnt' be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
-release.jar: files("//src") | javac(source="1.8") | jar;
+release.jar  =files("//src") | javac(source="1.8") | jar;
 ```
 
 Matching arguments to parameters works according to following algorithm

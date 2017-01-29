@@ -10,7 +10,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CachingTest extends AcceptanceTestCase {
   @Test
   public void second_call_to_a_function_uses_cached_result() throws Exception {
-    givenScript("result1: cacheableRandom(); result2 : cacheableRandom();");
+    givenScript("result1 = cacheableRandom(); result2 = cacheableRandom();");
     whenSmoothBuild("result1");
     whenSmoothBuild("result2");
     thenFinishedWithSuccess();
@@ -19,7 +19,7 @@ public class CachingTest extends AcceptanceTestCase {
 
   @Test
   public void second_call_to_not_cached_function_invokes_function() throws Exception {
-    givenScript("result1: notCacheableRandom(); result2 : notCacheableRandom();");
+    givenScript("result1 = notCacheableRandom(); result2 = notCacheableRandom();");
     whenSmoothBuild("result1");
     whenSmoothBuild("result2");
     thenFinishedWithSuccess();

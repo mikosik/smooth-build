@@ -8,7 +8,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ScriptParsingTest extends AcceptanceTestCase {
   @Test
   public void syntax_error_is_reported() throws Exception {
-    givenScript("result: ");
+    givenScript("result = ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenEqual(output(), "build.smooth:1: error: no viable alternative at input '<EOF>'\n");

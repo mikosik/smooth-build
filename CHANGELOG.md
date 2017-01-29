@@ -1,6 +1,8 @@
 Change Log
 ==========
 
+ * changed ':' to '=' in function declaration
+
 Version 0.12.0 (2016.12.14)
 ---------------------------
 

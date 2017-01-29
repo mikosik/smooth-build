@@ -1,7 +1,7 @@
 grammar Smooth;
 
 module: function* EOF;
-function: functionName ':' pipe ';' ;
+function: functionName '=' pipe ';' ;
 pipe: expression ( p+='|' call )* ;
 expression : call | STRING | array;
 call: functionName ( '(' argList? ')' )? ;

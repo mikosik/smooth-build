@@ -12,7 +12,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class StringLiteralTest extends AcceptanceTestCase {
   @Test
   public void string_literal() throws IOException {
-    givenScript("result : 'abc';");
+    givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -20,14 +20,14 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void missing_closing_quote() throws Exception {
-    givenScript("result : 'abc;");
+    givenScript("result = 'abc;");
     whenSmoothBuild("result");
     thenFinishedWithError();
   }
 
   @Test
   public void empty_string() throws IOException {
-    givenScript("result : '';");
+    givenScript("result = '';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
@@ -35,7 +35,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_letters() throws IOException {
-    givenScript("result : 'abcdefghijklmnopqrstuvwxyz';");
+    givenScript("result = 'abcdefghijklmnopqrstuvwxyz';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abcdefghijklmnopqrstuvwxyz"));
@@ -43,7 +43,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_capital_letters() throws IOException {
-    givenScript("result : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';");
+    givenScript("result = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
@@ -51,7 +51,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_digits() throws IOException {
-    givenScript("result : '0123456789';");
+    givenScript("result = '0123456789';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("0123456789"));
@@ -59,7 +59,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_smooth_lang_comment_character() throws IOException {
-    givenScript("result : '#';");
+    givenScript("result = '#';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("#"));
@@ -67,7 +67,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_single_quotes() throws IOException {
-    givenRawScript("result : \"'\";");
+    givenRawScript("result = \"'\";");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("'"));
@@ -75,7 +75,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_backslash() throws IOException {
-    givenScript("result : '\\\\';");
+    givenScript("result = '\\\\';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\\"));
@@ -83,7 +83,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_tab() throws IOException {
-    givenScript("result : '\\t';");
+    givenScript("result = '\\t';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\t"));
@@ -91,7 +91,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_backspace() throws IOException {
-    givenScript("result : '\\b';");
+    givenScript("result = '\\b';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\b"));
@@ -99,7 +99,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_new_line() throws IOException {
-    givenScript("result : '\\n';");
+    givenScript("result = '\\n';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\n"));
@@ -107,7 +107,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_carriage_return() throws IOException {
-    givenScript("result : '\\r';");
+    givenScript("result = '\\r';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\r"));
@@ -115,7 +115,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_form_feed() throws IOException {
-    givenScript("result : '\\r';");
+    givenScript("result = '\\r';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\r"));
@@ -123,7 +123,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_escaped_double_quotes() throws IOException {
-    givenScript("result : '\\\"';");
+    givenScript("result = '\\\"';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("\""));
@@ -131,7 +131,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void with_illegal_escape_sequence() throws IOException {
-    givenScript("result : '\\A';");
+    givenScript("result = '\\A';");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenEqual(output(), "build.smooth:1: error: "

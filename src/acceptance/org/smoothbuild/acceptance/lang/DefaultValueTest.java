@@ -12,7 +12,7 @@ import org.smoothbuild.io.fs.base.Path;
 public class DefaultValueTest extends AcceptanceTestCase {
   @Test
   public void default_value_for_string_is_empty_string() throws Exception {
-    givenScript("result: stringIdentity();");
+    givenScript("result = stringIdentity();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
@@ -20,7 +20,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_blob_is_empty_stream() throws Exception {
-    givenScript("result: blobIdentity();");
+    givenScript("result = blobIdentity();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
@@ -28,7 +28,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_file_has_root_path() throws Exception {
-    givenScript("result: fileIdentity() | path;");
+    givenScript("result = fileIdentity() | path;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(Path.root().value()));
@@ -36,7 +36,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_file_has_empty_content() throws Exception {
-    givenScript("result: fileIdentity() | content;");
+    givenScript("result = fileIdentity() | content;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
@@ -44,7 +44,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_string_array_is_empty_array() throws Exception {
-    givenScript("result: stringArrayIdentity();");
+    givenScript("result = stringArrayIdentity();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
@@ -52,7 +52,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_nothing_array_is_empty_array() throws Exception {
-    givenScript("result: nothingArrayIdentity();");
+    givenScript("result = nothingArrayIdentity();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
@@ -60,7 +60,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_nothing_doesnt_exist() throws Exception {
-    givenScript("result: nothingIdentity();");
+    givenScript("result = nothingIdentity();");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("build.smooth:1: error: Parameter 'nothing' has to be "
