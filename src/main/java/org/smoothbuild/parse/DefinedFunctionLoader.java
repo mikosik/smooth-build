@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
@@ -15,6 +16,7 @@ import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.sane;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -35,11 +37,16 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayContext;
+import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
+import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
+import org.smoothbuild.antlr.SmoothParser.ParamContext;
+import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -82,8 +89,74 @@ public class DefinedFunctionLoader {
     }
 
     public Maybe<DefinedFunction> loadFunction(FunctionContext functionContext) {
+      Maybe<List<Parameter>> parameters = parseParameters(functionContext.paramList());
       Maybe<Expression> expression = parsePipe(functionContext.pipe());
-      return invokeWrap(expression, e -> createFunction(functionContext, e));
+      return invokeWrap(parameters, expression, (p, e) -> createFunction(functionContext, e));
+    }
+
+    private Maybe<List<Parameter>> parseParameters(ParamListContext context) {
+      List<Maybe<Parameter>> parameters = new ArrayList<>();
+      List<ParamContext> contexts = context == null ? asList() : sane(context.param());
+      for (int i = 0; i < contexts.size(); i++) {
+        parameters.add(parseParameter(i, contexts.get(i)));
+      }
+      Maybe<List<Parameter>> result = pullUp(parameters);
+      if (result.hasValue()) {
+        return result.addErrors(duplicateParameterNameErrors(result.value(), contexts));
+      } else {
+        return result;
+      }
+    }
+
+    public ArrayList<ParseError> duplicateParameterNameErrors(List<Parameter> parameters,
+        List<ParamContext> contexts) {
+      ArrayList<ParseError> result = new ArrayList<>();
+      Set<String> names = new HashSet<>();
+      for (int i = 0; i < parameters.size(); i++) {
+        String name = parameters.get(i).name();
+        if (names.contains(name)) {
+          result.add(new ParseError(
+              locationOf(contexts.get(i)), "Duplicate parameter '" + name + "'."));
+        }
+        names.add(name);
+      }
+      return result;
+    }
+
+    private Maybe<Parameter> parseParameter(int i, ParamContext context) {
+      String name = context.name().getText();
+      Maybe<Type> type = parseType(context.type());
+      return invokeWrap(type, t -> parameter(t, name));
+    }
+
+    private Maybe<Type> parseType(TypeContext context) {
+      if (context.basicType() != null) {
+        return parseBasicType(context.basicType());
+      }
+      if (context.arrayType() != null) {
+        return parseArrayType(context.arrayType());
+      }
+      throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
+          + " without children.");
+    }
+
+    private Maybe<Type> parseBasicType(BasicTypeContext context) {
+      Type type = Types.basicTypeFromString(context.getText());
+      if (type == null) {
+        return error(
+            new ParseError(locationOf(context), "Unknown type '" + context.getText() + "'."));
+      }
+      return value(type);
+    }
+
+    private Maybe<Type> parseArrayType(ArrayTypeContext context) {
+      Maybe<Type> elementType = parseType(context.type());
+      return invoke(elementType, et -> {
+        if (et instanceof ArrayType) {
+          return error(new ParseError(locationOf(context), "Nested array type is forbidden."));
+        }
+        return value(Types.arrayTypeContaining(et));
+      });
     }
 
     private static DefinedFunction createFunction(FunctionContext functionContext,
