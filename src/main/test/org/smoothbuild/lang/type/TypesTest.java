@@ -26,7 +26,6 @@ import org.junit.Test;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
-
   @Test
   public void basic_types() {
     when(basicTypes());
@@ -85,5 +84,59 @@ public class TypesTest {
     assertEquals(BLOB_ARRAY, arrayTypeContaining(BLOB));
     assertEquals(FILE_ARRAY, arrayTypeContaining(FILE));
     assertEquals(NIL, arrayTypeContaining(NOTHING));
+  }
+
+  @Test
+  public void string_from_string() throws Exception {
+    when(Types.fromString("String"));
+    thenReturned(STRING);
+  }
+
+  @Test
+  public void blob_from_string() throws Exception {
+    when(Types.fromString("Blob"));
+    thenReturned(BLOB);
+  }
+
+  @Test
+  public void file_from_string() throws Exception {
+    when(Types.fromString("File"));
+    thenReturned(FILE);
+  }
+
+  @Test
+  public void nothing_from_string() throws Exception {
+    when(Types.fromString("Nothing"));
+    thenReturned(NOTHING);
+  }
+
+  @Test
+  public void string_array_from_string() throws Exception {
+    when(Types.fromString("[String]"));
+    thenReturned(STRING_ARRAY);
+  }
+
+  @Test
+  public void blob_array_from_string() throws Exception {
+    when(Types.fromString("[Blob]"));
+    thenReturned(BLOB_ARRAY);
+  }
+
+  @Test
+  public void file_array_from_string() throws Exception {
+    when(Types.fromString("[File]"));
+    thenReturned(FILE_ARRAY);
+  }
+
+  @Test
+  public void nil_from_string() throws Exception {
+    when(Types.fromString("[Nothing]"));
+    thenReturned(NIL);
+  }
+
+  @Test
+  public void unknown_type_from_string() throws Exception {
+    when(Types.fromString("notAType"));
+    thenReturned(null);
   }
 }

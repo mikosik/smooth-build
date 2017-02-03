@@ -2,7 +2,7 @@
 
 Jars an array of files.
 
- * File[] __files__ - files to be compressed (jared).
+ * [File] __files__ - files to be compressed (jared).
  * Blob __manifest__ - Content of manifest file.
 
 Returns __Blob__ containing compressed files.

@@ -105,4 +105,21 @@ public class Types {
     }
     return builder.build();
   }
+
+  public static Type fromString(String string) {
+    for (Type type : BASIC_TYPES) {
+      if (type.name().equals(string)) {
+        return type;
+      }
+    }
+    if (string.startsWith("[") && string.endsWith("]")) {
+      String elementTypeString = string.substring(1, string.length() - 1);
+      for (Type type : BASIC_TYPES) {
+        if (type.name().equals(elementTypeString)) {
+          return arrayTypeContaining(type);
+        }
+      }
+    }
+    return null;
+  }
 }

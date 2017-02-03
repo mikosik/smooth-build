@@ -2,12 +2,12 @@
 
 Concatenates two Blob[].
 
- * Blob[] __blobs__ - Array of blobs to be concatenated with array passed
+ * [Blob] __blobs__ - Array of blobs to be concatenated with array passed
 via "with" parameter.
- * Blob[] __with__ - Array of blobs to be concatenated with array passed
+ * [Blob] __with__ - Array of blobs to be concatenated with array passed
 via "blobs" parameter.
 
-Returns __Blob[]__ containing all Blob from first and second argument.
+Returns __[Blob]__ containing all Blob from first and second argument.
 
 ### examples
 

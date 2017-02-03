@@ -2,7 +2,7 @@
 
 Filters files according to given glob pattern.
 
- * File[] __files__ - Array of files to be filtered.
+ * [File] __files__ - Array of files to be filtered.
  * String __include__ - glob pattern specyfing which files should be filtered
 (included in result). Following wildcards are allowed:
    * `**` matches any number (possibly zero) of directories.

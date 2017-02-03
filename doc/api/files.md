@@ -7,7 +7,7 @@ Path should start with `//` which denotes root of project.
 Referencing directory outside project is not allowed.
 Slash `/` should be used as separator no matter what your operating system is.
 
-Returns __File[]__ with all files recursively from directory specified
+Returns __[File]__ with all files recursively from directory specified
 via 'path' parameter.
 
 ### examples
