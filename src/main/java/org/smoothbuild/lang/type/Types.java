@@ -33,12 +33,11 @@ public class Types {
    * NOTHING is not a basic type as it is not possible to create instance of
    * that type.
    */
-  private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE);
+  private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+      NOTHING);
   public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
       BLOB_ARRAY, FILE_ARRAY, NIL);
 
-  private static final ImmutableSet<Type> ARRAY_ELEMENT_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      NOTHING);
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
@@ -46,8 +45,7 @@ public class Types {
    * Some of the set above converted to java types.
    */
 
-  private static final ImmutableSet<TypeLiteral<?>> ARRAY_ELEMENT_JTYPES =
-      toJTypes(ARRAY_ELEMENT_TYPES);
+  private static final ImmutableSet<TypeLiteral<?>> BASIC_JTYPES = toJTypes(BASIC_TYPES);
 
   /*
    * A few handy mappings.
@@ -72,7 +70,7 @@ public class Types {
   }
 
   public static ImmutableSet<TypeLiteral<?>> arrayElementJTypes() {
-    return ARRAY_ELEMENT_JTYPES;
+    return BASIC_JTYPES;
   }
 
   public static Type jTypeToType(TypeLiteral<?> jType) {
