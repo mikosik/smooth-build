@@ -33,9 +33,9 @@
     <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar"/>
     <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE"/>
     <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar"/>
-    <property name="lib.guava" value="${dir.lib}/guava-17.0.jar"/>
+    <property name="lib.guava" value="${dir.lib}/guava-21.0.jar"/>
     <property name="lib.guava.license" value="${dir.lib}/guava.LICENSE"/>
-    <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-17.0.jar"/>
+    <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-21.0.jar"/>
     <property name="lib.guice" value="${dir.lib}/guice-3.0.jar"/>
     <property name="lib.guice.license" value="${dir.lib}/guice.LICENSE"/>
     <property name="lib.hamcrest" value="${dir.lib}/hamcrest-core-1.3.jar"/>
