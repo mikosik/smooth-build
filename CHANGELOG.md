@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * established array type as basic type inside brackets '[]'
  * changed ':' to '=' in function declaration
 
 Version 0.12.0 (2016.12.14)

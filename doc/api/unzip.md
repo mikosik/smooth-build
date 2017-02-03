@@ -4,7 +4,7 @@ Unzips files from given zip file.
 
  * Blob __blob__ - Zip to be uncompressed.
 
-Returns __File[]__ - arrays of File uncompressed from given zip.
+Returns __[File]__ - arrays of File uncompressed from given zip.
 
 ### examples
 Uncompresses all files from "zips/myZip.zip" file.

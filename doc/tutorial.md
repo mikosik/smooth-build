@@ -45,14 +45,14 @@ passed as argument to it) is of one of following types:
  * **String** - Sequence of characters
  * **Blob** - Sequence of bytes
  * **File** - Single file - compound object that has a content (Blob) and path associated with it (String).
- * Array ( **String[]**, **Blob[]**, **File[]** )
+ * Array ( **[String]**, **[Blob]**, **[File]** )
 
 Smooth language is strongly typed and statically checked.
 Value can be assigned to given function parameter if value's type
 is assignable to that parameter's type.
 Each type is assignable to itself.
 File can be assigned to Blob.
-File[] can be assigned to Blob[].
+[File] can be assigned to [Blob].
 
 
 ### Functions
@@ -86,7 +86,7 @@ when declaring function in smooth language.
 As you noticed Smooth contains String literals which are specified
 by enclosing its charcters inside double quotes as in most languages.
 Another literal that you find useful is an array literal that lets you
-create vaue of `String[]`, `Blob[]` and `File[]` types.
+create vaue of `[String]`, `[Blob]` and `[File]` types.
 Array literal is comma separated list of expressions enclosed inside brackets `[]`.
 
 ```

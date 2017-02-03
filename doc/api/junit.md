@@ -2,7 +2,7 @@
 
 Executes junit tests and fails if any of the test fail.
 
- * Blob[] __libs__ - Array of jar files containing test classes and all
+ * [Blob] __libs__ - Array of jar files containing test classes and all
 library classes needed for test to run.
 All classes which names end with Test will be run.
  * String __include__ - Pattern matching java class files from which

@@ -3,9 +3,9 @@ Core smooth functions
 
  * [aidl](api/aidl.md) Runs android aidl tool to generate java
 class source code from android aidl file.
- * [concatenateBlobArrays](api/concatenateBlobArrays.md) Concatenates two Blob[].
- * [concatenateFileArrays](api/concatenateFileArrays.md) Concatenates two File[].
- * [concatenateStringArrays](api/concatenateStringArrays.md) Concatenates two String[].
+ * [concatenateBlobArrays](api/concatenateBlobArrays.md) Concatenates two [Blob].
+ * [concatenateFileArrays](api/concatenateFileArrays.md) Concatenates two [File].
+ * [concatenateStringArrays](api/concatenateStringArrays.md) Concatenates two [String].
  * [content](api/content.md) Returns File's content.
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.

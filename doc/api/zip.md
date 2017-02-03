@@ -2,7 +2,7 @@
 
 Zips an array of files.
 
- * File[] __files__ - files to be compressed (zipped).
+ * [File] __files__ - files to be compressed (zipped).
 
 Returns __Blob__ containing compressed files.
 
