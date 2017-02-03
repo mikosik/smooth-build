@@ -24,148 +24,112 @@ import com.google.common.io.CharStreams;
 
 public class TestingFunctions {
 
-  public static class StringIdentity {
-    @SmoothFunction
-    public static SString stringIdentity(Container container, SString string) {
-      return string;
-    }
+  @SmoothFunction
+  public static SString stringIdentity(Container container, SString string) {
+    return string;
   }
 
-  public static class TwoStrings {
-    @SmoothFunction
-    public static SString twoStrings(Container container, SString stringA, SString stringB) {
-      return container.create().string(stringA.value() + ":" + stringB.value());
-    }
+  @SmoothFunction
+  public static SString twoStrings(Container container, SString stringA, SString stringB) {
+    return container.create().string(stringA.value() + ":" + stringB.value());
   }
 
-  public static class BlobIdentity {
-    @SmoothFunction
-    public static Blob blobIdentity(Container container, Blob blob) {
-      return blob;
-    }
+  @SmoothFunction
+  public static Blob blobIdentity(Container container, Blob blob) {
+    return blob;
   }
 
-  public static class TwoBlobs {
-    @SmoothFunction
-    public static Blob twoBlobs(Container container, Blob blob1, Blob blob2) {
-      return blob1;
-    }
+  @SmoothFunction
+  public static Blob twoBlobs(Container container, Blob blob1, Blob blob2) {
+    return blob1;
   }
 
-  public static class FileIdentity {
-    @SmoothFunction
-    public static SFile fileIdentity(Container container, SFile file) {
-      return file;
-    }
+  @SmoothFunction
+  public static SFile fileIdentity(Container container, SFile file) {
+    return file;
   }
 
-  public static class StringArrayIdentity {
-    @SmoothFunction
-    public static Array<SString> stringArrayIdentity(Container container,
-        Array<SString> stringArray) {
-      return stringArray;
-    }
+  @SmoothFunction
+  public static Array<SString> stringArrayIdentity(Container container,
+      Array<SString> stringArray) {
+    return stringArray;
   }
 
-  public static class NothingIdentity {
-    @SmoothFunction
-    public static Nothing nothingIdentity(Container container, Nothing nothing) {
-      return nothing;
-    }
+  @SmoothFunction
+  public static Nothing nothingIdentity(Container container, Nothing nothing) {
+    return nothing;
   }
 
-  public static class NothingArrayIdentity {
-    @SmoothFunction
-    public static Array<Nothing> nothingArrayIdentity(Container container,
-        Array<Nothing> nothingArray) {
-      return nothingArray;
-    }
+  @SmoothFunction
+  public static Array<Nothing> nothingArrayIdentity(Container container,
+      Array<Nothing> nothingArray) {
+    return nothingArray;
   }
 
-  public static class FileAndBlob {
-    @SmoothFunction
-    public static SString fileAndBlob(Container container, SFile file, Blob blob)
-        throws IOException {
-      InputStream fileStream = file.content().openInputStream();
-      InputStream blobStream = blob.openInputStream();
-      String fileString = CharStreams.toString(new InputStreamReader(fileStream));
-      String blobString = CharStreams.toString(new InputStreamReader(blobStream));
+  @SmoothFunction
+  public static SString fileAndBlob(Container container, SFile file, Blob blob)
+      throws IOException {
+    InputStream fileStream = file.content().openInputStream();
+    InputStream blobStream = blob.openInputStream();
+    String fileString = CharStreams.toString(new InputStreamReader(fileStream));
+    String blobString = CharStreams.toString(new InputStreamReader(blobStream));
 
-      return container.create().string(fileString + ":" + blobString);
-    }
+    return container.create().string(fileString + ":" + blobString);
   }
 
-  public static class OneRequired {
-    @SmoothFunction
-    public static SString oneRequired(Container container, @Required SString string) {
-      return string;
-    }
+  @SmoothFunction
+  public static SString oneRequired(Container container, @Required SString string) {
+    return string;
   }
 
-  public static class TwoRequired {
-    @SmoothFunction
-    public static SString twoRequired(Container container, @Required SString stringA,
-        @Required SString stringB) {
-      return container.create().string(stringA.value() + ":" + stringB.value());
-    }
+  @SmoothFunction
+  public static SString twoRequired(Container container, @Required SString stringA,
+      @Required SString stringB) {
+    return container.create().string(stringA.value() + ":" + stringB.value());
   }
 
-  public static class OneOptionalOneRequired {
-    @SmoothFunction
-    public static SString oneOptionalOneRequired(Container container, SString stringA,
-        @Required SString stringB) {
-      return container.create().string(stringA.value() + ":" + stringB.value());
-    }
+  @SmoothFunction
+  public static SString oneOptionalOneRequired(Container container, SString stringA,
+      @Required SString stringB) {
+    return container.create().string(stringA.value() + ":" + stringB.value());
   }
 
-  public static class CacheableRandom {
-    @SmoothFunction
-    public static SString cacheableRandom(Container container) {
-      long randomLong = new Random().nextLong();
-      return container.create().string(Long.toString(randomLong));
-    }
+  @SmoothFunction
+  public static SString cacheableRandom(Container container) {
+    long randomLong = new Random().nextLong();
+    return container.create().string(Long.toString(randomLong));
   }
 
-  public static class NotCacheableRandom {
-    @SmoothFunction
-    @NotCacheable
-    public static SString notCacheableRandom(Container container) {
-      long randomLong = new Random().nextLong();
-      return container.create().string(Long.toString(randomLong));
-    }
+  @SmoothFunction
+  @NotCacheable
+  public static SString notCacheableRandom(Container container) {
+    long randomLong = new Random().nextLong();
+    return container.create().string(Long.toString(randomLong));
   }
 
-  public static class TempFilePath {
-    @SmoothFunction
-    public static SString tempFilePath(Container container) {
-      TempDir tempDir = container.createTempDir();
-      String osPath = tempDir.asOsPath(path("file.txt"));
-      new File(osPath).mkdirs();
-      return container.create().string(osPath);
-    }
+  @SmoothFunction
+  public static SString tempFilePath(Container container) {
+    TempDir tempDir = container.createTempDir();
+    String osPath = tempDir.asOsPath(path("file.txt"));
+    new File(osPath).mkdirs();
+    return container.create().string(osPath);
   }
 
-  public static class AmbiguousArguments {
-    @SmoothFunction
-    public static SString ambiguousArguments(Container container, SString param1,
-        Array<SString> param2, SFile param3, Array<SFile> param4, Array<Blob> param5) {
-      return container.create().string("");
-    }
+  @SmoothFunction
+  public static SString ambiguousArguments(Container container, SString param1,
+      Array<SString> param2, SFile param3, Array<SFile> param4, Array<Blob> param5) {
+    return container.create().string("");
   }
 
-  public static class ThrowFileSystemException {
-    @SmoothFunction
-    public static SString throwFileSystemException(Container container, SString string) {
-      long randomLong = new Random().nextLong();
-      throw new FileSystemException(string.toString() + randomLong + " ");
-    }
+  @SmoothFunction
+  public static SString throwFileSystemException(Container container, SString string) {
+    long randomLong = new Random().nextLong();
+    throw new FileSystemException(string.toString() + randomLong + " ");
   }
 
-  public static class ThrowRuntimeException {
-    @SmoothFunction
-    public static SString throwRuntimeException(Container container, SString string) {
-      long randomLong = new Random().nextLong();
-      throw new RuntimeException(string.toString() + randomLong + " ");
-    }
+  @SmoothFunction
+  public static SString throwRuntimeException(Container container, SString string) {
+    long randomLong = new Random().nextLong();
+    throw new RuntimeException(string.toString() + randomLong + " ");
   }
 }
