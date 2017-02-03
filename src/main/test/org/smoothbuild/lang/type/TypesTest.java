@@ -30,7 +30,7 @@ public class TypesTest {
   @Test
   public void basic_types() {
     when(basicTypes());
-    thenReturned(containsInAnyOrder(STRING, BLOB, FILE));
+    thenReturned(containsInAnyOrder(STRING, BLOB, FILE, NOTHING));
   }
 
   @Test
