@@ -37,8 +37,12 @@ public class Console {
   }
 
   public void error(CodeLocation location, String message) {
-    println("build.smooth:" + location.line() + ": error: " + message);
+    println(errorLine(location, message));
     errorCount++;
+  }
+
+  public static String errorLine(CodeLocation location, String message) {
+    return "build.smooth:" + location.line() + ": error: " + message;
   }
 
   public void error(String message) {
