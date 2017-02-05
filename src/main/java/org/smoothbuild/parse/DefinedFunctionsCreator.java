@@ -3,9 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.def.Argument.namedArgument;
-import static org.smoothbuild.lang.function.def.Argument.namelessArgument;
-import static org.smoothbuild.lang.function.def.Argument.pipedArgument;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
@@ -13,6 +10,9 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.arg.Argument.namedArgument;
+import static org.smoothbuild.parse.arg.Argument.namelessArgument;
+import static org.smoothbuild.parse.arg.Argument.pipedArgument;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
@@ -41,14 +41,14 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.Argument;
-import org.smoothbuild.lang.function.def.ArgumentExpressionCreator;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.parse.arg.Argument;
+import org.smoothbuild.parse.arg.ArgumentExpressionCreator;
 import org.smoothbuild.util.UnescapingFailedException;
 
 public class DefinedFunctionsCreator {

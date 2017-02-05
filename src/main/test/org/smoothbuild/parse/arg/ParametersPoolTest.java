@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.parse.arg;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.function.base.Parameter.optionalParameter;

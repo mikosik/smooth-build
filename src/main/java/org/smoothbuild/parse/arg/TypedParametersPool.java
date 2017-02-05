@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.parse.arg;
 
 import java.util.Set;
 
