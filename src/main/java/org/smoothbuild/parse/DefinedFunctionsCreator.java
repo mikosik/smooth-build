@@ -78,22 +78,21 @@ public class DefinedFunctionsCreator {
 
   public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
       List<Name> sorted) {
-    new Worker(console, functions, implicitConverter)
-        .functionList(functionContexts, sorted);
+    new Worker(functions, implicitConverter)
+        .functionList(console, functionContexts, sorted);
   }
 
   private static class Worker {
-    private final Console console;
     private final Functions functions;
     private final ImplicitConverter implicitConverter;
 
-    public Worker(Console console, Functions functions, ImplicitConverter implicitConverter) {
-      this.console = console;
+    public Worker(Functions functions, ImplicitConverter implicitConverter) {
       this.functions = functions;
       this.implicitConverter = implicitConverter;
     }
 
-    public void functionList(Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    public void functionList(Console console, Map<Name, FunctionContext> functionContexts,
+        List<Name> sorted) {
       for (Name name : sorted) {
         Parsed<DefinedFunction> function = parseFunction(functionContexts.get(name));
         if (function.hasResult()) {
@@ -129,7 +128,11 @@ public class DefinedFunctionsCreator {
         });
         Parsed<List<Argument>> arguments = parseArgumentList(call.argList());
         arguments = invoke(arguments, pipedArgument, Lists::concat);
-        result = parseCall(call, arguments);
+        if (arguments.hasResult()) {
+          result = parseCall(call, arguments.result());
+        } else {
+          Parsed.errors(arguments.errors());
+        }
       }
       return result;
     }
@@ -162,18 +165,21 @@ public class DefinedFunctionsCreator {
       Parsed<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(array);
       Parsed<Type> elemType = commonSuperType(expressions, location);
-      return invoke(elemType, expressions, (elemType_, expressions_) -> {
-        ArrayType arrayType = Types.arrayTypeContaining(elemType_);
-        if (arrayType == null) {
-          console.error(location, "Array cannot contain element with type " + elemType.result()
-              + ". Only following types are allowed: " + Types.basicTypes() + ".");
-          throw new ParsingException();
-        }
-        List<Expression> converted = expressions_.stream()
-            .map((expression) -> implicitConverter.apply(elemType_, expression))
-            .collect(toList());
-        return new ArrayExpression(arrayType, converted, location);
-      });
+      if (!(expressions.hasResult() && elemType.hasResult())) {
+        return Parsed.<Expression> errors(expressions.errors()).addErrors(elemType.errors());
+      }
+      List<Expression> pureExpressions = expressions.result();
+      Type pureType = elemType.result();
+      ArrayType arrayType = Types.arrayTypeContaining(pureType);
+      if (arrayType == null) {
+        return Parsed.error(location, "Array cannot contain element with type " + elemType.result()
+            + ". Only following types are allowed: " + Types.basicTypes() + ".");
+      }
+
+      List<Expression> converted = pureExpressions.stream()
+          .map((e) -> implicitConverter.apply(pureType, e))
+          .collect(toList());
+      return parsed(new ArrayExpression(arrayType, converted, location));
     }
 
     private Parsed<Type> commonSuperType(Parsed<List<Expression>> expressions,
@@ -228,17 +234,20 @@ public class DefinedFunctionsCreator {
     }
 
     private Parsed<Expression> parseCall(CallContext callContext) {
-      return parseCall(callContext, parseArgumentList(callContext.argList()));
+      Parsed<List<Argument>> argumentList = parseArgumentList(callContext.argList());
+      if (argumentList.hasResult()) {
+        return parseCall(callContext, argumentList.result());
+      } else {
+        return Parsed.errors(argumentList.errors());
+      }
     }
 
-    private Parsed<Expression> parseCall(CallContext callContext,
-        Parsed<List<Argument>> arguments) {
+    private Parsed<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
       Function function = functions.get(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
-      Parsed<List<Expression>> argumentExpressions =
-          invoke(arguments, arguments_ -> createArgExprs(codeLocation, console, function,
-              arguments_));
+      Parsed<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
+          arguments);
       if (argumentExpressions.hasResult()) {
         return parsed(function.createCallExpression(argumentExpressions.result(), false,
             codeLocation));
@@ -253,7 +262,8 @@ public class DefinedFunctionsCreator {
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
-          result = invoke(result, parseArgument(i, argContexts.get(i)), Lists::concat);
+          Parsed<Argument> argument = parseArgument(i, argContexts.get(i));
+          result = invoke(result, argument, Lists::concat);
         }
       }
       return result;
@@ -284,46 +294,42 @@ public class DefinedFunctionsCreator {
       }
     }
 
-    public List<Expression> createArgExprs(CodeLocation codeLocation,
-        Console console, Function function, Collection<Argument> arguments) {
+    public Parsed<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
+        List<Argument> arguments) {
       ParametersPool parametersPool = new ParametersPool(function.parameters());
-      ImmutableList<Argument> namedArguments = Argument.filterNamed(arguments);
+      List<Argument> namedArguments = Argument.filterNamed(arguments);
 
-      detectDuplicatedAndUnknownArgumentNames(function, console, namedArguments);
-      if (console.isErrorReported()) {
-        return null;
+      List<ParseError> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
+      if (!errors.isEmpty()) {
+        return Parsed.errors(errors);
       }
 
       Map<Parameter, Argument> argumentMap = new HashMap<>();
-      processNamedArguments(parametersPool, console, argumentMap, namedArguments);
-      if (console.isErrorReported()) {
-        return null;
+      errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
+      if (!errors.isEmpty()) {
+        return Parsed.errors(errors);
       }
 
-      processNamelessArguments(function, arguments, parametersPool, console, argumentMap,
+      errors = processNamelessArguments(function, arguments, parametersPool, argumentMap,
           codeLocation);
-      if (console.isErrorReported()) {
-        return null;
+      if (!errors.isEmpty()) {
+        return Parsed.errors(errors);
       }
       Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
       if (missingRequiredParameters.size() != 0) {
-        console.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
+        return Parsed.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
             missingRequiredParameters));
-        return null;
       }
 
       Map<String, Expression> argumentExpressions = convert(argumentMap);
       for (Parameter parameter : parametersPool.allOptional()) {
         if (parameter.type() == Types.NOTHING) {
-          console.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
+          return Parsed.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
               + "assigned explicitly as type 'Nothing' doesn't have default value.");
         } else {
           Expression expression = new DefaultValueExpression(parameter.type(), codeLocation);
           argumentExpressions.put(parameter.name(), expression);
         }
-      }
-      if (console.isErrorReported()) {
-        return null;
       }
 
       return sortAccordingToParametersOrder(argumentExpressions, function);
@@ -338,17 +344,18 @@ public class DefinedFunctionsCreator {
           + argumentMap.toString();
     }
 
-    private List<Expression> sortAccordingToParametersOrder(
+    private Parsed<List<Expression>> sortAccordingToParametersOrder(
         Map<String, Expression> argumentExpressions, Function function) {
       ImmutableList.Builder<Expression> builder = ImmutableList.builder();
       for (Parameter parameter : function.parameters()) {
         builder.add(argumentExpressions.get(parameter.name()));
       }
-      return builder.build();
+      return Parsed.parsed(builder.build());
     }
 
-    private static void detectDuplicatedAndUnknownArgumentNames(Function function,
-        Console console, Collection<Argument> namedArguments) {
+    private static List<ParseError> duplicatedAndUnknownArgumentNames(Function function,
+        Collection<Argument> namedArguments) {
+      ArrayList<ParseError> errors = new ArrayList<>();
       Set<String> unusedNames = new HashSet<>(parametersToNames(function.parameters()));
       Set<String> usedNames = new HashSet<>();
       for (Argument argument : namedArguments) {
@@ -358,39 +365,41 @@ public class DefinedFunctionsCreator {
             unusedNames.remove(name);
             usedNames.add(name);
           } else if (usedNames.contains(name)) {
-            console.error(argument.codeLocation(), "Argument '" + argument.name()
-                + "' assigned twice.");
+            errors.add(new ParseError(argument.codeLocation(), "Argument '" + argument.name()
+                + "' assigned twice."));
           } else {
-            console.error(argument.codeLocation(), "Function " + function.name()
-                + " has no parameter '" + argument.name() + "'.");
+            errors.add(new ParseError(argument.codeLocation(), "Function " + function.name()
+                + " has no parameter '" + argument.name() + "'."));
           }
         }
       }
+      return errors;
     }
 
-    private static void processNamedArguments(ParametersPool parametersPool, Console console,
+    private static List<ParseError> processNamedArguments(ParametersPool parametersPool,
         Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
+      ArrayList<ParseError> errors = new ArrayList<>();
       for (Argument argument : namedArguments) {
         if (argument.hasName()) {
           String name = argument.name();
           Parameter parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (!canConvert(argument.type(), paramType)) {
-            console.error(argument.codeLocation(), "Type mismatch, cannot convert argument '"
-                + argument.name() + "' of type '" + argument.type().name() + "' to '" + paramType
-                    .name() + "'.");
+            errors.add(new ParseError(argument.codeLocation(),
+                "Type mismatch, cannot convert argument '" + argument.name() + "' of type '"
+                    + argument.type().name() + "' to '" + paramType.name() + "'."));
           } else {
             argumentMap.put(parameter, argument);
           }
         }
       }
+      return errors;
     }
 
-    private static void processNamelessArguments(Function function, Collection<Argument> arguments,
-        ParametersPool parametersPool, Console console, Map<Parameter, Argument> argumentMap,
-        CodeLocation codeLocation) {
+    private static List<ParseError> processNamelessArguments(Function function,
+        Collection<Argument> arguments, ParametersPool parametersPool,
+        Map<Parameter, Argument> argumentMap, CodeLocation codeLocation) {
       ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
-
       for (Type type : allTypes()) {
         Collection<Argument> availableArguments = namelessArgs.get(type);
         int argsSize = availableArguments.size();
@@ -403,12 +412,13 @@ public class DefinedFunctionsCreator {
             argumentMap.put(candidateParameter, onlyArgument);
             parametersPool.take(candidateParameter);
           } else {
-            console.error(codeLocation, ambiguousAssignmentErrorMessage(function, argumentMap,
-                availableArguments, availableTypedParams));
-            return;
+            String message = ambiguousAssignmentErrorMessage(function, argumentMap,
+                availableArguments, availableTypedParams);
+            return asList(new ParseError(codeLocation, message));
           }
         }
       }
+      return new ArrayList<>();
     }
 
     private static String ambiguousAssignmentErrorMessage(Function function,
