@@ -77,6 +77,33 @@ public class ParsedTest {
   }
 
   @Test
+  public void with_errors_contains_error() throws Exception {
+    given(parsed = Parsed.errors(asList(error, error2)));
+    when(() -> parsed.errors());
+    thenReturned(asList(error, error2));
+  }
+
+  @Test
+  public void with_errors_fails_for_null() throws Exception {
+    when(() -> Parsed.errors(null));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void with_errors_has_no_result() throws Exception {
+    given(parsed = Parsed.errors(asList(error, error2)));
+    when(() -> parsed.hasResult());
+    thenReturned(false);
+  }
+
+  @Test
+  public void with_errors_fails_for_result() throws Exception {
+    given(parsed = Parsed.errors(asList(error, error2)));
+    when(() -> parsed.result());
+    thenThrown(IllegalStateException.class);
+  }
+
+  @Test
   public void result_with_added_error_has_no_result() throws Exception {
     given(parsed = Parsed.parsed("result"));
     given(parsed = parsed.addError(error));
