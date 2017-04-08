@@ -99,8 +99,8 @@ public class DefinedFunctionsCreator {
         if (function.hasResult()) {
           functions.add(function.result());
         }
-        for (String error : function.errors()) {
-          console.rawError(error);
+        for (ParseError error : function.errors()) {
+          console.error(error.codeLocation, error.message);
         }
       }
       if (console.isErrorReported()) {

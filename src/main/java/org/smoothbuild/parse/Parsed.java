@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.cli.Console.errorLine;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -16,34 +15,34 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class Parsed<E> {
   private final E result;
-  private final ImmutableList<String> errors;
+  private final ImmutableList<ParseError> errors;
 
   public static <E> Parsed<E> parsed(E result) {
     return new Parsed<>(requireNonNull(result), ImmutableList.of());
   }
 
   public static <E> Parsed<E> error(CodeLocation location, String message) {
-    return error(errorLine(location, message));
+    return error(new ParseError(location, message));
   }
 
-  public static <E> Parsed<E> error(String error) {
-    return new Parsed<>(null, ImmutableList.of(error));
+  public static <E> Parsed<E> error(ParseError error) {
+    return new Parsed<E>(null, ImmutableList.of(error));
   }
 
-  private Parsed(E result, ImmutableList<String> errors) {
+  private Parsed(E result, ImmutableList<ParseError> errors) {
     this.result = result;
     this.errors = errors;
   }
 
   public Parsed<E> addError(CodeLocation location, String message) {
-    return addError(errorLine(location, message));
+    return addError(new ParseError(location, message));
   }
 
-  public Parsed<E> addError(String error) {
+  public Parsed<E> addError(ParseError error) {
     return new Parsed<>(null, concatErrors(errors, ImmutableList.of(error)));
   }
 
-  public Parsed<E> addErrors(List<String> errors) {
+  public Parsed<E> addErrors(List<ParseError> errors) {
     return new Parsed<>(null, concatErrors(this.errors, errors));
   }
 
@@ -56,7 +55,7 @@ public class Parsed<E> {
     return result;
   }
 
-  public ImmutableList<String> errors() {
+  public ImmutableList<ParseError> errors() {
     return errors;
   }
 
@@ -102,9 +101,9 @@ public class Parsed<E> {
     }
   }
 
-  private static ImmutableList<String> concatErrors(List<String>... lists) {
-    Builder<String> builder = ImmutableList.builder();
-    for (List<String> list : lists) {
+  private static ImmutableList<ParseError> concatErrors(List<ParseError>... lists) {
+    Builder<ParseError> builder = ImmutableList.builder();
+    for (List<ParseError> list : lists) {
       builder.addAll(list);
     }
     return builder.build();
