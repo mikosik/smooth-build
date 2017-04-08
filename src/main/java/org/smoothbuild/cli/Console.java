@@ -50,11 +50,6 @@ public class Console {
     errorCount++;
   }
 
-  public void rawError(String message) {
-    println(message);
-    errorCount++;
-  }
-
   public void print(String header, Iterable<? extends Message> messages) {
     println(GROUP_PREFIX + header);
     print(messages);
