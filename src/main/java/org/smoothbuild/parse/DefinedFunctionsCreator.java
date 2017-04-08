@@ -5,11 +5,11 @@ import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Parsed.invoke;
+import static org.smoothbuild.parse.Parsed.parsed;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
@@ -46,9 +46,9 @@ import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.arg.Argument;
 import org.smoothbuild.parse.arg.ArgumentExpressionCreator;
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.UnescapingFailedException;
 
 public class DefinedFunctionsCreator {
@@ -66,13 +66,8 @@ public class DefinedFunctionsCreator {
 
   public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
       List<Name> sorted) {
-    Worker worker = new Worker(console, functions, argumentExpressionCreator, implicitConverter);
-    for (Name name : sorted) {
-      functions.add(worker.build(functionContexts.get(name)));
-    }
-    if (console.isErrorReported()) {
-      throw new ParsingException();
-    }
+    new Worker(console, functions, argumentExpressionCreator, implicitConverter)
+        .functionList(functionContexts, sorted);
   }
 
   private static class Worker {
@@ -89,101 +84,113 @@ public class DefinedFunctionsCreator {
       this.implicitConverter = implicitConverter;
     }
 
-    public DefinedFunction build(FunctionContext functionContext) {
-      return toFunction(functionContext);
+    public void functionList(Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+      for (Name name : sorted) {
+        Parsed<DefinedFunction> function = parseFunction(functionContexts.get(name));
+        if (function.hasResult()) {
+          functions.add(function.result());
+        }
+        for (String error : function.errors()) {
+          console.rawError(error);
+        }
+      }
+      if (console.isErrorReported()) {
+        throw new ParsingException();
+      }
     }
 
-    private DefinedFunction toFunction(FunctionContext functionContext) {
-      Expression expression = toExpression(functionContext.pipe());
+    private Parsed<DefinedFunction> parseFunction(FunctionContext functionContext) {
+      Parsed<Expression> expression = parsePipe(functionContext.pipe());
       Name name = name(functionContext.functionName().getText());
-      Signature signature = new Signature(expression.type(), name, asList());
-      return new DefinedFunction(signature, expression);
+      return invoke(expression, (expression_) -> {
+        Signature signature = new Signature(expression_.type(), name, asList());
+        return new DefinedFunction(signature, expression_);
+      });
     }
 
-    private Expression toExpression(PipeContext pipeContext) {
-      Expression result = toExpression(pipeContext.expression());
+    private Parsed<Expression> parsePipe(PipeContext pipeContext) {
+      Parsed<Expression> result = parseExpression(pipeContext.expression());
       List<CallContext> calls = pipeContext.call();
       for (int i = 0; i < calls.size(); i++) {
         CallContext call = calls.get(i);
-        List<Argument> arguments = toArguments(call.argList());
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
-        arguments.add(pipedArgument(result, codeLocation));
-        result = toExpression(call, arguments);
+        Parsed<Argument> pipedArgument = invoke(result, result_ -> {
+          return pipedArgument(result_, codeLocation);
+        });
+        Parsed<List<Argument>> arguments = parseArgumentList(call.argList());
+        arguments = invoke(arguments, pipedArgument, Lists::concat);
+        result = parseCall(call, arguments);
       }
       return result;
     }
 
-    private List<Expression> toExpression(List<ExpressionContext> expressionContexts) {
-      return expressionContexts.stream().map(this::toExpression).collect(toList());
+    private Parsed<List<Expression>> parseExpressionList(
+        List<ExpressionContext> expressionContexts) {
+      Parsed<List<Expression>> result = parsed(new ArrayList<>());
+      for (ExpressionContext expressionContext : expressionContexts) {
+        result = invoke(result, parseExpression(expressionContext), Lists::concat);
+      }
+      return result;
     }
 
-    private Expression toExpression(ExpressionContext expressionContext) {
+    private Parsed<Expression> parseExpression(ExpressionContext expressionContext) {
       if (expressionContext.array() != null) {
-        return toExpression(expressionContext.array());
+        return parseArray(expressionContext.array());
       }
       if (expressionContext.call() != null) {
-        return toExpression(expressionContext.call());
+        return parseCall(expressionContext.call());
       }
       if (expressionContext.STRING() != null) {
-        return toStringExpression(expressionContext.STRING());
+        return parseStringLiteral(expressionContext.STRING());
       }
       throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
           + " without children.");
     }
 
-    private Expression toExpression(ArrayContext array) {
+    private Parsed<Expression> parseArray(ArrayContext array) {
       List<ExpressionContext> elems = array.expression();
-      List<Expression> expressions = toExpression(elems);
-
+      Parsed<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(array);
-      Type elemType = commonSuperType(expressions, location);
-
-      if (elemType != null) {
-        return toArrayExpression(elemType, expressions, location);
-      } else {
-        return new InvalidExpression(NIL, location);
-      }
+      Parsed<Type> elemType = commonSuperType(expressions, location);
+      return invoke(elemType, expressions, (elemType_, expressions_) -> {
+        ArrayType arrayType = Types.arrayTypeContaining(elemType_);
+        if (arrayType == null) {
+          console.error(location, "Array cannot contain element with type " + elemType.result()
+              + ". Only following types are allowed: " + Types.basicTypes() + ".");
+          throw new ParsingException();
+        }
+        List<Expression> converted = expressions_.stream()
+            .map((expression) -> implicitConverter.apply(elemType_, expression))
+            .collect(toList());
+        return new ArrayExpression(arrayType, converted, location);
+      });
     }
 
-    private <T extends Value> Expression toArrayExpression(Type elemType,
-        List<Expression> expressions, CodeLocation location) {
-      ArrayType arrayType = Types.arrayTypeContaining(elemType);
-      if (arrayType == null) {
-        console.error(location, "Array cannot contain element with type " + elemType
-            + ". Only following types are allowed: " + basicTypes() + ".");
-        throw new ParsingException();
+    private Parsed<Type> commonSuperType(Parsed<List<Expression>> expressions,
+        CodeLocation location) {
+      if (!expressions.hasResult()) {
+        return invoke(expressions, expressions_ -> null);
       }
-      return new ArrayExpression(arrayType, toConvertedExpressions(elemType, expressions),
-          location);
-    }
-
-    public <T extends Value> List<Expression> toConvertedExpressions(Type type,
-        List<Expression> expressions) {
-      return expressions.stream().map((expression) -> implicitConverter.apply(type, expression))
-          .collect(toList());
-    }
-
-    private Type commonSuperType(List<Expression> expressions, CodeLocation location) {
-      if (expressions.size() == 0) {
-        return NOTHING;
+      List<Expression> list = expressions.result();
+      if (list.isEmpty()) {
+        return parsed(NOTHING);
       }
-      Type firstType = expressions.get(0).type();
+      Type firstType = list.get(0).type();
       Type superType = firstType;
 
-      for (int i = 1; i < expressions.size(); i++) {
-        Type type = expressions.get(i).type();
+      for (int i = 1; i < list.size(); i++) {
+        Type type = list.get(i).type();
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          console.error(location,
+          return Parsed.error(location,
               "Array cannot contain elements of incompatible types.\n"
                   + "First element has type " + firstType + " while element at index " + i
                   + " has type " + type + ".");
-          throw new ParsingException();
         }
       }
-      return superType;
+      return parsed(superType);
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
@@ -211,56 +218,62 @@ public class DefinedFunctionsCreator {
       return null;
     }
 
-    private Expression toExpression(CallContext callContext) {
-      return toExpression(callContext, toArguments(callContext.argList()));
+    private Parsed<Expression> parseCall(CallContext callContext) {
+      return parseCall(callContext, parseArgumentList(callContext.argList()));
     }
 
-    private Expression toExpression(CallContext callContext, List<Argument> arguments) {
+    private Parsed<Expression> parseCall(CallContext callContext,
+        Parsed<List<Argument>> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
       Function function = functions.get(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
-      List<Expression> argumentExpressions = argumentExpressionCreator.createArgExprs(codeLocation,
-          console, function, arguments);
-
-      if (argumentExpressions == null) {
-        return new InvalidExpression(function.type(), codeLocation);
+      Parsed<List<Expression>> argumentExpressions =
+          invoke(arguments, arguments_ -> {
+            return argumentExpressionCreator.createArgExprs(
+                codeLocation, console, function, arguments_);
+          });
+      if (argumentExpressions.hasResult()) {
+        return parsed(function.createCallExpression(argumentExpressions.result(), false,
+            codeLocation));
       } else {
-        return function.createCallExpression(argumentExpressions, false, codeLocation);
+        return parsed((Expression) new InvalidExpression(function.type(), codeLocation))
+            .addErrors(argumentExpressions.errors());
       }
     }
 
-    private List<Argument> toArguments(ArgListContext argListContext) {
-      List<Argument> result = new ArrayList<>();
+    private Parsed<List<Argument>> parseArgumentList(ArgListContext argListContext) {
+      Parsed<List<Argument>> result = parsed(new ArrayList<>());
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
-          result.add(toArgument(i, argContexts.get(i)));
+          result = invoke(result, parseArgument(i, argContexts.get(i)), Lists::concat);
         }
       }
       return result;
     }
 
-    private Argument toArgument(int index, ArgContext arg) {
-      Expression expression = toExpression(arg.expression());
-
-      CodeLocation location = locationOf(arg);
-      ParamNameContext paramName = arg.paramName();
-      if (paramName == null) {
-        return namelessArgument(index + 1, expression, location);
-      } else {
-        return namedArgument(index + 1, paramName.getText(), expression, location);
-      }
+    private Parsed<Argument> parseArgument(int index, ArgContext arg) {
+      Parsed<Expression> expression = parseExpression(arg.expression());
+      return invoke(expression, expression_ -> {
+        CodeLocation location = locationOf(arg);
+        ParamNameContext paramName = arg.paramName();
+        if (paramName == null) {
+          return namelessArgument(index + 1, expression_, location);
+        } else {
+          return namedArgument(index + 1, paramName.getText(), expression_, location);
+        }
+      });
     }
 
-    private Expression toStringExpression(TerminalNode stringToken) {
+    private Parsed<Expression> parseStringLiteral(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       CodeLocation location = locationOf(stringToken.getSymbol());
       try {
-        return new StringLiteralExpression(unescaped(string), location);
+        return parsed(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
-        console.error(location, e.getMessage());
-        return new InvalidExpression(STRING, location);
+        return parsed((Expression) new InvalidExpression(STRING, location))
+            .addError(location, e.getMessage());
       }
     }
   }
