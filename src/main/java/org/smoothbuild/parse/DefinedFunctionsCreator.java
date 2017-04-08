@@ -43,7 +43,6 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.ImplicitConverter;
 import org.smoothbuild.lang.expr.InvalidExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.function.Functions;
@@ -54,8 +53,10 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.arg.Argument;
 import org.smoothbuild.parse.arg.MapToString;
 import org.smoothbuild.parse.arg.ParametersPool;
@@ -68,27 +69,22 @@ import com.google.common.collect.ImmutableMultimap;
 
 public class DefinedFunctionsCreator {
   private final Functions functions;
-  private final ImplicitConverter implicitConverter;
 
   @Inject
-  public DefinedFunctionsCreator(Functions functions, ImplicitConverter implicitConverter) {
+  public DefinedFunctionsCreator(Functions functions) {
     this.functions = functions;
-    this.implicitConverter = implicitConverter;
   }
 
   public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
       List<Name> sorted) {
-    new Worker(functions, implicitConverter)
-        .functionList(console, functionContexts, sorted);
+    new Worker(functions).functionList(console, functionContexts, sorted);
   }
 
   private static class Worker {
     private final Functions functions;
-    private final ImplicitConverter implicitConverter;
 
-    public Worker(Functions functions, ImplicitConverter implicitConverter) {
+    public Worker(Functions functions) {
       this.functions = functions;
-      this.implicitConverter = implicitConverter;
     }
 
     public void functionList(Console console, Map<Name, FunctionContext> functionContexts,
@@ -177,7 +173,7 @@ public class DefinedFunctionsCreator {
       }
 
       List<Expression> converted = pureExpressions.stream()
-          .map((e) -> implicitConverter.apply(pureType, e))
+          .map((e) -> implicitConversion(pureType, e))
           .collect(toList());
       return parsed(new ArrayExpression(arrayType, converted, location));
     }
@@ -488,12 +484,23 @@ public class DefinedFunctionsCreator {
       for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
         Parameter parameter = entry.getKey();
         Argument argument = entry.getValue();
-        Expression expression = implicitConverter.apply(parameter.type(), argument.expression());
+        Expression expression = implicitConversion(parameter.type(), argument.expression());
         map.put(parameter.name(), expression);
       }
 
       return map;
     }
 
+    public <T extends Value> Expression implicitConversion(Type destinationType,
+        Expression source) {
+      Type sourceType = source.type();
+      if (sourceType == destinationType) {
+        return source;
+      }
+
+      Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
+      Function function = functions.get(functionName);
+      return function.createCallExpression(asList(source), true, source.codeLocation());
+    }
   }
 }
