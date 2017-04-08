@@ -29,6 +29,10 @@ public class Parsed<E> {
     return new Parsed<E>(null, ImmutableList.of(error));
   }
 
+  public static <E> Parsed<E> errors(List<ParseError> errors) {
+    return new Parsed<E>(null, ImmutableList.copyOf(errors));
+  }
+
   private Parsed(E result, ImmutableList<ParseError> errors) {
     this.result = result;
     this.errors = errors;
