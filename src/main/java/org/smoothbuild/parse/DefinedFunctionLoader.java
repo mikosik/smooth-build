@@ -37,7 +37,6 @@ import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -65,39 +64,21 @@ import org.smoothbuild.util.UnescapingFailedException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 
-public class DefinedFunctionsCreator {
+public class DefinedFunctionLoader {
 
-  public static Functions createDefinedFunctions(Functions loadedFunctions, Console console,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
-    return new Worker(loadedFunctions).functionList(console, functionContexts, sorted);
+  public static Parsed<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
+      FunctionContext functionContext) {
+    return new Worker(loadedFunctions).loadFunction(functionContext);
   }
 
   private static class Worker {
     private final Functions loadedFunctions;
-    private Functions justLoadedFunctions = new Functions();
 
     public Worker(Functions loadedFunctions) {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Functions functionList(Console console, Map<Name, FunctionContext> functionContexts,
-        List<Name> sorted) {
-      for (Name name : sorted) {
-        Parsed<DefinedFunction> function = parseFunction(functionContexts.get(name));
-        if (function.hasResult()) {
-          justLoadedFunctions = justLoadedFunctions.add(function.result());
-        }
-        for (ParseError error : function.errors()) {
-          console.error(error.codeLocation, error.message);
-        }
-      }
-      if (console.isErrorReported()) {
-        throw new ParsingException();
-      }
-      return justLoadedFunctions;
-    }
-
-    private Parsed<DefinedFunction> parseFunction(FunctionContext functionContext) {
+    public Parsed<DefinedFunction> loadFunction(FunctionContext functionContext) {
       Parsed<Expression> expression = parsePipe(functionContext.pipe());
       Name name = name(functionContext.functionName().getText());
       return invoke(expression, (expression_) -> {
@@ -234,7 +215,7 @@ public class DefinedFunctionsCreator {
 
     private Parsed<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
-      Function function = getFunction(name(functionNameContext.getText()));
+      Function function = loadedFunctions.get(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
       Parsed<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
@@ -244,14 +225,6 @@ public class DefinedFunctionsCreator {
       } else {
         return parsed((Expression) new InvalidExpression(function.type(), codeLocation))
             .addErrors(argumentExpressions.errors());
-      }
-    }
-
-    private Function getFunction(Name name) {
-      if (loadedFunctions.contains(name)) {
-        return loadedFunctions.get(name);
-      } else {
-        return justLoadedFunctions.get(name);
       }
     }
 
@@ -501,7 +474,7 @@ public class DefinedFunctionsCreator {
       }
 
       Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
-      Function function = getFunction(functionName);
+      Function function = loadedFunctions.get(functionName);
       return function.createCallExpression(asList(source), true, source.codeLocation());
     }
   }
