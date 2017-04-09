@@ -41,6 +41,11 @@ public class Console {
     errorCount++;
   }
 
+  public void rawError(Object error) {
+    println(error.toString());
+    errorCount++;
+  }
+
   public static String errorLine(CodeLocation location, String message) {
     return "build.smooth:" + location.line() + ": error: " + message;
   }

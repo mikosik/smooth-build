@@ -12,8 +12,8 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.element;
+import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
@@ -270,7 +270,7 @@ public class DefinedFunctionLoader {
       ParametersPool parametersPool = new ParametersPool(function.parameters());
       List<Argument> namedArguments = Argument.filterNamed(arguments);
 
-      List<Maybe.Error> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
+      List<Object> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
       if (!errors.isEmpty()) {
         return Maybe.errors(errors);
       }
@@ -324,9 +324,9 @@ public class DefinedFunctionLoader {
       return Maybe.element(builder.build());
     }
 
-    private static List<Maybe.Error> duplicatedAndUnknownArgumentNames(Function function,
+    private static List<Object> duplicatedAndUnknownArgumentNames(Function function,
         Collection<Argument> namedArguments) {
-      ArrayList<Maybe.Error> errors = new ArrayList<>();
+      ArrayList<Object> errors = new ArrayList<>();
       Set<String> unusedNames = new HashSet<>(parametersToNames(function.parameters()));
       Set<String> usedNames = new HashSet<>();
       for (Argument argument : namedArguments) {
@@ -336,10 +336,10 @@ public class DefinedFunctionLoader {
             unusedNames.remove(name);
             usedNames.add(name);
           } else if (usedNames.contains(name)) {
-            errors.add(new Maybe.Error(argument.codeLocation(), "Argument '" + argument.name()
+            errors.add(new ParseError(argument.codeLocation(), "Argument '" + argument.name()
                 + "' assigned twice."));
           } else {
-            errors.add(new Maybe.Error(argument.codeLocation(), "Function " + function.name()
+            errors.add(new ParseError(argument.codeLocation(), "Function " + function.name()
                 + " has no parameter '" + argument.name() + "'."));
           }
         }
@@ -347,16 +347,16 @@ public class DefinedFunctionLoader {
       return errors;
     }
 
-    private static List<Maybe.Error> processNamedArguments(ParametersPool parametersPool,
+    private static List<Object> processNamedArguments(ParametersPool parametersPool,
         Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
-      ArrayList<Maybe.Error> errors = new ArrayList<>();
+      ArrayList<Object> errors = new ArrayList<>();
       for (Argument argument : namedArguments) {
         if (argument.hasName()) {
           String name = argument.name();
           Parameter parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (!canConvert(argument.type(), paramType)) {
-            errors.add(new Maybe.Error(argument.codeLocation(),
+            errors.add(new ParseError(argument.codeLocation(),
                 "Type mismatch, cannot convert argument '" + argument.name() + "' of type '"
                     + argument.type().name() + "' to '" + paramType.name() + "'."));
           } else {
@@ -367,7 +367,7 @@ public class DefinedFunctionLoader {
       return errors;
     }
 
-    private static List<Maybe.Error> processNamelessArguments(Function function,
+    private static List<Object> processNamelessArguments(Function function,
         Collection<Argument> arguments, ParametersPool parametersPool,
         Map<Parameter, Argument> argumentMap, CodeLocation codeLocation) {
       ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
@@ -385,7 +385,7 @@ public class DefinedFunctionLoader {
           } else {
             String message = ambiguousAssignmentErrorMessage(function, argumentMap,
                 availableArguments, availableTypedParams);
-            return asList(new Maybe.Error(codeLocation, message));
+            return asList(new ParseError(codeLocation, message));
           }
         }
       }

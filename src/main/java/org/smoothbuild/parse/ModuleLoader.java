@@ -67,8 +67,8 @@ public class ModuleLoader {
         justLoadedFunctions = justLoadedFunctions.add(function.result());
         allFunctions = allFunctions.add(function.result());
       }
-      for (Maybe.Error error : function.errors()) {
-        console.error(error.codeLocation, error.message);
+      for (Object error : function.errors()) {
+        console.rawError(error);
       }
     }
     if (console.isErrorReported()) {
