@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.function;
 
 import static org.smoothbuild.lang.function.base.Name.name;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -40,6 +41,15 @@ public class FunctionsTest {
     given(functions = functions.add(function));
     when(functions.get(name));
     thenReturned(function);
+  }
+
+  @Test
+  public void getting_unknown_function_fails() throws Exception {
+    given(willReturn(Name.name("functionName")), function).name();
+    given(functions = new Functions().add(function));
+    when(() -> functions.get(Name.name("missingFunction")));
+    thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
+        + "Available functions: ['functionName']")));
   }
 
   @Test
