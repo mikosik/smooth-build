@@ -12,8 +12,8 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Parsed.invoke;
-import static org.smoothbuild.parse.Parsed.parsed;
+import static org.smoothbuild.parse.Maybe.invoke;
+import static org.smoothbuild.parse.Maybe.element;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
@@ -66,7 +66,7 @@ import com.google.common.collect.ImmutableMultimap;
 
 public class DefinedFunctionLoader {
 
-  public static Parsed<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
+  public static Maybe<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
       FunctionContext functionContext) {
     return new Worker(loadedFunctions).loadFunction(functionContext);
   }
@@ -78,8 +78,8 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Parsed<DefinedFunction> loadFunction(FunctionContext functionContext) {
-      Parsed<Expression> expression = parsePipe(functionContext.pipe());
+    public Maybe<DefinedFunction> loadFunction(FunctionContext functionContext) {
+      Maybe<Expression> expression = parsePipe(functionContext.pipe());
       Name name = name(functionContext.functionName().getText());
       return invoke(expression, (expression_) -> {
         Signature signature = new Signature(expression_.type(), name, asList());
@@ -87,37 +87,37 @@ public class DefinedFunctionLoader {
       });
     }
 
-    private Parsed<Expression> parsePipe(PipeContext pipeContext) {
-      Parsed<Expression> result = parseExpression(pipeContext.expression());
+    private Maybe<Expression> parsePipe(PipeContext pipeContext) {
+      Maybe<Expression> result = parseExpression(pipeContext.expression());
       List<CallContext> calls = pipeContext.call();
       for (int i = 0; i < calls.size(); i++) {
         CallContext call = calls.get(i);
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
-        Parsed<Argument> pipedArgument = invoke(result, result_ -> {
+        Maybe<Argument> pipedArgument = invoke(result, result_ -> {
           return pipedArgument(result_, codeLocation);
         });
-        Parsed<List<Argument>> arguments = parseArgumentList(call.argList());
+        Maybe<List<Argument>> arguments = parseArgumentList(call.argList());
         arguments = invoke(arguments, pipedArgument, Lists::concat);
         if (arguments.hasResult()) {
           result = parseCall(call, arguments.result());
         } else {
-          Parsed.errors(arguments.errors());
+          Maybe.errors(arguments.errors());
         }
       }
       return result;
     }
 
-    private Parsed<List<Expression>> parseExpressionList(
+    private Maybe<List<Expression>> parseExpressionList(
         List<ExpressionContext> expressionContexts) {
-      Parsed<List<Expression>> result = parsed(new ArrayList<>());
+      Maybe<List<Expression>> result = element(new ArrayList<>());
       for (ExpressionContext expressionContext : expressionContexts) {
         result = invoke(result, parseExpression(expressionContext), Lists::concat);
       }
       return result;
     }
 
-    private Parsed<Expression> parseExpression(ExpressionContext expressionContext) {
+    private Maybe<Expression> parseExpression(ExpressionContext expressionContext) {
       if (expressionContext.array() != null) {
         return parseArray(expressionContext.array());
       }
@@ -131,36 +131,36 @@ public class DefinedFunctionLoader {
           + " without children.");
     }
 
-    private Parsed<Expression> parseArray(ArrayContext array) {
+    private Maybe<Expression> parseArray(ArrayContext array) {
       List<ExpressionContext> elems = array.expression();
-      Parsed<List<Expression>> expressions = parseExpressionList(elems);
+      Maybe<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(array);
-      Parsed<Type> elemType = commonSuperType(expressions, location);
+      Maybe<Type> elemType = commonSuperType(expressions, location);
       if (!(expressions.hasResult() && elemType.hasResult())) {
-        return Parsed.<Expression> errors(expressions.errors()).addErrors(elemType.errors());
+        return Maybe.<Expression> errors(expressions.errors()).addErrors(elemType.errors());
       }
       List<Expression> pureExpressions = expressions.result();
       Type pureType = elemType.result();
       ArrayType arrayType = Types.arrayTypeContaining(pureType);
       if (arrayType == null) {
-        return Parsed.error(location, "Array cannot contain element with type " + elemType.result()
+        return Maybe.error(location, "Array cannot contain element with type " + elemType.result()
             + ". Only following types are allowed: " + Types.basicTypes() + ".");
       }
 
       List<Expression> converted = pureExpressions.stream()
           .map((e) -> implicitConversion(pureType, e))
           .collect(toList());
-      return parsed(new ArrayExpression(arrayType, converted, location));
+      return element(new ArrayExpression(arrayType, converted, location));
     }
 
-    private Parsed<Type> commonSuperType(Parsed<List<Expression>> expressions,
+    private Maybe<Type> commonSuperType(Maybe<List<Expression>> expressions,
         CodeLocation location) {
       if (!expressions.hasResult()) {
         return invoke(expressions, expressions_ -> null);
       }
       List<Expression> list = expressions.result();
       if (list.isEmpty()) {
-        return parsed(NOTHING);
+        return element(NOTHING);
       }
       Type firstType = list.get(0).type();
       Type superType = firstType;
@@ -170,13 +170,13 @@ public class DefinedFunctionLoader {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          return Parsed.error(location,
+          return Maybe.error(location,
               "Array cannot contain elements of incompatible types.\n"
                   + "First element has type " + firstType + " while element at index " + i
                   + " has type " + type + ".");
         }
       }
-      return parsed(superType);
+      return element(superType);
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
@@ -204,44 +204,44 @@ public class DefinedFunctionLoader {
       return null;
     }
 
-    private Parsed<Expression> parseCall(CallContext callContext) {
-      Parsed<List<Argument>> argumentList = parseArgumentList(callContext.argList());
+    private Maybe<Expression> parseCall(CallContext callContext) {
+      Maybe<List<Argument>> argumentList = parseArgumentList(callContext.argList());
       if (argumentList.hasResult()) {
         return parseCall(callContext, argumentList.result());
       } else {
-        return Parsed.errors(argumentList.errors());
+        return Maybe.errors(argumentList.errors());
       }
     }
 
-    private Parsed<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
+    private Maybe<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
       Function function = loadedFunctions.get(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
-      Parsed<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
+      Maybe<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
       if (argumentExpressions.hasResult()) {
-        return parsed(function.createCallExpression(argumentExpressions.result(), false,
+        return element(function.createCallExpression(argumentExpressions.result(), false,
             codeLocation));
       } else {
-        return parsed((Expression) new InvalidExpression(function.type(), codeLocation))
+        return element((Expression) new InvalidExpression(function.type(), codeLocation))
             .addErrors(argumentExpressions.errors());
       }
     }
 
-    private Parsed<List<Argument>> parseArgumentList(ArgListContext argListContext) {
-      Parsed<List<Argument>> result = parsed(new ArrayList<>());
+    private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
+      Maybe<List<Argument>> result = element(new ArrayList<>());
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
-          Parsed<Argument> argument = parseArgument(i, argContexts.get(i));
+          Maybe<Argument> argument = parseArgument(i, argContexts.get(i));
           result = invoke(result, argument, Lists::concat);
         }
       }
       return result;
     }
 
-    private Parsed<Argument> parseArgument(int index, ArgContext arg) {
-      Parsed<Expression> expression = parseExpression(arg.expression());
+    private Maybe<Argument> parseArgument(int index, ArgContext arg) {
+      Maybe<Expression> expression = parseExpression(arg.expression());
       return invoke(expression, expression_ -> {
         CodeLocation location = locationOf(arg);
         ParamNameContext paramName = arg.paramName();
@@ -253,49 +253,49 @@ public class DefinedFunctionLoader {
       });
     }
 
-    private Parsed<Expression> parseStringLiteral(TerminalNode stringToken) {
+    private Maybe<Expression> parseStringLiteral(TerminalNode stringToken) {
       String quotedString = stringToken.getText();
       String string = quotedString.substring(1, quotedString.length() - 1);
       CodeLocation location = locationOf(stringToken.getSymbol());
       try {
-        return parsed(new StringLiteralExpression(unescaped(string), location));
+        return element(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
-        return parsed((Expression) new InvalidExpression(STRING, location))
+        return element((Expression) new InvalidExpression(STRING, location))
             .addError(location, e.getMessage());
       }
     }
 
-    public Parsed<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
+    public Maybe<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
         List<Argument> arguments) {
       ParametersPool parametersPool = new ParametersPool(function.parameters());
       List<Argument> namedArguments = Argument.filterNamed(arguments);
 
-      List<ParseError> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
+      List<Maybe.Error> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
       if (!errors.isEmpty()) {
-        return Parsed.errors(errors);
+        return Maybe.errors(errors);
       }
 
       Map<Parameter, Argument> argumentMap = new HashMap<>();
       errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
       if (!errors.isEmpty()) {
-        return Parsed.errors(errors);
+        return Maybe.errors(errors);
       }
 
       errors = processNamelessArguments(function, arguments, parametersPool, argumentMap,
           codeLocation);
       if (!errors.isEmpty()) {
-        return Parsed.errors(errors);
+        return Maybe.errors(errors);
       }
       Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
       if (missingRequiredParameters.size() != 0) {
-        return Parsed.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
+        return Maybe.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
             missingRequiredParameters));
       }
 
       Map<String, Expression> argumentExpressions = convert(argumentMap);
       for (Parameter parameter : parametersPool.allOptional()) {
         if (parameter.type() == Types.NOTHING) {
-          return Parsed.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
+          return Maybe.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
               + "assigned explicitly as type 'Nothing' doesn't have default value.");
         } else {
           Expression expression = new DefaultValueExpression(parameter.type(), codeLocation);
@@ -315,18 +315,18 @@ public class DefinedFunctionLoader {
           + argumentMap.toString();
     }
 
-    private Parsed<List<Expression>> sortAccordingToParametersOrder(
+    private Maybe<List<Expression>> sortAccordingToParametersOrder(
         Map<String, Expression> argumentExpressions, Function function) {
       ImmutableList.Builder<Expression> builder = ImmutableList.builder();
       for (Parameter parameter : function.parameters()) {
         builder.add(argumentExpressions.get(parameter.name()));
       }
-      return Parsed.parsed(builder.build());
+      return Maybe.element(builder.build());
     }
 
-    private static List<ParseError> duplicatedAndUnknownArgumentNames(Function function,
+    private static List<Maybe.Error> duplicatedAndUnknownArgumentNames(Function function,
         Collection<Argument> namedArguments) {
-      ArrayList<ParseError> errors = new ArrayList<>();
+      ArrayList<Maybe.Error> errors = new ArrayList<>();
       Set<String> unusedNames = new HashSet<>(parametersToNames(function.parameters()));
       Set<String> usedNames = new HashSet<>();
       for (Argument argument : namedArguments) {
@@ -336,10 +336,10 @@ public class DefinedFunctionLoader {
             unusedNames.remove(name);
             usedNames.add(name);
           } else if (usedNames.contains(name)) {
-            errors.add(new ParseError(argument.codeLocation(), "Argument '" + argument.name()
+            errors.add(new Maybe.Error(argument.codeLocation(), "Argument '" + argument.name()
                 + "' assigned twice."));
           } else {
-            errors.add(new ParseError(argument.codeLocation(), "Function " + function.name()
+            errors.add(new Maybe.Error(argument.codeLocation(), "Function " + function.name()
                 + " has no parameter '" + argument.name() + "'."));
           }
         }
@@ -347,16 +347,16 @@ public class DefinedFunctionLoader {
       return errors;
     }
 
-    private static List<ParseError> processNamedArguments(ParametersPool parametersPool,
+    private static List<Maybe.Error> processNamedArguments(ParametersPool parametersPool,
         Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
-      ArrayList<ParseError> errors = new ArrayList<>();
+      ArrayList<Maybe.Error> errors = new ArrayList<>();
       for (Argument argument : namedArguments) {
         if (argument.hasName()) {
           String name = argument.name();
           Parameter parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (!canConvert(argument.type(), paramType)) {
-            errors.add(new ParseError(argument.codeLocation(),
+            errors.add(new Maybe.Error(argument.codeLocation(),
                 "Type mismatch, cannot convert argument '" + argument.name() + "' of type '"
                     + argument.type().name() + "' to '" + paramType.name() + "'."));
           } else {
@@ -367,7 +367,7 @@ public class DefinedFunctionLoader {
       return errors;
     }
 
-    private static List<ParseError> processNamelessArguments(Function function,
+    private static List<Maybe.Error> processNamelessArguments(Function function,
         Collection<Argument> arguments, ParametersPool parametersPool,
         Map<Parameter, Argument> argumentMap, CodeLocation codeLocation) {
       ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
@@ -385,7 +385,7 @@ public class DefinedFunctionLoader {
           } else {
             String message = ambiguousAssignmentErrorMessage(function, argumentMap,
                 availableArguments, availableTypedParams);
-            return asList(new ParseError(codeLocation, message));
+            return asList(new Maybe.Error(codeLocation, message));
           }
         }
       }

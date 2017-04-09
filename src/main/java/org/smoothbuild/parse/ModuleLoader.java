@@ -61,13 +61,13 @@ public class ModuleLoader {
     Functions justLoadedFunctions = new Functions();
     Functions allFunctions = functions;
     for (Name name : sorted) {
-      Parsed<DefinedFunction> function = loadDefinedFunction(allFunctions, functionContexts.get(
+      Maybe<DefinedFunction> function = loadDefinedFunction(allFunctions, functionContexts.get(
           name));
       if (function.hasResult()) {
         justLoadedFunctions = justLoadedFunctions.add(function.result());
         allFunctions = allFunctions.add(function.result());
       }
-      for (ParseError error : function.errors()) {
+      for (Maybe.Error error : function.errors()) {
         console.error(error.codeLocation, error.message);
       }
     }
