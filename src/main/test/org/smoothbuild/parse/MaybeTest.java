@@ -2,9 +2,9 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
+import static org.smoothbuild.parse.Maybe.element;
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invoke;
-import static org.smoothbuild.parse.Maybe.element;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -19,9 +19,9 @@ public class MaybeTest {
   private Maybe<String> maybe1;
   private Maybe<String> maybe2;
   private Maybe<String> maybe3;
-  private Maybe.Error error;
-  private Maybe.Error error2;
-  private Maybe.Error error3;
+  private Object error;
+  private Object error2;
+  private Object error3;
 
   @Before
   public void before() {

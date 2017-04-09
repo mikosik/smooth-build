@@ -15,48 +15,38 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class Maybe<E> {
   private final E result;
-  private final ImmutableList<Error> errors;
-
-  public static class Error {
-    public final CodeLocation codeLocation;
-    public final String message;
-
-    public Error(CodeLocation codeLocation, String message) {
-      this.codeLocation = requireNonNull(codeLocation);
-      this.message = requireNonNull(message);
-    }
-  }
+  private final ImmutableList<Object> errors;
 
   public static <E> Maybe<E> element(E result) {
     return new Maybe<>(requireNonNull(result), ImmutableList.of());
   }
 
   public static <E> Maybe<E> error(CodeLocation location, String message) {
-    return error(new Error(location, message));
+    return error(new ParseError(location, message));
   }
 
-  public static <E> Maybe<E> error(Error error) {
+  public static <E> Maybe<E> error(Object error) {
     return new Maybe<E>(null, ImmutableList.of(error));
   }
 
-  public static <E> Maybe<E> errors(List<Error> errors) {
+  public static <E> Maybe<E> errors(List<Object> errors) {
     return new Maybe<E>(null, ImmutableList.copyOf(errors));
   }
 
-  private Maybe(E result, ImmutableList<Error> errors) {
+  private Maybe(E result, ImmutableList<Object> errors) {
     this.result = result;
     this.errors = errors;
   }
 
   public Maybe<E> addError(CodeLocation location, String message) {
-    return addError(new Error(location, message));
+    return addError(new ParseError(location, message));
   }
 
-  public Maybe<E> addError(Error error) {
+  public Maybe<E> addError(Object error) {
     return new Maybe<>(null, concatErrors(errors, ImmutableList.of(error)));
   }
 
-  public Maybe<E> addErrors(List<Error> errors) {
+  public Maybe<E> addErrors(List<? extends Object> errors) {
     return new Maybe<>(null, concatErrors(this.errors, errors));
   }
 
@@ -69,7 +59,7 @@ public class Maybe<E> {
     return result;
   }
 
-  public ImmutableList<Error> errors() {
+  public ImmutableList<Object> errors() {
     return errors;
   }
 
@@ -115,9 +105,9 @@ public class Maybe<E> {
     }
   }
 
-  private static ImmutableList<Error> concatErrors(List<Error>... lists) {
-    Builder<Error> builder = ImmutableList.builder();
-    for (List<Error> list : lists) {
+  private static ImmutableList<Object> concatErrors(List<? extends Object>... lists) {
+    Builder<Object> builder = ImmutableList.builder();
+    for (List<? extends Object> list : lists) {
       builder.addAll(list);
     }
     return builder.build();
