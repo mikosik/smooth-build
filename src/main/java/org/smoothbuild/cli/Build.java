@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.Maybe;
 import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionException;
@@ -39,14 +40,18 @@ public class Build {
   }
 
   public int run(String... names) {
+    List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
+    Maybe<Set<Name>> functionNames = parseArguments(argsWithoutFirst);
+    if (!functionNames.hasResult()) {
+      for (Object error : functionNames.errors()) {
+        console.rawError(error);
+      }
+      return EXIT_CODE_ERROR;
+    }
+    tempManager.removeTemps();
     try {
-      List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
-      Set<Name> functionNames = parseArguments(argsWithoutFirst);
-      Functions builtinFunctions = loadBuiltinFunctions();
-      tempManager.removeTemps();
-      Functions definedFunctions = moduleLoader.loadFunctions(builtinFunctions, DEFAULT_SCRIPT);
-      Functions functions = builtinFunctions.addAll(definedFunctions);
-      smoothExecutor.execute(functions, functionNames);
+      Functions functions = loadFunctions();
+      smoothExecutor.execute(functions, functionNames.result());
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
     }
@@ -55,26 +60,30 @@ public class Build {
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  public Set<Name> parseArguments(List<String> args) {
+  private Functions loadFunctions() {
+    Functions builtinFunctions = loadBuiltinFunctions();
+    Functions definedFunctions = moduleLoader.loadFunctions(builtinFunctions, DEFAULT_SCRIPT);
+    return builtinFunctions.addAll(definedFunctions);
+  }
+
+  public Maybe<Set<Name>> parseArguments(List<String> args) {
     DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<>();
     for (String argument : args) {
       if (isLegalName(argument)) {
         duplicatesDetector.addValue(name(argument));
       } else {
-        console.error("Illegal function name '" + argument + "' passed in command line.");
-        throw new ExecutionException();
+        return Maybe.error("error: Illegal function name '" + argument
+            + "' passed in command line.");
       }
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
-      console.error("Function " + name + " has been specified more than once.");
-      throw new ExecutionException();
+      return Maybe.error("error: Function " + name + " has been specified more than once.");
     }
     Set<Name> result = duplicatesDetector.getUniqueValues();
     if (result.isEmpty()) {
-      console.error("Specify at least one function to be executed.");
-      throw new ExecutionException();
+      return Maybe.error("error: Specify at least one function to be executed.");
     }
-    return result;
+    return Maybe.element(result);
   }
 }
