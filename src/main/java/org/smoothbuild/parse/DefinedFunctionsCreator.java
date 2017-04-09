@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
@@ -68,31 +66,26 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 
 public class DefinedFunctionsCreator {
-  private final Functions functions;
 
-  @Inject
-  public DefinedFunctionsCreator(Functions functions) {
-    this.functions = functions;
-  }
-
-  public void createDefinedFunctions(Console console, Map<Name, FunctionContext> functionContexts,
-      List<Name> sorted) {
-    new Worker(functions).functionList(console, functionContexts, sorted);
+  public static Functions createDefinedFunctions(Functions loadedFunctions, Console console,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    return new Worker(loadedFunctions).functionList(console, functionContexts, sorted);
   }
 
   private static class Worker {
-    private final Functions functions;
+    private final Functions loadedFunctions;
+    private Functions justLoadedFunctions = new Functions();
 
-    public Worker(Functions functions) {
-      this.functions = functions;
+    public Worker(Functions loadedFunctions) {
+      this.loadedFunctions = loadedFunctions;
     }
 
-    public void functionList(Console console, Map<Name, FunctionContext> functionContexts,
+    public Functions functionList(Console console, Map<Name, FunctionContext> functionContexts,
         List<Name> sorted) {
       for (Name name : sorted) {
         Parsed<DefinedFunction> function = parseFunction(functionContexts.get(name));
         if (function.hasResult()) {
-          functions.add(function.result());
+          justLoadedFunctions = justLoadedFunctions.add(function.result());
         }
         for (ParseError error : function.errors()) {
           console.error(error.codeLocation, error.message);
@@ -101,6 +94,7 @@ public class DefinedFunctionsCreator {
       if (console.isErrorReported()) {
         throw new ParsingException();
       }
+      return justLoadedFunctions;
     }
 
     private Parsed<DefinedFunction> parseFunction(FunctionContext functionContext) {
@@ -240,7 +234,7 @@ public class DefinedFunctionsCreator {
 
     private Parsed<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
       FunctionNameContext functionNameContext = callContext.functionName();
-      Function function = functions.get(name(functionNameContext.getText()));
+      Function function = getFunction(name(functionNameContext.getText()));
       CodeLocation codeLocation = locationOf(functionNameContext);
       Parsed<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
@@ -250,6 +244,14 @@ public class DefinedFunctionsCreator {
       } else {
         return parsed((Expression) new InvalidExpression(function.type(), codeLocation))
             .addErrors(argumentExpressions.errors());
+      }
+    }
+
+    private Function getFunction(Name name) {
+      if (loadedFunctions.contains(name)) {
+        return loadedFunctions.get(name);
+      } else {
+        return justLoadedFunctions.get(name);
       }
     }
 
@@ -499,7 +501,7 @@ public class DefinedFunctionsCreator {
       }
 
       Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
-      Function function = functions.get(functionName);
+      Function function = getFunction(functionName);
       return function.createCallExpression(asList(source), true, source.codeLocation());
     }
   }

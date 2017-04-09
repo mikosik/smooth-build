@@ -27,11 +27,13 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.util.ClassLoaders;
 
 public class NativeLibraryLoader {
-  public static void loadBuiltinFunctions(Functions functions) {
+  public static Functions loadBuiltinFunctions() {
+    Functions functions = new Functions();
     Path libsPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR);
     for (Function function : loadNativeModulesFromDir(libsPath)) {
-      functions.add(function);
+      functions = functions.add(function);
     }
+    return functions;
   }
 
   private static String smoothHomeDir() {

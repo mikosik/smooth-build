@@ -28,26 +28,25 @@ public class Build {
   private final TempManager tempManager;
   private final ModuleLoader moduleLoader;
   private final SmoothExecutor smoothExecutor;
-  private final Functions functions;
 
   @Inject
   public Build(Console console, TempManager tempManager, ModuleLoader moduleLoader,
-      SmoothExecutor smoothExecutor, Functions functions) {
+      SmoothExecutor smoothExecutor) {
     this.console = console;
     this.tempManager = tempManager;
     this.moduleLoader = moduleLoader;
     this.smoothExecutor = smoothExecutor;
-    this.functions = functions;
   }
 
   public int run(String... names) {
     try {
       List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
       Set<Name> functionNames = parseArguments(argsWithoutFirst);
-      loadBuiltinFunctions(functions);
+      Functions builtinFunctions = loadBuiltinFunctions();
       tempManager.removeTemps();
-      moduleLoader.loadFunctions(DEFAULT_SCRIPT);
-      smoothExecutor.execute(functionNames);
+      Functions definedFunctions = moduleLoader.loadFunctions(builtinFunctions, DEFAULT_SCRIPT);
+      Functions functions = builtinFunctions.addAll(definedFunctions);
+      smoothExecutor.execute(functions, functionNames);
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
     }
