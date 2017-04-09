@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.DefinedFunctionsCreator.createDefinedFunctions;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
@@ -23,21 +24,16 @@ import org.smoothbuild.lang.function.base.Name;
 
 public class ModuleLoader {
   private final FileSystem fileSystem;
-  private final Functions functions;
-  private final DefinedFunctionsCreator definedFunctionsCreator;
   private final Console console;
 
   @Inject
-  public ModuleLoader(FileSystem fileSystem, Functions functions,
-      DefinedFunctionsCreator definedFunctionsCreator, Console console) {
+  public ModuleLoader(FileSystem fileSystem, Console console) {
     this.fileSystem = fileSystem;
-    this.functions = functions;
-    this.definedFunctionsCreator = definedFunctionsCreator;
     this.console = console;
   }
 
-  public void loadFunctions(Path smoothFile) {
-    loadFunctions(scriptInputStream(smoothFile), smoothFile);
+  public Functions loadFunctions(Functions functions, Path smoothFile) {
+    return loadFunctions(functions, scriptInputStream(smoothFile), smoothFile);
   }
 
   private InputStream scriptInputStream(Path scriptFile) {
@@ -49,13 +45,13 @@ public class ModuleLoader {
     }
   }
 
-  private void loadFunctions(InputStream inputStream, Path scriptFile) {
+  private Functions loadFunctions(Functions functions, InputStream inputStream, Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(console, functions, dependencies);
     List<Name> sorted = sortDependencies(functions, dependencies, console);
-    definedFunctionsCreator.createDefinedFunctions(console, functionContexts, sorted);
+    return createDefinedFunctions(functions, console, functionContexts, sorted);
   }
 
   public static void detectUndefinedFunctions(Console console, Functions functions,

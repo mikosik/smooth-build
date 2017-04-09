@@ -3,20 +3,41 @@ package org.smoothbuild.lang.function;
 import static java.util.Collections.unmodifiableCollection;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Singleton;
 
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
-@Singleton
-public class Functions {
-  private final Map<Name, Function> functions = new HashMap<>();
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
-  public void add(Function function) {
-    functions.put(function.name(), function);
+public class Functions {
+  private final ImmutableMap<Name, Function> functions;
+
+  public Functions() {
+    this.functions = ImmutableMap.of();
+  }
+
+  private Functions(ImmutableMap<Name, Function> map) {
+    this.functions = map;
+  }
+
+  public Functions addAll(Functions functions) {
+    ImmutableMap<Name, Function> map = builder()
+        .putAll(functions.functions)
+        .build();
+    return new Functions(map);
+  }
+
+  public Functions add(Function function) {
+    ImmutableMap<Name, Function> map = builder()
+        .put(function.name(), function)
+        .build();
+    return new Functions(map);
+  }
+
+  private Builder<Name, Function> builder() {
+    return ImmutableMap.<Name, Function> builder()
+        .putAll(this.functions);
   }
 
   public Function get(Name name) {

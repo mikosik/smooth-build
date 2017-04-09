@@ -10,18 +10,16 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
 public class SmoothExecutor {
-  private final Functions functions;
   private final ArtifactBuilder artifactBuilder;
   private final Console console;
 
   @Inject
-  public SmoothExecutor(Functions functions, ArtifactBuilder artifactBuilder, Console console) {
-    this.functions = functions;
+  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
     this.artifactBuilder = artifactBuilder;
     this.console = console;
   }
 
-  public void execute(Set<Name> names) {
+  public void execute(Functions functions, Set<Name> names) {
     for (Name name : names) {
       Function function = functions.get(name);
       if (function == null) {
