@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.DefinedFunctionsCreator.createDefinedFunctions;
+import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
@@ -21,6 +21,7 @@ import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.function.def.DefinedFunction;
 
 public class ModuleLoader {
   private final FileSystem fileSystem;
@@ -51,7 +52,29 @@ public class ModuleLoader {
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
     detectUndefinedFunctions(console, functions, dependencies);
     List<Name> sorted = sortDependencies(functions, dependencies, console);
-    return createDefinedFunctions(functions, console, functionContexts, sorted);
+    return loadDefinedFunctions(functions, functionContexts, sorted);
+  }
+
+  public Functions loadDefinedFunctions(Functions functions,
+      Map<Name, FunctionContext> functionContexts,
+      List<Name> sorted) {
+    Functions justLoadedFunctions = new Functions();
+    Functions allFunctions = functions;
+    for (Name name : sorted) {
+      Parsed<DefinedFunction> function = loadDefinedFunction(allFunctions, functionContexts.get(
+          name));
+      if (function.hasResult()) {
+        justLoadedFunctions = justLoadedFunctions.add(function.result());
+        allFunctions = allFunctions.add(function.result());
+      }
+      for (ParseError error : function.errors()) {
+        console.error(error.codeLocation, error.message);
+      }
+    }
+    if (console.isErrorReported()) {
+      throw new ParsingException();
+    }
+    return justLoadedFunctions;
   }
 
   public static void detectUndefinedFunctions(Console console, Functions functions,

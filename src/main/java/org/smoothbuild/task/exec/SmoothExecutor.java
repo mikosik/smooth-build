@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 
 public class SmoothExecutor {
@@ -21,12 +20,11 @@ public class SmoothExecutor {
 
   public void execute(Functions functions, Set<Name> names) {
     for (Name name : names) {
-      Function function = functions.get(name);
-      if (function == null) {
+      if (!functions.contains(name)) {
         console.error("Unknown function " + name + ".");
         throw new ExecutionException();
       }
-      artifactBuilder.addArtifact(function);
+      artifactBuilder.addArtifact(functions.get(name));
     }
 
     artifactBuilder.runBuild();
