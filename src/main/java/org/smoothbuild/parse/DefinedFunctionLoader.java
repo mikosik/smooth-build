@@ -12,8 +12,8 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.Maybe.invoke;
+import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
@@ -321,7 +321,7 @@ public class DefinedFunctionLoader {
       for (Parameter parameter : function.parameters()) {
         builder.add(argumentExpressions.get(parameter.name()));
       }
-      return Maybe.result(builder.build());
+      return result(builder.build());
     }
 
     private static List<Object> duplicatedAndUnknownArgumentNames(Function function,
