@@ -6,6 +6,8 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
+import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.result;
 
 import java.util.List;
 import java.util.Set;
@@ -72,18 +74,18 @@ public class Build {
       if (isLegalName(argument)) {
         duplicatesDetector.addValue(name(argument));
       } else {
-        return Maybe.error("error: Illegal function name '" + argument
+        return error("error: Illegal function name '" + argument
             + "' passed in command line.");
       }
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
-      return Maybe.error("error: Function " + name + " has been specified more than once.");
+      return error("error: Function " + name + " has been specified more than once.");
     }
     Set<Name> result = duplicatesDetector.getUniqueValues();
     if (result.isEmpty()) {
-      return Maybe.error("error: Specify at least one function to be executed.");
+      return error("error: Specify at least one function to be executed.");
     }
-    return Maybe.result(result);
+    return result(result);
   }
 }
