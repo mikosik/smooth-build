@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
 import static org.testory.Testory.given;
@@ -136,6 +137,32 @@ public class MaybeTest {
   }
 
   @Test
+  public void function_invoke_with_result() throws Exception {
+    given(maybe = result("one"));
+    given(maybe = invoke(maybe, (result) -> result(result + "!")));
+    when(maybe.result());
+    thenReturned("one!");
+  }
+
+  @Test
+  public void function_invoke_with_error() throws Exception {
+    given(maybe = error(error));
+    given(maybe = invoke(maybe, (result) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void function_invoke_returning_error() throws Exception {
+    given(maybe = result("one"));
+    given(maybe = invoke(maybe, (result) -> error(error)));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
   public void function_invokeWrap_with_result() throws Exception {
     given(maybe = result("one"));
     given(maybe = invokeWrap(maybe, (result) -> result + "!"));
@@ -149,6 +176,57 @@ public class MaybeTest {
     given(maybe = invokeWrap(maybe, (result) -> result));
     when(maybe.errors());
     thenReturned(asList(error));
+  }
+
+  @Test
+  public void bifunction_invoke_with_two_results() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = result("two"));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> result(r1 + r2)));
+    when(maybe.result());
+    thenReturned("onetwo");
+  }
+
+  @Test
+  public void bifunction_invoke_with_two_results_returning_error() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = result("two"));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> error(error)));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void bifunction_invoke_with_result_and_error() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = error(error));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void bifunction_invoke_with_error_and_result() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = result("one"));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void bifunction_invoke_with_two_errors() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = error(error2));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error, error2));
   }
 
   @Test
@@ -185,6 +263,110 @@ public class MaybeTest {
     given(maybe = invokeWrap(maybe1, maybe2, (r1, r2) -> null));
     when(maybe.errors());
     thenReturned(asList(error, error2));
+  }
+
+  @Test
+  public void trifunction_invoke_with_three_results() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = result("two"));
+    given(maybe3 = result("three"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> result(r1 + r2 + r3)));
+    when(maybe.result());
+    thenReturned("onetwothree");
+  }
+
+  @Test
+  public void trifunction_invoke_with_three_results_returning_error() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = result("two"));
+    given(maybe3 = result("three"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> error(error)));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void trifunction_invoke_with_result_result_error() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = result("two"));
+    given(maybe3 = error(error3));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error3));
+  }
+
+  @Test
+  public void trifunction_invoke_with_result_error_result() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = error(error2));
+    given(maybe3 = result("three"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error2));
+  }
+
+  @Test
+  public void trifunction_invoke_with_result_error_error() throws Exception {
+    given(maybe1 = result("one"));
+    given(maybe2 = error(error2));
+    given(maybe3 = error(error3));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error2, error3));
+  }
+
+  @Test
+  public void trifunction_invoke_with_error_result_result() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = result("two"));
+    given(maybe3 = result("one"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void trifunction_invoke_with_error_result_error() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = result("two"));
+    given(maybe3 = error(error3));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error, error3));
+  }
+
+  @Test
+  public void trifunction_invoke_with_error_error_result() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = error(error2));
+    given(maybe3 = result("two"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error, error2));
+  }
+
+  @Test
+  public void trifunction_invoke_with_error_error_error() throws Exception {
+    given(maybe1 = error(error));
+    given(maybe2 = error(error2));
+    given(maybe3 = error(error3));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
+      throw new RuntimeException();
+    }));
+    when(maybe.errors());
+    thenReturned(asList(error, error2, error3));
   }
 
   @Test
