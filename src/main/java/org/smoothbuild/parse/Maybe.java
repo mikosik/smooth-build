@@ -63,7 +63,7 @@ public class Maybe<E> {
     return errors;
   }
 
-  public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, R> function) {
+  public static <S, R> Maybe<R> invokeWrap(Maybe<S> s, Function<S, R> function) {
     if (s.hasResult()) {
       return result(function.apply(s.result));
     } else {
@@ -71,7 +71,7 @@ public class Maybe<E> {
     }
   }
 
-  public static <S, T, R> Maybe<R> invoke(Maybe<S> s, Maybe<T> t, BiFunction<S, T, R> function) {
+  public static <S, T, R> Maybe<R> invokeWrap(Maybe<S> s, Maybe<T> t, BiFunction<S, T, R> function) {
     if (s.hasResult() && t.hasResult()) {
       return result(function.apply(s.result, t.result));
     } else {
@@ -79,7 +79,7 @@ public class Maybe<E> {
     }
   }
 
-  public static <S, T, U, R> Maybe<R> invoke(Maybe<S> s,
+  public static <S, T, U, R> Maybe<R> invokeWrap(Maybe<S> s,
       Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, R> function) {
     if (s.hasResult() && t.hasResult() && u.hasResult()) {
       return result(function.apply(s.result, t.result, u.result));

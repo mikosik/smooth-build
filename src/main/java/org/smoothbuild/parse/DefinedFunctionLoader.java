@@ -12,7 +12,7 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.invoke;
+import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
@@ -81,7 +81,7 @@ public class DefinedFunctionLoader {
     public Maybe<DefinedFunction> loadFunction(FunctionContext functionContext) {
       Maybe<Expression> expression = parsePipe(functionContext.pipe());
       Name name = name(functionContext.functionName().getText());
-      return invoke(expression, (expression_) -> {
+      return invokeWrap(expression, (expression_) -> {
         Signature signature = new Signature(expression_.type(), name, asList());
         return new DefinedFunction(signature, expression_);
       });
@@ -94,11 +94,11 @@ public class DefinedFunctionLoader {
         CallContext call = calls.get(i);
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
-        Maybe<Argument> pipedArgument = invoke(result, result_ -> {
+        Maybe<Argument> pipedArgument = invokeWrap(result, result_ -> {
           return pipedArgument(result_, codeLocation);
         });
         Maybe<List<Argument>> arguments = parseArgumentList(call.argList());
-        arguments = invoke(arguments, pipedArgument, Lists::concat);
+        arguments = invokeWrap(arguments, pipedArgument, Lists::concat);
         if (arguments.hasResult()) {
           result = parseCall(call, arguments.result());
         } else {
@@ -112,7 +112,7 @@ public class DefinedFunctionLoader {
         List<ExpressionContext> expressionContexts) {
       Maybe<List<Expression>> result = result(new ArrayList<>());
       for (ExpressionContext expressionContext : expressionContexts) {
-        result = invoke(result, parseExpression(expressionContext), Lists::concat);
+        result = invokeWrap(result, parseExpression(expressionContext), Lists::concat);
       }
       return result;
     }
@@ -156,7 +156,7 @@ public class DefinedFunctionLoader {
     private Maybe<Type> commonSuperType(Maybe<List<Expression>> expressions,
         CodeLocation location) {
       if (!expressions.hasResult()) {
-        return invoke(expressions, expressions_ -> null);
+        return invokeWrap(expressions, expressions_ -> null);
       }
       List<Expression> list = expressions.result();
       if (list.isEmpty()) {
@@ -234,7 +234,7 @@ public class DefinedFunctionLoader {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
           Maybe<Argument> argument = parseArgument(i, argContexts.get(i));
-          result = invoke(result, argument, Lists::concat);
+          result = invokeWrap(result, argument, Lists::concat);
         }
       }
       return result;
@@ -242,7 +242,7 @@ public class DefinedFunctionLoader {
 
     private Maybe<Argument> parseArgument(int index, ArgContext arg) {
       Maybe<Expression> expression = parseExpression(arg.expression());
-      return invoke(expression, expression_ -> {
+      return invokeWrap(expression, expression_ -> {
         CodeLocation location = locationOf(arg);
         ParamNameContext paramName = arg.paramName();
         if (paramName == null) {
