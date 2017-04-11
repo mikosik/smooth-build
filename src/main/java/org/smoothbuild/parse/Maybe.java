@@ -64,44 +64,27 @@ public class Maybe<E> {
   }
 
   public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, R> function) {
-    return new Maybe<>(invokeRaw(s, function), s.errors);
-  }
-
-  private static <S, R> R invokeRaw(Maybe<S> s, Function<S, R> function) {
     if (s.hasResult()) {
-      return function.apply(s.result);
+      return Maybe.element(function.apply(s.result));
     } else {
-      return null;
+      return errors(s.errors);
     }
   }
 
   public static <S, T, R> Maybe<R> invoke(Maybe<S> s, Maybe<T> t, BiFunction<S, T, R> function) {
-    return new Maybe<>(
-        invokeRaw(s, t, function),
-        concatErrors(s.errors, t.errors));
-  }
-
-  private static <S, T, R> R invokeRaw(Maybe<S> s, Maybe<T> t, BiFunction<S, T, R> function) {
     if (s.hasResult() && t.hasResult()) {
-      return function.apply(s.result, t.result);
+      return Maybe.element(function.apply(s.result, t.result));
     } else {
-      return null;
+      return errors(concatErrors(s.errors, t.errors));
     }
   }
 
   public static <S, T, U, R> Maybe<R> invoke(Maybe<S> s,
       Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, R> function) {
-    return new Maybe<>(
-        invokeRaw(s, t, u, function),
-        concatErrors(s.errors, t.errors, u.errors));
-  }
-
-  private static <S, T, U, R> R invokeRaw(Maybe<S> s,
-      Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, R> function) {
     if (s.hasResult() && t.hasResult() && u.hasResult()) {
-      return function.apply(s.result, t.result, u.result);
+      return Maybe.element(function.apply(s.result, t.result, u.result));
     } else {
-      return null;
+      return errors(concatErrors(s.errors, t.errors, u.errors));
     }
   }
 
