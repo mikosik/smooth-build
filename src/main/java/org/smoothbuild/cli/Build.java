@@ -84,6 +84,6 @@ public class Build {
     if (result.isEmpty()) {
       return Maybe.error("error: Specify at least one function to be executed.");
     }
-    return Maybe.element(result);
+    return Maybe.result(result);
   }
 }

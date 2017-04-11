@@ -12,7 +12,7 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.element;
+import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
@@ -110,7 +110,7 @@ public class DefinedFunctionLoader {
 
     private Maybe<List<Expression>> parseExpressionList(
         List<ExpressionContext> expressionContexts) {
-      Maybe<List<Expression>> result = element(new ArrayList<>());
+      Maybe<List<Expression>> result = result(new ArrayList<>());
       for (ExpressionContext expressionContext : expressionContexts) {
         result = invoke(result, parseExpression(expressionContext), Lists::concat);
       }
@@ -150,7 +150,7 @@ public class DefinedFunctionLoader {
       List<Expression> converted = pureExpressions.stream()
           .map((e) -> implicitConversion(pureType, e))
           .collect(toList());
-      return element(new ArrayExpression(arrayType, converted, location));
+      return result(new ArrayExpression(arrayType, converted, location));
     }
 
     private Maybe<Type> commonSuperType(Maybe<List<Expression>> expressions,
@@ -160,7 +160,7 @@ public class DefinedFunctionLoader {
       }
       List<Expression> list = expressions.result();
       if (list.isEmpty()) {
-        return element(NOTHING);
+        return result(NOTHING);
       }
       Type firstType = list.get(0).type();
       Type superType = firstType;
@@ -176,7 +176,7 @@ public class DefinedFunctionLoader {
                   + " has type " + type + ".");
         }
       }
-      return element(superType);
+      return result(superType);
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
@@ -220,16 +220,16 @@ public class DefinedFunctionLoader {
       Maybe<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
       if (argumentExpressions.hasResult()) {
-        return element(function.createCallExpression(argumentExpressions.result(), false,
+        return result(function.createCallExpression(argumentExpressions.result(), false,
             codeLocation));
       } else {
-        return element((Expression) new InvalidExpression(function.type(), codeLocation))
+        return result((Expression) new InvalidExpression(function.type(), codeLocation))
             .addErrors(argumentExpressions.errors());
       }
     }
 
     private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
-      Maybe<List<Argument>> result = element(new ArrayList<>());
+      Maybe<List<Argument>> result = result(new ArrayList<>());
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
@@ -258,9 +258,9 @@ public class DefinedFunctionLoader {
       String string = quotedString.substring(1, quotedString.length() - 1);
       CodeLocation location = locationOf(stringToken.getSymbol());
       try {
-        return element(new StringLiteralExpression(unescaped(string), location));
+        return result(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
-        return element((Expression) new InvalidExpression(STRING, location))
+        return result((Expression) new InvalidExpression(STRING, location))
             .addError(location, e.getMessage());
       }
     }
@@ -321,7 +321,7 @@ public class DefinedFunctionLoader {
       for (Parameter parameter : function.parameters()) {
         builder.add(argumentExpressions.get(parameter.name()));
       }
-      return Maybe.element(builder.build());
+      return Maybe.result(builder.build());
     }
 
     private static List<Object> duplicatedAndUnknownArgumentNames(Function function,
