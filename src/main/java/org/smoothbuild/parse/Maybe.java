@@ -29,7 +29,7 @@ public class Maybe<E> {
     return new Maybe<E>(null, ImmutableList.of(error));
   }
 
-  public static <E> Maybe<E> errors(List<Object> errors) {
+  public static <E> Maybe<E> errors(List<? extends Object> errors) {
     return new Maybe<E>(null, ImmutableList.copyOf(errors));
   }
 
