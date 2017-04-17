@@ -53,38 +53,24 @@ public class ModuleLoader {
       Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
-    Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
-    detectUndefinedFunctions(console, functions, dependencies);
-    List<Name> sorted = sortDependencies(functions, dependencies, console);
+    Maybe<Map<Name, Set<Dependency>>> dependencies = collectDependencies(module, functions);
+    Maybe<List<Name>> sorted = invokeWrap(dependencies,
+        dependencies_ -> sortDependencies(functions, dependencies_, console));
     return loadDefinedFunctions(functions, functionContexts, sorted);
   }
 
   public Maybe<Functions> loadDefinedFunctions(Functions functions,
       Map<Name, FunctionContext> functionContexts,
-      List<Name> sorted) {
-    Maybe<Functions> justLoaded = result(new Functions());
-    for (Name name : sorted) {
-      Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<DefinedFunction> function = invoke(all, a -> loadDefinedFunction(a, functionContexts
-          .get(name)));
-      justLoaded = invokeWrap(justLoaded, function, Functions::add);
-    }
-    return justLoaded;
-  }
-
-  public static void detectUndefinedFunctions(Console console, Functions functions,
-      Map<Name, Set<Dependency>> dependencies) {
-    Set<Name> declaredFunctions = dependencies.keySet();
-    for (Set<Dependency> functionDependencies : dependencies.values()) {
-      for (Dependency dependency : functionDependencies) {
-        Name name = dependency.functionName();
-        if (!functions.contains(name) && !declaredFunctions.contains(name)) {
-          console.error(dependency.location(), "Call to unknown function " + name + ".");
-        }
+      Maybe<List<Name>> sorted) {
+    return invoke(sorted, s -> {
+      Maybe<Functions> justLoaded = result(new Functions());
+      for (Name name : s) {
+        Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
+        Maybe<DefinedFunction> function = invoke(all,
+            a -> loadDefinedFunction(a, functionContexts.get(name)));
+        justLoaded = invokeWrap(justLoaded, function, Functions::add);
       }
-    }
-    if (console.isErrorReported()) {
-      throw new ParsingException();
-    }
+      return justLoaded;
+    });
   }
 }
