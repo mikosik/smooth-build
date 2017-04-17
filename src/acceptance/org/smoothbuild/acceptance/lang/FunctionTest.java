@@ -65,6 +65,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = unknownFunction;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: Call to unknown function 'unknownFunction'.\n");
+    then(output(), containsString(
+        "build.smooth:1: error: Call to unknown function 'unknownFunction'.\n"));
   }
 }
