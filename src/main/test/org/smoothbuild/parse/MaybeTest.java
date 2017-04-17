@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
@@ -11,6 +12,8 @@ import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +58,13 @@ public class MaybeTest {
     given(maybe = error(error));
     when(() -> maybe.errors());
     thenReturned(asList(error));
+  }
+
+  @Test
+  public void errors_static_factory_accepts_list_of_strings() throws Exception {
+    given(maybe = errors(Arrays.<String> asList("abc", "def")));
+    when(() -> maybe.errors());
+    thenReturned(Arrays.asList("abc", "def"));
   }
 
   @Test
