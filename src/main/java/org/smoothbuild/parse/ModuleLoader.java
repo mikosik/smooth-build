@@ -80,8 +80,8 @@ public class ModuleLoader {
   public static void detectUndefinedFunctions(Console console, Functions functions,
       Map<Name, Set<Dependency>> dependencies) {
     Set<Name> declaredFunctions = dependencies.keySet();
-    for (Set<Dependency> functionDependecies : dependencies.values()) {
-      for (Dependency dependency : functionDependecies) {
+    for (Set<Dependency> functionDependencies : dependencies.values()) {
+      for (Dependency dependency : functionDependencies) {
         Name name = dependency.functionName();
         if (!functions.contains(name) && !declaredFunctions.contains(name)) {
           console.error(dependency.location(), "Call to unknown function " + name + ".");
