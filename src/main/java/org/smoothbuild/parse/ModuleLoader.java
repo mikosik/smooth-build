@@ -4,6 +4,9 @@ import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
+import static org.smoothbuild.parse.Maybe.invoke;
+import static org.smoothbuild.parse.Maybe.invokeWrap;
+import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 
 import java.io.InputStream;
@@ -33,7 +36,7 @@ public class ModuleLoader {
     this.console = console;
   }
 
-  public Functions loadFunctions(Functions functions, Path smoothFile) {
+  public Maybe<Functions> loadFunctions(Functions functions, Path smoothFile) {
     return loadFunctions(functions, scriptInputStream(smoothFile), smoothFile);
   }
 
@@ -46,7 +49,8 @@ public class ModuleLoader {
     }
   }
 
-  private Functions loadFunctions(Functions functions, InputStream inputStream, Path scriptFile) {
+  private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
+      Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
     Map<Name, Set<Dependency>> dependencies = collectDependencies(module);
@@ -55,26 +59,17 @@ public class ModuleLoader {
     return loadDefinedFunctions(functions, functionContexts, sorted);
   }
 
-  public Functions loadDefinedFunctions(Functions functions,
+  public Maybe<Functions> loadDefinedFunctions(Functions functions,
       Map<Name, FunctionContext> functionContexts,
       List<Name> sorted) {
-    Functions justLoadedFunctions = new Functions();
-    Functions allFunctions = functions;
+    Maybe<Functions> justLoaded = result(new Functions());
     for (Name name : sorted) {
-      Maybe<DefinedFunction> function = loadDefinedFunction(allFunctions, functionContexts.get(
-          name));
-      if (function.hasResult()) {
-        justLoadedFunctions = justLoadedFunctions.add(function.result());
-        allFunctions = allFunctions.add(function.result());
-      }
-      for (Object error : function.errors()) {
-        console.rawError(error);
-      }
+      Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
+      Maybe<DefinedFunction> function = invoke(all, a -> loadDefinedFunction(a, functionContexts
+          .get(name)));
+      justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
-    if (console.isErrorReported()) {
-      throw new ParsingException();
-    }
-    return justLoadedFunctions;
+    return justLoaded;
   }
 
   public static void detectUndefinedFunctions(Console console, Functions functions,
