@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
 
 import java.util.List;
@@ -52,8 +53,14 @@ public class Build {
     }
     tempManager.removeTemps();
     try {
-      Functions functions = loadFunctions();
-      smoothExecutor.execute(functions, functionNames.result());
+      Maybe<Functions> functions = loadFunctions();
+      if (functions.hasResult()) {
+        smoothExecutor.execute(functions.result(), functionNames.result());
+      } else {
+        for (Object error : functions.errors()) {
+          console.rawError(error);
+        }
+      }
     } catch (ParsingException | ExecutionException e) {
       return EXIT_CODE_ERROR;
     }
@@ -62,10 +69,10 @@ public class Build {
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Functions loadFunctions() {
-    Functions builtinFunctions = loadBuiltinFunctions();
-    Functions definedFunctions = moduleLoader.loadFunctions(builtinFunctions, DEFAULT_SCRIPT);
-    return builtinFunctions.addAll(definedFunctions);
+  private Maybe<Functions> loadFunctions() {
+    Functions builtin = loadBuiltinFunctions();
+    Maybe<Functions> defined = moduleLoader.loadFunctions(builtin, DEFAULT_SCRIPT);
+    return invokeWrap(defined, defined_ -> builtin.addAll(defined_));
   }
 
   public Maybe<Set<Name>> parseArguments(List<String> args) {
