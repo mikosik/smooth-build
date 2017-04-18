@@ -1,9 +1,9 @@
 package org.smoothbuild.acceptance.argument;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -14,8 +14,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
     givenScript("result = stringIdentity(wrongName='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(),
-        "build.smooth:1: error: Function 'stringIdentity' has no parameter 'wrongName'.\n");
+    then(output(), containsString(
+        "build.smooth:1: error: Function 'stringIdentity' has no parameter 'wrongName'.\n"));
   }
 
   @Test
@@ -23,8 +23,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
     givenScript("result = blobIdentity(blob='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(),
-        "build.smooth:1: error: Type mismatch, cannot convert argument 'blob' of type 'String' to 'Blob'.\n");
+    then(output(), containsString("build.smooth:1: error: "
+        + "Type mismatch, cannot convert argument 'blob' of type 'String' to 'Blob'.\n"));
   }
 
   @Test
@@ -57,6 +57,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
     givenScript("result = stringIdentity(string='abc', string='def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: Argument 'string' assigned twice.\n");
+    then(output(), containsString(
+        "build.smooth:1: error: Argument 'string' assigned twice.\n"));
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.acceptance.lang;
 import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
 
 import java.io.IOException;
 
@@ -74,9 +73,9 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result = ['abc', content(file('//file2.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: "
-        + "Array cannot contain elements of incompatible types.\n"
-        + "First element has type 'String' while element at index 1 has type 'Blob'.\n");
+    then(output(), containsString(
+        "build.smooth:1: error: Array cannot contain elements of incompatible types.\n"
+            + "First element has type 'String' while element at index 1 has type 'Blob'.\n"));
   }
 
   @Test
@@ -100,7 +99,8 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result = [ [] ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: Array cannot contain element with type 'Nothing[]'."
-        + " Only following types are allowed: ['String', 'Blob', 'File', 'Nothing'].\n");
+    then(output(), containsString(
+        "build.smooth:1: error: Array cannot contain element with type 'Nothing[]'."
+            + " Only following types are allowed: ['String', 'Blob', 'File', 'Nothing'].\n"));
   }
 }
