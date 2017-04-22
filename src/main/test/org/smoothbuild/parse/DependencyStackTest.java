@@ -4,8 +4,6 @@ import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -14,7 +12,6 @@ import static org.testory.Testory.when;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 
@@ -30,7 +27,6 @@ public class DependencyStackTest {
   private DependencyStackElem elem1;
   private DependencyStackElem elem2;
   private DependencyStackElem elem3;
-  private Console console;
 
   @Test
   public void stack_is_empty_initially() {
@@ -140,14 +136,12 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name2, name3, 2));
     given(dependencyStack).push(elem(name3, name4, 3));
     given(dependencyStack).push(elem(name4, name2, 4));
-    given(console = mock(Console.class));
-    when(dependencyStack).reportAndThrowCycleException(console);
-    thenThrown(ParsingException.class);
-    thenCalled(console).error(codeLocation(2),
+    when(() -> dependencyStack.createCycleError().toString());
+    thenReturned(new ParseError(codeLocation(2),
         "Function call graph contains cycle:\n"
             + name2.value() + codeLocation(2) + " -> " + name3.value() + "\n"
             + name3.value() + codeLocation(3) + " -> " + name4.value() + "\n"
-            + name4.value() + codeLocation(4) + " -> " + name2.value() + "\n");
+            + name4.value() + codeLocation(4) + " -> " + name2.value() + "\n").toString());
   }
 
   @Test
@@ -155,12 +149,9 @@ public class DependencyStackTest {
     given(dependencyStack = new DependencyStack());
     given(dependencyStack).push(elem(name1, name2, 1));
     given(dependencyStack).push(elem(name2, name2, 2));
-    given(console = mock(Console.class));
-    when(dependencyStack).reportAndThrowCycleException(console);
-    thenThrown(ParsingException.class);
-    thenCalled(console).error(codeLocation(2),
-        "Function call graph contains cycle:\n"
-            + name2.value() + codeLocation(2) + " -> " + name2.value() + "\n");
+    when(() -> dependencyStack.createCycleError().toString());
+    thenReturned(new ParseError(codeLocation(2), "Function call graph contains cycle:\n"
+        + name2.value() + codeLocation(2) + " -> " + name2.value() + "\n").toString());
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {

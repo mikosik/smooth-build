@@ -1,5 +1,8 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.result;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,7 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 
@@ -20,11 +22,9 @@ import com.google.common.collect.ImmutableList;
  * function in returned list. Detects cycles in dependency graph.
  */
 public class DependencySorter {
-  public static List<Name> sortDependencies(Functions functions,
-      Map<Name, Set<Dependency>> dependencies, Console console) {
-    Worker worker = new Worker(functions, dependencies, console);
-    worker.work();
-    return worker.result();
+  public static Maybe<List<Name>> sortDependencies(Functions functions,
+      Map<Name, Set<Dependency>> dependencies) {
+    return new Worker(functions, dependencies).work();
   }
 
   private static class Worker {
@@ -32,52 +32,43 @@ public class DependencySorter {
     private final Set<Name> reachableNames;
     private final List<Name> sorted;
     private final DependencyStack stack;
-    private final Console console;
 
-    public Worker(Functions functions, Map<Name, Set<Dependency>> dependencies, Console console) {
-      this.console = console;
+    public Worker(Functions functions, Map<Name, Set<Dependency>> dependencies) {
       this.notSorted = new HashMap<>(dependencies);
       this.reachableNames = new HashSet<>(functions.names());
       this.sorted = new ArrayList<>(dependencies.size());
       this.stack = new DependencyStack();
     }
 
-    public void work() {
+    public Maybe<List<Name>> work() {
       while (!notSorted.isEmpty() || !stack.isEmpty()) {
         if (stack.isEmpty()) {
           stack.push(removeNext(notSorted));
         }
-        processStackTop();
-      }
-    }
-
-    private void processStackTop() {
-      DependencyStackElem stackTop = stack.peek();
-      Dependency missing = findUnreachableDependency(reachableNames, stackTop.dependencies());
-      if (missing == null) {
-        addStackTopToSorted();
-      } else {
-        stackTop.setMissing(missing);
-        Set<Dependency> next = notSorted.remove(missing.functionName());
-        if (next == null) {
-          // DependencyCollector made sure that all dependency exists so the
-          // only possibility at this point is that missing dependency is on
-          // stack and we have cycle in call graph.
-          stack.reportAndThrowCycleException(console);
+        DependencyStackElem stackTop = stack.peek();
+        Dependency missing = findUnreachableDependency(reachableNames, stackTop.dependencies());
+        if (missing == null) {
+          addStackTopToSorted();
         } else {
-          stack.push(new DependencyStackElem(missing.functionName(), next));
+          stackTop.setMissing(missing);
+          Set<Dependency> next = notSorted.remove(missing.functionName());
+          if (next == null) {
+            // DependencyCollector made sure that all dependency exists so the
+            // only possibility at this point is that missing dependency is on
+            // stack and we have cycle in call graph.
+            return error(stack.createCycleError());
+          } else {
+            stack.push(new DependencyStackElem(missing.functionName(), next));
+          }
         }
       }
+      return result(ImmutableList.copyOf(sorted));
     }
 
     private void addStackTopToSorted() {
       Name name = stack.pop().name();
       sorted.add(name);
       reachableNames.add(name);
-    }
-
-    public List<Name> result() {
-      return ImmutableList.copyOf(sorted);
     }
 
     private Dependency findUnreachableDependency(Set<Name> reachableNames,

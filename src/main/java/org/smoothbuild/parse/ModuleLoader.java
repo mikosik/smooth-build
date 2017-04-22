@@ -54,8 +54,8 @@ public class ModuleLoader {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
     Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
     Maybe<Map<Name, Set<Dependency>>> dependencies = collectDependencies(module, functions);
-    Maybe<List<Name>> sorted = invokeWrap(dependencies,
-        dependencies_ -> sortDependencies(functions, dependencies_, console));
+    Maybe<List<Name>> sorted = invoke(dependencies,
+        dependencies_ -> sortDependencies(functions, dependencies_));
     return loadDefinedFunctions(functions, functionContexts, sorted);
   }
 
