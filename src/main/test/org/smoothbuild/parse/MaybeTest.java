@@ -147,6 +147,20 @@ public class MaybeTest {
   }
 
   @Test
+  public void to_string_result() throws Exception {
+    given(maybe = result("abc"));
+    when(() -> maybe.toString());
+    thenReturned("Maybe.result(abc)");
+  }
+
+  @Test
+  public void to_string_error() throws Exception {
+    given(maybe = error("abc"));
+    when(() -> maybe.toString());
+    thenReturned("Maybe.error(abc)");
+  }
+
+  @Test
   public void function_invoke_with_result() throws Exception {
     given(maybe = result("one"));
     given(maybe = invoke(maybe, (result) -> result(result + "!")));

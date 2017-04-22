@@ -1,7 +1,9 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -61,6 +63,18 @@ public class Maybe<E> {
 
   public ImmutableList<Object> errors() {
     return errors;
+  }
+
+  public String toString() {
+    if (hasResult()) {
+      return "Maybe.result(" + result + ")";
+    } else {
+      List<String> messages = errors
+          .stream()
+          .map(Object::toString)
+          .collect(toList());
+      return "Maybe.error(" + join(", ", messages) + ")";
+    }
   }
 
   public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, Maybe<R>> function) {
