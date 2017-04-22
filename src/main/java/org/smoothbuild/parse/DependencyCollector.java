@@ -1,9 +1,12 @@
 package org.smoothbuild.parse;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Maybe.errors;
+import static org.smoothbuild.parse.Maybe.result;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,22 +37,33 @@ public class DependencyCollector {
 
   public static Maybe<Map<Name, Set<Dependency>>> detectUndefinedFunctions(Functions functions,
       Map<Name, Set<Dependency>> dependencies) {
-    List<Object> errors = new ArrayList<>();
-    Set<Name> declaredFunctions = dependencies.keySet();
-    for (Set<Dependency> functionDependencies : dependencies.values()) {
-      for (Dependency dependency : functionDependencies) {
-        Name name = dependency.functionName();
-        if (!functions.contains(name) && !declaredFunctions.contains(name)) {
-          errors.add(
-              new ParseError(dependency.location(), "Call to unknown function " + name + "."));
-        }
-      }
-    }
-    if (errors.isEmpty()) {
-      return Maybe.result(dependencies);
+    Set<Dependency> defined = ImmutableSet.<Name> builder()
+        .addAll(functions.names())
+        .addAll(dependencies.keySet())
+        .build()
+        .stream()
+        .map(name -> new Dependency(null, name))
+        .collect(toSet());
+    Set<Dependency> referenced = dependencies
+        .values()
+        .stream()
+        .flatMap(fd -> fd.stream())
+        .collect(toSet());
+    referenced.removeAll(defined);
+    if (referenced.isEmpty()) {
+      return result(dependencies);
     } else {
-      return Maybe.errors(errors);
+      List<ParseError> errors = referenced
+          .stream()
+          .map(DependencyCollector::unknownFunctionError)
+          .collect(toList());
+      return errors(errors);
     }
+  }
+
+  private static ParseError unknownFunctionError(Dependency dependency) {
+    return new ParseError(dependency.location(),
+        "Call to unknown function " + dependency.functionName() + ".");
   }
 
   private static class Worker extends SmoothBaseVisitor<Void> {
