@@ -9,6 +9,8 @@ import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
@@ -144,6 +146,35 @@ public class MaybeTest {
     given(maybe = maybe.addErrors(asList(error2, error3)));
     when(() -> maybe.errors());
     thenReturned(asList(error, error2, error3));
+  }
+
+  @Test
+  public void maybe_with_equal_results_are_equal() throws Exception {
+    given(maybe = result("abc"));
+    given(maybe2 = result("abc"));
+    thenEqual(maybe, maybe2);
+  }
+
+  @Test
+  public void maybe_with_equal_errors_are_equal() throws Exception {
+    given(maybe = error("abc"));
+    given(maybe2 = error("abc"));
+    thenEqual(maybe, maybe2);
+  }
+
+  @Test
+  public void maybe_result_is_not_equal_to_maybe_error() throws Exception {
+    given(maybe = result("abc"));
+    given(maybe2 = error("abc"));
+    when(() -> maybe.equals(maybe2));
+    thenReturned(false);
+  }
+
+  @Test
+  public void error_has_different_hashcode_than_result() throws Exception {
+    given(maybe = result("abc"));
+    given(maybe2 = error("abc"));
+    then(maybe.hashCode() != maybe2.hashCode());
   }
 
   @Test
