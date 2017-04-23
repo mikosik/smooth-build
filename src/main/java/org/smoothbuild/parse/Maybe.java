@@ -12,6 +12,7 @@ import java.util.function.Function;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.util.TriFunction;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -63,6 +64,18 @@ public class Maybe<E> {
 
   public ImmutableList<Object> errors() {
     return errors;
+  }
+
+  public boolean equals(Object object) {
+    return object instanceof Maybe && equals((Maybe<?>) object);
+  }
+
+  public boolean equals(Maybe<?> that) {
+    return Objects.equal(result, result) && errors.equals(that.errors);
+  }
+
+  public int hashCode() {
+    return Objects.hashCode(result, errors);
   }
 
   public String toString() {
