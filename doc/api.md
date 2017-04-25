@@ -10,13 +10,13 @@ class source code from android aidl file.
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.
  * [filter](api/filter.md) Filters files according to glob pattern.
- * [jar](api/jar.md) Jars (api/compresses) set of files.
+ * [jar](api/jar.md) Jars (compresses) set of files.
  * [javac](api/javac.md) Compiles set of java files.
  * [junit](api/junit.md) Runs junit tests.
  * [path](api/path.md) Returns File's path.
  * [toBlob](api/toBlob.md) Converts String to Blob.
  * [File](api/File.md) Creates File from path and content.
  * [toString](api/toString.md) Converts Blob to String using UTF-8 coding.
- * [unjar](api/unjar.md) Jars (api/compresses) set of files.
+ * [unjar](api/unjar.md) Unjars (uncompresses) files from given jar file.
  * [unzip](api/unzip.md) Unzips files from zip file.
- * [zip](api/zip.md) Zips (api/compresses) set of files.
+ * [zip](api/zip.md) Zips (compresses) set of files.
