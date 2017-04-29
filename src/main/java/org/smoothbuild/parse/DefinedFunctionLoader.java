@@ -12,6 +12,7 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
@@ -143,8 +144,9 @@ public class DefinedFunctionLoader {
       Type pureType = elemType.result();
       ArrayType arrayType = Types.arrayTypeContaining(pureType);
       if (arrayType == null) {
-        return Maybe.error(location, "Array cannot contain element with type " + elemType.result()
-            + ". Only following types are allowed: " + Types.basicTypes() + ".");
+        return error(new ParseError(location, "Array cannot contain element with type "
+            + elemType.result() + ". Only following types are allowed: " + Types.basicTypes()
+            + "."));
       }
 
       List<Expression> converted = pureExpressions.stream()
@@ -170,10 +172,10 @@ public class DefinedFunctionLoader {
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
-          return Maybe.error(location,
+          return error(new ParseError(location,
               "Array cannot contain elements of incompatible types.\n"
                   + "First element has type " + firstType + " while element at index " + i
-                  + " has type " + type + ".");
+                  + " has type " + type + "."));
         }
       }
       return result(superType);
@@ -288,15 +290,15 @@ public class DefinedFunctionLoader {
       }
       Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
       if (missingRequiredParameters.size() != 0) {
-        return Maybe.error(codeLocation, missingRequiredArgsMessage(function, argumentMap,
-            missingRequiredParameters));
+        return error(new ParseError(codeLocation,
+            missingRequiredArgsMessage(function, argumentMap, missingRequiredParameters)));
       }
 
       Map<String, Expression> argumentExpressions = convert(argumentMap);
       for (Parameter parameter : parametersPool.allOptional()) {
         if (parameter.type() == Types.NOTHING) {
-          return Maybe.error(codeLocation, "Parameter '" + parameter.name() + "' has to be "
-              + "assigned explicitly as type 'Nothing' doesn't have default value.");
+          return error(new ParseError(codeLocation, "Parameter '" + parameter.name()
+              + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
         } else {
           Expression expression = new DefaultValueExpression(parameter.type(), codeLocation);
           argumentExpressions.put(parameter.name(), expression);
