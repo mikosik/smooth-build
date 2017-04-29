@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
@@ -33,6 +34,7 @@ public class Maybe<E> {
   }
 
   public static <E> Maybe<E> errors(List<? extends Object> errors) {
+    checkArgument(!errors.isEmpty(), "'errors' argument shouldn't be empty");
     return new Maybe<E>(null, ImmutableList.copyOf(errors));
   }
 
