@@ -137,7 +137,7 @@ public class DefinedFunctionLoader {
       CodeLocation location = locationOf(array);
       Maybe<Type> elemType = commonSuperType(expressions, location);
       if (!(expressions.hasResult() && elemType.hasResult())) {
-        return Maybe.<Expression> errors(expressions.errors()).addErrors(elemType.errors());
+        return Maybe.<Expression> errors(expressions.addErrors(elemType.errors()).errors());
       }
       List<Expression> pureExpressions = expressions.result();
       Type pureType = elemType.result();
