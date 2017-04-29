@@ -2,7 +2,6 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
 
 import java.io.IOException;
 
@@ -24,7 +23,8 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = 'abc'; function1 = 'def';");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: Function 'function1' is already defined.\n");
+    then(output(), containsString("build.smooth:1: error: "
+        + "Function 'function1' is already defined.\n"));
   }
 
   @Test
@@ -32,8 +32,8 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("file = 'abc';");
     whenSmoothBuild("file");
     thenFinishedWithError();
-    thenEqual(output(),
-        "build.smooth:1: error: Function 'file' cannot override builtin function with the same name.\n");
+    then(output(), containsString("build.smooth:1: error: "
+        + "Function 'file' cannot override builtin function with the same name.\n"));
   }
 
   @Test
