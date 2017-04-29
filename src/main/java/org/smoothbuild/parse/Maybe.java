@@ -50,7 +50,7 @@ public class Maybe<E> {
   }
 
   public Maybe<E> addErrors(List<? extends Object> errors) {
-    return new Maybe<>(null, concatErrors(this.errors, errors));
+    return new Maybe<>(errors.isEmpty() ? result : null, concatErrors(this.errors, errors));
   }
 
   public boolean hasResult() {

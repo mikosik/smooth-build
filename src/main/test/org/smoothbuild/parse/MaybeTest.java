@@ -133,6 +133,14 @@ public class MaybeTest {
   }
 
   @Test
+  public void result_with_added_empty_errors_has_result() throws Exception {
+    given(maybe = result("result"));
+    given(maybe = maybe.addErrors(asList()));
+    when(() -> maybe.hasResult());
+    thenReturned(true);
+  }
+
+  @Test
   public void error_with_added_error_has_both() throws Exception {
     given(maybe = error(error));
     given(maybe = maybe.addError(error2));
@@ -146,6 +154,14 @@ public class MaybeTest {
     given(maybe = maybe.addErrors(asList(error2, error3)));
     when(() -> maybe.errors());
     thenReturned(asList(error, error2, error3));
+  }
+
+  @Test
+  public void error_with_added_empty_errors_initial_error() throws Exception {
+    given(maybe = error(error));
+    given(maybe = maybe.addErrors(asList()));
+    when(() -> maybe.errors());
+    thenReturned(asList(error));
   }
 
   @Test
