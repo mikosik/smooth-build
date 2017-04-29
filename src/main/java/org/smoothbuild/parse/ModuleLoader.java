@@ -52,7 +52,10 @@ public class ModuleLoader {
   private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
       Path scriptFile) {
     ModuleContext module = parseScript(console, inputStream, scriptFile);
-    Map<Name, FunctionContext> functionContexts = collectFunctions(console, functions, module);
+    Maybe<Map<Name, FunctionContext>> functionContexts = collectFunctions(functions, module);
+    if (!functionContexts.hasResult()) {
+      return Maybe.errors(functionContexts.errors());
+    }
     Maybe<Map<Name, Set<Dependency>>> dependencies = collectDependencies(module, functions);
     Maybe<List<Name>> sorted = invoke(dependencies,
         dependencies_ -> sortDependencies(functions, dependencies_));
@@ -60,14 +63,14 @@ public class ModuleLoader {
   }
 
   public Maybe<Functions> loadDefinedFunctions(Functions functions,
-      Map<Name, FunctionContext> functionContexts,
+      Maybe<Map<Name, FunctionContext>> functionContexts,
       Maybe<List<Name>> sorted) {
-    return invoke(sorted, s -> {
+    return invoke(functionContexts, sorted, (fc, s) -> {
       Maybe<Functions> justLoaded = result(new Functions());
       for (Name name : s) {
         Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
         Maybe<DefinedFunction> function = invoke(all,
-            a -> loadDefinedFunction(a, functionContexts.get(name)));
+            a -> loadDefinedFunction(a, fc.get(name)));
         justLoaded = invokeWrap(justLoaded, function, Functions::add);
       }
       return justLoaded;
