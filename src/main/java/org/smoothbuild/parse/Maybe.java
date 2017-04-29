@@ -25,10 +25,6 @@ public class Maybe<E> {
     return new Maybe<>(requireNonNull(result), ImmutableList.of());
   }
 
-  public static <E> Maybe<E> error(CodeLocation location, String message) {
-    return error(new ParseError(location, message));
-  }
-
   public static <E> Maybe<E> error(Object error) {
     return new Maybe<E>(null, ImmutableList.of(error));
   }
