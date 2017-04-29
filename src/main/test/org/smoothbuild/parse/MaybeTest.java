@@ -103,6 +103,12 @@ public class MaybeTest {
   }
 
   @Test
+  public void with_errors_fails_for_empty_list() throws Exception {
+    when(() -> Maybe.errors(asList()));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
   public void with_errors_has_no_result() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
     when(() -> maybe.hasResult());
