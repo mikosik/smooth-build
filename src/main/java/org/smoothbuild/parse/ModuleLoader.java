@@ -4,6 +4,7 @@ import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
+import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
@@ -18,7 +19,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
@@ -28,24 +28,22 @@ import org.smoothbuild.lang.function.def.DefinedFunction;
 
 public class ModuleLoader {
   private final FileSystem fileSystem;
-  private final Console console;
 
   @Inject
-  public ModuleLoader(FileSystem fileSystem, Console console) {
+  public ModuleLoader(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.console = console;
   }
 
   public Maybe<Functions> loadFunctions(Functions functions, Path smoothFile) {
-    return loadFunctions(functions, scriptInputStream(smoothFile), smoothFile);
+    Maybe<InputStream> inputStream = scriptInputStream(smoothFile);
+    return invoke(inputStream, is -> loadFunctions(functions, is, smoothFile));
   }
 
-  private InputStream scriptInputStream(Path scriptFile) {
+  private Maybe<InputStream> scriptInputStream(Path scriptFile) {
     try {
-      return fileSystem.openInputStream(scriptFile);
+      return result(fileSystem.openInputStream(scriptFile));
     } catch (FileSystemException e) {
-      console.error("Cannot read build script file " + scriptFile + ". " + e.getMessage());
-      throw new ParsingException();
+      return error("error: Cannot read build script file " + scriptFile + ". " + e.getMessage());
     }
   }
 
