@@ -26,31 +26,31 @@ import org.smoothbuild.lang.function.base.Name;
 public class FunctionContextCollector {
   public static Maybe<List<FunctionContext>> collectFunctionContexts(ModuleContext module,
       Functions functions) {
-    Maybe<Map<Name, FunctionContext>> functionContexts = collectFunctions(module, functions);
-    if (!functionContexts.hasValue()) {
-      return errors(functionContexts.errors());
+    Maybe<Map<Name, FunctionNode>> functionNodes = collectNodes(module, functions);
+    if (!functionNodes.hasValue()) {
+      return errors(functionNodes.errors());
     }
     Maybe<Map<Name, Set<Dependency>>> dependencies = collectDependencies(module, functions);
     Maybe<List<Name>> sorted = invoke(dependencies, ds -> sortDependencies(functions, ds));
-    return invokeWrap(functionContexts, sorted, (fcs, s) -> sortFunctions(fcs, s));
+    return invokeWrap(functionNodes, sorted, (fns, s) -> sortFunctions(fns, s));
   }
 
-  private static List<FunctionContext> sortFunctions(Map<Name, FunctionContext> functionContexts,
+  private static List<FunctionContext> sortFunctions(Map<Name, FunctionNode> functionNodes,
       List<Name> names) {
     return names.stream()
-        .map(n -> functionContexts.get(n))
+        .map(n -> functionNodes.get(n).context())
         .collect(toList());
   }
 
-  private static Maybe<Map<Name, FunctionContext>> collectFunctions(ModuleContext module,
+  private static Maybe<Map<Name, FunctionNode>> collectNodes(ModuleContext module,
       Functions functions) {
-    Map<Name, FunctionContext> functionContexts = new HashMap<>();
+    Map<Name, FunctionNode> nodes = new HashMap<>();
     List<ParseError> errors = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
-      public Void visitFunction(FunctionContext functionContext) {
-        FunctionNameContext nameContext = functionContext.functionName();
+      public Void visitFunction(FunctionContext context) {
+        FunctionNameContext nameContext = context.functionName();
         Name name = name(nameContext.getText());
-        if (functionContexts.keySet().contains(name)) {
+        if (nodes.keySet().contains(name)) {
           errors.add(new ParseError(
               locationOf(nameContext), "Function " + name + " is already defined."));
           return null;
@@ -60,11 +60,10 @@ public class FunctionContextCollector {
               + " cannot override builtin function with the same name."));
           return null;
         }
-
-        functionContexts.put(name, functionContext);
+        nodes.put(name, new FunctionNode(name, context, locationOf(nameContext)));
         return null;
       }
     }.visit(module);
-    return maybe(functionContexts, errors);
+    return maybe(nodes, errors);
   }
 }
