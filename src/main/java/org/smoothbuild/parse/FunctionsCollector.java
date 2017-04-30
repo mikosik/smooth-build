@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class FunctionsCollector {
     }
 
     public Maybe<Map<Name, FunctionContext>> result() {
-      return Maybe.result(functionContexts).addErrors(errors);
+      return value(functionContexts).addErrors(errors);
     }
   }
 }

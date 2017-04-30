@@ -21,7 +21,7 @@ public class FunctionContextCollector {
   public static Maybe<List<FunctionContext>> collectFunctionContexts(ModuleContext module,
       Functions functions) {
     Maybe<Map<Name, FunctionContext>> functionContexts = collectFunctions(functions, module);
-    if (!functionContexts.hasResult()) {
+    if (!functionContexts.hasValue()) {
       return errors(functionContexts.errors());
     }
     Maybe<Map<Name, Set<Dependency>>> dependencies = collectDependencies(module, functions);

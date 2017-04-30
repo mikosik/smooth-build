@@ -5,7 +5,7 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenReturned;
@@ -38,7 +38,7 @@ public class DependencySorterTest {
     given(map).put(name4, dependencies());
     given(map).put(name2, dependencies(name3));
     when(() -> sortDependencies(new Functions(), map));
-    thenReturned(result(asList(name4, name3, name2, name1)));
+    thenReturned(value(asList(name4, name3, name2, name1)));
   }
 
   @Test
@@ -51,7 +51,7 @@ public class DependencySorterTest {
     given(map).put(name5, dependencies(name6));
     given(map).put(name6, dependencies());
 
-    List<Name> list = sortDependencies(new Functions(), map).result();
+    List<Name> list = sortDependencies(new Functions(), map).value();
     then(list.indexOf(name4) < list.indexOf(name2));
     then(list.indexOf(name2) < list.indexOf(name1));
 
@@ -65,7 +65,7 @@ public class DependencySorterTest {
     given(map = new HashMap<>());
     given(map).put(name1, dependencies(name1));
     when(() -> sortDependencies(new Functions(), map));
-    thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasResult());
+    thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasValue());
   }
 
   @Test
@@ -75,7 +75,7 @@ public class DependencySorterTest {
     given(map).put(name2, dependencies(name3));
     given(map).put(name3, dependencies(name1));
     when(() -> sortDependencies(new Functions(), map));
-    thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasResult());
+    thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasValue());
   }
 
   private static Set<Dependency> dependencies(Name... names) {

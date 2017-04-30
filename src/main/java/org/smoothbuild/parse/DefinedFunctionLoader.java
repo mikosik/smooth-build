@@ -14,7 +14,7 @@ import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
@@ -100,8 +100,8 @@ public class DefinedFunctionLoader {
         });
         Maybe<List<Argument>> arguments = parseArgumentList(call.argList());
         arguments = invokeWrap(arguments, pipedArgument, Lists::concat);
-        if (arguments.hasResult()) {
-          result = parseCall(call, arguments.result());
+        if (arguments.hasValue()) {
+          result = parseCall(call, arguments.value());
         } else {
           Maybe.errors(arguments.errors());
         }
@@ -111,7 +111,7 @@ public class DefinedFunctionLoader {
 
     private Maybe<List<Expression>> parseExpressionList(
         List<ExpressionContext> expressionContexts) {
-      Maybe<List<Expression>> result = result(new ArrayList<>());
+      Maybe<List<Expression>> result = value(new ArrayList<>());
       for (ExpressionContext expressionContext : expressionContexts) {
         result = invokeWrap(result, parseExpression(expressionContext), Lists::concat);
       }
@@ -137,32 +137,32 @@ public class DefinedFunctionLoader {
       Maybe<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(array);
       Maybe<Type> elemType = commonSuperType(expressions, location);
-      if (!(expressions.hasResult() && elemType.hasResult())) {
+      if (!(expressions.hasValue() && elemType.hasValue())) {
         return Maybe.<Expression> errors(expressions.addErrors(elemType.errors()).errors());
       }
-      List<Expression> pureExpressions = expressions.result();
-      Type pureType = elemType.result();
+      List<Expression> pureExpressions = expressions.value();
+      Type pureType = elemType.value();
       ArrayType arrayType = Types.arrayTypeContaining(pureType);
       if (arrayType == null) {
         return error(new ParseError(location, "Array cannot contain element with type "
-            + elemType.result() + ". Only following types are allowed: " + Types.basicTypes()
+            + elemType.value() + ". Only following types are allowed: " + Types.basicTypes()
             + "."));
       }
 
       List<Expression> converted = pureExpressions.stream()
           .map((e) -> implicitConversion(pureType, e))
           .collect(toList());
-      return result(new ArrayExpression(arrayType, converted, location));
+      return value(new ArrayExpression(arrayType, converted, location));
     }
 
     private Maybe<Type> commonSuperType(Maybe<List<Expression>> expressions,
         CodeLocation location) {
-      if (!expressions.hasResult()) {
+      if (!expressions.hasValue()) {
         return invokeWrap(expressions, expressions_ -> null);
       }
-      List<Expression> list = expressions.result();
+      List<Expression> list = expressions.value();
       if (list.isEmpty()) {
-        return result(NOTHING);
+        return value(NOTHING);
       }
       Type firstType = list.get(0).type();
       Type superType = firstType;
@@ -178,7 +178,7 @@ public class DefinedFunctionLoader {
                   + " has type " + type + "."));
         }
       }
-      return result(superType);
+      return value(superType);
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
@@ -208,8 +208,8 @@ public class DefinedFunctionLoader {
 
     private Maybe<Expression> parseCall(CallContext callContext) {
       Maybe<List<Argument>> argumentList = parseArgumentList(callContext.argList());
-      if (argumentList.hasResult()) {
-        return parseCall(callContext, argumentList.result());
+      if (argumentList.hasValue()) {
+        return parseCall(callContext, argumentList.value());
       } else {
         return Maybe.errors(argumentList.errors());
       }
@@ -221,17 +221,17 @@ public class DefinedFunctionLoader {
       CodeLocation codeLocation = locationOf(functionNameContext);
       Maybe<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
-      if (argumentExpressions.hasResult()) {
-        return result(function.createCallExpression(argumentExpressions.result(), false,
+      if (argumentExpressions.hasValue()) {
+        return value(function.createCallExpression(argumentExpressions.value(), false,
             codeLocation));
       } else {
-        return result((Expression) new InvalidExpression(function.type(), codeLocation))
+        return value((Expression) new InvalidExpression(function.type(), codeLocation))
             .addErrors(argumentExpressions.errors());
       }
     }
 
     private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
-      Maybe<List<Argument>> result = result(new ArrayList<>());
+      Maybe<List<Argument>> result = value(new ArrayList<>());
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
@@ -260,9 +260,9 @@ public class DefinedFunctionLoader {
       String string = quotedString.substring(1, quotedString.length() - 1);
       CodeLocation location = locationOf(stringToken.getSymbol());
       try {
-        return result(new StringLiteralExpression(unescaped(string), location));
+        return value(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
-        return result((Expression) new InvalidExpression(STRING, location))
+        return value((Expression) new InvalidExpression(STRING, location))
             .addError(location, e.getMessage());
       }
     }
@@ -323,7 +323,7 @@ public class DefinedFunctionLoader {
       for (Parameter parameter : function.parameters()) {
         builder.add(argumentExpressions.get(parameter.name()));
       }
-      return result(builder.build());
+      return value(builder.build());
     }
 
     private static List<Object> duplicatedAndUnknownArgumentNames(Function function,

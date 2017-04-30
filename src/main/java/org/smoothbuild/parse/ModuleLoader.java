@@ -5,7 +5,7 @@ import static org.smoothbuild.parse.FunctionContextCollector.collectFunctionCont
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public class ModuleLoader {
 
   private Maybe<InputStream> scriptInputStream(Path scriptFile) {
     try {
-      return result(fileSystem.openInputStream(scriptFile));
+      return value(fileSystem.openInputStream(scriptFile));
     } catch (FileSystemException e) {
       return error("error: Cannot read build script file " + scriptFile + ". " + e.getMessage());
     }
@@ -52,7 +52,7 @@ public class ModuleLoader {
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions,
       List<FunctionContext> functionContexts) {
-    Maybe<Functions> justLoaded = result(new Functions());
+    Maybe<Functions> justLoaded = value(new Functions());
     for (FunctionContext functionContext : functionContexts) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
       Maybe<DefinedFunction> function = invoke(all,

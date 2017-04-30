@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.List;
 import java.util.Set;
@@ -44,7 +44,7 @@ public class Build {
   public int run(String... names) {
     List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
     Maybe<Set<Name>> functionNames = parseArguments(argsWithoutFirst);
-    if (!functionNames.hasResult()) {
+    if (!functionNames.hasValue()) {
       for (Object error : functionNames.errors()) {
         console.rawError(error);
       }
@@ -53,8 +53,8 @@ public class Build {
     tempManager.removeTemps();
     try {
       Maybe<Functions> functions = loadFunctions();
-      if (functions.hasResult()) {
-        smoothExecutor.execute(functions.result(), functionNames.result());
+      if (functions.hasValue()) {
+        smoothExecutor.execute(functions.value(), functionNames.value());
       } else {
         for (Object error : functions.errors()) {
           console.rawError(error);
@@ -92,6 +92,6 @@ public class Build {
     if (result.isEmpty()) {
       return error("error: Specify at least one function to be executed.");
     }
-    return result(result);
+    return value(result);
   }
 }

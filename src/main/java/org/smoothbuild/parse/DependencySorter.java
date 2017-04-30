@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class DependencySorter {
           }
         }
       }
-      return result(ImmutableList.copyOf(sorted));
+      return value(ImmutableList.copyOf(sorted));
     }
 
     private void addStackTopToSorted() {
