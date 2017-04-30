@@ -18,11 +18,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class Maybe<E> {
-  private final E result;
+  private final E value;
   private final ImmutableList<Object> errors;
 
-  public static <E> Maybe<E> result(E result) {
-    return new Maybe<>(requireNonNull(result), ImmutableList.of());
+  public static <E> Maybe<E> value(E value) {
+    return new Maybe<>(requireNonNull(value), ImmutableList.of());
   }
 
   public static <E> Maybe<E> error(Object error) {
@@ -34,13 +34,13 @@ public class Maybe<E> {
     return new Maybe<E>(null, ImmutableList.copyOf(errors));
   }
 
-  public static <E> Maybe<E> maybe(E result, List<? extends Object> errors) {
-    checkArgument(!(result == null && errors.isEmpty()));
-    return new Maybe<>(errors.isEmpty() ? result : null, ImmutableList.copyOf(errors));
+  public static <E> Maybe<E> maybe(E value, List<? extends Object> errors) {
+    checkArgument(!(value == null && errors.isEmpty()));
+    return new Maybe<>(errors.isEmpty() ? value : null, ImmutableList.copyOf(errors));
   }
 
-  private Maybe(E result, ImmutableList<Object> errors) {
-    this.result = result;
+  private Maybe(E value, ImmutableList<Object> errors) {
+    this.value = value;
     this.errors = errors;
   }
 
@@ -53,16 +53,16 @@ public class Maybe<E> {
   }
 
   public Maybe<E> addErrors(List<? extends Object> errors) {
-    return new Maybe<>(errors.isEmpty() ? result : null, concatErrors(this.errors, errors));
+    return new Maybe<>(errors.isEmpty() ? value : null, concatErrors(this.errors, errors));
   }
 
-  public boolean hasResult() {
-    return result != null;
+  public boolean hasValue() {
+    return value != null;
   }
 
-  public E result() {
-    checkState(hasResult());
-    return result;
+  public E value() {
+    checkState(hasValue());
+    return value;
   }
 
   public ImmutableList<Object> errors() {
@@ -74,16 +74,16 @@ public class Maybe<E> {
   }
 
   public boolean equals(Maybe<?> that) {
-    return Objects.equal(result, result) && errors.equals(that.errors);
+    return Objects.equal(value, value) && errors.equals(that.errors);
   }
 
   public int hashCode() {
-    return Objects.hashCode(result, errors);
+    return Objects.hashCode(value, errors);
   }
 
   public String toString() {
-    if (hasResult()) {
-      return "Maybe.result(" + result + ")";
+    if (hasValue()) {
+      return "Maybe.value(" + value + ")";
     } else {
       List<String> messages = errors
           .stream()
@@ -94,16 +94,16 @@ public class Maybe<E> {
   }
 
   public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, Maybe<R>> function) {
-    if (s.hasResult()) {
-      return function.apply(s.result);
+    if (s.hasValue()) {
+      return function.apply(s.value);
     } else {
       return errors(s.errors);
     }
   }
 
   public static <S, R> Maybe<R> invokeWrap(Maybe<S> s, Function<S, R> function) {
-    if (s.hasResult()) {
-      return result(function.apply(s.result));
+    if (s.hasValue()) {
+      return value(function.apply(s.value));
     } else {
       return errors(s.errors);
     }
@@ -111,8 +111,8 @@ public class Maybe<E> {
 
   public static <S, T, R> Maybe<R> invoke(Maybe<S> s, Maybe<T> t,
       BiFunction<S, T, Maybe<R>> function) {
-    if (s.hasResult() && t.hasResult()) {
-      return function.apply(s.result, t.result);
+    if (s.hasValue() && t.hasValue()) {
+      return function.apply(s.value, t.value);
     } else {
       return errors(concatErrors(s.errors, t.errors));
     }
@@ -120,8 +120,8 @@ public class Maybe<E> {
 
   public static <S, T, R> Maybe<R> invokeWrap(Maybe<S> s, Maybe<T> t,
       BiFunction<S, T, R> function) {
-    if (s.hasResult() && t.hasResult()) {
-      return result(function.apply(s.result, t.result));
+    if (s.hasValue() && t.hasValue()) {
+      return value(function.apply(s.value, t.value));
     } else {
       return errors(concatErrors(s.errors, t.errors));
     }
@@ -129,8 +129,8 @@ public class Maybe<E> {
 
   public static <S, T, U, R> Maybe<R> invoke(Maybe<S> s,
       Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, Maybe<R>> function) {
-    if (s.hasResult() && t.hasResult() && u.hasResult()) {
-      return function.apply(s.result, t.result, u.result);
+    if (s.hasValue() && t.hasValue() && u.hasValue()) {
+      return function.apply(s.value, t.value, u.value);
     } else {
       return errors(concatErrors(s.errors, t.errors, u.errors));
     }
@@ -138,8 +138,8 @@ public class Maybe<E> {
 
   public static <S, T, U, R> Maybe<R> invokeWrap(Maybe<S> s,
       Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, R> function) {
-    if (s.hasResult() && t.hasResult() && u.hasResult()) {
-      return result(function.apply(s.result, t.result, u.result));
+    if (s.hasValue() && t.hasValue() && u.hasValue()) {
+      return value(function.apply(s.value, t.value, u.value));
     } else {
       return errors(concatErrors(s.errors, t.errors, u.errors));
     }

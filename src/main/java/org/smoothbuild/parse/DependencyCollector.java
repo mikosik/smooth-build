@@ -5,7 +5,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.errors;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class DependencyCollector {
         .collect(toSet());
     referenced.removeAll(defined);
     if (referenced.isEmpty()) {
-      return result(dependencies);
+      return value(dependencies);
     } else {
       List<ParseError> errors = referenced
           .stream()

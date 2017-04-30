@@ -7,7 +7,7 @@ import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.result;
+import static org.smoothbuild.parse.Maybe.value;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.then;
@@ -36,23 +36,23 @@ public class MaybeTest {
   }
 
   @Test
-  public void created_result_has_result() throws Exception {
-    given(maybe = result("abc"));
-    when(() -> maybe.hasResult());
+  public void created_value_has_value() throws Exception {
+    given(maybe = value("abc"));
+    when(() -> maybe.hasValue());
     thenReturned(true);
   }
 
   @Test
-  public void created_result_has_no_error() throws Exception {
-    given(maybe = result("abc"));
+  public void created_value_has_no_error() throws Exception {
+    given(maybe = value("abc"));
     when(() -> maybe.errors());
     thenReturned(empty());
   }
 
   @Test
-  public void created_result_contains_result() throws Exception {
-    given(maybe = result("abc"));
-    when(() -> maybe.result());
+  public void created_value_contains_value() throws Exception {
+    given(maybe = value("abc"));
+    when(() -> maybe.value());
     thenReturned("abc");
   }
 
@@ -77,16 +77,16 @@ public class MaybeTest {
   }
 
   @Test
-  public void created_error_has_no_result() throws Exception {
+  public void created_error_has_no_value() throws Exception {
     given(maybe = error(error));
-    when(() -> maybe.hasResult());
+    when(() -> maybe.hasValue());
     thenReturned(false);
   }
 
   @Test
-  public void created_error_fails_for_result() throws Exception {
+  public void created_error_fails_for_value() throws Exception {
     given(maybe = error(error));
-    when(() -> maybe.result());
+    when(() -> maybe.value());
     thenThrown(IllegalStateException.class);
   }
 
@@ -110,88 +110,88 @@ public class MaybeTest {
   }
 
   @Test
-  public void created_errors_has_no_result() throws Exception {
+  public void created_errors_has_no_value() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
-    when(() -> maybe.hasResult());
+    when(() -> maybe.hasValue());
     thenReturned(false);
   }
 
   @Test
-  public void created_errors_fails_for_result() throws Exception {
+  public void created_errors_fails_for_value() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
-    when(() -> maybe.result());
+    when(() -> maybe.value());
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void created_maybe_with_null_result_and_no_errors_fails() throws Exception {
+  public void created_maybe_with_null_value_and_no_errors_fails() throws Exception {
     when(() -> Maybe.maybe(null, asList()));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
-  public void created_maybe_with_result_and_no_errors_has_result() throws Exception {
-    given(maybe = Maybe.maybe("result", asList()));
-    when(() -> maybe.result());
-    thenReturned("result");
+  public void created_maybe_with_value_and_no_errors_has_value() throws Exception {
+    given(maybe = Maybe.maybe("value", asList()));
+    when(() -> maybe.value());
+    thenReturned("value");
   }
 
   @Test
-  public void created_maybe_with_result_and_no_errors_has_no_errors() throws Exception {
-    given(maybe = Maybe.maybe("result", asList()));
+  public void created_maybe_with_value_and_no_errors_has_no_errors() throws Exception {
+    given(maybe = Maybe.maybe("value", asList()));
     when(() -> maybe.errors());
     thenReturned(hasSize(0));
   }
 
   @Test
-  public void created_maybe_with_null_result_and_errors_fails_for_result() throws Exception {
+  public void created_maybe_with_null_value_and_errors_fails_for_value() throws Exception {
     given(maybe = Maybe.maybe(null, asList(error, error2)));
-    when(() -> maybe.result());
+    when(() -> maybe.value());
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void created_maybe_with_null_result_and_errors_has_errors() throws Exception {
+  public void created_maybe_with_null_value_and_errors_has_errors() throws Exception {
     given(maybe = Maybe.maybe(null, asList(error, error2)));
     when(() -> maybe.errors());
     thenReturned(asList(error, error2));
   }
 
   @Test
-  public void created_maybe_with_result_and_errors_fails_for_result() throws Exception {
-    given(maybe = Maybe.maybe("result", asList(error, error2)));
-    when(() -> maybe.result());
+  public void created_maybe_with_value_and_errors_fails_for_value() throws Exception {
+    given(maybe = Maybe.maybe("value", asList(error, error2)));
+    when(() -> maybe.value());
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void created_maybe_with_result_and_errors_has_errors() throws Exception {
-    given(maybe = Maybe.maybe("result", asList(error, error2)));
+  public void created_maybe_with_value_and_errors_has_errors() throws Exception {
+    given(maybe = Maybe.maybe("value", asList(error, error2)));
     when(() -> maybe.errors());
     thenReturned(asList(error, error2));
   }
 
   @Test
-  public void result_with_added_error_has_no_result() throws Exception {
-    given(maybe = result("result"));
+  public void value_with_added_error_has_no_value() throws Exception {
+    given(maybe = value("value"));
     given(maybe = maybe.addError(error));
-    when(() -> maybe.hasResult());
+    when(() -> maybe.hasValue());
     thenReturned(false);
   }
 
   @Test
-  public void result_with_added_errors_has_no_result() throws Exception {
-    given(maybe = result("result"));
+  public void value_with_added_errors_has_no_value() throws Exception {
+    given(maybe = value("value"));
     given(maybe = maybe.addErrors(asList(error, error2)));
-    when(() -> maybe.hasResult());
+    when(() -> maybe.hasValue());
     thenReturned(false);
   }
 
   @Test
-  public void result_with_added_empty_errors_has_result() throws Exception {
-    given(maybe = result("result"));
+  public void value_with_added_empty_errors_has_value() throws Exception {
+    given(maybe = value("value"));
     given(maybe = maybe.addErrors(asList()));
-    when(() -> maybe.hasResult());
+    when(() -> maybe.hasValue());
     thenReturned(true);
   }
 
@@ -220,9 +220,9 @@ public class MaybeTest {
   }
 
   @Test
-  public void maybe_with_equal_results_are_equal() throws Exception {
-    given(maybe = result("abc"));
-    given(maybe2 = result("abc"));
+  public void maybe_with_equal_values_are_equal() throws Exception {
+    given(maybe = value("abc"));
+    given(maybe2 = value("abc"));
     thenEqual(maybe, maybe2);
   }
 
@@ -234,25 +234,25 @@ public class MaybeTest {
   }
 
   @Test
-  public void maybe_result_is_not_equal_to_maybe_error() throws Exception {
-    given(maybe = result("abc"));
+  public void maybe_value_is_not_equal_to_maybe_error() throws Exception {
+    given(maybe = value("abc"));
     given(maybe2 = error("abc"));
     when(() -> maybe.equals(maybe2));
     thenReturned(false);
   }
 
   @Test
-  public void error_has_different_hashcode_than_result() throws Exception {
-    given(maybe = result("abc"));
+  public void error_has_different_hashcode_than_value() throws Exception {
+    given(maybe = value("abc"));
     given(maybe2 = error("abc"));
     then(maybe.hashCode() != maybe2.hashCode());
   }
 
   @Test
-  public void to_string_result() throws Exception {
-    given(maybe = result("abc"));
+  public void to_string_value() throws Exception {
+    given(maybe = value("abc"));
     when(() -> maybe.toString());
-    thenReturned("Maybe.result(abc)");
+    thenReturned("Maybe.value(abc)");
   }
 
   @Test
@@ -263,17 +263,17 @@ public class MaybeTest {
   }
 
   @Test
-  public void function_invoke_with_result() throws Exception {
-    given(maybe = result("one"));
-    given(maybe = invoke(maybe, (result) -> result(result + "!")));
-    when(maybe.result());
+  public void function_invoke_with_value() throws Exception {
+    given(maybe = value("one"));
+    given(maybe = invoke(maybe, (value) -> value(value + "!")));
+    when(maybe.value());
     thenReturned("one!");
   }
 
   @Test
   public void function_invoke_with_error() throws Exception {
     given(maybe = error(error));
-    given(maybe = invoke(maybe, (result) -> {
+    given(maybe = invoke(maybe, (value) -> {
       throw new RuntimeException();
     }));
     when(maybe.errors());
@@ -282,49 +282,49 @@ public class MaybeTest {
 
   @Test
   public void function_invoke_returning_error() throws Exception {
-    given(maybe = result("one"));
-    given(maybe = invoke(maybe, (result) -> error(error)));
+    given(maybe = value("one"));
+    given(maybe = invoke(maybe, (value) -> error(error)));
     when(maybe.errors());
     thenReturned(asList(error));
   }
 
   @Test
-  public void function_invokeWrap_with_result() throws Exception {
-    given(maybe = result("one"));
-    given(maybe = invokeWrap(maybe, (result) -> result + "!"));
-    when(maybe.result());
+  public void function_invokeWrap_with_value() throws Exception {
+    given(maybe = value("one"));
+    given(maybe = invokeWrap(maybe, (value) -> value + "!"));
+    when(maybe.value());
     thenReturned("one!");
   }
 
   @Test
   public void function_invokeWrap_with_error() throws Exception {
     given(maybe = error(error));
-    given(maybe = invokeWrap(maybe, (result) -> result));
+    given(maybe = invokeWrap(maybe, (value) -> value));
     when(maybe.errors());
     thenReturned(asList(error));
   }
 
   @Test
-  public void bifunction_invoke_with_two_results() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
-    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> result(r1 + r2)));
-    when(maybe.result());
+  public void bifunction_invoke_with_two_values() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
+    given(maybe = invoke(maybe1, maybe2, (r1, r2) -> value(r1 + r2)));
+    when(maybe.value());
     thenReturned("onetwo");
   }
 
   @Test
-  public void bifunction_invoke_with_two_results_returning_error() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
+  public void bifunction_invoke_with_two_values_returning_error() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
     given(maybe = invoke(maybe1, maybe2, (r1, r2) -> error(error)));
     when(maybe.errors());
     thenReturned(asList(error));
   }
 
   @Test
-  public void bifunction_invoke_with_result_and_error() throws Exception {
-    given(maybe1 = result("one"));
+  public void bifunction_invoke_with_value_and_error() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error));
     given(maybe = invoke(maybe1, maybe2, (r1, r2) -> {
       throw new RuntimeException();
@@ -334,9 +334,9 @@ public class MaybeTest {
   }
 
   @Test
-  public void bifunction_invoke_with_error_and_result() throws Exception {
+  public void bifunction_invoke_with_error_and_value() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("one"));
+    given(maybe2 = value("one"));
     given(maybe = invoke(maybe1, maybe2, (r1, r2) -> {
       throw new RuntimeException();
     }));
@@ -356,17 +356,17 @@ public class MaybeTest {
   }
 
   @Test
-  public void bifunction_invokeWrap_with_two_results() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
+  public void bifunction_invokeWrap_with_two_values() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
     given(maybe = invokeWrap(maybe1, maybe2, (r1, r2) -> r1 + r2));
-    when(maybe.result());
+    when(maybe.value());
     thenReturned("onetwo");
   }
 
   @Test
-  public void bifunction_invokeWrap_with_result_and_error() throws Exception {
-    given(maybe1 = result("one"));
+  public void bifunction_invokeWrap_with_value_and_error() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error));
     given(maybe = invokeWrap(maybe1, maybe2, (r1, r2) -> null));
     when(maybe.errors());
@@ -374,9 +374,9 @@ public class MaybeTest {
   }
 
   @Test
-  public void bifunction_invokeWrap_with_error_and_result() throws Exception {
+  public void bifunction_invokeWrap_with_error_and_value() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("one"));
+    given(maybe2 = value("one"));
     given(maybe = invokeWrap(maybe1, maybe2, (r1, r2) -> null));
     when(maybe.errors());
     thenReturned(asList(error));
@@ -392,29 +392,29 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_three_results() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
-    given(maybe3 = result("three"));
-    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> result(r1 + r2 + r3)));
-    when(maybe.result());
+  public void trifunction_invoke_with_three_values() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
+    given(maybe3 = value("three"));
+    given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> value(r1 + r2 + r3)));
+    when(maybe.value());
     thenReturned("onetwothree");
   }
 
   @Test
-  public void trifunction_invoke_with_three_results_returning_error() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
-    given(maybe3 = result("three"));
+  public void trifunction_invoke_with_three_values_returning_error() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
+    given(maybe3 = value("three"));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> error(error)));
     when(maybe.errors());
     thenReturned(asList(error));
   }
 
   @Test
-  public void trifunction_invoke_with_result_result_error() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
+  public void trifunction_invoke_with_value_value_error() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
     given(maybe3 = error(error3));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
       throw new RuntimeException();
@@ -424,10 +424,10 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_result_error_result() throws Exception {
-    given(maybe1 = result("one"));
+  public void trifunction_invoke_with_value_error_value() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error2));
-    given(maybe3 = result("three"));
+    given(maybe3 = value("three"));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
       throw new RuntimeException();
     }));
@@ -436,8 +436,8 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_result_error_error() throws Exception {
-    given(maybe1 = result("one"));
+  public void trifunction_invoke_with_value_error_error() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error2));
     given(maybe3 = error(error3));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
@@ -448,10 +448,10 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_error_result_result() throws Exception {
+  public void trifunction_invoke_with_error_value_value() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("two"));
-    given(maybe3 = result("one"));
+    given(maybe2 = value("two"));
+    given(maybe3 = value("one"));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
       throw new RuntimeException();
     }));
@@ -460,9 +460,9 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_error_result_error() throws Exception {
+  public void trifunction_invoke_with_error_value_error() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("two"));
+    given(maybe2 = value("two"));
     given(maybe3 = error(error3));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
       throw new RuntimeException();
@@ -472,10 +472,10 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invoke_with_error_error_result() throws Exception {
+  public void trifunction_invoke_with_error_error_value() throws Exception {
     given(maybe1 = error(error));
     given(maybe2 = error(error2));
-    given(maybe3 = result("two"));
+    given(maybe3 = value("two"));
     given(maybe = invoke(maybe1, maybe2, maybe3, (r1, r2, r3) -> {
       throw new RuntimeException();
     }));
@@ -496,19 +496,19 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invokeWrap_with_three_results() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
-    given(maybe3 = result("three"));
+  public void trifunction_invokeWrap_with_three_values() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
+    given(maybe3 = value("three"));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> r1 + r2 + r3));
-    when(maybe.result());
+    when(maybe.value());
     thenReturned("onetwothree");
   }
 
   @Test
-  public void trifunction_invokeWrap_with_result_result_error() throws Exception {
-    given(maybe1 = result("one"));
-    given(maybe2 = result("two"));
+  public void trifunction_invokeWrap_with_value_value_error() throws Exception {
+    given(maybe1 = value("one"));
+    given(maybe2 = value("two"));
     given(maybe3 = error(error3));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
     when(maybe.errors());
@@ -516,18 +516,18 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invokeWrap_with_result_error_result() throws Exception {
-    given(maybe1 = result("one"));
+  public void trifunction_invokeWrap_with_value_error_value() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error2));
-    given(maybe3 = result("three"));
+    given(maybe3 = value("three"));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
     when(maybe.errors());
     thenReturned(asList(error2));
   }
 
   @Test
-  public void trifunction_invokeWrap_with_result_error_error() throws Exception {
-    given(maybe1 = result("one"));
+  public void trifunction_invokeWrap_with_value_error_error() throws Exception {
+    given(maybe1 = value("one"));
     given(maybe2 = error(error2));
     given(maybe3 = error(error3));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
@@ -536,19 +536,19 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invokeWrap_with_error_result_result() throws Exception {
+  public void trifunction_invokeWrap_with_error_value_value() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("two"));
-    given(maybe3 = result("one"));
+    given(maybe2 = value("two"));
+    given(maybe3 = value("one"));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
     when(maybe.errors());
     thenReturned(asList(error));
   }
 
   @Test
-  public void trifunction_invokeWrap_with_error_result_error() throws Exception {
+  public void trifunction_invokeWrap_with_error_value_error() throws Exception {
     given(maybe1 = error(error));
-    given(maybe2 = result("two"));
+    given(maybe2 = value("two"));
     given(maybe3 = error(error3));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
     when(maybe.errors());
@@ -556,10 +556,10 @@ public class MaybeTest {
   }
 
   @Test
-  public void trifunction_invokeWrap_with_error_error_result() throws Exception {
+  public void trifunction_invokeWrap_with_error_error_value() throws Exception {
     given(maybe1 = error(error));
     given(maybe2 = error(error2));
-    given(maybe3 = result("two"));
+    given(maybe3 = value("two"));
     given(maybe = invokeWrap(maybe1, maybe2, maybe3, (r1, r2, r3) -> null));
     when(maybe.errors());
     thenReturned(asList(error, error2));
