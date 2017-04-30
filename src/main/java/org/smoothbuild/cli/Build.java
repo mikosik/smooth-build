@@ -20,7 +20,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.Maybe;
 import org.smoothbuild.parse.ModuleLoader;
-import org.smoothbuild.parse.ParsingException;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -61,7 +60,7 @@ public class Build {
           console.rawError(error);
         }
       }
-    } catch (ParsingException | ExecutionException e) {
+    } catch (ExecutionException e) {
       return EXIT_CODE_ERROR;
     }
 
