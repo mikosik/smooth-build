@@ -5,6 +5,7 @@ import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.FunctionsCollector.collectFunctions;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.result;
@@ -53,27 +54,24 @@ public class ModuleLoader {
     Maybe<Map<Name, FunctionContext>> functionContexts = invoke(
         module, m -> collectFunctions(functions, m));
     if (!functionContexts.hasResult()) {
-      return Maybe.errors(functionContexts.errors());
+      return errors(functionContexts.errors());
     }
     Maybe<Map<Name, Set<Dependency>>> dependencies = invoke(
         module, m -> collectDependencies(m, functions));
     Maybe<List<Name>> sorted = invoke(dependencies,
-        dependencies_ -> sortDependencies(functions, dependencies_));
-    return loadDefinedFunctions(functions, functionContexts, sorted);
+        ds -> sortDependencies(functions, ds));
+    return invoke(functionContexts, sorted, (fc, s) -> loadDefinedFunctions(functions, fc, s));
   }
 
-  public Maybe<Functions> loadDefinedFunctions(Functions functions,
-      Maybe<Map<Name, FunctionContext>> functionContexts,
-      Maybe<List<Name>> sorted) {
-    return invoke(functionContexts, sorted, (fc, s) -> {
-      Maybe<Functions> justLoaded = result(new Functions());
-      for (Name name : s) {
-        Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-        Maybe<DefinedFunction> function = invoke(all,
-            a -> loadDefinedFunction(a, fc.get(name)));
-        justLoaded = invokeWrap(justLoaded, function, Functions::add);
-      }
-      return justLoaded;
-    });
+  private Maybe<Functions> loadDefinedFunctions(Functions functions,
+      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+    Maybe<Functions> justLoaded = result(new Functions());
+    for (Name name : sorted) {
+      Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
+      Maybe<DefinedFunction> function = invoke(all,
+          a -> loadDefinedFunction(a, functionContexts.get(name)));
+      justLoaded = invokeWrap(justLoaded, function, Functions::add);
+    }
+    return justLoaded;
   }
 }
