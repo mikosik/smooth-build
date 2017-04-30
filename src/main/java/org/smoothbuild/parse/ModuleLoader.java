@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
@@ -58,18 +59,26 @@ public class ModuleLoader {
     }
     Maybe<Map<Name, Set<Dependency>>> dependencies = invoke(
         module, m -> collectDependencies(m, functions));
-    Maybe<List<Name>> sorted = invoke(dependencies,
-        ds -> sortDependencies(functions, ds));
-    return invoke(functionContexts, sorted, (fc, s) -> loadDefinedFunctions(functions, fc, s));
+    Maybe<List<Name>> sorted = invoke(dependencies, ds -> sortDependencies(functions, ds));
+    Maybe<List<FunctionContext>> sortedFunctionContexts =
+        invokeWrap(functionContexts, sorted, (fcs, s) -> sortFunctions(fcs, s));
+    return invoke(sortedFunctionContexts, sfcs -> loadDefinedFunctions(functions, sfcs));
+  }
+
+  private List<FunctionContext> sortFunctions(Map<Name, FunctionContext> functionContexts,
+      List<Name> names) {
+    return names.stream()
+        .map(n -> functionContexts.get(n))
+        .collect(toList());
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions,
-      Map<Name, FunctionContext> functionContexts, List<Name> sorted) {
+      List<FunctionContext> functionContexts) {
     Maybe<Functions> justLoaded = result(new Functions());
-    for (Name name : sorted) {
+    for (FunctionContext functionContext : functionContexts) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
       Maybe<DefinedFunction> function = invoke(all,
-          a -> loadDefinedFunction(a, functionContexts.get(name)));
+          a -> loadDefinedFunction(a, functionContext));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
