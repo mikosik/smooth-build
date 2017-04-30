@@ -2,10 +2,14 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.maybe;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -21,21 +25,17 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class ScriptParser {
-  public static ModuleContext parseScript(Console console, InputStream inputStream,
-      Path scriptFile) {
-    ErrorListener errorListener = new ErrorListener(console);
-
+  public static Maybe<ModuleContext> parseScript(InputStream inputStream, Path scriptFile) {
+    ErrorListener errorListener = new ErrorListener();
     ANTLRInputStream antlrInputStream;
     try {
       antlrInputStream = new ANTLRInputStream(inputStream);
     } catch (IOException e) {
-      console.error("error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
-      throw new ParsingException();
+      return error("error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
     }
 
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
@@ -46,24 +46,18 @@ public class ScriptParser {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
 
-    ModuleContext result = parser.module();
-    if (console.isErrorReported()) {
-      throw new ParsingException();
-    }
-    return result;
+    return maybe(parser.module(), errorListener.errors);
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final Console console;
+    private final List<ParseError> errors = new ArrayList<>();
 
-    public ErrorListener(Console console) {
-      this.console = console;
-    }
+    public ErrorListener() {}
 
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
         int charPositionInLine, String msg, @Nullable RecognitionException e) {
       CodeLocation location = createLocation(offendingSymbol, line);
-      console.error(location, msg);
+      errors.add(new ParseError(location, msg));
     }
 
     private CodeLocation createLocation(Object offendingSymbol, int line) {
@@ -92,7 +86,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      console.error(locationOf(token), message);
+      errors.add(new ParseError(locationOf(token), message));
     }
   }
 }
