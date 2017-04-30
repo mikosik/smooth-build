@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.cmd;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
@@ -18,8 +19,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_fails_when_script_file_is_missing() throws Exception {
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(), "error: Cannot read build script file 'build.smooth'. "
-        + "File 'build.smooth' doesn't exist.\n");
+    then(output(), containsString("error: Cannot read build script file 'build.smooth'. "
+        + "File 'build.smooth' doesn't exist.\n"));
   }
 
   @Test
