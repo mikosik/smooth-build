@@ -34,6 +34,11 @@ public class Maybe<E> {
     return new Maybe<E>(null, ImmutableList.copyOf(errors));
   }
 
+  public static <E> Maybe<E> maybe(E result, List<? extends Object> errors) {
+    checkArgument(!(result == null && errors.isEmpty()));
+    return new Maybe<>(errors.isEmpty() ? result : null, ImmutableList.copyOf(errors));
+  }
+
   private Maybe(E result, ImmutableList<Object> errors) {
     this.result = result;
     this.errors = errors;

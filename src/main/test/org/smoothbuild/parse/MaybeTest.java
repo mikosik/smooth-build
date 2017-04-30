@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
@@ -35,28 +36,28 @@ public class MaybeTest {
   }
 
   @Test
-  public void with_result_has_result() throws Exception {
+  public void created_result_has_result() throws Exception {
     given(maybe = result("abc"));
     when(() -> maybe.hasResult());
     thenReturned(true);
   }
 
   @Test
-  public void with_result_has_no_error() throws Exception {
+  public void created_result_has_no_error() throws Exception {
     given(maybe = result("abc"));
     when(() -> maybe.errors());
     thenReturned(empty());
   }
 
   @Test
-  public void with_result_contains_result() throws Exception {
+  public void created_result_contains_result() throws Exception {
     given(maybe = result("abc"));
     when(() -> maybe.result());
     thenReturned("abc");
   }
 
   @Test
-  public void with_error_contains_error() throws Exception {
+  public void created_error_contains_error() throws Exception {
     given(maybe = error(error));
     when(() -> maybe.errors());
     thenReturned(asList(error));
@@ -70,56 +71,104 @@ public class MaybeTest {
   }
 
   @Test
-  public void with_error_fails_for_null() throws Exception {
+  public void created_error_fails_for_null() throws Exception {
     when(() -> error(null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
-  public void with_error_has_no_result() throws Exception {
+  public void created_error_has_no_result() throws Exception {
     given(maybe = error(error));
     when(() -> maybe.hasResult());
     thenReturned(false);
   }
 
   @Test
-  public void with_error_fails_for_result() throws Exception {
+  public void created_error_fails_for_result() throws Exception {
     given(maybe = error(error));
     when(() -> maybe.result());
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void with_errors_contains_error() throws Exception {
+  public void created_errors_contains_error() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
     when(() -> maybe.errors());
     thenReturned(asList(error, error2));
   }
 
   @Test
-  public void with_errors_fails_for_null() throws Exception {
+  public void created_errors_fails_for_null() throws Exception {
     when(() -> Maybe.errors(null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
-  public void with_errors_fails_for_empty_list() throws Exception {
+  public void created_errors_fails_for_empty_list() throws Exception {
     when(() -> Maybe.errors(asList()));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
-  public void with_errors_has_no_result() throws Exception {
+  public void created_errors_has_no_result() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
     when(() -> maybe.hasResult());
     thenReturned(false);
   }
 
   @Test
-  public void with_errors_fails_for_result() throws Exception {
+  public void created_errors_fails_for_result() throws Exception {
     given(maybe = Maybe.errors(asList(error, error2)));
     when(() -> maybe.result());
     thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void created_maybe_with_null_result_and_no_errors_fails() throws Exception {
+    when(() -> Maybe.maybe(null, asList()));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void created_maybe_with_result_and_no_errors_has_result() throws Exception {
+    given(maybe = Maybe.maybe("result", asList()));
+    when(() -> maybe.result());
+    thenReturned("result");
+  }
+
+  @Test
+  public void created_maybe_with_result_and_no_errors_has_no_errors() throws Exception {
+    given(maybe = Maybe.maybe("result", asList()));
+    when(() -> maybe.errors());
+    thenReturned(hasSize(0));
+  }
+
+  @Test
+  public void created_maybe_with_null_result_and_errors_fails_for_result() throws Exception {
+    given(maybe = Maybe.maybe(null, asList(error, error2)));
+    when(() -> maybe.result());
+    thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void created_maybe_with_null_result_and_errors_has_errors() throws Exception {
+    given(maybe = Maybe.maybe(null, asList(error, error2)));
+    when(() -> maybe.errors());
+    thenReturned(asList(error, error2));
+  }
+
+  @Test
+  public void created_maybe_with_result_and_errors_fails_for_result() throws Exception {
+    given(maybe = Maybe.maybe("result", asList(error, error2)));
+    when(() -> maybe.result());
+    thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void created_maybe_with_result_and_errors_has_errors() throws Exception {
+    given(maybe = Maybe.maybe("result", asList(error, error2)));
+    when(() -> maybe.errors());
+    thenReturned(asList(error, error2));
   }
 
   @Test
