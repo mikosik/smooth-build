@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.testory.Testory.thenEqual;
+import static org.hamcrest.Matchers.containsString;
+import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -11,6 +12,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
     givenScript("result = ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenEqual(output(), "build.smooth:1: error: no viable alternative at input '<EOF>'\n");
+    then(output(), containsString(
+        "build.smooth:1: error: no viable alternative at input '<EOF>'\n"));
   }
 }
