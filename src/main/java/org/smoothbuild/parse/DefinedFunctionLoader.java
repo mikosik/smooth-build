@@ -81,11 +81,14 @@ public class DefinedFunctionLoader {
 
     public Maybe<DefinedFunction> loadFunction(FunctionContext functionContext) {
       Maybe<Expression> expression = parsePipe(functionContext.pipe());
+      return invokeWrap(expression, e -> createFunction(functionContext, e));
+    }
+
+    private static DefinedFunction createFunction(FunctionContext functionContext,
+        Expression expression) {
       Name name = name(functionContext.functionName().getText());
-      return invokeWrap(expression, (expression_) -> {
-        Signature signature = new Signature(expression_.type(), name, asList());
-        return new DefinedFunction(signature, expression_);
-      });
+      Signature signature = new Signature(expression.type(), name, asList());
+      return new DefinedFunction(signature, expression);
     }
 
     private Maybe<Expression> parsePipe(PipeContext pipeContext) {
