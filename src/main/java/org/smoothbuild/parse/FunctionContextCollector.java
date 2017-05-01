@@ -3,18 +3,19 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
-import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
@@ -32,15 +33,7 @@ public class FunctionContextCollector {
   public static Maybe<List<FunctionContext>> collectFunctionContexts(ModuleContext module,
       Functions functions) {
     Maybe<Map<Name, FunctionNode>> functionNodes = collectNodes(module, functions);
-    Maybe<List<Name>> sorted = invoke(functionNodes, fns -> sortDependencies(functions, fns));
-    return invokeWrap(functionNodes, sorted, (fns, s) -> sortFunctions(fns, s));
-  }
-
-  private static List<FunctionContext> sortFunctions(Map<Name, FunctionNode> functionNodes,
-      List<Name> names) {
-    return names.stream()
-        .map(n -> functionNodes.get(n).context())
-        .collect(toList());
+    return invoke(functionNodes, fns -> sortDependencies(functions, fns));
   }
 
   private static Maybe<Map<Name, FunctionNode>> collectNodes(ModuleContext module,
@@ -110,5 +103,56 @@ public class FunctionContextCollector {
   private static ParseError unknownFunctionError(Dependency dependency) {
     return new ParseError(dependency.location(),
         "Call to unknown function " + dependency.functionName() + ".");
+  }
+
+  public static Maybe<List<FunctionContext>> sortDependencies(Functions functions,
+      Map<Name, FunctionNode> nodes) {
+    Map<Name, FunctionNode> notSorted = new HashMap<>(nodes);
+    Set<Name> availableFunctions = new HashSet<>(functions.names());
+    List<Name> sorted = new ArrayList<>(nodes.size());
+    DependencyStack stack = new DependencyStack();
+
+    while (!notSorted.isEmpty() || !stack.isEmpty()) {
+      if (stack.isEmpty()) {
+        stack.push(removeNext(notSorted));
+      }
+      DependencyStackElem stackTop = stack.peek();
+      Dependency missing = findUnreachableDependency(
+          availableFunctions, sorted, stackTop.dependencies());
+      if (missing == null) {
+        sorted.add(stack.pop().name());
+      } else {
+        stackTop.setMissing(missing);
+        FunctionNode next = notSorted.remove(missing.functionName());
+        if (next == null) {
+          return error(stack.createCycleError());
+        } else {
+          stack.push(new DependencyStackElem(next));
+        }
+      }
+    }
+    List<FunctionContext> contexts = sorted
+        .stream()
+        .map(n -> nodes.get(n).context())
+        .collect(toList());
+    return value(contexts);
+  }
+
+  private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
+      List<Name> sorted, Set<Dependency> dependencies) {
+    for (Dependency dependency : dependencies) {
+      Name name = dependency.functionName();
+      if (!(sorted.contains(name) || availableFunctions.contains(name))) {
+        return dependency;
+      }
+    }
+    return null;
+  }
+
+  private static DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
+    Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
+    Entry<Name, FunctionNode> element = it.next();
+    it.remove();
+    return new DependencyStackElem(element.getValue());
   }
 }
