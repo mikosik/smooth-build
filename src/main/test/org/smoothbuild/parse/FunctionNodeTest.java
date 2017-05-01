@@ -3,6 +3,8 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 
+import java.util.HashSet;
+
 import org.junit.Test;
 
 import com.google.common.testing.EqualsTester;
@@ -24,6 +26,6 @@ public class FunctionNodeTest {
   }
 
   private static FunctionNode node(String name, int line) {
-    return new FunctionNode(name(name), null, codeLocation(line));
+    return new FunctionNode(name(name), null, new HashSet<>(), codeLocation(line));
   }
 }

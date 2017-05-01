@@ -13,7 +13,6 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -155,13 +154,14 @@ public class DependencyStackTest {
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {
-    ImmutableSet<Dependency> deps = ImmutableSet.of();
-    DependencyStackElem elem = new DependencyStackElem(from, deps);
-    elem.setMissing(new Dependency(CodeLocation.codeLocation(location), to));
+    DependencyStackElem elem = new DependencyStackElem(
+        new FunctionNode(from, null, ImmutableSet.of(), null));
+    elem.setMissing(new Dependency(codeLocation(location), to));
     return elem;
   }
 
   private static DependencyStackElem elem() {
-    return new DependencyStackElem(name("name"), ImmutableSet.<Dependency> of());
+    return new DependencyStackElem(new FunctionNode(
+        name("name"), null, ImmutableSet.of(), null));
   }
 }

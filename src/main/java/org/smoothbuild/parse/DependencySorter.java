@@ -23,17 +23,17 @@ import com.google.common.collect.ImmutableList;
  */
 public class DependencySorter {
   public static Maybe<List<Name>> sortDependencies(Functions functions,
-      Map<Name, Set<Dependency>> dependencies) {
+      Map<Name, FunctionNode> dependencies) {
     return new Worker(functions, dependencies).work();
   }
 
   private static class Worker {
-    private final Map<Name, Set<Dependency>> notSorted;
+    private final Map<Name, FunctionNode> notSorted;
     private final Set<Name> reachableNames;
     private final List<Name> sorted;
     private final DependencyStack stack;
 
-    public Worker(Functions functions, Map<Name, Set<Dependency>> dependencies) {
+    public Worker(Functions functions, Map<Name, FunctionNode> dependencies) {
       this.notSorted = new HashMap<>(dependencies);
       this.reachableNames = new HashSet<>(functions.names());
       this.sorted = new ArrayList<>(dependencies.size());
@@ -51,14 +51,14 @@ public class DependencySorter {
           addStackTopToSorted();
         } else {
           stackTop.setMissing(missing);
-          Set<Dependency> next = notSorted.remove(missing.functionName());
+          FunctionNode next = notSorted.remove(missing.functionName());
           if (next == null) {
             // DependencyCollector made sure that all dependency exists so the
             // only possibility at this point is that missing dependency is on
             // stack and we have cycle in call graph.
             return error(stack.createCycleError());
           } else {
-            stack.push(new DependencyStackElem(missing.functionName(), next));
+            stack.push(new DependencyStackElem(next));
           }
         }
       }
@@ -81,11 +81,11 @@ public class DependencySorter {
       return null;
     }
 
-    private DependencyStackElem removeNext(Map<Name, Set<Dependency>> dependencies) {
-      Iterator<Entry<Name, Set<Dependency>>> it = dependencies.entrySet().iterator();
-      Entry<Name, Set<Dependency>> element = it.next();
+    private DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
+      Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
+      Entry<Name, FunctionNode> element = it.next();
       it.remove();
-      return new DependencyStackElem(element.getKey(), element.getValue());
+      return new DependencyStackElem(element.getValue());
     }
   }
 }
