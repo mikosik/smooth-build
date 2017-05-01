@@ -1,14 +1,14 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.parse.DependencyCollector.collectDependencies;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.maybe;
+import static org.smoothbuild.parse.Maybe.value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,16 +26,13 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 
+import com.google.common.collect.ImmutableSet;
+
 public class FunctionContextCollector {
   public static Maybe<List<FunctionContext>> collectFunctionContexts(ModuleContext module,
       Functions functions) {
     Maybe<Map<Name, FunctionNode>> functionNodes = collectNodes(module, functions);
-    if (!functionNodes.hasValue()) {
-      return errors(functionNodes.errors());
-    }
-    Maybe<Map<Name, FunctionNode>> dependencies = invoke(functionNodes,
-        fns -> collectDependencies(fns, functions));
-    Maybe<List<Name>> sorted = invoke(dependencies, ds -> sortDependencies(functions, ds));
+    Maybe<List<Name>> sorted = invoke(functionNodes, fns -> sortDependencies(functions, fns));
     return invokeWrap(functionNodes, sorted, (fns, s) -> sortFunctions(fns, s));
   }
 
@@ -81,6 +78,37 @@ public class FunctionContextCollector {
       }
 
     }.visit(module);
-    return maybe(nodes, errors);
+    if (errors.isEmpty()) {
+      return value(nodes).addErrors(undefinedFunctionErrors(functions, nodes));
+    } else {
+      return errors(errors);
+    }
+  }
+
+  public static List<ParseError> undefinedFunctionErrors(Functions functions,
+      Map<Name, FunctionNode> functionNodes) {
+    Set<Dependency> defined = ImmutableSet.<Name> builder()
+        .addAll(functions.names())
+        .addAll(functionNodes.keySet())
+        .build()
+        .stream()
+        .map(name -> new Dependency(null, name))
+        .collect(toSet());
+    Set<Dependency> referenced = functionNodes
+        .values()
+        .stream()
+        .map(FunctionNode::dependencies)
+        .flatMap(fd -> fd.stream())
+        .collect(toSet());
+    referenced.removeAll(defined);
+    return referenced
+        .stream()
+        .map(FunctionContextCollector::unknownFunctionError)
+        .collect(toList());
+  }
+
+  private static ParseError unknownFunctionError(Dependency dependency) {
+    return new ParseError(dependency.location(),
+        "Call to unknown function " + dependency.functionName() + ".");
   }
 }
