@@ -33,7 +33,7 @@ public class FunctionContextCollector {
   public static Maybe<List<FunctionContext>> collectFunctionContexts(ModuleContext module,
       Functions functions) {
     Maybe<Map<Name, FunctionNode>> functionNodes = collectNodes(module, functions);
-    return invoke(functionNodes, fns -> sortDependencies(functions, fns));
+    return invoke(functionNodes, fns -> sortedByDependencies(functions, fns));
   }
 
   private static Maybe<Map<Name, FunctionNode>> collectNodes(ModuleContext module,
@@ -105,7 +105,7 @@ public class FunctionContextCollector {
         "Call to unknown function " + dependency.functionName() + ".");
   }
 
-  public static Maybe<List<FunctionContext>> sortDependencies(Functions functions,
+  public static Maybe<List<FunctionContext>> sortedByDependencies(Functions functions,
       Map<Name, FunctionNode> nodes) {
     Map<Name, FunctionNode> notSorted = new HashMap<>(nodes);
     Set<Name> availableFunctions = new HashSet<>(functions.names());
