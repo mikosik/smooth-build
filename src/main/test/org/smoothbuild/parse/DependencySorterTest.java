@@ -1,8 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.DependencySorter.sortDependencies;
 import static org.smoothbuild.parse.Maybe.value;
@@ -14,6 +12,7 @@ import static org.testory.Testory.when;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.Functions;
@@ -28,15 +27,15 @@ public class DependencySorterTest {
   private final Name name4 = Name.name("name4");
   private final Name name5 = Name.name("name5");
   private final Name name6 = Name.name("name6");
-  private HashMap<Name, Set<Dependency>> map;
+  private HashMap<Name, FunctionNode> map;
 
   @Test
   public void linear_dependency() {
     given(map = new HashMap<>());
-    given(map).put(name3, dependencies(name4));
-    given(map).put(name1, dependencies(name2));
-    given(map).put(name4, dependencies());
-    given(map).put(name2, dependencies(name3));
+    given(map).put(name3, node(name3, name4));
+    given(map).put(name1, node(name1, name2));
+    given(map).put(name4, node(name4));
+    given(map).put(name2, node(name2, name3));
     when(() -> sortDependencies(new Functions(), map));
     thenReturned(value(asList(name4, name3, name2, name1)));
   }
@@ -44,12 +43,12 @@ public class DependencySorterTest {
   @Test
   public void tree_dependency() {
     given(map = new HashMap<>());
-    given(map).put(name1, dependencies(name2, name3));
-    given(map).put(name2, dependencies(name4));
-    given(map).put(name3, dependencies(name5));
-    given(map).put(name4, dependencies());
-    given(map).put(name5, dependencies(name6));
-    given(map).put(name6, dependencies());
+    given(map).put(name1, node(name1, name2, name3));
+    given(map).put(name2, node(name2, name4));
+    given(map).put(name3, node(name3, name5));
+    given(map).put(name4, node(name4));
+    given(map).put(name5, node(name5, name6));
+    given(map).put(name6, node(name6));
 
     List<Name> list = sortDependencies(new Functions(), map).value();
     then(list.indexOf(name4) < list.indexOf(name2));
@@ -63,7 +62,7 @@ public class DependencySorterTest {
   @Test
   public void simple_recursion_is_logged_as_error() throws Exception {
     given(map = new HashMap<>());
-    given(map).put(name1, dependencies(name1));
+    given(map).put(name1, node(name1, name1));
     when(() -> sortDependencies(new Functions(), map));
     thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasValue());
   }
@@ -71,14 +70,18 @@ public class DependencySorterTest {
   @Test
   public void cycle_is_logged_as_error() throws Exception {
     given(map = new HashMap<>());
-    given(map).put(name1, dependencies(name2));
-    given(map).put(name2, dependencies(name3));
-    given(map).put(name3, dependencies(name1));
+    given(map).put(name1, node(name1, name2));
+    given(map).put(name2, node(name2, name3));
+    given(map).put(name3, node(name3, name1));
     when(() -> sortDependencies(new Functions(), map));
     thenReturned((Predicate<Maybe<?>>) maybe -> !maybe.hasValue());
   }
 
-  private static Set<Dependency> dependencies(Name... names) {
-    return stream(names).map((name) -> new Dependency(codeLocation(1), name)).collect(toSet());
+  private static FunctionNode node(Name name, Name... dependencies) {
+    Set<Dependency> dependencySet = asList(dependencies)
+        .stream()
+        .map(n -> new Dependency(codeLocation(1), n))
+        .collect(Collectors.toSet());
+    return new FunctionNode(name, null, dependencySet, codeLocation(1));
   }
 }

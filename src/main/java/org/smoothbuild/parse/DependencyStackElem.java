@@ -5,21 +5,19 @@ import java.util.Set;
 import org.smoothbuild.lang.function.base.Name;
 
 public class DependencyStackElem {
-  private final Name name;
-  private final Set<Dependency> dependencies;
+  private final FunctionNode node;
   private Dependency missing;
 
-  public DependencyStackElem(Name name, Set<Dependency> dependencies) {
-    this.name = name;
-    this.dependencies = dependencies;
+  public DependencyStackElem(FunctionNode node) {
+    this.node = node;
   }
 
   public Name name() {
-    return name;
+    return node.name();
   }
 
   public Set<Dependency> dependencies() {
-    return dependencies;
+    return node.dependencies();
   }
 
   public Dependency missing() {

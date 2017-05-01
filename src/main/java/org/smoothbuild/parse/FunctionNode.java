@@ -1,17 +1,24 @@
 package org.smoothbuild.parse;
 
+import java.util.Set;
+
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
+
+import com.google.common.collect.ImmutableSet;
 
 public class FunctionNode {
   private final Name name;
   private final FunctionContext context;
   private final CodeLocation location;
+  private final Set<Dependency> dependencies;
 
-  public FunctionNode(Name name, FunctionContext context, CodeLocation location) {
+  public FunctionNode(Name name, FunctionContext context, Set<Dependency> dependencies,
+      CodeLocation location) {
     this.name = name;
     this.context = context;
+    this.dependencies = ImmutableSet.copyOf(dependencies);
     this.location = location;
   }
 
@@ -21,6 +28,10 @@ public class FunctionNode {
 
   public FunctionContext context() {
     return context;
+  }
+
+  public Set<Dependency> dependencies() {
+    return dependencies;
   }
 
   public CodeLocation location() {
