@@ -24,68 +24,51 @@ import com.google.common.collect.ImmutableList;
 public class DependencySorter {
   public static Maybe<List<Name>> sortDependencies(Functions functions,
       Map<Name, FunctionNode> dependencies) {
-    return new Worker(functions, dependencies).work();
+    Map<Name, FunctionNode> notSorted = new HashMap<>(dependencies);
+    Set<Name> availableFunctions = new HashSet<>(functions.names());
+    List<Name> sorted = new ArrayList<>(dependencies.size());
+    DependencyStack stack = new DependencyStack();
+    
+    while (!notSorted.isEmpty() || !stack.isEmpty()) {
+      if (stack.isEmpty()) {
+        stack.push(removeNext(notSorted));
+      }
+      DependencyStackElem stackTop = stack.peek();
+      Dependency missing = findUnreachableDependency(
+          availableFunctions, sorted, stackTop.dependencies());
+      if (missing == null) {
+        sorted.add(stack.pop().name());
+      } else {
+        stackTop.setMissing(missing);
+        FunctionNode next = notSorted.remove(missing.functionName());
+        if (next == null) {
+          // DependencyCollector made sure that all dependency exists so the
+          // only possibility at this point is that missing dependency is on
+          // stack and we have cycle in call graph.
+          return error(stack.createCycleError());
+        } else {
+          stack.push(new DependencyStackElem(next));
+        }
+      }
+    }
+    return value(ImmutableList.copyOf(sorted));
   }
 
-  private static class Worker {
-    private final Map<Name, FunctionNode> notSorted;
-    private final Set<Name> reachableNames;
-    private final List<Name> sorted;
-    private final DependencyStack stack;
-
-    public Worker(Functions functions, Map<Name, FunctionNode> dependencies) {
-      this.notSorted = new HashMap<>(dependencies);
-      this.reachableNames = new HashSet<>(functions.names());
-      this.sorted = new ArrayList<>(dependencies.size());
-      this.stack = new DependencyStack();
-    }
-
-    public Maybe<List<Name>> work() {
-      while (!notSorted.isEmpty() || !stack.isEmpty()) {
-        if (stack.isEmpty()) {
-          stack.push(removeNext(notSorted));
-        }
-        DependencyStackElem stackTop = stack.peek();
-        Dependency missing = findUnreachableDependency(reachableNames, stackTop.dependencies());
-        if (missing == null) {
-          addStackTopToSorted();
-        } else {
-          stackTop.setMissing(missing);
-          FunctionNode next = notSorted.remove(missing.functionName());
-          if (next == null) {
-            // DependencyCollector made sure that all dependency exists so the
-            // only possibility at this point is that missing dependency is on
-            // stack and we have cycle in call graph.
-            return error(stack.createCycleError());
-          } else {
-            stack.push(new DependencyStackElem(next));
-          }
-        }
+  private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
+      List<Name> sorted, Set<Dependency> dependencies) {
+    for (Dependency dependency : dependencies) {
+      Name name = dependency.functionName();
+      if (!(sorted.contains(name) || availableFunctions.contains(name))) {
+        return dependency;
       }
-      return value(ImmutableList.copyOf(sorted));
     }
+    return null;
+  }
 
-    private void addStackTopToSorted() {
-      Name name = stack.pop().name();
-      sorted.add(name);
-      reachableNames.add(name);
-    }
-
-    private Dependency findUnreachableDependency(Set<Name> reachableNames,
-        Set<Dependency> dependencies) {
-      for (Dependency dependency : dependencies) {
-        if (!reachableNames.contains(dependency.functionName())) {
-          return dependency;
-        }
-      }
-      return null;
-    }
-
-    private DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
-      Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
-      Entry<Name, FunctionNode> element = it.next();
-      it.remove();
-      return new DependencyStackElem(element.getValue());
-    }
+  private static DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
+    Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
+    Entry<Name, FunctionNode> element = it.next();
+    it.remove();
+    return new DependencyStackElem(element.getValue());
   }
 }
