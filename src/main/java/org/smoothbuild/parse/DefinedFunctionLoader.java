@@ -41,7 +41,6 @@ import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.InvalidExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
@@ -224,13 +223,8 @@ public class DefinedFunctionLoader {
       CodeLocation codeLocation = locationOf(functionNameContext);
       Maybe<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
           arguments);
-      if (argumentExpressions.hasValue()) {
-        return value(function.createCallExpression(argumentExpressions.value(), false,
-            codeLocation));
-      } else {
-        return value((Expression) new InvalidExpression(function.type(), codeLocation))
-            .addErrors(argumentExpressions.errors());
-      }
+      return invokeWrap(argumentExpressions,
+          aes -> function.createCallExpression(aes, false, codeLocation));
     }
 
     private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
@@ -265,8 +259,7 @@ public class DefinedFunctionLoader {
       try {
         return value(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
-        return value((Expression) new InvalidExpression(STRING, location))
-            .addError(new ParseError(location, e.getMessage()));
+        return error(new ParseError(location, e.getMessage()));
       }
     }
 
