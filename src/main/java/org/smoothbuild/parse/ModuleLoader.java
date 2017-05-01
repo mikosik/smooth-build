@@ -45,9 +45,9 @@ public class ModuleLoader {
   private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
-    Maybe<List<FunctionContext>> sortedFunctionContexts = invoke(module,
+    Maybe<List<FunctionContext>> functionContexts = invoke(module,
         m -> collectFunctionContexts(m, functions));
-    return invoke(sortedFunctionContexts, sfcs -> loadDefinedFunctions(functions, sfcs));
+    return invoke(functionContexts, sfcs -> loadDefinedFunctions(functions, sfcs));
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions,
