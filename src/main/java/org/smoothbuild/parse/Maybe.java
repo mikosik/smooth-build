@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.util.TriFunction;
 
 import com.google.common.base.Objects;
@@ -42,10 +41,6 @@ public class Maybe<E> {
   private Maybe(E value, ImmutableList<Object> errors) {
     this.value = value;
     this.errors = errors;
-  }
-
-  public Maybe<E> addError(CodeLocation location, String message) {
-    return addError(new ParseError(location, message));
   }
 
   public Maybe<E> addError(Object error) {

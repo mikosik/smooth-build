@@ -266,7 +266,7 @@ public class DefinedFunctionLoader {
         return value(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
         return value((Expression) new InvalidExpression(STRING, location))
-            .addError(location, e.getMessage());
+            .addError(new ParseError(location, e.getMessage()));
       }
     }
 
