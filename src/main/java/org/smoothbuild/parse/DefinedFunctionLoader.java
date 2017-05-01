@@ -101,11 +101,11 @@ public class DefinedFunctionLoader {
           return pipedArgument(result_, codeLocation);
         });
         Maybe<List<Argument>> arguments = parseArgumentList(call.argList());
-        arguments = invokeWrap(arguments, pipedArgument, Lists::concat);
         if (arguments.hasValue()) {
+          arguments = invokeWrap(arguments, pipedArgument, Lists::concat);
           result = parseCall(call, arguments.value());
         } else {
-          Maybe.errors(arguments.errors());
+          result = result.addErrors(arguments.errors());
         }
       }
       return result;
