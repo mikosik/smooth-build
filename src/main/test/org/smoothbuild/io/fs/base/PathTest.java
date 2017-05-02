@@ -8,14 +8,13 @@ import static org.quackery.report.AssertException.assertEquals;
 import static org.quackery.report.AssertException.assertTrue;
 import static org.quackery.report.AssertException.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.util.Lists.map;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,10 +36,6 @@ public class PathTest {
             .addAll(map(listOfCorrectPaths(), PathTest::pathCanBeCreatedForValidName)))
         .add(suite("cannot create path with invalid value")
             .addAll(map(listOfInvalidPaths(), PathTest::cannotCreatePathWithInvalidValue)));
-  }
-
-  private static <A, B> List<B> map(List<A> elements, Function<? super A, B> mapper) {
-    return elements.stream().map(mapper).collect(Collectors.toList());
   }
 
   private static Case pathCanBeCreatedForValidName(String path) {
@@ -164,11 +159,7 @@ public class PathTest {
   private static Case testParts(String path, List<String> parts) {
     return newCase(format("[{0}] has parts: {1}", path, parts),
         () -> {
-          List<String> actualParts = path(path)
-              .parts()
-              .stream()
-              .map(Path::value)
-              .collect(Collectors.toList());
+          List<String> actualParts = map(path(path).parts(), Path::value);
           assertEquals(actualParts, parts);
         });
   }

@@ -8,6 +8,7 @@ import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.value;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,11 +132,7 @@ public class FunctionContextCollector {
         }
       }
     }
-    List<FunctionContext> contexts = sorted
-        .stream()
-        .map(n -> nodes.get(n).context())
-        .collect(toList());
-    return value(contexts);
+    return value(map(sorted, n -> nodes.get(n).context()));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,

@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
@@ -20,6 +19,7 @@ import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
+import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
@@ -107,10 +107,7 @@ public class DefinedFunctionLoader {
     }
 
     private Maybe<List<Expression>> parseExpressionList(List<ExpressionContext> expressions) {
-      return pullUp(expressions
-          .stream()
-          .map(e -> parseExpression(e))
-          .collect(toList()));
+      return pullUp(map(expressions, this::parseExpression));
     }
 
     private Maybe<Expression> parseExpression(ExpressionContext expressionContext) {
@@ -137,9 +134,7 @@ public class DefinedFunctionLoader {
 
     private Expression createArray(ArrayType type, List<Expression> elements,
         CodeLocation location) {
-      List<Expression> converted = elements.stream()
-          .map((e) -> implicitConversion(type.elemType(), e))
-          .collect(toList());
+      List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
       return new ArrayExpression(type, converted, location);
     }
 
