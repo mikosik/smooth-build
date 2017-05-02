@@ -103,4 +103,14 @@ public class ArrayTest extends AcceptanceTestCase {
         "build.smooth:1: error: Array cannot contain element with type 'Nothing[]'."
             + " Only following types are allowed: ['String', 'Blob', 'File', 'Nothing'].\n"));
   }
+
+  @Test
+  public void first_element_expression_error_doesnt_suppress_second_element_expression_error()
+      throws IOException {
+    givenScript("result = [ stringIdentity(unknown1=''), stringIdentity(unknown2='') ];");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("Function 'stringIdentity' has no parameter 'unknown1'."));
+    then(output(), containsString("Function 'stringIdentity' has no parameter 'unknown2'."));
+  }
 }
