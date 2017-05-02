@@ -4,11 +4,11 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.errors;
-import static org.smoothbuild.parse.Maybe.invoke;
-import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.errors;
+import static org.smoothbuild.util.Maybe.invoke;
+import static org.smoothbuild.util.Maybe.value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +27,7 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableSet;
 
