@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +82,7 @@ public class Maybe<E> {
     if (hasValue()) {
       return "Maybe.value(" + value + ")";
     } else {
-      List<String> messages = errors
-          .stream()
-          .map(Object::toString)
-          .collect(toList());
-      return "Maybe.error(" + join(", ", messages) + ")";
+      return "Maybe.error(" + join(", ", map(errors, Object::toString)) + ")";
     }
   }
 
