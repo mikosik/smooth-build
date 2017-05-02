@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -133,39 +133,27 @@ public class DefinedFunctionLoader {
       List<ExpressionContext> elems = array.expression();
       Maybe<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(array);
-      Maybe<Type> elemType = commonSuperType(expressions, location);
-      if (!(expressions.hasValue() && elemType.hasValue())) {
-        return Maybe.<Expression> errors(expressions.addErrors(elemType.errors()).errors());
-      }
-      List<Expression> pureExpressions = expressions.value();
-      Type pureType = elemType.value();
-      ArrayType arrayType = Types.arrayTypeContaining(pureType);
-      if (arrayType == null) {
-        return error(new ParseError(location, "Array cannot contain element with type "
-            + elemType.value() + ". Only following types are allowed: " + Types.basicTypes()
-            + "."));
-      }
-
-      List<Expression> converted = pureExpressions.stream()
-          .map((e) -> implicitConversion(pureType, e))
-          .collect(toList());
-      return value(new ArrayExpression(arrayType, converted, location));
+      Maybe<ArrayType> arrayType = invoke(expressions, es -> arrayType(es, location));
+      return invokeWrap(arrayType, at -> createArray(at, expressions.value(), location));
     }
 
-    private Maybe<Type> commonSuperType(Maybe<List<Expression>> expressions,
+    private Expression createArray(ArrayType type, List<Expression> elements,
         CodeLocation location) {
-      if (!expressions.hasValue()) {
-        return invokeWrap(expressions, expressions_ -> null);
+      List<Expression> converted = elements.stream()
+          .map((e) -> implicitConversion(type.elemType(), e))
+          .collect(toList());
+      return new ArrayExpression(type, converted, location);
+    }
+
+    private Maybe<ArrayType> arrayType(List<Expression> expressions, CodeLocation location) {
+      if (expressions.isEmpty()) {
+        return value(NIL);
       }
-      List<Expression> list = expressions.value();
-      if (list.isEmpty()) {
-        return value(NOTHING);
-      }
-      Type firstType = list.get(0).type();
+      Type firstType = expressions.get(0).type();
       Type superType = firstType;
 
-      for (int i = 1; i < list.size(); i++) {
-        Type type = list.get(i).type();
+      for (int i = 1; i < expressions.size(); i++) {
+        Type type = expressions.get(i).type();
         superType = commonSuperType(superType, type);
 
         if (superType == null) {
@@ -175,7 +163,14 @@ public class DefinedFunctionLoader {
                   + " has type " + type + "."));
         }
       }
-      return value(superType);
+      ArrayType arrayType = Types.arrayTypeContaining(superType);
+      if (arrayType == null) {
+        return error(new ParseError(location, "Array cannot contain element with type "
+            + superType + ". Only following types are allowed: " + Types.basicTypes()
+            + "."));
+      }
+
+      return value(arrayType);
     }
 
     private static Type commonSuperType(Type type1, Type type2) {
