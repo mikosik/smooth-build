@@ -12,6 +12,7 @@ import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.pullUp;
@@ -216,15 +217,17 @@ public class DefinedFunctionLoader {
 
     private Maybe<Argument> parseArgument(int index, ArgContext arg) {
       Maybe<Expression> expression = parseExpression(arg.expression());
-      return invokeWrap(expression, expression_ -> {
-        CodeLocation location = locationOf(arg);
-        ParamNameContext paramName = arg.paramName();
-        if (paramName == null) {
-          return namelessArgument(index + 1, expression_, location);
-        } else {
-          return namedArgument(index + 1, paramName.getText(), expression_, location);
-        }
-      });
+      return invokeWrap(expression, e -> createArgument(index, arg, e));
+    }
+
+    private Argument createArgument(int index, ArgContext arg, Expression expression_) {
+      CodeLocation location = locationOf(arg);
+      ParamNameContext paramName = arg.paramName();
+      if (paramName == null) {
+        return namelessArgument(index + 1, expression_, location);
+      } else {
+        return namedArgument(index + 1, paramName.getText(), expression_, location);
+      }
     }
 
     private Maybe<Expression> parseStringLiteral(TerminalNode stringToken) {
@@ -245,19 +248,19 @@ public class DefinedFunctionLoader {
 
       List<Object> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
       if (!errors.isEmpty()) {
-        return Maybe.errors(errors);
+        return errors(errors);
       }
 
       Map<Parameter, Argument> argumentMap = new HashMap<>();
       errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
       if (!errors.isEmpty()) {
-        return Maybe.errors(errors);
+        return errors(errors);
       }
 
       errors = processNamelessArguments(function, arguments, parametersPool, argumentMap,
           codeLocation);
       if (!errors.isEmpty()) {
-        return Maybe.errors(errors);
+        return errors(errors);
       }
       Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
       if (missingRequiredParameters.size() != 0) {
