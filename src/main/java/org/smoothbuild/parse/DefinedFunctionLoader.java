@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.error;
+import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
 import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
@@ -97,16 +98,10 @@ public class DefinedFunctionLoader {
         CallContext call = calls.get(i);
         // nameless piped argument's location is set to the pipe character '|'
         CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
-        Maybe<Argument> pipedArgument = invokeWrap(result, result_ -> {
-          return pipedArgument(result_, codeLocation);
-        });
-        Maybe<List<Argument>> arguments = parseArgumentList(call.argList());
-        if (arguments.hasValue()) {
-          arguments = invokeWrap(arguments, pipedArgument, Lists::concat);
-          result = parseCall(call, arguments.value());
-        } else {
-          result = result.addErrors(arguments.errors());
-        }
+        Maybe<Argument> pipedArg = invokeWrap(result, r -> pipedArgument(r, codeLocation));
+        Maybe<List<Argument>> restArgs = parseArgumentList(call.argList());
+        Maybe<List<Argument>> allArgs = invokeWrap(restArgs, pipedArg, Lists::concat);
+        result = invoke(allArgs, as -> parseCall(call, as));
       }
       return result;
     }
