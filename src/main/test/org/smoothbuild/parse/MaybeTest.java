@@ -7,6 +7,7 @@ import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.errors;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
+import static org.smoothbuild.parse.Maybe.pullUp;
 import static org.smoothbuild.parse.Maybe.value;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
@@ -17,6 +18,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,7 @@ public class MaybeTest {
   private Maybe<String> maybe1;
   private Maybe<String> maybe2;
   private Maybe<String> maybe3;
+  private List<Maybe<String>> listOfMaybe;
   private Object error;
   private Object error2;
   private Object error3;
@@ -260,6 +263,41 @@ public class MaybeTest {
     given(maybe = error("abc"));
     when(() -> maybe.toString());
     thenReturned("Maybe.error(abc)");
+  }
+
+  @Test
+  public void pulling_up_empty_list_gives_value_with_empty_list() throws Exception {
+    given(listOfMaybe = asList());
+    when(() -> pullUp(listOfMaybe));
+    thenReturned(value(asList()));
+  }
+
+  @Test
+  public void pulling_up_list_with_value_returns_value_with_one_element() throws Exception {
+    given(listOfMaybe = asList(value("abc")));
+    when(() -> pullUp(listOfMaybe));
+    thenReturned(value(asList("abc")));
+  }
+
+  @Test
+  public void pulling_up_list_with_error_returns_error() throws Exception {
+    given(listOfMaybe = asList(error(error)));
+    when(() -> pullUp(listOfMaybe));
+    thenReturned(error(error));
+  }
+
+  @Test
+  public void pulling_up_list_with_value_and_error_returns_error() throws Exception {
+    given(listOfMaybe = asList(value("abc"), error(error)));
+    when(() -> pullUp(listOfMaybe));
+    thenReturned(error(error));
+  }
+
+  @Test
+  public void pulling_up_list_with_two_errors_returns_errors() throws Exception {
+    given(listOfMaybe = asList(error(error), error(error2)));
+    when(() -> pullUp(listOfMaybe));
+    thenReturned(errors(asList(error, error2)));
   }
 
   @Test

@@ -6,10 +6,12 @@ import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.TriFunction;
 
 import com.google.common.base.Objects;
@@ -86,6 +88,14 @@ public class Maybe<E> {
           .collect(toList());
       return "Maybe.error(" + join(", ", messages) + ")";
     }
+  }
+
+  public static <E> Maybe<List<E>> pullUp(List<Maybe<E>> list) {
+    Maybe<List<E>> result = value(new ArrayList<>());
+    for (Maybe<E> element : list) {
+      result = invokeWrap(result, element, Lists::concat);
+    }
+    return result;
   }
 
   public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, Maybe<R>> function) {
