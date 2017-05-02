@@ -1,14 +1,14 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.util;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
-import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.errors;
-import static org.smoothbuild.parse.Maybe.invoke;
-import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.pullUp;
-import static org.smoothbuild.parse.Maybe.value;
+import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.errors;
+import static org.smoothbuild.util.Maybe.invoke;
+import static org.smoothbuild.util.Maybe.invokeWrap;
+import static org.smoothbuild.util.Maybe.pullUp;
+import static org.smoothbuild.util.Maybe.value;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.then;

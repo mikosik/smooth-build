@@ -2,8 +2,8 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.maybe;
+import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.maybe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +27,7 @@ import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.util.Maybe;
 
 public class ScriptParser {
   public static Maybe<ModuleContext> parseScript(InputStream inputStream, Path scriptFile) {

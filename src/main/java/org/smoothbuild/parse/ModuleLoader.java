@@ -2,11 +2,11 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.FunctionContextCollector.collectFunctionContexts;
-import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.invoke;
-import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.invoke;
+import static org.smoothbuild.util.Maybe.invokeWrap;
+import static org.smoothbuild.util.Maybe.value;
 
 import java.io.InputStream;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
   private final FileSystem fileSystem;

@@ -6,9 +6,9 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
-import static org.smoothbuild.parse.Maybe.error;
-import static org.smoothbuild.parse.Maybe.invokeWrap;
-import static org.smoothbuild.parse.Maybe.value;
+import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.invokeWrap;
+import static org.smoothbuild.util.Maybe.value;
 
 import java.util.List;
 import java.util.Set;
@@ -18,11 +18,11 @@ import javax.inject.Inject;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.Maybe;
 import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
+import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import org.smoothbuild.util.Lists;
-import org.smoothbuild.util.TriFunction;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
