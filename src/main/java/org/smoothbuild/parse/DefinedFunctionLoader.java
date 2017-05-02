@@ -15,6 +15,7 @@ import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.Maybe.error;
 import static org.smoothbuild.parse.Maybe.invoke;
 import static org.smoothbuild.parse.Maybe.invokeWrap;
+import static org.smoothbuild.parse.Maybe.pullUp;
 import static org.smoothbuild.parse.Maybe.value;
 import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
@@ -105,13 +106,11 @@ public class DefinedFunctionLoader {
       return result;
     }
 
-    private Maybe<List<Expression>> parseExpressionList(
-        List<ExpressionContext> expressionContexts) {
-      Maybe<List<Expression>> result = value(new ArrayList<>());
-      for (ExpressionContext expressionContext : expressionContexts) {
-        result = invokeWrap(result, parseExpression(expressionContext), Lists::concat);
-      }
-      return result;
+    private Maybe<List<Expression>> parseExpressionList(List<ExpressionContext> expressions) {
+      return pullUp(expressions
+          .stream()
+          .map(e -> parseExpression(e))
+          .collect(toList()));
     }
 
     private Maybe<Expression> parseExpression(ExpressionContext expressionContext) {
@@ -210,15 +209,14 @@ public class DefinedFunctionLoader {
     }
 
     private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
-      Maybe<List<Argument>> result = value(new ArrayList<>());
+      List<Maybe<Argument>> result = new ArrayList<>();
       if (argListContext != null) {
         List<ArgContext> argContexts = argListContext.arg();
         for (int i = 0; i < argContexts.size(); i++) {
-          Maybe<Argument> argument = parseArgument(i, argContexts.get(i));
-          result = invokeWrap(result, argument, Lists::concat);
+          result.add(parseArgument(i, argContexts.get(i)));
         }
       }
-      return result;
+      return pullUp(result);
     }
 
     private Maybe<Argument> parseArgument(int index, ArgContext arg) {
