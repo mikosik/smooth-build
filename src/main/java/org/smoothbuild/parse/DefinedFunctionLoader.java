@@ -36,7 +36,6 @@ import org.smoothbuild.antlr.SmoothParser.ArrayContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
-import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
@@ -199,22 +198,15 @@ public class DefinedFunctionLoader {
     }
 
     private Maybe<Expression> parseCall(CallContext callContext) {
-      Maybe<List<Argument>> argumentList = parseArgumentList(callContext.argList());
-      if (argumentList.hasValue()) {
-        return parseCall(callContext, argumentList.value());
-      } else {
-        return Maybe.errors(argumentList.errors());
-      }
+      Maybe<List<Argument>> arguments = parseArgumentList(callContext.argList());
+      return invoke(arguments, as -> parseCall(callContext, as));
     }
 
     private Maybe<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
-      FunctionNameContext functionNameContext = callContext.functionName();
-      Function function = loadedFunctions.get(name(functionNameContext.getText()));
-      CodeLocation codeLocation = locationOf(functionNameContext);
-      Maybe<List<Expression>> argumentExpressions = createArgExprs(codeLocation, function,
-          arguments);
-      return invokeWrap(argumentExpressions,
-          aes -> function.createCallExpression(aes, false, codeLocation));
+      Function function = loadedFunctions.get(name(callContext.functionName().getText()));
+      CodeLocation codeLocation = locationOf(callContext.functionName());
+      Maybe<List<Expression>> expressions = createArgExprs(codeLocation, function, arguments);
+      return invokeWrap(expressions, es -> function.createCallExpression(es, false, codeLocation));
     }
 
     private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
