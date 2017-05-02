@@ -71,7 +71,7 @@ public class Build {
   private Maybe<Functions> loadFunctions() {
     Functions builtin = loadBuiltinFunctions();
     Maybe<Functions> defined = moduleLoader.loadFunctions(builtin, DEFAULT_SCRIPT);
-    return invokeWrap(defined, defined_ -> builtin.addAll(defined_));
+    return invokeWrap(defined, builtin::addAll);
   }
 
   public Maybe<Set<Name>> parseArguments(List<String> args) {
