@@ -107,10 +107,9 @@ public class Types {
   }
 
   public static Type fromString(String string) {
-    for (Type type : BASIC_TYPES) {
-      if (type.name().equals(string)) {
-        return type;
-      }
+    Type basicType = basicTypeFromString(string);
+    if (basicType != null) {
+      return basicType;
     }
     if (string.startsWith("[") && string.endsWith("]")) {
       String elementTypeString = string.substring(1, string.length() - 1);
@@ -118,6 +117,15 @@ public class Types {
         if (type.name().equals(elementTypeString)) {
           return arrayTypeContaining(type);
         }
+      }
+    }
+    return null;
+  }
+
+  public static Type basicTypeFromString(String string) {
+    for (Type type : BASIC_TYPES) {
+      if (type.name().equals(string)) {
+        return type;
       }
     }
     return null;

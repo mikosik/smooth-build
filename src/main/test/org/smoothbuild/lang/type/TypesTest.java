@@ -87,6 +87,60 @@ public class TypesTest {
   }
 
   @Test
+  public void string_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("String"));
+    thenReturned(STRING);
+  }
+
+  @Test
+  public void blob_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("Blob"));
+    thenReturned(BLOB);
+  }
+
+  @Test
+  public void file_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("File"));
+    thenReturned(FILE);
+  }
+
+  @Test
+  public void nothing_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("Nothing"));
+    thenReturned(NOTHING);
+  }
+
+  @Test
+  public void string_array_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("[String]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void blob_array_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("[Blob]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void file_array_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("[File]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void nil_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("[Nothing]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void unknown_type_basic_type_from_string() throws Exception {
+    when(Types.basicTypeFromString("notAType"));
+    thenReturned(null);
+  }
+
+  @Test
   public void string_from_string() throws Exception {
     when(Types.fromString("String"));
     thenReturned(STRING);
