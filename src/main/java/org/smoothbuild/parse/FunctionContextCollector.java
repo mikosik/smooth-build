@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
@@ -96,10 +95,7 @@ public class FunctionContextCollector {
         .flatMap(fd -> fd.stream())
         .collect(toSet());
     referenced.removeAll(defined);
-    return referenced
-        .stream()
-        .map(FunctionContextCollector::unknownFunctionError)
-        .collect(toList());
+    return Lists.map(referenced, FunctionContextCollector::unknownFunctionError);
   }
 
   private static ParseError unknownFunctionError(Dependency dependency) {
