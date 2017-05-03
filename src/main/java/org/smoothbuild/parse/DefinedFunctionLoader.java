@@ -77,8 +77,8 @@ import com.google.common.collect.ImmutableMultimap;
 public class DefinedFunctionLoader {
 
   public static Maybe<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
-      FunctionContext functionContext) {
-    return new Worker(loadedFunctions).loadFunction(functionContext);
+      FunctionContext context) {
+    return new Worker(loadedFunctions).loadFunction(context);
   }
 
   private static class Worker {
@@ -88,10 +88,10 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Maybe<DefinedFunction> loadFunction(FunctionContext functionContext) {
-      Maybe<List<Parameter>> parameters = parseParameters(functionContext.paramList());
-      Maybe<Expression> expression = parsePipe(functionContext.pipe());
-      return invokeWrap(parameters, expression, (p, e) -> createFunction(functionContext, e));
+    public Maybe<DefinedFunction> loadFunction(FunctionContext context) {
+      Maybe<List<Parameter>> parameters = parseParameters(context.paramList());
+      Maybe<Expression> expression = parsePipe(context.pipe());
+      return invokeWrap(parameters, expression, (p, e) -> createFunction(context, e));
     }
 
     private Maybe<List<Parameter>> parseParameters(ParamListContext context) {
@@ -159,20 +159,19 @@ public class DefinedFunctionLoader {
       });
     }
 
-    private static DefinedFunction createFunction(FunctionContext functionContext,
-        Expression expression) {
-      Name name = name(functionContext.name().getText());
+    private static DefinedFunction createFunction(FunctionContext context, Expression expression) {
+      Name name = name(context.name().getText());
       Signature signature = new Signature(expression.type(), name, asList());
       return new DefinedFunction(signature, expression);
     }
 
-    private Maybe<Expression> parsePipe(PipeContext pipeContext) {
-      Maybe<Expression> result = parseExpression(pipeContext.expression());
-      List<CallContext> calls = pipeContext.call();
+    private Maybe<Expression> parsePipe(PipeContext context) {
+      Maybe<Expression> result = parseExpression(context.expression());
+      List<CallContext> calls = context.call();
       for (int i = 0; i < calls.size(); i++) {
         CallContext call = calls.get(i);
         // nameless piped argument's location is set to the pipe character '|'
-        CodeLocation codeLocation = locationOf(pipeContext.p.get(i));
+        CodeLocation codeLocation = locationOf(context.p.get(i));
         Maybe<Argument> pipedArg = invokeWrap(result, r -> pipedArgument(r, codeLocation));
         Maybe<List<Argument>> restArgs = parseArgumentList(call.argList());
         Maybe<List<Argument>> allArgs = invokeWrap(restArgs, pipedArg, Lists::concat);
@@ -181,28 +180,28 @@ public class DefinedFunctionLoader {
       return result;
     }
 
-    private Maybe<List<Expression>> parseExpressionList(List<ExpressionContext> expressions) {
-      return pullUp(map(expressions, this::parseExpression));
+    private Maybe<List<Expression>> parseExpressionList(List<ExpressionContext> contexts) {
+      return pullUp(map(contexts, this::parseExpression));
     }
 
-    private Maybe<Expression> parseExpression(ExpressionContext expressionContext) {
-      if (expressionContext.array() != null) {
-        return parseArray(expressionContext.array());
+    private Maybe<Expression> parseExpression(ExpressionContext context) {
+      if (context.array() != null) {
+        return parseArray(context.array());
       }
-      if (expressionContext.call() != null) {
-        return parseCall(expressionContext.call());
+      if (context.call() != null) {
+        return parseCall(context.call());
       }
-      if (expressionContext.STRING() != null) {
-        return parseStringLiteral(expressionContext.STRING());
+      if (context.STRING() != null) {
+        return parseStringLiteral(context.STRING());
       }
       throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
           + " without children.");
     }
 
-    private Maybe<Expression> parseArray(ArrayContext array) {
-      List<ExpressionContext> elems = array.expression();
+    private Maybe<Expression> parseArray(ArrayContext context) {
+      List<ExpressionContext> elems = context.expression();
       Maybe<List<Expression>> expressions = parseExpressionList(elems);
-      CodeLocation location = locationOf(array);
+      CodeLocation location = locationOf(context);
       Maybe<ArrayType> arrayType = invoke(expressions, es -> arrayType(es, location));
       return invokeWrap(arrayType, at -> createArray(at, expressions.value(), location));
     }
@@ -266,22 +265,22 @@ public class DefinedFunctionLoader {
       return null;
     }
 
-    private Maybe<Expression> parseCall(CallContext callContext) {
-      Maybe<List<Argument>> arguments = parseArgumentList(callContext.argList());
-      return invoke(arguments, as -> parseCall(callContext, as));
+    private Maybe<Expression> parseCall(CallContext context) {
+      Maybe<List<Argument>> arguments = parseArgumentList(context.argList());
+      return invoke(arguments, as -> parseCall(context, as));
     }
 
-    private Maybe<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
-      Function function = loadedFunctions.get(name(callContext.name().getText()));
-      CodeLocation codeLocation = locationOf(callContext.name());
+    private Maybe<Expression> parseCall(CallContext context, List<Argument> arguments) {
+      Function function = loadedFunctions.get(name(context.name().getText()));
+      CodeLocation codeLocation = locationOf(context.name());
       Maybe<List<Expression>> expressions = createArgExprs(codeLocation, function, arguments);
       return invokeWrap(expressions, es -> function.createCallExpression(es, false, codeLocation));
     }
 
-    private Maybe<List<Argument>> parseArgumentList(ArgListContext argListContext) {
+    private Maybe<List<Argument>> parseArgumentList(ArgListContext context) {
       List<Maybe<Argument>> result = new ArrayList<>();
-      if (argListContext != null) {
-        List<ArgContext> argContexts = argListContext.arg();
+      if (context != null) {
+        List<ArgContext> argContexts = context.arg();
         for (int i = 0; i < argContexts.size(); i++) {
           result.add(parseArgument(i, argContexts.get(i)));
         }
@@ -289,18 +288,18 @@ public class DefinedFunctionLoader {
       return pullUp(result);
     }
 
-    private Maybe<Argument> parseArgument(int index, ArgContext arg) {
-      Maybe<Expression> expression = parseExpression(arg.expression());
-      return invokeWrap(expression, e -> createArgument(index, arg, e));
+    private Maybe<Argument> parseArgument(int index, ArgContext context) {
+      Maybe<Expression> expression = parseExpression(context.expression());
+      return invokeWrap(expression, e -> createArgument(index, context, e));
     }
 
-    private Argument createArgument(int index, ArgContext arg, Expression expression_) {
-      CodeLocation location = locationOf(arg);
-      NameContext paramName = arg.name();
+    private Argument createArgument(int index, ArgContext context, Expression expression) {
+      CodeLocation location = locationOf(context);
+      NameContext paramName = context.name();
       if (paramName == null) {
-        return namelessArgument(index + 1, expression_, location);
+        return namelessArgument(index + 1, expression, location);
       } else {
-        return namedArgument(index + 1, paramName.getText(), expression_, location);
+        return namedArgument(index + 1, paramName.getText(), expression, location);
       }
     }
 
