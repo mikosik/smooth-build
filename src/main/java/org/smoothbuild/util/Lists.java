@@ -19,4 +19,8 @@ public class Lists {
         .map(function)
         .collect(toList());
   }
+
+  public static <T> List<T> sane(List<T> list) {
+    return list == null ? new ArrayList<>() : list;
+  }
 }
