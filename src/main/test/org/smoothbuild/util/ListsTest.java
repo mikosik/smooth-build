@@ -3,10 +3,12 @@ package org.smoothbuild.util;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.sane;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
+import static org.testory.common.Matchers.same;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +58,25 @@ public class ListsTest {
     given(list = asList("abc", "def"));
     when(() -> map(list, String::toUpperCase));
     thenReturned(asList("ABC", "DEF"));
+  }
+
+  @Test
+  public void sane_null_is_converted_to_empty_list() throws Exception {
+    when(() -> sane(null));
+    thenReturned(asList());
+  }
+
+  @Test
+  public void sane_empty_list_is_just_returned() throws Exception {
+    given(list = new ArrayList<>());
+    when(() -> sane(list));
+    thenReturned(same(list));
+  }
+
+  @Test
+  public void sane_non_empty_list_is_just_returned() throws Exception {
+    given(list = asList("abc", "def"));
+    when(() -> sane(list));
+    thenReturned(same(list));
   }
 }
