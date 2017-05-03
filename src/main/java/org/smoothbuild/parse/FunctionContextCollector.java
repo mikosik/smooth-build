@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -28,6 +27,7 @@ import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableSet;
@@ -133,7 +133,7 @@ public class FunctionContextCollector {
         }
       }
     }
-    return value(map(sorted, n -> nodes.get(n).context()));
+    return value(Lists.map(sorted, n -> nodes.get(n).context()));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,

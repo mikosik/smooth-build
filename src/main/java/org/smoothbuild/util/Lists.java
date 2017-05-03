@@ -3,6 +3,7 @@ package org.smoothbuild.util;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -13,7 +14,7 @@ public class Lists {
     return result;
   }
 
-  public static <T, R> List<R> map(List<T> list, Function<? super T, ? extends R> function) {
+  public static <T, R> List<R> map(Collection<T> list, Function<? super T, ? extends R> function) {
     return list
         .stream()
         .map(function)
