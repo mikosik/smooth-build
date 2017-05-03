@@ -5,16 +5,16 @@ import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
-import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
+import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class LocationHelpers {
   public static CodeLocation locationOf(ArgContext arg) {
-    ParamNameContext paramName = arg.paramName();
-    if (paramName == null) {
+    NameContext name = arg.name();
+    if (name == null) {
       return locationOf(arg.expression());
     } else {
-      return locationOf(paramName);
+      return locationOf(name);
     }
   }
 

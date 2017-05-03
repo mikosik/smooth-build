@@ -1,17 +1,14 @@
 grammar Smooth;
 
 module: function* EOF;
-function: functionName '=' pipe ';' ;
+function: name '=' pipe ';' ;
 pipe: expression ( p+='|' call )* ;
 expression : call | STRING | array;
-call: functionName ( '(' argList? ')' )? ;
+call: name ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
-arg: ( paramName '=' )? expression ; 
+arg: ( name '=' )? expression ; 
 array: '[' ( expression (',' expression)* (',')? )?  ']' ;
-
-
-functionName: IDENTIFIER ;
-paramName: IDENTIFIER ;
+name: IDENTIFIER ;
 
 
 IDENTIFIER: LETTER ( LETTER | NON_LETTER )* ;

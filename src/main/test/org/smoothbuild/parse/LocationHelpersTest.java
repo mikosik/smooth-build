@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
-import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
+import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class LocationHelpersTest {
@@ -23,7 +23,7 @@ public class LocationHelpersTest {
   private ParserRuleContext parserRuleContext;
   private ExpressionContext expressionContext;
   private ArgContext argContext;
-  private ParamNameContext paramNameContext;
+  private NameContext nameContext;
 
   @Before
   public void before() {
@@ -33,8 +33,8 @@ public class LocationHelpersTest {
 
   @Test
   public void location_of_arg_context_with_param_name() {
-    given(willReturn(paramNameContext), argContext).paramName();
-    given(willReturn(startToken), paramNameContext).getStart();
+    given(willReturn(nameContext), argContext).name();
+    given(willReturn(startToken), nameContext).getStart();
     given(willReturn(line), startToken).getLine();
     given(location = locationOf(argContext));
     when(location.line());

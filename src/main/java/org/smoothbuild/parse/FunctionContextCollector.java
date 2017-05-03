@@ -22,8 +22,8 @@ import java.util.Set;
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
-import org.smoothbuild.antlr.SmoothParser.FunctionNameContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
@@ -46,7 +46,7 @@ public class FunctionContextCollector {
       Set<Dependency> currentDependencies = new HashSet<>();
 
       public Void visitFunction(FunctionContext context) {
-        FunctionNameContext nameContext = context.functionName();
+        NameContext nameContext = context.name();
         Name name = name(nameContext.getText());
         if (nodes.keySet().contains(name)) {
           errors.add(new ParseError(
@@ -65,7 +65,7 @@ public class FunctionContextCollector {
       }
 
       public Void visitCall(CallContext call) {
-        FunctionNameContext functionName = call.functionName();
+        NameContext functionName = call.name();
         Name name = name(functionName.getText());
         CodeLocation location = locationOf(functionName);
         currentDependencies.add(new Dependency(location, name));
