@@ -38,7 +38,7 @@ import org.smoothbuild.antlr.SmoothParser.ArrayContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
-import org.smoothbuild.antlr.SmoothParser.ParamNameContext;
+import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
@@ -88,7 +88,7 @@ public class DefinedFunctionLoader {
 
     private static DefinedFunction createFunction(FunctionContext functionContext,
         Expression expression) {
-      Name name = name(functionContext.functionName().getText());
+      Name name = name(functionContext.name().getText());
       Signature signature = new Signature(expression.type(), name, asList());
       return new DefinedFunction(signature, expression);
     }
@@ -199,8 +199,8 @@ public class DefinedFunctionLoader {
     }
 
     private Maybe<Expression> parseCall(CallContext callContext, List<Argument> arguments) {
-      Function function = loadedFunctions.get(name(callContext.functionName().getText()));
-      CodeLocation codeLocation = locationOf(callContext.functionName());
+      Function function = loadedFunctions.get(name(callContext.name().getText()));
+      CodeLocation codeLocation = locationOf(callContext.name());
       Maybe<List<Expression>> expressions = createArgExprs(codeLocation, function, arguments);
       return invokeWrap(expressions, es -> function.createCallExpression(es, false, codeLocation));
     }
@@ -223,7 +223,7 @@ public class DefinedFunctionLoader {
 
     private Argument createArgument(int index, ArgContext arg, Expression expression_) {
       CodeLocation location = locationOf(arg);
-      ParamNameContext paramName = arg.paramName();
+      NameContext paramName = arg.name();
       if (paramName == null) {
         return namelessArgument(index + 1, expression_, location);
       } else {
