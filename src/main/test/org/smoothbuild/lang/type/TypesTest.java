@@ -13,7 +13,7 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -79,11 +79,11 @@ public class TypesTest {
   }
 
   @Test
-  public void arrayType_containing() {
-    assertEquals(STRING_ARRAY, arrayTypeContaining(STRING));
-    assertEquals(BLOB_ARRAY, arrayTypeContaining(BLOB));
-    assertEquals(FILE_ARRAY, arrayTypeContaining(FILE));
-    assertEquals(NIL, arrayTypeContaining(NOTHING));
+  public void array_of() {
+    assertEquals(STRING_ARRAY, arrayOf(STRING));
+    assertEquals(BLOB_ARRAY, arrayOf(BLOB));
+    assertEquals(FILE_ARRAY, arrayOf(FILE));
+    assertEquals(NIL, arrayOf(NOTHING));
   }
 
   @Test

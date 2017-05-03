@@ -1,7 +1,7 @@
 package org.smoothbuild.db.values;
 
 import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
-import static org.smoothbuild.lang.type.Types.arrayTypeContaining;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
 import static org.smoothbuild.lang.value.SFile.storeFileInDb;
 import static org.smoothbuild.lang.value.SString.storeStringInDb;
@@ -47,7 +47,7 @@ public class ValuesDb implements ValueFactory {
       throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
     }
     Type type = jTypeToType(TypeLiteral.get(elementClass));
-    return createArrayBuilder(arrayTypeContaining(type), elementClass);
+    return createArrayBuilder(arrayOf(type), elementClass);
   }
 
   private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type,
