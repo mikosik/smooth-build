@@ -155,7 +155,7 @@ public class DefinedFunctionLoader {
         if (et instanceof ArrayType) {
           return error(new ParseError(locationOf(context), "Nested array type is forbidden."));
         }
-        return value(Types.arrayTypeContaining(et));
+        return value(Types.arrayOf(et));
       });
     }
 
@@ -230,7 +230,7 @@ public class DefinedFunctionLoader {
                   + " has type " + type + "."));
         }
       }
-      ArrayType arrayType = Types.arrayTypeContaining(superType);
+      ArrayType arrayType = Types.arrayOf(superType);
       if (arrayType == null) {
         return error(new ParseError(location, "Array cannot contain element with type "
             + superType + ". Only following types are allowed: " + Types.basicTypes()

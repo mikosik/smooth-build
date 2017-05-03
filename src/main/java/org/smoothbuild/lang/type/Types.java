@@ -77,7 +77,7 @@ public class Types {
     return JTYPE_TO_TYPE.get(jType);
   }
 
-  public static <T extends Value> ArrayType arrayTypeContaining(Type elemType) {
+  public static <T extends Value> ArrayType arrayOf(Type elemType) {
     return ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
   }
 
@@ -115,7 +115,7 @@ public class Types {
       String elementTypeString = string.substring(1, string.length() - 1);
       for (Type type : BASIC_TYPES) {
         if (type.name().equals(elementTypeString)) {
-          return arrayTypeContaining(type);
+          return arrayOf(type);
         }
       }
     }
