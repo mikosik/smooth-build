@@ -9,6 +9,7 @@ import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.value;
+import static org.smoothbuild.util.Sets.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,13 +83,12 @@ public class FunctionContextCollector {
 
   public static List<ParseError> undefinedFunctionErrors(Functions functions,
       Map<Name, FunctionNode> functionNodes) {
-    Set<Dependency> defined = ImmutableSet.<Name> builder()
+
+    ImmutableSet<Name> all = ImmutableSet.<Name> builder()
         .addAll(functions.names())
         .addAll(functionNodes.keySet())
-        .build()
-        .stream()
-        .map(name -> new Dependency(null, name))
-        .collect(toSet());
+        .build();
+    Set<Dependency> defined = map(all, name -> new Dependency(null, name));
     Set<Dependency> referenced = functionNodes
         .values()
         .stream()
