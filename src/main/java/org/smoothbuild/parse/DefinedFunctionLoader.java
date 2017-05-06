@@ -77,8 +77,8 @@ import com.google.common.collect.ImmutableMultimap;
 public class DefinedFunctionLoader {
 
   public static Maybe<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
-      FunctionContext context) {
-    return new Worker(loadedFunctions).loadFunction(context);
+      FunctionNode functionNode) {
+    return new Worker(loadedFunctions).loadFunction(functionNode);
   }
 
   private static class Worker {
@@ -88,10 +88,11 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Maybe<DefinedFunction> loadFunction(FunctionContext context) {
+    public Maybe<DefinedFunction> loadFunction(FunctionNode node) {
+      FunctionContext context = node.context();
       Maybe<List<Parameter>> parameters = parseParameters(context.paramList());
       Maybe<Expression> expression = parsePipe(context.pipe());
-      return invokeWrap(parameters, expression, (p, e) -> createFunction(context, e));
+      return invokeWrap(parameters, expression, (p, e) -> createFunction(node, e));
     }
 
     private Maybe<List<Parameter>> parseParameters(ParamListContext context) {
@@ -155,9 +156,8 @@ public class DefinedFunctionLoader {
       });
     }
 
-    private static DefinedFunction createFunction(FunctionContext context, Expression expression) {
-      Name name = name(context.name().getText());
-      Signature signature = new Signature(expression.type(), name, asList());
+    private static DefinedFunction createFunction(FunctionNode node, Expression expression) {
+      Signature signature = new Signature(expression.type(), node.name(), asList());
       return new DefinedFunction(signature, expression);
     }
 
