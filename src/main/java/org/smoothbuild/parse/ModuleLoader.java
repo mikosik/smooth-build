@@ -1,7 +1,5 @@
 package org.smoothbuild.parse;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Maybe.error;
@@ -64,7 +62,7 @@ public class ModuleLoader {
   }
 
   private static Maybe<List<FunctionContext>> sortedByDependencies(Functions functions, Ast ast) {
-    Map<Name, FunctionNode> nodeMap = toNameMap(ast.functions());
+    Map<Name, FunctionNode> nodeMap = ast.nameToFunctionMap();
     Map<Name, FunctionNode> notSorted = new HashMap<>(nodeMap);
     Set<Name> availableFunctions = new HashSet<>(functions.names());
     List<Name> sorted = new ArrayList<>(nodeMap.size());
@@ -90,11 +88,6 @@ public class ModuleLoader {
       }
     }
     return value(Lists.map(sorted, n -> nodeMap.get(n).context()));
-  }
-
-  private static Map<Name, FunctionNode> toNameMap(List<FunctionNode> nodes) {
-    return nodes.stream()
-        .collect(toMap(FunctionNode::name, identity(), (a, b) -> a));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,

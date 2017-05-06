@@ -1,7 +1,5 @@
 package org.smoothbuild.parse;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Sets.map;
 
@@ -43,7 +41,7 @@ public class SemanticAnalyzer {
   }
 
   public static List<ParseError> undefinedFunctionErrors(Functions functions, Ast ast) {
-    Map<Name, FunctionNode> functionNodes = toNameMap(ast.functions());
+    Map<Name, FunctionNode> functionNodes = ast.nameToFunctionMap();
     ImmutableSet<Name> all = ImmutableSet.<Name> builder()
         .addAll(functions.names())
         .addAll(functionNodes.keySet())
@@ -62,10 +60,5 @@ public class SemanticAnalyzer {
   private static ParseError unknownFunctionError(Dependency dependency) {
     return new ParseError(dependency.location(),
         "Call to unknown function " + dependency.functionName() + ".");
-  }
-
-  private static Map<Name, FunctionNode> toNameMap(List<FunctionNode> nodes) {
-    return nodes.stream()
-        .collect(toMap(FunctionNode::name, identity(), (a, b) -> a));
   }
 }
