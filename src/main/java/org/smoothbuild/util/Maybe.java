@@ -50,6 +50,14 @@ public class Maybe<E> {
     return new Maybe<>(errors.isEmpty() ? value : null, concatErrors(this.errors, errors));
   }
 
+  public Maybe<E> addErrors(Function<E, List<? extends Object>> errorsSupplier) {
+    if (hasValue()) {
+      return addErrors(errorsSupplier.apply(value));
+    } else {
+      return this;
+    }
+  }
+
   public boolean hasValue() {
     return value != null;
   }
