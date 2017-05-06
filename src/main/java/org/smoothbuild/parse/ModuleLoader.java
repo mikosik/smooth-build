@@ -19,7 +19,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
@@ -56,12 +55,12 @@ public class ModuleLoader {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> Ast.create(m));
     ast = ast.addErrors(a -> SemanticAnalyzer.findErrors(functions, a));
-    Maybe<List<FunctionContext>> functionContexts = invoke(ast,
+    Maybe<List<FunctionNode>> nodes = invoke(ast,
         a -> sortedByDependencies(functions, a));
-    return invoke(functionContexts, sfcs -> loadDefinedFunctions(functions, sfcs));
+    return invoke(nodes, ns -> loadDefinedFunctions(functions, ns));
   }
 
-  private static Maybe<List<FunctionContext>> sortedByDependencies(Functions functions, Ast ast) {
+  private static Maybe<List<FunctionNode>> sortedByDependencies(Functions functions, Ast ast) {
     Map<Name, FunctionNode> nodeMap = ast.nameToFunctionMap();
     Map<Name, FunctionNode> notSorted = new HashMap<>(nodeMap);
     Set<Name> availableFunctions = new HashSet<>(functions.names());
@@ -87,7 +86,7 @@ public class ModuleLoader {
         }
       }
     }
-    return value(Lists.map(sorted, n -> nodeMap.get(n).context()));
+    return value(Lists.map(sorted, n -> nodeMap.get(n)));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
@@ -109,12 +108,12 @@ public class ModuleLoader {
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions,
-      List<FunctionContext> functionContexts) {
+      List<FunctionNode> functionsToLoad) {
     Maybe<Functions> justLoaded = value(new Functions());
-    for (FunctionContext functionContext : functionContexts) {
+    for (FunctionNode node : functionsToLoad) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
       Maybe<DefinedFunction> function = invoke(all,
-          a -> loadDefinedFunction(a, functionContext));
+          a -> loadDefinedFunction(a, node));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
