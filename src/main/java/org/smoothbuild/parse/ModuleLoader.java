@@ -1,7 +1,8 @@
 package org.smoothbuild.parse;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
-import static org.smoothbuild.parse.FunctionContextCollector.collectFunctionContexts;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -9,7 +10,14 @@ import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -19,7 +27,9 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
@@ -46,9 +56,63 @@ public class ModuleLoader {
   private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
-    Maybe<List<FunctionContext>> functionContexts = invoke(module,
-        m -> collectFunctionContexts(m, functions));
+    Maybe<Ast> ast = invokeWrap(module, m -> Ast.create(m));
+    ast = ast.addErrors(a -> SemanticAnalyzer.findErrors(functions, a));
+    Maybe<List<FunctionContext>> functionContexts = invoke(ast,
+        a -> sortedByDependencies(functions, a));
     return invoke(functionContexts, sfcs -> loadDefinedFunctions(functions, sfcs));
+  }
+
+  private static Maybe<List<FunctionContext>> sortedByDependencies(Functions functions, Ast ast) {
+    Map<Name, FunctionNode> nodeMap = toNameMap(ast.functions());
+    Map<Name, FunctionNode> notSorted = new HashMap<>(nodeMap);
+    Set<Name> availableFunctions = new HashSet<>(functions.names());
+    List<Name> sorted = new ArrayList<>(nodeMap.size());
+    DependencyStack stack = new DependencyStack();
+
+    while (!notSorted.isEmpty() || !stack.isEmpty()) {
+      if (stack.isEmpty()) {
+        stack.push(removeNext(notSorted));
+      }
+      DependencyStackElem stackTop = stack.peek();
+      Dependency missing = findUnreachableDependency(
+          availableFunctions, sorted, stackTop.dependencies());
+      if (missing == null) {
+        sorted.add(stack.pop().name());
+      } else {
+        stackTop.setMissing(missing);
+        FunctionNode next = notSorted.remove(missing.functionName());
+        if (next == null) {
+          return error(stack.createCycleError());
+        } else {
+          stack.push(new DependencyStackElem(next));
+        }
+      }
+    }
+    return value(Lists.map(sorted, n -> nodeMap.get(n).context()));
+  }
+
+  private static Map<Name, FunctionNode> toNameMap(List<FunctionNode> nodes) {
+    return nodes.stream()
+        .collect(toMap(FunctionNode::name, identity(), (a, b) -> a));
+  }
+
+  private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
+      List<Name> sorted, Set<Dependency> dependencies) {
+    for (Dependency dependency : dependencies) {
+      Name name = dependency.functionName();
+      if (!(sorted.contains(name) || availableFunctions.contains(name))) {
+        return dependency;
+      }
+    }
+    return null;
+  }
+
+  private static DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
+    Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
+    Entry<Name, FunctionNode> element = it.next();
+    it.remove();
+    return new DependencyStackElem(element.getValue());
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions,
