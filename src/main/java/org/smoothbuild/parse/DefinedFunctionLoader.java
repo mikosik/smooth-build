@@ -100,12 +100,8 @@ public class DefinedFunctionLoader {
       for (int i = 0; i < contexts.size(); i++) {
         parameters.add(parseParameter(i, contexts.get(i)));
       }
-      Maybe<List<Parameter>> result = pullUp(parameters);
-      if (result.hasValue()) {
-        return result.addErrors(duplicateParameterNameErrors(result.value(), contexts));
-      } else {
-        return result;
-      }
+      return pullUp(parameters)
+          .addErrors(v -> duplicateParameterNameErrors(v, contexts));
     }
 
     public ArrayList<ParseError> duplicateParameterNameErrors(List<Parameter> parameters,
