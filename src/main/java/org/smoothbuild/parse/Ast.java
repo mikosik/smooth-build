@@ -1,11 +1,14 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.function.Function.identity;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
@@ -20,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private final List<FunctionNode> functions;
+  private Map<Name, FunctionNode> nameToFunctionMap;
 
   private Ast(List<FunctionNode> functions) {
     this.functions = ImmutableList.copyOf(functions);
@@ -27,6 +31,18 @@ public class Ast {
 
   public List<FunctionNode> functions() {
     return functions;
+  }
+
+  public Map<Name, FunctionNode> nameToFunctionMap() {
+    if (nameToFunctionMap == null) {
+      nameToFunctionMap = createNameToFunctionMap();
+    }
+    return nameToFunctionMap;
+  }
+
+  private Map<Name, FunctionNode> createNameToFunctionMap() {
+    return functions.stream()
+        .collect(toImmutableMap(FunctionNode::name, identity(), (a, b) -> a));
   }
 
   public static Ast create(ModuleContext module) {
