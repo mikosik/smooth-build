@@ -222,6 +222,74 @@ public class MaybeTest {
     thenReturned(asList(error));
   }
 
+  //
+
+  @Test
+  public void value_with_added_supplied_empty_errors_has_value() throws Exception {
+    given(maybe = value("value"));
+    given(maybe = maybe.addErrors(e -> asList()));
+    when(() -> maybe.value());
+    thenReturned("value");
+  }
+
+  @Test
+  public void value_with_added_supplied_empty_errors_has_no_errors() throws Exception {
+    given(maybe = value("value"));
+    given(maybe = maybe.addErrors(e -> asList()));
+    when(() -> maybe.errors());
+    thenReturned(asList());
+  }
+
+  @Test
+  public void value_with_added_supplied_errors_has_no_value() throws Exception {
+    given(maybe = value("value"));
+    given(maybe = maybe.addErrors(e -> asList(error, error2)));
+    when(() -> maybe.hasValue());
+    thenReturned(false);
+  }
+
+  @Test
+  public void value_with_added_supplied_errors_has_that_errors() throws Exception {
+    given(maybe = value("value"));
+    given(maybe = maybe.addErrors(e -> asList(error, error2)));
+    when(() -> maybe.errors());
+    thenReturned(asList(error, error2));
+  }
+
+  @Test
+  public void error_with_added_supplied_empty_errors_has_initial_error() throws Exception {
+    given(maybe = error(error));
+    given(maybe = maybe.addErrors(e -> asList()));
+    when(() -> maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void error_with_added_supplied_empty_errors_has_no_value() throws Exception {
+    given(maybe = error(error));
+    given(maybe = maybe.addErrors(e -> asList()));
+    when(() -> maybe.hasValue());
+    thenReturned(false);
+  }
+
+  @Test
+  public void error_with_added_supplied_errors_has_only_initial_errors() throws Exception {
+    given(maybe = error(error));
+    given(maybe = maybe.addErrors(e -> asList(error2, error3)));
+    when(() -> maybe.errors());
+    thenReturned(asList(error));
+  }
+
+  @Test
+  public void error_with_added_supplied_errors_has_no_value() throws Exception {
+    given(maybe = error(error));
+    given(maybe = maybe.addErrors(e -> asList(error2, error3)));
+    when(() -> maybe.hasValue());
+    thenReturned(false);
+  }
+
+  //
+
   @Test
   public void maybe_with_equal_values_are_equal() throws Exception {
     given(maybe = value("abc"));
