@@ -67,6 +67,7 @@ import org.smoothbuild.parse.arg.Argument;
 import org.smoothbuild.parse.arg.MapToString;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
+import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;

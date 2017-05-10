@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.ast.FunctionNode;
 
 public class DependencyStackElem {
   private final FunctionNode node;

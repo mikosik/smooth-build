@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableSet;

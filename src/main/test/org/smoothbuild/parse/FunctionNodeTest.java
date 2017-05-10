@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import java.util.HashSet;
 
 import org.junit.Test;
+import org.smoothbuild.parse.ast.FunctionNode;
 
 import com.google.common.testing.EqualsTester;
 

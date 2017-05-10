@@ -1,10 +1,11 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.ast;
 
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.parse.Dependency;
 
 import com.google.common.collect.ImmutableSet;
 
