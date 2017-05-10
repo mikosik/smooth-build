@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.ast.FunctionNode;
 
 import com.google.common.collect.ImmutableSet;
 

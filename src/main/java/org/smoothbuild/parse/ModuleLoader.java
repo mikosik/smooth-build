@@ -1,8 +1,8 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.Ast.ast;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.parse.ast.Ast.ast;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
@@ -27,6 +27,8 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 
