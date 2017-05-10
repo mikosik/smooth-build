@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.Ast.ast;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Maybe.error;
@@ -55,12 +56,12 @@ public class ModuleLoader {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> Ast.create(m));
     ast = ast.addErrors(a -> SemanticAnalyzer.findErrors(functions, a));
-    Maybe<List<FunctionNode>> nodes = invoke(ast,
+    Maybe<Ast> nodes = invoke(ast,
         a -> sortedByDependencies(functions, a));
     return invoke(nodes, ns -> loadDefinedFunctions(functions, ns));
   }
 
-  private static Maybe<List<FunctionNode>> sortedByDependencies(Functions functions, Ast ast) {
+  private static Maybe<Ast> sortedByDependencies(Functions functions, Ast ast) {
     Map<Name, FunctionNode> nodeMap = ast.nameToFunctionMap();
     Map<Name, FunctionNode> notSorted = new HashMap<>(nodeMap);
     Set<Name> availableFunctions = new HashSet<>(functions.names());
@@ -86,7 +87,7 @@ public class ModuleLoader {
         }
       }
     }
-    return value(Lists.map(sorted, n -> nodeMap.get(n)));
+    return value(ast(Lists.map(sorted, n -> nodeMap.get(n))));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
@@ -107,10 +108,9 @@ public class ModuleLoader {
     return new DependencyStackElem(element.getValue());
   }
 
-  private Maybe<Functions> loadDefinedFunctions(Functions functions,
-      List<FunctionNode> functionsToLoad) {
+  private Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
-    for (FunctionNode node : functionsToLoad) {
+    for (FunctionNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
       Maybe<DefinedFunction> function = invoke(all,
           a -> loadDefinedFunction(a, node));
