@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Sets.map;
 
@@ -13,6 +14,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableSet;
@@ -22,6 +24,7 @@ public class SemanticAnalyzer {
     List<ParseError> errors = new ArrayList<>();
     errors.addAll(duplicateFunctionErrors(functions, ast));
     errors.addAll(undefinedFunctionErrors(functions, ast));
+    errors.addAll(duplicateParamNameErrors(ast));
     return errors;
   }
 
@@ -64,5 +67,25 @@ public class SemanticAnalyzer {
   private static ParseError unknownFunctionError(Dependency dependency) {
     return new ParseError(dependency.location(),
         "Call to unknown function " + dependency.functionName() + ".");
+  }
+
+  private static List<ParseError> duplicateParamNameErrors(Ast ast) {
+    return ast.functions().stream()
+        .map(f -> duplicateParamNameErrors(f.params()))
+        .flatMap(errors -> errors.stream())
+        .collect(toList());
+  }
+
+  private static List<ParseError> duplicateParamNameErrors(List<ParamNode> params) {
+    List<ParseError> errors = new ArrayList<>();
+    Set<String> names = new HashSet<>();
+    for (ParamNode node : params) {
+      String name = node.name();
+      if (names.contains(name)) {
+        errors.add(new ParseError(node.codeLocation(), "Duplicate parameter '" + name + "'."));
+      }
+      names.add(name);
+    }
+    return errors;
   }
 }

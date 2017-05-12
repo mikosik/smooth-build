@@ -102,23 +102,7 @@ public class DefinedFunctionLoader {
       for (int i = 0; i < contexts.size(); i++) {
         parameters.add(parseParameter(i, contexts.get(i)));
       }
-      return pullUp(parameters)
-          .addErrors(v -> duplicateParameterNameErrors(v, contexts));
-    }
-
-    public ArrayList<ParseError> duplicateParameterNameErrors(List<Parameter> parameters,
-        List<ParamContext> contexts) {
-      ArrayList<ParseError> result = new ArrayList<>();
-      Set<String> names = new HashSet<>();
-      for (int i = 0; i < parameters.size(); i++) {
-        String name = parameters.get(i).name();
-        if (names.contains(name)) {
-          result.add(new ParseError(
-              locationOf(contexts.get(i)), "Duplicate parameter '" + name + "'."));
-        }
-        names.add(name);
-      }
-      return result;
+      return pullUp(parameters);
     }
 
     private Maybe<Parameter> parseParameter(int i, ParamContext context) {
