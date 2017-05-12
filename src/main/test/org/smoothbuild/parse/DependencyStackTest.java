@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
@@ -156,13 +157,13 @@ public class DependencyStackTest {
 
   private DependencyStackElem elem(Name from, Name to, int location) {
     DependencyStackElem elem = new DependencyStackElem(
-        new FunctionNode(from, null, ImmutableSet.of(), null));
+        new FunctionNode(from, asList(), null, ImmutableSet.of(), null));
     elem.setMissing(new Dependency(codeLocation(location), to));
     return elem;
   }
 
   private static DependencyStackElem elem() {
     return new DependencyStackElem(new FunctionNode(
-        name("name"), null, ImmutableSet.of(), null));
+        name("name"), asList(), null, ImmutableSet.of(), null));
   }
 }
