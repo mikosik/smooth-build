@@ -12,9 +12,12 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableSet;
@@ -25,6 +28,8 @@ public class SemanticAnalyzer {
     errors.addAll(duplicateFunctionErrors(functions, ast));
     errors.addAll(undefinedFunctionErrors(functions, ast));
     errors.addAll(duplicateParamNameErrors(ast));
+    errors.addAll(unknownParamTypeErrors(ast));
+    errors.addAll(nestedArrayTypeParamErrors(ast));
     return errors;
   }
 
@@ -85,6 +90,46 @@ public class SemanticAnalyzer {
         errors.add(new ParseError(node.codeLocation(), "Duplicate parameter '" + name + "'."));
       }
       names.add(name);
+    }
+    return errors;
+  }
+
+  private static List<ParseError> unknownParamTypeErrors(Ast ast) {
+    return ast.functions().stream()
+        .map(f -> unknownParamTypeErrors(f.params()))
+        .flatMap(errors -> errors.stream())
+        .collect(toList());
+  }
+
+  private static List<ParseError> unknownParamTypeErrors(List<ParamNode> params) {
+    List<ParseError> errors = new ArrayList<>();
+    for (ParamNode node : params) {
+      TypeNode type = node.type();
+      while (type instanceof ArrayTypeNode) {
+        type = ((ArrayTypeNode) type).elementType();
+      }
+      if (Types.basicTypeFromString(type.name()) == null) {
+        errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
+      }
+    }
+    return errors;
+  }
+
+  private static List<ParseError> nestedArrayTypeParamErrors(Ast ast) {
+    return ast.functions().stream()
+        .map(f -> nestedArrayTypeParamErrors(f.params()))
+        .flatMap(errors -> errors.stream())
+        .collect(toList());
+  }
+
+  private static List<ParseError> nestedArrayTypeParamErrors(List<ParamNode> params) {
+    List<ParseError> errors = new ArrayList<>();
+    for (ParamNode node : params) {
+      TypeNode type = node.type();
+      if (type instanceof ArrayTypeNode
+          && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
+        errors.add(new ParseError(node.codeLocation(), "Nested array type is forbidden."));
+      }
     }
     return errors;
   }
