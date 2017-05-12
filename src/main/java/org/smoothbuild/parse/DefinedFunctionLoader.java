@@ -91,27 +91,27 @@ public class DefinedFunctionLoader {
 
     public Maybe<DefinedFunction> loadFunction(FunctionNode node) {
       FunctionContext context = node.context();
-      Maybe<List<Parameter>> parameters = parseParameters(context.paramList());
+      List<Parameter> parameters = parseParameters(context.paramList());
       Maybe<Expression> expression = parsePipe(context.pipe());
-      return invokeWrap(parameters, expression, (p, e) -> createFunction(node, e));
+      return invokeWrap(expression, e -> createFunction(node, e));
     }
 
-    private Maybe<List<Parameter>> parseParameters(ParamListContext context) {
-      List<Maybe<Parameter>> parameters = new ArrayList<>();
+    private List<Parameter> parseParameters(ParamListContext context) {
+      List<Parameter> parameters = new ArrayList<>();
       List<ParamContext> contexts = context == null ? asList() : sane(context.param());
       for (int i = 0; i < contexts.size(); i++) {
         parameters.add(parseParameter(i, contexts.get(i)));
       }
-      return pullUp(parameters);
+      return parameters;
     }
 
-    private Maybe<Parameter> parseParameter(int i, ParamContext context) {
+    private Parameter parseParameter(int i, ParamContext context) {
       String name = context.name().getText();
-      Maybe<Type> type = parseType(context.type());
-      return invokeWrap(type, t -> parameter(t, name));
+      Type type = parseType(context.type());
+      return parameter(type, name);
     }
 
-    private Maybe<Type> parseType(TypeContext context) {
+    private Type parseType(TypeContext context) {
       if (context.basicType() != null) {
         return parseBasicType(context.basicType());
       }
@@ -122,23 +122,13 @@ public class DefinedFunctionLoader {
           + " without children.");
     }
 
-    private Maybe<Type> parseBasicType(BasicTypeContext context) {
-      Type type = Types.basicTypeFromString(context.getText());
-      if (type == null) {
-        return error(
-            new ParseError(locationOf(context), "Unknown type '" + context.getText() + "'."));
-      }
-      return value(type);
+    private Type parseBasicType(BasicTypeContext context) {
+      return Types.basicTypeFromString(context.getText());
     }
 
-    private Maybe<Type> parseArrayType(ArrayTypeContext context) {
-      Maybe<Type> elementType = parseType(context.type());
-      return invoke(elementType, et -> {
-        if (et instanceof ArrayType) {
-          return error(new ParseError(locationOf(context), "Nested array type is forbidden."));
-        }
-        return value(Types.arrayOf(et));
-      });
+    private Type parseArrayType(ArrayTypeContext context) {
+      Type elementType = parseType(context.type());
+      return Types.arrayOf(elementType);
     }
 
     private static DefinedFunction createFunction(FunctionNode node, Expression expression) {
