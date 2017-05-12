@@ -19,7 +19,8 @@ import com.google.common.collect.ImmutableSet;
 
 public class SemanticAnalyzer {
   public static List<ParseError> findErrors(Functions functions, Ast ast) {
-    List<ParseError> errors = duplicateFunctionErrors(functions, ast);
+    List<ParseError> errors = new ArrayList<>();
+    errors.addAll(duplicateFunctionErrors(functions, ast));
     errors.addAll(undefinedFunctionErrors(functions, ast));
     return errors;
   }
