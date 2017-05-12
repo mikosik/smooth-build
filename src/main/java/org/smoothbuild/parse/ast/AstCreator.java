@@ -14,6 +14,8 @@ import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
+import org.smoothbuild.antlr.SmoothParser.ParamContext;
+import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.parse.Dependency;
@@ -27,9 +29,22 @@ public class AstCreator {
       public Void visitFunction(FunctionContext context) {
         NameContext nameContext = context.name();
         Name name = name(nameContext.getText());
+        List<ParamNode> params = convertParams(context.paramList());
         visitChildren(context);
-        nodes.add(new FunctionNode(name, context, currentDependencies, locationOf(nameContext)));
+        nodes.add(new FunctionNode(name, params, context, currentDependencies, locationOf(
+            nameContext)));
         return null;
+      }
+
+      private List<ParamNode> convertParams(ParamListContext paramList) {
+        ArrayList<ParamNode> result = new ArrayList<>();
+        if (paramList != null) {
+          for (ParamContext param : paramList.param()) {
+            CodeLocation codeLocation = locationOf(param);
+            result.add(new ParamNode(param.type().getText(), param.name().getText(), codeLocation));
+          }
+        }
+        return result;
       }
 
       public Void visitCall(CallContext call) {
@@ -39,7 +54,6 @@ public class AstCreator {
         currentDependencies.add(new Dependency(location, name));
         return visitChildren(call);
       }
-
     }.visit(module);
     return ast(nodes);
   }

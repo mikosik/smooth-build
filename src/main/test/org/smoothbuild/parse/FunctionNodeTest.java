@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 
@@ -27,6 +28,6 @@ public class FunctionNodeTest {
   }
 
   private static FunctionNode node(String name, int line) {
-    return new FunctionNode(name(name), null, new HashSet<>(), codeLocation(line));
+    return new FunctionNode(name(name), asList(), null, new HashSet<>(), codeLocation(line));
   }
 }
