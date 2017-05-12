@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
@@ -16,7 +17,6 @@ import static org.smoothbuild.parse.arg.Argument.namedArgument;
 import static org.smoothbuild.parse.arg.Argument.namelessArgument;
 import static org.smoothbuild.parse.arg.Argument.pipedArgument;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Lists.sane;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -43,8 +43,6 @@ import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
-import org.smoothbuild.antlr.SmoothParser.ParamContext;
-import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
@@ -68,6 +66,7 @@ import org.smoothbuild.parse.arg.MapToString;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
 import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -91,23 +90,21 @@ public class DefinedFunctionLoader {
 
     public Maybe<DefinedFunction> loadFunction(FunctionNode node) {
       FunctionContext context = node.context();
-      List<Parameter> parameters = parseParameters(context.paramList());
+      List<Parameter> parameters = createParameters(node.params());
       Maybe<Expression> expression = parsePipe(context.pipe());
       return invokeWrap(expression, e -> createFunction(node, e));
     }
 
-    private List<Parameter> parseParameters(ParamListContext context) {
-      List<Parameter> parameters = new ArrayList<>();
-      List<ParamContext> contexts = context == null ? asList() : sane(context.param());
-      for (int i = 0; i < contexts.size(); i++) {
-        parameters.add(parseParameter(i, contexts.get(i)));
-      }
-      return parameters;
+    private static List<Parameter> createParameters(List<ParamNode> params) {
+      return params
+          .stream()
+          .map(Worker::createParameter)
+          .collect(toList());
     }
 
-    private Parameter parseParameter(int i, ParamContext context) {
-      String name = context.name().getText();
-      Type type = parseType(context.type());
+    private static Parameter createParameter(ParamNode param) {
+      String name = param.name();
+      Type type = Types.fromString(param.type().name());
       return parameter(type, name);
     }
 
