@@ -10,12 +10,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
+import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
+import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.SmoothParser.ParamListContext;
+import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.parse.Dependency;
@@ -36,15 +39,37 @@ public class AstCreator {
         return null;
       }
 
-      private List<ParamNode> convertParams(ParamListContext paramList) {
+      private List<ParamNode> convertParams(ParamListContext context) {
         ArrayList<ParamNode> result = new ArrayList<>();
-        if (paramList != null) {
-          for (ParamContext param : paramList.param()) {
+        if (context != null) {
+          for (ParamContext param : context.param()) {
+            TypeNode type = convertType(param.type());
+            String name = param.name().getText();
             CodeLocation codeLocation = locationOf(param);
-            result.add(new ParamNode(param.type().getText(), param.name().getText(), codeLocation));
+            result.add(new ParamNode(type, name, codeLocation));
           }
         }
         return result;
+      }
+
+      private TypeNode convertType(TypeContext context) {
+        if (context.basicType() != null) {
+          return convertBasicType(context.basicType());
+        }
+        if (context.arrayType() != null) {
+          return convertArrayType(context.arrayType());
+        }
+        throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
+            + " without children.");
+      }
+
+      private TypeNode convertBasicType(BasicTypeContext context) {
+        return new TypeNode(context.getText(), locationOf(context));
+      }
+
+      private TypeNode convertArrayType(ArrayTypeContext context) {
+        TypeNode elementType = convertType(context.type());
+        return new ArrayTypeNode(elementType, locationOf(context));
       }
 
       public Void visitCall(CallContext call) {
