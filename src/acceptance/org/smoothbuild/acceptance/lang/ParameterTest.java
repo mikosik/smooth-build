@@ -7,6 +7,15 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ParameterTest extends AcceptanceTestCase {
+
+  @Test
+  public void no_parameters() throws Exception {
+    givenScript("noParameters() = 'abc';"
+        + "result() = 'def';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+  }
+
   @Test
   public void string_parameter() throws Exception {
     givenScript("oneParameter(String string) = 'abc';"
