@@ -28,6 +28,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
@@ -56,7 +57,7 @@ public class ModuleLoader {
   private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
-    Maybe<Ast> ast = invokeWrap(module, m -> Ast.create(m));
+    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
     ast = ast.addErrors(a -> SemanticAnalyzer.findErrors(functions, a));
     Maybe<Ast> nodes = invoke(ast,
         a -> sortedByDependencies(functions, a));
