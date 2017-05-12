@@ -9,18 +9,17 @@ import org.smoothbuild.parse.Dependency;
 
 import com.google.common.collect.ImmutableSet;
 
-public class FunctionNode {
+public class FunctionNode extends Node {
   private final Name name;
   private final FunctionContext context;
-  private final CodeLocation location;
   private final Set<Dependency> dependencies;
 
   public FunctionNode(Name name, FunctionContext context, Set<Dependency> dependencies,
       CodeLocation location) {
+    super(location);
     this.name = name;
     this.context = context;
     this.dependencies = ImmutableSet.copyOf(dependencies);
-    this.location = location;
   }
 
   public Name name() {
@@ -33,10 +32,6 @@ public class FunctionNode {
 
   public Set<Dependency> dependencies() {
     return dependencies;
-  }
-
-  public CodeLocation location() {
-    return location;
   }
 
   public final boolean equals(Object object) {
@@ -52,6 +47,6 @@ public class FunctionNode {
   }
 
   public String toString() {
-    return "[" + name + ":" + location + "]";
+    return "[" + name + ":" + codeLocation() + "]";
   }
 }

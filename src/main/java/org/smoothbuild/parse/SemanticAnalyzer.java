@@ -31,11 +31,12 @@ public class SemanticAnalyzer {
     for (FunctionNode node : ast.functions()) {
       Name name = node.name();
       if (defined.contains(name)) {
-        errors.add(new ParseError(node.location(), "Function " + name + " is already defined."));
+        errors.add(new ParseError(node.codeLocation(), "Function " + name
+            + " is already defined."));
       }
       defined.add(name);
       if (functions.contains(name)) {
-        errors.add(new ParseError(node.location(), "Function " + name
+        errors.add(new ParseError(node.codeLocation(), "Function " + name
             + " cannot override builtin function with the same name."));
       }
     }
