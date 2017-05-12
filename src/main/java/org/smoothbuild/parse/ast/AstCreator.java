@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.ast.Ast.ast;
+import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +43,7 @@ public class AstCreator {
       private List<ParamNode> convertParams(ParamListContext context) {
         ArrayList<ParamNode> result = new ArrayList<>();
         if (context != null) {
-          for (ParamContext param : context.param()) {
+          for (ParamContext param : sane(context.param())) {
             TypeNode type = convertType(param.type());
             String name = param.name().getText();
             CodeLocation codeLocation = locationOf(param);
