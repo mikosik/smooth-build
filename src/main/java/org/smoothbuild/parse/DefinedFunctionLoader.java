@@ -104,7 +104,7 @@ public class DefinedFunctionLoader {
 
     private static Parameter createParameter(ParamNode param) {
       String name = param.name();
-      Type type = Types.fromString(param.type().name());
+      Type type = Types.fromString(param.typeNode().name());
       return parameter(type, name);
     }
 
