@@ -1,15 +1,15 @@
 grammar Smooth;
 
-module: function* EOF;
-function: name ( '(' paramList? ')' )? '=' pipe ';' ;
+module: func* EOF;
+func: name ( '(' paramList? ')' )? '=' pipe ';' ;
 paramList: param ( ',' param )* ','? ;
 param: type name ;
-pipe: expression ( p+='|' call )* ;
-expression : call | STRING | array;
+pipe: expr ( p+='|' call )* ;
+expr : call | STRING | array;
 call: name ( '(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
-arg: ( name '=' )? expression ; 
-array: '[' ( expression (',' expression)* (',')? )?  ']' ;
+arg: ( name '=' )? expr ; 
+array: '[' ( expr (',' expr)* (',')? )?  ']' ;
 type: basicType | arrayType ;
 basicType: IDENTIFIER ;
 arrayType: '[' type ']' ;
