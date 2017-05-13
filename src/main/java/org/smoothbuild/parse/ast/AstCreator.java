@@ -84,7 +84,9 @@ public class AstCreator {
           return new CallNode(call.name().getText(), args, locationOf(call.name()));
         }
         if (context.STRING() != null) {
-          return new ContextExprNode(context, locationOf(context));
+          String quotedString = context.STRING().getText();
+          return new StringNode(quotedString.substring(1, quotedString.length() - 1),
+              locationOf(context));
         }
         throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
             + " without children.");

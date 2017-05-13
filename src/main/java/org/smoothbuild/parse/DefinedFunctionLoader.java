@@ -64,6 +64,7 @@ import org.smoothbuild.parse.ast.ContextExprNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -109,6 +110,9 @@ public class DefinedFunctionLoader {
     private Maybe<Expression> createExpression(ExprNode node) {
       if (node instanceof CallNode) {
         return createCall((CallNode) node);
+      }
+      if (node instanceof StringNode) {
+        return createStringLiteral((StringNode) node);
       }
       if (node instanceof ContextExprNode) {
         return parseExpression(((ContextExprNode) node).expr());
@@ -261,6 +265,15 @@ public class DefinedFunctionLoader {
         return value(new StringLiteralExpression(unescaped(string), location));
       } catch (UnescapingFailedException e) {
         return error(new ParseError(location, e.getMessage()));
+      }
+    }
+
+    private Maybe<Expression> createStringLiteral(StringNode node) {
+      try {
+        return value(new StringLiteralExpression(
+            unescaped(node.value()), node.codeLocation()));
+      } catch (UnescapingFailedException e) {
+        return error(new ParseError(node.codeLocation(), e.getMessage()));
       }
     }
 
