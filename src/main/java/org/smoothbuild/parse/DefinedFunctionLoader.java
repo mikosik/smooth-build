@@ -12,7 +12,6 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
@@ -31,13 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.smoothbuild.antlr.SmoothParser.ArgContext;
-import org.smoothbuild.antlr.SmoothParser.ArgListContext;
-import org.smoothbuild.antlr.SmoothParser.ArrayContext;
-import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
-import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -61,7 +54,6 @@ import org.smoothbuild.parse.arg.TypedParametersPool;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.ContextExprNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.parse.ast.ParamNode;
@@ -104,10 +96,6 @@ public class DefinedFunctionLoader {
       return new DefinedFunction(signature, expression);
     }
 
-    private Maybe<List<Expression>> parseExpressionList(List<ExprContext> contexts) {
-      return pullUp(map(contexts, this::parseExpression));
-    }
-
     private Maybe<Expression> createExpression(ExprNode node) {
       if (node instanceof CallNode) {
         return createCall((CallNode) node);
@@ -118,23 +106,6 @@ public class DefinedFunctionLoader {
       if (node instanceof ArrayNode) {
         return createArray((ArrayNode) node);
       }
-      if (node instanceof ContextExprNode) {
-        return parseExpression(((ContextExprNode) node).expr());
-      }
-      throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
-          + " without children.");
-    }
-
-    private Maybe<Expression> parseExpression(ExprContext context) {
-      if (context.array() != null) {
-        return parseArray(context.array());
-      }
-      if (context.call() != null) {
-        return parseCall(context.call());
-      }
-      if (context.STRING() != null) {
-        return parseStringLiteral(context.STRING());
-      }
       throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
     }
@@ -144,14 +115,6 @@ public class DefinedFunctionLoader {
       CodeLocation location = node.codeLocation();
       Maybe<ArrayType> arrayType = invoke(exprList, es -> arrayType(es, location));
       return invokeWrap(arrayType, at -> createArray(at, exprList.value(), location));
-    }
-
-    private Maybe<Expression> parseArray(ArrayContext context) {
-      List<ExprContext> elems = context.expr();
-      Maybe<List<Expression>> expressions = parseExpressionList(elems);
-      CodeLocation location = locationOf(context);
-      Maybe<ArrayType> arrayType = invoke(expressions, es -> arrayType(es, location));
-      return invokeWrap(arrayType, at -> createArray(at, expressions.value(), location));
     }
 
     private Expression createArray(ArrayType type, List<Expression> elements,
@@ -232,51 +195,6 @@ public class DefinedFunctionLoader {
       }
       return Maybe.pullUp(result);
 
-    }
-
-    private Maybe<Expression> parseCall(CallContext context) {
-      Maybe<List<Argument>> arguments = parseArgumentList(context.argList());
-      return invoke(arguments, as -> parseCall(context, as));
-    }
-
-    private Maybe<Expression> parseCall(CallContext context, List<Argument> arguments) {
-      Function function = loadedFunctions.get(name(context.name().getText()));
-      CodeLocation codeLocation = locationOf(context.name());
-      Maybe<List<Expression>> expressions = createArgExprs(codeLocation, function, arguments);
-      return invokeWrap(expressions, es -> function.createCallExpression(es, false, codeLocation));
-    }
-
-    private Maybe<List<Argument>> parseArgumentList(ArgListContext context) {
-      List<Maybe<Argument>> result = new ArrayList<>();
-      if (context != null) {
-        List<ArgContext> argContexts = context.arg();
-        for (int i = 0; i < argContexts.size(); i++) {
-          result.add(parseArgument(i, argContexts.get(i)));
-        }
-      }
-      return pullUp(result);
-    }
-
-    private Maybe<Argument> parseArgument(int index, ArgContext context) {
-      Maybe<Expression> expression = parseExpression(context.expr());
-      return invokeWrap(expression, e -> createArgument(index, context, e));
-    }
-
-    private Argument createArgument(int index, ArgContext context, Expression expression) {
-      NameContext paramName = context.name();
-      String name = paramName == null ? null : paramName.getText();
-      return argument(index, name, expression, locationOf(context));
-    }
-
-    private Maybe<Expression> parseStringLiteral(TerminalNode stringToken) {
-      String quotedString = stringToken.getText();
-      String string = quotedString.substring(1, quotedString.length() - 1);
-      CodeLocation location = locationOf(stringToken.getSymbol());
-      try {
-        return value(new StringLiteralExpression(unescaped(string), location));
-      } catch (UnescapingFailedException e) {
-        return error(new ParseError(location, e.getMessage()));
-      }
     }
 
     private Maybe<Expression> createStringLiteral(StringNode node) {
