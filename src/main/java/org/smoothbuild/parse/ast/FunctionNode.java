@@ -3,7 +3,6 @@ package org.smoothbuild.parse.ast;
 import java.util.List;
 import java.util.Set;
 
-import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.parse.Dependency;
@@ -14,15 +13,15 @@ import com.google.common.collect.ImmutableSet;
 public class FunctionNode extends Node {
   private final Name name;
   private final List<ParamNode> params;
-  private final FunctionContext context;
+  private final ExprNode expr;
   private final Set<Dependency> dependencies;
 
-  public FunctionNode(Name name, List<ParamNode> params, FunctionContext context,
+  public FunctionNode(Name name, List<ParamNode> params, ExprNode expr,
       Set<Dependency> dependencies, CodeLocation location) {
     super(location);
     this.name = name;
     this.params = ImmutableList.copyOf(params);
-    this.context = context;
+    this.expr = expr;
     this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 
@@ -34,8 +33,8 @@ public class FunctionNode extends Node {
     return params;
   }
 
-  public FunctionContext context() {
-    return context;
+  public ExprNode expr() {
+    return expr;
   }
 
   public Set<Dependency> dependencies() {
@@ -43,7 +42,7 @@ public class FunctionNode extends Node {
   }
 
   public FunctionNode withParams(List<ParamNode> params) {
-    return new FunctionNode(name, params, context, dependencies, codeLocation());
+    return new FunctionNode(name, params, expr, dependencies, codeLocation());
   }
 
   public final boolean equals(Object object) {
