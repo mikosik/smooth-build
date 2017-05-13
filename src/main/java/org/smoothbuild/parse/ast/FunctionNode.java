@@ -42,6 +42,10 @@ public class FunctionNode extends Node {
     return dependencies;
   }
 
+  public FunctionNode withParams(List<ParamNode> params) {
+    return new FunctionNode(name, params, context, dependencies, codeLocation());
+  }
+
   public final boolean equals(Object object) {
     if (!(object instanceof FunctionNode)) {
       return false;
