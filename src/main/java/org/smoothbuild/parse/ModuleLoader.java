@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
+import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.ast.Ast.ast;
 import static org.smoothbuild.util.Maybe.error;
@@ -58,7 +59,7 @@ public class ModuleLoader {
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
-    ast = ast.addErrors(a -> SemanticAnalyzer.findErrors(functions, a));
+    ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     Maybe<Ast> nodes = invoke(ast,
         a -> sortedByDependencies(functions, a));
     return invoke(nodes, ns -> loadDefinedFunctions(functions, ns));
