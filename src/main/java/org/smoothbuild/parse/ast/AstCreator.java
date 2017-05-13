@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.ast.Ast.ast;
+import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class AstCreator {
 
       private ExprNode convertExpression(ExprContext context) {
         if (context.array() != null) {
-          return new ContextExprNode(context, locationOf(context));
+          List<ExprNode> elements = map(context.array().expr(), this::convertExpression);
+          return new ArrayNode(elements, locationOf(context));
         }
         if (context.call() != null) {
           CallContext call = context.call();

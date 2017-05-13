@@ -59,6 +59,7 @@ import org.smoothbuild.parse.arg.MapToString;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
 import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ContextExprNode;
 import org.smoothbuild.parse.ast.ExprNode;
@@ -114,6 +115,9 @@ public class DefinedFunctionLoader {
       if (node instanceof StringNode) {
         return createStringLiteral((StringNode) node);
       }
+      if (node instanceof ArrayNode) {
+        return createArray((ArrayNode) node);
+      }
       if (node instanceof ContextExprNode) {
         return parseExpression(((ContextExprNode) node).expr());
       }
@@ -133,6 +137,13 @@ public class DefinedFunctionLoader {
       }
       throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
+    }
+
+    private Maybe<Expression> createArray(ArrayNode node) {
+      Maybe<List<Expression>> exprList = pullUp(map(node.elements(), this::createExpression));
+      CodeLocation location = node.codeLocation();
+      Maybe<ArrayType> arrayType = invoke(exprList, es -> arrayType(es, location));
+      return invokeWrap(arrayType, at -> createArray(at, exprList.value(), location));
     }
 
     private Maybe<Expression> parseArray(ArrayContext context) {
