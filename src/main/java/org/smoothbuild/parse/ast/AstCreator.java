@@ -38,7 +38,7 @@ public class AstCreator {
         NameContext nameContext = context.name();
         Name name = name(nameContext.getText());
         List<ParamNode> params = convertParams(context.paramList());
-        ExprNode pipe = doVisitPipe(context.pipe());
+        ExprNode pipe = convertPipe(context.pipe());
         visitChildren(context);
         nodes.add(new FunctionNode(name, params, pipe, currentDependencies,
             locationOf(nameContext)));
@@ -58,9 +58,9 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode doVisitPipe(PipeContext context) {
+      private ExprNode convertPipe(PipeContext context) {
         ExprContext initialExpression = context.expr();
-        ExprNode result = new ContextExprNode(initialExpression, locationOf(initialExpression));
+        ExprNode result = convertExpression(initialExpression);
         List<CallContext> calls = context.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
@@ -68,13 +68,29 @@ public class AstCreator {
           CodeLocation codeLocation = locationOf(context.p.get(i));
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, codeLocation));
-          args.addAll(doVisitArgList(call.argList()));
+          args.addAll(convertArgList(call.argList()));
           result = new CallNode(call.name().getText(), args, locationOf(call.name()));
         }
         return result;
       }
 
-      private List<ArgNode> doVisitArgList(ArgListContext context) {
+      private ExprNode convertExpression(ExprContext context) {
+        if (context.array() != null) {
+          return new ContextExprNode(context, locationOf(context));
+        }
+        if (context.call() != null) {
+          CallContext call = context.call();
+          List<ArgNode> args = convertArgList(call.argList());
+          return new CallNode(call.name().getText(), args, locationOf(call.name()));
+        }
+        if (context.STRING() != null) {
+          return new ContextExprNode(context, locationOf(context));
+        }
+        throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
+            + " without children.");
+      }
+
+      private List<ArgNode> convertArgList(ArgListContext context) {
         List<ArgNode> result = new ArrayList<>();
         if (context != null) {
           List<ArgContext> argContexts = context.arg();
@@ -83,7 +99,7 @@ public class AstCreator {
             ExprContext exprContext = argContext.expr();
             NameContext nameContext = argContext.name();
             String name = nameContext == null ? null : nameContext.getText();
-            ExprNode exprNode = new ContextExprNode(exprContext, locationOf(exprContext));
+            ExprNode exprNode = convertExpression(exprContext);
             result.add(new ArgNode(i + 1, name, exprNode, locationOf(argContext)));
           }
         }
