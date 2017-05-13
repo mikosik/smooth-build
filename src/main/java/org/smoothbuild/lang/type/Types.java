@@ -106,22 +106,6 @@ public class Types {
     return builder.build();
   }
 
-  public static Type fromString(String string) {
-    Type basicType = basicTypeFromString(string);
-    if (basicType != null) {
-      return basicType;
-    }
-    if (string.startsWith("[") && string.endsWith("]")) {
-      String elementTypeString = string.substring(1, string.length() - 1);
-      for (Type type : BASIC_TYPES) {
-        if (type.name().equals(elementTypeString)) {
-          return arrayOf(type);
-        }
-      }
-    }
-    return null;
-  }
-
   public static Type basicTypeFromString(String string) {
     for (Type type : BASIC_TYPES) {
       if (type.name().equals(string)) {
