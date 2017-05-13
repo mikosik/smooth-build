@@ -11,14 +11,18 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
+import org.smoothbuild.antlr.SmoothParser.ArgContext;
+import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
+import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.SmoothParser.ParamListContext;
+import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
@@ -34,9 +38,10 @@ public class AstCreator {
         NameContext nameContext = context.name();
         Name name = name(nameContext.getText());
         List<ParamNode> params = convertParams(context.paramList());
+        ExprNode pipe = doVisitPipe(context.pipe());
         visitChildren(context);
-        nodes.add(new FunctionNode(name, params, context, currentDependencies, locationOf(
-            nameContext)));
+        nodes.add(new FunctionNode(name, params, pipe, currentDependencies,
+            locationOf(nameContext)));
         return null;
       }
 
@@ -48,6 +53,38 @@ public class AstCreator {
             String name = param.name().getText();
             CodeLocation codeLocation = locationOf(param);
             result.add(new ParamNode(type, name, codeLocation));
+          }
+        }
+        return result;
+      }
+
+      private ExprNode doVisitPipe(PipeContext context) {
+        ExpressionContext initialExpression = context.expression();
+        ExprNode result = new ContextExprNode(initialExpression, locationOf(initialExpression));
+        List<CallContext> calls = context.call();
+        for (int i = 0; i < calls.size(); i++) {
+          CallContext call = calls.get(i);
+          // nameless piped argument's location is set to the pipe character '|'
+          CodeLocation codeLocation = locationOf(context.p.get(i));
+          List<ArgNode> args = new ArrayList<>();
+          args.add(new ArgNode(0, null, result, codeLocation));
+          args.addAll(doVisitArgList(call.argList()));
+          result = new CallNode(call.name().getText(), args, locationOf(call.name()));
+        }
+        return result;
+      }
+
+      private List<ArgNode> doVisitArgList(ArgListContext context) {
+        List<ArgNode> result = new ArrayList<>();
+        if (context != null) {
+          List<ArgContext> argContexts = context.arg();
+          for (int i = 0; i < argContexts.size(); i++) {
+            ArgContext argContext = argContexts.get(i);
+            ExpressionContext exprContext = argContext.expression();
+            NameContext nameContext = argContext.name();
+            String name = nameContext == null ? null : nameContext.getText();
+            ExprNode exprNode = new ContextExprNode(exprContext, locationOf(exprContext));
+            result.add(new ArgNode(i + 1, name, exprNode, locationOf(argContext)));
           }
         }
         return result;

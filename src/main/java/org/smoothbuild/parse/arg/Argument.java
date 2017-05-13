@@ -36,7 +36,7 @@ public class Argument {
     return new Argument(0, null, expression, codeLocation);
   }
 
-  private Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
+  public Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;
