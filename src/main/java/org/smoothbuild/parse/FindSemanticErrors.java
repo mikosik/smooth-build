@@ -22,8 +22,8 @@ import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableSet;
 
-public class SemanticAnalyzer {
-  public static List<ParseError> findErrors(Functions functions, Ast ast) {
+public class FindSemanticErrors {
+  public static List<ParseError> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     errors.addAll(duplicateFunctionErrors(functions, ast));
     errors.addAll(undefinedFunctionErrors(functions, ast));
@@ -66,7 +66,7 @@ public class SemanticAnalyzer {
         .flatMap(fd -> fd.stream())
         .collect(toSet());
     referenced.removeAll(defined);
-    return Lists.map(referenced, SemanticAnalyzer::unknownFunctionError);
+    return Lists.map(referenced, FindSemanticErrors::unknownFunctionError);
   }
 
   private static ParseError unknownFunctionError(Dependency dependency) {
