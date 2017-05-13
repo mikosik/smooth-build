@@ -104,7 +104,7 @@ public class FindSemanticErrors {
   private static List<ParseError> unknownParamTypeErrors(List<ParamNode> params) {
     List<ParseError> errors = new ArrayList<>();
     for (ParamNode node : params) {
-      TypeNode type = node.type();
+      TypeNode type = node.typeNode();
       while (type instanceof ArrayTypeNode) {
         type = ((ArrayTypeNode) type).elementType();
       }
@@ -125,7 +125,7 @@ public class FindSemanticErrors {
   private static List<ParseError> nestedArrayTypeParamErrors(List<ParamNode> params) {
     List<ParseError> errors = new ArrayList<>();
     for (ParamNode node : params) {
-      TypeNode type = node.type();
+      TypeNode type = node.typeNode();
       if (type instanceof ArrayTypeNode
           && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
         errors.add(new ParseError(node.codeLocation(), "Nested array type is forbidden."));
