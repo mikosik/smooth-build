@@ -15,6 +15,7 @@ import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.basicTypes;
+import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
@@ -26,6 +27,8 @@ import org.junit.Test;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
+  private ArrayType type;
+
   @Test
   public void basic_types() {
     when(basicTypes());
@@ -108,6 +111,13 @@ public class TypesTest {
   public void nothing_basic_type_from_string() throws Exception {
     when(Types.basicTypeFromString("Nothing"));
     thenReturned(NOTHING);
+  }
+
+  @Test
+  public void string_array_name() throws Exception {
+    given(type = Types.arrayOf(STRING));
+    when(() -> type.name());
+    thenReturned("[String]");
   }
 
   @Test
