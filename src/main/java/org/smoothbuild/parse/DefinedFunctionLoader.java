@@ -37,14 +37,11 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayContext;
-import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
-import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
 import org.smoothbuild.antlr.SmoothParser.FunctionContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
-import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -100,26 +97,6 @@ public class DefinedFunctionLoader {
           .stream()
           .map(p -> parameter(p.type(), p.name()))
           .collect(toList());
-    }
-
-    private Type parseType(TypeContext context) {
-      if (context.basicType() != null) {
-        return parseBasicType(context.basicType());
-      }
-      if (context.arrayType() != null) {
-        return parseArrayType(context.arrayType());
-      }
-      throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
-          + " without children.");
-    }
-
-    private Type parseBasicType(BasicTypeContext context) {
-      return Types.basicTypeFromString(context.getText());
-    }
-
-    private Type parseArrayType(ArrayTypeContext context) {
-      Type elementType = parseType(context.type());
-      return Types.arrayOf(elementType);
     }
 
     private static DefinedFunction createFunction(FunctionNode node, Expression expression) {
