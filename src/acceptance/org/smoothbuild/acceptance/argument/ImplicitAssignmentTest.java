@@ -124,12 +124,12 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
             + "'ambiguousArguments' function some nameless arguments should be assigned:\n"
             + "List of assignments that were successfully detected is following:\n"
             + "  File    : param3 <- File    : <nameless> #| [ line 1 ]\n"
-            + "  String[]: param2 <- String[]: <nameless> #2 [ line 1 ]\n"
+            + "  [String]: param2 <- [String]: <nameless> #2 [ line 1 ]\n"
             + "  String  : param1 <- String  : <nameless> #1 [ line 1 ]\n"
             + "List of nameless arguments that caused problems:\n"
-            + "  Nothing[]: <nameless> #3 [ line 1 ]\n"
+            + "  [Nothing]: <nameless> #3 [ line 1 ]\n"
             + "List of unassigned parameters of desired type is following:\n"
-            + "  Blob[]: param5\n"
-            + "  File[]: param4\n\n"));
+            + "  [Blob]: param5\n"
+            + "  [File]: param4\n\n"));
   }
 }

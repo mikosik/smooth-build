@@ -116,7 +116,7 @@ public class ParameterTest {
     thenReturned("" //
         + "  String: param1               \n" //
         + "  String: param2-with-very-long\n" //
-        + "  File[]: param3               \n" //
+        + "  [File]: param3               \n" //
     );
   }
 }
