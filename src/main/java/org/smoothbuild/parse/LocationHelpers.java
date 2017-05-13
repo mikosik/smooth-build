@@ -12,7 +12,7 @@ public class LocationHelpers {
   public static CodeLocation locationOf(ArgContext arg) {
     NameContext name = arg.name();
     if (name == null) {
-      return locationOf(arg.expression());
+      return locationOf(arg.expr());
     } else {
       return locationOf(name);
     }

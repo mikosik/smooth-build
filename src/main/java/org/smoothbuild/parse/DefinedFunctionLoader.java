@@ -36,7 +36,7 @@ import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
-import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
+import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.DefaultValueExpression;
@@ -102,7 +102,7 @@ public class DefinedFunctionLoader {
       return new DefinedFunction(signature, expression);
     }
 
-    private Maybe<List<Expression>> parseExpressionList(List<ExpressionContext> contexts) {
+    private Maybe<List<Expression>> parseExpressionList(List<ExprContext> contexts) {
       return pullUp(map(contexts, this::parseExpression));
     }
 
@@ -113,11 +113,11 @@ public class DefinedFunctionLoader {
       if (node instanceof ContextExprNode) {
         return parseExpression(((ContextExprNode) node).expr());
       }
-      throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+      throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
     }
 
-    private Maybe<Expression> parseExpression(ExpressionContext context) {
+    private Maybe<Expression> parseExpression(ExprContext context) {
       if (context.array() != null) {
         return parseArray(context.array());
       }
@@ -127,12 +127,12 @@ public class DefinedFunctionLoader {
       if (context.STRING() != null) {
         return parseStringLiteral(context.STRING());
       }
-      throw new RuntimeException("Illegal parse tree: " + ExpressionContext.class.getSimpleName()
+      throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
     }
 
     private Maybe<Expression> parseArray(ArrayContext context) {
-      List<ExpressionContext> elems = context.expression();
+      List<ExprContext> elems = context.expr();
       Maybe<List<Expression>> expressions = parseExpressionList(elems);
       CodeLocation location = locationOf(context);
       Maybe<ArrayType> arrayType = invoke(expressions, es -> arrayType(es, location));
@@ -243,7 +243,7 @@ public class DefinedFunctionLoader {
     }
 
     private Maybe<Argument> parseArgument(int index, ArgContext context) {
-      Maybe<Expression> expression = parseExpression(context.expression());
+      Maybe<Expression> expression = parseExpression(context.expr());
       return invokeWrap(expression, e -> createArgument(index, context, e));
     }
 

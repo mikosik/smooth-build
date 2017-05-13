@@ -1,17 +1,17 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
+import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class ContextExprNode extends ExprNode {
-  private final ExpressionContext expr;
+  private final ExprContext expr;
 
-  public ContextExprNode(ExpressionContext expr, CodeLocation codeLocation) {
+  public ContextExprNode(ExprContext expr, CodeLocation codeLocation) {
     super(codeLocation);
     this.expr = expr;
   }
 
-  public ExpressionContext expr() {
+  public ExprContext expr() {
     return expr;
   }
 }

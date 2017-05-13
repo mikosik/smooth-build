@@ -16,8 +16,8 @@ import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
-import org.smoothbuild.antlr.SmoothParser.ExpressionContext;
-import org.smoothbuild.antlr.SmoothParser.FunctionContext;
+import org.smoothbuild.antlr.SmoothParser.ExprContext;
+import org.smoothbuild.antlr.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
@@ -34,7 +34,7 @@ public class AstCreator {
     new SmoothBaseVisitor<Void>() {
       Set<Dependency> currentDependencies = new HashSet<>();
 
-      public Void visitFunction(FunctionContext context) {
+      public Void visitFunc(FuncContext context) {
         NameContext nameContext = context.name();
         Name name = name(nameContext.getText());
         List<ParamNode> params = convertParams(context.paramList());
@@ -59,7 +59,7 @@ public class AstCreator {
       }
 
       private ExprNode doVisitPipe(PipeContext context) {
-        ExpressionContext initialExpression = context.expression();
+        ExprContext initialExpression = context.expr();
         ExprNode result = new ContextExprNode(initialExpression, locationOf(initialExpression));
         List<CallContext> calls = context.call();
         for (int i = 0; i < calls.size(); i++) {
@@ -80,7 +80,7 @@ public class AstCreator {
           List<ArgContext> argContexts = context.arg();
           for (int i = 0; i < argContexts.size(); i++) {
             ArgContext argContext = argContexts.get(i);
-            ExpressionContext exprContext = argContext.expression();
+            ExprContext exprContext = argContext.expr();
             NameContext nameContext = argContext.name();
             String name = nameContext == null ? null : nameContext.getText();
             ExprNode exprNode = new ContextExprNode(exprContext, locationOf(exprContext));
