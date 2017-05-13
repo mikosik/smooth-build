@@ -98,14 +98,8 @@ public class DefinedFunctionLoader {
     private static List<Parameter> createParameters(List<ParamNode> params) {
       return params
           .stream()
-          .map(Worker::createParameter)
+          .map(p -> parameter(p.type(), p.name()))
           .collect(toList());
-    }
-
-    private static Parameter createParameter(ParamNode param) {
-      String name = param.name();
-      Type type = Types.fromString(param.typeNode().name());
-      return parameter(type, name);
     }
 
     private Type parseType(TypeContext context) {
