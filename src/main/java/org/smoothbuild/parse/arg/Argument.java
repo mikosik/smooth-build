@@ -20,23 +20,12 @@ public class Argument {
   private final Expression expression;
   private final CodeLocation codeLocation;
 
-  public static Argument namedArgument(int number, String name, Expression expression,
+  public static Argument argument(int number, String name, Expression expression,
       CodeLocation codeLocation) {
-    checkArgument(0 < number);
-    return new Argument(number, checkNotNull(name), expression, codeLocation);
+    return new Argument(number, name, expression, codeLocation);
   }
 
-  public static Argument namelessArgument(int number, Expression expression,
-      CodeLocation codeLocation) {
-    checkArgument(0 < number);
-    return new Argument(number, null, expression, codeLocation);
-  }
-
-  public static Argument pipedArgument(Expression expression, CodeLocation codeLocation) {
-    return new Argument(0, null, expression, codeLocation);
-  }
-
-  public Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
+  private Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
     checkArgument(0 <= number);
     this.number = number;
     this.name = name;

@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
@@ -211,7 +212,7 @@ public class DefinedFunctionLoader {
       for (ArgNode argNode : args) {
         Maybe<Expression> expression = createExpression(argNode.expr());
         Maybe<Argument> argument = invokeWrap(expression,
-            e -> new Argument(argNode.number(), argNode.name(), e, argNode.codeLocation()));
+            e -> argument(argNode.number(), argNode.name(), e, argNode.codeLocation()));
         result.add(argument);
       }
       return Maybe.pullUp(result);
@@ -249,7 +250,7 @@ public class DefinedFunctionLoader {
     private Argument createArgument(int index, ArgContext context, Expression expression) {
       NameContext paramName = context.name();
       String name = paramName == null ? null : paramName.getText();
-      return new Argument(index, name, expression, locationOf(context));
+      return argument(index, name, expression, locationOf(context));
     }
 
     private Maybe<Expression> parseStringLiteral(TerminalNode stringToken) {
