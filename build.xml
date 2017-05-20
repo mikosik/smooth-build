@@ -1,4 +1,4 @@
-<project name="smooth-build" basedir="." default="all">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="smooth-build" basedir="." default="all">
 
     <property name="zipped.dir" value="smooth"/>
 
@@ -30,21 +30,19 @@
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
     <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
 
-    <property name="lib.antlr" value="${dir.lib}/antlr-4.1-complete.jar"/>
-    <property name="lib.antlr.license" value="${dir.lib}/antlr.LICENSE"/>
-    <property name="lib.aopalliance" value="${dir.lib}/aopalliance.jar"/>
-    <property name="lib.guava" value="${dir.lib}/guava-21.0.jar"/>
-    <property name="lib.guava.license" value="${dir.lib}/guava.LICENSE"/>
-    <property name="lib.guava-testlib" value="${dir.lib}/guava-testlib-21.0.jar"/>
-    <property name="lib.guice" value="${dir.lib}/guice-3.0.jar"/>
-    <property name="lib.guice.license" value="${dir.lib}/guice.LICENSE"/>
-    <property name="lib.hamcrest" value="${dir.lib}/hamcrest-core-1.3.jar"/>
-    <property name="lib.hamcrest.license" value="${dir.lib}/hamcrest-core.LICENSE"/>
-    <property name="lib.hamcrest-library" value="${dir.lib}/hamcrest-library-1.3.jar"/>
-    <property name="lib.javax.inject" value="${dir.lib}/javax.inject.jar"/>
-    <property name="lib.junit" value="${dir.lib}/junit-4.12.jar"/>
-    <property name="lib.junit.license" value="${dir.lib}/junit.LICENSE"/>
+    <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.1.jar"/>
+    <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.1.jar"/>
+    <property name="lib.antlr3-runtime" value="${dir.lib}/ivy/antlr-runtime-3.5.jar"/>
+    <property name="lib.aopalliance" value="${dir.lib}/ivy/aopalliance-1.0.jar"/>
+    <property name="lib.guava" value="${dir.lib}/ivy/guava-21.0.jar"/>
+    <property name="lib.guava-testlib" value="${dir.lib}/ivy/guava-testlib-21.0.jar"/>
+    <property name="lib.guice" value="${dir.lib}/ivy/guice-3.0.jar"/>
+    <property name="lib.hamcrest" value="${dir.lib}/ivy/hamcrest-core-1.3.jar"/>
+    <property name="lib.hamcrest-library" value="${dir.lib}/ivy/hamcrest-library-1.3.jar"/>
+    <property name="lib.javax.inject" value="${dir.lib}/ivy/javax.inject-1.jar"/>
+    <property name="lib.junit" value="${dir.lib}/ivy/junit-4.12.jar"/>
     <property name="lib.quackery" value="${dir.lib}/quackery-0.13.2.jar"/>
+    <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.0.7.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.1.1.jar"/>
 
     <target name="init">
@@ -61,6 +59,8 @@
         <mkdir dir="${dir.build.jar}"/>
         <mkdir dir="${dir.build.release}"/>
         <mkdir dir="${dir.build.acceptance}"/>
+
+        <ivy:retrieve pattern="lib/ivy/[artifact]-[revision](-[classifier]).[ext]"/>
     </target>
 
     <target name="generate-java-grammar" depends="init">
@@ -70,7 +70,10 @@
             <arg line="-visitor"/>
             <arg line="Smooth.g4"/>
             <classpath>
-                <pathelement location="${dir.lib}/antlr-4.1-complete.jar"/>
+                <pathelement location="${lib.antlr4}"/>
+                <pathelement location="${lib.antlr4-runtime}"/>
+                <pathelement location="${lib.antlr3-runtime}"/>
+                <pathelement location="${lib.stringtemplate4}"/>
             </classpath>
         </java>
     </target>
@@ -78,7 +81,7 @@
     <!-- compile src/main/java -->
 
     <path id="classpath.for.main.java">
-        <pathelement location="${lib.antlr}"/>
+        <pathelement location="${lib.antlr4-runtime}"/>
         <pathelement location="${lib.aopalliance}"/>
         <pathelement location="${lib.guava}"/>
         <pathelement location="${lib.guice}"/>
@@ -317,10 +320,6 @@
 
             <zipfileset dir="${dir.build.class.func.java}"/>
             <zipfileset file="LICENSE"/>
-
-            <!-- TODO can be removed once junit function becomes separate plugin -->
-            <zipfileset file="${lib.junit.license}"/>
-            <zipfileset file="${lib.hamcrest.license}"/>
         </jar>
     </target>
 
@@ -328,7 +327,7 @@
 
     <target name="smooth-jar-file" depends="compile-main.java">
         <jar destfile="${dir.build.smooth.jar}">
-            <zipfileset src="${lib.antlr}"        excludes="* META-INF/**"/>
+            <zipfileset src="${lib.antlr4-runtime}" excludes="* META-INF/**"/>
             <zipfileset src="${lib.aopalliance}"  excludes="* META-INF/**"/>
             <zipfileset src="${lib.guava}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.guice}"        excludes="* META-INF/**"/>
@@ -336,10 +335,6 @@
 
             <zipfileset dir="${dir.build.class.main.java}"/>
             <zipfileset file="LICENSE"/>
-
-            <zipfileset file="${lib.antlr.license}"/>
-            <zipfileset file="${lib.guava.license}"/>
-            <zipfileset file="${lib.guice.license}"/>
         </jar>
     </target>
 
