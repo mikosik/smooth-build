@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * fixed smooth script to work correctly when it is redirected to via symlink
  * established array type as basic type inside brackets '[]'
  * changed ':' to '=' in function declaration
 
