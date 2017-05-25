@@ -1,6 +1,5 @@
 #!/bin/sh
 
-export SMOOTH_HOME=`dirname ${0}`
-
+export SMOOTH_HOME=`dirname "$(readlink -f "${0}")"`
 java -cp "${SMOOTH_HOME}"/smooth.jar org.smoothbuild.Main ${*}
 
