@@ -7,11 +7,9 @@ import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NIL;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
+import static org.smoothbuild.lang.type.Types.commonSuperType;
 import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
@@ -149,31 +147,6 @@ public class DefinedFunctionLoader {
       }
 
       return value(arrayType);
-    }
-
-    private static Type commonSuperType(Type type1, Type type2) {
-      if (type1 == STRING) {
-        if (type2 == STRING) {
-          return STRING;
-        } else {
-          return null;
-        }
-      } else if (type1 == BLOB) {
-        if (type2 == BLOB || type2 == FILE) {
-          return BLOB;
-        } else {
-          return null;
-        }
-      } else if (type1 == FILE) {
-        if (type2 == FILE) {
-          return FILE;
-        } else if (type2 == BLOB) {
-          return BLOB;
-        } else {
-          return null;
-        }
-      }
-      return null;
     }
 
     private Maybe<Expression> createCall(CallNode node) {

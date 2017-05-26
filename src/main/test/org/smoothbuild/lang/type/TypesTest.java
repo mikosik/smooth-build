@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
@@ -148,5 +149,74 @@ public class TypesTest {
   public void unknown_type_basic_type_from_string() throws Exception {
     when(Types.basicTypeFromString("notAType"));
     thenReturned(null);
+  }
+
+  @Test
+  public void common_super_type() throws Exception {
+    StringBuilder builder = new StringBuilder();
+
+    assertCommonSuperType(STRING, STRING, STRING, builder);
+    assertCommonSuperType(STRING, BLOB, null, builder);
+    assertCommonSuperType(STRING, FILE, null, builder);
+    assertCommonSuperType(STRING, NOTHING, STRING, builder);
+    assertCommonSuperType(STRING, STRING_ARRAY, null, builder);
+    assertCommonSuperType(STRING, BLOB_ARRAY, null, builder);
+    assertCommonSuperType(STRING, FILE_ARRAY, null, builder);
+    assertCommonSuperType(STRING, NIL, null, builder);
+
+    assertCommonSuperType(BLOB, BLOB, BLOB, builder);
+    assertCommonSuperType(BLOB, FILE, BLOB, builder);
+    assertCommonSuperType(BLOB, NOTHING, BLOB, builder);
+    assertCommonSuperType(BLOB, STRING_ARRAY, null, builder);
+    assertCommonSuperType(BLOB, BLOB_ARRAY, null, builder);
+    assertCommonSuperType(BLOB, FILE_ARRAY, null, builder);
+    assertCommonSuperType(BLOB, NIL, null, builder);
+
+    assertCommonSuperType(FILE, FILE, FILE, builder);
+    assertCommonSuperType(FILE, NOTHING, FILE, builder);
+    assertCommonSuperType(FILE, STRING_ARRAY, null, builder);
+    assertCommonSuperType(FILE, BLOB_ARRAY, null, builder);
+    assertCommonSuperType(FILE, FILE_ARRAY, null, builder);
+    assertCommonSuperType(FILE, NIL, null, builder);
+
+    assertCommonSuperType(NOTHING, NOTHING, NOTHING, builder);
+    assertCommonSuperType(NOTHING, STRING_ARRAY, STRING_ARRAY, builder);
+    assertCommonSuperType(NOTHING, BLOB_ARRAY, BLOB_ARRAY, builder);
+    assertCommonSuperType(NOTHING, FILE_ARRAY, FILE_ARRAY, builder);
+    assertCommonSuperType(NOTHING, NIL, NIL, builder);
+
+    assertCommonSuperType(STRING_ARRAY, STRING_ARRAY, STRING_ARRAY, builder);
+    assertCommonSuperType(STRING_ARRAY, BLOB_ARRAY, null, builder);
+    assertCommonSuperType(STRING_ARRAY, FILE_ARRAY, null, builder);
+    assertCommonSuperType(STRING_ARRAY, NIL, STRING_ARRAY, builder);
+
+    assertCommonSuperType(BLOB_ARRAY, BLOB_ARRAY, BLOB_ARRAY, builder);
+    assertCommonSuperType(BLOB_ARRAY, FILE_ARRAY, BLOB_ARRAY, builder);
+    assertCommonSuperType(BLOB_ARRAY, NIL, BLOB_ARRAY, builder);
+
+    assertCommonSuperType(FILE_ARRAY, FILE_ARRAY, FILE_ARRAY, builder);
+    assertCommonSuperType(FILE_ARRAY, NIL, FILE_ARRAY, builder);
+
+    assertCommonSuperType(NIL, NIL, NIL, builder);
+
+    String errors = builder.toString();
+    if (0 < errors.length()) {
+      fail(errors);
+    }
+  }
+
+  private static void assertCommonSuperType(Type type1, Type type2, Type expected,
+      StringBuilder builder) {
+    assertCommonSuperTypeImpl(type1, type2, expected, builder);
+    assertCommonSuperTypeImpl(type2, type1, expected, builder);
+  }
+
+  private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected,
+      StringBuilder builder) {
+    Type actual = Types.commonSuperType(type1, type2);
+    if (expected != actual) {
+      builder.append("commonSuperType(" + type1 + "," + type2 + ") = " + actual + " but should = "
+          + expected + "\n");
+    }
   }
 }

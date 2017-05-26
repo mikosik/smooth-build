@@ -114,4 +114,37 @@ public class Types {
     }
     return null;
   }
+
+  public static Type commonSuperType(Type type1, Type type2) {
+    if (type1 == type2) {
+      return type1;
+    }
+    if (type1 == NOTHING) {
+      return type2;
+    }
+    if (type2 == NOTHING) {
+      return type1;
+    }
+    if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
+      Type elemType1 = ((ArrayType) type1).elemType();
+      Type elemType2 = ((ArrayType) type2).elemType();
+      return arrayOf(commonSuperType(elemType1, elemType2));
+    }
+    if (type1 == BLOB) {
+      if (type2 == BLOB || type2 == FILE) {
+        return BLOB;
+      } else {
+        return null;
+      }
+    } else if (type1 == FILE) {
+      if (type2 == FILE) {
+        return FILE;
+      } else if (type2 == BLOB) {
+        return BLOB;
+      } else {
+        return null;
+      }
+    }
+    return null;
+  }
 }
