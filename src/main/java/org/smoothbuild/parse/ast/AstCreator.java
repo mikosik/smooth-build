@@ -31,7 +31,7 @@ import org.smoothbuild.parse.Dependency;
 
 public class AstCreator {
   public static Ast fromParseTree(ModuleContext module) {
-    List<FunctionNode> nodes = new ArrayList<>();
+    List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       Set<Dependency> currentDependencies = new HashSet<>();
 
@@ -41,7 +41,7 @@ public class AstCreator {
         List<ParamNode> params = convertParams(context.paramList());
         ExprNode pipe = convertPipe(context.pipe());
         visitChildren(context);
-        nodes.add(new FunctionNode(name, params, pipe, currentDependencies,
+        nodes.add(new FuncNode(name, params, pipe, currentDependencies,
             locationOf(nameContext)));
         return null;
       }

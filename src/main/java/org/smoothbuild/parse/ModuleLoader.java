@@ -31,7 +31,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
 
@@ -67,8 +67,8 @@ public class ModuleLoader {
   }
 
   private static Maybe<Ast> sortedByDependencies(Functions functions, Ast ast) {
-    Map<Name, FunctionNode> nodeMap = ast.nameToFunctionMap();
-    Map<Name, FunctionNode> notSorted = new HashMap<>(nodeMap);
+    Map<Name, FuncNode> nodeMap = ast.nameToFunctionMap();
+    Map<Name, FuncNode> notSorted = new HashMap<>(nodeMap);
     Set<Name> availableFunctions = new HashSet<>(functions.names());
     List<Name> sorted = new ArrayList<>(nodeMap.size());
     DependencyStack stack = new DependencyStack();
@@ -84,7 +84,7 @@ public class ModuleLoader {
         sorted.add(stack.pop().name());
       } else {
         stackTop.setMissing(missing);
-        FunctionNode next = notSorted.remove(missing.functionName());
+        FuncNode next = notSorted.remove(missing.functionName());
         if (next == null) {
           return error(stack.createCycleError());
         } else {
@@ -106,16 +106,16 @@ public class ModuleLoader {
     return null;
   }
 
-  private static DependencyStackElem removeNext(Map<Name, FunctionNode> dependencies) {
-    Iterator<Entry<Name, FunctionNode>> it = dependencies.entrySet().iterator();
-    Entry<Name, FunctionNode> element = it.next();
+  private static DependencyStackElem removeNext(Map<Name, FuncNode> dependencies) {
+    Iterator<Entry<Name, FuncNode>> it = dependencies.entrySet().iterator();
+    Entry<Name, FuncNode> element = it.next();
     it.remove();
     return new DependencyStackElem(element.getValue());
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
-    for (FunctionNode node : ast.functions()) {
+    for (FuncNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
       Maybe<DefinedFunction> function = invoke(all,
           a -> loadDefinedFunction(a, node));

@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -157,13 +157,13 @@ public class DependencyStackTest {
 
   private DependencyStackElem elem(Name from, Name to, int location) {
     DependencyStackElem elem = new DependencyStackElem(
-        new FunctionNode(from, asList(), null, ImmutableSet.of(), null));
+        new FuncNode(from, asList(), null, ImmutableSet.of(), null));
     elem.setMissing(new Dependency(codeLocation(location), to));
     return elem;
   }
 
   private static DependencyStackElem elem() {
-    return new DependencyStackElem(new FunctionNode(
+    return new DependencyStackElem(new FuncNode(
         name("name"), asList(), null, ImmutableSet.of(), null));
   }
 }
