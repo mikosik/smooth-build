@@ -1,13 +1,10 @@
 package org.smoothbuild.parse;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.util.Sets.map;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
@@ -15,122 +12,135 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.AstWalker;
+import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FunctionNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.TypeNode;
-import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
   public static List<ParseError> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
-    errors.addAll(duplicateFunctionErrors(functions, ast));
-    errors.addAll(undefinedFunctionErrors(functions, ast));
-    errors.addAll(duplicateParamNameErrors(ast));
-    errors.addAll(unknownParamTypeErrors(ast));
-    errors.addAll(nestedArrayTypeParamErrors(ast));
+    errors.addAll(overridenBuiltinFunctions(functions, ast));
+    errors.addAll(duplicateFunctions(functions, ast));
+    errors.addAll(undefinedFunctions(functions, ast));
+    errors.addAll(duplicateParamNames(ast));
+    errors.addAll(unknownParamTypes(ast));
+    errors.addAll(nestedArrayTypeParams(ast));
     return errors;
   }
 
-  private static List<ParseError> duplicateFunctionErrors(Functions functions,
-      Ast ast) {
+  private static List<ParseError> overridenBuiltinFunctions(Functions functions, Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitFunction(FunctionNode function) {
+        List<ParseError> errors = super.visitFunction(function);
+        if (functions.contains(function.name())) {
+          errors.add(new ParseError(function.codeLocation(), "Function " + function.name()
+              + " cannot override builtin function with the same name."));
+        }
+        return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> duplicateFunctions(Functions functions, Ast ast) {
     Set<Name> defined = new HashSet<>();
-    List<ParseError> errors = new ArrayList<>();
-    for (FunctionNode node : ast.functions()) {
-      Name name = node.name();
-      if (defined.contains(name)) {
-        errors.add(new ParseError(node.codeLocation(), "Function " + name
-            + " is already defined."));
+    return new ErrorAstWalker() {
+      public List<ParseError> visitFunction(FunctionNode function) {
+        List<ParseError> errors = super.visitFunction(function);
+        if (defined.contains(function.name())) {
+          errors.add(new ParseError(function.codeLocation(), "Function " + function.name()
+              + " is already defined."));
+        }
+        defined.add(function.name());
+        return errors;
       }
-      defined.add(name);
-      if (functions.contains(name)) {
-        errors.add(new ParseError(node.codeLocation(), "Function " + name
-            + " cannot override builtin function with the same name."));
-      }
-    }
-    return errors;
+    }.visitAst(ast);
   }
 
-  public static List<ParseError> undefinedFunctionErrors(Functions functions, Ast ast) {
-    Map<Name, FunctionNode> functionNodes = ast.nameToFunctionMap();
-    ImmutableSet<Name> all = ImmutableSet.<Name> builder()
+  private static List<ParseError> undefinedFunctions(Functions functions, Ast ast) {
+    Set<Name> all = ImmutableSet.<Name> builder()
         .addAll(functions.names())
-        .addAll(functionNodes.keySet())
+        .addAll(map(ast.functions(), f -> f.name()))
         .build();
-    Set<Dependency> defined = map(all, name -> new Dependency(null, name));
-    Set<Dependency> referenced = functionNodes
-        .values()
-        .stream()
-        .map(FunctionNode::dependencies)
-        .flatMap(fd -> fd.stream())
-        .collect(toSet());
-    referenced.removeAll(defined);
-    return Lists.map(referenced, FindSemanticErrors::unknownFunctionError);
-  }
 
-  private static ParseError unknownFunctionError(Dependency dependency) {
-    return new ParseError(dependency.location(),
-        "Call to unknown function " + dependency.functionName() + ".");
-  }
-
-  private static List<ParseError> duplicateParamNameErrors(Ast ast) {
-    return ast.functions().stream()
-        .map(f -> duplicateParamNameErrors(f.params()))
-        .flatMap(errors -> errors.stream())
-        .collect(toList());
-  }
-
-  private static List<ParseError> duplicateParamNameErrors(List<ParamNode> params) {
-    List<ParseError> errors = new ArrayList<>();
-    Set<String> names = new HashSet<>();
-    for (ParamNode node : params) {
-      String name = node.name();
-      if (names.contains(name)) {
-        errors.add(new ParseError(node.codeLocation(), "Duplicate parameter '" + name + "'."));
+    return new ErrorAstWalker() {
+      public List<ParseError> visitCall(CallNode call) {
+        List<ParseError> errors = super.visitCall(call);
+        if (!all.contains(call.name())) {
+          errors.add(new ParseError(call.codeLocation(),
+              "Call to unknown function " + call.name() + "."));
+        }
+        return errors;
       }
-      names.add(name);
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> duplicateParamNames(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitParams(List<ParamNode> params) {
+        List<ParseError> errors = super.visitParams(params);
+        Set<String> names = new HashSet<>();
+        for (ParamNode param : params) {
+          String name = param.name();
+          if (names.contains(name)) {
+            errors.add(new ParseError(param.codeLocation(), "Duplicate parameter '" + name + "'."));
+          }
+          names.add(name);
+        }
+        return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> unknownParamTypes(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitParams(List<ParamNode> params) {
+        List<ParseError> errors = super.visitParams(params);
+        for (ParamNode node : params) {
+          TypeNode type = node.typeNode();
+          while (type instanceof ArrayTypeNode) {
+            type = ((ArrayTypeNode) type).elementType();
+          }
+          if (Types.basicTypeFromString(type.name()) == null) {
+            errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
+          }
+        }
+        return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> nestedArrayTypeParams(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitParams(List<ParamNode> params) {
+        List<ParseError> errors = super.visitParams(params);
+        for (ParamNode node : params) {
+          TypeNode type = node.typeNode();
+          if (type instanceof ArrayTypeNode
+              && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
+            errors.add(new ParseError(node.codeLocation(), "Nested array type is forbidden."));
+          }
+        }
+        return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static class ErrorAstWalker extends AstWalker<List<ParseError>> {
+    @Override
+    public List<ParseError> reduce(List<ParseError> a, List<ParseError> b) {
+      ArrayList<ParseError> result = new ArrayList<>();
+      result.addAll(a);
+      result.addAll(b);
+      return result;
     }
-    return errors;
-  }
 
-  private static List<ParseError> unknownParamTypeErrors(Ast ast) {
-    return ast.functions().stream()
-        .map(f -> unknownParamTypeErrors(f.params()))
-        .flatMap(errors -> errors.stream())
-        .collect(toList());
-  }
-
-  private static List<ParseError> unknownParamTypeErrors(List<ParamNode> params) {
-    List<ParseError> errors = new ArrayList<>();
-    for (ParamNode node : params) {
-      TypeNode type = node.typeNode();
-      while (type instanceof ArrayTypeNode) {
-        type = ((ArrayTypeNode) type).elementType();
-      }
-      if (Types.basicTypeFromString(type.name()) == null) {
-        errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
-      }
+    @Override
+    public List<ParseError> reduceIdentity() {
+      return new ArrayList<>();
     }
-    return errors;
-  }
-
-  private static List<ParseError> nestedArrayTypeParamErrors(Ast ast) {
-    return ast.functions().stream()
-        .map(f -> nestedArrayTypeParamErrors(f.params()))
-        .flatMap(errors -> errors.stream())
-        .collect(toList());
-  }
-
-  private static List<ParseError> nestedArrayTypeParamErrors(List<ParamNode> params) {
-    List<ParseError> errors = new ArrayList<>();
-    for (ParamNode node : params) {
-      TypeNode type = node.typeNode();
-      if (type instanceof ArrayTypeNode
-          && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
-        errors.add(new ParseError(node.codeLocation(), "Nested array type is forbidden."));
-      }
-    }
-    return errors;
   }
 }
