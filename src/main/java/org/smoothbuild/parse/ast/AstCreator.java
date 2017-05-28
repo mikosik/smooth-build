@@ -70,7 +70,8 @@ public class AstCreator {
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, codeLocation));
           args.addAll(convertArgList(call.argList()));
-          result = new CallNode(call.name().getText(), args, locationOf(call.name()));
+          Name name = name(call.name().getText());
+          result = new CallNode(name, args, locationOf(call.name()));
         }
         return result;
       }
@@ -83,7 +84,8 @@ public class AstCreator {
         if (context.call() != null) {
           CallContext call = context.call();
           List<ArgNode> args = convertArgList(call.argList());
-          return new CallNode(call.name().getText(), args, locationOf(call.name()));
+          Name name = name(call.name().getText());
+          return new CallNode(name, args, locationOf(call.name()));
         }
         if (context.STRING() != null) {
           String quotedString = context.STRING().getText();

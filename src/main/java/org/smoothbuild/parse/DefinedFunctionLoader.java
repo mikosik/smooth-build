@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
@@ -151,7 +150,7 @@ public class DefinedFunctionLoader {
 
     private Maybe<Expression> createCall(CallNode node) {
       Maybe<List<Argument>> args = convertArgNodesToArguments(node.args());
-      Function function = loadedFunctions.get(name(node.name()));
+      Function function = loadedFunctions.get(node.name());
       Maybe<List<Expression>> expressions = invoke(args,
           a -> createArgExprs(node.codeLocation(), function, a));
       return invokeWrap(expressions,
