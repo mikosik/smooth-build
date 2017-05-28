@@ -7,11 +7,11 @@ import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import java.util.HashSet;
 
 import org.junit.Test;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 
 import com.google.common.testing.EqualsTester;
 
-public class FunctionNodeTest {
+public class FuncNodeTest {
 
   @Test
   public void equals_and_hash_code() {
@@ -27,7 +27,7 @@ public class FunctionNodeTest {
     tester.testEquals();
   }
 
-  private static FunctionNode node(String name, int line) {
-    return new FunctionNode(name(name), asList(), null, new HashSet<>(), codeLocation(line));
+  private static FuncNode node(String name, int line) {
+    return new FuncNode(name(name), asList(), null, new HashSet<>(), codeLocation(line));
   }
 }

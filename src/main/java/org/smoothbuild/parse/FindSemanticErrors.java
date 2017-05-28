@@ -14,7 +14,7 @@ import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstWalker;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
@@ -34,7 +34,7 @@ public class FindSemanticErrors {
 
   private static List<ParseError> overridenBuiltinFunctions(Functions functions, Ast ast) {
     return new ErrorAstWalker() {
-      public List<ParseError> visitFunction(FunctionNode function) {
+      public List<ParseError> visitFunction(FuncNode function) {
         List<ParseError> errors = super.visitFunction(function);
         if (functions.contains(function.name())) {
           errors.add(new ParseError(function.codeLocation(), "Function " + function.name()
@@ -48,7 +48,7 @@ public class FindSemanticErrors {
   private static List<ParseError> duplicateFunctions(Functions functions, Ast ast) {
     Set<Name> defined = new HashSet<>();
     return new ErrorAstWalker() {
-      public List<ParseError> visitFunction(FunctionNode function) {
+      public List<ParseError> visitFunction(FuncNode function) {
         List<ParseError> errors = super.visitFunction(function);
         if (defined.contains(function.name())) {
           errors.add(new ParseError(function.codeLocation(), "Function " + function.name()

@@ -15,11 +15,11 @@ public abstract class AstWalker<T> {
     return visitFunctions(ast.functions());
   }
 
-  public T visitFunctions(List<FunctionNode> functions) {
+  public T visitFunctions(List<FuncNode> functions) {
     return visitElements(functions, this::visitFunction);
   }
 
-  public T visitFunction(FunctionNode function) {
+  public T visitFunction(FuncNode function) {
     return reduce(
         visitName(function.name()),
         visitParams(function.params()),

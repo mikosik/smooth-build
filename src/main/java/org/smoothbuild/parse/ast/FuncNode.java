@@ -10,13 +10,13 @@ import org.smoothbuild.parse.Dependency;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class FunctionNode extends Node {
+public class FuncNode extends Node {
   private final Name name;
   private final List<ParamNode> params;
   private final ExprNode expr;
   private final Set<Dependency> dependencies;
 
-  public FunctionNode(Name name, List<ParamNode> params, ExprNode expr,
+  public FuncNode(Name name, List<ParamNode> params, ExprNode expr,
       Set<Dependency> dependencies, CodeLocation location) {
     super(location);
     this.name = name;
@@ -41,15 +41,15 @@ public class FunctionNode extends Node {
     return dependencies;
   }
 
-  public FunctionNode withParams(List<ParamNode> params) {
-    return new FunctionNode(name, params, expr, dependencies, codeLocation());
+  public FuncNode withParams(List<ParamNode> params) {
+    return new FuncNode(name, params, expr, dependencies, codeLocation());
   }
 
   public final boolean equals(Object object) {
-    if (!(object instanceof FunctionNode)) {
+    if (!(object instanceof FuncNode)) {
       return false;
     }
-    FunctionNode that = (FunctionNode) object;
+    FuncNode that = (FuncNode) object;
     return this.name.equals(that.name);
   }
 

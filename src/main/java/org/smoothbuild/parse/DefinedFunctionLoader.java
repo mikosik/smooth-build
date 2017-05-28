@@ -52,7 +52,7 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.util.Maybe;
@@ -64,8 +64,8 @@ import com.google.common.collect.ImmutableMultimap;
 public class DefinedFunctionLoader {
 
   public static Maybe<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
-      FunctionNode functionNode) {
-    return new Worker(loadedFunctions).loadFunction(functionNode);
+      FuncNode funcNode) {
+    return new Worker(loadedFunctions).loadFunction(funcNode);
   }
 
   private static class Worker {
@@ -75,7 +75,7 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Maybe<DefinedFunction> loadFunction(FunctionNode node) {
+    public Maybe<DefinedFunction> loadFunction(FuncNode node) {
       List<Parameter> parameters = createParameters(node.params());
       Maybe<Expression> expression = createExpression(node.expr());
       return invokeWrap(expression, e -> createFunction(node, e));
@@ -88,7 +88,7 @@ public class DefinedFunctionLoader {
           .collect(toList());
     }
 
-    private static DefinedFunction createFunction(FunctionNode node, Expression expression) {
+    private static DefinedFunction createFunction(FuncNode node, Expression expression) {
       Signature signature = new Signature(expression.type(), node.name(), asList());
       return new DefinedFunction(signature, expression);
     }

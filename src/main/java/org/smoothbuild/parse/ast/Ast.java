@@ -11,30 +11,30 @@ import org.smoothbuild.lang.function.base.Name;
 import com.google.common.collect.ImmutableList;
 
 public class Ast {
-  private final List<FunctionNode> functions;
-  private Map<Name, FunctionNode> nameToFunctionMap;
+  private final List<FuncNode> functions;
+  private Map<Name, FuncNode> nameToFunctionMap;
 
-  public static Ast ast(List<FunctionNode> functions) {
+  public static Ast ast(List<FuncNode> functions) {
     return new Ast(functions);
   }
 
-  private Ast(List<FunctionNode> functions) {
+  private Ast(List<FuncNode> functions) {
     this.functions = ImmutableList.copyOf(functions);
   }
 
-  public List<FunctionNode> functions() {
+  public List<FuncNode> functions() {
     return functions;
   }
 
-  public Map<Name, FunctionNode> nameToFunctionMap() {
+  public Map<Name, FuncNode> nameToFunctionMap() {
     if (nameToFunctionMap == null) {
       nameToFunctionMap = createNameToFunctionMap();
     }
     return nameToFunctionMap;
   }
 
-  private Map<Name, FunctionNode> createNameToFunctionMap() {
+  private Map<Name, FuncNode> createNameToFunctionMap() {
     return functions.stream()
-        .collect(toImmutableMap(FunctionNode::name, identity(), (a, b) -> a));
+        .collect(toImmutableMap(FuncNode::name, identity(), (a, b) -> a));
   }
 }

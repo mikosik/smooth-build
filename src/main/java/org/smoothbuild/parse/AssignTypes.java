@@ -8,27 +8,27 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.FunctionNode;
+import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
 public class AssignTypes {
   public static Ast assignTypes(Ast ast) {
-    List<FunctionNode> withAssignedTypes = ast
+    List<FuncNode> withAssignedTypes = ast
         .functions()
         .stream()
-        .map((FunctionNode f) -> assignTypes(f))
+        .map((FuncNode f) -> assignTypes(f))
         .collect(toList());
     return Ast.ast(withAssignedTypes);
   }
 
-  private static FunctionNode assignTypes(FunctionNode functionNode) {
-    List<ParamNode> params = functionNode
+  private static FuncNode assignTypes(FuncNode funcNode) {
+    List<ParamNode> params = funcNode
         .params()
         .stream()
         .map(p -> assignType(p))
         .collect(toList());
-    return functionNode.withParams(params);
+    return funcNode.withParams(params);
   }
 
   private static ParamNode assignType(ParamNode paramNode) {
