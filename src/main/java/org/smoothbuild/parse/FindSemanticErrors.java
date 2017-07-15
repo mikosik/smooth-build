@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstWalker;
@@ -28,6 +30,8 @@ public class FindSemanticErrors {
     errors.addAll(undefinedFunctions(functions, ast));
     errors.addAll(duplicateParamNames(ast));
     errors.addAll(unknownParamTypes(ast));
+    errors.addAll(duplicateArgNames(ast));
+    errors.addAll(unknownArgNames(functions, ast));
     errors.addAll(nestedArrayTypeParams(ast));
     return errors;
   }
@@ -125,6 +129,58 @@ public class FindSemanticErrors {
           }
         }
         return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> duplicateArgNames(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitArgs(List<ArgNode> args) {
+        List<ParseError> errors = super.visitArgs(args);
+        Set<String> names = new HashSet<>();
+        for (ArgNode arg : args) {
+          String name = arg.name();
+          if (name != null) {
+            if (names.contains(name)) {
+              errors.add(new ParseError(arg.codeLocation(), "Argument '" + name
+                  + "' assigned twice."));
+            }
+            names.add(name);
+          }
+        }
+        return errors;
+      }
+    }.visitAst(ast);
+  }
+
+  private static List<ParseError> unknownArgNames(Functions functions, Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitCall(CallNode call) {
+        List<ParseError> errors = super.visitCall(call);
+        Set<String> names = getParameters(call.name(), functions, ast);
+        for (ArgNode arg : call.args()) {
+          String name = arg.name();
+          if (name != null && !names.contains(name)) {
+            errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
+                + " has no parameter '" + name + "'."));
+          }
+        }
+        return errors;
+      }
+
+      private Set<String> getParameters(Name functionName, Functions functions, Ast ast) {
+        FuncNode funcNode = ast.nameToFunctionMap().get(functionName);
+        if (funcNode != null) {
+          return funcNode.params().stream()
+              .map(p -> p.name())
+              .collect(toSet());
+        }
+        if (functions.contains(functionName)) {
+          return functions.get(functionName).parameters().stream()
+              .map(p -> p.name())
+              .collect(toSet());
+        }
+        return null;
       }
     }.visitAst(ast);
   }

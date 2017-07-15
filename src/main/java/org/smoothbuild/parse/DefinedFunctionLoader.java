@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
-import static org.smoothbuild.lang.function.base.Parameters.parametersToNames;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.allTypes;
@@ -22,7 +21,6 @@ import static org.smoothbuild.util.StringUnescaper.unescaped;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -183,13 +181,8 @@ public class DefinedFunctionLoader {
       ParametersPool parametersPool = new ParametersPool(function.parameters());
       List<Argument> namedArguments = Argument.filterNamed(arguments);
 
-      List<Object> errors = duplicatedAndUnknownArgumentNames(function, namedArguments);
-      if (!errors.isEmpty()) {
-        return errors(errors);
-      }
-
       Map<Parameter, Argument> argumentMap = new HashMap<>();
-      errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
+      List<Object> errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
       if (!errors.isEmpty()) {
         return errors(errors);
       }
@@ -235,29 +228,6 @@ public class DefinedFunctionLoader {
         builder.add(argumentExpressions.get(parameter.name()));
       }
       return value(builder.build());
-    }
-
-    private static List<Object> duplicatedAndUnknownArgumentNames(Function function,
-        Collection<Argument> namedArguments) {
-      ArrayList<Object> errors = new ArrayList<>();
-      Set<String> unusedNames = new HashSet<>(parametersToNames(function.parameters()));
-      Set<String> usedNames = new HashSet<>();
-      for (Argument argument : namedArguments) {
-        if (argument.hasName()) {
-          String name = argument.name();
-          if (unusedNames.contains(name)) {
-            unusedNames.remove(name);
-            usedNames.add(name);
-          } else if (usedNames.contains(name)) {
-            errors.add(new ParseError(argument.codeLocation(), "Argument '" + argument.name()
-                + "' assigned twice."));
-          } else {
-            errors.add(new ParseError(argument.codeLocation(), "Function " + function.name()
-                + " has no parameter '" + argument.name() + "'."));
-          }
-        }
-      }
-      return errors;
     }
 
     private static List<Object> processNamedArguments(ParametersPool parametersPool,
