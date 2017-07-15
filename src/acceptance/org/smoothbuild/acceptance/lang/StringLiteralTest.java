@@ -26,6 +26,13 @@ public class StringLiteralTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void spanning_to_next_line() throws Exception {
+    givenScript("result = 'ab\nc';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+  }
+
+  @Test
   public void empty_string() throws IOException {
     givenScript("result = '';");
     whenSmoothBuild("result");

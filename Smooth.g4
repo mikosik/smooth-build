@@ -16,7 +16,7 @@ arrayType: '[' type ']' ;
 name: IDENTIFIER ;
 
 IDENTIFIER: LETTER ( LETTER | NON_LETTER )* ;
-STRING: '"' (ESC|.)*? '"' ;
+STRING: '"' (ESC | ~('\r' | '\n'))*? '"' ;
 
 fragment ESC : '\\"' | '\\\\' ;
 fragment LETTER: 'a'..'z' | 'A'..'Z' ;
