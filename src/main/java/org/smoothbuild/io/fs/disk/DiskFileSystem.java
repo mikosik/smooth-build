@@ -104,7 +104,7 @@ public class DiskFileSystem implements FileSystem {
     createDir(path.parent());
 
     try {
-      return new BufferedOutputStream(java.nio.file.Files.newOutputStream(jdkPath(path)));
+      return new BufferedOutputStream(Files.newOutputStream(jdkPath(path)));
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
