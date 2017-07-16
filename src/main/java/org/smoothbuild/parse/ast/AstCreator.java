@@ -2,7 +2,6 @@ package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.smoothbuild.parse.ast.Ast.ast;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
@@ -140,6 +139,6 @@ public class AstCreator {
         return visitChildren(call);
       }
     }.visit(module);
-    return ast(nodes);
+    return new Ast(nodes);
   }
 }

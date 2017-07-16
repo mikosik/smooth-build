@@ -19,7 +19,7 @@ public class AssignTypes {
         .stream()
         .map((FuncNode f) -> assignTypes(f))
         .collect(toList());
-    return Ast.ast(withAssignedTypes);
+    return new Ast(withAssignedTypes);
   }
 
   private static FuncNode assignTypes(FuncNode funcNode) {
