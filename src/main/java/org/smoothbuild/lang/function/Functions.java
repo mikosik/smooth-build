@@ -52,6 +52,10 @@ public class Functions {
     return functions.containsKey(name);
   }
 
+  public ImmutableMap<Name, Function> nameToFunctionMap() {
+    return functions;
+  }
+
   public Collection<Name> names() {
     return unmodifiableCollection(functions.keySet());
   }

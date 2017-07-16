@@ -5,9 +5,7 @@ import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
-import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.lang.type.Types.commonSuperType;
 import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
@@ -106,42 +104,14 @@ public class DefinedFunctionLoader {
     private Maybe<Expression> createArray(ArrayNode node) {
       Maybe<List<Expression>> exprList = pullUp(map(node.elements(), this::createExpression));
       CodeLocation location = node.codeLocation();
-      Maybe<ArrayType> arrayType = invoke(exprList, es -> arrayType(es, location));
-      return invokeWrap(arrayType, at -> createArray(at, exprList.value(), location));
+      return invokeWrap(exprList, el -> createArray(node, el, location));
     }
 
-    private Expression createArray(ArrayType type, List<Expression> elements,
+    private Expression createArray(ArrayNode array, List<Expression> elements,
         CodeLocation location) {
+      ArrayType type = (ArrayType) array.get(Type.class);
       List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
       return new ArrayExpression(type, converted, location);
-    }
-
-    private Maybe<ArrayType> arrayType(List<Expression> expressions, CodeLocation location) {
-      if (expressions.isEmpty()) {
-        return value(NIL);
-      }
-      Type firstType = expressions.get(0).type();
-      Type superType = firstType;
-
-      for (int i = 1; i < expressions.size(); i++) {
-        Type type = expressions.get(i).type();
-        superType = commonSuperType(superType, type);
-
-        if (superType == null) {
-          return error(new ParseError(location,
-              "Array cannot contain elements of incompatible types.\n"
-                  + "First element has type " + firstType + " while element at index " + i
-                  + " has type " + type + "."));
-        }
-      }
-      ArrayType arrayType = Types.arrayOf(superType);
-      if (arrayType == null) {
-        return error(new ParseError(location, "Array cannot contain element with type "
-            + superType + ". Only following types are allowed: " + Types.basicTypes()
-            + "."));
-      }
-
-      return value(arrayType);
     }
 
     private Maybe<Expression> createCall(CallNode node) {
