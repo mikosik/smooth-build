@@ -1,26 +1,21 @@
 package org.smoothbuild.parse;
 
+import java.util.List;
+
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
 public class AssignTypes {
-  public static Ast assignTypes(Ast ast) {
-    ast.functions().stream().forEach(f -> assignTypes(f));
-    return ast;
-  }
-
-  private static void assignTypes(FuncNode func) {
-    func.params().stream().forEach(AssignTypes::assignType);
-  }
-
-  private static void assignType(ParamNode param) {
-    TypeNode type = param.type();
-    type.set(Type.class, createType(type));
+  public static List<ParseError> assignTypes(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitType(TypeNode type) {
+        type.set(Type.class, createType(type));
+        return super.visitType(type);
+      }
+    }.visitAst(ast);
   }
 
   private static Type createType(TypeNode typeNode) {
