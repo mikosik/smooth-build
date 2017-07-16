@@ -34,7 +34,7 @@ public abstract class AstWalker<T> {
   }
 
   public T visitParam(ParamNode param) {
-    return visitType(param.typeNode());
+    return visitType(param.type());
   }
 
   public T visitType(TypeNode type) {
