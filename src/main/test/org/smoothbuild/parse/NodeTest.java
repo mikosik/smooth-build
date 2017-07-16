@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
+import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
@@ -26,5 +27,20 @@ public class NodeTest {
     given(node = new Node(codeLocation(1)));
     when(() -> node.get(String.class));
     thenThrown(NoSuchElementException.class);
+  }
+
+  @Test
+  public void has_return_false_for_nonexistent_attribute() throws Exception {
+    given(node = new Node(codeLocation(1)));
+    when(() -> node.has(String.class));
+    thenReturned(false);
+  }
+
+  @Test
+  public void has_returns_true_for_existing_attribute() throws Exception {
+    given(node = new Node(codeLocation(1)));
+    given(node).set(String.class, "abc");
+    when(() -> node.has(String.class));
+    thenReturned(true);
   }
 }
