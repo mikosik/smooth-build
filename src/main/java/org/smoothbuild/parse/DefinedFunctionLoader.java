@@ -82,7 +82,7 @@ public class DefinedFunctionLoader {
     private static List<Parameter> createParameters(List<ParamNode> params) {
       return params
           .stream()
-          .map(p -> parameter(p.type(), p.name()))
+          .map(p -> parameter(p.type().get(Type.class), p.name()))
           .collect(toList());
     }
 
