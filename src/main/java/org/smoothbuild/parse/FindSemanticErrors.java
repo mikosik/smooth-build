@@ -2,8 +2,10 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,13 +20,16 @@ import org.smoothbuild.parse.ast.AstWalker;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
+import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
   public static List<ParseError> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
+    errors.addAll(unescapeStrings(ast));
     errors.addAll(overridenBuiltinFunctions(functions, ast));
     errors.addAll(duplicateFunctions(functions, ast));
     errors.addAll(undefinedFunctions(functions, ast));
@@ -34,6 +39,20 @@ public class FindSemanticErrors {
     errors.addAll(unknownArgNames(functions, ast));
     errors.addAll(nestedArrayTypeParams(ast));
     return errors;
+  }
+
+  private static Collection<? extends ParseError> unescapeStrings(Ast ast) {
+    return new ErrorAstWalker() {
+      public List<ParseError> visitString(StringNode string) {
+        List<ParseError> errors = super.visitString(string);
+        try {
+          string.set(String.class, unescaped(string.value()));
+        } catch (UnescapingFailedException e) {
+          errors.add(new ParseError(string.codeLocation(), e.getMessage()));
+        }
+        return errors;
+      }
+    }.visitAst(ast);
   }
 
   private static List<ParseError> overridenBuiltinFunctions(Functions functions, Ast ast) {

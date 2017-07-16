@@ -16,7 +16,6 @@ import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.pullUp;
 import static org.smoothbuild.util.Maybe.value;
-import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +53,6 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.util.Maybe;
-import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -96,7 +94,7 @@ public class DefinedFunctionLoader {
         return createCall((CallNode) node);
       }
       if (node instanceof StringNode) {
-        return createStringLiteral((StringNode) node);
+        return value(createStringLiteral((StringNode) node));
       }
       if (node instanceof ArrayNode) {
         return createArray((ArrayNode) node);
@@ -167,13 +165,8 @@ public class DefinedFunctionLoader {
 
     }
 
-    private Maybe<Expression> createStringLiteral(StringNode node) {
-      try {
-        return value(new StringLiteralExpression(
-            unescaped(node.value()), node.codeLocation()));
-      } catch (UnescapingFailedException e) {
-        return error(new ParseError(node.codeLocation(), e.getMessage()));
-      }
+    private Expression createStringLiteral(StringNode node) {
+      return new StringLiteralExpression(node.get(String.class), node.codeLocation());
     }
 
     public Maybe<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
