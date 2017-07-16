@@ -162,7 +162,6 @@ public class DefinedFunctionLoader {
         result.add(argument);
       }
       return Maybe.pullUp(result);
-
     }
 
     private Expression createStringLiteral(StringNode node) {
