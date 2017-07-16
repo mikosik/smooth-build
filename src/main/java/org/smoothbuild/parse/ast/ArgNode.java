@@ -7,11 +7,11 @@ public class ArgNode extends Node {
   private final String name;
   private final ExprNode expr;
 
-  public ArgNode(int number, String name, ExprNode result, CodeLocation codeLocation) {
+  public ArgNode(int number, String name, ExprNode expr, CodeLocation codeLocation) {
     super(codeLocation);
     this.number = number;
     this.name = name;
-    this.expr = result;
+    this.expr = expr;
   }
 
   public int number() {
