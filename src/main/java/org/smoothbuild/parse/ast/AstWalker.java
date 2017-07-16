@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.Type;
 
 public abstract class AstWalker<T> {
   public T visitAst(Ast ast) {
@@ -35,10 +34,10 @@ public abstract class AstWalker<T> {
   }
 
   public T visitParam(ParamNode param) {
-    return visitType(param.type());
+    return visitType(param.typeNode());
   }
 
-  public T visitType(Type type) {
+  public T visitType(TypeNode type) {
     return reduceIdentity();
   }
 
