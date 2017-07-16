@@ -1,9 +1,14 @@
 package org.smoothbuild.parse.ast;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class Node {
   private final CodeLocation codeLocation;
+  private Map<Class<?>, Object> map;
 
   public Node(CodeLocation codeLocation) {
     this.codeLocation = codeLocation;
@@ -11,5 +16,24 @@ public class Node {
 
   public CodeLocation codeLocation() {
     return codeLocation;
+  }
+
+  public <T> T get(Class<T> clazz) {
+    Object result = map().get(clazz);
+    if (result == null) {
+      throw new NoSuchElementException(clazz.getName());
+    }
+    return (T) result;
+  }
+
+  public <T> void set(Class<T> clazz, T value) {
+    map().put(clazz, value);
+  }
+
+  private Map<Class<?>, Object> map() {
+    if (map == null) {
+      map = new HashMap<>();
+    }
+    return map;
   }
 }
