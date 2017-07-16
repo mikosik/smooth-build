@@ -23,6 +23,13 @@ public class NodeTest {
   }
 
   @Test
+  public void set_null_value_attribute_can_be_retrieved() throws Exception {
+    given(node = new Node(codeLocation(1)));
+    when(() -> node.set(String.class, null));
+    thenEqual(node.get(String.class), null);
+  }
+
+  @Test
   public void getting_nonexistent_attribute_fails() throws Exception {
     given(node = new Node(codeLocation(1)));
     when(() -> node.get(String.class));

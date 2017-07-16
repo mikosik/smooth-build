@@ -19,11 +19,10 @@ public class Node {
   }
 
   public <T> T get(Class<T> clazz) {
-    Object result = map().get(clazz);
-    if (result == null) {
+    if (!map().containsKey(clazz)) {
       throw new NoSuchElementException(clazz.getName());
     }
-    return (T) result;
+    return (T) map().get(clazz);
   }
 
   public <T> void set(Class<T> clazz, T value) {
