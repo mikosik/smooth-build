@@ -60,8 +60,8 @@ public class ModuleLoader {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
-    ast = ast.addErrors(a -> assignTypes(a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
+    ast = ast.addErrors(a -> assignTypes(functions, a));
     return invoke(ast, a -> loadDefinedFunctions(functions, a));
   }
 
