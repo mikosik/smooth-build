@@ -14,11 +14,7 @@ public class Ast {
   private final List<FuncNode> functions;
   private Map<Name, FuncNode> nameToFunctionMap;
 
-  public static Ast ast(List<FuncNode> functions) {
-    return new Ast(functions);
-  }
-
-  private Ast(List<FuncNode> functions) {
+  public Ast(List<FuncNode> functions) {
     this.functions = ImmutableList.copyOf(functions);
   }
 

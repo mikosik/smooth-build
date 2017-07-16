@@ -4,7 +4,6 @@ import static org.smoothbuild.parse.AssignTypes.assignTypes;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.parse.ast.Ast.ast;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
@@ -92,7 +91,7 @@ public class ModuleLoader {
         }
       }
     }
-    return value(ast(Lists.map(sorted, n -> nodeMap.get(n))));
+    return value(new Ast(Lists.map(sorted, n -> nodeMap.get(n))));
   }
 
   private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
