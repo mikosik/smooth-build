@@ -27,53 +27,51 @@ import org.smoothbuild.parse.ast.TypeNode;
 
 public class AssignTypes {
   public static List<ParseError> assignTypes(Functions functions, Ast ast) {
+    List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()
         .entrySet()
         .stream()
         .collect(toMap(e -> e.getKey(), e -> e.getValue().type()));
-    return new ErrorAstWalker() {
-      public List<ParseError> visitFunctions(List<FuncNode> functions) {
-        List<ParseError> errors = new ArrayList<>();
+    new AstVisitor() {
+      public void visitFunctions(List<FuncNode> functions) {
         for (FuncNode funcNode : functions) {
-          errors.addAll(visitFunction(funcNode));
+          visitFunction(funcNode);
           if (funcNode.has(Type.class)) {
             functionTypes.put(funcNode.name(), funcNode.get(Type.class));
           }
         }
-        return errors;
       }
 
-      public List<ParseError> visitFunction(FuncNode function) {
-        List<ParseError> errors = super.visitFunction(function);
+      public void visitFunction(FuncNode function) {
+        super.visitFunction(function);
         function.set(Type.class, function.expr().get(Type.class));
-        return errors;
       }
 
-      public List<ParseError> visitType(TypeNode type) {
+      public void visitType(TypeNode type) {
         type.set(Type.class, createType(type));
-        return super.visitType(type);
+        super.visitType(type);
       }
 
-      public List<ParseError> visitArray(ArrayNode array) {
-        List<ParseError> errors = visitElements(array.elements(), this::visitExpr);
+      public void visitArray(ArrayNode array) {
+        visitElements(array.elements(), this::visitExpr);
         CodeLocation location = array.codeLocation();
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
           array.set(Type.class, NIL);
-          return errors;
+          return;
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {
           array.set(Type.class, null);
-          return errors;
+          return;
         }
         Type superType = firstType;
 
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
           if (type == null) {
-            return errors;
+            return;
           }
           superType = commonSuperType(superType, type);
 
@@ -83,7 +81,7 @@ public class AssignTypes {
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type " + firstType + " while element at index " + i
                     + " has type " + type + "."));
-            return errors;
+            return;
           }
         }
         ArrayType arrayType = Types.arrayOf(superType);
@@ -92,31 +90,30 @@ public class AssignTypes {
           errors.add(new ParseError(location, "Array cannot contain element with type "
               + superType + ". Only following types are allowed: " + Types.basicTypes()
               + "."));
-          return errors;
+          return;
         }
         array.set(Type.class, arrayType);
-        return errors;
+        return;
       }
 
-      public List<ParseError> visitCall(CallNode call) {
+      public void visitCall(CallNode call) {
+        visitArgs(call.args());
         if (functionTypes.containsKey(call.name())) {
           call.set(Type.class, functionTypes.get(call.name()));
         }
-        return visitArgs(call.args());
       }
 
-      public List<ParseError> visitArg(ArgNode arg) {
+      public void visitArg(ArgNode arg) {
         ExprNode expr = arg.expr();
-        List<ParseError> errors = visitExpr(expr);
+        visitExpr(expr);
         arg.set(Type.class, expr.get(Type.class));
-        return errors;
       }
 
-      public List<ParseError> visitString(StringNode expr) {
+      public void visitString(StringNode expr) {
         expr.set(Type.class, STRING);
-        return reduceIdentity();
       }
     }.visitAst(ast);
+    return errors;
   }
 
   private static Type createType(TypeNode typeNode) {
