@@ -107,11 +107,11 @@ public class AssignTypes {
     return errors;
   }
 
-  private static Type createType(TypeNode typeNode) {
-    if (typeNode instanceof ArrayTypeNode) {
-      TypeNode elementTypeNode = ((ArrayTypeNode) typeNode).elementType();
+  private static Type createType(TypeNode type) {
+    if (type instanceof ArrayTypeNode) {
+      TypeNode elementTypeNode = ((ArrayTypeNode) type).elementType();
       return Types.arrayOf(createType(elementTypeNode));
     }
-    return Types.basicTypeFromString(typeNode.name());
+    return Types.basicTypeFromString(type.name());
   }
 }
