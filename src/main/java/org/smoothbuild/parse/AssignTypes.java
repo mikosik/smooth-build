@@ -34,27 +34,20 @@ public class AssignTypes {
         .stream()
         .collect(toMap(e -> e.getKey(), e -> e.getValue().type()));
     new AstVisitor() {
-      public void visitFunctions(List<FuncNode> functions) {
-        for (FuncNode funcNode : functions) {
-          visitFunction(funcNode);
-          if (funcNode.has(Type.class)) {
-            functionTypes.put(funcNode.name(), funcNode.get(Type.class));
-          }
-        }
-      }
-
       public void visitFunction(FuncNode function) {
         super.visitFunction(function);
-        function.set(Type.class, function.expr().get(Type.class));
+        Type type = function.expr().get(Type.class);
+        function.set(Type.class, type);
+        functionTypes.put(function.name(), type);
       }
 
       public void visitType(TypeNode type) {
-        type.set(Type.class, createType(type));
         super.visitType(type);
+        type.set(Type.class, createType(type));
       }
 
       public void visitArray(ArrayNode array) {
-        visitElements(array.elements(), this::visitExpr);
+        super.visitArray(array);
         CodeLocation location = array.codeLocation();
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
@@ -97,20 +90,18 @@ public class AssignTypes {
       }
 
       public void visitCall(CallNode call) {
-        visitArgs(call.args());
-        if (functionTypes.containsKey(call.name())) {
-          call.set(Type.class, functionTypes.get(call.name()));
-        }
+        super.visitCall(call);
+        call.set(Type.class, functionTypes.get(call.name()));
       }
 
       public void visitArg(ArgNode arg) {
-        ExprNode expr = arg.expr();
-        visitExpr(expr);
-        arg.set(Type.class, expr.get(Type.class));
+        super.visitArg(arg);
+        arg.set(Type.class, arg.expr().get(Type.class));
       }
 
-      public void visitString(StringNode expr) {
-        expr.set(Type.class, STRING);
+      public void visitString(StringNode string) {
+        super.visitString(string);
+        string.set(Type.class, STRING);
       }
     }.visitAst(ast);
     return errors;
