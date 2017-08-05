@@ -130,8 +130,8 @@ public class FindSemanticErrors {
         super.visitArgs(args);
         Set<String> names = new HashSet<>();
         for (ArgNode arg : args) {
-          String name = arg.name();
-          if (name != null) {
+          if (arg.hasName()) {
+            String name = arg.name();
             if (names.contains(name)) {
               errors.add(new ParseError(arg.codeLocation(), "Argument '" + name
                   + "' assigned twice."));
@@ -149,10 +149,9 @@ public class FindSemanticErrors {
         super.visitCall(call);
         Set<String> names = getParameters(call.name(), functions, ast);
         for (ArgNode arg : call.args()) {
-          String name = arg.name();
-          if (name != null && !names.contains(name)) {
+          if (arg.hasName() && !names.contains(arg.name())) {
             errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
-                + " has no parameter '" + name + "'."));
+                + " has no parameter '" + arg.name() + "'."));
           }
         }
       }
