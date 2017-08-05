@@ -60,45 +60,42 @@ public class AssignTypes {
 
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
+        array.set(Type.class, findArrayType(array));
+      }
+
+      private Type findArrayType(ArrayNode array) {
         CodeLocation location = array.codeLocation();
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          array.set(Type.class, NIL);
-          return;
+          return NIL;
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {
-          array.set(Type.class, null);
-          return;
+          return null;
         }
         Type superType = firstType;
-
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
           if (type == null) {
-            return;
+            return null;
           }
           superType = commonSuperType(superType, type);
 
           if (superType == null) {
-            array.set(Type.class, null);
             errors.add(new ParseError(location,
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type " + firstType + " while element at index " + i
                     + " has type " + type + "."));
-            return;
+            return null;
           }
         }
         ArrayType arrayType = Types.arrayOf(superType);
         if (arrayType == null) {
-          array.set(Type.class, null);
           errors.add(new ParseError(location, "Array cannot contain element with type "
               + superType + ". Only following types are allowed: " + Types.basicTypes()
               + "."));
-          return;
         }
-        array.set(Type.class, arrayType);
-        return;
+        return arrayType;
       }
 
       public void visitCall(CallNode call) {
