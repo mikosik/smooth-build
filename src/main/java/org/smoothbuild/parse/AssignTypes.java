@@ -46,6 +46,18 @@ public class AssignTypes {
         type.set(Type.class, createType(type));
       }
 
+      private Type createType(TypeNode type) {
+        if (type instanceof ArrayTypeNode) {
+          TypeNode elementType = ((ArrayTypeNode) type).elementType();
+          return Types.arrayOf(createType(elementType));
+        }
+        Type result = Types.basicTypeFromString(type.name());
+        if (result == null) {
+          errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
+        }
+        return result;
+      }
+
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
         CodeLocation location = array.codeLocation();
@@ -105,13 +117,5 @@ public class AssignTypes {
       }
     }.visitAst(ast);
     return errors;
-  }
-
-  private static Type createType(TypeNode type) {
-    if (type instanceof ArrayTypeNode) {
-      TypeNode elementTypeNode = ((ArrayTypeNode) type).elementType();
-      return Types.arrayOf(createType(elementTypeNode));
-    }
-    return Types.basicTypeFromString(type.name());
   }
 }
