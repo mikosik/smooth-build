@@ -49,7 +49,7 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void unknnown_type_parameter() throws Exception {
+  public void unknown_type_parameter() throws Exception {
     givenScript("oneParameter(Unknown unknown) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
@@ -91,7 +91,7 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void unknnown_array_type_parameter() throws Exception {
+  public void unknown_array_type_parameter() throws Exception {
     givenScript("oneParameter([Unknown] unknown) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
