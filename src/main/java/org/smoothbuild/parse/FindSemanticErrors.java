@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -32,7 +31,6 @@ public class FindSemanticErrors {
     duplicateFunctions(errors, functions, ast);
     undefinedFunctions(errors, functions, ast);
     duplicateParamNames(errors, ast);
-    unknownParamTypes(errors, ast);
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
     nestedArrayTypeParams(errors, ast);
@@ -106,23 +104,6 @@ public class FindSemanticErrors {
             errors.add(new ParseError(param.codeLocation(), "Duplicate parameter '" + name + "'."));
           }
           names.add(name);
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void unknownParamTypes(List<ParseError> errors, Ast ast) {
-    new AstVisitor() {
-      public void visitParams(List<ParamNode> params) {
-        super.visitParams(params);
-        for (ParamNode node : params) {
-          TypeNode type = node.type();
-          while (type instanceof ArrayTypeNode) {
-            type = ((ArrayTypeNode) type).elementType();
-          }
-          if (Types.basicTypeFromString(type.name()) == null) {
-            errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
-          }
         }
       }
     }.visitAst(ast);
