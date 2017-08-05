@@ -127,8 +127,9 @@ public class DefinedFunctionLoader {
       List<Maybe<Argument>> result = new ArrayList<Maybe<Argument>>();
       for (ArgNode argNode : args) {
         Maybe<Expression> expression = createExpression(argNode.expr());
+        String name = argNode.hasName() ? argNode.name() : null;
         Maybe<Argument> argument = invokeWrap(expression,
-            e -> argument(argNode.number(), argNode.name(), e, argNode.codeLocation()));
+            e -> argument(argNode.number(), name, e, argNode.codeLocation()));
         result.add(argument);
       }
       return Maybe.pullUp(result);

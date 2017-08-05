@@ -1,5 +1,7 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class ArgNode extends Node {
@@ -18,7 +20,12 @@ public class ArgNode extends Node {
     return number;
   }
 
+  public boolean hasName() {
+    return name != null;
+  }
+
   public String name() {
+    checkState(hasName());
     return name;
   }
 
