@@ -62,7 +62,16 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void call_to_unknown_function_causes_error() throws IOException {
-    givenScript("function1 = unknownFunction;");
+    givenScript("function1 = unknownFunction();");
+    whenSmoothBuild("function1");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "build.smooth:1: error: Call to unknown function 'unknownFunction'.\n"));
+  }
+
+  @Test
+  public void call_to_unknown_function_with_argument_causes_error() throws IOException {
+    givenScript("function1 = unknownFunction(abc='a');");
     whenSmoothBuild("function1");
     thenFinishedWithError();
     then(output(), containsString(

@@ -148,10 +148,12 @@ public class FindSemanticErrors {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         Set<String> names = getParameters(call.name(), functions, ast);
-        for (ArgNode arg : call.args()) {
-          if (arg.hasName() && !names.contains(arg.name())) {
-            errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
-                + " has no parameter '" + arg.name() + "'."));
+        if (names != null) {
+          for (ArgNode arg : call.args()) {
+            if (arg.hasName() && !names.contains(arg.name())) {
+              errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
+                  + " has no parameter '" + arg.name() + "'."));
+            }
           }
         }
       }
