@@ -142,10 +142,9 @@ public class DefinedFunctionLoader {
     public Maybe<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
         List<Argument> arguments) {
       ParametersPool parametersPool = new ParametersPool(function.parameters());
-      List<Argument> namedArguments = Argument.filterNamed(arguments);
 
       Map<Parameter, Argument> argumentMap = new HashMap<>();
-      List<Object> errors = processNamedArguments(parametersPool, argumentMap, namedArguments);
+      List<Object> errors = processNamedArguments(parametersPool, argumentMap, arguments);
       if (!errors.isEmpty()) {
         return errors(errors);
       }
@@ -194,8 +193,9 @@ public class DefinedFunctionLoader {
     }
 
     private static List<Object> processNamedArguments(ParametersPool parametersPool,
-        Map<Parameter, Argument> argumentMap, Collection<Argument> namedArguments) {
+        Map<Parameter, Argument> argumentMap, Collection<Argument> arguments) {
       ArrayList<Object> errors = new ArrayList<>();
+      List<Argument> namedArguments = Argument.filterNamed(arguments);
       for (Argument argument : namedArguments) {
         if (argument.hasName()) {
           String name = argument.name();
