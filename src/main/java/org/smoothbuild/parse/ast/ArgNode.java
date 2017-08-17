@@ -5,19 +5,19 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.lang.message.CodeLocation;
 
 public class ArgNode extends Node {
-  private final int number;
+  private final int position;
   private final String name;
   private final ExprNode expr;
 
-  public ArgNode(int number, String name, ExprNode expr, CodeLocation codeLocation) {
+  public ArgNode(int position, String name, ExprNode expr, CodeLocation codeLocation) {
     super(codeLocation);
-    this.number = number;
+    this.position = position;
     this.name = name;
     this.expr = expr;
   }
 
-  public int number() {
-    return number;
+  public int position() {
+    return position;
   }
 
   public boolean hasName() {

@@ -129,7 +129,7 @@ public class DefinedFunctionLoader {
         Maybe<Expression> expression = createExpression(argNode.expr());
         String name = argNode.hasName() ? argNode.name() : null;
         Maybe<Argument> argument = invokeWrap(expression,
-            e -> argument(argNode.number(), name, e, argNode.codeLocation()));
+            e -> argument(argNode.position(), name, e, argNode.codeLocation()));
         result.add(argument);
       }
       return Maybe.pullUp(result);
@@ -263,14 +263,15 @@ public class DefinedFunctionLoader {
     }
 
     private static String argsToList(Collection<Argument> availableArguments) {
-      List<Argument> arguments = Argument.NUMBER_ORDERING.sortedCopy(availableArguments);
+      List<Argument> arguments = Argument.POSITION_ORDERING.sortedCopy(availableArguments);
       int typeLength = longestArgType(arguments);
       int nameLength = longestArgName(arguments);
-      int numberLength = longestArgNumber(arguments);
+      int positionLength = longestArgPosition(arguments);
 
       StringBuilder builder = new StringBuilder();
       for (Argument argument : arguments) {
-        builder.append("  " + argument.toPaddedString(typeLength, nameLength, numberLength) + "\n");
+        builder.append("  " + argument.toPaddedString(
+            typeLength, nameLength, positionLength) + "\n");
       }
       return builder.toString();
     }
@@ -291,12 +292,12 @@ public class DefinedFunctionLoader {
       return result;
     }
 
-    private static int longestArgNumber(List<Argument> arguments) {
-      int maxNumber = 0;
+    private static int longestArgPosition(List<Argument> arguments) {
+      int maxPosition = 0;
       for (Argument argument : arguments) {
-        maxNumber = Math.max(maxNumber, argument.number());
+        maxPosition = Math.max(maxPosition, argument.position());
       }
-      return Integer.toString(maxNumber).length();
+      return Integer.toString(maxPosition).length();
     }
 
     private Map<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
