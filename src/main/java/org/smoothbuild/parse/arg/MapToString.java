@@ -12,13 +12,13 @@ public class MapToString {
     int maxParamName = longestParameterName(paramToArgMap.keySet());
     int maxArgType = longestArgumentType(paramToArgMap.values());
     int maxArgName = longestArgumentName(paramToArgMap.values());
-    int maxNumber = longestArgumentNumber(paramToArgMap.values());
+    int maxPosition = longestArgumentPosition(paramToArgMap.values());
 
     StringBuilder builder = new StringBuilder();
     for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
       Argument argument = entry.getValue();
-      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxNumber);
+      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxPosition);
       builder.append("  " + paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
@@ -56,11 +56,11 @@ public class MapToString {
     return result;
   }
 
-  private static int longestArgumentNumber(Collection<Argument> arguments) {
-    int maxNumber = 0;
+  private static int longestArgumentPosition(Collection<Argument> arguments) {
+    int maxPosition = 0;
     for (Argument argument : arguments) {
-      maxNumber = Math.max(maxNumber, argument.number());
+      maxPosition = Math.max(maxPosition, argument.position());
     }
-    return Integer.toString(maxNumber).length();
+    return Integer.toString(maxPosition).length();
   }
 }

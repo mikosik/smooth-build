@@ -17,30 +17,30 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
 
 public class Argument {
-  private final int number;
+  private final int position;
   private final String name;
   private final Expression expression;
   private final CodeLocation codeLocation;
 
-  public static Argument argument(int number, String name, Expression expression,
+  public static Argument argument(int position, String name, Expression expression,
       CodeLocation codeLocation) {
-    return new Argument(number, name, expression, codeLocation);
+    return new Argument(position, name, expression, codeLocation);
   }
 
-  private Argument(int number, String name, Expression expression, CodeLocation codeLocation) {
-    checkArgument(0 <= number);
-    this.number = number;
+  private Argument(int position, String name, Expression expression, CodeLocation codeLocation) {
+    checkArgument(0 <= position);
+    this.position = position;
     this.name = name;
     this.expression = checkNotNull(expression);
     this.codeLocation = checkNotNull(codeLocation);
   }
 
   /**
-   * Number of position of this argument in function call's argument list. Value
-   * zero denotes piped argument. Value one denotes first argument on the list.
+   * Position of this argument in function call's argument list. Value zero
+   * denotes piped argument. Value one denotes first argument on the list.
    */
-  public int number() {
-    return number;
+  public int position() {
+    return position;
   }
 
   public String name() {
@@ -70,16 +70,16 @@ public class Argument {
     return name != null;
   }
 
-  public String toPaddedString(int minTypeLength, int minNameLength, int minNumberLength) {
+  public String toPaddedString(int minTypeLength, int minNameLength, int minPositionLength) {
     String type = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String name = padEnd(nameSanitized(), minNameLength, ' ');
-    String number = padEnd(numberString(), minNumberLength, ' ');
+    String position = padEnd(positionString(), minPositionLength, ' ');
     String location = codeLocation.toString();
-    return type + name + " #" + number + " " + location;
+    return type + name + " #" + position + " " + location;
   }
 
-  private String numberString() {
-    return number == 0 ? "|" : Integer.toString(number);
+  private String positionString() {
+    return position == 0 ? "|" : Integer.toString(position);
   }
 
   public String toString() {
@@ -100,14 +100,14 @@ public class Argument {
         .collect(toImmutableListMultimap(a -> a.expression().type(), a -> a));
   }
 
-  public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
+  public static final Ordering<Argument> POSITION_ORDERING = new Ordering<Argument>() {
     public int compare(Argument argument1, Argument argument2) {
-      int number1 = argument1.number();
-      int number2 = argument2.number();
-      if (number1 == number2) {
+      int position1 = argument1.position();
+      int position2 = argument2.position();
+      if (position1 == position2) {
         return 0;
       }
-      if (number1 < number2) {
+      if (position1 < position2) {
         return -1;
       } else {
         return 1;
