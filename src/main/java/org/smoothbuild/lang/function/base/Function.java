@@ -9,6 +9,8 @@ import org.smoothbuild.lang.type.Type;
 import com.google.common.collect.ImmutableList;
 
 public interface Function {
+  public Signature signature();
+
   public Type type();
 
   public Name name();
