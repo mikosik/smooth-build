@@ -1,25 +1,14 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Parameter.parameter;
-import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
-import static org.smoothbuild.lang.type.Conversions.canConvert;
-import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Maybe.error;
-import static org.smoothbuild.util.Maybe.errors;
-import static org.smoothbuild.util.Maybe.invoke;
-import static org.smoothbuild.util.Maybe.invokeWrap;
-import static org.smoothbuild.util.Maybe.pullUp;
-import static org.smoothbuild.util.Maybe.value;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
@@ -35,27 +24,16 @@ import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.parse.arg.Argument;
-import org.smoothbuild.parse.arg.MapToString;
-import org.smoothbuild.parse.arg.ParametersPool;
-import org.smoothbuild.parse.arg.TypedParametersPool;
-import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.util.Maybe;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
 
 public class DefinedFunctionLoader {
-
-  public static Maybe<DefinedFunction> loadDefinedFunction(Functions loadedFunctions,
+  public static DefinedFunction loadDefinedFunction(Functions loadedFunctions,
       FuncNode funcNode) {
     return new Worker(loadedFunctions).loadFunction(funcNode);
   }
@@ -67,10 +45,10 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public Maybe<DefinedFunction> loadFunction(FuncNode node) {
+    public DefinedFunction loadFunction(FuncNode node) {
       List<Parameter> parameters = createParameters(node.params());
-      Maybe<Expression> expression = createExpression(node.expr());
-      return invokeWrap(expression, e -> createFunction(node, e));
+      Expression expression = createExpression(node.expr());
+      return createFunction(node, expression);
     }
 
     private static List<Parameter> createParameters(List<ParamNode> params) {
@@ -85,12 +63,12 @@ public class DefinedFunctionLoader {
       return new DefinedFunction(signature, expression);
     }
 
-    private Maybe<Expression> createExpression(ExprNode node) {
+    private Expression createExpression(ExprNode node) {
       if (node instanceof CallNode) {
         return createCall((CallNode) node);
       }
       if (node instanceof StringNode) {
-        return value(createStringLiteral((StringNode) node));
+        return createStringLiteral((StringNode) node);
       }
       if (node instanceof ArrayNode) {
         return createArray((ArrayNode) node);
@@ -99,10 +77,10 @@ public class DefinedFunctionLoader {
           + " without children.");
     }
 
-    private Maybe<Expression> createArray(ArrayNode node) {
-      Maybe<List<Expression>> exprList = pullUp(map(node.elements(), this::createExpression));
+    private Expression createArray(ArrayNode node) {
+      List<Expression> exprList = map(node.elements(), this::createExpression);
       CodeLocation location = node.codeLocation();
-      return invokeWrap(exprList, el -> createArray(node, el, location));
+      return createArray(node, exprList, location);
     }
 
     private Expression createArray(ArrayNode array, List<Expression> elements,
@@ -112,202 +90,29 @@ public class DefinedFunctionLoader {
       return new ArrayExpression(type, converted, location);
     }
 
-    private Maybe<Expression> createCall(CallNode node) {
-      Maybe<List<Argument>> args = convertArgNodesToArguments(node.args());
-      Function function = loadedFunctions.get(node.name());
-      Maybe<List<Expression>> expressions = invoke(args,
-          a -> createArgExprs(node.codeLocation(), function, a));
-      return invokeWrap(expressions,
-          es -> function.createCallExpression(es, false, node.codeLocation()));
+    private Expression createCall(CallNode call) {
+      Function function = loadedFunctions.get(call.name());
+      List<Expression> expressions = createSortedArgumentExpressions(call, function);
+      return function.createCallExpression(expressions, false, call.codeLocation());
     }
 
-    private Maybe<List<Argument>> convertArgNodesToArguments(List<ArgNode> args) {
-      List<Maybe<Argument>> result = new ArrayList<Maybe<Argument>>();
-      for (ArgNode argNode : args) {
-        Maybe<Expression> expression = createExpression(argNode.expr());
-        String name = argNode.hasName() ? argNode.name() : null;
-        Maybe<Argument> argument = invokeWrap(expression,
-            e -> new Argument(argNode, name, e, argNode.codeLocation()));
-        result.add(argument);
-      }
-      return Maybe.pullUp(result);
+    private List<Expression> createSortedArgumentExpressions(CallNode call, Function function) {
+      Map<Parameter, Expression> assignedExpressions = call
+          .args()
+          .stream()
+          .filter(a -> a.has(Parameter.class))
+          .collect(toMap(a -> a.get(Parameter.class), a -> createExpression(a.expr())));
+      return function
+          .parameters()
+          .stream()
+          .map(p -> assignedExpressions.containsKey(p)
+              ? implicitConversion(p.type(), assignedExpressions.get(p))
+              : p.defaultValueExpression())
+          .collect(toImmutableList());
     }
 
     private Expression createStringLiteral(StringNode node) {
       return new StringLiteralExpression(node.get(String.class), node.codeLocation());
-    }
-
-    public Maybe<List<Expression>> createArgExprs(CodeLocation codeLocation, Function function,
-        List<Argument> arguments) {
-      ParametersPool parametersPool = new ParametersPool(function.parameters());
-
-      Map<Parameter, Argument> argumentMap = new HashMap<>();
-      List<Object> errors = processNamedArguments(parametersPool, argumentMap, arguments);
-      if (!errors.isEmpty()) {
-        return errors(errors);
-      }
-
-      errors = processNamelessArguments(function, arguments, parametersPool, argumentMap,
-          codeLocation);
-      if (!errors.isEmpty()) {
-        return errors(errors);
-      }
-      Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
-      if (missingRequiredParameters.size() != 0) {
-        return error(new ParseError(codeLocation,
-            missingRequiredArgsMessage(function, argumentMap, missingRequiredParameters)));
-      }
-
-      Map<String, Expression> argumentExpressions = convert(argumentMap);
-      for (Parameter parameter : parametersPool.allOptional()) {
-        if (parameter.type() == Types.NOTHING) {
-          return error(new ParseError(codeLocation, "Parameter '" + parameter.name()
-              + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
-        } else {
-          argumentExpressions.put(parameter.name(), parameter.defaultValueExpression());
-        }
-      }
-
-      return sortAccordingToParametersOrder(argumentExpressions, function);
-    }
-
-    private static String missingRequiredArgsMessage(Function function,
-        Map<Parameter, Argument> argumentMap, Set<Parameter> missingRequiredParameters) {
-      return "Not all parameters required by " + function.name() + " function has been specified.\n"
-          + "Missing required parameters:\n"
-          + parametersToString(missingRequiredParameters)
-          + "All correct 'parameters <- arguments' assignments:\n"
-          + argumentMap.toString();
-    }
-
-    private Maybe<List<Expression>> sortAccordingToParametersOrder(
-        Map<String, Expression> argumentExpressions, Function function) {
-      ImmutableList.Builder<Expression> builder = ImmutableList.builder();
-      for (Parameter parameter : function.parameters()) {
-        builder.add(argumentExpressions.get(parameter.name()));
-      }
-      return value(builder.build());
-    }
-
-    private static List<Object> processNamedArguments(ParametersPool parametersPool,
-        Map<Parameter, Argument> argumentMap, Collection<Argument> arguments) {
-      ArrayList<Object> errors = new ArrayList<>();
-      List<Argument> namedArguments = Argument.filterNamed(arguments);
-      for (Argument argument : namedArguments) {
-        if (argument.hasName()) {
-          String name = argument.name();
-          Parameter parameter = parametersPool.take(name);
-          Type paramType = parameter.type();
-          if (!canConvert(argument.type(), paramType)) {
-            errors.add(new ParseError(argument.codeLocation(),
-                "Type mismatch, cannot convert argument '" + argument.name() + "' of type '"
-                    + argument.type().name() + "' to '" + paramType.name() + "'."));
-          } else {
-            argumentMap.put(parameter, argument);
-          }
-        }
-      }
-      return errors;
-    }
-
-    private static List<Object> processNamelessArguments(Function function,
-        Collection<Argument> arguments, ParametersPool parametersPool,
-        Map<Parameter, Argument> argumentMap, CodeLocation codeLocation) {
-      ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
-      for (Type type : allTypes()) {
-        Collection<Argument> availableArguments = namelessArgs.get(type);
-        int argsSize = availableArguments.size();
-        if (0 < argsSize) {
-          TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
-
-          if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-            Argument onlyArgument = availableArguments.iterator().next();
-            Parameter candidateParameter = availableTypedParams.candidate();
-            argumentMap.put(candidateParameter, onlyArgument);
-            parametersPool.take(candidateParameter);
-          } else {
-            String message = ambiguousAssignmentErrorMessage(function, argumentMap,
-                availableArguments, availableTypedParams);
-            return asList(new ParseError(codeLocation, message));
-          }
-        }
-      }
-      return new ArrayList<>();
-    }
-
-    private static String ambiguousAssignmentErrorMessage(Function function,
-        Map<Parameter, Argument> argumentMap, Collection<Argument> availableArguments,
-        TypedParametersPool availableTypedParams) {
-      String assignmentList = MapToString.toString(argumentMap);
-      if (availableTypedParams.isEmpty()) {
-        return "Can't find parameter(s) of proper type in "
-            + function.name()
-            + " function for some nameless argument(s):\n"
-            + "List of assignments that were successfully detected so far is following:\n"
-            + assignmentList
-            + "List of arguments for which no parameter could be found is following:\n"
-            + argsToList(availableArguments);
-      } else {
-        return "Can't decide unambiguously to which parameters in " + function.name()
-            + " function some nameless arguments should be assigned:\n"
-            + "List of assignments that were successfully detected is following:\n"
-            + assignmentList
-            + "List of nameless arguments that caused problems:\n"
-            + argsToList(availableArguments)
-            + "List of unassigned parameters of desired type is following:\n"
-            + availableTypedParams.toFormattedString();
-      }
-    }
-
-    private static String argsToList(Collection<Argument> availableArguments) {
-      List<Argument> arguments = Argument.POSITION_ORDERING.sortedCopy(availableArguments);
-      int typeLength = longestArgType(arguments);
-      int nameLength = longestArgName(arguments);
-      int positionLength = longestArgPosition(arguments);
-
-      StringBuilder builder = new StringBuilder();
-      for (Argument argument : arguments) {
-        builder.append("  " + argument.toPaddedString(
-            typeLength, nameLength, positionLength) + "\n");
-      }
-      return builder.toString();
-    }
-
-    private static int longestArgType(List<Argument> arguments) {
-      int result = 0;
-      for (Argument argument : arguments) {
-        result = Math.max(result, argument.type().name().length());
-      }
-      return result;
-    }
-
-    private static int longestArgName(List<Argument> arguments) {
-      int result = 0;
-      for (Argument argument : arguments) {
-        result = Math.max(result, argument.nameSanitized().length());
-      }
-      return result;
-    }
-
-    private static int longestArgPosition(List<Argument> arguments) {
-      int maxPosition = 0;
-      for (Argument argument : arguments) {
-        maxPosition = Math.max(maxPosition, argument.position());
-      }
-      return Integer.toString(maxPosition).length();
-    }
-
-    private Map<String, Expression> convert(Map<Parameter, Argument> paramToArgMap) {
-      Map<String, Expression> map = new HashMap<>();
-
-      for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
-        Parameter parameter = entry.getKey();
-        Argument argument = entry.getValue();
-        Expression expression = implicitConversion(parameter.type(), argument.expression());
-        map.put(parameter.name(), expression);
-      }
-
-      return map;
     }
 
     public <T extends Value> Expression implicitConversion(Type destinationType,
