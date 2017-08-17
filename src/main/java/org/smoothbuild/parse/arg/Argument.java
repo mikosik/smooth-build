@@ -3,6 +3,8 @@ package org.smoothbuild.parse.arg;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 
 import java.util.Collection;
 
@@ -85,24 +87,17 @@ public class Argument {
   }
 
   public static ImmutableList<Argument> filterNamed(Collection<Argument> arguments) {
-    ImmutableList.Builder<Argument> builder = ImmutableList.builder();
-    for (Argument argument : arguments) {
-      if (argument.hasName()) {
-        builder.add(argument);
-      }
-    }
-    return builder.build();
+    return arguments
+        .stream()
+        .filter(a -> a.hasName())
+        .collect(toImmutableList());
   }
 
   public static ImmutableMultimap<Type, Argument> filterNameless(Collection<Argument> arguments) {
-    ImmutableMultimap.Builder<Type, Argument> builder = ImmutableMultimap.builder();
-    for (Argument argument : arguments) {
-      if (!argument.hasName()) {
-        Type type = argument.expression().type();
-        builder.put(type, argument);
-      }
-    }
-    return builder.build();
+    return arguments
+        .stream()
+        .filter(a -> !a.hasName())
+        .collect(toImmutableListMultimap(a -> a.expression().type(), a -> a));
   }
 
   public static final Ordering<Argument> NUMBER_ORDERING = new Ordering<Argument>() {
