@@ -14,108 +14,88 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ExprNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
 public class ArgumentTest {
   private final String name = "name";
-  private final Expression expression = mock(Expression.class);
+  private final ExprNode expr = mock(ExprNode.class);
   private final CodeLocation codeLocation = codeLocation(1);
   private Argument argument;
   private Argument argument2;
   private Argument argument3;
   private Argument argument4;
 
-  public void negative_number_is_forbidden() {
-    when(() -> argument(-1, name, expression, codeLocation));
-    thenThrown(IllegalArgumentException.class);
-  }
-
-  public void zero_number_is_forbidden() {
-    when(() -> argument(0, name, expression, codeLocation));
-    thenThrown(IllegalArgumentException.class);
-  }
-
-  public void null_expression_is_forbidden() {
-    when(() -> argument(1, name, null, codeLocation));
-    thenThrown(NullPointerException.class);
-  }
-
-  public void null_code_location_is_forbidden() {
-    when(() -> argument(1, name, expression, null));
-    thenThrown(NullPointerException.class);
-  }
-
   @Test
   public void argument_type_is_equal_to_argument_expression_type() throws Exception {
-    given(willReturn(FILE), expression).type();
-    when(argument(1, name, expression, codeLocation)).type();
+    given(argument = new Argument(new ArgNode(0, name, expr(FILE), codeLocation)));
+    when(() -> argument.type());
     thenReturned(FILE);
   }
 
   public void nameless_argument_throws_exception_when_asked_for_name() throws Exception {
-    given(argument = argument(1, null, expression, codeLocation));
+    given(argument = new Argument(new ArgNode(0, null, expr(FILE), codeLocation)));
     when(() -> argument.name());
     thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void named_argument_has_name() throws Exception {
-    given(argument = argument(1, name, expression, codeLocation));
+    given(argument = new Argument(new ArgNode(1, name, expr, codeLocation)));
     when(argument).hasName();
     thenReturned(true);
   }
 
   @Test
   public void nameless_argument_does_not_have_name() throws Exception {
-    given(argument = argument(1, null, expression, codeLocation));
+    given(argument = new Argument(new ArgNode(1, null, expr, codeLocation)));
     when(argument).hasName();
     thenReturned(false);
   }
 
   @Test
   public void sanitized_name_of_named_argument_is_equal_its_name() throws Exception {
-    given(argument = argument(1, name, expression, codeLocation));
+    given(argument = new Argument(new ArgNode(1, name, expr, codeLocation)));
     when(argument).nameSanitized();
     thenReturned(name);
   }
 
   @Test
   public void sanitized_name_of_nameless_argument_is_equal_to_nameless() throws Exception {
-    given(argument = argument(1, null, expression, codeLocation));
+    given(argument = new Argument(new ArgNode(1, null, expr, codeLocation)));
     when(argument).nameSanitized();
     thenReturned("<nameless>");
   }
 
   @Test
   public void named_argument_to_string() throws Exception {
-    given(willReturn(STRING), expression).type();
-    when(argument(1, name, expression, codeLocation)).toString();
+    given(argument = new Argument(new ArgNode(1, name, expr(STRING), codeLocation)));
+    when(argument).toString();
     thenReturned("String:" + name);
   }
 
   @Test
-  public void nameless_argument_to_strig() throws Exception {
-    given(willReturn(STRING), expression).type();
-    when(argument(1, null, expression, codeLocation)).toString();
+  public void nameless_argument_to_string() throws Exception {
+    given(argument = new Argument(new ArgNode(1, null, expr(STRING), codeLocation)));
+    when(argument).toString();
     thenReturned("String:<nameless>");
   }
 
   @Test
   public void to_padded_string() throws Exception {
-    given(willReturn(STRING), expression).type();
-    when(argument(1, "myName", expression, codeLocation)).toPaddedString(10, 13, 7);
+    given(argument = new Argument(new ArgNode(1, "myName", expr(STRING), codeLocation)));
+    when(argument).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       " + codeLocation.toString());
   }
 
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
-    given(willReturn(STRING), expression).type();
-    when(argument(1, "myName", expression, codeLocation(1))).toPaddedString(1, 1, 1);
+    given(argument = new Argument(new ArgNode(1, "myName", expr(STRING), codeLocation)));
+    when(argument).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 " + codeLocation.toString());
   }
 
@@ -140,18 +120,25 @@ public class ArgumentTest {
   }
 
   private static Argument named(String name) {
-    return argument(1, name, mock(Expression.class), codeLocation(1));
+    return argument(1, name, mock(ExprNode.class), codeLocation(1));
   }
 
   private static Argument nameless(Type type) {
-    Expression expression = mock(Expression.class);
-    given(willReturn(type), expression).type();
-    return argument(1, null, expression, codeLocation(1));
+    return typedArgument(null, type);
   }
 
-  private static Argument argument(int position, String name, Expression expression,
+  private static Argument typedArgument(String name, Type type) {
+    return argument(1, name, expr(type), codeLocation(1));
+  }
+
+  private static ExprNode expr(Type type) {
+    ExprNode expr = mock(ExprNode.class);
+    given(willReturn(type), expr).get(Type.class);
+    return expr;
+  }
+
+  private static Argument argument(int position, String name, ExprNode expr,
       CodeLocation codeLocation) {
-    ArgNode arg = new ArgNode(position, name, null, codeLocation);
-    return new Argument(arg, name, expression, codeLocation);
+    return new Argument(new ArgNode(position, name, expr, codeLocation));
   }
 }

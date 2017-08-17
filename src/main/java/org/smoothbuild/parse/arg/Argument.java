@@ -1,16 +1,15 @@
 package org.smoothbuild.parse.arg;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 
 import java.util.Collection;
 
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
+import org.smoothbuild.parse.ast.ExprNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -18,15 +17,13 @@ import com.google.common.collect.Ordering;
 
 public class Argument {
   private final ArgNode arg;
-  private final String name;
-  private final Expression expression;
-  private final CodeLocation codeLocation;
 
-  public Argument(ArgNode arg, String name, Expression expression, CodeLocation codeLocation) {
+  public Argument(ArgNode arg) {
     this.arg = arg;
-    this.name = name;
-    this.expression = checkNotNull(expression);
-    this.codeLocation = checkNotNull(codeLocation);
+  }
+
+  public ArgNode arg() {
+    return arg;
   }
 
   /**
@@ -37,7 +34,12 @@ public class Argument {
     return arg.position();
   }
 
+  public boolean hasName() {
+    return arg.hasName();
+  }
+
   public String name() {
+    String name = arg.hasName() ? arg.name() : null;
     if (name == null) {
       throw new UnsupportedOperationException("Nameless argument does not have name.");
     }
@@ -45,30 +47,30 @@ public class Argument {
   }
 
   public String nameSanitized() {
-    return name == null ? "<nameless>" : name;
+    return arg.hasName() ? arg.name() : "<nameless>";
   }
 
   public Type type() {
-    return expression.type();
+    return expr().get(Type.class);
   }
 
-  public Expression expression() {
-    return expression;
+  public boolean hasType() {
+    return expr().has(Type.class);
+  }
+
+  public ExprNode expr() {
+    return arg.expr();
   }
 
   public CodeLocation codeLocation() {
-    return codeLocation;
-  }
-
-  public boolean hasName() {
-    return name != null;
+    return arg.codeLocation();
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength, int minPositionLength) {
     String type = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String name = padEnd(nameSanitized(), minNameLength, ' ');
     String position = padEnd(positionString(), minPositionLength, ' ');
-    String location = codeLocation.toString();
+    String location = codeLocation().toString();
     return type + name + " #" + position + " " + location;
   }
 
@@ -91,7 +93,7 @@ public class Argument {
     return arguments
         .stream()
         .filter(a -> !a.hasName())
-        .collect(toImmutableListMultimap(a -> a.expression().type(), a -> a));
+        .collect(toImmutableListMultimap(a -> a.type(), a -> a));
   }
 
   public static final Ordering<Argument> POSITION_ORDERING = new Ordering<Argument>() {

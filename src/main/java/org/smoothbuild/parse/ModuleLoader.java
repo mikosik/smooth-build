@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
@@ -62,6 +63,7 @@ public class ModuleLoader {
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
     ast = ast.addErrors(a -> assignTypes(functions, a));
+    ast = ast.addErrors(a -> assignArgsToParams(functions, a));
     return invoke(ast, a -> loadDefinedFunctions(functions, a));
   }
 
@@ -116,8 +118,7 @@ public class ModuleLoader {
     Maybe<Functions> justLoaded = value(new Functions());
     for (FuncNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<DefinedFunction> function = invoke(all,
-          a -> loadDefinedFunction(a, node));
+      Maybe<DefinedFunction> function = invokeWrap(all, a -> loadDefinedFunction(a, node));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;

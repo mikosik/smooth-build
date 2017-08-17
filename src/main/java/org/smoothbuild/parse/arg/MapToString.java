@@ -1,13 +1,17 @@
 package org.smoothbuild.parse.arg;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.parse.ast.CallNode;
 
 public class MapToString {
-  public static String toString(Map<Parameter, Argument> paramToArgMap) {
+  public static String toString(CallNode call) {
+    Map<Parameter, Argument> paramToArgMap = createMap(call);
     int maxParamType = longestParameterType(paramToArgMap.keySet());
     int maxParamName = longestParameterName(paramToArgMap.keySet());
     int maxArgType = longestArgumentType(paramToArgMap.values());
@@ -22,6 +26,14 @@ public class MapToString {
       builder.append("  " + paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
+  }
+
+  private static Map<Parameter, Argument> createMap(CallNode call) {
+    return call
+        .args()
+        .stream()
+        .filter(a -> a.has(Parameter.class))
+        .collect(toMap(a -> a.get(Parameter.class), a -> new Argument(a)));
   }
 
   private static int longestParameterType(Set<Parameter> parameters) {
