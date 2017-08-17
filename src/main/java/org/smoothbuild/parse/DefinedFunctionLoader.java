@@ -24,7 +24,6 @@ import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.function.Functions;
@@ -166,8 +165,7 @@ public class DefinedFunctionLoader {
           return error(new ParseError(codeLocation, "Parameter '" + parameter.name()
               + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
         } else {
-          Expression expression = new DefaultValueExpression(parameter.type(), codeLocation);
-          argumentExpressions.put(parameter.name(), expression);
+          argumentExpressions.put(parameter.name(), parameter.defaultValueExpression());
         }
       }
 
