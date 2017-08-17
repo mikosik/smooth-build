@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
@@ -22,8 +25,12 @@ import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public class AssignTypes {
   public static List<ParseError> assignTypes(Functions functions, Ast ast) {
@@ -39,6 +46,33 @@ public class AssignTypes {
         Type type = function.expr().get(Type.class);
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
+        List<Parameter> parameters = createParameters(function.params());
+        Signature signature = (type == null || parameters == null)
+            ? null
+            : new Signature(type, function.name(), parameters);
+        function.set(Signature.class, signature);
+      }
+
+      private List<Parameter> createParameters(List<ParamNode> params) {
+        Builder<Parameter> builder = ImmutableList.builder();
+        for (ParamNode param : params) {
+          Parameter parameter = param.get(Parameter.class);
+          if (parameter == null) {
+            return null;
+          }
+          builder.add(parameter);
+        }
+        return builder.build();
+      }
+
+      public void visitParam(ParamNode param) {
+        super.visitParam(param);
+        Type type = param.type().get(Type.class);
+        param.set(Type.class, type);
+        Parameter parameter = type == null
+            ? null
+            : parameter(param.get(Type.class), param.name());
+        param.set(Parameter.class, parameter);
       }
 
       public void visitType(TypeNode type) {
