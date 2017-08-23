@@ -4,6 +4,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
+import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +19,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.parse.arg.MapToString;
+import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -89,7 +91,7 @@ public class AssignArgsToParams {
             + "Missing required parameters:\n"
             + parametersToString(missingRequiredParameters)
             + "All correct 'parameters <- arguments' assignments:\n"
-            + MapToString.toString(call);
+            + ArgsStringHelper.assignedArgsToString(call);
       }
 
       private boolean processNamedArguments(CallNode call, ParametersPool parametersPool) {
@@ -147,7 +149,7 @@ public class AssignArgsToParams {
 
       private String ambiguousAssignmentErrorMessage(CallNode call, Signature signature,
           Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
-        String assignmentList = MapToString.toString(call);
+        String assignmentList = assignedArgsToString(call);
         if (availableTypedParams.isEmpty()) {
           return "Can't find parameter(s) of proper type in "
               + signature.name()
@@ -155,55 +157,17 @@ public class AssignArgsToParams {
               + "List of assignments that were successfully detected so far is following:\n"
               + assignmentList
               + "List of arguments for which no parameter could be found is following:\n"
-              + argsToList(availableArgs);
+              + argsToString(availableArgs);
         } else {
           return "Can't decide unambiguously to which parameters in " + signature.name()
               + " function some nameless arguments should be assigned:\n"
               + "List of assignments that were successfully detected is following:\n"
               + assignmentList
               + "List of nameless arguments that caused problems:\n"
-              + argsToList(availableArgs)
+              + argsToString(availableArgs)
               + "List of unassigned parameters of desired type is following:\n"
               + availableTypedParams.toFormattedString();
         }
-      }
-
-      private String argsToList(Collection<ArgNode> availableArgs) {
-        List<ArgNode> args = ArgNode.POSITION_ORDERING.sortedCopy(availableArgs);
-        int typeLength = longestArgType(args);
-        int nameLength = longestArgName(args);
-        int positionLength = longestArgPosition(args);
-
-        StringBuilder builder = new StringBuilder();
-        for (ArgNode arg : args) {
-          builder.append("  " + arg.toPaddedString(
-              typeLength, nameLength, positionLength) + "\n");
-        }
-        return builder.toString();
-      }
-
-      private int longestArgType(List<ArgNode> args) {
-        int result = 0;
-        for (ArgNode arg : args) {
-          result = Math.max(result, arg.get(Type.class).name().length());
-        }
-        return result;
-      }
-
-      private int longestArgName(List<ArgNode> args) {
-        int result = 0;
-        for (ArgNode arg : args) {
-          result = Math.max(result, arg.nameSanitized().length());
-        }
-        return result;
-      }
-
-      private int longestArgPosition(List<ArgNode> args) {
-        int maxPosition = 0;
-        for (ArgNode arg : args) {
-          maxPosition = Math.max(maxPosition, arg.position());
-        }
-        return Integer.toString(maxPosition).length();
       }
 
     }.visitAst(ast);

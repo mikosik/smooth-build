@@ -3,6 +3,7 @@ package org.smoothbuild.parse.arg;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -12,8 +13,8 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 
-public class MapToString {
-  public static String toString(CallNode call) {
+public class ArgsStringHelper {
+  public static String assignedArgsToString(CallNode call) {
     Map<Parameter, ArgNode> paramToArgMap = createMap(call);
     int maxParamType = longestParameterType(paramToArgMap.keySet());
     int maxParamName = longestParameterName(paramToArgMap.keySet());
@@ -37,6 +38,20 @@ public class MapToString {
         .stream()
         .filter(a -> a.has(Parameter.class))
         .collect(toMap(a -> a.get(Parameter.class), Function.identity()));
+  }
+
+  public static String argsToString(Collection<ArgNode> availableArgs) {
+    List<ArgNode> args = ArgNode.POSITION_ORDERING.sortedCopy(availableArgs);
+    int typeLength = longestArgType(args);
+    int nameLength = longestArgName(args);
+    int positionLength = longestArgPosition(args);
+
+    StringBuilder builder = new StringBuilder();
+    for (ArgNode arg : args) {
+      builder.append("  " + arg.toPaddedString(
+          typeLength, nameLength, positionLength) + "\n");
+    }
+    return builder.toString();
   }
 
   private static int longestParameterType(Set<Parameter> parameters) {
