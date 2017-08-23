@@ -76,19 +76,6 @@ public class DefinedFunctionLoader {
           + " without children.");
     }
 
-    private Expression createArray(ArrayNode node) {
-      List<Expression> exprList = map(node.elements(), this::createExpression);
-      CodeLocation location = node.codeLocation();
-      return createArray(node, exprList, location);
-    }
-
-    private Expression createArray(ArrayNode array, List<Expression> elements,
-        CodeLocation location) {
-      ArrayType type = (ArrayType) array.get(Type.class);
-      List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
-      return new ArrayExpression(type, converted, location);
-    }
-
     private Expression createCall(CallNode call) {
       Function function = loadedFunctions.get(call.name());
       List<Expression> expressions = createSortedArgumentExpressions(call, function);
@@ -112,6 +99,19 @@ public class DefinedFunctionLoader {
 
     private Expression createStringLiteral(StringNode node) {
       return new StringLiteralExpression(node.get(String.class), node.codeLocation());
+    }
+
+    private Expression createArray(ArrayNode node) {
+      List<Expression> exprList = map(node.elements(), this::createExpression);
+      CodeLocation location = node.codeLocation();
+      return createArray(node, exprList, location);
+    }
+
+    private Expression createArray(ArrayNode array, List<Expression> elements,
+        CodeLocation location) {
+      ArrayType type = (ArrayType) array.get(Type.class);
+      List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
+      return new ArrayExpression(type, converted, location);
     }
 
     public <T extends Value> Expression implicitConversion(Type destinationType,
