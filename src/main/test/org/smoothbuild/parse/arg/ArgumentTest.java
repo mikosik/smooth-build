@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -18,6 +17,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.parse.ast.ArgNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
@@ -147,5 +147,11 @@ public class ArgumentTest {
     Expression expression = mock(Expression.class);
     given(willReturn(type), expression).type();
     return argument(1, null, expression, codeLocation(1));
+  }
+
+  private static Argument argument(int position, String name, Expression expression,
+      CodeLocation codeLocation) {
+    ArgNode arg = new ArgNode(position, name, null, codeLocation);
+    return new Argument(arg, name, expression, codeLocation);
   }
 }

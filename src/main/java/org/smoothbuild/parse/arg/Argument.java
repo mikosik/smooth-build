@@ -1,6 +1,5 @@
 package org.smoothbuild.parse.arg;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.collect.ImmutableList.toImmutableList;
@@ -11,25 +10,20 @@ import java.util.Collection;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.parse.ast.ArgNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Ordering;
 
 public class Argument {
-  private final int position;
+  private final ArgNode arg;
   private final String name;
   private final Expression expression;
   private final CodeLocation codeLocation;
 
-  public static Argument argument(int position, String name, Expression expression,
-      CodeLocation codeLocation) {
-    return new Argument(position, name, expression, codeLocation);
-  }
-
-  private Argument(int position, String name, Expression expression, CodeLocation codeLocation) {
-    checkArgument(0 <= position);
-    this.position = position;
+  public Argument(ArgNode arg, String name, Expression expression, CodeLocation codeLocation) {
+    this.arg = arg;
     this.name = name;
     this.expression = checkNotNull(expression);
     this.codeLocation = checkNotNull(codeLocation);
@@ -40,7 +34,7 @@ public class Argument {
    * denotes piped argument. Value one denotes first argument on the list.
    */
   public int position() {
-    return position;
+    return arg.position();
   }
 
   public String name() {
@@ -79,7 +73,7 @@ public class Argument {
   }
 
   private String positionString() {
-    return position == 0 ? "|" : Integer.toString(position);
+    return position() == 0 ? "|" : Integer.toString(position());
   }
 
   public String toString() {
