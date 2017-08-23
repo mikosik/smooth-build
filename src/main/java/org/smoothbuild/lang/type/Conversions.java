@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
@@ -28,11 +27,11 @@ public class Conversions {
   private static ImmutableMap<TypeConversion, Name> createConversions() {
     ImmutableMap.Builder<TypeConversion, Name> builder = ImmutableMap.builder();
 
-    builder.put(new TypeConversion(FILE, BLOB), name("fileToBlob"));
-    builder.put(new TypeConversion(FILE_ARRAY, BLOB_ARRAY), name("fileArrayToBlobArray"));
-    builder.put(new TypeConversion(NIL, STRING_ARRAY), name("nilToStringArray"));
-    builder.put(new TypeConversion(NIL, BLOB_ARRAY), name("nilToBlobArray"));
-    builder.put(new TypeConversion(NIL, FILE_ARRAY), name("nilToFileArray"));
+    builder.put(new TypeConversion(FILE, BLOB), new Name("fileToBlob"));
+    builder.put(new TypeConversion(FILE_ARRAY, BLOB_ARRAY), new Name("fileArrayToBlobArray"));
+    builder.put(new TypeConversion(NIL, STRING_ARRAY), new Name("nilToStringArray"));
+    builder.put(new TypeConversion(NIL, BLOB_ARRAY), new Name("nilToBlobArray"));
+    builder.put(new TypeConversion(NIL, FILE_ARRAY), new Name("nilToFileArray"));
 
     return builder.build();
   }

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
@@ -18,7 +17,7 @@ import org.smoothbuild.lang.type.Type;
 
 public class SignatureTest {
   private final Type type = STRING;
-  private final Name name = name("name");
+  private final Name name = new Name("name");
   private final List<Parameter> parameters = asList();
   private Parameter parameter;
   private Parameter parameter2;

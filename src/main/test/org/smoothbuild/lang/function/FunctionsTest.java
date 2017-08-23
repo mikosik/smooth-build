@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function;
 
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
@@ -45,9 +44,9 @@ public class FunctionsTest {
 
   @Test
   public void getting_unknown_function_fails() throws Exception {
-    given(willReturn(Name.name("functionName")), function).name();
+    given(willReturn(new Name("functionName")), function).name();
     given(functions = new Functions().add(function));
-    when(() -> functions.get(Name.name("missingFunction")));
+    when(() -> functions.get(new Name("missingFunction")));
     thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
         + "Available functions: ['functionName']")));
   }
@@ -73,7 +72,7 @@ public class FunctionsTest {
   @Test
   public void names_returns_collection_that_forbids_adding_elements() {
     given(functions = new Functions());
-    when(functions.names()).add(name("name"));
+    when(functions.names()).add(new Name("name"));
     thenThrown(UnsupportedOperationException.class);
   }
 }

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -26,7 +25,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void type_returns_signature_type() {
-    given(signature = new Signature(STRING, name("name"), asList()));
+    given(signature = new Signature(STRING, new Name("name"), asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
     thenReturned(STRING);
@@ -34,7 +33,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void name_returns_signature_name() {
-    given(name = name("name"));
+    given(name = new Name("name"));
     given(signature = new Signature(STRING, name, asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
@@ -44,7 +43,7 @@ public class AbstractFunctionTest {
   @Test
   public void params_returns_signature_params() {
     given(parameters = asList(new Parameter(STRING, "name", null)));
-    given(signature = new Signature(STRING, name("name"), parameters));
+    given(signature = new Signature(STRING, new Name("name"), parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();
     thenReturned(parameters);

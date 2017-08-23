@@ -4,7 +4,6 @@ import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invokeWrap;
@@ -78,7 +77,7 @@ public class Build {
     DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<>();
     for (String argument : args) {
       if (isLegalName(argument)) {
-        duplicatesDetector.addValue(name(argument));
+        duplicatesDetector.addValue(new Name(argument));
       } else {
         return error("error: Illegal function name '" + argument
             + "' passed in command line.");

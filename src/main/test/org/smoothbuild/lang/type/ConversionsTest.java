@@ -4,7 +4,6 @@ import static java.text.MessageFormat.format;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.type.Types.ALL_TYPES;
@@ -21,6 +20,7 @@ import org.quackery.Case;
 import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
+import org.smoothbuild.lang.function.base.Name;
 
 @RunWith(QuackeryRunner.class)
 public class ConversionsTest {
@@ -57,6 +57,6 @@ public class ConversionsTest {
 
   private static Case testConvertFunctionName(Type from, Type to, String functionName) {
     return newCase(format("{0} to {1} is named {2}", from, to, functionName), () -> assertEquals(
-        convertFunctionName(from, to), name(functionName)));
+        convertFunctionName(from, to), new Name(functionName)));
   }
 }

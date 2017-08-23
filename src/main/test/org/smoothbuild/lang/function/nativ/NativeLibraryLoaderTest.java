@@ -3,7 +3,6 @@ package org.smoothbuild.lang.function.nativ;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadNativeModules;
 import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.thenReturned;
@@ -44,7 +43,7 @@ public class NativeLibraryLoaderTest {
   @Test
   public void all_functions_are_loaded() throws Exception {
     when(toNames(loadNativeModules(asList(module(TwoFunctions.class)))));
-    thenReturned(contains(name("func1"), name("func2")));
+    thenReturned(contains(new Name("func1"), new Name("func2")));
   }
 
   public static class TwoFunctions {

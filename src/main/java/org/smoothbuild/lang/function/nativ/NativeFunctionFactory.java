@@ -83,7 +83,7 @@ public class NativeFunctionFactory {
   private static Name createName(Method method) throws NativeFunctionImplementationException {
     String name = method.getName();
     if (Name.isLegalName(name)) {
-      return Name.name(name);
+      return new Name(name);
     } else {
       throw new NativeFunctionImplementationException(method, "Its name " + name + " is illegal.");
     }

@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsSame.sameInstance;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -19,10 +18,10 @@ import org.smoothbuild.parse.ast.FuncNode;
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
-  private final Name name1 = name("function1");
-  private final Name name2 = name("function2");
-  private final Name name3 = name("function3");
-  private final Name name4 = name("function4");
+  private final Name name1 = new Name("function1");
+  private final Name name2 = new Name("function2");
+  private final Name name3 = new Name("function3");
+  private final Name name4 = new Name("function4");
 
   private DependencyStack dependencyStack;
   private DependencyStackElem elem1;
@@ -164,6 +163,6 @@ public class DependencyStackTest {
 
   private static DependencyStackElem elem() {
     return new DependencyStackElem(new FuncNode(
-        name("name"), asList(), null, ImmutableSet.of(), null));
+        new Name("name"), asList(), null, ImmutableSet.of(), null));
   }
 }
