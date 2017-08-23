@@ -1,0 +1,94 @@
+package org.smoothbuild.parse.ast;
+
+import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.type.Types.FILE;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.testory.Testory.given;
+import static org.testory.Testory.mock;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
+
+import org.junit.Test;
+import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.type.Type;
+
+public class ArgNodeTest {
+  private ArgNode arg;
+  private final CodeLocation codeLocation = codeLocation(1);
+  private final String name = "arg-name";
+
+  @Test
+  public void nameed_arg_has_name() throws Exception {
+    given(arg = new ArgNode(0, "name", expr(FILE), codeLocation));
+    when(() -> arg.hasName());
+    thenReturned(true);
+  }
+
+  @Test
+  public void nameless_arg_does_not_have_name() throws Exception {
+    given(arg = new ArgNode(0, null, expr(FILE), codeLocation));
+    when(() -> arg.hasName());
+    thenReturned(false);
+  }
+
+  @Test
+  public void nameless_arg_throws_exception_when_asked_for_name() throws Exception {
+    given(arg = new ArgNode(0, null, expr(FILE), codeLocation));
+    when(() -> arg.name());
+    thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void sanitized_name_of_named_argument_is_equal_its_name() throws Exception {
+    given(arg = new ArgNode(1, name, null, codeLocation));
+    when(arg).nameSanitized();
+    thenReturned(name);
+  }
+
+  @Test
+  public void sanitized_name_of_nameless_argument_is_equal_to_nameless() throws Exception {
+    given(arg = new ArgNode(1, null, null, codeLocation));
+    when(arg).nameSanitized();
+    thenReturned("<nameless>");
+  }
+
+  @Test
+  public void type_and_name_of_named_argument() throws Exception {
+    given(arg = new ArgNode(1, name, expr(STRING), codeLocation));
+    given(arg).set(Type.class, STRING);
+    when(arg).typeAndName();
+    thenReturned("String:" + name);
+  }
+
+  @Test
+  public void nameless_argument_to_string() throws Exception {
+    given(arg = new ArgNode(1, null, expr(STRING), codeLocation));
+    given(arg).set(Type.class, STRING);
+    when(arg).typeAndName();
+    thenReturned("String:<nameless>");
+  }
+
+  @Test
+  public void to_padded_string() throws Exception {
+    given(arg = new ArgNode(1, "myName", expr(STRING), codeLocation));
+    given(arg).set(Type.class, STRING);
+    when(arg).toPaddedString(10, 13, 7);
+    thenReturned("String    : myName        #1       " + codeLocation.toString());
+  }
+
+  @Test
+  public void to_padded_string_with_short_limits() throws Exception {
+    given(arg = new ArgNode(1, "myName", expr(STRING), codeLocation));
+    given(arg).set(Type.class, STRING);
+    when(arg).toPaddedString(1, 1, 1);
+    thenReturned("String: myName #1 " + codeLocation.toString());
+  }
+
+  private static ExprNode expr(Type type) {
+    ExprNode expr = mock(ExprNode.class);
+    given(willReturn(type), expr).get(Type.class);
+    return expr;
+  }
+}

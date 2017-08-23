@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 
@@ -16,7 +17,6 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.parse.arg.Argument;
 import org.smoothbuild.parse.arg.MapToString;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
@@ -33,25 +33,19 @@ public class AssignArgsToParams {
     new AstVisitor() {
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        List<Argument> arguments = call.args()
-            .stream()
-            .map(this::toArgument)
-            .collect(toImmutableList());
-        for (Argument argument : arguments) {
-          if (!argument.hasType()) {
-            return;
-          }
+        if (!eachArgHasType(call)) {
+          return;
         }
         Signature signature = functionSignature(call);
         if (signature == null) {
           return;
         }
         ParametersPool parametersPool = new ParametersPool(signature.parameters());
-        if (processNamedArguments(parametersPool, arguments)) {
+        if (processNamedArguments(call, parametersPool)) {
           return;
         }
         if (processNamelessArguments(
-            call, signature, arguments, parametersPool, call.codeLocation())) {
+            call, signature, parametersPool, call.codeLocation())) {
           return;
         }
         Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
@@ -69,6 +63,13 @@ public class AssignArgsToParams {
         }
       }
 
+      private boolean eachArgHasType(CallNode call) {
+        return call
+            .args()
+            .stream()
+            .allMatch(a -> a.has(Type.class));
+      }
+
       private Signature functionSignature(CallNode call) {
         Name name = call.name();
         if (functions.contains(name)) {
@@ -81,10 +82,6 @@ public class AssignArgsToParams {
         return null;
       }
 
-      private Argument toArgument(ArgNode arg) {
-        return new Argument(arg);
-      }
-
       private String missingRequiredArgsMessage(CallNode call, Signature signature,
           Set<Parameter> missingRequiredParameters) {
         return "Not all parameters required by " + signature.name()
@@ -95,43 +92,47 @@ public class AssignArgsToParams {
             + MapToString.toString(call);
       }
 
-      private boolean processNamedArguments(ParametersPool parametersPool,
-          Collection<Argument> arguments) {
+      private boolean processNamedArguments(CallNode call, ParametersPool parametersPool) {
         boolean failed = false;
-        List<Argument> namedArguments = Argument.filterNamed(arguments);
-        for (Argument argument : namedArguments) {
-          if (argument.hasName()) {
-            String name = argument.name();
-            Parameter parameter = parametersPool.take(name);
-            Type paramType = parameter.type();
-            if (!canConvert(argument.type(), paramType)) {
-              failed = true;
-              errors.add(new ParseError(argument.codeLocation(),
-                  "Type mismatch, cannot convert argument '" + argument.name() + "' of type '"
-                      + argument.type().name() + "' to '" + paramType.name() + "'."));
-              argument.arg().set(Parameter.class, null);
-            } else {
-              argument.arg().set(Parameter.class, parameter);
-            }
+        List<ArgNode> namedArgs = call
+            .args()
+            .stream()
+            .filter(a -> a.hasName())
+            .collect(toImmutableList());
+        for (ArgNode arg : namedArgs) {
+          String name = arg.name();
+          Parameter parameter = parametersPool.take(name);
+          Type paramType = parameter.type();
+          if (!canConvert(arg.get(Type.class), paramType)) {
+            failed = true;
+            errors.add(new ParseError(arg.codeLocation(),
+                "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
+                    + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
+            arg.set(Parameter.class, null);
+          } else {
+            arg.set(Parameter.class, parameter);
           }
         }
         return failed;
       }
 
       private boolean processNamelessArguments(CallNode call, Signature signature,
-          Collection<Argument> arguments, ParametersPool parametersPool,
-          CodeLocation codeLocation) {
-        ImmutableMultimap<Type, Argument> namelessArgs = Argument.filterNameless(arguments);
+          ParametersPool parametersPool, CodeLocation codeLocation) {
+        ImmutableMultimap<Type, ArgNode> namelessArgs = call
+            .args()
+            .stream()
+            .filter(a -> !a.hasName())
+            .collect(toImmutableListMultimap(a -> a.get(Type.class), a -> a));
         for (Type type : Types.allTypes()) {
-          Collection<Argument> availableArguments = namelessArgs.get(type);
+          Collection<ArgNode> availableArguments = namelessArgs.get(type);
           int argsSize = availableArguments.size();
           if (0 < argsSize) {
             TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
 
             if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-              Argument onlyArgument = availableArguments.iterator().next();
+              ArgNode onlyArgument = availableArguments.iterator().next();
               Parameter candidateParameter = availableTypedParams.candidate();
-              onlyArgument.arg().set(Parameter.class, candidateParameter);
+              onlyArgument.set(Parameter.class, candidateParameter);
               parametersPool.take(candidateParameter);
             } else {
               String message = ambiguousAssignmentErrorMessage(
@@ -145,7 +146,7 @@ public class AssignArgsToParams {
       }
 
       private String ambiguousAssignmentErrorMessage(CallNode call, Signature signature,
-          Collection<Argument> availableArguments, TypedParametersPool availableTypedParams) {
+          Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
         String assignmentList = MapToString.toString(call);
         if (availableTypedParams.isEmpty()) {
           return "Can't find parameter(s) of proper type in "
@@ -154,53 +155,53 @@ public class AssignArgsToParams {
               + "List of assignments that were successfully detected so far is following:\n"
               + assignmentList
               + "List of arguments for which no parameter could be found is following:\n"
-              + argsToList(availableArguments);
+              + argsToList(availableArgs);
         } else {
           return "Can't decide unambiguously to which parameters in " + signature.name()
               + " function some nameless arguments should be assigned:\n"
               + "List of assignments that were successfully detected is following:\n"
               + assignmentList
               + "List of nameless arguments that caused problems:\n"
-              + argsToList(availableArguments)
+              + argsToList(availableArgs)
               + "List of unassigned parameters of desired type is following:\n"
               + availableTypedParams.toFormattedString();
         }
       }
 
-      private String argsToList(Collection<Argument> availableArguments) {
-        List<Argument> arguments = Argument.POSITION_ORDERING.sortedCopy(availableArguments);
-        int typeLength = longestArgType(arguments);
-        int nameLength = longestArgName(arguments);
-        int positionLength = longestArgPosition(arguments);
+      private String argsToList(Collection<ArgNode> availableArgs) {
+        List<ArgNode> args = ArgNode.POSITION_ORDERING.sortedCopy(availableArgs);
+        int typeLength = longestArgType(args);
+        int nameLength = longestArgName(args);
+        int positionLength = longestArgPosition(args);
 
         StringBuilder builder = new StringBuilder();
-        for (Argument argument : arguments) {
-          builder.append("  " + argument.toPaddedString(
+        for (ArgNode arg : args) {
+          builder.append("  " + arg.toPaddedString(
               typeLength, nameLength, positionLength) + "\n");
         }
         return builder.toString();
       }
 
-      private int longestArgType(List<Argument> arguments) {
+      private int longestArgType(List<ArgNode> args) {
         int result = 0;
-        for (Argument argument : arguments) {
-          result = Math.max(result, argument.type().name().length());
+        for (ArgNode arg : args) {
+          result = Math.max(result, arg.get(Type.class).name().length());
         }
         return result;
       }
 
-      private int longestArgName(List<Argument> arguments) {
+      private int longestArgName(List<ArgNode> args) {
         int result = 0;
-        for (Argument argument : arguments) {
-          result = Math.max(result, argument.nameSanitized().length());
+        for (ArgNode arg : args) {
+          result = Math.max(result, arg.nameSanitized().length());
         }
         return result;
       }
 
-      private int longestArgPosition(List<Argument> arguments) {
+      private int longestArgPosition(List<ArgNode> args) {
         int maxPosition = 0;
-        for (Argument argument : arguments) {
-          maxPosition = Math.max(maxPosition, argument.position());
+        for (ArgNode arg : args) {
+          maxPosition = Math.max(maxPosition, arg.position());
         }
         return Integer.toString(maxPosition).length();
       }
