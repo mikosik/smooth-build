@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -54,7 +53,7 @@ public class DefinedFunctionLoader {
     private static List<Parameter> createParameters(List<ParamNode> params) {
       return params
           .stream()
-          .map(p -> parameter(p.type().get(Type.class), p.name()))
+          .map(p -> new Parameter(p.type().get(Type.class), p.name(), null))
           .collect(toList());
     }
 

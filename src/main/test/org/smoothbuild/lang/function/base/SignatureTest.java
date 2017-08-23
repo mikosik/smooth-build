@@ -2,7 +2,6 @@ package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.function.base.Name.name;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
@@ -41,8 +40,8 @@ public class SignatureTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(parameter = parameter(BLOB, "blob", mock(Expression.class)));
-    given(parameter2 = parameter(FILE, "file", mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, "blob", mock(Expression.class)));
+    given(parameter2 = new Parameter(FILE, "file", mock(Expression.class)));
     when(new Signature(STRING, name, asList(parameter, parameter2))).toString();
     thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

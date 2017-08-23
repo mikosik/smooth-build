@@ -15,15 +15,7 @@ public class Parameter {
   private final Expression defaultValue;
   private final HashCode nameHash;
 
-  public static Parameter parameter(Type type, String name, Expression defaultValue) {
-    return new Parameter(type, name, defaultValue);
-  }
-
-  public static Parameter parameter(Type type, String name) {
-    return parameter(type, name, null);
-  }
-
-  private Parameter(Type type, String name, Expression defaultValue) {
+  public Parameter(Type type, String name, Expression defaultValue) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.defaultValue = defaultValue;

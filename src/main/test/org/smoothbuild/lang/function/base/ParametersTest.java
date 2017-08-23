@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -32,7 +31,7 @@ public class ParametersTest {
 
   @Test
   public void filter_required_params_omits_optional_param() throws Exception {
-    given(parameter1 = parameter(STRING, "name", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "name", mock(Expression.class)));
     given(parameters = asList(parameter1));
     when(Parameters.filterRequiredParameters(parameters));
     thenReturned(asList());
@@ -40,7 +39,7 @@ public class ParametersTest {
 
   @Test
   public void filter_required_params_keeps_required_param() throws Exception {
-    given(parameter1 = parameter(STRING, "name"));
+    given(parameter1 = new Parameter(STRING, "name", null));
     given(parameters = asList(parameter1));
     when(Parameters.filterRequiredParameters(parameters));
     thenReturned(asList(parameter1));
@@ -48,9 +47,9 @@ public class ParametersTest {
 
   @Test
   public void filter_required_params_keeps_only_required_params() throws Exception {
-    given(parameter1 = parameter(STRING, "name"));
-    given(parameter2 = parameter(STRING, "name", mock(Expression.class)));
-    given(parameter3 = parameter(STRING, "name"));
+    given(parameter1 = new Parameter(STRING, "name", null));
+    given(parameter2 = new Parameter(STRING, "name", mock(Expression.class)));
+    given(parameter3 = new Parameter(STRING, "name", null));
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.filterRequiredParameters(parameters));
     thenReturned(asList(parameter1, parameter3));
@@ -67,7 +66,7 @@ public class ParametersTest {
 
   @Test
   public void filter_optional_params_omits_required_param() throws Exception {
-    given(parameter1 = parameter(STRING, "name"));
+    given(parameter1 = new Parameter(STRING, "name", null));
     given(parameters = asList(parameter1));
     when(Parameters.filterOptionalParameters(parameters));
     thenReturned(asList());
@@ -75,7 +74,7 @@ public class ParametersTest {
 
   @Test
   public void filter_optional_params_keeps_optional_param() throws Exception {
-    given(parameter1 = parameter(STRING, "name", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "name", mock(Expression.class)));
     given(parameters = asList(parameter1));
     when(Parameters.filterOptionalParameters(parameters));
     thenReturned(asList(parameter1));
@@ -83,9 +82,9 @@ public class ParametersTest {
 
   @Test
   public void filter_optional_params_keeps_only_optional_params() throws Exception {
-    given(parameter1 = parameter(STRING, "name", mock(Expression.class)));
-    given(parameter2 = parameter(STRING, "name"));
-    given(parameter3 = parameter(STRING, "name", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "name", mock(Expression.class)));
+    given(parameter2 = new Parameter(STRING, "name", null));
+    given(parameter3 = new Parameter(STRING, "name", mock(Expression.class)));
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.filterOptionalParameters(parameters));
     thenReturned(asList(parameter1, parameter3));
@@ -95,9 +94,9 @@ public class ParametersTest {
 
   @Test
   public void params_to_names() throws Exception {
-    given(parameter1 = parameter(STRING, "name1", mock(Expression.class)));
-    given(parameter2 = parameter(STRING, "name2"));
-    given(parameter3 = parameter(STRING, "name3", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "name1", mock(Expression.class)));
+    given(parameter2 = new Parameter(STRING, "name2", null));
+    given(parameter3 = new Parameter(STRING, "name3", mock(Expression.class)));
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.parametersToNames(parameters));
     thenReturned(asList("name1", "name2", "name3"));
@@ -107,9 +106,9 @@ public class ParametersTest {
 
   @Test
   public void params_to_map() throws Exception {
-    given(parameter1 = parameter(STRING, "alpha"));
-    given(parameter2 = parameter(STRING, "beta", mock(Expression.class)));
-    given(parameter3 = parameter(STRING, "gamma", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "alpha", null));
+    given(parameter2 = new Parameter(STRING, "beta", mock(Expression.class)));
+    given(parameter3 = new Parameter(STRING, "gamma", mock(Expression.class)));
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.parametersToMap(parameters));
     thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2,
@@ -127,9 +126,9 @@ public class ParametersTest {
 
   @Test
   public void sorted_params() throws Exception {
-    given(parameter1 = parameter(STRING, "gamma", mock(Expression.class)));
-    given(parameter2 = parameter(STRING, "alpha"));
-    given(parameter3 = parameter(STRING, "beta", mock(Expression.class)));
+    given(parameter1 = new Parameter(STRING, "gamma", mock(Expression.class)));
+    given(parameter2 = new Parameter(STRING, "alpha", null));
+    given(parameter3 = new Parameter(STRING, "beta", mock(Expression.class)));
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.sortedParameters(parameters));
     thenReturned(asList(parameter2, parameter3, parameter1));
