@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
@@ -24,10 +23,10 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Parameter;
 
 public class TypedParametersPoolTest {
-  private final Parameter string = parameter(STRING, "string1", mock(Expression.class));
-  private final Parameter blob = parameter(BLOB, "blob", mock(Expression.class));
-  private final Parameter stringRequired = parameter(STRING, "stringRequired");
-  private final Parameter stringRequired2 = parameter(STRING, "stringRequired2");
+  private final Parameter string = new Parameter(STRING, "string1", mock(Expression.class));
+  private final Parameter blob = new Parameter(BLOB, "blob", mock(Expression.class));
+  private final Parameter stringRequired = new Parameter(STRING, "stringRequired", null);
+  private final Parameter stringRequired2 = new Parameter(STRING, "stringRequired2", null);
 
   private Set<Parameter> optional;
   private Set<Parameter> required;

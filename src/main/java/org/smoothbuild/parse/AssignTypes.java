@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
@@ -71,7 +70,7 @@ public class AssignTypes {
         param.set(Type.class, type);
         Parameter parameter = type == null
             ? null
-            : parameter(param.get(Type.class), param.name());
+            : new Parameter(param.get(Type.class), param.name(), null);
         param.set(Parameter.class, parameter);
       }
 

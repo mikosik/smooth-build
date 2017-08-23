@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
 
@@ -27,7 +26,7 @@ public class NativeParameterFactory {
     boolean isRequired = isRequired(method, annotationMap);
     Expression defaultValue = isRequired ? null
         : new DefaultValueExpression(type, codeLocation(Integer.MAX_VALUE));
-    return parameter(type, name, defaultValue);
+    return new Parameter(type, name, defaultValue);
   }
 
   private static Type type(Method method, java.lang.reflect.Type reflectType)
