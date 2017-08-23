@@ -5,35 +5,38 @@ import static java.util.stream.Collectors.toMap;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 
 public class MapToString {
   public static String toString(CallNode call) {
-    Map<Parameter, Argument> paramToArgMap = createMap(call);
+    Map<Parameter, ArgNode> paramToArgMap = createMap(call);
     int maxParamType = longestParameterType(paramToArgMap.keySet());
     int maxParamName = longestParameterName(paramToArgMap.keySet());
-    int maxArgType = longestArgumentType(paramToArgMap.values());
-    int maxArgName = longestArgumentName(paramToArgMap.values());
-    int maxPosition = longestArgumentPosition(paramToArgMap.values());
+    int maxArgType = longestArgType(paramToArgMap.values());
+    int maxArgName = longestArgName(paramToArgMap.values());
+    int maxPosition = longestArgPosition(paramToArgMap.values());
 
     StringBuilder builder = new StringBuilder();
-    for (Map.Entry<Parameter, Argument> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<Parameter, ArgNode> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
-      Argument argument = entry.getValue();
-      String argPart = argument.toPaddedString(maxArgType, maxArgName, maxPosition);
+      ArgNode arg = entry.getValue();
+      String argPart = arg.toPaddedString(maxArgType, maxArgName, maxPosition);
       builder.append("  " + paramPart + " <- " + argPart + "\n");
     }
     return builder.toString();
   }
 
-  private static Map<Parameter, Argument> createMap(CallNode call) {
+  private static Map<Parameter, ArgNode> createMap(CallNode call) {
     return call
         .args()
         .stream()
         .filter(a -> a.has(Parameter.class))
-        .collect(toMap(a -> a.get(Parameter.class), a -> new Argument(a)));
+        .collect(toMap(a -> a.get(Parameter.class), Function.identity()));
   }
 
   private static int longestParameterType(Set<Parameter> parameters) {
@@ -52,26 +55,26 @@ public class MapToString {
     return result;
   }
 
-  private static int longestArgumentType(Collection<Argument> arguments) {
+  private static int longestArgType(Collection<ArgNode> args) {
     int result = 0;
-    for (Argument argument : arguments) {
-      result = Math.max(result, argument.type().name().length());
+    for (ArgNode arg : args) {
+      result = Math.max(result, arg.get(Type.class).name().length());
     }
     return result;
   }
 
-  private static int longestArgumentName(Collection<Argument> arguments) {
+  private static int longestArgName(Collection<ArgNode> args) {
     int result = 0;
-    for (Argument argument : arguments) {
-      result = Math.max(result, argument.nameSanitized().length());
+    for (ArgNode arg : args) {
+      result = Math.max(result, arg.nameSanitized().length());
     }
     return result;
   }
 
-  private static int longestArgumentPosition(Collection<Argument> arguments) {
+  private static int longestArgPosition(Collection<ArgNode> args) {
     int maxPosition = 0;
-    for (Argument argument : arguments) {
-      maxPosition = Math.max(maxPosition, argument.position());
+    for (ArgNode arg : args) {
+      maxPosition = Math.max(maxPosition, arg.position());
     }
     return Integer.toString(maxPosition).length();
   }
