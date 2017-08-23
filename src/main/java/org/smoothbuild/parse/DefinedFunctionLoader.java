@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.function.base.Parameter.parameter;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.parse.arg.Argument.argument;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.errors;
@@ -128,7 +127,7 @@ public class DefinedFunctionLoader {
         Maybe<Expression> expression = createExpression(argNode.expr());
         String name = argNode.hasName() ? argNode.name() : null;
         Maybe<Argument> argument = invokeWrap(expression,
-            e -> argument(argNode.position(), name, e, argNode.codeLocation()));
+            e -> new Argument(argNode, name, e, argNode.codeLocation()));
         result.add(argument);
       }
       return Maybe.pullUp(result);
