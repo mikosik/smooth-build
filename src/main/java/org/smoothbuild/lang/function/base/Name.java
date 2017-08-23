@@ -8,18 +8,14 @@ public class Name {
 
   private final String value;
 
-  public static Name name(String value) {
-    if (!isLegalName(value)) {
-      throw new IllegalArgumentException("Illegal function name: '" + value + "'");
-    }
-    return new Name(value);
-  }
-
   public static boolean isLegalName(String simple) {
     return PATTERN.matcher(simple).matches();
   }
 
-  private Name(String value) {
+  public Name(String value) {
+    if (!isLegalName(value)) {
+      throw new IllegalArgumentException("Illegal function name: '" + value + "'");
+    }
     this.value = value;
   }
 

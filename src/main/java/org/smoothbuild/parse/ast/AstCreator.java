@@ -1,6 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
@@ -36,7 +35,7 @@ public class AstCreator {
 
       public Void visitFunc(FuncContext context) {
         NameContext nameContext = context.name();
-        Name name = name(nameContext.getText());
+        Name name = new Name(nameContext.getText());
         List<ParamNode> params = convertParams(context.paramList());
         ExprNode pipe = convertPipe(context.pipe());
         visitChildren(context);
@@ -69,7 +68,7 @@ public class AstCreator {
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, codeLocation));
           args.addAll(convertArgList(call.argList()));
-          Name name = name(call.name().getText());
+          Name name = new Name(call.name().getText());
           result = new CallNode(name, args, locationOf(call.name()));
         }
         return result;
@@ -83,7 +82,7 @@ public class AstCreator {
         if (context.call() != null) {
           CallContext call = context.call();
           List<ArgNode> args = convertArgList(call.argList());
-          Name name = name(call.name().getText());
+          Name name = new Name(call.name().getText());
           return new CallNode(name, args, locationOf(call.name()));
         }
         if (context.STRING() != null) {
@@ -133,7 +132,7 @@ public class AstCreator {
 
       public Void visitCall(CallContext call) {
         NameContext functionName = call.name();
-        Name name = name(functionName.getText());
+        Name name = new Name(functionName.getText());
         CodeLocation location = locationOf(functionName);
         currentDependencies.add(new Dependency(location, name));
         return visitChildren(call);

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -81,7 +80,7 @@ public class NameTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(name = name("abc"));
+    given(name = new Name("abc"));
     when(name).toString();
     thenReturned("'abc'");
   }
@@ -90,11 +89,11 @@ public class NameTest {
   public void testEquals() throws Exception {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(name("a"), name("a"));
-    tester.addEqualityGroup(name("b"));
-    tester.addEqualityGroup(name("c"));
-    tester.addEqualityGroup(name("ab"));
-    tester.addEqualityGroup(name("abc"));
+    tester.addEqualityGroup(new Name("a"), new Name("a"));
+    tester.addEqualityGroup(new Name("b"));
+    tester.addEqualityGroup(new Name("c"));
+    tester.addEqualityGroup(new Name("ab"));
+    tester.addEqualityGroup(new Name("abc"));
 
     tester.testEquals();
   }

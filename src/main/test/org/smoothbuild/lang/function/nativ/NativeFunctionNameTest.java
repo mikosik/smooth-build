@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.function.base.Name.name;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
 import static org.smoothbuild.lang.function.nativ.TestingUtils.function;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
@@ -9,6 +8,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
@@ -33,7 +33,7 @@ public class NativeFunctionNameTest {
   @Test
   public void function_name_is_equal_to_method_name() throws Exception {
     when(function(SimpleFunction.class).name());
-    thenReturned(name("myFunction"));
+    thenReturned(new Name("myFunction"));
   }
 
   public static class SimpleFunction {
