@@ -1,10 +1,11 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.deps;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.parse.ParseError;
 
 public class DependencyStack {
   private final Deque<DependencyStackElem> stack = new ArrayDeque<>();

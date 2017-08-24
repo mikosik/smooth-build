@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.deps;
 
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 

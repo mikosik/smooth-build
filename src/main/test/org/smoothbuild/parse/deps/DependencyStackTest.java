@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.deps;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsSame.sameInstance;
@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.FuncNode;
 
 import com.google.common.collect.ImmutableSet;
