@@ -1,4 +1,4 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 import static org.testory.Testory.given;
@@ -10,7 +10,6 @@ import static org.testory.Testory.when;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
-import org.smoothbuild.parse.ast.Node;
 
 public class NodeTest {
   private Node node;
