@@ -1,28 +1,22 @@
 package org.smoothbuild.parse.ast;
 
 import java.util.List;
-import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
-import org.smoothbuild.parse.Dependency;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public class FuncNode extends Node {
   private final Name name;
   private final List<ParamNode> params;
   private final ExprNode expr;
-  private final Set<Dependency> dependencies;
 
-  public FuncNode(Name name, List<ParamNode> params, ExprNode expr,
-      Set<Dependency> dependencies, CodeLocation location) {
+  public FuncNode(Name name, List<ParamNode> params, ExprNode expr, CodeLocation location) {
     super(location);
     this.name = name;
     this.params = ImmutableList.copyOf(params);
     this.expr = expr;
-    this.dependencies = ImmutableSet.copyOf(dependencies);
   }
 
   public Name name() {
@@ -35,10 +29,6 @@ public class FuncNode extends Node {
 
   public ExprNode expr() {
     return expr;
-  }
-
-  public Set<Dependency> dependencies() {
-    return dependencies;
   }
 
   public final boolean equals(Object object) {

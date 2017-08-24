@@ -31,6 +31,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
+import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
@@ -89,7 +90,7 @@ public class ModuleLoader {
         if (next == null) {
           return error(stack.createCycleError());
         } else {
-          stack.push(new DependencyStackElem(next));
+          stack.push(newStackElem(next));
         }
       }
     }
@@ -111,7 +112,18 @@ public class ModuleLoader {
     Iterator<Entry<Name, FuncNode>> it = dependencies.entrySet().iterator();
     Entry<Name, FuncNode> element = it.next();
     it.remove();
-    return new DependencyStackElem(element.getValue());
+    return newStackElem(element.getValue());
+  }
+
+  private static DependencyStackElem newStackElem(FuncNode func) {
+    Set<Dependency> dependencies = new HashSet<>();
+    new AstVisitor() {
+      public void visitCall(CallNode call) {
+        super.visitCall(call);
+        dependencies.add(new Dependency(call.codeLocation(), call.name()));
+      }
+    }.visitFunction(func);
+    return new DependencyStackElem(func, dependencies);
   }
 
   private Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
