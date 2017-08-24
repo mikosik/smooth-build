@@ -1,11 +1,10 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.ast;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ast.FuncNode;
 
 import com.google.common.testing.EqualsTester;
 
