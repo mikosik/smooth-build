@@ -5,9 +5,7 @@ import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
@@ -25,22 +23,18 @@ import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
-import org.smoothbuild.parse.Dependency;
 
 public class AstCreator {
   public static Ast fromParseTree(ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
-      Set<Dependency> currentDependencies = new HashSet<>();
-
       public Void visitFunc(FuncContext context) {
         NameContext nameContext = context.name();
         Name name = new Name(nameContext.getText());
         List<ParamNode> params = convertParams(context.paramList());
         ExprNode pipe = convertPipe(context.pipe());
         visitChildren(context);
-        nodes.add(new FuncNode(name, params, pipe, currentDependencies,
-            locationOf(nameContext)));
+        nodes.add(new FuncNode(name, params, pipe, locationOf(nameContext)));
         return null;
       }
 
@@ -128,14 +122,6 @@ public class AstCreator {
       private TypeNode convertArrayType(ArrayTypeContext context) {
         TypeNode elementType = convertType(context.type());
         return new ArrayTypeNode(elementType, locationOf(context));
-      }
-
-      public Void visitCall(CallContext call) {
-        NameContext functionName = call.name();
-        Name name = new Name(functionName.getText());
-        CodeLocation location = locationOf(functionName);
-        currentDependencies.add(new Dependency(location, name));
-        return visitChildren(call);
       }
     }.visit(module);
     return new Ast(nodes);

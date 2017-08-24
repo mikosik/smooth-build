@@ -8,9 +8,11 @@ import org.smoothbuild.parse.ast.FuncNode;
 public class DependencyStackElem {
   private final FuncNode node;
   private Dependency missing;
+  private final Set<Dependency> dependencies;
 
-  public DependencyStackElem(FuncNode node) {
+  public DependencyStackElem(FuncNode node, Set<Dependency> dependencies) {
     this.node = node;
+    this.dependencies = dependencies;
   }
 
   public Name name() {
@@ -18,7 +20,7 @@ public class DependencyStackElem {
   }
 
   public Set<Dependency> dependencies() {
-    return node.dependencies();
+    return dependencies;
   }
 
   public Dependency missing() {
