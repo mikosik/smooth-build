@@ -7,7 +7,7 @@ import java.util.List;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.base.Computer;
+import org.smoothbuild.task.base.Evaluator;
 
 import com.google.common.collect.ImmutableList;
 
@@ -37,12 +37,12 @@ public abstract class Expression {
     return dependencies;
   }
 
-  protected ImmutableList<Computer> createDependenciesComputers(ValuesDb valuesDb) {
+  protected ImmutableList<Evaluator> createDependenciesEvaluator(ValuesDb valuesDb) {
     return dependencies
         .stream()
-        .map(e -> e.createComputer(valuesDb))
+        .map(e -> e.createEvaluator(valuesDb))
         .collect(ImmutableList.toImmutableList());
   }
 
-  public abstract Computer createComputer(ValuesDb valuesDb);
+  public abstract Evaluator createEvaluator(ValuesDb valuesDb);
 }

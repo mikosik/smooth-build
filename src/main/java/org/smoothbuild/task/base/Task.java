@@ -12,18 +12,18 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class Task {
-  private final Computer computer;
+  private final Evaluator evaluator;
   private final ImmutableList<Task> dependencies;
   private Output output;
 
-  public Task(Computer computer, ImmutableList<Task> dependencies) {
-    this.computer = computer;
+  public Task(Evaluator evaluator, ImmutableList<Task> dependencies) {
+    this.evaluator = evaluator;
     this.dependencies = dependencies;
     this.output = null;
   }
 
-  public Computer computer() {
-    return computer;
+  public Evaluator evaluator() {
+    return evaluator;
   }
 
   public ImmutableList<Task> dependencies() {
@@ -31,27 +31,27 @@ public class Task {
   }
 
   public String name() {
-    return computer.name();
+    return evaluator.name();
   }
 
   public Type resultType() {
-    return computer.resultType();
+    return evaluator.resultType();
   }
 
   public boolean isInternal() {
-    return computer.isInternal();
+    return evaluator.isInternal();
   }
 
   public boolean isCacheable() {
-    return computer.isCacheable();
+    return evaluator.isCacheable();
   }
 
   public CodeLocation codeLocation() {
-    return computer.codeLocation();
+    return evaluator.codeLocation();
   }
 
   public void execute(ContainerImpl container) {
-    output = computer.execute(input(), container);
+    output = evaluator.evaluate(input(), container);
   }
 
   public Output output() {
@@ -69,7 +69,7 @@ public class Task {
 
   public HashCode hash() {
     Hasher hasher = Hash.newHasher();
-    hasher.putBytes(computer.hash().asBytes());
+    hasher.putBytes(evaluator.hash().asBytes());
     hasher.putBytes(input().hash().asBytes());
     return hasher.hash();
   }

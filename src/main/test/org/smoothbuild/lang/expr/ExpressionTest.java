@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.base.Computer;
+import org.smoothbuild.task.base.Evaluator;
 
 public class ExpressionTest {
   private final Type type = STRING;
@@ -57,7 +57,7 @@ public class ExpressionTest {
       super(type, asList(), codeLocation);
     }
 
-    public Computer createComputer(ValuesDb valuesDb) {
+    public Evaluator createEvaluator(ValuesDb valuesDb) {
       return null;
     }
   }
