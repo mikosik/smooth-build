@@ -44,10 +44,10 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public DefinedFunction loadFunction(FuncNode node) {
-      List<Parameter> parameters = createParameters(node.params());
-      Expression expression = createExpression(node.expr());
-      return createFunction(node, expression);
+    public DefinedFunction loadFunction(FuncNode func) {
+      List<Parameter> parameters = createParameters(func.params());
+      Expression expression = createExpression(func.expr());
+      return createFunction(func, expression);
     }
 
     private static List<Parameter> createParameters(List<ParamNode> params) {
@@ -57,20 +57,20 @@ public class DefinedFunctionLoader {
           .collect(toList());
     }
 
-    private static DefinedFunction createFunction(FuncNode node, Expression expression) {
-      Signature signature = new Signature(expression.type(), node.name(), asList());
+    private static DefinedFunction createFunction(FuncNode func, Expression expression) {
+      Signature signature = new Signature(expression.type(), func.name(), asList());
       return new DefinedFunction(signature, expression);
     }
 
-    private Expression createExpression(ExprNode node) {
-      if (node instanceof CallNode) {
-        return createCall((CallNode) node);
+    private Expression createExpression(ExprNode expr) {
+      if (expr instanceof CallNode) {
+        return createCall((CallNode) expr);
       }
-      if (node instanceof StringNode) {
-        return createStringLiteral((StringNode) node);
+      if (expr instanceof StringNode) {
+        return createStringLiteral((StringNode) expr);
       }
-      if (node instanceof ArrayNode) {
-        return createArray((ArrayNode) node);
+      if (expr instanceof ArrayNode) {
+        return createArray((ArrayNode) expr);
       }
       throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
@@ -97,14 +97,14 @@ public class DefinedFunctionLoader {
           .collect(toImmutableList());
     }
 
-    private Expression createStringLiteral(StringNode node) {
-      return new StringLiteralExpression(node.get(String.class), node.codeLocation());
+    private Expression createStringLiteral(StringNode string) {
+      return new StringLiteralExpression(string.get(String.class), string.codeLocation());
     }
 
-    private Expression createArray(ArrayNode node) {
-      List<Expression> exprList = map(node.elements(), this::createExpression);
-      CodeLocation location = node.codeLocation();
-      return createArray(node, exprList, location);
+    private Expression createArray(ArrayNode array) {
+      List<Expression> exprList = map(array.elements(), this::createExpression);
+      CodeLocation location = array.codeLocation();
+      return createArray(array, exprList, location);
     }
 
     private Expression createArray(ArrayNode array, List<Expression> elements,
