@@ -80,7 +80,7 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void nesting_is_forbidden() throws IOException {
-    givenScript("myArray = []; result = [ myArray ];");
+    givenScript("myArray = []; result = [ myArray() ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("Array cannot contain element with type '[Nothing]'."));

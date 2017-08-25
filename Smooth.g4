@@ -6,7 +6,7 @@ paramList: param ( ',' param )* ','? ;
 param: type name ;
 pipe: expr ( p+='|' call )* ;
 expr : call | STRING | array;
-call: name ( '(' argList? ')' )? ;
+call: name '(' argList? ')' ;
 argList: arg ( ',' arg )* ','? ;
 arg: ( name '=' )? expr ; 
 array: '[' ( expr (',' expr)* (',')? )?  ']' ;

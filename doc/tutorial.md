@@ -6,7 +6,7 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release.jar = files("//src") | javac | jar;
+release.jar = files("//src") | javac() | jar();
 ```
 
 This script defines `release.jar` function that performs following tasks:
@@ -73,7 +73,7 @@ can be used the same way as builtin functions (like `javac`).
 We can refactor our initial example by splitting it into two functions:
 
 ```
-classes = files("//src") | javac;
+classes = files("//src") | javac();
 release.jar = jar(classes);
 ```
 
@@ -106,7 +106,7 @@ which has four parameters.
 Despite that we kept passing only one argument in all above examples.
 It didn't cause any error as smooth was capable to infer parameter
 this argument should be assigned to by comparing its type with parameter types.
-Parameters left without match are assigned zero value of given type.
+Parameters left without match are assigned default value of given type.
 
 However if there's ambiguity (smooth is not able to deduce which arguments
 should be assigned to which parameters) then it fails with error.
@@ -116,7 +116,7 @@ In the following example we need to explicitly name `source` parameter, as
 without it, smooth wouldnt' be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
-release.jar  =files("//src") | javac(source="1.8") | jar;
+release.jar  =files("//src") | javac(source="1.8") | jar();
 ```
 
 Matching arguments to parameters works according to following algorithm

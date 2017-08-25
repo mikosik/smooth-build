@@ -28,7 +28,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_file_has_root_path() throws Exception {
-    givenScript("result = fileIdentity() | path;");
+    givenScript("result = fileIdentity() | path();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(Path.root().value()));
@@ -36,7 +36,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
 
   @Test
   public void default_value_for_file_has_empty_content() throws Exception {
-    givenScript("result = fileIdentity() | content;");
+    givenScript("result = fileIdentity() | content();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
