@@ -12,7 +12,7 @@ public class ContentTest extends AcceptanceTestCase {
   @Test
   public void content_function() throws IOException {
     givenFile("file1.txt", "abc");
-    givenScript("result = file('//file1.txt') | content;");
+    givenScript("result = file('//file1.txt') | content();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
