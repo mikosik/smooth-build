@@ -69,6 +69,11 @@ public class AstCreator {
       }
 
       private ExprNode convertExpression(ExprContext context) {
+        if (context.ref() != null) {
+          NameContext nameContext = context.ref().name();
+          Name name = new Name(nameContext.getText());
+          return new RefNode(name, locationOf(context));
+        }
         if (context.array() != null) {
           List<ExprNode> elements = map(context.array().expr(), this::convertExpression);
           return new ArrayNode(elements, locationOf(context));
