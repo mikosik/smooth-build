@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.base.Computer;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -26,20 +27,20 @@ public class TaskGraph {
   }
 
   public <T extends Value> Task createTasks(Expression expression) {
-    Task root = createTasksImpl(expression);
+    Task root = createTasksImpl(expression.createComputer(valuesDb));
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends Value> Task createTasksImpl(Expression expression) {
-    ImmutableList<Task> dependencies = createTasksImpl(expression.dependencies());
-    return new Task(expression.createComputer(valuesDb), dependencies);
+  private <T extends Value> Task createTasksImpl(Computer computer) {
+    ImmutableList<Task> dependencies = createTasksImpl(computer.dependencies());
+    return new Task(computer, dependencies);
   }
 
-  private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Expression> expressions) {
+  private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Computer> computers) {
     Builder<Task> builder = ImmutableList.builder();
-    for (Expression expression : expressions) {
-      Task executor = createTasksImpl(expression);
+    for (Computer computer : computers) {
+      Task executor = createTasksImpl(computer);
       builder.add(executor);
     }
     return builder.build();
