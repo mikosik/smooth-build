@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.task.base.AlgorithmHashes.arrayAlgorithmHash;
+import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
@@ -11,15 +11,15 @@ import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
 
-public class ArrayAlgorithm implements Algorithm {
+public class ArrayComputation implements Computation {
   private final ArrayType arrayType;
 
-  public ArrayAlgorithm(ArrayType arrayType) {
+  public ArrayComputation(ArrayType arrayType) {
     this.arrayType = arrayType;
   }
 
   public HashCode hash() {
-    return arrayAlgorithmHash();
+    return arrayComputationHash();
   }
 
   public Type resultType() {

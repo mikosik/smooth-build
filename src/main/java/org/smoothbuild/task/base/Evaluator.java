@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Evaluator {
-  private final Algorithm algorithm;
+  private final Computation computation;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
@@ -24,31 +24,31 @@ public class Evaluator {
   private final ImmutableList<Evaluator> dependencies;
 
   public static Evaluator valueEvaluator(Value value, CodeLocation codeLocation) {
-    return new Evaluator(new ValueAlgorithm(value), value.type().name(), true, true, codeLocation,
+    return new Evaluator(new ValueComputation(value), value.type().name(), true, true, codeLocation,
         ImmutableList.of());
   }
 
   public static Evaluator arrayEvaluator(ArrayType arrayType, CodeLocation codeLocation,
       List<Evaluator> dependencies) {
-    return new Evaluator(new ArrayAlgorithm(arrayType), arrayType.name(), true, true, codeLocation,
+    return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, codeLocation,
         dependencies);
   }
 
   public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
       CodeLocation codeLocation, List<Evaluator> dependencies) {
-    return new Evaluator(new NativeCallAlgorithm(function), function.name().value(), isInternal,
+    return new Evaluator(new NativeCallComputation(function), function.name().value(), isInternal,
         function.isCacheable(), codeLocation, dependencies);
   }
 
   public static Evaluator virtualEvaluator(DefinedFunction function, CodeLocation codeLocation,
       List<Evaluator> dependencies) {
-    return new Evaluator(new IdentityAlgorithm(function.type()), function.name().value(), false,
+    return new Evaluator(new IdentityComputation(function.type()), function.name().value(), false,
         true, codeLocation, dependencies);
   }
 
-  public Evaluator(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
+  public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,
       CodeLocation codeLocation, List<Evaluator> dependencies) {
-    this.algorithm = algorithm;
+    this.computation = computation;
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.isCacheable = isCacheable;
@@ -57,11 +57,11 @@ public class Evaluator {
   }
 
   public HashCode hash() {
-    return algorithm.hash();
+    return computation.hash();
   }
 
   public Type resultType() {
-    return algorithm.resultType();
+    return computation.resultType();
   }
 
   public String name() {
@@ -85,6 +85,6 @@ public class Evaluator {
   }
 
   public Output evaluate(Input input, ContainerImpl container) {
-    return algorithm.execute(input, container);
+    return computation.execute(input, container);
   }
 }

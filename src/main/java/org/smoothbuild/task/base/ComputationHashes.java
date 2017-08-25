@@ -6,20 +6,20 @@ import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
 
-public class AlgorithmHashes {
-  public static HashCode valueAlgorithmHash(Value value) {
+public class ComputationHashes {
+  public static HashCode valueComputationHash(Value value) {
     return hash(0, value.hash());
   }
 
-  public static HashCode arrayAlgorithmHash() {
+  public static HashCode arrayComputationHash() {
     return hash(1);
   }
 
-  public static HashCode identityAlgorithmHash() {
+  public static HashCode identityComputationHash() {
     return hash(2);
   }
 
-  public static HashCode nativeCallAlgorithmHash(NativeFunction function) {
+  public static HashCode nativeCallComputationHash(NativeFunction function) {
     return hash(3, function.hash());
   }
 
