@@ -51,7 +51,8 @@ public class NativeFunction extends AbstractFunction {
       CodeLocation codeLocation) {
     return new Expression(type(), args, codeLocation) {
       public Computer createComputer(ValuesDb valuesDb) {
-        return nativeCallComputer(NativeFunction.this, isGenerated, codeLocation);
+        return nativeCallComputer(NativeFunction.this, isGenerated, codeLocation,
+            createDependenciesComputers(valuesDb));
       }
     };
   }

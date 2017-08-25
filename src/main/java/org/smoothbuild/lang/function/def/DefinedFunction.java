@@ -38,7 +38,8 @@ public class DefinedFunction extends AbstractFunction {
     checkArgument(!isGenerated);
     return new Expression(type(), asList(root), codeLocation) {
       public Computer createComputer(ValuesDb valuesDb) {
-        return virtualComputer(DefinedFunction.this, codeLocation());
+        return virtualComputer(
+            DefinedFunction.this, codeLocation(), createDependenciesComputers(valuesDb));
       }
     };
   }

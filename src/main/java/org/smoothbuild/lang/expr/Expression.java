@@ -37,5 +37,12 @@ public abstract class Expression {
     return dependencies;
   }
 
+  protected ImmutableList<Computer> createDependenciesComputers(ValuesDb valuesDb) {
+    return dependencies
+        .stream()
+        .map(e -> e.createComputer(valuesDb))
+        .collect(ImmutableList.toImmutableList());
+  }
+
   public abstract Computer createComputer(ValuesDb valuesDb);
 }

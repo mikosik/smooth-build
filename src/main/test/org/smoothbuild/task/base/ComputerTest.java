@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.task.exec.ContainerImpl;
 
+import com.google.common.collect.ImmutableList;
+
 public class ComputerTest {
   private final String name = "name";
   private final CodeLocation codeLocation = codeLocation(1);
@@ -58,7 +60,7 @@ public class ComputerTest {
 
   public static class MyComputer extends Computer {
     public MyComputer(String name, boolean isInternal, CodeLocation codeLocation) {
-      super(null, name, isInternal, true, codeLocation);
+      super(null, name, isInternal, true, codeLocation, ImmutableList.of());
     }
 
     public Output execute(Input input, ContainerImpl container) {
