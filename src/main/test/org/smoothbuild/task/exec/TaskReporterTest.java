@@ -69,7 +69,7 @@ public class TaskReporterTest {
 
   private static final class MyComputer extends Computer {
     private MyComputer(boolean isInternal) {
-      super(null, "name", isInternal, true, CodeLocation.codeLocation(2));
+      super(null, "name", isInternal, true, CodeLocation.codeLocation(2), ImmutableList.of());
     }
 
     public Output execute(Input input, ContainerImpl container) {

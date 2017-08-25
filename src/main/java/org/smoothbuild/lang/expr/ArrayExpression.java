@@ -19,6 +19,6 @@ public class ArrayExpression extends Expression {
   }
 
   public Computer createComputer(ValuesDb valuesDb) {
-    return arrayComputer(arrayType, codeLocation());
+    return arrayComputer(arrayType, codeLocation(), createDependenciesComputers(valuesDb));
   }
 }
