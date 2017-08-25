@@ -16,7 +16,7 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.WarningMessage;
-import org.smoothbuild.task.base.Computer;
+import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
@@ -64,15 +64,15 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyComputer(isInternal), ImmutableList.of());
+    return new Task(new MyEvaluator(isInternal), ImmutableList.of());
   }
 
-  private static final class MyComputer extends Computer {
-    private MyComputer(boolean isInternal) {
+  private static final class MyEvaluator extends Evaluator {
+    private MyEvaluator(boolean isInternal) {
       super(null, "name", isInternal, true, CodeLocation.codeLocation(2), ImmutableList.of());
     }
 
-    public Output execute(Input input, ContainerImpl container) {
+    public Output evaluate(Input input, ContainerImpl container) {
       return null;
     }
   }

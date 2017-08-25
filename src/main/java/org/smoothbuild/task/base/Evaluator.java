@@ -15,39 +15,39 @@ import org.smoothbuild.task.exec.ContainerImpl;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class Computer {
+public class Evaluator {
   private final Algorithm algorithm;
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
   private final CodeLocation codeLocation;
-  private final ImmutableList<Computer> dependencies;
+  private final ImmutableList<Evaluator> dependencies;
 
-  public static Computer valueComputer(Value value, CodeLocation codeLocation) {
-    return new Computer(new ValueAlgorithm(value), value.type().name(), true, true, codeLocation,
+  public static Evaluator valueEvaluator(Value value, CodeLocation codeLocation) {
+    return new Evaluator(new ValueAlgorithm(value), value.type().name(), true, true, codeLocation,
         ImmutableList.of());
   }
 
-  public static Computer arrayComputer(ArrayType arrayType, CodeLocation codeLocation,
-      List<Computer> dependencies) {
-    return new Computer(new ArrayAlgorithm(arrayType), arrayType.name(), true, true, codeLocation,
+  public static Evaluator arrayEvaluator(ArrayType arrayType, CodeLocation codeLocation,
+      List<Evaluator> dependencies) {
+    return new Evaluator(new ArrayAlgorithm(arrayType), arrayType.name(), true, true, codeLocation,
         dependencies);
   }
 
-  public static Computer nativeCallComputer(NativeFunction function, boolean isInternal,
-      CodeLocation codeLocation, List<Computer> dependencies) {
-    return new Computer(new NativeCallAlgorithm(function), function.name().value(), isInternal,
+  public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
+      CodeLocation codeLocation, List<Evaluator> dependencies) {
+    return new Evaluator(new NativeCallAlgorithm(function), function.name().value(), isInternal,
         function.isCacheable(), codeLocation, dependencies);
   }
 
-  public static Computer virtualComputer(DefinedFunction function, CodeLocation codeLocation,
-      List<Computer> dependencies) {
-    return new Computer(new IdentityAlgorithm(function.type()), function.name().value(), false,
+  public static Evaluator virtualEvaluator(DefinedFunction function, CodeLocation codeLocation,
+      List<Evaluator> dependencies) {
+    return new Evaluator(new IdentityAlgorithm(function.type()), function.name().value(), false,
         true, codeLocation, dependencies);
   }
 
-  public Computer(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
-      CodeLocation codeLocation, List<Computer> dependencies) {
+  public Evaluator(Algorithm algorithm, String name, boolean isInternal, boolean isCacheable,
+      CodeLocation codeLocation, List<Evaluator> dependencies) {
     this.algorithm = algorithm;
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
@@ -80,11 +80,11 @@ public class Computer {
     return codeLocation;
   }
 
-  public ImmutableList<Computer> dependencies() {
+  public ImmutableList<Evaluator> dependencies() {
     return dependencies;
   }
 
-  public Output execute(Input input, ContainerImpl container) {
+  public Output evaluate(Input input, ContainerImpl container) {
     return algorithm.execute(input, container);
   }
 }

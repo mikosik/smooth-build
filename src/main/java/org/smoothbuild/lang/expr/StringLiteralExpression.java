@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.expr;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.task.base.Computer.valueComputer;
+import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.task.base.Computer;
+import org.smoothbuild.task.base.Evaluator;
 
 public class StringLiteralExpression extends Expression {
   private final String string;
@@ -16,7 +16,7 @@ public class StringLiteralExpression extends Expression {
     this.string = string;
   }
 
-  public Computer createComputer(ValuesDb valuesDb) {
-    return valueComputer(valuesDb.string(string), codeLocation());
+  public Evaluator createEvaluator(ValuesDb valuesDb) {
+    return valueEvaluator(valuesDb.string(string), codeLocation());
   }
 }
