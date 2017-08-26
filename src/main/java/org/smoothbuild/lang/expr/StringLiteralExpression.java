@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.task.base.Evaluator;
@@ -16,7 +17,7 @@ public class StringLiteralExpression extends Expression {
     this.string = string;
   }
 
-  public Evaluator createEvaluator(ValuesDb valuesDb) {
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
     return valueEvaluator(valuesDb.string(string), location());
   }
 }

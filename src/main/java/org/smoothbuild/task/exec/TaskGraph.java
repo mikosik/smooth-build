@@ -27,7 +27,7 @@ public class TaskGraph {
   }
 
   public <T extends Value> Task createTasks(Expression expression) {
-    Task root = createTasksImpl(expression.createEvaluator(valuesDb));
+    Task root = createTasksImpl(expression.createEvaluator(valuesDb, null));
     rootTasks.add(root);
     return root;
   }
