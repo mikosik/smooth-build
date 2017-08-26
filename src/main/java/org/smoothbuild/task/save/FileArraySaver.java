@@ -53,6 +53,7 @@ public class FileArraySaver implements Saver<Array<SFile>> {
   private String duplicatedPathsMessage(Name name, Set<String> duplicates) {
     String separator = "\n  ";
     String list = separator + duplicates.stream().collect(joining(separator));
-    return "Can't store result of " + name + " as it contains files with duplicated paths:" + list;
+    return "Can't store result of '" + name + "' as it contains files with duplicated paths:"
+        + list;
   }
 }

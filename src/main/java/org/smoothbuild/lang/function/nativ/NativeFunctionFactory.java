@@ -108,7 +108,7 @@ public class NativeFunctionFactory {
   private static HashCode createHash(HashCode jarHash, Signature signature) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(jarHash.asBytes());
-    hasher.putString(signature.name().value(), SmoothConstants.CHARSET);
+    hasher.putString(signature.name().toString(), SmoothConstants.CHARSET);
     return hasher.hash();
   }
 }

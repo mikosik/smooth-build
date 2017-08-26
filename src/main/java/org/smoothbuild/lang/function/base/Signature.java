@@ -34,7 +34,7 @@ public class Signature {
 
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append(type.name() + " " + name.value() + "(");
+    builder.append(type.name() + " " + name + "(");
     int count = 0;
     for (Parameter parameter : parameters) {
       if (count != 0) {

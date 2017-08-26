@@ -42,7 +42,7 @@ public class Functions {
 
   public Function get(Name name) {
     if (!functions.containsKey(name)) {
-      throw new IllegalArgumentException("Cannot find function " + name + ".\n"
+      throw new IllegalArgumentException("Cannot find function '" + name + "'.\n"
           + "Available functions: " + functions.keySet());
     }
     return functions.get(name);

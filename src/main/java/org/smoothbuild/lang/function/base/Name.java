@@ -19,10 +19,6 @@ public class Name {
     this.value = value;
   }
 
-  public String value() {
-    return value;
-  }
-
   public boolean equals(Object object) {
     return object instanceof Name && equals((Name) object);
   }
@@ -36,6 +32,6 @@ public class Name {
   }
 
   public String toString() {
-    return "'" + value + "'";
+    return value;
   }
 }

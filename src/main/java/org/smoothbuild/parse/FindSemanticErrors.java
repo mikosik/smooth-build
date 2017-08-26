@@ -56,8 +56,8 @@ public class FindSemanticErrors {
       public void visitFunction(FuncNode function) {
         super.visitFunction(function);
         if (functions.contains(function.name())) {
-          errors.add(new ParseError(function.codeLocation(), "Function " + function.name()
-              + " cannot override builtin function with the same name."));
+          errors.add(new ParseError(function.codeLocation(), "Function '" + function.name()
+              + "' cannot override builtin function with the same name."));
         }
       }
     }.visitAst(ast);
@@ -69,8 +69,8 @@ public class FindSemanticErrors {
       public void visitFunction(FuncNode function) {
         super.visitFunction(function);
         if (defined.contains(function.name())) {
-          errors.add(new ParseError(function.codeLocation(), "Function " + function.name()
-              + " is already defined."));
+          errors.add(new ParseError(function.codeLocation(), "Function '" + function.name()
+              + "' is already defined."));
         }
         defined.add(function.name());
       }
@@ -87,7 +87,7 @@ public class FindSemanticErrors {
         super.visitCall(call);
         if (!all.contains(call.name())) {
           errors.add(new ParseError(call.codeLocation(),
-              "Call to unknown function " + call.name() + "."));
+              "Call to unknown function '" + call.name() + "'."));
         }
       }
     }.visitAst(ast);
@@ -101,7 +101,7 @@ public class FindSemanticErrors {
         for (ParamNode param : params) {
           Name name = param.name();
           if (names.contains(name)) {
-            errors.add(new ParseError(param.codeLocation(), "Duplicate parameter " + name + "."));
+            errors.add(new ParseError(param.codeLocation(), "Duplicate parameter '" + name + "'."));
           }
           names.add(name);
         }
@@ -133,8 +133,8 @@ public class FindSemanticErrors {
           if (arg.hasName()) {
             Name name = arg.name();
             if (names.contains(name)) {
-              errors.add(new ParseError(arg.codeLocation(), "Argument " + name
-                  + " assigned twice."));
+              errors.add(new ParseError(arg.codeLocation(), "Argument '" + name
+                  + "' assigned twice."));
             }
             names.add(name);
           }
@@ -151,8 +151,8 @@ public class FindSemanticErrors {
         if (names != null) {
           for (ArgNode arg : call.args()) {
             if (arg.hasName() && !names.contains(arg.name())) {
-              errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
-                  + " has no parameter '" + arg.name().value() + "'."));
+              errors.add(new ParseError(arg.codeLocation(), "Function '" + call.name()
+                  + "' has no parameter '" + arg.name() + "'."));
             }
           }
         }

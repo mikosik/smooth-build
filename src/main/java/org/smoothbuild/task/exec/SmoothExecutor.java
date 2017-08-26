@@ -21,7 +21,7 @@ public class SmoothExecutor {
   public void execute(Functions functions, Set<Name> names) {
     for (Name name : names) {
       if (!functions.contains(name)) {
-        console.error("Unknown function " + name + ".");
+        console.error("Unknown function '" + name + "'.");
         throw new ExecutionException();
       }
       artifactBuilder.addArtifact(functions.get(name));

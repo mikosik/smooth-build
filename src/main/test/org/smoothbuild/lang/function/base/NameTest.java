@@ -82,7 +82,7 @@ public class NameTest {
   public void test_to_string() throws Exception {
     given(name = new Name("abc"));
     when(name).toString();
-    thenReturned("'abc'");
+    thenReturned("abc");
   }
 
   @Test

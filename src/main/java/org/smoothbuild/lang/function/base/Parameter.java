@@ -19,7 +19,7 @@ public class Parameter {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.defaultValue = defaultValue;
-    this.nameHash = Hash.string(name.value());
+    this.nameHash = Hash.string(name.toString());
   }
 
   public Type type() {
@@ -57,12 +57,12 @@ public class Parameter {
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type.name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name.value(), minNameLength, ' ');
+    String namePart = padEnd(name.toString(), minNameLength, ' ');
     return typePart + namePart;
   }
 
   public String toString() {
-    return "Param(" + type.name() + ": " + name.value() + ")";
+    return "Param(" + type.name() + ": " + name + ")";
   }
 
   public static String parametersToString(Iterable<Parameter> parameters) {
@@ -87,7 +87,7 @@ public class Parameter {
   private static int longestParameterName(Iterable<Parameter> parameters) {
     int result = 0;
     for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.name().value().length());
+      result = Math.max(result, parameter.name().toString().length());
     }
     return result;
   }

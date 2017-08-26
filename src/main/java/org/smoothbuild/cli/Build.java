@@ -85,7 +85,7 @@ public class Build {
     }
 
     for (Name name : duplicatesDetector.getDuplicateValues()) {
-      return error("error: Function " + name + " has been specified more than once.");
+      return error("error: Function '" + name + "' has been specified more than once.");
     }
     Set<Name> result = duplicatesDetector.getUniqueValues();
     if (result.isEmpty()) {

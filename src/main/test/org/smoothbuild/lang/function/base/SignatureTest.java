@@ -42,7 +42,7 @@ public class SignatureTest {
     given(parameter = new Parameter(BLOB, new Name("blob"), mock(Expression.class)));
     given(parameter2 = new Parameter(FILE, new Name("file"), mock(Expression.class)));
     when(new Signature(STRING, name, asList(parameter, parameter2))).toString();
-    thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
+    thenReturned(STRING.name() + " " + name + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }
 }

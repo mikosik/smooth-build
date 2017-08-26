@@ -35,7 +35,7 @@ public class ArgNode extends Node {
   }
 
   public String nameSanitized() {
-    return hasName() ? name().value() : "<nameless>";
+    return hasName() ? name().toString() : "<nameless>";
   }
 
   public String typeAndName() {

@@ -52,7 +52,7 @@ public abstract class Scope<E> {
     }
 
     public E get(Name name) {
-      throw new NoSuchElementException(name.value());
+      throw new NoSuchElementException(name.toString());
     }
 
     public void add(Name name, E element) {
