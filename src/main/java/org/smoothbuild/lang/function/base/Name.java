@@ -14,7 +14,7 @@ public class Name {
 
   public Name(String value) {
     if (!isLegalName(value)) {
-      throw new IllegalArgumentException("Illegal function name: '" + value + "'");
+      throw new IllegalArgumentException("Illegal name: '" + value + "'");
     }
     this.value = value;
   }
