@@ -19,7 +19,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
@@ -103,15 +102,13 @@ public class DefinedFunctionLoader {
 
     private Expression createArray(ArrayNode array) {
       List<Expression> exprList = map(array.elements(), this::createExpression);
-      CodeLocation location = array.codeLocation();
-      return createArray(array, exprList, location);
+      return createArray(array, exprList);
     }
 
-    private Expression createArray(ArrayNode array, List<Expression> elements,
-        CodeLocation location) {
+    private Expression createArray(ArrayNode array, List<Expression> elements) {
       ArrayType type = (ArrayType) array.get(Type.class);
       List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
-      return new ArrayExpression(type, converted, location);
+      return new ArrayExpression(type, converted, array.codeLocation());
     }
 
     public <T extends Value> Expression implicitConversion(Type destinationType,
