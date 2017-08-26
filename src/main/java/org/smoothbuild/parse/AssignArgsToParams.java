@@ -58,7 +58,7 @@ public class AssignArgsToParams {
         }
         for (Parameter parameter : parametersPool.allOptional()) {
           if (parameter.type() == Types.NOTHING) {
-            errors.add(new ParseError(call.codeLocation(), "Parameter '" + parameter.name().value()
+            errors.add(new ParseError(call.codeLocation(), "Parameter '" + parameter.name()
                 + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
             return;
           }
@@ -86,8 +86,8 @@ public class AssignArgsToParams {
 
       private String missingRequiredArgsMessage(CallNode call, Signature signature,
           Set<Parameter> missingRequiredParameters) {
-        return "Not all parameters required by " + signature.name()
-            + " function has been specified.\n"
+        return "Not all parameters required by '" + signature.name()
+            + "' function has been specified.\n"
             + "Missing required parameters:\n"
             + parametersToString(missingRequiredParameters)
             + "All correct 'parameters <- arguments' assignments:\n"
@@ -108,7 +108,7 @@ public class AssignArgsToParams {
           if (!canConvert(arg.get(Type.class), paramType)) {
             failed = true;
             errors.add(new ParseError(arg.codeLocation(),
-                "Type mismatch, cannot convert argument '" + arg.name().value() + "' of type '"
+                "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
                     + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
             arg.set(Parameter.class, null);
           } else {
@@ -151,16 +151,16 @@ public class AssignArgsToParams {
           Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
         String assignmentList = assignedArgsToString(call);
         if (availableTypedParams.isEmpty()) {
-          return "Can't find parameter(s) of proper type in "
+          return "Can't find parameter(s) of proper type in '"
               + signature.name()
-              + " function for some nameless argument(s):\n"
+              + "' function for some nameless argument(s):\n"
               + "List of assignments that were successfully detected so far is following:\n"
               + assignmentList
               + "List of arguments for which no parameter could be found is following:\n"
               + argsToString(availableArgs);
         } else {
-          return "Can't decide unambiguously to which parameters in " + signature.name()
-              + " function some nameless arguments should be assigned:\n"
+          return "Can't decide unambiguously to which parameters in '" + signature.name()
+              + "' function some nameless arguments should be assigned:\n"
               + "List of assignments that were successfully detected is following:\n"
               + assignmentList
               + "List of nameless arguments that caused problems:\n"

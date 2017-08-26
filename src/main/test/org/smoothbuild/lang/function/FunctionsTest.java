@@ -48,7 +48,7 @@ public class FunctionsTest {
     given(functions = new Functions().add(function));
     when(() -> functions.get(new Name("missingFunction")));
     thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
-        + "Available functions: ['functionName']")));
+        + "Available functions: [functionName]")));
   }
 
   @Test

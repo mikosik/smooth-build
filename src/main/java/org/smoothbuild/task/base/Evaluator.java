@@ -30,20 +30,21 @@ public class Evaluator {
 
   public static Evaluator arrayEvaluator(ArrayType arrayType, CodeLocation codeLocation,
       List<Evaluator> dependencies) {
-    return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, codeLocation,
+    return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true,
+        codeLocation,
         dependencies);
   }
 
   public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
       CodeLocation codeLocation, List<Evaluator> dependencies) {
-    return new Evaluator(new NativeCallComputation(function), function.name().value(), isInternal,
-        function.isCacheable(), codeLocation, dependencies);
+    return new Evaluator(new NativeCallComputation(function), function.name().toString(),
+        isInternal, function.isCacheable(), codeLocation, dependencies);
   }
 
   public static Evaluator virtualEvaluator(DefinedFunction function, CodeLocation codeLocation,
       List<Evaluator> dependencies) {
-    return new Evaluator(new IdentityComputation(function.type()), function.name().value(), false,
-        true, codeLocation, dependencies);
+    return new Evaluator(new IdentityComputation(function.type()), function.name().toString(),
+        false, true, codeLocation, dependencies);
   }
 
   public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,

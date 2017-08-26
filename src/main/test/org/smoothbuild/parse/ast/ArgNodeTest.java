@@ -45,7 +45,7 @@ public class ArgNodeTest {
   public void sanitized_name_of_named_argument_is_equal_its_name() throws Exception {
     given(arg = new ArgNode(1, name, null, codeLocation));
     when(arg).nameSanitized();
-    thenReturned(name.value());
+    thenReturned(name.toString());
   }
 
   @Test
@@ -60,7 +60,7 @@ public class ArgNodeTest {
     given(arg = new ArgNode(1, name, expr(STRING), codeLocation));
     given(arg).set(Type.class, STRING);
     when(arg).typeAndName();
-    thenReturned("String:" + name.value());
+    thenReturned("String:" + name);
   }
 
   @Test

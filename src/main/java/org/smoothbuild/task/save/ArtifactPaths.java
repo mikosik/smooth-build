@@ -15,6 +15,6 @@ public class ArtifactPaths {
   }
 
   public static Path artifactPath(Name name) {
-    return ARTIFACTS_PATH.append(path(name.value()));
+    return ARTIFACTS_PATH.append(path(name.toString()));
   }
 }

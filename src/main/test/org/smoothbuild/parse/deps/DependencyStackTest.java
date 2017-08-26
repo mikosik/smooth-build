@@ -140,9 +140,9 @@ public class DependencyStackTest {
     when(() -> dependencyStack.createCycleError().toString());
     thenReturned(new ParseError(codeLocation(2),
         "Function call graph contains cycle:\n"
-            + name2.value() + codeLocation(2) + " -> " + name3.value() + "\n"
-            + name3.value() + codeLocation(3) + " -> " + name4.value() + "\n"
-            + name4.value() + codeLocation(4) + " -> " + name2.value() + "\n").toString());
+            + name2 + codeLocation(2) + " -> " + name3 + "\n"
+            + name3 + codeLocation(3) + " -> " + name4 + "\n"
+            + name4 + codeLocation(4) + " -> " + name2 + "\n").toString());
   }
 
   @Test
@@ -152,7 +152,7 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name2, name2, 2));
     when(() -> dependencyStack.createCycleError().toString());
     thenReturned(new ParseError(codeLocation(2), "Function call graph contains cycle:\n"
-        + name2.value() + codeLocation(2) + " -> " + name2.value() + "\n").toString());
+        + name2 + codeLocation(2) + " -> " + name2 + "\n").toString());
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {

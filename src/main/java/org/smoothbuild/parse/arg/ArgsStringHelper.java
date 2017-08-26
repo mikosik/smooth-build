@@ -65,7 +65,7 @@ public class ArgsStringHelper {
   private static int longestParameterName(Set<Parameter> parameters) {
     int result = 0;
     for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.name().value().length());
+      result = Math.max(result, parameter.name().toString().length());
     }
     return result;
   }

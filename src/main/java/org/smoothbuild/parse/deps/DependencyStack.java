@@ -43,8 +43,8 @@ public class DependencyStack {
     for (int i = first; i < array.length; i++) {
       DependencyStackElem current = array[i];
       Dependency missing = current.missing();
-      builder.append(current.name().value() + missing.location() + " -> " + missing.functionName()
-          .value() + "\n");
+      builder.append(current.name().toString() + missing.location()
+          + " -> " + missing.functionName() + "\n");
     }
     CodeLocation location = array[first].missing().location();
     return new ParseError(location, "Function call graph contains cycle:\n" + builder.toString());

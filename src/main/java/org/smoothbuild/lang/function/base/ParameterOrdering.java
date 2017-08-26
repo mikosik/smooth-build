@@ -8,6 +8,6 @@ public class ParameterOrdering extends Ordering<Parameter> {
   private ParameterOrdering() {}
 
   public int compare(Parameter left, Parameter right) {
-    return left.name().value().compareTo(right.name().value());
+    return left.name().toString().compareTo(right.name().toString());
   }
 }
