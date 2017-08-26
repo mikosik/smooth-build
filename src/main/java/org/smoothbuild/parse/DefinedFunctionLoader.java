@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
+import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.function.Functions;
@@ -28,6 +29,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 
 public class DefinedFunctionLoader {
@@ -46,7 +48,8 @@ public class DefinedFunctionLoader {
     public DefinedFunction loadFunction(FuncNode func) {
       List<Parameter> parameters = createParameters(func.params());
       Expression expression = createExpression(func.expr());
-      return createFunction(func, expression);
+      Signature signature = new Signature(expression.type(), func.name(), parameters);
+      return new DefinedFunction(signature, expression);
     }
 
     private static List<Parameter> createParameters(List<ParamNode> params) {
@@ -56,12 +59,10 @@ public class DefinedFunctionLoader {
           .collect(toList());
     }
 
-    private static DefinedFunction createFunction(FuncNode func, Expression expression) {
-      Signature signature = new Signature(expression.type(), func.name(), asList());
-      return new DefinedFunction(signature, expression);
-    }
-
     private Expression createExpression(ExprNode expr) {
+      if (expr instanceof RefNode) {
+        return createReference((RefNode) expr);
+      }
       if (expr instanceof CallNode) {
         return createCall((CallNode) expr);
       }
@@ -73,6 +74,10 @@ public class DefinedFunctionLoader {
       }
       throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
           + " without children.");
+    }
+
+    private Expression createReference(RefNode ref) {
+      return new BoundValueExpression(ref.get(Type.class), ref.name(), ref.location());
     }
 
     private Expression createCall(CallNode call) {

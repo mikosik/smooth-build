@@ -10,6 +10,7 @@ import java.util.List;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
+import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -50,9 +51,9 @@ public class NativeFunction extends AbstractFunction {
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
       Location location) {
     return new Expression(type(), args, location) {
-      public Evaluator createEvaluator(ValuesDb valuesDb) {
+      public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
         return nativeCallEvaluator(NativeFunction.this, isGenerated, location,
-            createDependenciesEvaluator(valuesDb));
+            createDependenciesEvaluator(valuesDb, scope));
       }
     };
   }

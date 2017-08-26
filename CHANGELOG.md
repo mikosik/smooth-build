@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * defined functions can have parameters (previously only native functions could)
  * function call must have parentheses (even when call has no arguments)
  * fixed smooth script to work correctly when it is redirected to via symlink
  * established array type as basic type inside brackets '[]'

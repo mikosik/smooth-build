@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NON_INFERABLE;
 import static org.smoothbuild.lang.type.Types.STRING;
@@ -13,6 +14,7 @@ import java.util.Map;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
@@ -25,6 +27,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
@@ -40,8 +43,19 @@ public class AssignTypes {
         .stream()
         .collect(toMap(e -> e.getKey(), e -> e.getValue().type()));
     new AstVisitor() {
+      Scope<Type> scope;
+
       public void visitFunction(FuncNode function) {
-        super.visitFunction(function);
+        visitName(function.name());
+        visitParams(function.params());
+
+        scope = scope();
+        function.params()
+            .stream()
+            .forEach(p -> scope.add(p.name(), p.get(Type.class)));
+        visitExpr(function.expr());
+        scope = null;
+
         Type type = function.expr().get(Type.class);
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
@@ -88,6 +102,10 @@ public class AssignTypes {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
         return result;
+      }
+
+      public void visitRef(RefNode ref) {
+        ref.set(Type.class, scope.get(ref.name()));
       }
 
       public void visitArray(ArrayNode array) {

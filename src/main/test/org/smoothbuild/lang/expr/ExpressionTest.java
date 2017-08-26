@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
@@ -57,7 +58,7 @@ public class ExpressionTest {
       super(type, asList(), location);
     }
 
-    public Evaluator createEvaluator(ValuesDb valuesDb) {
+    public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
       return null;
     }
   }
