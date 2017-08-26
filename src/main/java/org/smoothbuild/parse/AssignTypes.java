@@ -117,15 +117,15 @@ public class AssignTypes {
           if (superType == null) {
             errors.add(new ParseError(location,
                 "Array cannot contain elements of incompatible types.\n"
-                    + "First element has type " + firstType + " while element at index " + i
-                    + " has type " + type + "."));
+                    + "First element has type '" + firstType + "' while element at index " + i
+                    + " has type '" + type + "'."));
             return null;
           }
         }
         ArrayType arrayType = Types.arrayOf(superType);
         if (arrayType == null) {
-          errors.add(new ParseError(location, "Array cannot contain element with type "
-              + superType + ". Only following types are allowed: " + Types.basicTypes()
+          errors.add(new ParseError(location, "Array cannot contain element with type '"
+              + superType + "'. Only following types are allowed: " + Types.basicTypes()
               + "."));
         }
         return arrayType;

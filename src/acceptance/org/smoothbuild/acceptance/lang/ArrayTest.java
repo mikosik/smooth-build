@@ -101,7 +101,7 @@ public class ArrayTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "build.smooth:1: error: Array cannot contain element with type '[Nothing]'."
-            + " Only following types are allowed: ['String', 'Blob', 'File', 'Nothing'].\n"));
+            + " Only following types are allowed: [String, Blob, File, Nothing].\n"));
   }
 
   @Test
