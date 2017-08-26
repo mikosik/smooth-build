@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 
 import org.smoothbuild.lang.expr.DefaultValueExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.type.Type;
@@ -26,7 +27,7 @@ public class NativeParameterFactory {
     boolean isRequired = isRequired(method, annotationMap);
     Expression defaultValue = isRequired ? null
         : new DefaultValueExpression(type, codeLocation(Integer.MAX_VALUE));
-    return new Parameter(type, name, defaultValue);
+    return new Parameter(type, new Name(name), defaultValue);
   }
 
   private static Type type(Method method, java.lang.reflect.Type reflectType)

@@ -9,6 +9,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -23,12 +24,12 @@ public class NativeFunctionParameterTest {
 
   @Test
   public void parameter_name_is_taken_from_java_parameter_name() throws Exception {
-    given(function = function(Name.class));
+    given(function = function(ParameterName.class));
     when(function.parameters().get(0).name());
-    thenReturned("parameter");
+    thenReturned(new Name("parameter"));
   }
 
-  public static class Name {
+  public static class ParameterName {
     @SmoothFunction
     public static SString function(Container container, SString parameter) {
       return null;

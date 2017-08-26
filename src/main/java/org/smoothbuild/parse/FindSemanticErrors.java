@@ -97,11 +97,11 @@ public class FindSemanticErrors {
     new AstVisitor() {
       public void visitParams(List<ParamNode> params) {
         super.visitParams(params);
-        Set<String> names = new HashSet<>();
+        Set<Name> names = new HashSet<>();
         for (ParamNode param : params) {
-          String name = param.name();
+          Name name = param.name();
           if (names.contains(name)) {
-            errors.add(new ParseError(param.codeLocation(), "Duplicate parameter '" + name + "'."));
+            errors.add(new ParseError(param.codeLocation(), "Duplicate parameter " + name + "."));
           }
           names.add(name);
         }
@@ -128,13 +128,13 @@ public class FindSemanticErrors {
     new AstVisitor() {
       public void visitArgs(List<ArgNode> args) {
         super.visitArgs(args);
-        Set<String> names = new HashSet<>();
+        Set<Name> names = new HashSet<>();
         for (ArgNode arg : args) {
           if (arg.hasName()) {
-            String name = arg.name();
+            Name name = arg.name();
             if (names.contains(name)) {
-              errors.add(new ParseError(arg.codeLocation(), "Argument '" + name
-                  + "' assigned twice."));
+              errors.add(new ParseError(arg.codeLocation(), "Argument " + name
+                  + " assigned twice."));
             }
             names.add(name);
           }
@@ -147,18 +147,18 @@ public class FindSemanticErrors {
     new AstVisitor() {
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        Set<String> names = getParameters(call.name(), functions, ast);
+        Set<Name> names = getParameters(call.name(), functions, ast);
         if (names != null) {
           for (ArgNode arg : call.args()) {
             if (arg.hasName() && !names.contains(arg.name())) {
               errors.add(new ParseError(arg.codeLocation(), "Function " + call.name()
-                  + " has no parameter '" + arg.name() + "'."));
+                  + " has no parameter '" + arg.name().value() + "'."));
             }
           }
         }
       }
 
-      private Set<String> getParameters(Name functionName, Functions functions, Ast ast) {
+      private Set<Name> getParameters(Name functionName, Functions functions, Ast ast) {
         FuncNode funcNode = ast.nameToFunctionMap().get(functionName);
         if (funcNode != null) {
           return funcNode.params().stream()

@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.padEnd;
 
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.type.Type;
 
@@ -10,10 +11,10 @@ import com.google.common.collect.Ordering;
 
 public class ArgNode extends Node {
   private final int position;
-  private final String name;
+  private final Name name;
   private final ExprNode expr;
 
-  public ArgNode(int position, String name, ExprNode expr, CodeLocation codeLocation) {
+  public ArgNode(int position, Name name, ExprNode expr, CodeLocation codeLocation) {
     super(codeLocation);
     this.position = position;
     this.name = name;
@@ -28,13 +29,13 @@ public class ArgNode extends Node {
     return name != null;
   }
 
-  public String name() {
+  public Name name() {
     checkState(hasName());
     return name;
   }
 
   public String nameSanitized() {
-    return hasName() ? name() : "<nameless>";
+    return hasName() ? name().value() : "<nameless>";
   }
 
   public String typeAndName() {

@@ -39,8 +39,8 @@ public class SignatureTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(parameter = new Parameter(BLOB, "blob", mock(Expression.class)));
-    given(parameter2 = new Parameter(FILE, "file", mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, new Name("blob"), mock(Expression.class)));
+    given(parameter2 = new Parameter(FILE, new Name("file"), mock(Expression.class)));
     when(new Signature(STRING, name, asList(parameter, parameter2))).toString();
     thenReturned(STRING.name() + " " + name.value() + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

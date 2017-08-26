@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.type.Type;
 
@@ -23,7 +24,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 public class ParametersPool {
-  private final ImmutableMap<String, Parameter> parameters;
+  private final ImmutableMap<Name, Parameter> parameters;
   private final ImmutableMap<Type, TypedParametersPool> typePools;
   private final Map<Type, Set<Parameter>> optionalParametersMap;
   private final Map<Type, Set<Parameter>> requiredParametersMap;
@@ -35,7 +36,7 @@ public class ParametersPool {
     this.typePools = createTypePools(optionalParametersMap, requiredParametersMap);
   }
 
-  public Parameter take(String name) {
+  public Parameter take(Name name) {
     Parameter parameter = parameters.get(name);
     checkArgument(parameter != null);
     return take(parameter);

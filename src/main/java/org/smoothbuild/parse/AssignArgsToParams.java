@@ -58,7 +58,7 @@ public class AssignArgsToParams {
         }
         for (Parameter parameter : parametersPool.allOptional()) {
           if (parameter.type() == Types.NOTHING) {
-            errors.add(new ParseError(call.codeLocation(), "Parameter '" + parameter.name()
+            errors.add(new ParseError(call.codeLocation(), "Parameter '" + parameter.name().value()
                 + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
             return;
           }
@@ -102,13 +102,13 @@ public class AssignArgsToParams {
             .filter(a -> a.hasName())
             .collect(toImmutableList());
         for (ArgNode arg : namedArgs) {
-          String name = arg.name();
+          Name name = arg.name();
           Parameter parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (!canConvert(arg.get(Type.class), paramType)) {
             failed = true;
             errors.add(new ParseError(arg.codeLocation(),
-                "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
+                "Type mismatch, cannot convert argument '" + arg.name().value() + "' of type '"
                     + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
             arg.set(Parameter.class, null);
           } else {

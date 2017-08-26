@@ -20,13 +20,16 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 
 public class TypedParametersPoolTest {
-  private final Parameter string = new Parameter(STRING, "string1", mock(Expression.class));
-  private final Parameter blob = new Parameter(BLOB, "blob", mock(Expression.class));
-  private final Parameter stringRequired = new Parameter(STRING, "stringRequired", null);
-  private final Parameter stringRequired2 = new Parameter(STRING, "stringRequired2", null);
+  private final Parameter string = new Parameter(
+      STRING, new Name("string1"), mock(Expression.class));
+  private final Parameter blob = new Parameter(BLOB, new Name("blob"), mock(Expression.class));
+  private final Parameter stringRequired = new Parameter(STRING, new Name("stringRequired"), null);
+  private final Parameter stringRequired2 = new Parameter(
+      STRING, new Name("stringRequired2"), null);
 
   private Set<Parameter> optional;
   private Set<Parameter> required;

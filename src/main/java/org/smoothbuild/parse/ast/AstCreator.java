@@ -43,7 +43,7 @@ public class AstCreator {
         if (context != null) {
           for (ParamContext param : sane(context.param())) {
             TypeNode type = convertType(param.type());
-            String name = param.name().getText();
+            Name name = new Name(param.name().getText());
             CodeLocation codeLocation = locationOf(param);
             result.add(new ParamNode(type, name, codeLocation));
           }
@@ -101,7 +101,7 @@ public class AstCreator {
             ArgContext argContext = argContexts.get(i);
             ExprContext exprContext = argContext.expr();
             NameContext nameContext = argContext.name();
-            String name = nameContext == null ? null : nameContext.getText();
+            Name name = nameContext == null ? null : new Name(nameContext.getText());
             ExprNode exprNode = convertExpression(exprContext);
             result.add(new ArgNode(i + 1, name, exprNode, locationOf(argContext)));
           }

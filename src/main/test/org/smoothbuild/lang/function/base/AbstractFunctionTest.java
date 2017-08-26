@@ -42,7 +42,7 @@ public class AbstractFunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(parameters = asList(new Parameter(STRING, "name", null)));
+    given(parameters = asList(new Parameter(STRING, new Name("name"), null)));
     given(signature = new Signature(STRING, new Name("name"), parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();
