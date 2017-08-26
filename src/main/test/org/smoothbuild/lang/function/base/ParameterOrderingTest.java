@@ -17,18 +17,18 @@ public class ParameterOrderingTest {
 
   @Test
   public void ordering_params() {
-    given(parameter1 = new Parameter(STRING, "aaa", null));
-    given(parameter2 = new Parameter(STRING, "bbb", null));
-    given(parameter3 = new Parameter(STRING, "ccc", null));
+    given(parameter1 = new Parameter(STRING, new Name("aaa"), null));
+    given(parameter2 = new Parameter(STRING, new Name("bbb"), null));
+    given(parameter3 = new Parameter(STRING, new Name("ccc"), null));
     when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }
 
   @Test
   public void ordering_params_of_different_length() {
-    given(parameter1 = new Parameter(STRING, "a", null));
-    given(parameter2 = new Parameter(STRING, "aa", null));
-    given(parameter3 = new Parameter(STRING, "aaa", null));
+    given(parameter1 = new Parameter(STRING, new Name("a"), null));
+    given(parameter2 = new Parameter(STRING, new Name("aa"), null));
+    given(parameter3 = new Parameter(STRING, new Name("aaa"), null));
     when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }

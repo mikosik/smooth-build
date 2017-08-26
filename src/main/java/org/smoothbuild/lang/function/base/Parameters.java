@@ -24,8 +24,8 @@ public class Parameters {
     return builder.build();
   }
 
-  public static ImmutableMap<String, Parameter> parametersToMap(Iterable<Parameter> params) {
-    ImmutableMap.Builder<String, Parameter> builder = ImmutableMap.builder();
+  public static ImmutableMap<Name, Parameter> parametersToMap(Iterable<Parameter> params) {
+    ImmutableMap.Builder<Name, Parameter> builder = ImmutableMap.builder();
     for (Parameter parameter : params) {
       builder.put(parameter.name(), parameter);
     }
