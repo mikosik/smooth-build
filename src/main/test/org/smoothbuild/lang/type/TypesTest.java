@@ -68,7 +68,7 @@ public class TypesTest {
 
   @Test
   public void to_string() {
-    assertEquals("'String'", STRING.toString());
+    assertEquals("String", STRING.toString());
   }
 
   @Test
