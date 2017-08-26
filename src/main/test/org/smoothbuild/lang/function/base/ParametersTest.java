@@ -90,18 +90,6 @@ public class ParametersTest {
     thenReturned(asList(parameter1, parameter3));
   }
 
-  // paramsToNames()
-
-  @Test
-  public void params_to_names() throws Exception {
-    given(parameter1 = new Parameter(STRING, "name1", mock(Expression.class)));
-    given(parameter2 = new Parameter(STRING, "name2", null));
-    given(parameter3 = new Parameter(STRING, "name3", mock(Expression.class)));
-    given(parameters = asList(parameter1, parameter2, parameter3));
-    when(Parameters.parametersToNames(parameters));
-    thenReturned(asList("name1", "name2", "name3"));
-  }
-
   // paramsToMap()
 
   @Test
@@ -114,24 +102,4 @@ public class ParametersTest {
     thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2,
         parameter3.name(), parameter3));
   }
-
-  // sortedParams()
-
-  @Test
-  public void sorted_params_for_empty_list_returns_empty_list() throws Exception {
-    given(parameters = asList());
-    when(Parameters.sortedParameters(parameters));
-    thenReturned(asList());
-  }
-
-  @Test
-  public void sorted_params() throws Exception {
-    given(parameter1 = new Parameter(STRING, "gamma", mock(Expression.class)));
-    given(parameter2 = new Parameter(STRING, "alpha", null));
-    given(parameter3 = new Parameter(STRING, "beta", mock(Expression.class)));
-    given(parameters = asList(parameter1, parameter2, parameter3));
-    when(Parameters.sortedParameters(parameters));
-    thenReturned(asList(parameter2, parameter3, parameter1));
-  }
-
 }
