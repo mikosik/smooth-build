@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NON_INFERABLE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
 
@@ -45,7 +46,7 @@ public class AssignTypes {
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
         List<Parameter> parameters = createParameters(function.params());
-        Signature signature = (type == null || parameters == null)
+        Signature signature = (type == NON_INFERABLE || parameters == null)
             ? null
             : new Signature(type, function.name(), parameters);
         function.set(Signature.class, signature);
@@ -67,7 +68,7 @@ public class AssignTypes {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
-        Parameter parameter = type == null
+        Parameter parameter = type == NON_INFERABLE
             ? null
             : new Parameter(param.get(Type.class), param.name(), null);
         param.set(Parameter.class, parameter);
@@ -75,7 +76,8 @@ public class AssignTypes {
 
       public void visitType(TypeNode type) {
         super.visitType(type);
-        type.set(Type.class, createType(type));
+        Type inferredType = createType(type);
+        type.set(Type.class, inferredType == null ? NON_INFERABLE : inferredType);
       }
 
       private Type createType(TypeNode type) {
@@ -101,14 +103,14 @@ public class AssignTypes {
           return NIL;
         }
         Type firstType = expressions.get(0).get(Type.class);
-        if (firstType == null) {
-          return null;
+        if (firstType == NON_INFERABLE) {
+          return NON_INFERABLE;
         }
         Type superType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
-          if (type == null) {
-            return null;
+          if (type == NON_INFERABLE) {
+            return NON_INFERABLE;
           }
           superType = commonSuperType(superType, type);
 
@@ -117,7 +119,7 @@ public class AssignTypes {
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type '" + firstType + "' while element at index " + i
                     + " has type '" + type + "'."));
-            return null;
+            return NON_INFERABLE;
           }
         }
         ArrayType arrayType = Types.arrayOf(superType);
@@ -125,6 +127,7 @@ public class AssignTypes {
           errors.add(new ParseError(array, "Array cannot contain element with type '"
               + superType + "'. Only following types are allowed: " + Types.basicTypes()
               + "."));
+          return NON_INFERABLE;
         }
         return arrayType;
       }

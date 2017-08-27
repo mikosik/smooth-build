@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Types {
+  public static final Type NON_INFERABLE = new NonInferableType();
   public static final Type STRING = new StringType();
   public static final Type BLOB = new BlobType();
   public static final Type FILE = new FileType();
@@ -24,14 +25,14 @@ public class Types {
   public static final ArrayType NIL = new ArrayType(NOTHING, new TypeLiteral<Array<Nothing>>() {});
 
   /*
-   * Not each type can be used in every place. Each set below represent one
-   * place where smooth type can be used and contains all smooth types that can
-   * be used there.
+   * Not each type can be used in every place. Each set below represent one place
+   * where smooth type can be used and contains all smooth types that can be used
+   * there.
    */
 
   /**
-   * NOTHING is not a basic type as it is not possible to create instance of
-   * that type.
+   * NOTHING is not a basic type as it is not possible to create instance of that
+   * type.
    */
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
@@ -61,9 +62,8 @@ public class Types {
   }
 
   /**
-   * All smooth types available in smooth language. Returned list is sorted
-   * using type - subtype relationship. Each type comes before all of its
-   * subtypes.
+   * All smooth types available in smooth language. Returned list is sorted using
+   * type - subtype relationship. Each type comes before all of its subtypes.
    */
   public static ImmutableSet<Type> allTypes() {
     return ALL_TYPES;
