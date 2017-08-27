@@ -13,7 +13,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -86,7 +86,7 @@ public class AssignTypes {
         }
         Type result = Types.basicTypeFromString(type.name());
         if (result == null) {
-          errors.add(new ParseError(type.codeLocation(), "Unknown type '" + type.name() + "'."));
+          errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
         return result;
       }
@@ -97,7 +97,7 @@ public class AssignTypes {
       }
 
       private Type findArrayType(ArrayNode array) {
-        CodeLocation location = array.codeLocation();
+        Location location = array.location();
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
           return NIL;

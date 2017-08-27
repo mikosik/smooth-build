@@ -78,7 +78,7 @@ public class DefinedFunctionLoader {
     private Expression createCall(CallNode call) {
       Function function = loadedFunctions.get(call.name());
       List<Expression> expressions = createSortedArgumentExpressions(call, function);
-      return function.createCallExpression(expressions, false, call.codeLocation());
+      return function.createCallExpression(expressions, false, call.location());
     }
 
     private List<Expression> createSortedArgumentExpressions(CallNode call, Function function) {
@@ -97,7 +97,7 @@ public class DefinedFunctionLoader {
     }
 
     private Expression createStringLiteral(StringNode string) {
-      return new StringLiteralExpression(string.get(String.class), string.codeLocation());
+      return new StringLiteralExpression(string.get(String.class), string.location());
     }
 
     private Expression createArray(ArrayNode array) {
@@ -108,7 +108,7 @@ public class DefinedFunctionLoader {
     private Expression createArray(ArrayNode array, List<Expression> elements) {
       ArrayType type = (ArrayType) array.get(Type.class);
       List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
-      return new ArrayExpression(type, converted, array.codeLocation());
+      return new ArrayExpression(type, converted, array.location());
     }
 
     public <T extends Value> Expression implicitConversion(Type destinationType,
@@ -120,7 +120,7 @@ public class DefinedFunctionLoader {
 
       Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
       Function function = loadedFunctions.get(functionName);
-      return function.createCallExpression(asList(source), true, source.codeLocation());
+      return function.createCallExpression(asList(source), true, source.location());
     }
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.deps;
 
-import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.Location.location;
 
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
@@ -24,6 +24,6 @@ public class DependencyTest {
   }
 
   private static Dependency dependency(int line, String name) {
-    return new Dependency(codeLocation(line), new Name(name));
+    return new Dependency(location(line), new Name(name));
   }
 }

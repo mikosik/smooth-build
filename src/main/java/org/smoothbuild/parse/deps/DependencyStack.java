@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ParseError;
 
 public class DependencyStack {
@@ -46,7 +46,7 @@ public class DependencyStack {
       builder.append(current.name().toString() + missing.location()
           + " -> " + missing.functionName() + "\n");
     }
-    CodeLocation location = array[first].missing().location();
+    Location location = array[first].missing().location();
     return new ParseError(location, "Function call graph contains cycle:\n" + builder.toString());
   }
 }

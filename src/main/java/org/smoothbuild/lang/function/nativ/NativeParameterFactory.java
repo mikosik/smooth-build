@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.Location.location;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
 
 import java.lang.annotation.Annotation;
@@ -26,7 +26,7 @@ public class NativeParameterFactory {
     String name = jParameter.getName();
     boolean isRequired = isRequired(method, annotationMap);
     Expression defaultValue = isRequired ? null
-        : new DefaultValueExpression(type, codeLocation(Integer.MAX_VALUE));
+        : new DefaultValueExpression(type, location(Integer.MAX_VALUE));
     return new Parameter(type, new Name(name), defaultValue);
   }
 

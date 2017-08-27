@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
@@ -20,40 +20,40 @@ public class Evaluator {
   private final String name;
   private final boolean isInternal;
   private final boolean isCacheable;
-  private final CodeLocation codeLocation;
+  private final Location location;
   private final ImmutableList<Evaluator> dependencies;
 
-  public static Evaluator valueEvaluator(Value value, CodeLocation codeLocation) {
-    return new Evaluator(new ValueComputation(value), value.type().name(), true, true, codeLocation,
+  public static Evaluator valueEvaluator(Value value, Location location) {
+    return new Evaluator(new ValueComputation(value), value.type().name(), true, true, location,
         ImmutableList.of());
   }
 
-  public static Evaluator arrayEvaluator(ArrayType arrayType, CodeLocation codeLocation,
+  public static Evaluator arrayEvaluator(ArrayType arrayType, Location location,
       List<Evaluator> dependencies) {
     return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true,
-        codeLocation,
+        location,
         dependencies);
   }
 
   public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
-      CodeLocation codeLocation, List<Evaluator> dependencies) {
+      Location location, List<Evaluator> dependencies) {
     return new Evaluator(new NativeCallComputation(function), function.name().toString(),
-        isInternal, function.isCacheable(), codeLocation, dependencies);
+        isInternal, function.isCacheable(), location, dependencies);
   }
 
-  public static Evaluator virtualEvaluator(DefinedFunction function, CodeLocation codeLocation,
+  public static Evaluator virtualEvaluator(DefinedFunction function, Location location,
       List<Evaluator> dependencies) {
     return new Evaluator(new IdentityComputation(function.type()), function.name().toString(),
-        false, true, codeLocation, dependencies);
+        false, true, location, dependencies);
   }
 
   public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,
-      CodeLocation codeLocation, List<Evaluator> dependencies) {
+      Location location, List<Evaluator> dependencies) {
     this.computation = computation;
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.isCacheable = isCacheable;
-    this.codeLocation = checkNotNull(codeLocation);
+    this.location = checkNotNull(location);
     this.dependencies = ImmutableList.copyOf(dependencies);
   }
 
@@ -77,8 +77,8 @@ public class Evaluator {
     return isCacheable;
   }
 
-  public CodeLocation codeLocation() {
-    return codeLocation;
+  public Location location() {
+    return location;
   }
 
   public ImmutableList<Evaluator> dependencies() {

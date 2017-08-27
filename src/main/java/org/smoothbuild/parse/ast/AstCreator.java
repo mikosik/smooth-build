@@ -22,7 +22,7 @@ import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class AstCreator {
   public static Ast fromParseTree(ModuleContext module) {
@@ -44,8 +44,8 @@ public class AstCreator {
           for (ParamContext param : sane(context.param())) {
             TypeNode type = convertType(param.type());
             Name name = new Name(param.name().getText());
-            CodeLocation codeLocation = locationOf(param);
-            result.add(new ParamNode(type, name, codeLocation));
+            Location location = locationOf(param);
+            result.add(new ParamNode(type, name, location));
           }
         }
         return result;
@@ -58,9 +58,9 @@ public class AstCreator {
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
           // nameless piped argument's location is set to the pipe character '|'
-          CodeLocation codeLocation = locationOf(context.p.get(i));
+          Location location = locationOf(context.p.get(i));
           List<ArgNode> args = new ArrayList<>();
-          args.add(new ArgNode(0, null, result, codeLocation));
+          args.add(new ArgNode(0, null, result, location));
           args.addAll(convertArgList(call.argList()));
           Name name = new Name(call.name().getText());
           result = new CallNode(name, args, locationOf(call.name()));

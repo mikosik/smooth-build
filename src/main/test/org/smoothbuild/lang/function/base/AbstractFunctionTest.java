@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class AbstractFunctionTest {
   Name name;
@@ -55,7 +55,7 @@ public class AbstractFunctionTest {
     }
 
     public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-        CodeLocation codeLocation) {
+        Location location) {
       return null;
     }
   }

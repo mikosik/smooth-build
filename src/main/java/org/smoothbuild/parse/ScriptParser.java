@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
@@ -26,7 +26,7 @@ import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.util.Maybe;
 
 public class ScriptParser {
@@ -57,13 +57,13 @@ public class ScriptParser {
 
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
         int charPositionInLine, String msg, @Nullable RecognitionException e) {
-      CodeLocation location = createLocation(offendingSymbol, line);
+      Location location = createLocation(offendingSymbol, line);
       errors.add(new ParseError(location, msg));
     }
 
-    private CodeLocation createLocation(Object offendingSymbol, int line) {
+    private Location createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return codeLocation(line);
+        return location(line);
       } else {
         return locationOf((Token) offendingSymbol);
       }

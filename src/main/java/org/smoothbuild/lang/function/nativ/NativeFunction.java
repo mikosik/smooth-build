@@ -12,8 +12,8 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.message.ErrorMessage;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
@@ -48,10 +48,10 @@ public class NativeFunction extends AbstractFunction {
   }
 
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-      CodeLocation codeLocation) {
-    return new Expression(type(), args, codeLocation) {
+      Location location) {
+    return new Expression(type(), args, location) {
       public Evaluator createEvaluator(ValuesDb valuesDb) {
-        return nativeCallEvaluator(NativeFunction.this, isGenerated, codeLocation,
+        return nativeCallEvaluator(NativeFunction.this, isGenerated, location,
             createDependenciesEvaluator(valuesDb));
       }
     };

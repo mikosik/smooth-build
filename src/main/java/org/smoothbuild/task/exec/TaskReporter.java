@@ -30,7 +30,7 @@ public class TaskReporter {
 
   @VisibleForTesting
   static String header(Task task, boolean isResultFromCached) {
-    String locationString = task.codeLocation().toString();
+    String locationString = task.location().toString();
     int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
     String cached = isResultFromCached ? " CACHED" : "";

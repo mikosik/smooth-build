@@ -4,18 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class Node {
-  private final CodeLocation codeLocation;
+  private final Location location;
   private Map<Class<?>, Object> map;
 
-  public Node(CodeLocation codeLocation) {
-    this.codeLocation = codeLocation;
+  public Node(Location location) {
+    this.location = location;
   }
 
-  public CodeLocation codeLocation() {
-    return codeLocation;
+  public Location location() {
+    return location;
   }
 
   public <T> T get(Class<T> clazz) {

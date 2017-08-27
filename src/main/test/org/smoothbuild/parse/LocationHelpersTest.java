@@ -14,12 +14,12 @@ import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class LocationHelpersTest {
   private int line;
   private Token startToken;
-  private CodeLocation location;
+  private Location location;
   private ParserRuleContext parserRuleContext;
   private ExprContext expressionContext;
   private ArgContext argContext;

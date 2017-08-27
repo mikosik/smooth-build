@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.Location.location;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.when;
@@ -94,7 +94,7 @@ public class ConsoleTest {
   public void final_summary_is_failed_when_code_error_was_printed() throws Exception {
     given(outputStream = new ByteArrayOutputStream());
     given(console = new Console(new PrintStream(outputStream)));
-    given(console).error(codeLocation(13), "some message");
+    given(console).error(location(13), "some message");
     when(console).printFinalSummary();
     thenEqual(outputStream.toString(),
         "build.smooth:13: error: some message\n"

@@ -16,7 +16,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
@@ -47,18 +47,18 @@ public class AssignArgsToParams {
           return;
         }
         if (processNamelessArguments(
-            call, signature, parametersPool, call.codeLocation())) {
+            call, signature, parametersPool, call.location())) {
           return;
         }
         Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
         if (missingRequiredParameters.size() != 0) {
-          errors.add(new ParseError(call.codeLocation(),
+          errors.add(new ParseError(call.location(),
               missingRequiredArgsMessage(call, signature, missingRequiredParameters)));
           return;
         }
         for (Parameter parameter : parametersPool.allOptional()) {
           if (parameter.type() == Types.NOTHING) {
-            errors.add(new ParseError(call.codeLocation(), "Parameter '" + parameter.name()
+            errors.add(new ParseError(call.location(), "Parameter '" + parameter.name()
                 + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
             return;
           }
@@ -107,7 +107,7 @@ public class AssignArgsToParams {
           Type paramType = parameter.type();
           if (!canConvert(arg.get(Type.class), paramType)) {
             failed = true;
-            errors.add(new ParseError(arg.codeLocation(),
+            errors.add(new ParseError(arg.location(),
                 "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
                     + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
             arg.set(Parameter.class, null);
@@ -119,7 +119,7 @@ public class AssignArgsToParams {
       }
 
       private boolean processNamelessArguments(CallNode call, Signature signature,
-          ParametersPool parametersPool, CodeLocation codeLocation) {
+          ParametersPool parametersPool, Location location) {
         ImmutableMultimap<Type, ArgNode> namelessArgs = call
             .args()
             .stream()
@@ -139,7 +139,7 @@ public class AssignArgsToParams {
             } else {
               String message = ambiguousAssignmentErrorMessage(
                   call, signature, availableArguments, availableTypedParams);
-              errors.add(new ParseError(codeLocation, message));
+              errors.add(new ParseError(location, message));
               return true;
             }
           }
