@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
@@ -30,7 +30,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function function) {
     Expression expression =
-        function.createCallExpression(asList(), false, CodeLocation.commandLine());
+        function.createCallExpression(asList(), false, Location.commandLine());
     artifacts.put(function.name(), taskGraph.createTasks(expression));
   }
 

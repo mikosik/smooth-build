@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Ordering;
@@ -14,8 +14,8 @@ public class ArgNode extends Node {
   private final Name name;
   private final ExprNode expr;
 
-  public ArgNode(int position, Name name, ExprNode expr, CodeLocation codeLocation) {
-    super(codeLocation);
+  public ArgNode(int position, Name name, ExprNode expr, Location location) {
+    super(location);
     this.position = position;
     this.name = name;
     this.expr = expr;
@@ -50,7 +50,7 @@ public class ArgNode extends Node {
     String type = padEnd(get(Type.class).name(), minTypeLength, ' ') + ": ";
     String name = padEnd(nameSanitized(), minNameLength, ' ');
     String position = padEnd(positionString(), minPositionLength, ' ');
-    String location = codeLocation().toString();
+    String location = location().toString();
     return type + name + " #" + position + " " + location;
   }
 

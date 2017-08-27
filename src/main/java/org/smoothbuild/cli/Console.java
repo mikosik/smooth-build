@@ -6,9 +6,9 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.message.CodeLocation;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.InfoMessage;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.WarningMessage;
 
@@ -36,7 +36,7 @@ public class Console {
     this.printStream = printStream;
   }
 
-  public void error(CodeLocation location, String message) {
+  public void error(Location location, String message) {
     println(errorLine(location, message));
     errorCount++;
   }
@@ -46,7 +46,7 @@ public class Console {
     errorCount++;
   }
 
-  public static String errorLine(CodeLocation location, String message) {
+  public static String errorLine(Location location, String message) {
     return "build.smooth:" + location.line() + ": error: " + message;
   }
 

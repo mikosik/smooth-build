@@ -12,7 +12,7 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.task.base.Evaluator;
 
 /**
@@ -33,13 +33,13 @@ public class DefinedFunction extends AbstractFunction {
   }
 
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-      CodeLocation codeLocation) {
+      Location location) {
     checkArgument(args.isEmpty());
     checkArgument(!isGenerated);
-    return new Expression(type(), asList(root), codeLocation) {
+    return new Expression(type(), asList(root), location) {
       public Evaluator createEvaluator(ValuesDb valuesDb) {
         return virtualEvaluator(
-            DefinedFunction.this, codeLocation(), createDependenciesEvaluator(valuesDb));
+            DefinedFunction.this, location(), createDependenciesEvaluator(valuesDb));
       }
     };
   }

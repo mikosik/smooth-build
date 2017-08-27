@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.exec.ContainerImpl;
 
@@ -46,8 +46,8 @@ public class Task {
     return evaluator.isCacheable();
   }
 
-  public CodeLocation codeLocation() {
-    return evaluator.codeLocation();
+  public Location location() {
+    return evaluator.location();
   }
 
   public void execute(ContainerImpl container) {

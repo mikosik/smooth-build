@@ -3,7 +3,7 @@ package org.smoothbuild.lang.function.base;
 import java.util.List;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
@@ -18,5 +18,5 @@ public interface Function {
   public ImmutableList<Parameter> parameters();
 
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-      CodeLocation codeLocation);
+      Location location);
 }

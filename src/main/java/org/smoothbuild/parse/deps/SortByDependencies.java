@@ -74,7 +74,7 @@ public class SortByDependencies {
     new AstVisitor() {
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        dependencies.add(new Dependency(call.codeLocation(), call.name()));
+        dependencies.add(new Dependency(call.location(), call.name()));
       }
     }.visitFunction(func);
     return new DependencyStackElem(func, dependencies);

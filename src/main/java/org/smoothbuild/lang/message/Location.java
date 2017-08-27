@@ -2,19 +2,19 @@ package org.smoothbuild.lang.message;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class CodeLocation {
+public class Location {
   private final int line;
 
-  public static CodeLocation commandLine() {
-    return new CodeLocation(-1);
+  public static Location commandLine() {
+    return new Location(-1);
   }
 
-  public static CodeLocation codeLocation(int line) {
+  public static Location location(int line) {
     checkArgument(0 < line);
-    return new CodeLocation(line);
+    return new Location(line);
   }
 
-  private CodeLocation(int line) {
+  private Location(int line) {
     this.line = line;
   }
 
@@ -26,8 +26,8 @@ public class CodeLocation {
   }
 
   public final boolean equals(Object object) {
-    if (object instanceof CodeLocation) {
-      CodeLocation that = (CodeLocation) object;
+    if (object instanceof Location) {
+      Location that = (Location) object;
       return this.line == that.line;
     }
     return false;

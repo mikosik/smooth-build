@@ -11,12 +11,12 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskHashesTest {
-  private static final CodeLocation CL = CodeLocation.codeLocation(2);
+  private final Location location = Location.location(2);
   private final ValuesDb valuesDb = memoryValuesDb();
 
   private Task dep;
@@ -28,7 +28,7 @@ public class TaskHashesTest {
 
   @Test
   public void hashes_of_tasks_with_same_evaluator_and_dependencies_are_equal() throws Exception {
-    given(evaluator = valueEvaluator(valuesDb.string("work"), CL));
+    given(evaluator = valueEvaluator(valuesDb.string("work"), location));
     given(dep = mock(Task.class));
     given(willReturn(new Output(valuesDb.string("abc"))), dep).output();
     given(task = new Task(evaluator, ImmutableList.<Task> of(dep)));
@@ -40,7 +40,7 @@ public class TaskHashesTest {
   @Test
   public void hashes_of_tasks_with_same_evaluator_and_different_dependencies_are_not_equal()
       throws Exception {
-    given(evaluator = valueEvaluator(valuesDb.string("work"), CL));
+    given(evaluator = valueEvaluator(valuesDb.string("work"), location));
     given(dep = mock(Task.class));
     given(willReturn(new Output(valuesDb.string("abc"))), dep).output();
     given(dep2 = mock(Task.class));
@@ -54,8 +54,8 @@ public class TaskHashesTest {
   @Test
   public void hashes_of_tasks_with_different_evaluator_and_same_dependencies_are_not_equal()
       throws Exception {
-    given(evaluator = valueEvaluator(valuesDb.string("work"), CL));
-    given(evaluator2 = valueEvaluator(valuesDb.string("work2"), CL));
+    given(evaluator = valueEvaluator(valuesDb.string("work"), location));
+    given(evaluator2 = valueEvaluator(valuesDb.string("work2"), location));
     given(dep = mock(Task.class));
     given(willReturn(new Output(valuesDb.string("abc"))), dep).output();
     given(task = new Task(evaluator, ImmutableList.<Task> of(dep)));

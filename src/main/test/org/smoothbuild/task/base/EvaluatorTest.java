@@ -1,26 +1,26 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.message.CodeLocation.codeLocation;
+import static org.smoothbuild.lang.message.Location.location;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.collect.ImmutableList;
 
 public class EvaluatorTest {
   private final String name = "name";
-  private final CodeLocation codeLocation = codeLocation(1);
+  private final Location location = location(1);
 
   private Evaluator evaluator;
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new MyEvaluator(null, true, codeLocation));
+    when(() -> new MyEvaluator(null, true, location));
     thenThrown(NullPointerException.class);
   }
 
@@ -32,35 +32,35 @@ public class EvaluatorTest {
 
   @Test
   public void name() throws Exception {
-    given(evaluator = new MyEvaluator(name, false, codeLocation));
+    given(evaluator = new MyEvaluator(name, false, location));
     when(evaluator.name());
     thenReturned(name);
   }
 
   @Test
   public void is_internal_return_true_when_true_passed_to_constructor() throws Exception {
-    given(evaluator = new MyEvaluator(name, true, codeLocation));
+    given(evaluator = new MyEvaluator(name, true, location));
     when(evaluator.isInternal());
     thenReturned(true);
   }
 
   @Test
   public void is_internal_return_false_when_false_passed_to_constructor() throws Exception {
-    given(evaluator = new MyEvaluator(name, false, codeLocation));
+    given(evaluator = new MyEvaluator(name, false, location));
     when(evaluator.isInternal());
     thenReturned(false);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(evaluator = new MyEvaluator(name, false, codeLocation));
-    when(evaluator.codeLocation());
-    thenReturned(codeLocation);
+    given(evaluator = new MyEvaluator(name, false, location));
+    when(evaluator.location());
+    thenReturned(location);
   }
 
   public static class MyEvaluator extends Evaluator {
-    public MyEvaluator(String name, boolean isInternal, CodeLocation codeLocation) {
-      super(null, name, isInternal, true, codeLocation, ImmutableList.of());
+    public MyEvaluator(String name, boolean isInternal, Location location) {
+      super(null, name, isInternal, true, location, ImmutableList.of());
     }
 
     public Output evaluate(Input input, ContainerImpl container) {

@@ -1,9 +1,9 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class ExprNode extends Node {
-  public ExprNode(CodeLocation codeLocation) {
-    super(codeLocation);
+  public ExprNode(Location location) {
+    super(location);
   }
 }

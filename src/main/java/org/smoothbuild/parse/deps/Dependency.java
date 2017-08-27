@@ -1,18 +1,18 @@
 package org.smoothbuild.parse.deps;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 public class Dependency {
-  private final CodeLocation location;
+  private final Location location;
   private final Name functionName;
 
-  public Dependency(CodeLocation location, Name functionName) {
+  public Dependency(Location location, Name functionName) {
     this.location = location;
     this.functionName = functionName;
   }
 
-  public CodeLocation location() {
+  public Location location() {
     return location;
   }
 

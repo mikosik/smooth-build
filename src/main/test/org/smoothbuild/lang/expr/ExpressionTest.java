@@ -11,13 +11,13 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 
 public class ExpressionTest {
   private final Type type = STRING;
-  private CodeLocation codeLocation;
+  private Location location;
 
   private MyExpression expression;
 
@@ -28,7 +28,7 @@ public class ExpressionTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new MyExpression(null, codeLocation));
+    when(() -> new MyExpression(null, location));
     thenThrown(NullPointerException.class);
   }
 
@@ -40,21 +40,21 @@ public class ExpressionTest {
 
   @Test
   public void type() throws Exception {
-    given(expression = new MyExpression(type, codeLocation));
+    given(expression = new MyExpression(type, location));
     when(expression.type());
     thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(expression = new MyExpression(type, codeLocation));
-    when(expression.codeLocation());
-    thenReturned(codeLocation);
+    given(expression = new MyExpression(type, location));
+    when(expression.location());
+    thenReturned(location);
   }
 
   public static class MyExpression extends Expression {
-    public MyExpression(Type type, CodeLocation codeLocation) {
-      super(type, asList(), codeLocation);
+    public MyExpression(Type type, Location location) {
+      super(type, asList(), location);
     }
 
     public Evaluator createEvaluator(ValuesDb valuesDb) {

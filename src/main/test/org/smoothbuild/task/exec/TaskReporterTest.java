@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.task.base.Evaluator;
@@ -69,7 +69,7 @@ public class TaskReporterTest {
 
   private static final class MyEvaluator extends Evaluator {
     private MyEvaluator(boolean isInternal) {
-      super(null, "name", isInternal, true, CodeLocation.codeLocation(2), ImmutableList.of());
+      super(null, "name", isInternal, true, Location.location(2), ImmutableList.of());
     }
 
     public Output evaluate(Input input, ContainerImpl container) {

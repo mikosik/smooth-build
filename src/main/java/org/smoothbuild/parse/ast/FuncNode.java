@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import java.util.List;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.message.CodeLocation;
+import org.smoothbuild.lang.message.Location;
 
 import com.google.common.collect.ImmutableList;
 
@@ -12,7 +12,7 @@ public class FuncNode extends Node {
   private final List<ParamNode> params;
   private final ExprNode expr;
 
-  public FuncNode(Name name, List<ParamNode> params, ExprNode expr, CodeLocation location) {
+  public FuncNode(Name name, List<ParamNode> params, ExprNode expr, Location location) {
     super(location);
     this.name = name;
     this.params = ImmutableList.copyOf(params);
@@ -44,6 +44,6 @@ public class FuncNode extends Node {
   }
 
   public String toString() {
-    return "[" + name + ":" + codeLocation() + "]";
+    return "[" + name + ":" + location() + "]";
   }
 }
