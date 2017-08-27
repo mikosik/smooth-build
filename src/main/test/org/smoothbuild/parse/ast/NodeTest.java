@@ -22,10 +22,10 @@ public class NodeTest {
   }
 
   @Test
-  public void set_null_value_attribute_can_be_retrieved() throws Exception {
+  public void setting_null_value_throws_exception() throws Exception {
     given(node = new Node(location(1)));
     when(() -> node.set(String.class, null));
-    thenEqual(node.get(String.class), null);
+    thenThrown(NullPointerException.class);
   }
 
   @Test
