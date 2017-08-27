@@ -19,6 +19,8 @@ public abstract class Scope<E> {
 
   public abstract void add(Name name, E element);
 
+  public abstract Scope<E> outerScope();
+
   private static class InnerScope<E> extends Scope<E> {
     private final Scope<E> outerScope;
     private final Map<Name, E> bindings = new HashMap<>();
@@ -44,6 +46,13 @@ public abstract class Scope<E> {
       }
       bindings.put(name, element);
     }
+
+    public Scope<E> outerScope() {
+      if (outerScope.getClass() == EmptyScope.class) {
+        throw new UnsupportedOperationException();
+      }
+      return outerScope;
+    }
   }
 
   private static class EmptyScope<E> extends Scope<E> {
@@ -58,6 +67,9 @@ public abstract class Scope<E> {
     public void add(Name name, E element) {
       throw new UnsupportedOperationException();
     }
-  }
 
+    public Scope<E> outerScope() {
+      throw new UnsupportedOperationException();
+    }
+  }
 }
