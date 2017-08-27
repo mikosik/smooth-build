@@ -46,10 +46,9 @@ public class AssignTypes {
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
         List<Parameter> parameters = createParameters(function.params());
-        Signature signature = (type == NON_INFERABLE || parameters == null)
-            ? null
-            : new Signature(type, function.name(), parameters);
-        function.set(Signature.class, signature);
+        if (type != NON_INFERABLE && parameters != null) {
+          function.set(Signature.class, new Signature(type, function.name(), parameters));
+        }
       }
 
       private List<Parameter> createParameters(List<ParamNode> params) {
