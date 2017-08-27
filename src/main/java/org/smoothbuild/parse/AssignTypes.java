@@ -55,11 +55,11 @@ public class AssignTypes {
       private List<Parameter> createParameters(List<ParamNode> params) {
         Builder<Parameter> builder = ImmutableList.builder();
         for (ParamNode param : params) {
-          Parameter parameter = param.get(Parameter.class);
-          if (parameter == null) {
+          if (param.has(Parameter.class)) {
+            builder.add(param.get(Parameter.class));
+          } else {
             return null;
           }
-          builder.add(parameter);
         }
         return builder.build();
       }
@@ -68,10 +68,9 @@ public class AssignTypes {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
-        Parameter parameter = type == NON_INFERABLE
-            ? null
-            : new Parameter(param.get(Type.class), param.name(), null);
-        param.set(Parameter.class, parameter);
+        if (type != NON_INFERABLE) {
+          param.set(Parameter.class, new Parameter(param.get(Type.class), param.name(), null));
+        }
       }
 
       public void visitType(TypeNode type) {

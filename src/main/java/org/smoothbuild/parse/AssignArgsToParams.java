@@ -103,14 +103,13 @@ public class AssignArgsToParams {
           Name name = arg.name();
           Parameter parameter = parametersPool.take(name);
           Type paramType = parameter.type();
-          if (!canConvert(arg.get(Type.class), paramType)) {
+          if (canConvert(arg.get(Type.class), paramType)) {
+            arg.set(Parameter.class, parameter);
+          } else {
             failed = true;
             errors.add(new ParseError(arg,
                 "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
                     + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
-            arg.set(Parameter.class, null);
-          } else {
-            arg.set(Parameter.class, parameter);
           }
         }
         return failed;
