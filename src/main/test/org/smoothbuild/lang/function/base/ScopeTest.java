@@ -5,6 +5,7 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+import static org.testory.common.Matchers.same;
 
 import java.util.NoSuchElementException;
 
@@ -72,5 +73,20 @@ public class ScopeTest {
     given(scope).add(name, "bound in inner");
     when(() -> scope.get(name));
     thenReturned("bound in inner");
+  }
+
+  @Test
+  public void top_level_scope_doesnt_have_outer_scope() throws Exception {
+    given(scope = scope());
+    when(() -> scope.outerScope());
+    thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void inner_scope_can_return_outer_scope() throws Exception {
+    given(outerScope = scope());
+    given(scope = scope(outerScope));
+    when(() -> scope.outerScope());
+    thenReturned(same(outerScope));
   }
 }
