@@ -13,7 +13,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -97,7 +96,6 @@ public class AssignTypes {
       }
 
       private Type findArrayType(ArrayNode array) {
-        Location location = array.location();
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
           return NIL;
@@ -115,7 +113,7 @@ public class AssignTypes {
           superType = commonSuperType(superType, type);
 
           if (superType == null) {
-            errors.add(new ParseError(location,
+            errors.add(new ParseError(array,
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type '" + firstType + "' while element at index " + i
                     + " has type '" + type + "'."));
@@ -124,7 +122,7 @@ public class AssignTypes {
         }
         ArrayType arrayType = Types.arrayOf(superType);
         if (arrayType == null) {
-          errors.add(new ParseError(location, "Array cannot contain element with type '"
+          errors.add(new ParseError(array, "Array cannot contain element with type '"
               + superType + "'. Only following types are allowed: " + Types.basicTypes()
               + "."));
         }
