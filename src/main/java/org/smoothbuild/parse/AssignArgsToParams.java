@@ -77,7 +77,9 @@ public class AssignArgsToParams {
         }
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
-          return function.get(Signature.class);
+          if (function.has(Signature.class)) {
+            return function.get(Signature.class);
+          }
         }
         return null;
       }
