@@ -44,7 +44,7 @@ public class FindSemanticErrors {
         try {
           string.set(String.class, unescaped(string.value()));
         } catch (UnescapingFailedException e) {
-          errors.add(new ParseError(string.location(), e.getMessage()));
+          errors.add(new ParseError(string, e.getMessage()));
         }
       }
     }.visitAst(ast);
@@ -56,7 +56,7 @@ public class FindSemanticErrors {
       public void visitFunction(FuncNode function) {
         super.visitFunction(function);
         if (functions.contains(function.name())) {
-          errors.add(new ParseError(function.location(), "Function '" + function.name()
+          errors.add(new ParseError(function, "Function '" + function.name()
               + "' cannot override builtin function with the same name."));
         }
       }
@@ -69,7 +69,7 @@ public class FindSemanticErrors {
       public void visitFunction(FuncNode function) {
         super.visitFunction(function);
         if (defined.contains(function.name())) {
-          errors.add(new ParseError(function.location(), "Function '" + function.name()
+          errors.add(new ParseError(function, "Function '" + function.name()
               + "' is already defined."));
         }
         defined.add(function.name());
@@ -86,8 +86,7 @@ public class FindSemanticErrors {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         if (!all.contains(call.name())) {
-          errors.add(new ParseError(call.location(),
-              "Call to unknown function '" + call.name() + "'."));
+          errors.add(new ParseError(call, "Call to unknown function '" + call.name() + "'."));
         }
       }
     }.visitAst(ast);
@@ -101,7 +100,7 @@ public class FindSemanticErrors {
         for (ParamNode param : params) {
           Name name = param.name();
           if (names.contains(name)) {
-            errors.add(new ParseError(param.location(), "Duplicate parameter '" + name + "'."));
+            errors.add(new ParseError(param, "Duplicate parameter '" + name + "'."));
           }
           names.add(name);
         }
@@ -117,7 +116,7 @@ public class FindSemanticErrors {
           TypeNode type = node.type();
           if (type instanceof ArrayTypeNode
               && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
-            errors.add(new ParseError(node.location(), "Nested array type is forbidden."));
+            errors.add(new ParseError(node, "Nested array type is forbidden."));
           }
         }
       }
@@ -133,8 +132,7 @@ public class FindSemanticErrors {
           if (arg.hasName()) {
             Name name = arg.name();
             if (names.contains(name)) {
-              errors.add(new ParseError(arg.location(), "Argument '" + name
-                  + "' assigned twice."));
+              errors.add(new ParseError(arg, "Argument '" + name + "' assigned twice."));
             }
             names.add(name);
           }
@@ -151,7 +149,7 @@ public class FindSemanticErrors {
         if (names != null) {
           for (ArgNode arg : call.args()) {
             if (arg.hasName() && !names.contains(arg.name())) {
-              errors.add(new ParseError(arg.location(), "Function '" + call.name()
+              errors.add(new ParseError(arg, "Function '" + call.name()
                   + "' has no parameter '" + arg.name() + "'."));
             }
           }
