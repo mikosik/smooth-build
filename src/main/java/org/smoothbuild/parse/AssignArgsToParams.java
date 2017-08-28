@@ -15,7 +15,6 @@ import java.util.Set;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
@@ -37,21 +36,21 @@ public class AssignArgsToParams {
         if (!eachArgHasType(call)) {
           return;
         }
-        Signature signature = functionSignature(call);
-        if (signature == null) {
+        List<Parameter> parameters = functionSignature(call);
+        if (parameters == null) {
           return;
         }
-        ParametersPool parametersPool = new ParametersPool(signature.parameters());
+        ParametersPool parametersPool = new ParametersPool(parameters);
         if (processNamedArguments(call, parametersPool)) {
           return;
         }
-        if (processNamelessArguments(call, signature, parametersPool)) {
+        if (processNamelessArguments(call, parametersPool)) {
           return;
         }
         Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
         if (missingRequiredParameters.size() != 0) {
           errors.add(new ParseError(call,
-              missingRequiredArgsMessage(call, signature, missingRequiredParameters)));
+              missingRequiredArgsMessage(call, missingRequiredParameters)));
           return;
         }
         for (Parameter parameter : parametersPool.allOptional()) {
@@ -70,23 +69,23 @@ public class AssignArgsToParams {
             .allMatch(a -> a.has(Type.class));
       }
 
-      private Signature functionSignature(CallNode call) {
+      private List<Parameter> functionSignature(CallNode call) {
         Name name = call.name();
         if (functions.contains(name)) {
-          return functions.get(name).signature();
+          return functions.get(name).signature().parameters();
         }
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
-          if (function.has(Signature.class)) {
-            return function.get(Signature.class);
+          if (function.has(List.class)) {
+            return function.get(List.class);
           }
         }
         return null;
       }
 
-      private String missingRequiredArgsMessage(CallNode call, Signature signature,
+      private String missingRequiredArgsMessage(CallNode call,
           Set<Parameter> missingRequiredParameters) {
-        return "Not all parameters required by '" + signature.name()
+        return "Not all parameters required by '" + call.name()
             + "' function has been specified.\n"
             + "Missing required parameters:\n"
             + parametersToString(missingRequiredParameters)
@@ -117,8 +116,7 @@ public class AssignArgsToParams {
         return failed;
       }
 
-      private boolean processNamelessArguments(CallNode call, Signature signature,
-          ParametersPool parametersPool) {
+      private boolean processNamelessArguments(CallNode call, ParametersPool parametersPool) {
         ImmutableMultimap<Type, ArgNode> namelessArgs = call
             .args()
             .stream()
@@ -137,7 +135,7 @@ public class AssignArgsToParams {
               parametersPool.take(candidateParameter);
             } else {
               String message = ambiguousAssignmentErrorMessage(
-                  call, signature, availableArguments, availableTypedParams);
+                  call, availableArguments, availableTypedParams);
               errors.add(new ParseError(call, message));
               return true;
             }
@@ -146,19 +144,19 @@ public class AssignArgsToParams {
         return false;
       }
 
-      private String ambiguousAssignmentErrorMessage(CallNode call, Signature signature,
+      private String ambiguousAssignmentErrorMessage(CallNode call,
           Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
         String assignmentList = assignedArgsToString(call);
         if (availableTypedParams.isEmpty()) {
           return "Can't find parameter(s) of proper type in '"
-              + signature.name()
+              + call.name()
               + "' function for some nameless argument(s):\n"
               + "List of assignments that were successfully detected so far is following:\n"
               + assignmentList
               + "List of arguments for which no parameter could be found is following:\n"
               + argsToString(availableArgs);
         } else {
-          return "Can't decide unambiguously to which parameters in '" + signature.name()
+          return "Can't decide unambiguously to which parameters in '" + call.name()
               + "' function some nameless arguments should be assigned:\n"
               + "List of assignments that were successfully detected is following:\n"
               + assignmentList

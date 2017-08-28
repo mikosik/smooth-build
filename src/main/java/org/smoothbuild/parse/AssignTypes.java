@@ -15,7 +15,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Scope;
-import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -60,8 +59,8 @@ public class AssignTypes {
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
         List<Parameter> parameters = createParameters(function.params());
-        if (type != NON_INFERABLE && parameters != null) {
-          function.set(Signature.class, new Signature(type, function.name(), parameters));
+        if (parameters != null) {
+          function.set(List.class, parameters);
         }
       }
 
