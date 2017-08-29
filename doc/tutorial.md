@@ -73,12 +73,9 @@ can be used the same way as builtin functions (like `javac`).
 We can refactor our initial example by splitting it into two functions:
 
 ```
-classes = files("//src") | javac();
-release.jar = jar(classes);
+classes(String sourcePath) = files(sourcePath) | javac();
+release.jar = jar(classes("//src"));
 ```
-
-However smooth doesn't support specifying parameters yet
-when declaring function in smooth language.
 
 
 ### Literals
