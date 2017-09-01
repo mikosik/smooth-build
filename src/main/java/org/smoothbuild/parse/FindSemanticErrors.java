@@ -31,9 +31,8 @@ public class FindSemanticErrors {
     List<ParseError> errors = new ArrayList<>();
     unescapeStrings(errors, ast);
     overridenBuiltinFunctions(errors, functions, ast);
-    undefinedReferences(errors, ast);
+    undefinedElements(errors, functions, ast);
     duplicateFunctions(errors, functions, ast);
-    undefinedFunctions(errors, functions, ast);
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
@@ -67,7 +66,16 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedReferences(List<ParseError> errors, Ast ast) {
+  private static void undefinedFunctions(List<ParseError> errors, Functions functions, Ast ast) {
+
+    new AstVisitor() {}.visitAst(ast);
+  }
+
+  private static void undefinedElements(List<ParseError> errors, Functions functions, Ast ast) {
+    Set<Name> all = ImmutableSet.<Name> builder()
+        .addAll(functions.names())
+        .addAll(map(ast.functions(), f -> f.name()))
+        .build();
     new AstVisitor() {
       Scope<Name> scope = null;
 
@@ -91,6 +99,13 @@ public class FindSemanticErrors {
         super.visitFunction(func);
         scope = null;
       }
+
+      public void visitCall(CallNode call) {
+        super.visitCall(call);
+        if (!all.contains(call.name())) {
+          errors.add(new ParseError(call, "Call to unknown function '" + call.name() + "'."));
+        }
+      }
     }.visitAst(ast);
   }
 
@@ -104,21 +119,6 @@ public class FindSemanticErrors {
               + "' is already defined."));
         }
         defined.add(function.name());
-      }
-    }.visitAst(ast);
-  }
-
-  private static void undefinedFunctions(List<ParseError> errors, Functions functions, Ast ast) {
-    Set<Name> all = ImmutableSet.<Name> builder()
-        .addAll(functions.names())
-        .addAll(map(ast.functions(), f -> f.name()))
-        .build();
-    new AstVisitor() {
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        if (!all.contains(call.name())) {
-          errors.add(new ParseError(call, "Call to unknown function '" + call.name() + "'."));
-        }
       }
     }.visitAst(ast);
   }
