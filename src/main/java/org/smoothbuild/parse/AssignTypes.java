@@ -23,10 +23,10 @@ import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
+import org.smoothbuild.parse.ast.CallNode.ParamRefFlag;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
@@ -103,10 +103,6 @@ public class AssignTypes {
         return result;
       }
 
-      public void visitRef(RefNode ref) {
-        ref.set(Type.class, scope.get(ref.name()));
-      }
-
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
         array.set(Type.class, findArrayType(array));
@@ -149,7 +145,11 @@ public class AssignTypes {
 
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        call.set(Type.class, functionTypes.get(call.name()));
+        if (call.has(ParamRefFlag.class)) {
+          call.set(Type.class, scope.get(call.name()));
+        } else {
+          call.set(Type.class, functionTypes.get(call.name()));
+        }
       }
 
       public void visitArg(ArgNode arg) {

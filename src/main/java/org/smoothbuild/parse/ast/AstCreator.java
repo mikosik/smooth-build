@@ -63,26 +63,24 @@ public class AstCreator {
           args.add(new ArgNode(0, null, result, location));
           args.addAll(convertArgList(call.argList()));
           Name name = new Name(call.name().getText());
-          result = new CallNode(name, args, locationOf(call.name()));
+          boolean hasParentheses = call.p != null;
+          result = new CallNode(name, args, hasParentheses, locationOf(call.name()));
         }
         return result;
       }
 
       private ExprNode convertExpression(ExprContext context) {
-        if (context.ref() != null) {
-          NameContext nameContext = context.ref().name();
-          Name name = new Name(nameContext.getText());
-          return new RefNode(name, locationOf(context));
-        }
         if (context.array() != null) {
           List<ExprNode> elements = map(context.array().expr(), this::convertExpression);
           return new ArrayNode(elements, locationOf(context));
         }
         if (context.call() != null) {
           CallContext call = context.call();
-          List<ArgNode> args = convertArgList(call.argList());
           Name name = new Name(call.name().getText());
-          return new CallNode(name, args, locationOf(call.name()));
+          List<ArgNode> args = convertArgList(call.argList());
+          Location location = locationOf(call.name());
+          boolean hasParentheses = call.p != null;
+          return new CallNode(name, args, hasParentheses, location);
         }
         if (context.STRING() != null) {
           String quotedString = context.STRING().getText();

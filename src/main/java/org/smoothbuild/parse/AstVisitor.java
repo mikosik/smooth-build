@@ -11,7 +11,6 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
@@ -43,9 +42,7 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof RefNode) {
-      visitRef((RefNode) expr);
-    } else if (expr instanceof ArrayNode) {
+    if (expr instanceof ArrayNode) {
       visitArray((ArrayNode) expr);
     } else if (expr instanceof CallNode) {
       visitCall((CallNode) expr);
@@ -55,8 +52,6 @@ public class AstVisitor {
       throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
     }
   }
-
-  public void visitRef(RefNode expr) {}
 
   public void visitArray(ArrayNode array) {
     visitElements(array.elements(), this::visitExpr);
