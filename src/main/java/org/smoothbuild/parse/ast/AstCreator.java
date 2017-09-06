@@ -28,20 +28,20 @@ public class AstCreator {
   public static Ast fromParseTree(ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
-      public Void visitFunc(FuncContext context) {
-        NameContext nameContext = context.name();
+      public Void visitFunc(FuncContext func) {
+        NameContext nameContext = func.name();
         Name name = new Name(nameContext.getText());
-        List<ParamNode> params = convertParams(context.paramList());
-        ExprNode pipe = convertPipe(context.pipe());
-        visitChildren(context);
+        List<ParamNode> params = convertParams(func.paramList());
+        ExprNode pipe = convertPipe(func.pipe());
+        visitChildren(func);
         nodes.add(new FuncNode(name, params, pipe, locationOf(nameContext)));
         return null;
       }
 
-      private List<ParamNode> convertParams(ParamListContext context) {
+      private List<ParamNode> convertParams(ParamListContext paramList) {
         ArrayList<ParamNode> result = new ArrayList<>();
-        if (context != null) {
-          for (ParamContext param : sane(context.param())) {
+        if (paramList != null) {
+          for (ParamContext param : sane(paramList.param())) {
             TypeNode type = convertType(param.type());
             Name name = new Name(param.name().getText());
             Location location = locationOf(param);
@@ -51,14 +51,14 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode convertPipe(PipeContext context) {
-        ExprContext initialExpression = context.expr();
+      private ExprNode convertPipe(PipeContext pipe) {
+        ExprContext initialExpression = pipe.expr();
         ExprNode result = convertExpression(initialExpression);
-        List<CallContext> calls = context.call();
+        List<CallContext> calls = pipe.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
           // nameless piped argument's location is set to the pipe character '|'
-          Location location = locationOf(context.p.get(i));
+          Location location = locationOf(pipe.p.get(i));
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, location));
           args.addAll(convertArgList(call.argList()));
@@ -69,62 +69,62 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode convertExpression(ExprContext context) {
-        if (context.array() != null) {
-          List<ExprNode> elements = map(context.array().expr(), this::convertExpression);
-          return new ArrayNode(elements, locationOf(context));
+      private ExprNode convertExpression(ExprContext expr) {
+        if (expr.array() != null) {
+          List<ExprNode> elements = map(expr.array().expr(), this::convertExpression);
+          return new ArrayNode(elements, locationOf(expr));
         }
-        if (context.call() != null) {
-          CallContext call = context.call();
+        if (expr.call() != null) {
+          CallContext call = expr.call();
           Name name = new Name(call.name().getText());
           List<ArgNode> args = convertArgList(call.argList());
           Location location = locationOf(call.name());
           boolean hasParentheses = call.p != null;
           return new CallNode(name, args, hasParentheses, location);
         }
-        if (context.STRING() != null) {
-          String quotedString = context.STRING().getText();
+        if (expr.STRING() != null) {
+          String quotedString = expr.STRING().getText();
           return new StringNode(quotedString.substring(1, quotedString.length() - 1),
-              locationOf(context));
+              locationOf(expr));
         }
         throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
             + " without children.");
       }
 
-      private List<ArgNode> convertArgList(ArgListContext context) {
+      private List<ArgNode> convertArgList(ArgListContext argList) {
         List<ArgNode> result = new ArrayList<>();
-        if (context != null) {
-          List<ArgContext> argContexts = context.arg();
-          for (int i = 0; i < argContexts.size(); i++) {
-            ArgContext argContext = argContexts.get(i);
-            ExprContext exprContext = argContext.expr();
-            NameContext nameContext = argContext.name();
+        if (argList != null) {
+          List<ArgContext> args = argList.arg();
+          for (int i = 0; i < args.size(); i++) {
+            ArgContext arg = args.get(i);
+            ExprContext expr = arg.expr();
+            NameContext nameContext = arg.name();
             Name name = nameContext == null ? null : new Name(nameContext.getText());
-            ExprNode exprNode = convertExpression(exprContext);
-            result.add(new ArgNode(i + 1, name, exprNode, locationOf(argContext)));
+            ExprNode exprNode = convertExpression(expr);
+            result.add(new ArgNode(i + 1, name, exprNode, locationOf(arg)));
           }
         }
         return result;
       }
 
-      private TypeNode convertType(TypeContext context) {
-        if (context.basicType() != null) {
-          return convertBasicType(context.basicType());
+      private TypeNode convertType(TypeContext type) {
+        if (type.basicType() != null) {
+          return convertBasicType(type.basicType());
         }
-        if (context.arrayType() != null) {
-          return convertArrayType(context.arrayType());
+        if (type.arrayType() != null) {
+          return convertArrayType(type.arrayType());
         }
         throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
             + " without children.");
       }
 
-      private TypeNode convertBasicType(BasicTypeContext context) {
-        return new TypeNode(context.getText(), locationOf(context));
+      private TypeNode convertBasicType(BasicTypeContext basicType) {
+        return new TypeNode(basicType.getText(), locationOf(basicType));
       }
 
-      private TypeNode convertArrayType(ArrayTypeContext context) {
-        TypeNode elementType = convertType(context.type());
-        return new ArrayTypeNode(elementType, locationOf(context));
+      private TypeNode convertArrayType(ArrayTypeContext arrayType) {
+        TypeNode elementType = convertType(arrayType.type());
+        return new ArrayTypeNode(elementType, locationOf(arrayType));
       }
     }.visit(module);
     return new Ast(nodes);
