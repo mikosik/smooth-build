@@ -17,6 +17,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
+import org.smoothbuild.parse.ast.CallNode.ParamRefFlag;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Maybe;
@@ -74,7 +75,9 @@ public class SortByDependencies {
     new AstVisitor() {
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        dependencies.add(new Dependency(call.location(), call.name()));
+        if (!call.has(ParamRefFlag.class)) {
+          dependencies.add(new Dependency(call.location(), call.name()));
+        }
       }
     }.visitFunction(func);
     return new DependencyStackElem(func, dependencies);

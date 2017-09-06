@@ -131,7 +131,7 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void calling_defined_function_with_one_parameter_is_allowed() throws Exception {
+  public void calling_defined_function_with_one_parameter() throws Exception {
     givenScript("func(String string) = 'abc';"
         + "result = func('def');");
     whenSmoothBuild("result");
@@ -149,21 +149,40 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void referencing_unknown_parameter_is_forbidden() throws Exception {
-    givenScript("func(String existingParam) = unknown;"
-        + "result = 'def';");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Unknown parameter 'unknown'.\n"));
-  }
-
-  @Test
   public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
     givenScript("func(String notUsedParameter) = 'abc';"
         + "result = func(throwFileSystemException());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactContent("result"), "abc");
+  }
+
+  @Test
+  public void calling_parameter_as_function_causes_error() throws Exception {
+    givenScript("func(String param) = param();"
+        + "      result = func('abc');");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "build.smooth:1: error: Parameter 'param' cannot be called as it is not a function.\n"));
+  }
+
+  @Test
+  public void parameter_can_shadow_builtin_function() throws Exception {
+    givenScript("func(String zip) = zip;"
+        + "      result = func('abc');");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    thenEqual(artifactContent("result"), "abc");
+  }
+
+  @Test
+  public void parameter_can_shadow_function() throws Exception {
+    givenScript("func1 = 'abc';"
+        + "      func2(String func) = func;"
+        + "      result = func2('def');");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    thenEqual(artifactContent("result"), "def");
   }
 }

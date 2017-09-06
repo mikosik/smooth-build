@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -12,14 +11,13 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
+import org.smoothbuild.parse.ast.CallNode.ParamRefFlag;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -31,6 +29,7 @@ public class FindSemanticErrors {
     List<ParseError> errors = new ArrayList<>();
     unescapeStrings(errors, ast);
     overridenBuiltinFunctions(errors, functions, ast);
+    parametersReferenceWithParentheses(errors, ast);
     undefinedElements(errors, functions, ast);
     duplicateFunctions(errors, functions, ast);
     duplicateParamNames(errors, ast);
@@ -66,9 +65,16 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedFunctions(List<ParseError> errors, Functions functions, Ast ast) {
-
-    new AstVisitor() {}.visitAst(ast);
+  private static void parametersReferenceWithParentheses(List<ParseError> errors, Ast ast) {
+    new AstVisitor() {
+      public void visitCall(CallNode call) {
+        super.visitCall(call);
+        if (call.has(ParamRefFlag.class) && call.hasParentheses()) {
+          errors.add(new ParseError(call, "Parameter '" + call.name()
+              + "' cannot be called as it is not a function."));
+        }
+      }
+    }.visitAst(ast);
   }
 
   private static void undefinedElements(List<ParseError> errors, Functions functions, Ast ast) {
@@ -77,33 +83,14 @@ public class FindSemanticErrors {
         .addAll(map(ast.functions(), f -> f.name()))
         .build();
     new AstVisitor() {
-      Scope<Name> scope = null;
-
-      public void visitRef(RefNode ref) {
-        super.visitRef(ref);
-        if (!scope.contains(ref.name())) {
-          errors.add(new ParseError(ref.location(), "Unknown parameter '" + ref.name() + "'."));
-        }
-      }
-
       public void visitFunction(FuncNode func) {
-        scope = scope();
-        func
-            .params()
-            .stream()
-            .forEach(p -> {
-              if (!scope.contains(p.name())) {
-                scope.add(p.name(), null);
-              }
-            });
         super.visitFunction(func);
-        scope = null;
       }
 
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!all.contains(call.name())) {
-          errors.add(new ParseError(call, "Call to unknown function '" + call.name() + "'."));
+        if (!call.has(ParamRefFlag.class) && !all.contains(call.name())) {
+          errors.add(new ParseError(call.location(), "'" + call.name() + "' is undefined."));
         }
       }
     }.visitAst(ast);
