@@ -3,23 +3,18 @@ package org.smoothbuild.lang.function.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
-
-import com.google.common.hash.HashCode;
 
 public class Parameter {
   private final Type type;
   private final Name name;
   private final Expression defaultValue;
-  private final HashCode nameHash;
 
   public Parameter(Type type, Name name, Expression defaultValue) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.defaultValue = defaultValue;
-    this.nameHash = Hash.string(name.toString());
   }
 
   public Type type() {
@@ -36,10 +31,6 @@ public class Parameter {
 
   public Expression defaultValueExpression() {
     return defaultValue;
-  }
-
-  public HashCode nameHash() {
-    return nameHash;
   }
 
   public final boolean equals(Object object) {

@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
-import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
@@ -55,18 +53,6 @@ public class ParameterTest {
     thenEqual(parameter.type(), STRING);
     thenEqual(parameter.name(), name);
     thenEqual(parameter.isRequired(), true);
-  }
-
-  @Test
-  public void params_with_different_names_have_different_name_hashes() {
-    when(new Parameter(STRING, new Name("name1"), null).nameHash());
-    thenReturned(not(new Parameter(STRING, new Name("name2"), null).nameHash()));
-  }
-
-  @Test
-  public void params_with_same_names_but_different_types_have_the_same_name_hashes() {
-    when(new Parameter(STRING, new Name("name1"), null).nameHash());
-    thenReturned(new Parameter(BLOB, new Name("name1"), null).nameHash());
   }
 
   @Test
