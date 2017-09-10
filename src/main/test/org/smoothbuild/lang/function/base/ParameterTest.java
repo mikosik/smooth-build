@@ -7,6 +7,7 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.ArrayList;
@@ -14,10 +15,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
-
-import com.google.common.testing.EqualsTester;
 
 public class ParameterTest {
   private final Name name = new Name("name");
@@ -37,14 +34,30 @@ public class ParameterTest {
     thenReturned(true);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void null_type_is_forbidden() {
-    new Parameter(null, name, null);
+    when(() -> new Parameter(null, name, mock(Expression.class)));
+    thenThrown(NullPointerException.class);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void null_name_is_forbidden() {
-    new Parameter(STRING, null, null);
+    when(() -> new Parameter(STRING, null, mock(Expression.class)));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void type_getter() throws Exception {
+    given(parameter = new Parameter(STRING, name, mock(Expression.class)));
+    when(() -> parameter.type());
+    thenReturned(STRING);
+  }
+
+  @Test
+  public void name_getter() throws Exception {
+    given(parameter = new Parameter(STRING, name, mock(Expression.class)));
+    when(() -> parameter.name());
+    thenReturned(name);
   }
 
   @Test
@@ -52,22 +65,20 @@ public class ParameterTest {
     when(parameter = new Parameter(STRING, name, null));
     thenEqual(parameter.type(), STRING);
     thenEqual(parameter.name(), name);
-    thenEqual(parameter.isRequired(), true);
   }
 
   @Test
-  public void equals_and_hash_code() {
-    EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(
-        new Parameter(STRING, new Name("equal"), mock(Expression.class)),
-        new Parameter(STRING, new Name("equal"), mock(Expression.class)));
-    for (Type type : Types.allTypes()) {
-      tester.addEqualityGroup(new Parameter(type, name, mock(Expression.class)));
-      tester.addEqualityGroup(new Parameter(type, name, null));
-      tester.addEqualityGroup(new Parameter(type, new Name("name2"), mock(Expression.class)));
-      tester.addEqualityGroup(new Parameter(type, new Name("name2"), null));
-    }
-    tester.testEquals();
+  public void parameter_without_default_value_is_required() throws Exception {
+    given(parameter = new Parameter(STRING, name, null));
+    when(() -> parameter.isRequired());
+    thenReturned(true);
+  }
+
+  @Test
+  public void parameter_with_default_value_is_not_required() throws Exception {
+    given(parameter = new Parameter(STRING, name, mock(Expression.class)));
+    when(() -> parameter.isRequired());
+    thenReturned(false);
   }
 
   @Test
@@ -100,10 +111,9 @@ public class ParameterTest {
     parameters.add(new Parameter(FILE_ARRAY, new Name("param3"), null));
 
     when(parametersToString(parameters));
-    thenReturned("" //
-        + "  String: param1               \n" //
-        + "  String: param2-with-very-long\n" //
-        + "  [File]: param3               \n" //
-    );
+    thenReturned(""
+        + "  String: param1               \n"
+        + "  String: param2-with-very-long\n"
+        + "  [File]: param3               \n");
   }
 }
