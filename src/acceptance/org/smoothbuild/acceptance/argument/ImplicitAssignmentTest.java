@@ -11,16 +11,18 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_there_is_no_parameter_matching() throws Exception {
-    givenScript("result = blobIdentity('abc');");
+    givenScript("func(Blob blob) = blob;"
+        + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't find parameter(s) of proper type in 'blobIdentity'"
+    then(output(), containsString("Can't find parameter(s) of proper type in 'func'"
         + " function for some nameless argument(s)"));
   }
 
   @Test
   public void assigns_to_parameter_with_same_type() throws Exception {
-    givenScript("result = stringIdentity('abc');");
+    givenScript("func(String string) = string;"
+        + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -29,7 +31,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_to_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result = blobIdentity(file('//file.txt'));");
+    givenScript("func(Blob blob) = blob;"
+        + "      result = func(file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -37,29 +40,32 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void fails_when_one_parameter_matches_two_arguments() throws Exception {
-    givenScript("result = stringIdentity('abc', 'def');");
+    givenScript("func(String string) = string;"
+        + "result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
-        "Can't decide unambiguously to which parameters in 'stringIdentity'"
+        "Can't decide unambiguously to which parameters in 'func'"
             + " function some nameless arguments should be assigned"));
   }
 
   @Test
   public void fails_when_two_parameters_match_argument() throws Exception {
-    givenScript("result = twoStrings('abc');");
+    givenScript("func(String stringA, String stringB) = stringA;"
+        + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
+    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
         + " function some nameless arguments should be assigned"));
   }
 
   @Test
   public void fails_when_two_parameters_match_two_arguments() throws Exception {
-    givenScript("result = twoStrings('abc', 'def');");
+    givenScript("func(String stringA, String stringB) = stringA;"
+        + "      result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'twoStrings'"
+    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
         + " function some nameless arguments should be assigned"));
   }
 
@@ -86,10 +92,11 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_two_arguments_match_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result = blobIdentity(file('//file.txt'), file('//file.txt'));");
+    givenScript("func(Blob blob) = blob;"
+        + "      result = func(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'blobIdentity'"
+    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
         + " function some nameless arguments should be assigned"));
   }
 
@@ -106,7 +113,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void assigns_nil_to_string_array() throws Exception {
-    givenScript("result = stringArrayIdentity([]);");
+    givenScript("func([String] array) = array;"
+        + "      result = func([]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
@@ -115,21 +123,21 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void ambiguous_error_message() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript(
-        "result = file('//file.txt') | ambiguousArguments('abc', ['abc'], []);");
+    givenScript("func( String p1, [String] p2, File p3, [File] p4, [Blob] p5) = '';"
+        + "      result = file('//file.txt') | func('abc', ['abc'], []);");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
         "build.smooth:1: error: Can't decide unambiguously to which parameters in "
-            + "'ambiguousArguments' function some nameless arguments should be assigned:\n"
+            + "'func' function some nameless arguments should be assigned:\n"
             + "List of assignments that were successfully detected is following:\n"
-            + "  File    : param3 <- File    : <nameless> #| [ line 1 ]\n"
-            + "  [String]: param2 <- [String]: <nameless> #2 [ line 1 ]\n"
-            + "  String  : param1 <- String  : <nameless> #1 [ line 1 ]\n"
+            + "  File    : p3 <- File    : <nameless> #| [ line 1 ]\n"
+            + "  String  : p1 <- String  : <nameless> #1 [ line 1 ]\n"
+            + "  [String]: p2 <- [String]: <nameless> #2 [ line 1 ]\n"
             + "List of nameless arguments that caused problems:\n"
             + "  [Nothing]: <nameless> #3 [ line 1 ]\n"
             + "List of unassigned parameters of desired type is following:\n"
-            + "  [Blob]: param5\n"
-            + "  [File]: param4\n\n"));
+            + "  [Blob]: p5\n"
+            + "  [File]: p4\n\n"));
   }
 }

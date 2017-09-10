@@ -11,16 +11,18 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ExplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void fails_when_parameter_with_given_name_doesnt_exist() throws Exception {
-    givenScript("result = stringIdentity(wrongName='abc');");
+    givenScript("func(String string) = string;"
+        + "      result = func(wrongName='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
-        "build.smooth:1: error: Function 'stringIdentity' has no parameter 'wrongName'.\n"));
+        "build.smooth:1: error: Function 'func' has no parameter 'wrongName'.\n"));
   }
 
   @Test
   public void fails_when_parameter_has_incompatible_type() throws Exception {
-    givenScript("result = blobIdentity(blob='abc');");
+    givenScript("func(Blob blob) = blob;"
+        + "      result = func(blob='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("build.smooth:1: error: "
@@ -29,7 +31,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void assigns_to_parameter_with_same_type() throws Exception {
-    givenScript("result = stringIdentity(string='abc');");
+    givenScript("func(String string) = string;"
+        + "      result = func(string='abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -38,7 +41,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_to_parameter_with_supertype() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result = blobIdentity(blob=file('//file.txt'));");
+    givenScript("func(Blob blob) = blob;"
+        + "      result = func(blob=file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -46,7 +50,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void assigns_nil_to_string_array() throws Exception {
-    givenScript("result = stringArrayIdentity(stringArray=[]) ;");
+    givenScript("func([String] array) = array;"
+        + "      result = func(array=[]) ;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
@@ -54,7 +59,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
 
   @Test
   public void fails_when_two_arguments_are_assigned_to_same_parameter() throws Exception {
-    givenScript("result = stringIdentity(string='abc', string='def');");
+    givenScript("func(String string) = string;"
+        + "      result = func(string='abc', string='def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
