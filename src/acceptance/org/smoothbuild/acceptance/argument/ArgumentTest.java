@@ -11,7 +11,8 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArgumentTest extends AcceptanceTestCase {
   @Test
   public void trailing_comma_in_argument_list() throws IOException {
-    givenScript("result = toBlob(string='abc',) ;");
+    givenScript("func(String string) = string;"
+        + "      result = func(string='abc',) ;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }

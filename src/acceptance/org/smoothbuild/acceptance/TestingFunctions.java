@@ -78,17 +78,6 @@ public class TestingFunctions {
   }
 
   @SmoothFunction
-  public static SString oneRequired(Container container, @Required SString string) {
-    return string;
-  }
-
-  @SmoothFunction
-  public static SString twoRequired(Container container, @Required SString stringA,
-      @Required SString stringB) {
-    return container.create().string(stringA.value() + ":" + stringB.value());
-  }
-
-  @SmoothFunction
   public static SString oneOptionalOneRequired(Container container, SString stringA,
       @Required SString stringB) {
     return container.create().string(stringA.value() + ":" + stringB.value());
