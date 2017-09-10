@@ -6,7 +6,7 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release.jar = files("//src") | javac() | jar();
+release.jar = files("//src") | javac | jar;
 ```
 
 This script defines `release.jar` function that performs following tasks:
@@ -73,7 +73,7 @@ can be used the same way as builtin functions (like `javac`).
 We can refactor our initial example by splitting it into two functions:
 
 ```
-classes(String sourcePath) = files(sourcePath) | javac();
+classes(String sourcePath) = files(sourcePath) | javac;
 release.jar = jar(classes("//src"));
 ```
 
@@ -113,7 +113,7 @@ In the following example we need to explicitly name `source` parameter, as
 without it, smooth wouldnt' be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
-release.jar  =files("//src") | javac(source="1.8") | jar();
+release.jar = files("//src") | javac(source="1.8") | jar;
 ```
 
 Matching arguments to parameters works according to following algorithm
