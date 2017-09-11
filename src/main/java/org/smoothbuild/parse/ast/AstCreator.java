@@ -53,7 +53,7 @@ public class AstCreator {
 
       private ExprNode convertPipe(PipeContext pipe) {
         ExprContext initialExpression = pipe.expr();
-        ExprNode result = convertExpression(initialExpression);
+        ExprNode result = convertExpr(initialExpression);
         List<CallContext> calls = pipe.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
@@ -69,9 +69,9 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode convertExpression(ExprContext expr) {
+      private ExprNode convertExpr(ExprContext expr) {
         if (expr.array() != null) {
-          List<ExprNode> elements = map(expr.array().expr(), this::convertExpression);
+          List<ExprNode> elements = map(expr.array().expr(), this::convertExpr);
           return new ArrayNode(elements, locationOf(expr));
         }
         if (expr.call() != null) {
@@ -100,7 +100,7 @@ public class AstCreator {
             ExprContext expr = arg.expr();
             NameContext nameContext = arg.name();
             Name name = nameContext == null ? null : new Name(nameContext.getText());
-            ExprNode exprNode = convertExpression(expr);
+            ExprNode exprNode = convertExpr(expr);
             result.add(new ArgNode(i + 1, name, exprNode, locationOf(arg)));
           }
         }
