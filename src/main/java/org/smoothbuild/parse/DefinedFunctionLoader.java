@@ -98,7 +98,6 @@ public class DefinedFunctionLoader {
       Map<Parameter, Expression> assignedExpressions = call
           .args()
           .stream()
-          .filter(a -> a.has(Parameter.class))
           .collect(toMap(a -> a.get(Parameter.class), a -> createExpression(a.expr())));
       return function
           .parameters()
