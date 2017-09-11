@@ -1,13 +1,13 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.function.base.Parameters.filterOptionalParameters;
-import static org.smoothbuild.lang.function.base.Parameters.filterRequiredParameters;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
+import static org.smoothbuild.util.Lists.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,7 +76,8 @@ public class AssignArgsToParams {
         if (functions.contains(name)) {
           List<Parameter> parameters = functions.get(name).signature().parameters();
           return new ParametersPool(
-              filterOptionalParameters(parameters), filterRequiredParameters(parameters));
+              filter(parameters, not(Parameter::isRequired)),
+              filter(parameters, Parameter::isRequired));
         }
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
