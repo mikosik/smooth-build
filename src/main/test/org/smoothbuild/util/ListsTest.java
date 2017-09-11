@@ -2,6 +2,7 @@ package org.smoothbuild.util;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.util.Lists.concat;
+import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 import static org.testory.Testory.given;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+
+import com.google.common.base.Predicates;
 
 public class ListsTest {
   private List<String> list;
@@ -37,6 +40,34 @@ public class ListsTest {
     given(list = new ArrayList<>(asList("first")));
     when(concat(list, "second"));
     thenEqual(list, new ArrayList<>(asList("first")));
+  }
+
+  @Test
+  public void filter_empty_returns_empty() throws Exception {
+    given(list = asList());
+    when(() -> filter(list, Predicates.alwaysTrue()));
+    thenReturned(asList());
+  }
+
+  @Test
+  public void filter_with_always_true_predicate_returns_same_list() throws Exception {
+    given(list = asList("first", "second", "third"));
+    when(() -> filter(list, Predicates.alwaysTrue()));
+    thenReturned(asList("first", "second", "third"));
+  }
+
+  @Test
+  public void filter_with_always_false_predicate_returns_empty_list() throws Exception {
+    given(list = asList("first", "second", "third"));
+    when(() -> filter(list, Predicates.alwaysFalse()));
+    thenReturned(asList());
+  }
+
+  @Test
+  public void filter_filters_elements() throws Exception {
+    given(list = asList("first", "second", "third"));
+    when(() -> filter(list, s -> s.startsWith("s")));
+    thenReturned(asList("second"));
   }
 
   @Test
