@@ -18,8 +18,6 @@ public class BoundValueExpression extends Expression {
   }
 
   public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    // TODO this would cause returned evaluator.execute to be called twice
-    // and print twice to console, second time as cached
     return scope.get(name);
   }
 }
