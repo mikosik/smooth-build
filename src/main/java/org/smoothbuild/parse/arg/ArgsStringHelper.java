@@ -5,25 +5,24 @@ import static java.util.stream.Collectors.toMap;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
-import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 
 public class ArgsStringHelper {
   public static String assignedArgsToString(CallNode call) {
-    Map<Parameter, ArgNode> paramToArgMap = createMap(call);
-    int maxParamType = longestParameterType(paramToArgMap.keySet());
-    int maxParamName = longestParameterName(paramToArgMap.keySet());
+    Map<TypedName, ArgNode> paramToArgMap = createMap(call);
+    int maxParamType = TypedName.longestType(paramToArgMap.keySet());
+    int maxParamName = TypedName.longestName(paramToArgMap.keySet());
     int maxArgType = longestArgType(paramToArgMap.values());
     int maxArgName = longestArgName(paramToArgMap.values());
     int maxPosition = longestArgPosition(paramToArgMap.values());
 
     StringBuilder builder = new StringBuilder();
-    for (Map.Entry<Parameter, ArgNode> entry : paramToArgMap.entrySet()) {
+    for (Map.Entry<TypedName, ArgNode> entry : paramToArgMap.entrySet()) {
       String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
       ArgNode arg = entry.getValue();
       String argPart = arg.toPaddedString(maxArgType, maxArgName, maxPosition);
@@ -32,12 +31,12 @@ public class ArgsStringHelper {
     return builder.toString();
   }
 
-  private static Map<Parameter, ArgNode> createMap(CallNode call) {
+  private static Map<TypedName, ArgNode> createMap(CallNode call) {
     return call
         .args()
         .stream()
-        .filter(a -> a.has(Parameter.class))
-        .collect(toMap(a -> a.get(Parameter.class), Function.identity()));
+        .filter(a -> a.has(TypedName.class))
+        .collect(toMap(a -> a.get(TypedName.class), Function.identity()));
   }
 
   public static String argsToString(Collection<ArgNode> availableArgs) {
@@ -52,22 +51,6 @@ public class ArgsStringHelper {
           typeLength, nameLength, positionLength) + "\n");
     }
     return builder.toString();
-  }
-
-  private static int longestParameterType(Set<Parameter> parameters) {
-    int result = 0;
-    for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.type().name().length());
-    }
-    return result;
-  }
-
-  private static int longestParameterName(Set<Parameter> parameters) {
-    int result = 0;
-    for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.name().toString().length());
-    }
-    return result;
   }
 
   private static int longestArgType(Collection<ArgNode> args) {

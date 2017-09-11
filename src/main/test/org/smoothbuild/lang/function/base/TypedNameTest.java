@@ -1,10 +1,14 @@
 package org.smoothbuild.lang.function.base;
 
+import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
@@ -57,9 +61,37 @@ public class TypedNameTest {
   }
 
   @Test
+  public void to_padded_string() {
+    given(typedName = new TypedName(STRING, new Name("myName")));
+    when(typedName.toPaddedString(10, 13));
+    thenReturned("String    : myName       ");
+  }
+
+  @Test
+  public void to_padded_string_for_short_limits() {
+    given(typedName = new TypedName(STRING, new Name("myName")));
+    when(typedName.toPaddedString(1, 1));
+    thenReturned("String: myName");
+  }
+
+  @Test
   public void to_string() throws Exception {
     given(typedName = new TypedName(STRING, new Name("myName")));
     when(() -> typedName.toString());
     thenReturned("String myName");
+  }
+
+  @Test
+  public void params_to_string() {
+    List<TypedName> names = new ArrayList<>();
+    names.add(new TypedName(STRING, new Name("param1")));
+    names.add(new TypedName(STRING, new Name("param2-with-very-long")));
+    names.add(new TypedName(FILE_ARRAY, new Name("param3")));
+
+    when(TypedName.iterableToString(names));
+    thenReturned(""
+        + "  String: param1               \n"
+        + "  String: param2-with-very-long\n"
+        + "  [File]: param3               \n");
   }
 }

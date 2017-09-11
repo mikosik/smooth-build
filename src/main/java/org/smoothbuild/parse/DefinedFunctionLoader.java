@@ -21,6 +21,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.Signature;
+import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Conversions;
@@ -95,10 +96,10 @@ public class DefinedFunctionLoader {
     }
 
     private List<Expression> createSortedArgumentExpressions(CallNode call, Function function) {
-      Map<Parameter, Expression> assignedExpressions = call
+      Map<TypedName, Expression> assignedExpressions = call
           .args()
           .stream()
-          .collect(toMap(a -> a.get(Parameter.class), a -> createExpression(a.expr())));
+          .collect(toMap(a -> a.get(TypedName.class), a -> createExpression(a.expr())));
       return function
           .parameters()
           .stream()

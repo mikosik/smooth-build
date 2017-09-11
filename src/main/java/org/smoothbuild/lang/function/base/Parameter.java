@@ -30,31 +30,4 @@ public class Parameter extends TypedName {
   public String toString() {
     return "Param(" + type().name() + ": " + name() + ")";
   }
-
-  public static String parametersToString(Iterable<Parameter> parameters) {
-    int typeLength = longestParameterType(parameters);
-    int nameLength = longestParameterName(parameters);
-
-    StringBuilder builder = new StringBuilder();
-    for (Parameter parameter : parameters) {
-      builder.append("  " + parameter.toPaddedString(typeLength, nameLength) + "\n");
-    }
-    return builder.toString();
-  }
-
-  private static int longestParameterType(Iterable<Parameter> parameters) {
-    int result = 0;
-    for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.type().name().length());
-    }
-    return result;
-  }
-
-  private static int longestParameterName(Iterable<Parameter> parameters) {
-    int result = 0;
-    for (Parameter parameter : parameters) {
-      result = Math.max(result, parameter.name().toString().length());
-    }
-    return result;
-  }
 }

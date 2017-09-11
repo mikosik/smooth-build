@@ -2,7 +2,9 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static org.smoothbuild.lang.function.base.Parameter.parametersToString;
+import static java.util.Arrays.asList;
+import static org.smoothbuild.lang.function.base.Parameters.filterOptionalParameters;
+import static org.smoothbuild.lang.function.base.Parameters.filterRequiredParameters;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
@@ -15,6 +17,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
+import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
@@ -36,24 +39,23 @@ public class AssignArgsToParams {
         if (!eachArgHasType(call)) {
           return;
         }
-        List<Parameter> parameters = functionSignature(call);
-        if (parameters == null) {
+        ParametersPool parametersPool = parametersPool(call);
+        if (parametersPool == null) {
           return;
         }
-        ParametersPool parametersPool = new ParametersPool(parameters);
         if (processNamedArguments(call, parametersPool)) {
           return;
         }
         if (processNamelessArguments(call, parametersPool)) {
           return;
         }
-        Set<Parameter> missingRequiredParameters = parametersPool.allRequired();
+        Set<TypedName> missingRequiredParameters = parametersPool.allRequired();
         if (missingRequiredParameters.size() != 0) {
           errors.add(new ParseError(call,
               missingRequiredArgsMessage(call, missingRequiredParameters)));
           return;
         }
-        for (Parameter parameter : parametersPool.allOptional()) {
+        for (TypedName parameter : parametersPool.allOptional()) {
           if (parameter.type() == Types.NOTHING) {
             errors.add(new ParseError(call, "Parameter '" + parameter.name()
                 + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
@@ -69,26 +71,29 @@ public class AssignArgsToParams {
             .allMatch(a -> a.has(Type.class));
       }
 
-      private List<Parameter> functionSignature(CallNode call) {
+      private ParametersPool parametersPool(CallNode call) {
         Name name = call.name();
         if (functions.contains(name)) {
-          return functions.get(name).signature().parameters();
+          List<Parameter> parameters = functions.get(name).signature().parameters();
+          return new ParametersPool(
+              filterOptionalParameters(parameters), filterRequiredParameters(parameters));
         }
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
           if (function.has(List.class)) {
-            return function.get(List.class);
+            List<TypedName> parameters = function.get(List.class);
+            return new ParametersPool(asList(), parameters);
           }
         }
         return null;
       }
 
       private String missingRequiredArgsMessage(CallNode call,
-          Set<Parameter> missingRequiredParameters) {
+          Set<TypedName> missingRequiredParameters) {
         return "Not all parameters required by '" + call.name()
             + "' function has been specified.\n"
             + "Missing required parameters:\n"
-            + parametersToString(missingRequiredParameters)
+            + TypedName.iterableToString(missingRequiredParameters)
             + "All correct 'parameters <- arguments' assignments:\n"
             + ArgsStringHelper.assignedArgsToString(call);
       }
@@ -102,10 +107,10 @@ public class AssignArgsToParams {
             .collect(toImmutableList());
         for (ArgNode arg : namedArgs) {
           Name name = arg.name();
-          Parameter parameter = parametersPool.take(name);
+          TypedName parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (canConvert(arg.get(Type.class), paramType)) {
-            arg.set(Parameter.class, parameter);
+            arg.set(TypedName.class, parameter);
           } else {
             failed = true;
             errors.add(new ParseError(arg,
@@ -130,8 +135,8 @@ public class AssignArgsToParams {
 
             if (argsSize == 1 && availableTypedParams.hasCandidate()) {
               ArgNode onlyArgument = availableArguments.iterator().next();
-              Parameter candidateParameter = availableTypedParams.candidate();
-              onlyArgument.set(Parameter.class, candidateParameter);
+              TypedName candidateParameter = availableTypedParams.candidate();
+              onlyArgument.set(TypedName.class, candidateParameter);
               parametersPool.take(candidateParameter);
             } else {
               String message = ambiguousAssignmentErrorMessage(
