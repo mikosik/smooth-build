@@ -12,8 +12,6 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 
-import com.google.common.collect.ImmutableMap;
-
 public class ParametersTest {
   private final Name name = new Name("name");
   private List<Parameter> parameters;
@@ -89,18 +87,5 @@ public class ParametersTest {
     given(parameters = asList(parameter1, parameter2, parameter3));
     when(Parameters.filterOptionalParameters(parameters));
     thenReturned(asList(parameter1, parameter3));
-  }
-
-  // paramsToMap()
-
-  @Test
-  public void params_to_map() throws Exception {
-    given(parameter1 = new Parameter(STRING, new Name("alpha"), null));
-    given(parameter2 = new Parameter(STRING, new Name("beta"), mock(Expression.class)));
-    given(parameter3 = new Parameter(STRING, new Name("gamma"), mock(Expression.class)));
-    given(parameters = asList(parameter1, parameter2, parameter3));
-    when(Parameters.parametersToMap(parameters));
-    thenReturned(ImmutableMap.of(parameter1.name(), parameter1, parameter2.name(), parameter2,
-        parameter3.name(), parameter3));
   }
 }
