@@ -1,27 +1,19 @@
 package org.smoothbuild.lang.function.base;
 
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Predicates.not;
+import static org.smoothbuild.util.Lists.filter;
+
+import java.util.List;
+
 import com.google.common.collect.ImmutableMap;
 
 public class Parameters {
-
-  public static ImmutableList<Parameter> filterRequiredParameters(Iterable<Parameter> parameters) {
-    return filterParameters(parameters, true);
+  public static List<Parameter> filterRequiredParameters(List<Parameter> parameters) {
+    return filter(parameters, Parameter::isRequired);
   }
 
-  public static ImmutableList<Parameter> filterOptionalParameters(Iterable<Parameter> parameters) {
-    return filterParameters(parameters, false);
-  }
-
-  private static ImmutableList<Parameter> filterParameters(Iterable<Parameter> parameters,
-      boolean isRequired) {
-    ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-    for (Parameter parameter : parameters) {
-      if (parameter.isRequired() == isRequired) {
-        builder.add(parameter);
-      }
-    }
-    return builder.build();
+  public static List<Parameter> filterOptionalParameters(List<Parameter> parameters) {
+    return filter(parameters, not(Parameter::isRequired));
   }
 
   public static ImmutableMap<Name, Parameter> parametersToMap(Iterable<Parameter> params) {
