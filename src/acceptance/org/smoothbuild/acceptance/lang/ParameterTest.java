@@ -112,6 +112,14 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void parameters_with_trailing_comma_can_be_declared() throws Exception {
+    givenScript("func(String string, ) = string;"
+        + "result = func('abc');");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+  }
+
+  @Test
   public void two_parameters_with_same_name_are_forbidden() throws Exception {
     givenScript("twoParameters(String name, String name) = 'abc';"
         + "result = 'def';");
