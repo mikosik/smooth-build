@@ -13,8 +13,8 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Scope;
+import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -58,17 +58,17 @@ public class AssignTypes {
         Type type = function.expr().get(Type.class);
         function.set(Type.class, type);
         functionTypes.put(function.name(), type);
-        List<Parameter> parameters = createParameters(function.params());
+        List<TypedName> parameters = createParameters(function.params());
         if (parameters != null) {
           function.set(List.class, parameters);
         }
       }
 
-      private List<Parameter> createParameters(List<ParamNode> params) {
-        Builder<Parameter> builder = ImmutableList.builder();
+      private List<TypedName> createParameters(List<ParamNode> params) {
+        Builder<TypedName> builder = ImmutableList.builder();
         for (ParamNode param : params) {
-          if (param.has(Parameter.class)) {
-            builder.add(param.get(Parameter.class));
+          if (param.has(TypedName.class)) {
+            builder.add(param.get(TypedName.class));
           } else {
             return null;
           }
@@ -81,7 +81,7 @@ public class AssignTypes {
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
         if (type != NON_INFERABLE) {
-          param.set(Parameter.class, new Parameter(param.get(Type.class), param.name(), null));
+          param.set(TypedName.class, new TypedName(param.get(Type.class), param.name()));
         }
       }
 
