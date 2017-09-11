@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.function.def.DefinedFunction;
@@ -42,7 +40,6 @@ public class DefinedFunctionLoader {
 
   private static class Worker {
     private final Functions loadedFunctions;
-    private Scope<Name> scope;
 
     public Worker(Functions loadedFunctions) {
       this.loadedFunctions = loadedFunctions;
@@ -50,10 +47,6 @@ public class DefinedFunctionLoader {
 
     public DefinedFunction loadFunction(FuncNode func) {
       List<Parameter> parameters = createParameters(func.params());
-      scope = scope();
-      parameters
-          .stream()
-          .forEach(p -> scope.add(p.name(), null));
       Expression expression = createExpression(func.expr());
       Signature signature = new Signature(expression.type(), func.name(), parameters);
       return new DefinedFunction(signature, expression);
