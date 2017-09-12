@@ -42,13 +42,20 @@ public class AstCreator {
         ArrayList<ParamNode> result = new ArrayList<>();
         if (paramList != null) {
           for (ParamContext param : sane(paramList.param())) {
-            TypeNode type = convertType(param.type());
-            Name name = new Name(param.name().getText());
-            Location location = locationOf(param);
-            result.add(new ParamNode(type, name, location));
+            result.add(convertParam(param));
           }
         }
         return result;
+      }
+
+      private ParamNode convertParam(ParamContext param) {
+        TypeNode type = convertType(param.type());
+        Name name = new Name(param.name().getText());
+        Location location = locationOf(param);
+        ExprNode defaultValue = param.expr() != null
+            ? convertExpr(param.expr())
+            : null;
+        return new ParamNode(type, name, defaultValue, location);
       }
 
       private ExprNode convertPipe(PipeContext pipe) {

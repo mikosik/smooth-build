@@ -1,7 +1,7 @@
 Change Log
 ==========
 
- * defined functions can have parameters (previously only native functions could)
+ * defined functions can have parameters (previously only native functions could) and they can have default values specified
  * fixed smooth script to work correctly when it is redirected to via symlink
  * established array type as basic type inside brackets '[]'
  * changed ':' to '=' in function declaration

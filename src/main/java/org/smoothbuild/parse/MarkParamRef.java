@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,12 +17,14 @@ public class MarkParamRef {
   public static List<ParseError> markParamRef(Ast ast) {
     ArrayList<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
-      private Set<Name> params;
+      private Set<Name> params = new HashSet<>();
 
       public void visitFunction(FuncNode func) {
+        visitParams(func.params());
         params = paramNames(func);
-        super.visitFunction(func);
-        params = null;
+        visitName(func.name());
+        visitExpr(func.expr());
+        params = new HashSet<>();
       }
 
       private Set<Name> paramNames(FuncNode func) {

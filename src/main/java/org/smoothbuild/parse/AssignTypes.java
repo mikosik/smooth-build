@@ -82,6 +82,14 @@ public class AssignTypes {
         param.set(Type.class, type);
         if (type != NON_INFERABLE) {
           param.set(TypedName.class, new TypedName(param.get(Type.class), param.name()));
+          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != NON_INFERABLE) {
+            Type valueType = param.defaultValue().get((Type.class));
+            if (!type.equals(commonSuperType(type, valueType))) {
+              errors.add(new ParseError(param, "Parameter '" + param.name()
+                  + "' is of type " + type + " so it cannot have default value of type "
+                  + valueType + "."));
+            }
+          }
         }
       }
 
