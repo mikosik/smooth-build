@@ -97,9 +97,9 @@ public class DefinedFunctionLoader {
       return function
           .parameters()
           .stream()
-          .map(p -> assignedExpressions.containsKey(p)
-              ? implicitConversion(p.type(), assignedExpressions.get(p))
-              : p.defaultValueExpression())
+          .map(p -> implicitConversion(p.type(), assignedExpressions.containsKey(p)
+              ? assignedExpressions.get(p)
+              : p.defaultValueExpression()))
           .collect(toImmutableList());
     }
 
