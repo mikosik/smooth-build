@@ -83,11 +83,12 @@ public class DefaultValueTest extends AcceptanceTestCase {
   @Test
   public void default_value_can_have_type_convertible_to_parameter_type()
       throws Exception {
-    givenScript("func([String] withDefault = []) = withDefault;"
+    givenFile("file.txt", "abc");
+    givenScript("func(Blob param = file('//file.txt')) = param;"
         + "      result = func;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+    then(artifact("result"), hasContent("abc"));
   }
 
   @Test
