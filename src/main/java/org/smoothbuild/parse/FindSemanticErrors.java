@@ -55,10 +55,10 @@ public class FindSemanticErrors {
   private static void overridenBuiltinFunctions(List<ParseError> errors, Functions functions,
       Ast ast) {
     new AstVisitor() {
-      public void visitFunction(FuncNode function) {
-        super.visitFunction(function);
-        if (functions.contains(function.name())) {
-          errors.add(new ParseError(function, "Function '" + function.name()
+      public void visitFunction(FuncNode func) {
+        super.visitFunction(func);
+        if (functions.contains(func.name())) {
+          errors.add(new ParseError(func, "Function '" + func.name()
               + "' cannot override builtin function with the same name."));
         }
       }
@@ -99,13 +99,13 @@ public class FindSemanticErrors {
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
     Set<Name> defined = new HashSet<>();
     new AstVisitor() {
-      public void visitFunction(FuncNode function) {
-        super.visitFunction(function);
-        if (defined.contains(function.name())) {
-          errors.add(new ParseError(function, "Function '" + function.name()
+      public void visitFunction(FuncNode func) {
+        super.visitFunction(func);
+        if (defined.contains(func.name())) {
+          errors.add(new ParseError(func, "Function '" + func.name()
               + "' is already defined."));
         }
-        defined.add(function.name());
+        defined.add(func.name());
       }
     }.visitAst(ast);
   }
