@@ -19,14 +19,14 @@ public class AstVisitor {
     visitFunctions(ast.functions());
   }
 
-  public void visitFunctions(List<FuncNode> functions) {
-    visitElements(functions, this::visitFunction);
+  public void visitFunctions(List<FuncNode> funcs) {
+    visitElements(funcs, this::visitFunction);
   }
 
-  public void visitFunction(FuncNode function) {
-    visitName(function.name());
-    visitParams(function.params());
-    visitExpr(function.expr());
+  public void visitFunction(FuncNode func) {
+    visitName(func.name());
+    visitParams(func.params());
+    visitExpr(func.expr());
   }
 
   public void visitName(Name name) {}
@@ -72,10 +72,9 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitString(StringNode expr) {}
+  public void visitString(StringNode string) {}
 
-  public <E> void visitElements(List<E> elements,
-      Consumer<? super E> consumer) {
+  public <E> void visitElements(List<E> elements, Consumer<? super E> consumer) {
     elements
         .stream()
         .forEach(consumer);

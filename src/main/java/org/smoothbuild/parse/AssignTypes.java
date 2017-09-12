@@ -44,23 +44,23 @@ public class AssignTypes {
     new AstVisitor() {
       Scope<Type> scope;
 
-      public void visitFunction(FuncNode function) {
-        visitName(function.name());
-        visitParams(function.params());
+      public void visitFunction(FuncNode func) {
+        visitName(func.name());
+        visitParams(func.params());
 
         scope = scope();
-        function.params()
+        func.params()
             .stream()
             .forEach(p -> scope.add(p.name(), p.get(Type.class)));
-        visitExpr(function.expr());
+        visitExpr(func.expr());
         scope = null;
 
-        Type type = function.expr().get(Type.class);
-        function.set(Type.class, type);
-        functionTypes.put(function.name(), type);
-        List<TypedName> parameters = createParameters(function.params());
+        Type type = func.expr().get(Type.class);
+        func.set(Type.class, type);
+        functionTypes.put(func.name(), type);
+        List<TypedName> parameters = createParameters(func.params());
         if (parameters != null) {
-          function.set(List.class, parameters);
+          func.set(List.class, parameters);
         }
       }
 
