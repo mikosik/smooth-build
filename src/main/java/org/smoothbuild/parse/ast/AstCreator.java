@@ -31,36 +31,36 @@ public class AstCreator {
       public Void visitFunc(FuncContext func) {
         NameContext nameContext = func.name();
         Name name = new Name(nameContext.getText());
-        List<ParamNode> params = convertParams(func.paramList());
-        ExprNode pipe = convertPipe(func.pipe());
+        List<ParamNode> params = createParams(func.paramList());
+        ExprNode pipe = createPipe(func.pipe());
         visitChildren(func);
         nodes.add(new FuncNode(name, params, pipe, locationOf(nameContext)));
         return null;
       }
 
-      private List<ParamNode> convertParams(ParamListContext paramList) {
+      private List<ParamNode> createParams(ParamListContext paramList) {
         ArrayList<ParamNode> result = new ArrayList<>();
         if (paramList != null) {
           for (ParamContext param : sane(paramList.param())) {
-            result.add(convertParam(param));
+            result.add(createParam(param));
           }
         }
         return result;
       }
 
-      private ParamNode convertParam(ParamContext param) {
-        TypeNode type = convertType(param.type());
+      private ParamNode createParam(ParamContext param) {
+        TypeNode type = createType(param.type());
         Name name = new Name(param.name().getText());
         Location location = locationOf(param);
         ExprNode defaultValue = param.expr() != null
-            ? convertExpr(param.expr())
+            ? createExpr(param.expr())
             : null;
         return new ParamNode(type, name, defaultValue, location);
       }
 
-      private ExprNode convertPipe(PipeContext pipe) {
+      private ExprNode createPipe(PipeContext pipe) {
         ExprContext initialExpression = pipe.expr();
-        ExprNode result = convertExpr(initialExpression);
+        ExprNode result = createExpr(initialExpression);
         List<CallContext> calls = pipe.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
@@ -68,7 +68,7 @@ public class AstCreator {
           Location location = locationOf(pipe.p.get(i));
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, location));
-          args.addAll(convertArgList(call.argList()));
+          args.addAll(createArgList(call.argList()));
           Name name = new Name(call.name().getText());
           boolean hasParentheses = call.p != null;
           result = new CallNode(name, args, hasParentheses, locationOf(call.name()));
@@ -76,15 +76,15 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode convertExpr(ExprContext expr) {
+      private ExprNode createExpr(ExprContext expr) {
         if (expr.array() != null) {
-          List<ExprNode> elements = map(expr.array().expr(), this::convertExpr);
+          List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
           return new ArrayNode(elements, locationOf(expr));
         }
         if (expr.call() != null) {
           CallContext call = expr.call();
           Name name = new Name(call.name().getText());
-          List<ArgNode> args = convertArgList(call.argList());
+          List<ArgNode> args = createArgList(call.argList());
           Location location = locationOf(call.name());
           boolean hasParentheses = call.p != null;
           return new CallNode(name, args, hasParentheses, location);
@@ -98,7 +98,7 @@ public class AstCreator {
             + " without children.");
       }
 
-      private List<ArgNode> convertArgList(ArgListContext argList) {
+      private List<ArgNode> createArgList(ArgListContext argList) {
         List<ArgNode> result = new ArrayList<>();
         if (argList != null) {
           List<ArgContext> args = argList.arg();
@@ -107,30 +107,30 @@ public class AstCreator {
             ExprContext expr = arg.expr();
             NameContext nameContext = arg.name();
             Name name = nameContext == null ? null : new Name(nameContext.getText());
-            ExprNode exprNode = convertExpr(expr);
+            ExprNode exprNode = createExpr(expr);
             result.add(new ArgNode(i + 1, name, exprNode, locationOf(arg)));
           }
         }
         return result;
       }
 
-      private TypeNode convertType(TypeContext type) {
+      private TypeNode createType(TypeContext type) {
         if (type.basicType() != null) {
-          return convertBasicType(type.basicType());
+          return createBasicType(type.basicType());
         }
         if (type.arrayType() != null) {
-          return convertArrayType(type.arrayType());
+          return createArrayType(type.arrayType());
         }
         throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
             + " without children.");
       }
 
-      private TypeNode convertBasicType(BasicTypeContext basicType) {
+      private TypeNode createBasicType(BasicTypeContext basicType) {
         return new TypeNode(basicType.getText(), locationOf(basicType));
       }
 
-      private TypeNode convertArrayType(ArrayTypeContext arrayType) {
-        TypeNode elementType = convertType(arrayType.type());
+      private TypeNode createArrayType(ArrayTypeContext arrayType) {
+        TypeNode elementType = createType(arrayType.type());
         return new ArrayTypeNode(elementType, locationOf(arrayType));
       }
     }.visit(module);
