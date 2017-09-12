@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
@@ -27,6 +26,7 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.ParamNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
@@ -82,8 +82,18 @@ public class AssignArgsToParams {
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
           if (function.has(List.class)) {
-            List<TypedName> parameters = function.get(List.class);
-            return new ParametersPool(asList(), parameters);
+            List<TypedName> typedNames = function.get(List.class);
+            List<ParamNode> paramNodes = function.params();
+            List<TypedName> required = new ArrayList<>();
+            List<TypedName> optional = new ArrayList<>();
+            for (int i = 0; i < paramNodes.size(); i++) {
+              if (paramNodes.get(i).hasDefaultValue()) {
+                optional.add(typedNames.get(i));
+              } else {
+                required.add(typedNames.get(i));
+              }
+            }
+            return new ParametersPool(optional, required);
           }
         }
         return null;

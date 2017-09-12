@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.util.Lists.map;
 
@@ -46,17 +45,19 @@ public class DefinedFunctionLoader {
     }
 
     public DefinedFunction loadFunction(FuncNode func) {
-      List<Parameter> parameters = createParameters(func.params());
+      List<Parameter> parameters = map(func.params(), this::createParameter);
       Expression expression = createExpression(func.expr());
       Signature signature = new Signature(expression.type(), func.name(), parameters);
       return new DefinedFunction(signature, expression);
     }
 
-    private static List<Parameter> createParameters(List<ParamNode> params) {
-      return params
-          .stream()
-          .map(p -> new Parameter(p.type().get(Type.class), p.name(), null))
-          .collect(toList());
+    private Parameter createParameter(ParamNode p) {
+      Type type = p.type().get(Type.class);
+      Name name = p.name();
+      Expression defaultValue = p.hasDefaultValue()
+          ? createExpression(p.defaultValue())
+          : null;
+      return new Parameter(type, name, defaultValue);
     }
 
     private Expression createExpression(ExprNode expr) {

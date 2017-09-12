@@ -37,6 +37,9 @@ public class AstVisitor {
 
   public void visitParam(ParamNode param) {
     visitType(param.type());
+    if (param.hasDefaultValue()) {
+      visitExpr(param.defaultValue());
+    }
   }
 
   public void visitType(TypeNode type) {}

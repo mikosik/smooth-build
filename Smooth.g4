@@ -3,7 +3,7 @@ grammar Smooth;
 module: func* EOF;
 func: name ( '(' paramList? ')' )? '=' pipe ';' ;
 paramList: param ( ',' param )* ','? ;
-param: type name ;
+param: type name ( '=' expr )? ;
 pipe: expr ( p+='|' call )* ;
 expr : call | STRING | array;
 call: name ( p='(' argList? ')' )?;
