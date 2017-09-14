@@ -1,11 +1,14 @@
 package org.smoothbuild.parse.ast;
 
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
@@ -28,14 +31,25 @@ public class AstCreator {
   public static Ast fromParseTree(ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
+      private Set<Name> visibleParams = new HashSet<>();
+
       public Void visitFunc(FuncContext func) {
         NameContext nameContext = func.name();
         Name name = new Name(nameContext.getText());
         List<ParamNode> params = createParams(func.paramList());
+        visibleParams = paramNames(params);
         ExprNode pipe = createPipe(func.pipe());
         visitChildren(func);
+        visibleParams = new HashSet<>();
         nodes.add(new FuncNode(name, params, pipe, locationOf(nameContext)));
         return null;
+      }
+
+      private Set<Name> paramNames(List<ParamNode> params) {
+        return params
+            .stream()
+            .map(p -> p.name())
+            .collect(toSet());
       }
 
       private List<ParamNode> createParams(ParamListContext paramList) {
@@ -70,8 +84,7 @@ public class AstCreator {
           args.add(new ArgNode(0, null, result, location));
           args.addAll(createArgList(call.argList()));
           Name name = new Name(call.name().getText());
-          boolean hasParentheses = call.p != null;
-          result = new CallNode(name, args, hasParentheses, locationOf(call.name()));
+          result = new CallNode(name, args, locationOf(call.name()));
         }
         return result;
       }
@@ -84,10 +97,14 @@ public class AstCreator {
         if (expr.call() != null) {
           CallContext call = expr.call();
           Name name = new Name(call.name().getText());
-          List<ArgNode> args = createArgList(call.argList());
           Location location = locationOf(call.name());
-          boolean hasParentheses = call.p != null;
-          return new CallNode(name, args, hasParentheses, location);
+          if (visibleParams.contains(name)) {
+            boolean hasParentheses = call.p != null;
+            return new RefNode(name, hasParentheses, location);
+          } else {
+            List<ArgNode> args = createArgList(call.argList());
+            return new CallNode(name, args, location);
+          }
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();

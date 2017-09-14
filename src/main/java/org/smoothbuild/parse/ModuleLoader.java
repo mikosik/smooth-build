@@ -4,7 +4,6 @@ import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
 import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
-import static org.smoothbuild.parse.MarkParamRef.markParamRef;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortedByDependencies;
 import static org.smoothbuild.util.Maybe.error;
@@ -52,7 +51,6 @@ public class ModuleLoader {
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
-    ast = ast.addErrors(a -> markParamRef(a));
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
     ast = ast.addErrors(a -> assignTypes(functions, a));

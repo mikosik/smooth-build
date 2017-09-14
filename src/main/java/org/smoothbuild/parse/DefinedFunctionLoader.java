@@ -29,6 +29,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 
 public class DefinedFunctionLoader {
@@ -62,12 +63,10 @@ public class DefinedFunctionLoader {
 
     private Expression createExpression(ExprNode expr) {
       if (expr instanceof CallNode) {
-        CallNode call = (CallNode) expr;
-        if (call.has(CallNode.ParamRefFlag.class)) {
-          return createReference(call);
-        } else {
-          return createCall(call);
-        }
+        return createCall((CallNode) expr);
+      }
+      if (expr instanceof RefNode) {
+        return createReference((RefNode) expr);
       }
       if (expr instanceof StringNode) {
         return createStringLiteral((StringNode) expr);
@@ -79,7 +78,7 @@ public class DefinedFunctionLoader {
           + " without children.");
     }
 
-    private Expression createReference(CallNode ref) {
+    private Expression createReference(RefNode ref) {
       return new BoundValueExpression(ref.get(Type.class), ref.name(), ref.location());
     }
 
