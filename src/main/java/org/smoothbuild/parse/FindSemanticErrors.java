@@ -15,9 +15,9 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.CallNode.ParamRefFlag;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -67,10 +67,10 @@ public class FindSemanticErrors {
 
   private static void parametersReferenceWithParentheses(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        if (call.has(ParamRefFlag.class) && call.hasParentheses()) {
-          errors.add(new ParseError(call, "Parameter '" + call.name()
+      public void visitRef(RefNode ref) {
+        super.visitRef(ref);
+        if (ref.hasParentheses()) {
+          errors.add(new ParseError(ref, "Parameter '" + ref.name()
               + "' cannot be called as it is not a function."));
         }
       }
@@ -89,7 +89,7 @@ public class FindSemanticErrors {
 
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!call.has(ParamRefFlag.class) && !all.contains(call.name())) {
+        if (!all.contains(call.name())) {
           errors.add(new ParseError(call.location(), "'" + call.name() + "' is undefined."));
         }
       }

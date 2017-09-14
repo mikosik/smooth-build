@@ -11,6 +11,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
@@ -49,6 +50,8 @@ public class AstVisitor {
       visitArray((ArrayNode) expr);
     } else if (expr instanceof CallNode) {
       visitCall((CallNode) expr);
+    } else if (expr instanceof RefNode) {
+      visitRef((RefNode) expr);
     } else if (expr instanceof StringNode) {
       visitString((StringNode) expr);
     } else {
@@ -63,6 +66,8 @@ public class AstVisitor {
   public void visitCall(CallNode call) {
     visitArgs(call.args());
   }
+
+  public void visitRef(RefNode ref) {}
 
   public void visitArgs(List<ArgNode> args) {
     visitElements(args, this::visitArg);
