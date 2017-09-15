@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.TypeLiteral;
 
 public class Types {
-  public static final Type NON_INFERABLE = new NonInferableType();
   public static final Type STRING = new StringType();
   public static final Type BLOB = new BlobType();
   public static final Type FILE = new FileType();

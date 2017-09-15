@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.Types.NIL;
-import static org.smoothbuild.lang.type.Types.NON_INFERABLE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
 import static org.smoothbuild.lang.type.Types.isConvertible;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Scope;
@@ -19,6 +19,7 @@ import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -36,6 +37,12 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class AssignTypes {
   public static List<ParseError> assignTypes(Functions functions, Ast ast) {
+    final Type nonInferable = new Type("<NonInferable>", Value.class) {
+      @Override
+      public Value defaultValue(ValuesDb valuesDb) {
+        throw new UnsupportedOperationException();
+      }
+    };
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()
@@ -81,9 +88,9 @@ public class AssignTypes {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
-        if (type != NON_INFERABLE) {
+        if (type != nonInferable) {
           param.set(TypedName.class, new TypedName(param.get(Type.class), param.name()));
-          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != NON_INFERABLE) {
+          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != nonInferable) {
             Type valueType = param.defaultValue().get((Type.class));
             if (!isConvertible(valueType, type)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
@@ -97,7 +104,7 @@ public class AssignTypes {
       public void visitType(TypeNode type) {
         super.visitType(type);
         Type inferredType = createType(type);
-        type.set(Type.class, inferredType == null ? NON_INFERABLE : inferredType);
+        type.set(Type.class, inferredType == null ? nonInferable : inferredType);
       }
 
       private Type createType(TypeNode type) {
@@ -123,14 +130,14 @@ public class AssignTypes {
           return NIL;
         }
         Type firstType = expressions.get(0).get(Type.class);
-        if (firstType == NON_INFERABLE) {
-          return NON_INFERABLE;
+        if (firstType == nonInferable) {
+          return nonInferable;
         }
         Type superType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
-          if (type == NON_INFERABLE) {
-            return NON_INFERABLE;
+          if (type == nonInferable) {
+            return nonInferable;
           }
           superType = commonSuperType(superType, type);
 
@@ -139,7 +146,7 @@ public class AssignTypes {
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type '" + firstType + "' while element at index " + i
                     + " has type '" + type + "'."));
-            return NON_INFERABLE;
+            return nonInferable;
           }
         }
         ArrayType arrayType = Types.arrayOf(superType);
@@ -147,7 +154,7 @@ public class AssignTypes {
           errors.add(new ParseError(array, "Array cannot contain element with type '"
               + superType + "'. Only following types are allowed: " + Types.basicTypes()
               + "."));
-          return NON_INFERABLE;
+          return nonInferable;
         }
         return arrayType;
       }
