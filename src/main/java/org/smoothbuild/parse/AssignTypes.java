@@ -6,6 +6,7 @@ import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NON_INFERABLE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
+import static org.smoothbuild.lang.type.Types.isConvertible;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class AssignTypes {
           param.set(TypedName.class, new TypedName(param.get(Type.class), param.name()));
           if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != NON_INFERABLE) {
             Type valueType = param.defaultValue().get((Type.class));
-            if (!type.equals(commonSuperType(type, valueType))) {
+            if (!isConvertible(valueType, type)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
                   + "' is of type " + type + " so it cannot have default value of type "
                   + valueType + "."));
