@@ -116,4 +116,44 @@ public class FunctionTest extends AcceptanceTestCase {
     then(output(), containsString(
         "build.smooth:1: error: Parameter 'function1' cannot be called as it is not a function.\n"));
   }
+
+  @Test
+  public void function_expression_type_not_convertable_to_function_type_causes_error()
+      throws IOException {
+    givenScript("String result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("build.smooth:1: error: Type of function's 'result' expression"
+        + " is [Nothing] which is not convertable to function's declared result type String.\n"));
+  }
+
+  @Test
+  public void function_with_declared_result_type() throws IOException {
+    givenScript("String result = 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), hasContent("abc"));
+  }
+
+  @Test
+  public void function_with_result_type_which_is_supertype_of_function_expression()
+      throws IOException {
+    givenFile("file.txt", "abc");
+    givenScript("Blob func = file('//file.txt');"
+        + "      result = 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void function_result_cannot_be_assigned_to_non_convertable_type_even_when_function_expression_is_convertible()
+      throws IOException {
+    givenFile("file.txt", "abc");
+    givenScript("Blob func = file('//file.txt');"
+        + "      File result = func;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("build.smooth:1: error: Type of function's 'result' expression "
+        + "is Blob which is not convertable to function's declared result type File.\n"));
+  }
 }

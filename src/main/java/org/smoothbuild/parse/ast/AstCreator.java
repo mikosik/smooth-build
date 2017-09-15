@@ -34,6 +34,7 @@ public class AstCreator {
       private Set<Name> visibleParams = new HashSet<>();
 
       public Void visitFunc(FuncContext func) {
+        TypeNode type = func.type() == null ? null : createType(func.type());
         NameContext nameContext = func.name();
         Name name = new Name(nameContext.getText());
         List<ParamNode> params = createParams(func.paramList());
@@ -41,7 +42,7 @@ public class AstCreator {
         ExprNode pipe = createPipe(func.pipe());
         visitChildren(func);
         visibleParams = new HashSet<>();
-        nodes.add(new FuncNode(name, params, pipe, locationOf(nameContext)));
+        nodes.add(new FuncNode(type, name, params, pipe, locationOf(nameContext)));
         return null;
       }
 
