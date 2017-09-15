@@ -25,6 +25,6 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(new Name(name), asList(), null, location(line));
+    return new FuncNode(null, new Name(name), asList(), null, location(line));
   }
 }

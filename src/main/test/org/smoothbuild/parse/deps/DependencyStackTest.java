@@ -157,13 +157,13 @@ public class DependencyStackTest {
 
   private DependencyStackElem elem(Name from, Name to, int location) {
     DependencyStackElem elem = new DependencyStackElem(
-        new FuncNode(from, asList(), null, null), ImmutableSet.of());
+        new FuncNode(null, from, asList(), null, null), ImmutableSet.of());
     elem.setMissing(new Dependency(location(location), to));
     return elem;
   }
 
   private static DependencyStackElem elem() {
     return new DependencyStackElem(new FuncNode(
-        new Name("name"), asList(), null, null), ImmutableSet.of());
+        null, new Name("name"), asList(), null, null), ImmutableSet.of());
   }
 }

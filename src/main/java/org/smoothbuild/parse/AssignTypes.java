@@ -63,12 +63,27 @@ public class AssignTypes {
         visitExpr(func.expr());
         scope = null;
 
-        Type type = func.expr().get(Type.class);
+        Type type = funcType(func);
         func.set(Type.class, type);
         functionTypes.put(func.name(), type);
         List<TypedName> parameters = createParameters(func.params());
         if (parameters != null) {
           func.set(List.class, parameters);
+        }
+      }
+
+      private Type funcType(FuncNode func) {
+        Type exprType = func.expr().get(Type.class);
+        if (func.hasType()) {
+          Type type = createType(func.type());
+          if (type != nonInferable && exprType != nonInferable && !isConvertible(exprType, type)) {
+            errors.add(new ParseError(func, "Type of function's '" + func.name()
+                + "' expression is " + exprType
+                + " which is not convertable to function's declared result type " + type + "."));
+          }
+          return type;
+        } else {
+          return exprType;
         }
       }
 

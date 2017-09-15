@@ -8,15 +8,26 @@ import org.smoothbuild.lang.message.Location;
 import com.google.common.collect.ImmutableList;
 
 public class FuncNode extends Node {
+  private final TypeNode type;
   private final Name name;
   private final List<ParamNode> params;
   private final ExprNode expr;
 
-  public FuncNode(Name name, List<ParamNode> params, ExprNode expr, Location location) {
+  public FuncNode(TypeNode type, Name name, List<ParamNode> params, ExprNode expr,
+      Location location) {
     super(location);
+    this.type = type;
     this.name = name;
     this.params = ImmutableList.copyOf(params);
     this.expr = expr;
+  }
+
+  public boolean hasType() {
+    return type != null;
+  }
+
+  public TypeNode type() {
+    return type;
   }
 
   public Name name() {
