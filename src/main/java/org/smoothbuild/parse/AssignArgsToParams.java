@@ -36,9 +36,6 @@ public class AssignArgsToParams {
     new AstVisitor() {
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!eachArgHasType(call)) {
-          return;
-        }
         ParametersPool parametersPool = parametersPool(call);
         if (parametersPool == null) {
           return;
@@ -62,13 +59,6 @@ public class AssignArgsToParams {
             return;
           }
         }
-      }
-
-      private boolean eachArgHasType(CallNode call) {
-        return call
-            .args()
-            .stream()
-            .allMatch(a -> a.has(Type.class));
       }
 
       private ParametersPool parametersPool(CallNode call) {
