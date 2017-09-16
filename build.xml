@@ -7,6 +7,7 @@
     <property name="dir.src.main.java" location="${dir.src}/main/java"/>
     <property name="dir.src.main.test" location="${dir.src}/main/test"/>
     <property name="dir.src.func.java" location="${dir.src}/func/java"/>
+    <property name="dir.src.func.smooth" location="${dir.src}/func/smooth"/>
     <property name="dir.src.func.test" location="${dir.src}/func/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
@@ -344,6 +345,7 @@
         <zip destfile="${dir.build.release.file}" level="9">
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.func.smooth}/funcs.smooth"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
         </zip>
     </target>

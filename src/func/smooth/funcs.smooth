@@ -1,0 +1,84 @@
+
+File aidl(
+  String apiLevel,
+  String buildToolsVersion,
+  File interfaceFile,
+);
+
+[Blob] concatenateBlobArrays(
+  [Blob] blobs,
+  [Blob] with,
+);
+
+[Blob] concatenateFileArrays(
+  [File] files,
+  [File] with,
+);
+
+[String] concatenateStringArrays(
+  [String] strings,
+  [String] with,
+);
+
+Blob content(
+  File file,
+);
+
+File file
+  String path,
+);
+
+[File] files(
+  String path,
+);
+
+[File] filter(
+  [File] files,
+  String include,
+);
+
+Blob jar(
+  [File] files,
+  Blob manifest,
+);
+
+[File] javac(
+  [File] sources,
+  [Blob] libs = [],
+  String source = "1.5",
+  String target = "1.5",
+);
+
+String junit(
+  [Blob] libs = [],
+  String include = "**/*Test.class",
+);
+
+String path(
+  File file,
+);
+
+Blob toBlob(
+  String string,
+);
+
+File File(
+  String path,
+  Blob content,
+);
+
+String toString(
+  Blob blob,
+);
+
+[File] unjar(
+  Blob blob,
+);
+
+[File] unzip(
+  Blob blob,
+);
+
+Blob zip(
+  [File] files,
+);
