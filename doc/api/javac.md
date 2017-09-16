@@ -10,7 +10,7 @@ should be compatible with.
  * String __target__ - Version of JVM for which *.class files should
 be genereated.
 
-Returns File[] with compiled java classes (*.class files).
+Returns __[File]__ with compiled java classes (*.class files).
 
 ### examples
 

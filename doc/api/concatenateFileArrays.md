@@ -1,6 +1,6 @@
 ## concatenateFileArrays
 
-Concatenates two File[].
+Concatenates two [File].
 
  * [File] __files__ - Array of Files to be concatenated with array passed
 via "with" parameter.

@@ -1,6 +1,6 @@
 ## concatenateBlobArrays
 
-Concatenates two Blob[].
+Concatenates two [Blob].
 
  * [Blob] __blobs__ - Array of blobs to be concatenated with array passed
 via "with" parameter.

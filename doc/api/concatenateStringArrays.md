@@ -1,6 +1,6 @@
 ## concatenateStringArrays
 
-Concatenates two String[].
+Concatenates two [String].
 
  * [String] __strings__ - Array of Strings to be concatenated with array passed
 via "with" parameter.
