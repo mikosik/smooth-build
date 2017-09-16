@@ -8,7 +8,7 @@ Filters files according to given glob pattern.
    * `**` matches any number (possibly zero) of directories.
    * `*` matches any number (possibly zero) of characters in file/directory name.
 
-Returns File[] with filtered results.
+Returns __[File]__ with filtered results.
 
 ### examples
 
