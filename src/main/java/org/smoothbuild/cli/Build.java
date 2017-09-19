@@ -5,10 +5,12 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
+import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +19,6 @@ import javax.inject.Inject;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -28,15 +29,12 @@ import com.google.common.collect.ImmutableList;
 public class Build {
   private final Console console;
   private final TempManager tempManager;
-  private final ModuleLoader moduleLoader;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
-  public Build(Console console, TempManager tempManager, ModuleLoader moduleLoader,
-      SmoothExecutor smoothExecutor) {
+  public Build(Console console, TempManager tempManager, SmoothExecutor smoothExecutor) {
     this.console = console;
     this.tempManager = tempManager;
-    this.moduleLoader = moduleLoader;
     this.smoothExecutor = smoothExecutor;
   }
 
@@ -69,7 +67,7 @@ public class Build {
 
   private Maybe<Functions> loadFunctions() {
     Functions builtin = loadBuiltinFunctions();
-    Maybe<Functions> defined = moduleLoader.loadFunctions(builtin, DEFAULT_SCRIPT);
+    Maybe<Functions> defined = loadModule(builtin, Paths.get(DEFAULT_SCRIPT.value()));
     return invokeWrap(defined, builtin::addAll);
   }
 
