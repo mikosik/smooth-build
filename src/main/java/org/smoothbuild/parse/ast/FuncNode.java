@@ -38,6 +38,10 @@ public class FuncNode extends Node {
     return params;
   }
 
+  public boolean isNative() {
+    return expr == null;
+  }
+
   public ExprNode expr() {
     return expr;
   }
