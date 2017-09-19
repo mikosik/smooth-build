@@ -2,8 +2,8 @@ package org.smoothbuild.lang.function.nativ;
 
 import static org.smoothbuild.lang.function.nativ.NativeParameterFactory.createParameter;
 import static org.smoothbuild.lang.type.Types.jTypeToType;
-import static org.smoothbuild.util.ReflexiveUtils.isPublic;
-import static org.smoothbuild.util.ReflexiveUtils.isStatic;
+import static org.smoothbuild.util.reflect.ReflexiveUtils.isPublic;
+import static org.smoothbuild.util.reflect.ReflexiveUtils.isStatic;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

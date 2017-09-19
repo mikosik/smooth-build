@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static org.smoothbuild.util.Methods.canonicalName;
+import static org.smoothbuild.util.reflect.Methods.canonicalName;
 
 import java.lang.reflect.Method;
 
