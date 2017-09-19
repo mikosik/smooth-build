@@ -4,21 +4,16 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadNativeModules;
-import static org.smoothbuild.util.Classes.binaryPath;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
-import java.util.jar.JarOutputStream;
-import java.util.zip.ZipEntry;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -28,8 +23,6 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Classes;
-
-import com.google.common.io.ByteStreams;
 
 public class NativeLibraryLoaderTest {
   @Test
@@ -89,14 +82,7 @@ public class NativeLibraryLoaderTest {
   private static Path module(Class<?>... classes) throws IOException,
       FileNotFoundException {
     File tempJarFile = File.createTempFile("tmp", ".jar");
-    try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(tempJarFile))) {
-      for (Class<?> clazz : classes) {
-        jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
-        try (InputStream byteCodeInputStream = Classes.byteCodeAsInputStream(clazz)) {
-          ByteStreams.copy(byteCodeInputStream, jarOutputStream);
-        }
-      }
-    }
+    Classes.saveBytecodeInJar(tempJarFile, classes);
     return tempJarFile.toPath();
   }
 
