@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
-import static org.smoothbuild.util.Classes.binaryPath;
+import static org.smoothbuild.util.reflect.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -16,7 +16,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.util.Classes;
+import org.smoothbuild.util.reflect.Classes;
 
 public class FileClassLoaderTest {
   private final ValuesDb valuesDb = memoryValuesDb();

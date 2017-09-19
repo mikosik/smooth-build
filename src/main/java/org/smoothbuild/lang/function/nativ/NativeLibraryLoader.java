@@ -6,8 +6,8 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.lang.function.nativ.NativeFunctionFactory.nativeFunctions;
-import static org.smoothbuild.util.Classes.CLASS_FILE_EXTENSION;
-import static org.smoothbuild.util.Classes.binaryPathToBinaryName;
+import static org.smoothbuild.util.reflect.Classes.CLASS_FILE_EXTENSION;
+import static org.smoothbuild.util.reflect.Classes.binaryPathToBinaryName;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.util.ClassLoaders;
+import org.smoothbuild.util.reflect.ClassLoaders;
 
 public class NativeLibraryLoader {
   public static Functions loadBuiltinFunctions() {

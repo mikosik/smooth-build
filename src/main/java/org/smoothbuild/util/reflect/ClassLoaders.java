@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.reflect;
 
 import java.net.MalformedURLException;
 import java.net.URL;

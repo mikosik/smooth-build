@@ -22,7 +22,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.util.Classes;
+import org.smoothbuild.util.reflect.Classes;
 
 public class NativeLibraryLoaderTest {
   @Test

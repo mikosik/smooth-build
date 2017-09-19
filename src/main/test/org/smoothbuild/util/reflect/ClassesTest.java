@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.reflect;
 
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

@@ -1,6 +1,6 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.reflect;
 
-import static org.smoothbuild.util.Methods.canonicalName;
+import static org.smoothbuild.util.reflect.Methods.canonicalName;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

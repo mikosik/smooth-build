@@ -1,9 +1,9 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.reflect;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.util.ReflexiveUtils.isPublic;
-import static org.smoothbuild.util.ReflexiveUtils.isStatic;
+import static org.smoothbuild.util.reflect.ReflexiveUtils.isPublic;
+import static org.smoothbuild.util.reflect.ReflexiveUtils.isStatic;
 
 import org.junit.Test;
 
