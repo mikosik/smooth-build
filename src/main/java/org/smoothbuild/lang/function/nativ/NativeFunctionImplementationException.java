@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static org.smoothbuild.util.Methods.canonicalName;
+
 import java.lang.reflect.Method;
 
 public class NativeFunctionImplementationException extends RuntimeException {
@@ -13,7 +15,7 @@ public class NativeFunctionImplementationException extends RuntimeException {
   }
 
   private static String buildMessage(Method method, String message) {
-    return "Java method '" + method.getDeclaringClass().getCanonicalName() + "." + method.getName()
+    return "Java method '" + canonicalName(method)
         + "' is not a correct Smooth function implementation:\n" + message;
   }
 }
