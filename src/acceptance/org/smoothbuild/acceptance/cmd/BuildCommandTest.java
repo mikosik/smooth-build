@@ -19,8 +19,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_fails_when_script_file_is_missing() throws Exception {
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("error: Cannot read build script file 'build.smooth'. "
-        + "File 'build.smooth' doesn't exist.\n"));
+    then(output(), containsString("error: Cannot read build script file 'build.smooth'.\n"));
   }
 
   @Test

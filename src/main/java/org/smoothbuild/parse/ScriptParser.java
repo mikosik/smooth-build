@@ -7,6 +7,7 @@ import static org.smoothbuild.util.Maybe.maybe;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -25,7 +26,6 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.util.Maybe;
 

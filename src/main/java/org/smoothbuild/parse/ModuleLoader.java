@@ -11,14 +11,13 @@ import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-
-import javax.inject.Inject;
+import java.nio.file.Path;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.parse.ast.Ast;
@@ -27,27 +26,20 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
-  private final FileSystem fileSystem;
-
-  @Inject
-  public ModuleLoader(FileSystem fileSystem) {
-    this.fileSystem = fileSystem;
-  }
-
-  public Maybe<Functions> loadFunctions(Functions functions, Path smoothFile) {
+  public static Maybe<Functions> loadModule(Functions functions, Path smoothFile) {
     Maybe<InputStream> inputStream = scriptInputStream(smoothFile);
     return invoke(inputStream, is -> loadFunctions(functions, is, smoothFile));
   }
 
-  private Maybe<InputStream> scriptInputStream(Path scriptFile) {
+  private static Maybe<InputStream> scriptInputStream(Path scriptFile) {
     try {
-      return value(fileSystem.openInputStream(scriptFile));
-    } catch (FileSystemException e) {
-      return error("error: Cannot read build script file " + scriptFile + ". " + e.getMessage());
+      return value(new BufferedInputStream(new FileInputStream(scriptFile.toFile())));
+    } catch (IOException e) {
+      return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
   }
 
-  private Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
+  private static Maybe<Functions> loadFunctions(Functions functions, InputStream inputStream,
       Path scriptFile) {
     Maybe<ModuleContext> module = parseScript(inputStream, scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
@@ -58,7 +50,7 @@ public class ModuleLoader {
     return invoke(ast, a -> loadDefinedFunctions(functions, a));
   }
 
-  private Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
+  private static Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
     for (FuncNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
