@@ -20,8 +20,8 @@ public class Classes {
 
   public static String binaryPathToBinaryName(String binaryPath) {
     if (!binaryPath.endsWith(CLASS_FILE_EXTENSION)) {
-      throw new IllegalArgumentException("Path '' is not class file. It should end with "
-          + CLASS_FILE_EXTENSION);
+      throw new IllegalArgumentException("Path '" + binaryPath
+          + "' is not class file. It should end with " + CLASS_FILE_EXTENSION);
     }
     int newLength = binaryPath.length() - CLASS_FILE_EXTENSION.length();
     return binaryPath.substring(0, newLength).replace('/', '.');
