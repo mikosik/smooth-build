@@ -16,8 +16,8 @@ public class ClassLoaders {
     return new URLClassLoader(new URL[] { toUrl(absolutePath) }, parent);
   }
 
-  private static URL toUrl(Path funcsJarPath) {
-    String urlString = "file://" + funcsJarPath.toString();
+  private static URL toUrl(Path path) {
+    String urlString = "file://" + path.toString();
     try {
       return new URL(urlString);
     } catch (MalformedURLException e) {
