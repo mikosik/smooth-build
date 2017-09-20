@@ -83,10 +83,6 @@ public class FindSemanticErrors {
         .addAll(map(ast.functions(), f -> f.name()))
         .build();
     new AstVisitor() {
-      public void visitFunction(FuncNode func) {
-        super.visitFunction(func);
-      }
-
       public void visitCall(CallNode call) {
         super.visitCall(call);
         if (!all.contains(call.name())) {
