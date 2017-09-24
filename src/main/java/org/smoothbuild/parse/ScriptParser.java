@@ -4,9 +4,9 @@ import static org.smoothbuild.lang.message.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
+import static org.smoothbuild.util.Paths.openBufferedInputStream;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -30,15 +30,15 @@ import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.util.Maybe;
 
 public class ScriptParser {
-  public static Maybe<ModuleContext> parseScript(InputStream inputStream, Path scriptFile) {
-    ErrorListener errorListener = new ErrorListener();
+  public static Maybe<ModuleContext> parseScript(Path scriptFile) {
     ANTLRInputStream antlrInputStream;
     try {
-      antlrInputStream = new ANTLRInputStream(inputStream);
+      antlrInputStream = new ANTLRInputStream(openBufferedInputStream(scriptFile));
     } catch (IOException e) {
-      return error("error: Cannot read build script " + scriptFile + "\n" + e.getMessage());
+      return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
 
+    ErrorListener errorListener = new ErrorListener();
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);

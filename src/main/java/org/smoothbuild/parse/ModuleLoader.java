@@ -6,15 +6,10 @@ import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortedByDependencies;
-import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
@@ -27,8 +22,7 @@ import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
   public static Maybe<Functions> loadModule(Functions functions, Path scriptFile) {
-    Maybe<InputStream> inputStream = scriptInputStream(scriptFile);
-    Maybe<ModuleContext> module = invoke(inputStream, is -> parseScript(is, scriptFile));
+    Maybe<ModuleContext> module = parseScript(scriptFile);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
@@ -45,13 +39,5 @@ public class ModuleLoader {
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
-  }
-
-  private static Maybe<InputStream> scriptInputStream(Path scriptFile) {
-    try {
-      return value(new BufferedInputStream(new FileInputStream(scriptFile.toFile())));
-    } catch (IOException e) {
-      return error("error: Cannot read build script file '" + scriptFile + "'.");
-    }
   }
 }
