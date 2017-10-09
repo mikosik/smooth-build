@@ -8,7 +8,6 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -74,7 +73,7 @@ public class DefinedFunctionLoader {
       if (expr instanceof ArrayNode) {
         return createArray((ArrayNode) expr);
       }
-      throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
+      throw new RuntimeException("Illegal parse tree: " + expr.getClass().getSimpleName()
           + " without children.");
     }
 
