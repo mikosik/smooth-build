@@ -11,7 +11,6 @@ import java.util.Random;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -81,19 +80,6 @@ public class TestingFunctions {
   public static SString oneOptionalOneRequired(Container container, SString stringA,
       @Required SString stringB) {
     return container.create().string(stringA.value() + ":" + stringB.value());
-  }
-
-  @SmoothFunction
-  public static SString cacheableRandom(Container container) {
-    long randomLong = new Random().nextLong();
-    return container.create().string(Long.toString(randomLong));
-  }
-
-  @SmoothFunction
-  @NotCacheable
-  public static SString notCacheableRandom(Container container) {
-    long randomLong = new Random().nextLong();
-    return container.create().string(Long.toString(randomLong));
   }
 
   @SmoothFunction

@@ -8,6 +8,8 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -19,6 +21,9 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.function.def.DefinedFunction;
+import org.smoothbuild.lang.function.nativ.Native;
+import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
@@ -31,8 +36,11 @@ import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hasher;
+
 public class DefinedFunctionLoader {
-  public static DefinedFunction loadDefinedFunction(Functions loadedFunctions,
+  public static Function loadDefinedFunction(Functions loadedFunctions,
       FuncNode funcNode) {
     return new Worker(loadedFunctions).loadFunction(funcNode);
   }
@@ -44,11 +52,25 @@ public class DefinedFunctionLoader {
       this.loadedFunctions = loadedFunctions;
     }
 
-    public DefinedFunction loadFunction(FuncNode func) {
+    public Function loadFunction(FuncNode func) {
       List<Parameter> parameters = map(func.params(), this::createParameter);
-      Expression expression = createExpression(func.expr());
-      Signature signature = new Signature(expression.type(), func.name(), parameters);
-      return new DefinedFunction(signature, expression);
+      Signature signature = new Signature(func.get(Type.class), func.name(), parameters);
+      if (func.isNative()) {
+        Native nativ = func.get(Native.class);
+        HashCode hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
+        boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
+        return new NativeFunction(nativ.method(), signature, isCacheable, hash);
+      } else {
+        Expression expression = createExpression(func.expr());
+        return new DefinedFunction(signature, expression);
+      }
+    }
+
+    private static HashCode createNativeFunctionHash(HashCode jarHash, Signature signature) {
+      Hasher hasher = Hash.newHasher();
+      hasher.putBytes(jarHash.asBytes());
+      hasher.putString(signature.name().toString(), SmoothConstants.CHARSET);
+      return hasher.hash();
     }
 
     private Parameter createParameter(ParamNode p) {

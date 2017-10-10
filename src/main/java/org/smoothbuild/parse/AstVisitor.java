@@ -27,7 +27,9 @@ public class AstVisitor {
   public void visitFunction(FuncNode func) {
     visitName(func.name());
     visitParams(func.params());
-    visitExpr(func.expr());
+    if (!func.isNative()) {
+      visitExpr(func.expr());
+    }
   }
 
   public void visitName(Name name) {}
