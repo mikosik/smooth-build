@@ -1,7 +1,7 @@
 grammar Smooth;
 
 module: func* EOF;
-func: type? name ( '(' paramList? ')' )? '=' pipe ';' ;
+func: type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
 paramList: param ( ',' param )* ','? ;
 param: type name ( '=' expr )? ;
 pipe: expr ( p+='|' call )* ;

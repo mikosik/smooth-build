@@ -39,7 +39,7 @@ public class AstCreator {
         Name name = new Name(nameContext.getText());
         List<ParamNode> params = createParams(func.paramList());
         visibleParams = paramNames(params);
-        ExprNode pipe = createPipe(func.pipe());
+        ExprNode pipe = func.pipe() == null ? null : createPipe(func.pipe());
         visitChildren(func);
         visibleParams = new HashSet<>();
         nodes.add(new FuncNode(type, name, params, pipe, locationOf(nameContext)));

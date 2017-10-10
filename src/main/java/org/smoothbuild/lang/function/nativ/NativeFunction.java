@@ -40,6 +40,10 @@ public class NativeFunction extends AbstractFunction {
     this.isCacheable = isCacheable;
   }
 
+  public Method method() {
+    return method;
+  }
+
   public HashCode hash() {
     return hash;
   }

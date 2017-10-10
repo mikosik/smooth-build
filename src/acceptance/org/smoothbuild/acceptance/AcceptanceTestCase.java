@@ -10,6 +10,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -32,6 +33,7 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
+  private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
   private static String SMOOTH_BINARY_PATH;
 
@@ -65,6 +67,10 @@ public class AcceptanceTestCase {
       content.getBytes(UTF_8);
       writer.write(content);
     }
+  }
+
+  protected void givenNativeJar(Class<?>... classes) throws IOException {
+    saveBytecodeInJar(file(DEFAULT_NATIVE_JAR_FILE), classes);
   }
 
   protected void givenDir(String path) throws IOException {
