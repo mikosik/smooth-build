@@ -73,7 +73,7 @@ public class NativeFunction extends AbstractFunction {
       if (cause instanceof Message) {
         container.log((Message) cause);
       } else {
-        throw new RuntimeException(e);
+        throw new RuntimeException(cause);
       }
       return null;
     }
