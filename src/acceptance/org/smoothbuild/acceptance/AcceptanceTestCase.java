@@ -190,6 +190,10 @@ public class AcceptanceTestCase {
     return outputData;
   }
 
+  protected String error() {
+    return errorData;
+  }
+
   protected File artifact(String name) {
     return file(ARTIFACTS_DIR_PATH + name);
   }
