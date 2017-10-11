@@ -22,11 +22,11 @@ public class ErrorTest extends AcceptanceTestCase {
       throws IOException {
     givenScript("result = throwFileSystemException('" + MY_MESSAGE + "');");
     whenSmoothBuild("result");
-    thenFinishedWithError();
-    given(message = getMessageNumber(output()));
+    thenFinishedWithException();
+    given(message = getMessageNumber(error()));
     whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(getMessageNumber(output()), not(equalTo(message)));
+    thenFinishedWithException();
+    then(getMessageNumber(error()), not(equalTo(message)));
   }
 
   @Test
@@ -34,11 +34,11 @@ public class ErrorTest extends AcceptanceTestCase {
       throws IOException {
     givenScript("result = throwRuntimeException('" + MY_MESSAGE + "');");
     whenSmoothBuild("result");
-    thenFinishedWithError();
-    given(message = getMessageNumber(output()));
+    thenFinishedWithException();
+    given(message = getMessageNumber(error()));
     whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(getMessageNumber(output()), not(equalTo(message)));
+    thenFinishedWithException();
+    then(getMessageNumber(error()), not(equalTo(message)));
   }
 
   private String getMessageNumber(String output) {
