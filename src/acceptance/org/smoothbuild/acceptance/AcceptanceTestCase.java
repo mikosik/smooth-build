@@ -6,6 +6,7 @@ import static com.google.common.io.Files.createTempDir;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -167,6 +168,10 @@ public class AcceptanceTestCase {
 
   protected void thenFinishedWithSuccess() {
     thenReturnedCode(EXIT_CODE_SUCCESS);
+  }
+
+  protected void thenFinishedWithException() {
+    thenReturnedCode(EXIT_CODE_JAVA_EXCEPTION);
   }
 
   protected void thenFinishedWithError() {
