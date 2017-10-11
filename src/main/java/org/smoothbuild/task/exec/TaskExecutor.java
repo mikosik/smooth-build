@@ -40,9 +40,6 @@ public class TaskExecutor {
       ContainerImpl container = containerProvider.get();
       try {
         task.execute(container);
-      } catch (RuntimeException e) {
-        reporter.reportCrash(e);
-        throw new ExecutionException();
       } finally {
         container.destroy();
       }

@@ -1,7 +1,5 @@
 package org.smoothbuild.task.exec;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
@@ -35,9 +33,5 @@ public class TaskReporter {
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
     String cached = isResultFromCached ? " CACHED" : "";
     return name + locationString + cached;
-  }
-
-  public void reportCrash(RuntimeException e) {
-    console.error(getStackTraceAsString(e));
   }
 }
