@@ -6,6 +6,7 @@ import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 
 public class ParameterTest extends AcceptanceTestCase {
 
@@ -168,8 +169,10 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Test
   public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
-    givenScript("func(String notUsedParameter) = 'abc';"
-        + "result = func(throwFileSystemException());");
+    givenNativeJar(ThrowException.class);
+    givenScript("String throwException();"
+        + "      func(String notUsedParameter) = 'abc';"
+        + "      result = func(throwException());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactContent("result"), "abc");

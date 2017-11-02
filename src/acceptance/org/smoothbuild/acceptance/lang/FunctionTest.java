@@ -90,7 +90,8 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void argument_less_call_doesnt_need_parentheses_in_pipe() throws IOException {
-    givenScript("result    = 'abc' | stringIdentity;");
+    givenScript("stringIdentity(String string) = string;"
+        + "      result = 'abc' | stringIdentity;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
