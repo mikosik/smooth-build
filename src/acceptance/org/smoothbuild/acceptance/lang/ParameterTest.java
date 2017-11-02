@@ -50,6 +50,16 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void value_type_parameter_cannot_be_declared() throws Exception {
+    givenScript("oneParameter(Value value) = 'abc';"
+        + "result = 'def';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "build.smooth:1: error: Unknown type 'Value'.\n"));
+  }
+
+  @Test
   public void unknown_type_parameter_cannot_be_declared() throws Exception {
     givenScript("oneParameter(Unknown unknown) = 'abc';"
         + "result = 'def';");
