@@ -19,17 +19,19 @@ public class ArgumentTest extends AcceptanceTestCase {
 
   @Test
   public void arguments_can_be_passed_in_the_same_order_as_parameters() throws Exception {
-    givenScript("result = twoStrings(stringA='abc', stringB='def') ;");
+    givenScript("returnFirst(String a, String b) = a;"
+        + "      result = returnFirst(a='abc', b='def') ;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc:def"));
+    then(artifact("result"), hasContent("abc"));
   }
 
   @Test
   public void arguments_can_be_passed_in_reversed_order_of_parameters() throws Exception {
-    givenScript("result = twoStrings(stringB='def', stringA='abc') ;");
+    givenScript("returnFirst(String a, String b) = a;"
+        + "result = returnFirst(b='def', a='abc') ;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc:def"));
+    then(artifact("result"), hasContent("abc"));
   }
 }

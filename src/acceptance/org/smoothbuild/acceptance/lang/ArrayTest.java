@@ -107,10 +107,11 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void first_element_expression_error_doesnt_suppress_second_element_expression_error()
       throws IOException {
-    givenScript("result = [ stringIdentity(unknown1=''), stringIdentity(unknown2='') ];");
+    givenScript("function1 = 'abc';"
+        + "      result = [ function1(unknown1=''), function1(unknown2='') ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Function 'stringIdentity' has no parameter 'unknown1'."));
-    then(output(), containsString("Function 'stringIdentity' has no parameter 'unknown2'."));
+    then(output(), containsString("Function 'function1' has no parameter 'unknown1'."));
+    then(output(), containsString("Function 'function1' has no parameter 'unknown2'."));
   }
 }

@@ -11,6 +11,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.lang.nativ.TempFilePath;
 
 public class BuildCommandTest extends AcceptanceTestCase {
   private String path;
@@ -40,7 +41,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void temp_file_is_deleted_after_build_execution() throws Exception {
-    givenScript("result = tempFilePath();");
+    givenNativeJar(TempFilePath.class);
+    givenScript("String tempFilePath();"
+        + "      result = tempFilePath();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(new File(artifactContent("result")).exists(), false);

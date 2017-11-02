@@ -10,18 +10,20 @@ public class MixedAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_nameless_to_required_parameter_even_when_not_required_parameter_matches()
       throws Exception {
-    givenScript("result = oneOptionalOneRequired('abc');");
+    givenScript("oneOptionalOneRequired(String optional = 'def', String required) = required;"
+        + "      result = oneOptionalOneRequired('abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent(":abc"));
+    then(artifact("result"), hasContent("abc"));
   }
 
   @Test
   public void assigns_nameless_to_matching_parameter_that_was_left_once_named_was_assigned()
       throws Exception {
-    givenScript("result = twoStrings(stringA='abc', 'def');");
+    givenScript("twoStrings(String a, String b) = b;"
+        + "      result = twoStrings(a='abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc:def"));
+    then(artifact("result"), hasContent("def"));
   }
 }
