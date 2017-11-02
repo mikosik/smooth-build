@@ -53,7 +53,7 @@ public class NativeFunctionFactory {
     boolean cacheable = !method.isAnnotationPresent(NotCacheable.class);
     HashCode hash = createHash(jarHash, signature);
 
-    return new NativeFunction(method, signature, cacheable, hash);
+    return new NativeFunction(new Native(method, null), signature, cacheable, hash);
   }
 
   private static Signature createSignature(Method method)

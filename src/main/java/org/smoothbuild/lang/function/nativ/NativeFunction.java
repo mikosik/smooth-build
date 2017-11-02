@@ -29,19 +29,19 @@ import com.google.common.hash.HashCode;
  * @see DefinedFunction
  */
 public class NativeFunction extends AbstractFunction {
-  private final Method method;
+  private final Native nativ;
   private final HashCode hash;
   private final boolean isCacheable;
 
-  public NativeFunction(Method method, Signature signature, boolean isCacheable, HashCode hash) {
+  public NativeFunction(Native nativ, Signature signature, boolean isCacheable, HashCode hash) {
     super(signature);
-    this.method = method;
+    this.nativ = nativ;
     this.hash = hash;
     this.isCacheable = isCacheable;
   }
 
   public Method method() {
-    return method;
+    return nativ.method();
   }
 
   public HashCode hash() {
@@ -64,7 +64,7 @@ public class NativeFunction extends AbstractFunction {
 
   public Value invoke(ContainerImpl container, List<Value> arguments) {
     try {
-      Value result = (Value) method.invoke(null, createArguments(container, arguments));
+      Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
       if (result == null && !containsErrors(container.messages())) {
         container.log(new ErrorMessage("Native function " + name()
             + " has faulty implementation: it returned 'null' but logged no error."));

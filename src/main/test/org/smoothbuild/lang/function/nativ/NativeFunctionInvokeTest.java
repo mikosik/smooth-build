@@ -130,7 +130,8 @@ public class NativeFunctionInvokeTest {
     given(container = containerImpl());
     given(function = function(NormalFunction.class));
     given(method = PrivateMethod.class.getDeclaredMethods()[0]);
-    given(function = new NativeFunction(method, function.signature(), true, HashCode.fromInt(13)));
+    given(function = new NativeFunction(new Native(method, null), function.signature(), true,
+        HashCode.fromInt(13)));
     when(function).invoke(container, asList());
     thenThrown(RuntimeException.class);
   }

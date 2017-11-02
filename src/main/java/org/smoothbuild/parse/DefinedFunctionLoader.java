@@ -59,7 +59,7 @@ public class DefinedFunctionLoader {
         Native nativ = func.get(Native.class);
         HashCode hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
         boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
-        return new NativeFunction(nativ.method(), signature, isCacheable, hash);
+        return new NativeFunction(nativ, signature, isCacheable, hash);
       } else {
         Expression expression = createExpression(func.expr());
         return new DefinedFunction(signature, expression);
