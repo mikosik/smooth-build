@@ -39,9 +39,8 @@ import org.smoothbuild.parse.ast.StringNode;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
-public class DefinedFunctionLoader {
-  public static Function loadDefinedFunction(Functions loadedFunctions,
-      FuncNode funcNode) {
+public class FunctionLoader {
+  public static Function loadFunction(Functions loadedFunctions, FuncNode funcNode) {
     return new Worker(loadedFunctions).loadFunction(funcNode);
   }
 
