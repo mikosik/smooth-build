@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
-import static org.smoothbuild.parse.DefinedFunctionLoader.loadDefinedFunction;
+import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
@@ -36,14 +36,14 @@ public class ModuleLoader {
     ast = ast.addErrors(a -> assignArgsToParams(functions, a));
     Maybe<Map<Name, Native>> natives = findNatives(changeExtension(script, "jar"));
     ast = invoke(ast, natives, (a, n) -> assignNatives(a, n));
-    return invoke(ast, a -> loadDefinedFunctions(functions, a));
+    return invoke(ast, a -> loadFunctions(functions, a));
   }
 
-  private static Maybe<Functions> loadDefinedFunctions(Functions functions, Ast ast) {
+  private static Maybe<Functions> loadFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
     for (FuncNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<Function> function = invokeWrap(all, a -> loadDefinedFunction(a, node));
+      Maybe<Function> function = invokeWrap(all, a -> loadFunction(a, node));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
