@@ -1,15 +1,20 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.SmoothConstants.CONVERT_MODULE;
 import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothConstants.FUNCS_MODULE;
+import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
+import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
-import static org.smoothbuild.lang.function.nativ.NativeLibraryLoader.loadBuiltinFunctions;
 import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
@@ -66,9 +71,23 @@ public class Build {
   }
 
   private Maybe<Functions> loadFunctions() {
-    Functions builtin = loadBuiltinFunctions();
-    Maybe<Functions> defined = loadModule(builtin, Paths.get(DEFAULT_SCRIPT.value()));
-    return invokeWrap(defined, builtin::addAll);
+    Path convertModulePath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, CONVERT_MODULE);
+    Path funcsModulePath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, FUNCS_MODULE);
+    Path userModulePath = Paths.get(DEFAULT_SCRIPT.value());
+    Maybe<Functions> convert = loadModule(new Functions(), convertModulePath);
+    Maybe<Functions> funcs = loadModule(new Functions(), funcsModulePath);
+    Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
+    Maybe<Functions> userFunctions = invoke(builtin, b -> loadModule(b, userModulePath));
+    return invokeWrap(userFunctions, builtin, (u, b) -> b.addAll(u));
+  }
+
+  private static String smoothHomeDir() {
+    String smoothHomeDir = System.getenv(SMOOTH_HOME_ENV_VARIABLE);
+    if (smoothHomeDir == null) {
+      throw new RuntimeException("Environment variable '" + SMOOTH_HOME_ENV_VARIABLE
+          + "' not set.");
+    }
+    return smoothHomeDir;
   }
 
   public Maybe<Set<Name>> parseArguments(List<String> args) {
