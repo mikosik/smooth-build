@@ -47,7 +47,7 @@ public class Console {
   }
 
   public static String errorLine(Location location, String message) {
-    return "build.smooth:" + location.line() + ": error: " + message;
+    return location.file() + ":" + location.line() + ": error: " + message;
   }
 
   public void error(String message) {

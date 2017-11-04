@@ -9,20 +9,20 @@ import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.lang.message.Location;
 
 public class LocationHelpers {
-  public static Location locationOf(ArgContext arg) {
+  public static Location locationOf(String file, ArgContext arg) {
     NameContext name = arg.name();
     if (name == null) {
-      return locationOf(arg.expr());
+      return locationOf(file, arg.expr());
     } else {
-      return locationOf(name);
+      return locationOf(file, name);
     }
   }
 
-  public static Location locationOf(ParserRuleContext parserRuleContext) {
-    return locationOf(parserRuleContext.getStart());
+  public static Location locationOf(String file, ParserRuleContext parserRuleContext) {
+    return locationOf(file, parserRuleContext.getStart());
   }
 
-  public static Location locationOf(Token token) {
-    return location(token.getLine());
+  public static Location locationOf(String file, Token token) {
+    return location(file, token.getLine());
   }
 }

@@ -69,7 +69,8 @@ public class TaskReporterTest {
 
   private static final class MyEvaluator extends Evaluator {
     private MyEvaluator(boolean isInternal) {
-      super(null, "name", isInternal, true, Location.location(2), ImmutableList.of());
+      super(null, "name", isInternal, true, Location.location("script.smooth", 2),
+          ImmutableList.of());
     }
 
     public Output evaluate(Input input, ContainerImpl container) {

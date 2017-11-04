@@ -15,37 +15,38 @@ public class LocationTest {
 
   @Test
   public void line_returns_value_passed_during_construction() {
-    given(location = location(13));
+    given(location = location(null, 13));
     when(location.line());
     thenReturned(13);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void zero_line_is_forbidden() {
-    location(0);
+    location(null, 0);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void negative_line_is_forbidden() throws Exception {
-    location(-1);
+    location(null, -1);
   }
 
   @Test
   public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(location(1));
-    tester.addEqualityGroup(location(7));
-    tester.addEqualityGroup(location(11), location(11));
+    tester.addEqualityGroup(location(null, 1), location(null, 1));
+    tester.addEqualityGroup(location("abc", 7), location("abc", 7));
+    tester.addEqualityGroup(location("abc", 11), location("abc", 11));
+    tester.addEqualityGroup(location("def", 11), location("def", 11));
 
     tester.testEquals();
   }
 
   @Test
   public void file_code_location_to_string() throws Exception {
-    given(location = location(2));
+    given(location = location("abc", 2));
     when(location.toString());
-    thenReturned("[ line 2 ]");
+    thenReturned("[ abc:2 ]");
   }
 
   @Test

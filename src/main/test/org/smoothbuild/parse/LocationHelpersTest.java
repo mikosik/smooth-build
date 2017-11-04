@@ -36,7 +36,7 @@ public class LocationHelpersTest {
     given(willReturn(nameContext), argContext).name();
     given(willReturn(startToken), nameContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf(argContext));
+    given(location = locationOf("script.smooth", argContext));
     when(location.line());
     thenReturned(line);
   }
@@ -46,7 +46,7 @@ public class LocationHelpersTest {
     given(willReturn(expressionContext), argContext).expr();
     given(willReturn(startToken), expressionContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf(argContext));
+    given(location = locationOf("script.smooth", argContext));
     when(location.line());
     thenReturned(line);
   }
@@ -55,7 +55,7 @@ public class LocationHelpersTest {
   public void location_of_parser_rule_context() {
     given(willReturn(startToken), parserRuleContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf(parserRuleContext));
+    given(location = locationOf("script.smooth", parserRuleContext));
     when(location.line());
     thenReturned(line);
   }
@@ -63,7 +63,7 @@ public class LocationHelpersTest {
   @Test
   public void location_of_token() {
     given(willReturn(line), startToken).getLine();
-    when(location = locationOf(startToken));
+    when(location = locationOf("script.smooth", startToken));
     when(location.line());
     thenReturned(line);
   }
