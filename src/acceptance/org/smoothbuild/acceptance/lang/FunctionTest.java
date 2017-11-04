@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 
@@ -134,6 +135,14 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
+  }
+
+  @Test
+  public void function_with_array_of_nothing_as_result_type() throws IOException {
+    givenScript("[Nothing] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
   }
 
   @Test
