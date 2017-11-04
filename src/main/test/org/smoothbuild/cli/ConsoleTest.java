@@ -94,10 +94,10 @@ public class ConsoleTest {
   public void final_summary_is_failed_when_code_error_was_printed() throws Exception {
     given(outputStream = new ByteArrayOutputStream());
     given(console = new Console(new PrintStream(outputStream)));
-    given(console).error(location(13), "some message");
+    given(console).error(location("script.smooth", 13), "some message");
     when(console).printFinalSummary();
     thenEqual(outputStream.toString(),
-        "build.smooth:13: error: some message\n"
+        "script.smooth:13: error: some message\n"
             + " + FAILED :(\n"
             + "   + 1 error(s)\n");
   }

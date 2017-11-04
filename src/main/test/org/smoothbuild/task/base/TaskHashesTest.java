@@ -16,7 +16,7 @@ import org.smoothbuild.lang.message.Location;
 import com.google.common.collect.ImmutableList;
 
 public class TaskHashesTest {
-  private final Location location = Location.location(2);
+  private final Location location = Location.location("script.smooth", 2);
   private final ValuesDb valuesDb = memoryValuesDb();
 
   private Task dep;

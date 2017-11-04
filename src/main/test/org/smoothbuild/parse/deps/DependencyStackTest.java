@@ -138,11 +138,11 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name3, name4, 3));
     given(dependencyStack).push(elem(name4, name2, 4));
     when(() -> dependencyStack.createCycleError().toString());
-    thenReturned(new ParseError(location(2),
+    thenReturned(new ParseError(location("script.smooth", 2),
         "Function call graph contains cycle:\n"
-            + name2 + location(2) + " -> " + name3 + "\n"
-            + name3 + location(3) + " -> " + name4 + "\n"
-            + name4 + location(4) + " -> " + name2 + "\n").toString());
+            + name2 + location("script.smooth", 2) + " -> " + name3 + "\n"
+            + name3 + location("script.smooth", 3) + " -> " + name4 + "\n"
+            + name4 + location("script.smooth", 4) + " -> " + name2 + "\n").toString());
   }
 
   @Test
@@ -151,14 +151,15 @@ public class DependencyStackTest {
     given(dependencyStack).push(elem(name1, name2, 1));
     given(dependencyStack).push(elem(name2, name2, 2));
     when(() -> dependencyStack.createCycleError().toString());
-    thenReturned(new ParseError(location(2), "Function call graph contains cycle:\n"
-        + name2 + location(2) + " -> " + name2 + "\n").toString());
+    thenReturned(new ParseError(location("script.smooth", 2),
+        "Function call graph contains cycle:\n"
+            + name2 + location("script.smooth", 2) + " -> " + name2 + "\n").toString());
   }
 
   private DependencyStackElem elem(Name from, Name to, int location) {
     DependencyStackElem elem = new DependencyStackElem(
         new FuncNode(null, from, asList(), null, null), ImmutableSet.of());
-    elem.setMissing(new Dependency(location(location), to));
+    elem.setMissing(new Dependency(location("script.smooth", location), to));
     return elem;
   }
 

@@ -24,6 +24,6 @@ public class DependencyTest {
   }
 
   private static Dependency dependency(int line, String name) {
-    return new Dependency(location(line), new Name(name));
+    return new Dependency(location("script.smooth", line), new Name(name));
   }
 }

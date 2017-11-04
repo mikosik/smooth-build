@@ -3,9 +3,9 @@ package org.smoothbuild.parse;
 import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
-import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
+import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortedByDependencies;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -29,7 +29,7 @@ import org.smoothbuild.util.Maybe;
 public class ModuleLoader {
   public static Maybe<Functions> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
-    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(m));
+    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script.toString(), m));
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
     ast = ast.addErrors(a -> assignTypes(functions, a));

@@ -14,7 +14,7 @@ import org.smoothbuild.lang.message.Location;
 import com.google.common.testing.EqualsTester;
 
 public class FuncNodeTest {
-  private final Location location = location(1);
+  private final Location location = location("script.smooth", 1);
   private FuncNode func;
 
   @Test
@@ -48,6 +48,6 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(null, new Name(name), asList(), null, location(line));
+    return new FuncNode(null, new Name(name), asList(), null, location("script.smooth", line));
   }
 }

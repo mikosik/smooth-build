@@ -26,7 +26,7 @@ public class NativeParameterFactory {
     String name = jParameter.getName();
     boolean isRequired = isRequired(method, annotationMap);
     Expression defaultValue = isRequired ? null
-        : new DefaultValueExpression(type, location(Integer.MAX_VALUE));
+        : new DefaultValueExpression(type, location(null, Integer.MAX_VALUE));
     return new Parameter(type, new Name(name), defaultValue);
   }
 

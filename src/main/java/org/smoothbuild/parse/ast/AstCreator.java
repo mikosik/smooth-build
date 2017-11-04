@@ -28,7 +28,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 
 public class AstCreator {
-  public static Ast fromParseTree(ModuleContext module) {
+  public static Ast fromParseTree(String file, ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       private Set<Name> visibleParams = new HashSet<>();
@@ -42,7 +42,7 @@ public class AstCreator {
         ExprNode pipe = func.pipe() == null ? null : createPipe(func.pipe());
         visitChildren(func);
         visibleParams = new HashSet<>();
-        nodes.add(new FuncNode(type, name, params, pipe, locationOf(nameContext)));
+        nodes.add(new FuncNode(type, name, params, pipe, locationOf(file, nameContext)));
         return null;
       }
 
@@ -66,7 +66,7 @@ public class AstCreator {
       private ParamNode createParam(ParamContext param) {
         TypeNode type = createType(param.type());
         Name name = new Name(param.name().getText());
-        Location location = locationOf(param);
+        Location location = locationOf(file, param);
         ExprNode defaultValue = param.expr() != null
             ? createExpr(param.expr())
             : null;
@@ -80,12 +80,12 @@ public class AstCreator {
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
           // nameless piped argument's location is set to the pipe character '|'
-          Location location = locationOf(pipe.p.get(i));
+          Location location = locationOf(file, pipe.p.get(i));
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(0, null, result, location));
           args.addAll(createArgList(call.argList()));
           Name name = new Name(call.name().getText());
-          result = new CallNode(name, args, locationOf(call.name()));
+          result = new CallNode(name, args, locationOf(file, call.name()));
         }
         return result;
       }
@@ -93,12 +93,12 @@ public class AstCreator {
       private ExprNode createExpr(ExprContext expr) {
         if (expr.array() != null) {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
-          return new ArrayNode(elements, locationOf(expr));
+          return new ArrayNode(elements, locationOf(file, expr));
         }
         if (expr.call() != null) {
           CallContext call = expr.call();
           Name name = new Name(call.name().getText());
-          Location location = locationOf(call.name());
+          Location location = locationOf(file, call.name());
           if (visibleParams.contains(name)) {
             boolean hasParentheses = call.p != null;
             return new RefNode(name, hasParentheses, location);
@@ -110,7 +110,7 @@ public class AstCreator {
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();
           return new StringNode(quotedString.substring(1, quotedString.length() - 1),
-              locationOf(expr));
+              locationOf(file, expr));
         }
         throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
             + " without children.");
@@ -126,7 +126,7 @@ public class AstCreator {
             NameContext nameContext = arg.name();
             Name name = nameContext == null ? null : new Name(nameContext.getText());
             ExprNode exprNode = createExpr(expr);
-            result.add(new ArgNode(i + 1, name, exprNode, locationOf(arg)));
+            result.add(new ArgNode(i + 1, name, exprNode, locationOf(file, arg)));
           }
         }
         return result;
@@ -144,12 +144,12 @@ public class AstCreator {
       }
 
       private TypeNode createBasicType(BasicTypeContext basicType) {
-        return new TypeNode(basicType.getText(), locationOf(basicType));
+        return new TypeNode(basicType.getText(), locationOf(file, basicType));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
         TypeNode elementType = createType(arrayType.type());
-        return new ArrayTypeNode(elementType, locationOf(arrayType));
+        return new ArrayTypeNode(elementType, locationOf(file, arrayType));
       }
     }.visit(module);
     return new Ast(nodes);

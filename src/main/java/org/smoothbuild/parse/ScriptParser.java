@@ -38,7 +38,7 @@ public class ScriptParser {
       return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
 
-    ErrorListener errorListener = new ErrorListener();
+    ErrorListener errorListener = new ErrorListener(scriptFile.toString());
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -52,8 +52,11 @@ public class ScriptParser {
 
   public static class ErrorListener implements ANTLRErrorListener {
     private final List<ParseError> errors = new ArrayList<>();
+    private final String file;
 
-    public ErrorListener() {}
+    public ErrorListener(String file) {
+      this.file = file;
+    }
 
     public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
         int charPositionInLine, String msg, @Nullable RecognitionException e) {
@@ -63,9 +66,9 @@ public class ScriptParser {
 
     private Location createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return location(line);
+        return location(file, line);
       } else {
-        return locationOf((Token) offendingSymbol);
+        return locationOf(file, (Token) offendingSymbol);
       }
     }
 
@@ -87,7 +90,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      errors.add(new ParseError(locationOf(token), message));
+      errors.add(new ParseError(locationOf(file, token), message));
     }
   }
 }

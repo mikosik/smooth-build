@@ -14,7 +14,7 @@ import com.google.common.collect.ImmutableList;
 
 public class EvaluatorTest {
   private final String name = "name";
-  private final Location location = location(1);
+  private final Location location = location("script.smooth", 1);
 
   private Evaluator evaluator;
 

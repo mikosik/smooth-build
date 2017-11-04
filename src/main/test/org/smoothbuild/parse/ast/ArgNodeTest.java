@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.Type;
 
 public class ArgNodeTest {
   private ArgNode arg;
-  private final Location location = location(1);
+  private final Location location = location(null, 1);
   private final Name name = new Name("arg-name");
 
   @Test
