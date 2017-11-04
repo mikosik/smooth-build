@@ -14,6 +14,8 @@ public class SmoothConstants {
   public static final int EXIT_CODE_ERROR = 2;
   public static final String SMOOTH_HOME_ENV_VARIABLE = "SMOOTH_HOME";
   public static final String SMOOTH_HOME_LIB_DIR = "lib";
+  public static final String FUNCS_MODULE = "funcs.smooth";
+  public static final String CONVERT_MODULE = "convert.smooth";
 
   public static final Path DEFAULT_SCRIPT = path("build.smooth");
   public static final Charset CHARSET = Charsets.UTF_8;
