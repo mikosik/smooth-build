@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
@@ -16,10 +15,5 @@ public class ArrayType extends Type {
 
   public Type elemType() {
     return elemType;
-  }
-
-  public Array<? extends Value> defaultValue(ValuesDb valuesDb) {
-    Class<? extends Value> rawType = (Class<? extends Value>) elemType.jType().getRawType();
-    return valuesDb.arrayBuilder(rawType).build();
   }
 }
