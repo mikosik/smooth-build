@@ -10,7 +10,7 @@ File aidl(
   [Blob] with,
 );
 
-[Blob] concatenateFileArrays(
+[File] concatenateFileArrays(
   [File] files,
   [File] with,
 );
@@ -24,12 +24,12 @@ Blob content(
   File file,
 );
 
-File file
+File file(
   String path,
 );
 
 [File] files(
-  String path,
+  String dir,
 );
 
 [File] filter(
@@ -72,7 +72,7 @@ String toString(
 );
 
 [File] unjar(
-  Blob blob,
+  Blob jar,
 );
 
 [File] unzip(
