@@ -208,14 +208,15 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void exception_from_native_propagates_to_main() throws Exception {
+  public void exception_from_native_is_reported_as_error() throws Exception {
     givenNativeJar(ThrowException.class);
     givenScript("String throwException();\n"
         + "      result = throwException;");
     whenSmoothBuild("result");
-    thenFinishedWithException();
-    then(error(), containsString(
-        "java.lang.RuntimeException: java.lang.UnsupportedOperationException"));
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Function throwException threw java exception from its native code:\n"));
+    then(output(), containsString("java.lang.UnsupportedOperationException"));
   }
 
   @Test
