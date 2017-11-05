@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.SFile;
 
 public class FileToBlobFunction {
   @SmoothFunction
-  public static Blob fileToBlob(Container container, SFile input) {
-    return input.content();
+  public static Blob fileToBlob(Container container, SFile file) {
+    return file.content();
   }
 }
