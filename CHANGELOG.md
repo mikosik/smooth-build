@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+
+ * native function implementation must be also declared in smooth module using smooth language
+ * @Required is no longer used in native function implementation as its implied when parameter doesn't have default value specified
+
 Version 0.13.0 (2017.09.26)
 ---------------------------
 

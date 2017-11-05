@@ -20,7 +20,6 @@ import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.plugin.Required;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -29,8 +28,8 @@ import org.smoothbuild.lang.value.SString;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array<SFile> javac(Container container, @Required Array<SFile> sources,
-      Array<Blob> libs, SString source, SString target) {
+  public static Array<SFile> javac(Container container, Array<SFile> sources, Array<Blob> libs,
+      SString source, SString target) {
     return new Worker(container, sources, libs, source, target).execute();
   }
 
