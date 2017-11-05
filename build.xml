@@ -8,9 +8,9 @@
     <property name="dir.src.main.test" location="${dir.src}/main/test"/>
     <property name="dir.src.api.convert.java" location="${dir.src}/api/convert/java"/>
 	<property name="dir.src.api.convert.smooth" location="${dir.src}/api/convert/smooth"/>
-    <property name="dir.src.func.java" location="${dir.src}/func/java"/>
-    <property name="dir.src.func.smooth" location="${dir.src}/func/smooth"/>
-    <property name="dir.src.func.test" location="${dir.src}/func/test"/>
+    <property name="dir.src.api.func.java" location="${dir.src}/api/func/java"/>
+    <property name="dir.src.api.func.smooth" location="${dir.src}/api/func/smooth"/>
+    <property name="dir.src.api.func.test" location="${dir.src}/api/func/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
     <property name="dir.src.acceptance" location="${dir.src}/acceptance"/>
@@ -22,8 +22,8 @@
     <property name="dir.build.class.main.java" location="${dir.build.class}/main/java"/>
     <property name="dir.build.class.main.test" location="${dir.build.class}/main/test"/>
     <property name="dir.build.class.api.convert.java" location="${dir.build.class}/api/convert/java"/>
-    <property name="dir.build.class.func.java" location="${dir.build.class}/func/java"/>
-    <property name="dir.build.class.func.test" location="${dir.build.class}/func/test"/>
+    <property name="dir.build.class.api.func.java" location="${dir.build.class}/api/func/java"/>
+    <property name="dir.build.class.api.func.test" location="${dir.build.class}/api/func/test"/>
     <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java"/>
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
     <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
@@ -57,8 +57,8 @@
         <mkdir dir="${dir.build.class.main.java}"/>
         <mkdir dir="${dir.build.class.main.test}"/>
     	<mkdir dir="${dir.build.class.api.convert.java}"/>
-        <mkdir dir="${dir.build.class.func.java}"/>
-        <mkdir dir="${dir.build.class.func.test}"/>
+        <mkdir dir="${dir.build.class.api.func.java}"/>
+        <mkdir dir="${dir.build.class.api.func.test}"/>
         <mkdir dir="${dir.build.class.testing.java}"/>
         <mkdir dir="${dir.build.class.testing.test}"/>
         <mkdir dir="${dir.build.class.acceptance}"/>
@@ -136,30 +136,30 @@
         <pathelement location="${dir.build.class.api.convert.java}"/>
     </path>
 
-    <!-- compile src/func/java -->
+    <!-- compile src/api/func/java -->
 
-    <path id="classpath.for.func.java">
+    <path id="classpath.for.api.func.java">
         <path refid="classpath.with.main.java"/>
         <!-- TODO can be removed once junit function becomes separate plugin -->
         <pathelement location="${lib.junit}"/>
     </path>
 
-    <target name="compile-func.java" depends="compile-main.java">
-        <javac destdir="${dir.build.class.func.java}"
+    <target name="compile-api.func.java" depends="compile-main.java">
+        <javac destdir="${dir.build.class.api.func.java}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <compilerarg value="-parameters"/>
-            <src path="${dir.src.func.java}"/>
+            <src path="${dir.src.api.func.java}"/>
             <classpath>
-                <path refid="classpath.for.func.java"/>
+                <path refid="classpath.for.api.func.java"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.func.java">
-        <path refid="classpath.for.func.java"/>
-        <pathelement location="${dir.build.class.func.java}"/>
+    <path id="classpath.with.api.func.java">
+        <path refid="classpath.for.api.func.java"/>
+        <pathelement location="${dir.build.class.api.func.java}"/>
     </path>
 
     <!-- compile src/testing/java -->
@@ -220,18 +220,18 @@
 
     <path id="classpath.for.func.test">
         <path refid="classpath.with.testing.java"/>
-        <path refid="classpath.with.func.java"/>
+        <path refid="classpath.with.api.func.java"/>
         <pathelement location="${lib.hamcrest-library}"/>
         <pathelement location="${lib.junit}"/>
         <pathelement location="${lib.testory}"/>
     </path>
 
-    <target name="compile-func.test" depends="compile-func.java, compile-testing.java">
-        <javac destdir="${dir.build.class.func.test}"
+    <target name="compile-func.test" depends="compile-api.func.java, compile-testing.java">
+        <javac destdir="${dir.build.class.api.func.test}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <src path="${dir.src.func.test}"/>
+            <src path="${dir.src.api.func.test}"/>
             <classpath>
                 <path refid="classpath.for.func.test"/>
             </classpath>
@@ -240,7 +240,7 @@
 
     <path id="classpath.with.func.test">
         <path refid="classpath.for.func.test"/>
-        <pathelement location="${dir.build.class.func.test}"/>
+        <pathelement location="${dir.build.class.api.func.test}"/>
     </path>
 
     <!-- compile src/testing/test -->
@@ -275,7 +275,7 @@
     <path id="classpath.for.acceptance">
         <path refid="classpath.with.testing.java"/>
     	<path refid="classpath.with.api.convert.java"/>
-        <path refid="classpath.with.func.java"/>
+        <path refid="classpath.with.api.func.java"/>
         <pathelement location="${lib.hamcrest-library}"/>
         <pathelement location="${lib.testory}"/>
     </path>
@@ -335,7 +335,7 @@
             </classpath>
             <formatter type="brief" usefile="false"/>
             <batchtest todir="${dir.build}">
-                <fileset dir="${dir.build.class.func.test}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.api.func.test}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
     </target>
@@ -351,13 +351,13 @@
 
     <!-- build funcs.jar file -->
 
-    <target name="funcs-jar-file" depends="compile-func.java">
+    <target name="funcs-jar-file" depends="compile-api.func.java">
         <jar destfile="${dir.build.funcs.jar}">
             <!-- TODO can be removed once junit function becomes separate plugin -->
             <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
             <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
 
-            <zipfileset dir="${dir.build.class.func.java}"/>
+            <zipfileset dir="${dir.build.class.api.func.java}"/>
             <zipfileset file="LICENSE"/>
         </jar>
     </target>
@@ -385,7 +385,7 @@
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.convert.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.api.convert.smooth}/convert.smooth"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
-            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.func.smooth}/funcs.smooth"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.api.func.smooth}/funcs.smooth"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
         </zip>
     </target>
