@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Scope;
@@ -37,12 +36,7 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class AssignTypes {
   public static List<ParseError> assignTypes(Functions functions, Ast ast) {
-    final Type nonInferable = new Type("<NonInferable>", Value.class) {
-      @Override
-      public Value defaultValue(ValuesDb valuesDb) {
-        throw new UnsupportedOperationException();
-      }
-    };
+    final Type nonInferable = new Type("<NonInferable>", Value.class) {};
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()

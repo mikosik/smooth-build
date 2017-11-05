@@ -1,21 +1,9 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.STRING;
-
-import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.SString;
 
 public class FileType extends Type {
   protected FileType() {
     super("File", SFile.class);
-  }
-
-  public SFile defaultValue(ValuesDb valuesDb) {
-    SString path = (SString) STRING.defaultValue(valuesDb);
-    Blob content = (Blob) BLOB.defaultValue(valuesDb);
-    return valuesDb.file(path, content);
   }
 }
