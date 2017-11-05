@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 
@@ -77,7 +78,9 @@ public class NativeFunction extends AbstractFunction {
       if (cause instanceof Message) {
         container.log((Message) cause);
       } else {
-        throw new RuntimeException(cause);
+        container.log(new ErrorMessage("Function " + name()
+            + " threw java exception from its native code:\n"
+            + getStackTraceAsString(cause)));
       }
       return null;
     }
