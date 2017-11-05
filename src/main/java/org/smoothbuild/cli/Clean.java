@@ -14,7 +14,7 @@ import org.smoothbuild.io.fs.base.FileSystemException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
-public class Clean {
+public class Clean implements Command {
   private final FileSystem fileSystem;
   private final Console console;
 

@@ -1,12 +1,12 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
+import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FilesTest extends AcceptanceTestCase {
@@ -80,7 +80,7 @@ public class FilesTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith(DEFAULT_SCRIPT.value(), script, "dir/file.txt",
-        "abc"));
+    String defaultScript = new SmoothPaths(null).defaultScript().toString();
+    then(artifact("result"), isFileArrayWith(defaultScript, script, "dir/file.txt", "abc"));
   }
 }

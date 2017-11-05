@@ -2,8 +2,14 @@ package org.smoothbuild.cli;
 
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
+import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
+
+import java.nio.file.Paths;
 
 import org.smoothbuild.MainModule;
+import org.smoothbuild.SmoothPaths;
+
+import com.google.inject.Injector;
 
 public class Commands {
   public static final String BUILD = "build";
@@ -12,15 +18,15 @@ public class Commands {
 
   public static int execute(String[] args) {
     if (args.length == 0) {
-      return create(Help.class).run(new String[] { HELP });
+      args = new String[] { HELP };
     }
     switch (args[0]) {
       case BUILD:
-        return create(Build.class).run(args);
+        return runCommand(Build.class, args);
       case CLEAN:
-        return create(Clean.class).run(args);
+        return runCommand(Clean.class, args);
       case HELP:
-        return create(Help.class).run(args);
+        return runCommand(Help.class, args);
       default:
         System.out.println("smooth: '" + args[0]
             + "' is not a smooth command. See 'smooth help'.");
@@ -28,7 +34,15 @@ public class Commands {
     }
   }
 
-  private static <T> T create(Class<? extends T> clazz) {
-    return createInjector(new MainModule()).getInstance(clazz);
+  private static int runCommand(Class<? extends Command> command, String[] args) {
+    String homeDir = System.getenv(SMOOTH_HOME_ENV_VARIABLE);
+    if (homeDir == null) {
+      System.out.println("smooth: Environment variable '" + SMOOTH_HOME_ENV_VARIABLE
+          + "' not set.");
+      return EXIT_CODE_ERROR;
+    }
+    SmoothPaths smoothPaths = new SmoothPaths(Paths.get(homeDir));
+    Injector injector = createInjector(new MainModule(smoothPaths));
+    return injector.getInstance(command).run(args);
   }
 }

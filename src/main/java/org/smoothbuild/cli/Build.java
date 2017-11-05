@@ -1,12 +1,7 @@
 package org.smoothbuild.cli;
 
-import static org.smoothbuild.SmoothConstants.CONVERT_MODULE;
-import static org.smoothbuild.SmoothConstants.DEFAULT_SCRIPT;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.SmoothConstants.FUNCS_MODULE;
-import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
-import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Maybe.error;
@@ -14,13 +9,12 @@ import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
@@ -31,13 +25,16 @@ import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
-public class Build {
+public class Build implements Command {
+  private final SmoothPaths paths;
   private final Console console;
   private final TempManager tempManager;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
-  public Build(Console console, TempManager tempManager, SmoothExecutor smoothExecutor) {
+  public Build(SmoothPaths paths, Console console, TempManager tempManager,
+      SmoothExecutor smoothExecutor) {
+    this.paths = paths;
     this.console = console;
     this.tempManager = tempManager;
     this.smoothExecutor = smoothExecutor;
@@ -71,23 +68,11 @@ public class Build {
   }
 
   private Maybe<Functions> loadFunctions() {
-    Path convertModulePath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, CONVERT_MODULE);
-    Path funcsModulePath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, FUNCS_MODULE);
-    Path userModulePath = Paths.get(DEFAULT_SCRIPT.value());
-    Maybe<Functions> convert = loadModule(new Functions(), convertModulePath);
-    Maybe<Functions> funcs = loadModule(new Functions(), funcsModulePath);
+    Maybe<Functions> convert = loadModule(new Functions(), paths.convertModule());
+    Maybe<Functions> funcs = loadModule(new Functions(), paths.funcsModule());
     Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
-    Maybe<Functions> userFunctions = invoke(builtin, b -> loadModule(b, userModulePath));
+    Maybe<Functions> userFunctions = invoke(builtin, b -> loadModule(b, paths.defaultScript()));
     return invokeWrap(userFunctions, builtin, (u, b) -> b.addAll(u));
-  }
-
-  private static String smoothHomeDir() {
-    String smoothHomeDir = System.getenv(SMOOTH_HOME_ENV_VARIABLE);
-    if (smoothHomeDir == null) {
-      throw new RuntimeException("Environment variable '" + SMOOTH_HOME_ENV_VARIABLE
-          + "' not set.");
-    }
-    return smoothHomeDir;
   }
 
   public Maybe<Set<Name>> parseArguments(List<String> args) {

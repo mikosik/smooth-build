@@ -7,7 +7,7 @@ import static org.smoothbuild.cli.Commands.BUILD;
 import static org.smoothbuild.cli.Commands.CLEAN;
 import static org.smoothbuild.cli.Commands.HELP;
 
-public class Help {
+public class Help implements Command {
   public int run(String... args) {
     if (args.length == 1) {
       System.out.print(generalHelp());
