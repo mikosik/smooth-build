@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.nativ;
 
-import static java.nio.file.Files.list;
-import static java.util.stream.Collectors.toList;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_LIB_DIR;
 import static org.smoothbuild.io.util.JarFile.jarFile;
@@ -29,8 +28,9 @@ import org.smoothbuild.util.reflect.ClassLoaders;
 public class NativeLibraryLoader {
   public static Functions loadBuiltinFunctions() {
     Functions functions = new Functions();
-    Path libsPath = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR);
-    for (Function function : loadNativeModulesFromDir(libsPath)) {
+    Path convertJar = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "convert.jar");
+    Path funcsJar = Paths.get(smoothHomeDir(), SMOOTH_HOME_LIB_DIR, "funcs.jar");
+    for (Function function : loadNativeModules(asList(convertJar, funcsJar))) {
       functions = functions.add(function);
     }
     return functions;
@@ -43,18 +43,6 @@ public class NativeLibraryLoader {
           + "' not set.");
     }
     return smoothHomeDir;
-  }
-
-  public static Collection<Function> loadNativeModulesFromDir(Path libsPath) {
-    return loadNativeModules(listJars(libsPath));
-  }
-
-  private static List<Path> listJars(Path libsPath) {
-    try {
-      return list(libsPath).filter(path -> path.toFile().isFile()).collect(toList());
-    } catch (IOException e) {
-      throw new RuntimeException("IO error reading while reading from " + libsPath, e);
-    }
   }
 
   static Collection<Function> loadNativeModules(List<Path> jars) {

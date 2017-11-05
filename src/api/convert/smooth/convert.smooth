@@ -1,0 +1,20 @@
+
+Blob fileToBlob(
+  File file,
+);
+
+[Blob] fileArrayToBlobArray(
+  [File] files,
+);
+
+[Blob] nilToBlobArray(
+  [Nothing] nil,
+);
+
+[File] nilToFileArray(
+  [Nothing] nil,
+);
+
+[String] nilToStringArray(
+  [Nothing] nil,
+);

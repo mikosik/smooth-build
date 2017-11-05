@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="src/func/test"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/test"/>
+   	<classpathentry kind="src" path="src/api/convert/java"/>
 	<classpathentry kind="src" path="src/acceptance"/>
 	<classpathentry kind="src" path="src/testing/java"/>
 	<classpathentry kind="src" path="src/testing/test"/>

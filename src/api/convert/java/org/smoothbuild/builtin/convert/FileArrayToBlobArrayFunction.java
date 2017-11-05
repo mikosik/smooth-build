@@ -9,9 +9,9 @@ import org.smoothbuild.lang.value.SFile;
 
 public class FileArrayToBlobArrayFunction {
   @SmoothFunction
-  public static Array<Blob> fileArrayToBlobArray(Container container, Array<SFile> input) {
+  public static Array<Blob> fileArrayToBlobArray(Container container, Array<SFile> files) {
     ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
-    for (SFile file : input) {
+    for (SFile file : files) {
       builder.add(file.content());
     }
     return builder.build();
