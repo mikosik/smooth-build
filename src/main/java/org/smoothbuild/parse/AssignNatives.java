@@ -16,8 +16,6 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.util.Maybe;
 
-import com.google.inject.TypeLiteral;
-
 public class AssignNatives {
   public static Maybe<Ast> assignNatives(Ast ast, Map<Name, Native> natives) {
     List<ParseError> errors = new ArrayList<>();
@@ -43,11 +41,12 @@ public class AssignNatives {
       private void assign(FuncNode func, Native nativ) {
         Method method = nativ.method();
         Type resultType = func.get(Type.class);
-        TypeLiteral<?> resultJType = TypeLiteral.get(method.getGenericReturnType());
+        Class<?> resultJType = method.getReturnType();
         if (!resultType.jType().equals(resultJType)) {
           errors.add(new ParseError(func, "Function '" + func.name() + "' has result type "
               + resultType + " so its native implementation result type must be "
-              + resultType.jType() + " but it is " + resultJType + "."));
+              + resultType.jType().getCanonicalName() + " but it is "
+              + resultJType.getCanonicalName() + "."));
           return;
         }
         Parameter[] nativeParams = method.getParameters();
@@ -70,12 +69,13 @@ public class AssignNatives {
             return;
           }
           Type paramType = params.get(i).type().get(Type.class);
-          TypeLiteral<?> paramJType = TypeLiteral.get(nativeParam.getParameterizedType());
+          Class<?> paramJType = nativeParam.getType();
           if (!paramType.jType().equals(paramJType)) {
             errors.add(new ParseError(func, "Function '" + func.name()
-                + "' parameter '" + declaredName + "' has type " + paramType
-                + " so its native implementation type must be " + paramType.jType()
-                + " but it is " + paramJType + "."));
+                + "' parameter '" + declaredName + "' has type "
+                + paramType + " so its native implementation type must be "
+                + paramType.jType().getCanonicalName() + " but it is "
+                + paramJType.getCanonicalName() + "."));
             return;
           }
         }

@@ -15,12 +15,12 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.ForwardingOutputStream;
 
 public class OutputClassFile extends SimpleJavaFileObject {
-  private final ArrayBuilder<SFile> fileArrayBuilder;
+  private final ArrayBuilder fileArrayBuilder;
   private final Path path;
   private final BlobBuilder contentBuilder;
   private final Container container;
 
-  public OutputClassFile(ArrayBuilder<SFile> fileArrayBuilder, Path path, Container container) {
+  public OutputClassFile(ArrayBuilder fileArrayBuilder, Path path, Container container) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;

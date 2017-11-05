@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.util.Streams.copy;
 
 import java.io.BufferedOutputStream;
@@ -32,13 +33,13 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
   @SmoothFunction
-  public static Array<SFile> unzip(Container container, Blob blob) {
+  public static Array unzip(Container container, Blob blob) {
     return unzip(container, blob, x -> true);
   }
 
-  public static Array<SFile> unzip(Container container, Blob blob, Predicate<String> filter) {
+  public static Array unzip(Container container, Blob blob, Predicate<String> filter) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
+    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(FILE);
     try {
       File tempFile = copyToTempFile(blob);
       try (ZipFile zipFile = new ZipFile(tempFile)) {

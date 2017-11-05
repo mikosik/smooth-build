@@ -2,20 +2,14 @@ package org.smoothbuild.lang.type;
 
 import org.smoothbuild.lang.value.Value;
 
-import com.google.inject.TypeLiteral;
-
 /**
  * Type in smooth language.
  */
 public abstract class Type {
   private final String name;
-  private final TypeLiteral<? extends Value> jType;
+  private final Class<? extends Value> jType;
 
-  protected Type(String name, Class<? extends Value> clazz) {
-    this(name, TypeLiteral.get(clazz));
-  }
-
-  protected Type(String name, TypeLiteral<? extends Value> jType) {
+  protected Type(String name, Class<? extends Value> jType) {
     this.name = name;
     this.jType = jType;
   }
@@ -24,7 +18,7 @@ public abstract class Type {
     return name;
   }
 
-  public TypeLiteral<? extends Value> jType() {
+  public Class<? extends Value> jType() {
     return jType;
   }
 

@@ -27,15 +27,12 @@ public class ArrayComputation implements Computation {
   }
 
   public Output execute(Input input, ContainerImpl container) {
-    Class<? extends Value> elementClass = (Class<? extends Value>) arrayType.elemType().jType()
-        .getRawType();
-    return new Output(inputToArray(input, container, elementClass));
+    return new Output(inputToArray(input, container));
   }
 
-  private <T extends Value> Array<T> inputToArray(Input input, ContainerImpl container,
-      Class<T> elementClass) {
-    ArrayBuilder<T> builder = container.create().arrayBuilder(elementClass);
-    for (T value : (Iterable<T>) input.values()) {
+  private Array inputToArray(Input input, ContainerImpl container) {
+    ArrayBuilder builder = container.create().arrayBuilder(arrayType.elemType());
+    for (Value value : input.values()) {
       builder.add(value);
     }
     return builder.build();

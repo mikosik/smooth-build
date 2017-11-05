@@ -1,22 +1,23 @@
 package org.smoothbuild.builtin.blob;
 
+import static org.smoothbuild.lang.type.Types.BLOB;
+
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Value;
 
 public class ConcatenateBlobArraysFunction {
 
   @SmoothFunction
-  public static Array<Blob> concatenateBlobArrays(Container container, Array<Blob> blobs,
-      Array<Blob> with) {
-    ArrayBuilder<Blob> builder = container.create().arrayBuilder(Blob.class);
+  public static Array concatenateBlobArrays(Container container, Array blobs, Array with) {
+    ArrayBuilder builder = container.create().arrayBuilder(BLOB);
 
-    for (Blob blob : blobs) {
+    for (Value blob : blobs) {
       builder.add(blob);
     }
-    for (Blob blob : with) {
+    for (Value blob : with) {
       builder.add(blob);
     }
 

@@ -3,6 +3,7 @@ package org.smoothbuild.io.util;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
@@ -24,7 +25,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
 import org.testory.common.Matcher;
 
 public class TempDirTest {
@@ -35,7 +35,7 @@ public class TempDirTest {
   private ValuesDb valuesDb;
   private FileSystem fileSystem;
   private TempDir tempDir;
-  private Array<SFile> array;
+  private Array array;
 
   @Before
   public void before() {
@@ -72,14 +72,14 @@ public class TempDirTest {
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    given(array = array(valuesDb, SFile.class, file(valuesDb, path, bytes)));
+    given(array = array(valuesDb, FILE, file(valuesDb, path, bytes)));
     when(tempDir).writeFiles(array);
     thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
   }
 
   @Test
   public void writing_files_after_destroy_throws_exception() throws Exception {
-    given(array = array(valuesDb, SFile.class, file(valuesDb, path, bytes)));
+    given(array = array(valuesDb, FILE, file(valuesDb, path, bytes)));
     given(tempDir).destroy();
     when(tempDir).writeFiles(array);
     thenThrown(IllegalStateException.class);

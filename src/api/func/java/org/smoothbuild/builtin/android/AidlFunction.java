@@ -17,6 +17,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.CommandExecutor;
 
 public class AidlFunction {
@@ -47,18 +48,19 @@ public class AidlFunction {
     return onlyElement(outputFilesDir.readFiles());
   }
 
-  private static SFile onlyElement(Array<SFile> outputFiles) {
-    Iterator<SFile> iterator = outputFiles.iterator();
+  private static SFile onlyElement(Array outputFiles) {
+    Iterator<Value> iterator = outputFiles.iterator();
     if (!iterator.hasNext()) {
       throw new ErrorMessage(AIDL_BINARY
           + " binary should return exactly one file but returned zero.");
     }
-    SFile result = iterator.next();
+    SFile result = (SFile) iterator.next();
     if (iterator.hasNext()) {
       StringBuilder builder = new StringBuilder();
       builder.append(AIDL_BINARY);
       builder.append("binary should return exactly one file but it returned following files:\n");
-      for (SFile file : outputFiles) {
+      for (Value fileValue : outputFiles) {
+        SFile file = (SFile) fileValue;
         builder.append(file.path().value());
         builder.append("\n");
       }

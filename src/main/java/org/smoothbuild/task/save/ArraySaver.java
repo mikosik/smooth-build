@@ -10,14 +10,14 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
-public class ArraySaver<T extends Value> implements Saver<Array<T>> {
+public class ArraySaver implements Saver<Array> {
   private final FileSystem smoothFileSystem;
 
   public ArraySaver(FileSystem smoothFileSystem) {
     this.smoothFileSystem = smoothFileSystem;
   }
 
-  public void save(Name name, Array<T> array) {
+  public void save(Name name, Array array) {
     Path artifactPath = artifactPath(name);
 
     smoothFileSystem.delete(artifactPath);
@@ -27,7 +27,7 @@ public class ArraySaver<T extends Value> implements Saver<Array<T>> {
     smoothFileSystem.createDir(artifactPath);
 
     int i = 0;
-    for (T value : array) {
+    for (Value value : array) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path sourcePath = artifactPath.append(filePath);
       Path targetPath = targetPath(value);

@@ -31,6 +31,7 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -53,9 +54,7 @@ public class OutputsDbTest {
   private final Path path = path("file/path");
 
   private Message message;
-  private Array<SFile> fileArray;
-  private Array<Blob> blobArray;
-  private Array<SString> stringArray;
+  private Array array;
   private SFile file;
   private Blob blob;
   private SString stringValue;
@@ -92,8 +91,8 @@ public class OutputsDbTest {
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = file(valuesDb, path, bytes));
-    given(fileArray = valuesDb.arrayBuilder(SFile.class).add(file).build());
-    given(outputsDb).write(hash, new Output(fileArray, asList()));
+    given(array = valuesDb.arrayBuilder(FILE).add(file).build());
+    given(outputsDb).write(hash, new Output(array, asList()));
     when(((Iterable<?>) outputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
     thenReturned(file);
   }
@@ -101,8 +100,8 @@ public class OutputsDbTest {
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
-    given(blobArray = valuesDb.arrayBuilder(Blob.class).add(blob).build());
-    given(outputsDb).write(hash, new Output(blobArray, asList()));
+    given(array = valuesDb.arrayBuilder(Types.BLOB).add(blob).build());
+    given(outputsDb).write(hash, new Output(array, asList()));
     when(((Iterable<?>) outputsDb.read(hash, BLOB_ARRAY).result()).iterator().next());
     thenReturned(blob);
   }
@@ -110,8 +109,8 @@ public class OutputsDbTest {
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
-    given(stringArray = valuesDb.arrayBuilder(SString.class).add(stringValue).build());
-    given(outputsDb).write(hash, new Output(stringArray, asList()));
+    given(array = valuesDb.arrayBuilder(STRING).add(stringValue).build());
+    given(outputsDb).write(hash, new Output(array, asList()));
     when(((Iterable<?>) outputsDb.read(hash, STRING_ARRAY).result()).iterator().next());
     thenReturned(stringValue);
   }

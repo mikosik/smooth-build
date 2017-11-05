@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.util.function.Predicate;
 
@@ -14,14 +15,16 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 public class FilterFunction {
   @SmoothFunction
-  public static Array<SFile> filter(Container container, Array<SFile> files, SString include) {
+  public static Array filter(Container container, Array files, SString include) {
     Predicate<Path> filter = createFilter(include.value());
-    ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
+    ArrayBuilder builder = container.create().arrayBuilder(FILE);
 
-    for (SFile file : files) {
+    for (Value fileValue : files) {
+      SFile file = (SFile) fileValue;
       if (filter.test(path(file.path().value()))) {
         builder.add(file);
       }

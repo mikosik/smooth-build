@@ -1,27 +1,19 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.inject.TypeLiteral;
 
 public class Types {
   public static final Type STRING = new StringType();
   public static final Type BLOB = new BlobType();
   public static final Type FILE = new FileType();
   public static final Type NOTHING = new NothingType();
-  public static final ArrayType STRING_ARRAY = new ArrayType(STRING,
-      new TypeLiteral<Array<SString>>() {});
-  public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB, new TypeLiteral<Array<Blob>>() {});
-  public static final ArrayType FILE_ARRAY =
-      new ArrayType(FILE, new TypeLiteral<Array<SFile>>() {});
-  public static final ArrayType NIL = new ArrayType(NOTHING, new TypeLiteral<Array<Nothing>>() {});
+  public static final ArrayType STRING_ARRAY = new ArrayType(STRING);
+  public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB);
+  public static final ArrayType FILE_ARRAY = new ArrayType(FILE);
+  public static final ArrayType NIL = new ArrayType(NOTHING);
 
   /*
    * Not each type can be used in every place. Each set below represent one place
@@ -42,17 +34,9 @@ public class Types {
       STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
 
   /*
-   * Some of the set above converted to java types.
-   */
-
-  private static final ImmutableSet<TypeLiteral<?>> BASIC_JTYPES = toJTypes(BASIC_TYPES);
-
-  /*
    * A few handy mappings.
    */
 
-  private static final ImmutableMap<TypeLiteral<?>, Type> JTYPE_TO_TYPE =
-      createToTypeMap(ALL_TYPES);
   private static final ImmutableMap<Type, ArrayType> ELEM_TYPE_TO_ARRAY_TYPE =
       createElemTypeToArrayTypeMap(ARRAY_TYPES);
 
@@ -68,32 +52,8 @@ public class Types {
     return ALL_TYPES;
   }
 
-  public static ImmutableSet<TypeLiteral<?>> arrayElementJTypes() {
-    return BASIC_JTYPES;
-  }
-
-  public static Type jTypeToType(TypeLiteral<?> jType) {
-    return JTYPE_TO_TYPE.get(jType);
-  }
-
   public static <T extends Value> ArrayType arrayOf(Type elemType) {
     return ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
-  }
-
-  private static ImmutableSet<TypeLiteral<?>> toJTypes(Iterable<Type> types) {
-    ImmutableSet.Builder<TypeLiteral<?>> builder = ImmutableSet.builder();
-    for (Type type : types) {
-      builder.add(type.jType());
-    }
-    return builder.build();
-  }
-
-  private static ImmutableMap<TypeLiteral<?>, Type> createToTypeMap(Iterable<Type> types) {
-    ImmutableMap.Builder<TypeLiteral<?>, Type> builder = ImmutableMap.builder();
-    for (Type type : types) {
-      builder.put(type.jType(), type);
-    }
-    return builder.build();
   }
 
   private static ImmutableMap<Type, ArrayType> createElemTypeToArrayTypeMap(

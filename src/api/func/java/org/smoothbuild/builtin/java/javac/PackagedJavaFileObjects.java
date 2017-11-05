@@ -11,17 +11,19 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 
 public class PackagedJavaFileObjects {
   public static Iterable<InputClassFile> classesFromJars(Container container,
-      Iterable<Blob> libraryJars) {
+      Iterable<Value> libraryJars) {
     Set<InputClassFile> result = new HashSet<>();
-    for (Blob jarBlob : libraryJars) {
-      Array<SFile> files = UnzipFunction.unzip(container, jarBlob, isClassFilePredicate());
-      for (SFile classFile : files) {
-        InputClassFile inputClassFile = new InputClassFile(classFile);
+    for (Value jarBlobValue : libraryJars) {
+      Array files = UnzipFunction.unzip(container, ((Blob) jarBlobValue), isClassFilePredicate());
+      for (Value fileValues : files) {
+        SFile file = (SFile) fileValues;
+        InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
-          throw new ErrorMessage("File " + classFile.path()
+          throw new ErrorMessage("File " + file.path()
               + " is contained by two different library jar files.");
         } else {
           result.add(inputClassFile);

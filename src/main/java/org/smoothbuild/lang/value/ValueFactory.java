@@ -1,7 +1,9 @@
 package org.smoothbuild.lang.value;
 
+import org.smoothbuild.lang.type.Type;
+
 public interface ValueFactory {
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass);
+  public ArrayBuilder arrayBuilder(Type elementType);
 
   public SFile file(SString path, Blob content);
 
