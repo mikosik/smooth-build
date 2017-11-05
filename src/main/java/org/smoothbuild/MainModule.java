@@ -8,7 +8,14 @@ import org.smoothbuild.io.util.ReleaseJarModule;
 import com.google.inject.AbstractModule;
 
 public class MainModule extends AbstractModule {
+  private final SmoothPaths smoothPaths;
+
+  public MainModule(SmoothPaths smoothPaths) {
+    this.smoothPaths = smoothPaths;
+  }
+
   protected void configure() {
+    bind(SmoothPaths.class).toInstance(smoothPaths);
     install(new OutputsDbModule());
     install(new ValuesDbModule());
     install(new FileSystemModule());
