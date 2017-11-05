@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.lang.type.Types.FILE;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -12,14 +13,13 @@ import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 public class FilesFunction {
   @SmoothFunction
   @NotCacheable
-  public static Array<SFile> files(ContainerImpl container, SString dir) {
+  public static Array files(ContainerImpl container, SString dir) {
     Path path = validatedProjectPath("dir", dir);
     FileSystem fileSystem = container.fileSystem();
 
@@ -39,8 +39,8 @@ public class FilesFunction {
     }
   }
 
-  private static Array<SFile> readFiles(ContainerImpl container, FileSystem fileSystem, Path dir) {
-    ArrayBuilder<SFile> fileArrayBuilder = container.create().arrayBuilder(SFile.class);
+  private static Array readFiles(ContainerImpl container, FileSystem fileSystem, Path dir) {
+    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(FILE);
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {

@@ -13,16 +13,18 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
   @SmoothFunction
-  public static Blob zip(Container container, Array<SFile> files) {
+  public static Blob zip(Container container, Array files) {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = container.create().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder)) {
-      for (SFile file : files) {
+      for (Value fileValue : files) {
+        SFile file = (SFile) fileValue;
         String path = file.path().value();
         if (duplicatesDetector.addValue(path)) {
           throw new ErrorMessage("Cannot zip two files with the same path = " + path);

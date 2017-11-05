@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -18,9 +19,9 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
-  public static <T extends Value> Array<T> array(ValuesDb valuesDb, Class<T> elementType,
-      T... elements) {
-    ArrayBuilder<T> arrayBuilder = valuesDb.arrayBuilder(elementType);
+  public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
+      Value... elements) {
+    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(elementType);
     stream(elements).forEach(arrayBuilder::add);
     return arrayBuilder.build();
   }

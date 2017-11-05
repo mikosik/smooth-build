@@ -1,21 +1,23 @@
 package org.smoothbuild.builtin.string;
 
+import static org.smoothbuild.lang.type.Types.STRING;
+
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 public class ConcatenateStringArraysFunction {
   @SmoothFunction
-  public static Array<SString> concatenateStringArrays(Container container, Array<SString> strings,
-      Array<SString> with) {
-    ArrayBuilder<SString> builder = container.create().arrayBuilder(SString.class);
+  public static Array concatenateStringArrays(Container container, Array strings,
+      Array with) {
+    ArrayBuilder builder = container.create().arrayBuilder(STRING);
 
-    for (SString string : strings) {
+    for (Value string : strings) {
       builder.add(string);
     }
-    for (SString string : with) {
+    for (Value string : with) {
       builder.add(string);
     }
 

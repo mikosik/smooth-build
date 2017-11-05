@@ -66,9 +66,17 @@ public class NativeFunction extends AbstractFunction {
   public Value invoke(ContainerImpl container, List<Value> arguments) {
     try {
       Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
-      if (result == null && !containsErrors(container.messages())) {
-        container.log(new ErrorMessage("Native function " + name()
-            + " has faulty implementation: it returned 'null' but logged no error."));
+      if (result == null) {
+        if (!containsErrors(container.messages())) {
+          container.log(new ErrorMessage("Native function " + name()
+              + " has faulty implementation: it returned 'null' but logged no error."));
+        }
+        return null;
+      }
+      if (!type().equals(result.type())) {
+        container.log(new ErrorMessage("Function " + name()
+            + " has faulty native implementation: Its result type is " + type()
+            + " but it returned value of type " + result.type() + "."));
       }
       return result;
     } catch (IllegalAccessException e) {

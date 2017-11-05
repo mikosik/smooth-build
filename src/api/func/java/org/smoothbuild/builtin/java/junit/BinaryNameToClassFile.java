@@ -12,6 +12,7 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
@@ -21,8 +22,9 @@ public class BinaryNameToClassFile {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
-      Array<SFile> fileArray = UnzipFunction.unzip(container, jarBlob, isClassFilePredicate());
-      for (SFile classFile : fileArray) {
+      Array fileArray = UnzipFunction.unzip(container, jarBlob, isClassFilePredicate());
+      for (Value classFileValue : fileArray) {
+        SFile classFile = (SFile) classFileValue;
         String classFilePath = classFile.path().value();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {

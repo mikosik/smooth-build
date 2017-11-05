@@ -1,6 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,19 +21,18 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SFile;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final Container container;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
-  private final ArrayBuilder<SFile> resultClassFiles;
+  private final ArrayBuilder resultClassFiles;
 
   SandboxedJavaFileManager(StandardJavaFileManager fileManager, Container container,
       Iterable<InputClassFile> objects) {
     super(fileManager);
     this.container = container;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = container.create().arrayBuilder(SFile.class);
+    this.resultClassFiles = container.create().arrayBuilder(FILE);
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(
@@ -50,7 +50,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     return result;
   }
 
-  public Array<SFile> resultClassfiles() {
+  public Array resultClassfiles() {
     return resultClassFiles.build();
   }
 

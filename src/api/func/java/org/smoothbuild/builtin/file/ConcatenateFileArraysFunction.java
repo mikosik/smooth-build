@@ -1,21 +1,22 @@
 package org.smoothbuild.builtin.file;
 
+import static org.smoothbuild.lang.type.Types.FILE;
+
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 
 public class ConcatenateFileArraysFunction {
   @SmoothFunction
-  public static Array<SFile> concatenateFileArrays(Container container, Array<SFile> files,
-      Array<SFile> with) {
-    ArrayBuilder<SFile> builder = container.create().arrayBuilder(SFile.class);
+  public static Array concatenateFileArrays(Container container, Array files, Array with) {
+    ArrayBuilder builder = container.create().arrayBuilder(FILE);
 
-    for (SFile file : files) {
+    for (Value file : files) {
       builder.add(file);
     }
-    for (SFile file : with) {
+    for (Value file : with) {
       builder.add(file);
     }
 

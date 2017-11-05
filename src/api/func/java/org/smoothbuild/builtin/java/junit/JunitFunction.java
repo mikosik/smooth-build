@@ -4,6 +4,7 @@ import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -20,11 +21,16 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 public class JunitFunction {
   @SmoothFunction
-  public static SString junit(Container container, Array<Blob> libs, SString include) {
-    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libs);
+  public static SString junit(Container container, Array libs, SString include) {
+    ArrayList<Blob> libBlobs = new ArrayList<Blob>();
+    for (Value libValue : libs) {
+      libBlobs.add((Blob) libValue);
+    }
+    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libBlobs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);

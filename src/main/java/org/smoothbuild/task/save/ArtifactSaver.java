@@ -14,9 +14,6 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
@@ -31,10 +28,10 @@ public class ArtifactSaver {
     builder.put(STRING, new StringSaver(fileSystem));
     builder.put(BLOB, new BlobSaver(fileSystem));
     builder.put(FILE, new FileSaver(fileSystem));
-    builder.put(STRING_ARRAY, new ArraySaver<SString>(fileSystem));
-    builder.put(BLOB_ARRAY, new ArraySaver<Blob>(fileSystem));
+    builder.put(STRING_ARRAY, new ArraySaver(fileSystem));
+    builder.put(BLOB_ARRAY, new ArraySaver(fileSystem));
     builder.put(FILE_ARRAY, new FileArraySaver(fileSystem, console));
-    builder.put(NIL, new ArraySaver<Nothing>(fileSystem));
+    builder.put(NIL, new ArraySaver(fileSystem));
     this.saversMap = builder.build();
   }
 

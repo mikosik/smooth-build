@@ -3,6 +3,7 @@ package org.smoothbuild.io.util;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,7 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
 public class TempDir {
@@ -45,7 +47,7 @@ public class TempDir {
     isDestroyed = true;
   }
 
-  public void writeFiles(Array<SFile> files) {
+  public void writeFiles(Array files) {
     assertNotDestroyed();
     try {
       writeFilesImpl(files);
@@ -54,8 +56,9 @@ public class TempDir {
     }
   }
 
-  private void writeFilesImpl(Array<SFile> files) throws IOException {
-    for (SFile file : files) {
+  private void writeFilesImpl(Array files) throws IOException {
+    for (Value fileValue : files) {
+      SFile file = (SFile) fileValue;
       writeFileImpl(path(file.path().value()), file.content());
     }
   }
@@ -75,7 +78,7 @@ public class TempDir {
     Streams.copy(inputStream, outputStream);
   }
 
-  public Array<SFile> readFiles() {
+  public Array readFiles() {
     assertNotDestroyed();
     try {
       return readFilesImpl();
@@ -84,8 +87,8 @@ public class TempDir {
     }
   }
 
-  private Array<SFile> readFilesImpl() throws IOException {
-    ArrayBuilder<SFile> arrayBuilder = valuesDb.arrayBuilder(SFile.class);
+  private Array readFilesImpl() throws IOException {
+    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(FILE);
     for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
       Blob content = readContentImpl(path);
       SFile file = valuesDb.file(valuesDb.string(path.value()), content);

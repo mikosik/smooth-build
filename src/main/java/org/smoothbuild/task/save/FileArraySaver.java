@@ -13,10 +13,11 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.util.DuplicatesDetector;
 
-public class FileArraySaver implements Saver<Array<SFile>> {
+public class FileArraySaver implements Saver<Array> {
   private final FileSystem smoothFileSystem;
   private final Console console;
 
@@ -25,7 +26,7 @@ public class FileArraySaver implements Saver<Array<SFile>> {
     this.console = console;
   }
 
-  public void save(Name name, Array<SFile> fileArray) {
+  public void save(Name name, Array fileArray) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
 
     Path artifactPath = artifactPath(name);
@@ -35,7 +36,8 @@ public class FileArraySaver implements Saver<Array<SFile>> {
     // create empty dir for us.
     smoothFileSystem.createDir(artifactPath);
 
-    for (SFile file : fileArray) {
+    for (Value fileValue : fileArray) {
+      SFile file = (SFile) fileValue;
       Path sourcePath = artifactPath.append(path(file.path().value()));
       if (!duplicatesDetector.addValue(file.path().value())) {
         Path targetPath = targetPath(file.content());

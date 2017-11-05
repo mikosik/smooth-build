@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
+import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -22,14 +23,14 @@ import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array<SFile> javac(Container container, Array<SFile> sources, Array<Blob> libs,
-      SString source, SString target) {
+  public static Array javac(Container container, Array sources, Array libs, SString source,
+      SString target) {
     return new Worker(container, sources, libs, source, target).execute();
   }
 
@@ -41,14 +42,14 @@ public class JavacFunction {
 
     private final JavaCompiler compiler;
     private final Container container;
-    private final Array<SFile> sources;
-    private final Array<Blob> libs;
+    private final Array sources;
+    private final Array libs;
     private final SString source;
     private final SString target;
 
     public Worker(Container container,
-        Array<SFile> sources,
-        Array<Blob> libs,
+        Array sources,
+        Array libs,
         SString source,
         SString target) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
@@ -59,7 +60,7 @@ public class JavacFunction {
       this.target = target;
     }
 
-    public Array<SFile> execute() {
+    public Array execute() {
       if (compiler == null) {
         throw new ErrorMessage("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
@@ -67,7 +68,7 @@ public class JavacFunction {
       return compile(sources);
     }
 
-    public Array<SFile> compile(Array<SFile> files) {
+    public Array compile(Array files) {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
@@ -83,7 +84,7 @@ public class JavacFunction {
          */
         if (!inputSourceFiles.iterator().hasNext()) {
           container.log(new WarningMessage("Param 'sources' is empty list."));
-          return container.create().arrayBuilder(SFile.class).build();
+          return container.create().arrayBuilder(FILE).build();
         }
 
         // run compilation task
@@ -145,10 +146,10 @@ public class JavacFunction {
       return new SandboxedJavaFileManager(fileManager, container, libsClasses);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Value> sourceFiles) {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (SFile file : sourceFiles) {
-        result.add(new InputSourceFile(file));
+      for (Value file : sourceFiles) {
+        result.add(new InputSourceFile((SFile) file));
       }
       return result;
     }

@@ -15,30 +15,30 @@ import org.smoothbuild.lang.type.ArrayType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class Array<T extends Value> extends Value implements Iterable<T> {
-  private final Function<HashCode, T> valueConstructor;
+public class Array extends Value implements Iterable<Value> {
+  private final Function<HashCode, ? extends Value> valueConstructor;
   private final HashedDb hashedDb;
 
-  public Array(HashCode hash, ArrayType arrayType, Function<HashCode, T> valueConstructor,
-      HashedDb hashedDb) {
+  public Array(HashCode hash, ArrayType arrayType,
+      Function<HashCode, ? extends Value> valueConstructor, HashedDb hashedDb) {
     super(arrayType, hash);
     this.valueConstructor = valueConstructor;
     this.hashedDb = hashedDb;
   }
 
-  public static <T extends Value> Array<T> storeArrayInDb(List<? extends Value> elements,
-      ArrayType arrayType, Function<HashCode, T> valueConstructor, HashedDb hashedDb) {
+  public static Array storeArrayInDb(List<? extends Value> elements, ArrayType arrayType,
+      Function<HashCode, ? extends Value> valueConstructor, HashedDb hashedDb) {
     Marshaller marshaller = hashedDb.newMarshaller();
     for (Value element : elements) {
       marshaller.writeHash(element.hash());
     }
     marshaller.close();
-    return new Array<T>(marshaller.hash(), arrayType, valueConstructor, hashedDb);
+    return new Array(marshaller.hash(), arrayType, valueConstructor, hashedDb);
   }
 
-  public Iterator<T> iterator() {
+  public Iterator<Value> iterator() {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash())) {
-      ImmutableList.Builder<T> builder = ImmutableList.builder();
+      ImmutableList.Builder<Value> builder = ImmutableList.builder();
       HashCode elementHash = null;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
         builder.add(valueConstructor.apply(elementHash));

@@ -3,14 +3,15 @@ package org.smoothbuild.acceptance.lang;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.BlobArrayParameter;
+import org.smoothbuild.acceptance.lang.nativ.AddElementOfWrongTypeToArray;
+import org.smoothbuild.acceptance.lang.nativ.EmptyStringArray;
 import org.smoothbuild.acceptance.lang.nativ.FileParameter;
 import org.smoothbuild.acceptance.lang.nativ.IllegalName;
 import org.smoothbuild.acceptance.lang.nativ.NonPublicMethod;
@@ -24,7 +25,6 @@ import org.smoothbuild.acceptance.lang.nativ.SameName2;
 import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 import org.smoothbuild.acceptance.lang.nativ.WithoutContainer;
 import org.smoothbuild.lang.plugin.Container;
-import org.smoothbuild.lang.type.Types;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
@@ -175,22 +175,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'oneStringParameter' parameter 'string' has type [String] "
-            + "so its native implementation type must be " + STRING_ARRAY.jType()
-            + " but it is " + STRING.jType() + ".\n"));
-  }
-
-  @Test
-  public void native_with_different_array_parameter_type_causes_error()
-      throws Exception {
-    givenNativeJar(BlobArrayParameter.class);
-    givenScript("[Blob] blobArrayParameter([String] array);\n"
-        + "      result = blobArrayParameter([]);");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString(
-        "Function 'blobArrayParameter' parameter 'array' has type [String] "
-            + "so its native implementation type must be " + STRING_ARRAY.jType()
-            + " but it is " + BLOB_ARRAY.jType() + ".\n"));
+            + "so its native implementation type must be " + STRING_ARRAY.jType().getCanonicalName()
+            + " but it is " + STRING.jType().getCanonicalName() + ".\n"));
   }
 
   @Test
@@ -203,8 +189,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'fileParameter' parameter 'file' has type Blob "
-            + "so its native implementation type must be " + BLOB.jType()
-            + " but it is " + Types.FILE.jType() + ".\n"));
+            + "so its native implementation type must be " + BLOB.jType().getCanonicalName()
+            + " but it is " + FILE.jType().getCanonicalName() + ".\n"));
   }
 
   @Test
@@ -249,5 +235,28 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString("Native function reportWarning has faulty implementation: "
         + "it returned 'null' but logged no error."));
+  }
+
+  @Test
+  public void native_that_adds_element_of_wrong_type_to_array_causes_error() throws Exception {
+    givenNativeJar(AddElementOfWrongTypeToArray.class);
+    givenScript("[Blob] addElementOfWrongTypeToArray();\n"
+        + "      result = addElementOfWrongTypeToArray;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Function addElementOfWrongTypeToArray threw java exception from its native code:"));
+    then(output(), containsString("Element type must be Blob."));
+  }
+
+  @Test
+  public void native_that_return_array_of_wrong_type_causes_error() throws Exception {
+    givenNativeJar(EmptyStringArray.class);
+    givenScript("[Blob] emptyStringArray();\n"
+        + "      result = emptyStringArray;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("Function emptyStringArray has faulty native implementation: "
+        + "Its result type is [Blob] but it returned value of type [String]."));
   }
 }

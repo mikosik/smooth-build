@@ -1,8 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.lang.type.Types.arrayElementJTypes;
 import static org.smoothbuild.lang.type.Types.arrayOf;
-import static org.smoothbuild.lang.type.Types.jTypeToType;
 import static org.smoothbuild.lang.value.SFile.storeFileInDb;
 import static org.smoothbuild.lang.value.SString.storeStringInDb;
 
@@ -27,7 +25,6 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
 
 import com.google.common.hash.HashCode;
-import com.google.inject.TypeLiteral;
 
 public class ValuesDb implements ValueFactory {
   private final HashedDb hashedDb;
@@ -42,18 +39,16 @@ public class ValuesDb implements ValueFactory {
     return new ValuesDb(new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)));
   }
 
-  public <T extends Value> ArrayBuilder<T> arrayBuilder(Class<T> elementClass) {
-    if (!(arrayElementJTypes().contains(TypeLiteral.get(elementClass)))) {
-      throw new IllegalArgumentException("Illegal type " + elementClass.getCanonicalName());
+  public ArrayBuilder arrayBuilder(Type elementType) {
+    ArrayType arrayType = arrayOf(elementType);
+    if (arrayType == null) {
+      throw new IllegalArgumentException("Cannot create array with element of type " + elementType);
     }
-    Type type = jTypeToType(TypeLiteral.get(elementClass));
-    return createArrayBuilder(arrayOf(type), elementClass);
+    return createArrayBuilder(arrayType);
   }
 
-  private <T extends Value> ArrayBuilder<T> createArrayBuilder(ArrayType type,
-      Class<?> elementClass) {
-    return new ArrayBuilder<T>(type, (Function<HashCode, T>) valueConstructor(type.elemType()),
-        hashedDb);
+  private ArrayBuilder createArrayBuilder(ArrayType type) {
+    return new ArrayBuilder(type, valueConstructor(type.elemType()), hashedDb);
   }
 
   public SFile file(SString path, Blob content) {
@@ -66,6 +61,10 @@ public class ValuesDb implements ValueFactory {
 
   public SString string(String string) {
     return storeStringInDb(string, hashedDb);
+  }
+
+  public Array read(ArrayType type, HashCode hash) {
+    return (Array) read((Type) type, hash);
   }
 
   public Value read(Type type, HashCode hash) {
@@ -94,8 +93,8 @@ public class ValuesDb implements ValueFactory {
     throw new RuntimeException("Unexpected type: " + type);
   }
 
-  private <T extends Value> Array<T> arrayMarshaller(ArrayType type,
-      Function<HashCode, T> valueConstructor, HashCode hash) {
-    return new Array<T>(hash, type, valueConstructor, hashedDb);
+  private Array arrayMarshaller(ArrayType type,
+      Function<HashCode, ? extends Value> valueConstructor, HashCode hash) {
+    return new Array(hash, type, valueConstructor, hashedDb);
   }
 }
