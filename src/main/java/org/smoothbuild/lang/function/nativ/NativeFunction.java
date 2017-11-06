@@ -68,8 +68,8 @@ public class NativeFunction extends AbstractFunction {
       Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
       if (result == null) {
         if (!containsErrors(container.messages())) {
-          container.log(new ErrorMessage("Native function " + name()
-              + " has faulty implementation: it returned 'null' but logged no error."));
+          container.log(new ErrorMessage("Function " + name()
+              + " has faulty native implementation: it returned 'null' but logged no error."));
         }
         return null;
       }

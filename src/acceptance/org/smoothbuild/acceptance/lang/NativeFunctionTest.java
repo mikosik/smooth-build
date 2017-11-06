@@ -56,7 +56,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
-        "Invalid native function implementation in build.jar provided by "
+        "Invalid function native implementation in build.jar provided by "
             + SameName2.class.getCanonicalName() + ".sameName: "
             + "Function with the same name is also provided by "
             + SameName.class.getCanonicalName() + ".sameName.\n"));
@@ -68,7 +68,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Invalid native function implementation in build.jar provided by "
+    then(output(), containsString("Invalid function native implementation in build.jar provided by "
         + IllegalName.class.getCanonicalName()
         + ".illegalName$: Name 'illegalName$' is illegal.\n"));
   }
@@ -79,7 +79,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Invalid native function implementation in build.jar provided by "
+    then(output(), containsString("Invalid function native implementation in build.jar provided by "
         + NonPublicMethod.class.getCanonicalName()
         + ".function: Providing method must be public.\n"));
   }
@@ -90,7 +90,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Invalid native function implementation in build.jar provided by "
+    then(output(), containsString("Invalid function native implementation in build.jar provided by "
         + NonStaticMethod.class.getCanonicalName()
         + ".function: Providing method must be static.\n"));
   }
@@ -124,7 +124,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Invalid native function implementation in build.jar provided by "
+    then(output(), containsString("Invalid function native implementation in build.jar provided by "
         + WithoutContainer.class.getCanonicalName()
         + ".function: Providing method should have first parameter of type "
         + Container.class.getCanonicalName() + ".\n"));
@@ -222,7 +222,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         + "      result = returnNull();");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Native function returnNull has faulty implementation: "
+    then(output(), containsString("Function returnNull has faulty native implementation: "
         + "it returned 'null' but logged no error."));
   }
 
@@ -233,7 +233,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         + "      result = reportWarning('test message');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Native function reportWarning has faulty implementation: "
+    then(output(), containsString("Function reportWarning has faulty native implementation: "
         + "it returned 'null' but logged no error."));
   }
 
