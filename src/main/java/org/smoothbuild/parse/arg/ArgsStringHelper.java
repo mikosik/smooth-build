@@ -1,5 +1,6 @@
 package org.smoothbuild.parse.arg;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.Collection;
@@ -21,14 +22,15 @@ public class ArgsStringHelper {
     int maxArgName = longestArgName(paramToArgMap.values());
     int maxPosition = longestArgPosition(paramToArgMap.values());
 
-    StringBuilder builder = new StringBuilder();
-    for (Map.Entry<TypedName, ArgNode> entry : paramToArgMap.entrySet()) {
-      String paramPart = entry.getKey().toPaddedString(maxParamType, maxParamName);
-      ArgNode arg = entry.getValue();
-      String argPart = arg.toPaddedString(maxArgType, maxArgName, maxPosition);
-      builder.append("  " + paramPart + " <- " + argPart + "\n");
-    }
-    return builder.toString();
+    return paramToArgMap.entrySet()
+        .stream()
+        .map(e -> {
+          String paramPart = e.getKey().toPaddedString(maxParamType, maxParamName);
+          String argPart = e.getValue().toPaddedString(maxArgType, maxArgName, maxPosition);
+          return "  " + paramPart + " <- " + argPart + "\n";
+        })
+        .sorted()
+        .collect(joining());
   }
 
   private static Map<TypedName, ArgNode> createMap(CallNode call) {
@@ -45,12 +47,11 @@ public class ArgsStringHelper {
     int nameLength = longestArgName(args);
     int positionLength = longestArgPosition(args);
 
-    StringBuilder builder = new StringBuilder();
-    for (ArgNode arg : args) {
-      builder.append("  " + arg.toPaddedString(
-          typeLength, nameLength, positionLength) + "\n");
-    }
-    return builder.toString();
+    return args
+        .stream()
+        .map(a -> "  " + a.toPaddedString(typeLength, nameLength, positionLength) + "\n")
+        .sorted()
+        .collect(joining());
   }
 
   private static int longestArgType(Collection<ArgNode> args) {
