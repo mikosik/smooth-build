@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import java.util.Objects;
+
 import org.smoothbuild.lang.value.Value;
 
 /**
@@ -22,12 +24,19 @@ public class Type {
     return jType;
   }
 
-  public final boolean equals(Object object) {
-    return this == object;
+  public boolean equals(Object object) {
+    if (object == null) {
+      return false;
+    }
+    if (!Type.class.equals(object.getClass())) {
+      return false;
+    }
+    Type that = (Type) object;
+    return this.name.equals(that.name) && this.jType.equals(that.jType);
   }
 
-  public final int hashCode() {
-    return name.hashCode();
+  public int hashCode() {
+    return Objects.hash(name, jType);
   }
 
   public String toString() {
