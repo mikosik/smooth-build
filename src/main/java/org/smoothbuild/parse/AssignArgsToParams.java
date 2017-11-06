@@ -53,7 +53,7 @@ public class AssignArgsToParams {
           return;
         }
         for (TypedName parameter : parametersPool.allOptional()) {
-          if (parameter.type() == Types.NOTHING) {
+          if (parameter.type().equals(Types.NOTHING)) {
             errors.add(new ParseError(call, "Parameter '" + parameter.name()
                 + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
             return;

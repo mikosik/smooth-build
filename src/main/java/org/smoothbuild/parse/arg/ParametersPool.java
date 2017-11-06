@@ -103,7 +103,7 @@ public class ParametersPool {
     for (Type type : allTypes()) {
       Set<TypedName> set = new HashSet<>();
       for (TypedName name : names) {
-        if (name.type() == type) {
+        if (name.type().equals(type)) {
           set.add(name);
         }
       }

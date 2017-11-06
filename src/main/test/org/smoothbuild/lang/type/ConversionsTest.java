@@ -7,7 +7,6 @@ import static org.quackery.report.AssertException.assertEquals;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.type.Types.ALL_TYPES;
-import static org.smoothbuild.lang.type.Types.ARRAY_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
@@ -36,10 +35,10 @@ public class ConversionsTest {
   }
 
   private static Case testConversion(Type from, Type to) {
-    boolean canConvert = from == to ||
-        from == FILE && to == BLOB ||
-        from == FILE_ARRAY && to == BLOB_ARRAY ||
-        from == NIL && ARRAY_TYPES.contains(to);
+    boolean canConvert = from.equals(to) ||
+        from.equals(FILE) && to.equals(BLOB) ||
+        from.equals(FILE_ARRAY) && to.equals(BLOB_ARRAY) ||
+        from.equals(NIL) && (to instanceof ArrayType);
     String canOrCannot = canConvert ? "can" : "cannot";
     return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> assertEquals(
         canConvert(from, to), canConvert));

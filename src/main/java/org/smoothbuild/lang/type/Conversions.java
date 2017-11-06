@@ -17,7 +17,7 @@ public class Conversions {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
   public static boolean canConvert(Type from, Type to) {
-    return from == to || CONVERSIONS.containsKey(new TypeConversion(from, to));
+    return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from, to));
   }
 
   public static Name convertFunctionName(Type from, Type to) {

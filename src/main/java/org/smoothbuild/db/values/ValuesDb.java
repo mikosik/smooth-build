@@ -72,16 +72,16 @@ public class ValuesDb implements ValueFactory {
   }
 
   private Function<HashCode, ? extends Value> valueConstructor(Type type) {
-    if (type == Types.STRING) {
+    if (type.equals(Types.STRING)) {
       return (hash) -> new SString(hash, hashedDb);
     }
-    if (type == Types.BLOB) {
+    if (type.equals(Types.BLOB)) {
       return (hash) -> new Blob(hash, hashedDb);
     }
-    if (type == Types.FILE) {
+    if (type.equals(Types.FILE)) {
       return (hash) -> new SFile(hash, hashedDb);
     }
-    if (type == Types.NOTHING) {
+    if (type.equals(Types.NOTHING)) {
       return (hash) -> {
         throw new UnsupportedOperationException("Nothing cannot be constructed.");
       };
