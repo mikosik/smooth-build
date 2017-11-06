@@ -24,10 +24,6 @@ public class Types {
    * there.
    */
 
-  /**
-   * NOTHING is not a basic type as it is not possible to create instance of that
-   * type.
-   */
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
   public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
