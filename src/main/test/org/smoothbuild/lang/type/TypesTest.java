@@ -55,13 +55,14 @@ public class TypesTest {
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
 
+    tester.addEqualityGroup(NOTHING);
     tester.addEqualityGroup(STRING);
     tester.addEqualityGroup(BLOB);
     tester.addEqualityGroup(FILE);
-    tester.addEqualityGroup(STRING_ARRAY);
-    tester.addEqualityGroup(BLOB_ARRAY);
-    tester.addEqualityGroup(FILE_ARRAY);
-    tester.addEqualityGroup(NIL);
+    tester.addEqualityGroup(STRING_ARRAY, arrayOf(STRING));
+    tester.addEqualityGroup(BLOB_ARRAY, arrayOf(BLOB));
+    tester.addEqualityGroup(FILE_ARRAY, arrayOf(FILE));
+    tester.addEqualityGroup(NIL, arrayOf(NOTHING));
 
     tester.testEquals();
   }
@@ -80,14 +81,6 @@ public class TypesTest {
       }
       visited.add(type);
     }
-  }
-
-  @Test
-  public void array_of() {
-    assertEquals(STRING_ARRAY, arrayOf(STRING));
-    assertEquals(BLOB_ARRAY, arrayOf(BLOB));
-    assertEquals(FILE_ARRAY, arrayOf(FILE));
-    assertEquals(NIL, arrayOf(NOTHING));
   }
 
   @Test
