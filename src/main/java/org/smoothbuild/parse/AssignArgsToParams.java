@@ -52,13 +52,6 @@ public class AssignArgsToParams {
               missingRequiredArgsMessage(call, missingRequiredParameters)));
           return;
         }
-        for (TypedName parameter : parametersPool.allOptional()) {
-          if (parameter.type().equals(Types.NOTHING)) {
-            errors.add(new ParseError(call, "Parameter '" + parameter.name()
-                + "' has to be assigned explicitly as type 'Nothing' doesn't have default value."));
-            return;
-          }
-        }
       }
 
       private ParametersPool parametersPool(CallNode call) {
