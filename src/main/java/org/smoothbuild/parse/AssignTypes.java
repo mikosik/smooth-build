@@ -152,13 +152,13 @@ public class AssignTypes {
           return NIL;
         }
         Type firstType = expressions.get(0).get(Type.class);
-        if (firstType == nonInferable) {
+        if (nonInferable.equals(firstType)) {
           return nonInferable;
         }
         Type superType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
-          if (type == nonInferable) {
+          if (nonInferable.equals(type)) {
             return nonInferable;
           }
           superType = commonSuperType(superType, type);

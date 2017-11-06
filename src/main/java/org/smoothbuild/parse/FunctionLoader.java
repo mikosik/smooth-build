@@ -132,7 +132,7 @@ public class FunctionLoader {
       public <T extends Value> Expression implicitConversion(Type destinationType,
           Expression source) {
         Type sourceType = source.type();
-        if (sourceType == destinationType) {
+        if (sourceType.equals(destinationType)) {
           return source;
         }
 

@@ -83,13 +83,13 @@ public class Types {
   }
 
   public static Type commonSuperType(Type type1, Type type2) {
-    if (type1 == type2) {
+    if (type1.equals(type2)) {
       return type1;
     }
-    if (type1 == NOTHING) {
+    if (type1.equals(NOTHING)) {
       return type2;
     }
-    if (type2 == NOTHING) {
+    if (type2.equals(NOTHING)) {
       return type1;
     }
     if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
@@ -97,16 +97,16 @@ public class Types {
       Type elemType2 = ((ArrayType) type2).elemType();
       return arrayOf(commonSuperType(elemType1, elemType2));
     }
-    if (type1 == BLOB) {
-      if (type2 == BLOB || type2 == FILE) {
+    if (type1.equals(BLOB)) {
+      if (type2.equals(BLOB) || type2.equals(FILE)) {
         return BLOB;
       } else {
         return null;
       }
-    } else if (type1 == FILE) {
-      if (type2 == FILE) {
+    } else if (type1.equals(FILE)) {
+      if (type2.equals(FILE)) {
         return FILE;
-      } else if (type2 == BLOB) {
+      } else if (type2.equals(BLOB)) {
         return BLOB;
       } else {
         return null;
