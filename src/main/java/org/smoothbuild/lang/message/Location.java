@@ -46,10 +46,6 @@ public class Location {
   }
 
   public String toString() {
-    return "[ " + asString() + " ]";
-  }
-
-  private String asString() {
     if (line == -1) {
       return "cmd line";
     } else {

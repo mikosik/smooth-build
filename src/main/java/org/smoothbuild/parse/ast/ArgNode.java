@@ -51,7 +51,7 @@ public class ArgNode extends Node {
     String name = padEnd(nameSanitized(), minNameLength, ' ');
     String position = padEnd(positionString(), minPositionLength, ' ');
     String location = location().toString();
-    return type + name + " #" + position + " " + location;
+    return type + name + " #" + position + " [" + location + "]";
   }
 
   private String positionString() {

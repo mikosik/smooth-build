@@ -47,7 +47,7 @@ public class Console {
   }
 
   public static String errorLine(Location location, String message) {
-    return location.file() + ":" + location.line() + ": error: " + message;
+    return location.toString() + ": error: " + message;
   }
 
   public void error(String message) {

@@ -46,13 +46,13 @@ public class LocationTest {
   public void file_code_location_to_string() throws Exception {
     given(location = location("abc", 2));
     when(location.toString());
-    thenReturned("[ abc:2 ]");
+    thenReturned("abc:2");
   }
 
   @Test
   public void command_line_code_location_to_string() throws Exception {
     given(location = commandLine());
     when(location.toString());
-    thenReturned("[ cmd line ]");
+    thenReturned("cmd line");
   }
 }
