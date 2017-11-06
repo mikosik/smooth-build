@@ -6,7 +6,6 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
@@ -41,9 +40,6 @@ public class Types {
    * A few handy mappings.
    */
 
-  private static final ImmutableMap<Type, ArrayType> ELEM_TYPE_TO_ARRAY_TYPE =
-      createElemTypeToArrayTypeMap(ARRAY_TYPES);
-
   public static ImmutableSet<Type> basicTypes() {
     return BASIC_TYPES;
   }
@@ -57,16 +53,7 @@ public class Types {
   }
 
   public static <T extends Value> ArrayType arrayOf(Type elemType) {
-    return ELEM_TYPE_TO_ARRAY_TYPE.get(elemType);
-  }
-
-  private static ImmutableMap<Type, ArrayType> createElemTypeToArrayTypeMap(
-      ImmutableSet<ArrayType> arrayTypes) {
-    ImmutableMap.Builder<Type, ArrayType> builder = ImmutableMap.builder();
-    for (ArrayType type : arrayTypes) {
-      builder.put(type.elemType(), type);
-    }
-    return builder.build();
+    return new ArrayType(elemType);
   }
 
   public static Type basicTypeFromString(String string) {
@@ -95,7 +82,8 @@ public class Types {
     if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
       Type elemType1 = ((ArrayType) type1).elemType();
       Type elemType2 = ((ArrayType) type2).elemType();
-      return arrayOf(commonSuperType(elemType1, elemType2));
+      Type commonSuperType = commonSuperType(elemType1, elemType2);
+      return commonSuperType == null ? null : arrayOf(commonSuperType);
     }
     if (type1.equals(BLOB)) {
       if (type2.equals(BLOB) || type2.equals(FILE)) {
