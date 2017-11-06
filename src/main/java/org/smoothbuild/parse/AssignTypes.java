@@ -4,6 +4,8 @@ import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.arrayOf;
+import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
 import static org.smoothbuild.lang.type.Types.isConvertible;
 
@@ -15,7 +17,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.TypedName;
-import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Value;
@@ -132,7 +133,8 @@ public class AssignTypes {
       private Type createType(TypeNode type) {
         if (type instanceof ArrayTypeNode) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
-          return Types.arrayOf(createType(elementType));
+          Type inferredElemType = createType(elementType);
+          return inferredElemType == null ? null : arrayOf(inferredElemType);
         }
         Type result = Types.basicTypeFromString(type.name());
         if (result == null) {
@@ -171,14 +173,13 @@ public class AssignTypes {
             return nonInferable;
           }
         }
-        ArrayType arrayType = Types.arrayOf(superType);
-        if (arrayType == null) {
+        if (!basicTypes().contains(superType)) {
           errors.add(new ParseError(array, "Array cannot contain element with type '"
-              + superType + "'. Only following types are allowed: " + Types.basicTypes()
+              + superType + "'. Only following types are allowed: " + basicTypes()
               + "."));
           return nonInferable;
         }
-        return arrayType;
+        return Types.arrayOf(superType);
       }
 
       public void visitCall(CallNode call) {

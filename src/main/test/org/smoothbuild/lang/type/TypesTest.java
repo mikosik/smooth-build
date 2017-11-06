@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.google.common.base.Objects;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
@@ -207,7 +208,7 @@ public class TypesTest {
   private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected,
       StringBuilder builder) {
     Type actual = Types.commonSuperType(type1, type2);
-    if (expected != actual) {
+    if (!Objects.equal(expected, actual)) {
       builder.append("commonSuperType(" + type1 + "," + type2 + ") = " + actual + " but should = "
           + expected + "\n");
     }
