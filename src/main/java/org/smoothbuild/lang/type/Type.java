@@ -5,7 +5,7 @@ import org.smoothbuild.lang.value.Value;
 /**
  * Type in smooth language.
  */
-public abstract class Type {
+public class Type {
   private final String name;
   private final Class<? extends Value> jType;
 

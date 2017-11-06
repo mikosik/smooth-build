@@ -1,15 +1,19 @@
 package org.smoothbuild.lang.type;
 
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
-  public static final Type STRING = new StringType();
-  public static final Type BLOB = new BlobType();
-  public static final Type FILE = new FileType();
-  public static final Type NOTHING = new NothingType();
+  public static final Type STRING = new Type("String", SString.class);
+  public static final Type BLOB = new Type("Blob", Blob.class);
+  public static final Type FILE = new Type("File", SFile.class);
+  public static final Type NOTHING = new Type("Nothing", Nothing.class);
   public static final ArrayType STRING_ARRAY = new ArrayType(STRING);
   public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB);
   public static final ArrayType FILE_ARRAY = new ArrayType(FILE);
