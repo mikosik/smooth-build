@@ -17,7 +17,7 @@ import org.smoothbuild.lang.type.Type;
 
 public class ArgNodeTest {
   private ArgNode arg;
-  private final Location location = location(null, 1);
+  private final Location location = location("path", 1);
   private final Name name = new Name("arg-name");
 
   @Test
@@ -76,7 +76,7 @@ public class ArgNodeTest {
     given(arg = new ArgNode(1, new Name("myName"), expr(STRING), location));
     given(arg).set(Type.class, STRING);
     when(arg).toPaddedString(10, 13, 7);
-    thenReturned("String    : myName        #1       " + location.toString());
+    thenReturned("String    : myName        #1       [" + location.toString() + "]");
   }
 
   @Test
@@ -84,7 +84,7 @@ public class ArgNodeTest {
     given(arg = new ArgNode(1, new Name("myName"), expr(STRING), location));
     given(arg).set(Type.class, STRING);
     when(arg).toPaddedString(1, 1, 1);
-    thenReturned("String: myName #1 " + location.toString());
+    thenReturned("String: myName #1 [" + location.toString() + "]");
   }
 
   private static ExprNode expr(Type type) {
