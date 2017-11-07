@@ -49,13 +49,25 @@ public class TaskGraph {
   public void executeAll() {
     for (Task task : rootTasks) {
       executeGraph(task);
+      if (task.graphContainsErrors()) {
+        return;
+      }
     }
   }
 
   private void executeGraph(Task task) {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
+      if (subTask.graphContainsErrors()) {
+        return;
+      }
     }
     taskExecutor.execute(task);
+  }
+
+  public boolean containsErrors() {
+    return rootTasks
+        .stream()
+        .anyMatch(Task::graphContainsErrors);
   }
 }

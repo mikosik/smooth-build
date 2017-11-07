@@ -1,7 +1,5 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.lang.message.Messages.containsErrors;
-
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -48,9 +46,6 @@ public class TaskExecutor {
       }
     }
     reporter.report(task, isAlreadyCached);
-    if (containsErrors(task.output().messages())) {
-      throw new ExecutionException();
-    }
   }
 
   private <T extends Value> HashCode taskHash(Task task) {

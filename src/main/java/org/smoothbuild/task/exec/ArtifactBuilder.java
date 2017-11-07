@@ -36,11 +36,13 @@ public class ArtifactBuilder {
 
   public void runBuild() {
     taskGraph.executeAll();
-    for (Entry<Name, Task> artifact : artifacts.entrySet()) {
-      Name name = artifact.getKey();
-      Task task = artifact.getValue();
-      Value value = task.output().result();
-      artifactSaver.save(name, value);
+    if (!taskGraph.containsErrors()) {
+      for (Entry<Name, Task> artifact : artifacts.entrySet()) {
+        Name name = artifact.getKey();
+        Task task = artifact.getValue();
+        Value value = task.output().result();
+        artifactSaver.save(name, value);
+      }
     }
   }
 }

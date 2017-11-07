@@ -18,7 +18,6 @@ import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.Maybe;
@@ -50,19 +49,14 @@ public class Build implements Command {
       return EXIT_CODE_ERROR;
     }
     tempManager.removeTemps();
-    try {
-      Maybe<Functions> functions = loadFunctions();
-      if (functions.hasValue()) {
-        smoothExecutor.execute(functions.value(), functionNames.value());
-      } else {
-        for (Object error : functions.errors()) {
-          console.rawError(error);
-        }
+    Maybe<Functions> functions = loadFunctions();
+    if (functions.hasValue()) {
+      smoothExecutor.execute(functions.value(), functionNames.value());
+    } else {
+      for (Object error : functions.errors()) {
+        console.rawError(error);
       }
-    } catch (ExecutionException e) {
-      return EXIT_CODE_ERROR;
     }
-
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }

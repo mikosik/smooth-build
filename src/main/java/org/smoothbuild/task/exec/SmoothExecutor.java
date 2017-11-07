@@ -22,7 +22,7 @@ public class SmoothExecutor {
     for (Name name : names) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.");
-        throw new ExecutionException();
+        return;
       }
       artifactBuilder.addArtifact(functions.get(name));
     }
