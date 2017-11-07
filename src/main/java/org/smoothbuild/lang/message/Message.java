@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.message;
 
-import com.google.common.base.Throwables;
-
 public class Message extends RuntimeException {
   protected Message(String message) {
     super(message);
@@ -20,7 +18,7 @@ public class Message extends RuntimeException {
   }
 
   public String toString() {
-    return name() + ": " + getMessage() + stackTrace();
+    return name() + ": " + getMessage();
   }
 
   private String name() {
@@ -32,15 +30,6 @@ public class Message extends RuntimeException {
       return "INFO";
     } else {
       throw new RuntimeException("Unknown message type: " + getClass().getCanonicalName());
-    }
-  }
-
-  private String stackTrace() {
-    Throwable cause = getCause();
-    if (cause == null) {
-      return "";
-    } else {
-      return "\n" + Throwables.getStackTraceAsString(cause);
     }
   }
 }
