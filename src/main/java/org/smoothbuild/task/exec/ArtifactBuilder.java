@@ -18,25 +18,25 @@ import org.smoothbuild.task.save.ArtifactSaver;
 
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
-  private final TaskGraph taskGraph;
+  private final TaskBatch taskBatch;
   private final Map<Name, Task> artifacts;
 
   @Inject
-  public ArtifactBuilder(ArtifactSaver artifactSaver, TaskGraph taskGraph) {
+  public ArtifactBuilder(ArtifactSaver artifactSaver, TaskBatch taskBatch) {
     this.artifactSaver = artifactSaver;
-    this.taskGraph = taskGraph;
+    this.taskBatch = taskBatch;
     this.artifacts = new HashMap<>();
   }
 
   public void addArtifact(Function function) {
     Expression expression =
         function.createCallExpression(asList(), false, Location.commandLine());
-    artifacts.put(function.name(), taskGraph.createTasks(expression));
+    artifacts.put(function.name(), taskBatch.createTasks(expression));
   }
 
   public void runBuild() {
-    taskGraph.executeAll();
-    if (!taskGraph.containsErrors()) {
+    taskBatch.executeAll();
+    if (!taskBatch.containsErrors()) {
       for (Entry<Name, Task> artifact : artifacts.entrySet()) {
         Name name = artifact.getKey();
         Task task = artifact.getValue();

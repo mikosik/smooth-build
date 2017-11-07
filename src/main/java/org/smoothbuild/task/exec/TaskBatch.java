@@ -14,13 +14,13 @@ import org.smoothbuild.task.base.Task;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class TaskGraph {
+public class TaskBatch {
   private final TaskExecutor taskExecutor;
   private final ValuesDb valuesDb;
   private final List<Task> rootTasks;
 
   @Inject
-  public TaskGraph(TaskExecutor taskExecutor, ValuesDb valuesDb) {
+  public TaskBatch(TaskExecutor taskExecutor, ValuesDb valuesDb) {
     this.taskExecutor = taskExecutor;
     this.valuesDb = valuesDb;
     this.rootTasks = new ArrayList<>();
