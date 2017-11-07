@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
+import static org.smoothbuild.lang.message.MessageException.errorException;
 import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class JavacFunction {
 
     public Array execute() {
       if (compiler == null) {
-        throw new ErrorMessage("Couldn't find JavaCompiler implementation. "
+        throw errorException("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
       }
       return compile(sources);
@@ -118,9 +119,8 @@ public class JavacFunction {
       if (!source.value().isEmpty()) {
         String sourceArg = source.value();
         if (!SOURCE_VALUES.contains(sourceArg)) {
-          throw new ErrorMessage(
-              "Parameter source has illegal value = '" + sourceArg + "'.\n"
-                  + "Only following values are allowed " + SOURCE_VALUES + "\n");
+          throw errorException("Parameter source has illegal value = '" + sourceArg + "'.\n"
+              + "Only following values are allowed " + SOURCE_VALUES + "\n");
         }
         result.add("-source");
         result.add(sourceArg);
@@ -129,7 +129,7 @@ public class JavacFunction {
       if (!target.value().isEmpty()) {
         String targetArg = target.value();
         if (!TARGET_VALUES.contains(targetArg)) {
-          throw new ErrorMessage("Parameter target has illegal value = '" + targetArg + "'.\n"
+          throw errorException("Parameter target has illegal value = '" + targetArg + "'.\n"
               + "Only following values are allowed " + TARGET_VALUES);
         }
         result.add("-target");

@@ -16,7 +16,7 @@ import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Location;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Evaluator;
@@ -83,8 +83,8 @@ public class NativeFunction extends AbstractFunction {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof Message) {
-        container.log((Message) cause);
+      if (cause instanceof MessageException) {
+        container.log(((MessageException) cause).message());
       } else {
         container.log(new ErrorMessage("Function " + name()
             + " threw java exception from its native code:\n"

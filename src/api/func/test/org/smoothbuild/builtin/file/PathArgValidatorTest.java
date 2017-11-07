@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageException;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -23,7 +23,7 @@ public class PathArgValidatorTest {
       try {
         validatedProjectPath(name, valuesDb.string(path));
         fail("exception should be thrown for path = " + path);
-      } catch (Message e) {
+      } catch (MessageException e) {
         // expected
       }
     }

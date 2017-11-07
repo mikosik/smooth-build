@@ -14,7 +14,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -39,6 +39,6 @@ public class PackagedJavaFileObjectsTest {
     given(file1 = file(memoryValuesDb(), path("my/package/MyKlass.class")));
     given(jar = jar(file1));
     when(() -> classesFromJars(container, asList(jar, jar)));
-    thenThrown(Message.class);
+    thenThrown(MessageException.class);
   }
 }

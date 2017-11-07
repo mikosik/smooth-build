@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
+import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -23,7 +23,7 @@ public class PackagedJavaFileObjects {
         SFile file = (SFile) fileValues;
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
-          throw new ErrorMessage("File " + file.path()
+          throw errorException("File " + file.path()
               + " is contained by two different library jar files.");
         } else {
           result.add(inputClassFile);

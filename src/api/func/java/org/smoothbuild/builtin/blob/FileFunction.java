@@ -1,8 +1,9 @@
 package org.smoothbuild.builtin.blob;
 
+import static org.smoothbuild.lang.message.MessageException.errorException;
+
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
@@ -15,7 +16,7 @@ public class FileFunction {
     try {
       Path.path(path.value());
     } catch (IllegalPathException e) {
-      throw new ErrorMessage("Param '" + "path" + "' has illegal value. " + e.getMessage());
+      throw errorException("Param '" + "path" + "' has illegal value. " + e.getMessage());
     }
     return container.create().file(path, content);
   }

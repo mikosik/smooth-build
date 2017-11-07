@@ -1,5 +1,7 @@
 package org.smoothbuild.builtin.java;
 
+import static org.smoothbuild.lang.message.MessageException.errorException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,7 +11,6 @@ import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -30,7 +31,7 @@ public class JarFunction {
         SFile file = (SFile) fileValue;
         String path = file.path().value();
         if (duplicatesDetector.addValue(path)) {
-          throw new ErrorMessage("Cannot jar two files with the same path = " + path);
+          throw errorException("Cannot jar two files with the same path = " + path);
         }
         jarFile(file, jarOutputStream, buffer);
       }
