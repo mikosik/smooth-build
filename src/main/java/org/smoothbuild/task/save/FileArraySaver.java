@@ -14,7 +14,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.ExecutionException;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class FileArraySaver implements Saver<Array> {
@@ -48,7 +47,6 @@ public class FileArraySaver implements Saver<Array> {
     if (duplicatesDetector.hasDuplicates()) {
       Set<String> duplicates = duplicatesDetector.getDuplicateValues();
       console.error(duplicatedPathsMessage(name, duplicates));
-      throw new ExecutionException();
     }
   }
 

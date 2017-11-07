@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.message.Location;
@@ -65,6 +66,10 @@ public class Task {
 
   public boolean hasOutput() {
     return output != null;
+  }
+
+  public boolean graphContainsErrors() {
+    return !hasOutput() || containsErrors(output.messages());
   }
 
   public HashCode hash() {
