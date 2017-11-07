@@ -23,7 +23,7 @@ public class MessageTest {
   @Test
   public void test_error() {
     when(message = new ErrorMessage(messageString));
-    thenEqual(message.getMessage(), messageString);
+    thenEqual(message.message(), messageString);
   }
 
   @Test

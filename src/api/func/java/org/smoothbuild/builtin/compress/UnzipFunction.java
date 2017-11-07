@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.message.MessageException.errorException;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.util.Streams.copy;
 
@@ -20,7 +21,6 @@ import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.IllegalPathException;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -51,7 +51,7 @@ public class UnzipFunction {
             SFile unzippedEntry = unzipEntry(container, zipFile.getInputStream(entry), entry);
             String fileName = unzippedEntry.path().value();
             if (duplicatesDetector.addValue(fileName)) {
-              throw new ErrorMessage("archive contains two files with the same path = " + fileName);
+              throw errorException("archive contains two files with the same path = " + fileName);
             }
 
             fileArrayBuilder.add(unzippedEntry);
@@ -60,7 +60,7 @@ public class UnzipFunction {
       }
       return fileArrayBuilder.build();
     } catch (ZipException e) {
-      throw new ErrorMessage("Cannot read archive. Corrupted data?");
+      throw errorException("Cannot read archive. Corrupted data?");
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
@@ -77,7 +77,7 @@ public class UnzipFunction {
     try {
       path(fileName);
     } catch (IllegalPathException e) {
-      throw new ErrorMessage("File in archive has illegal name = '" + fileName + "'");
+      throw errorException("File in archive has illegal name = '" + fileName + "'");
     }
 
     SString path = container.create().string(fileName);

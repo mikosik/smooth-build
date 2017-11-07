@@ -3,12 +3,12 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.lang.message.MessageException.errorException;
 import static org.smoothbuild.lang.type.Types.FILE;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -24,16 +24,16 @@ public class FilesFunction {
     FileSystem fileSystem = container.fileSystem();
 
     if (path.startsWith(SMOOTH_DIR)) {
-      throw new ErrorMessage("Listing files from " + SMOOTH_DIR + " dir is not allowed.");
+      throw errorException("Listing files from " + SMOOTH_DIR + " dir is not allowed.");
     }
 
     switch (fileSystem.pathState(path)) {
       case DIR:
         return readFiles(container, fileSystem, path);
       case FILE:
-        throw new ErrorMessage("Dir " + path + " doesn't exist. It is a file.");
+        throw errorException("Dir " + path + " doesn't exist. It is a file.");
       case NOTHING:
-        throw new ErrorMessage("Dir " + path + " doesn't exist.");
+        throw errorException("Dir " + path + " doesn't exist.");
       default:
         throw new RuntimeException("Broken 'files' function implementation: unreachable case");
     }

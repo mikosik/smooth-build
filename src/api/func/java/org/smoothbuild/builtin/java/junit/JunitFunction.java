@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class JunitFunction {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      throw new ErrorMessage("Couldn't find class for binaryName = " + binaryName);
+      throw errorException("Couldn't find class for binaryName = " + binaryName);
     }
   }
 
@@ -82,7 +83,7 @@ public class JunitFunction {
     try {
       return pathMatcher(includeExpression);
     } catch (IllegalPathPatternException e) {
-      throw new ErrorMessage("Parameter 'include' has illegal value. " + e.getMessage());
+      throw errorException("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }
