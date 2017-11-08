@@ -34,6 +34,7 @@ public class AstCreator {
     new SmoothBaseVisitor<Void>() {
       private Set<Name> visibleParams = new HashSet<>();
 
+      @Override
       public Void visitFunc(FuncContext func) {
         TypeNode type = func.type() == null ? null : createType(func.type());
         NameContext nameContext = func.name();

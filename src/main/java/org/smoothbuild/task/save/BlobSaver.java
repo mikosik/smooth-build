@@ -15,6 +15,7 @@ public class BlobSaver implements Saver<Blob> {
     this.smoothFileSystem = smoothFileSystem;
   }
 
+  @Override
   public void save(Name name, Blob blob) {
     Path artifactPath = artifactPath(name);
     Path targetPath = targetPath(blob);

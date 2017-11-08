@@ -53,9 +53,11 @@ public class NativeFunction extends AbstractFunction {
     return isCacheable;
   }
 
+  @Override
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
       Location location) {
     return new Expression(type(), args, location) {
+      @Override
       public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
         return nativeCallEvaluator(NativeFunction.this, isGenerated, location,
             createDependenciesEvaluator(valuesDb, scope));

@@ -46,6 +46,7 @@ public class FuncNode extends Node {
     return expr;
   }
 
+  @Override
   public final boolean equals(Object object) {
     if (!(object instanceof FuncNode)) {
       return false;
@@ -54,10 +55,12 @@ public class FuncNode extends Node {
     return this.name.equals(that.name);
   }
 
+  @Override
   public final int hashCode() {
     return name.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[" + name + ":" + location() + "]";
   }

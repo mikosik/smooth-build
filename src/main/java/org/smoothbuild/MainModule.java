@@ -14,6 +14,7 @@ public class MainModule extends AbstractModule {
     this.smoothPaths = smoothPaths;
   }
 
+  @Override
   protected void configure() {
     bind(SmoothPaths.class).toInstance(smoothPaths);
     install(new OutputsDbModule());

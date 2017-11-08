@@ -19,6 +19,7 @@ public class Name {
     this.value = value;
   }
 
+  @Override
   public boolean equals(Object object) {
     return object instanceof Name && equals((Name) object);
   }
@@ -27,10 +28,12 @@ public class Name {
     return Objects.equals(value, name.value);
   }
 
+  @Override
   public int hashCode() {
     return value.hashCode();
   }
 
+  @Override
   public String toString() {
     return value;
   }

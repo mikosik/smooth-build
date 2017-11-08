@@ -34,6 +34,7 @@ public class Location {
     return line;
   }
 
+  @Override
   public final boolean equals(Object object) {
     if (object instanceof Location) {
       Location that = (Location) object;
@@ -42,10 +43,12 @@ public class Location {
     return false;
   }
 
+  @Override
   public final int hashCode() {
     return Objects.hash(file, line);
   }
 
+  @Override
   public String toString() {
     if (file == null) {
       return "cmd line";

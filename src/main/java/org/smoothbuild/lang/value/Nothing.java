@@ -10,10 +10,12 @@ public final class Nothing extends Value {
     super(null, null);
   }
 
+  @Override
   public HashCode hash() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public Type type() {
     throw new UnsupportedOperationException();
   }

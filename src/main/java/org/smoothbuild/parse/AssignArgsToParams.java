@@ -34,6 +34,7 @@ public class AssignArgsToParams {
   public static List<ParseError> assignArgsToParams(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
+      @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         ParametersPool parametersPool = parametersPool(call);

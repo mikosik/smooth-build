@@ -11,6 +11,7 @@ public class Message {
     return message;
   }
 
+  @Override
   public final boolean equals(Object object) {
     if (object instanceof Message) {
       Message that = (Message) object;
@@ -19,10 +20,12 @@ public class Message {
     return false;
   }
 
+  @Override
   public final int hashCode() {
     return getClass().hashCode() + 17 * message.hashCode();
   }
 
+  @Override
   public String toString() {
     return name() + ": " + message;
   }

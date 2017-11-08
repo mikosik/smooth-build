@@ -17,6 +17,7 @@ public class StringLiteralExpression extends Expression {
     this.string = string;
   }
 
+  @Override
   public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
     return valueEvaluator(valuesDb.string(string), location());
   }

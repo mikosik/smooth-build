@@ -21,12 +21,14 @@ public class Parameter extends TypedName {
     return defaultValue;
   }
 
+  @Override
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
     String namePart = padEnd(name().toString(), minNameLength, ' ');
     return typePart + namePart;
   }
 
+  @Override
   public String toString() {
     return "Param(" + type().name() + ": " + name() + ")";
   }

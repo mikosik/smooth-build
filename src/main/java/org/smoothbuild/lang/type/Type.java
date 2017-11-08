@@ -24,6 +24,7 @@ public class Type {
     return jType;
   }
 
+  @Override
   public boolean equals(Object object) {
     if (object == null) {
       return false;
@@ -35,10 +36,12 @@ public class Type {
     return this.name.equals(that.name) && this.jType.equals(that.jType);
   }
 
+  @Override
   public int hashCode() {
     return Objects.hash(name, jType);
   }
 
+  @Override
   public String toString() {
     return name;
   }

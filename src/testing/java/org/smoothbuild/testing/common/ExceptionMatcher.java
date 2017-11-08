@@ -17,12 +17,14 @@ public class ExceptionMatcher extends TypeSafeMatcher<Throwable> {
     this.throwable = throwable;
   }
 
+  @Override
   public void describeTo(Description description) {
     description.appendText("is instance of " + throwable.getClass().getSimpleName()
         + " with message '"
         + throwable.getMessage() + "'.");
   }
 
+  @Override
   protected boolean matchesSafely(Throwable item) {
     return throwable.getClass().isInstance(item)
         && Objects.equals(item.getMessage(), throwable.getMessage());

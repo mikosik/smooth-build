@@ -25,6 +25,7 @@ public class Value {
     return type;
   }
 
+  @Override
   public boolean equals(Object object) {
     return object instanceof Value && equals((Value) object);
   }
@@ -33,6 +34,7 @@ public class Value {
     return Objects.equals(hash, value.hash());
   }
 
+  @Override
   public int hashCode() {
     return hash.hashCode();
   }

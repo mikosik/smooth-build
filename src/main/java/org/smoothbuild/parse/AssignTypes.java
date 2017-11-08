@@ -47,6 +47,7 @@ public class AssignTypes {
     new AstVisitor() {
       Scope<Type> scope;
 
+      @Override
       public void visitFunction(FuncNode func) {
         visitName(func.name());
         visitParams(func.params());
@@ -107,6 +108,7 @@ public class AssignTypes {
         return builder.build();
       }
 
+      @Override
       public void visitParam(ParamNode param) {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
@@ -124,6 +126,7 @@ public class AssignTypes {
         }
       }
 
+      @Override
       public void visitType(TypeNode type) {
         super.visitType(type);
         Type inferredType = createType(type);
@@ -143,6 +146,7 @@ public class AssignTypes {
         return result;
       }
 
+      @Override
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
         array.set(Type.class, findArrayType(array));
@@ -182,21 +186,25 @@ public class AssignTypes {
         return Types.arrayOf(superType);
       }
 
+      @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         call.set(Type.class, functionTypes.get(call.name()));
       }
 
+      @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
         ref.set(Type.class, scope.get(ref.name()));
       }
 
+      @Override
       public void visitArg(ArgNode arg) {
         super.visitArg(arg);
         arg.set(Type.class, arg.expr().get(Type.class));
       }
 
+      @Override
       public void visitString(StringNode string) {
         super.visitString(string);
         string.set(Type.class, STRING);

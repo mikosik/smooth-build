@@ -24,12 +24,12 @@ public class Maybe<E> {
   }
 
   public static <E> Maybe<E> error(Object error) {
-    return new Maybe<E>(null, ImmutableList.of(error));
+    return new Maybe<>(null, ImmutableList.of(error));
   }
 
   public static <E> Maybe<E> errors(List<? extends Object> errors) {
     checkArgument(!errors.isEmpty(), "'errors' argument shouldn't be empty");
-    return new Maybe<E>(null, ImmutableList.copyOf(errors));
+    return new Maybe<>(null, ImmutableList.copyOf(errors));
   }
 
   public static <E> Maybe<E> maybe(E value, List<? extends Object> errors) {
@@ -71,6 +71,7 @@ public class Maybe<E> {
     return errors;
   }
 
+  @Override
   public boolean equals(Object object) {
     return object instanceof Maybe && equals((Maybe<?>) object);
   }
@@ -79,10 +80,12 @@ public class Maybe<E> {
     return Objects.equal(value, value) && errors.equals(that.errors);
   }
 
+  @Override
   public int hashCode() {
     return Objects.hashCode(value, errors);
   }
 
+  @Override
   public String toString() {
     if (hasValue()) {
       return "Maybe.value(" + value + ")";

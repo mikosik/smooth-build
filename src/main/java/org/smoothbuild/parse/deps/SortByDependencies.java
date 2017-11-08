@@ -72,6 +72,7 @@ public class SortByDependencies {
   private static DependencyStackElem newStackElem(FuncNode func) {
     Set<Dependency> dependencies = new HashSet<>();
     new AstVisitor() {
+      @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         dependencies.add(new Dependency(call.location(), call.name()));

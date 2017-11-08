@@ -19,6 +19,7 @@ public class Signature extends TypedName {
     return parameters;
   }
 
+  @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append(super.toString() + "(");

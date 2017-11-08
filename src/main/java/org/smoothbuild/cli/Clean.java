@@ -24,6 +24,7 @@ public class Clean implements Command {
     this.console = console;
   }
 
+  @Override
   public int run(String... args) {
     List<String> unknownArgs = ImmutableList.copyOf(args).subList(1, args.length);
     if (!unknownArgs.isEmpty()) {

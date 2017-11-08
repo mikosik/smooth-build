@@ -17,6 +17,7 @@ public class FileClassLoader extends ClassLoader {
     this.binaryNameToFile = binaryNameToFile;
   }
 
+  @Override
   public Class<?> findClass(String name) throws ClassNotFoundException {
     SFile file = binaryNameToFile.get(name);
     if (file == null) {

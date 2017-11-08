@@ -39,6 +39,7 @@ public class ValuesDb implements ValueFactory {
     return new ValuesDb(new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)));
   }
 
+  @Override
   public ArrayBuilder arrayBuilder(Type elementType) {
     ArrayType arrayType = arrayOf(elementType);
     if (arrayType == null) {
@@ -51,14 +52,17 @@ public class ValuesDb implements ValueFactory {
     return new ArrayBuilder(type, valueConstructor(type.elemType()), hashedDb);
   }
 
+  @Override
   public SFile file(SString path, Blob content) {
     return storeFileInDb(path, content, hashedDb);
   }
 
+  @Override
   public BlobBuilder blobBuilder() {
     return new BlobBuilder(hashedDb);
   }
 
+  @Override
   public SString string(String string) {
     return storeStringInDb(string, hashedDb);
   }

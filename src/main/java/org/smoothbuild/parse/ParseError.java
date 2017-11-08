@@ -19,6 +19,7 @@ public class ParseError {
     this.message = requireNonNull(message);
   }
 
+  @Override
   public String toString() {
     return Console.errorLine(location, message);
   }

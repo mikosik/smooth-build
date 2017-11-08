@@ -74,6 +74,7 @@ public class TaskReporterTest {
           ImmutableList.of());
     }
 
+    @Override
     public Output evaluate(Input input, ContainerImpl container) {
       return null;
     }

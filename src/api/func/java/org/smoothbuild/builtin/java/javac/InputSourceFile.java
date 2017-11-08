@@ -16,6 +16,7 @@ public class InputSourceFile extends SimpleJavaFileObject {
     this.file = file;
   }
 
+  @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
     try (Scanner scanner = new Scanner(file.content().openInputStream(), "UTF-8")) {
       scanner.useDelimiter("\\A");

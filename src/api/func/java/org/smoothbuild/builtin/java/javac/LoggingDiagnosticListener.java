@@ -19,6 +19,7 @@ public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObj
     this.errorReported = false;
   }
 
+  @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
     container.log(newMessage(diagnostic));
     errorReported = true;

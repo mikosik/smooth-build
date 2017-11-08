@@ -54,6 +54,7 @@ public class AbstractFunctionTest {
       super(signature);
     }
 
+    @Override
     public Expression createCallExpression(List<Expression> args, boolean isGenerated,
         Location location) {
       return null;

@@ -26,7 +26,7 @@ import org.smoothbuild.lang.value.SString;
 public class JunitFunction {
   @SmoothFunction
   public static SString junit(Container container, Array libs, SString include) {
-    ArrayList<Blob> libBlobs = new ArrayList<Blob>();
+    ArrayList<Blob> libBlobs = new ArrayList<>();
     for (Blob lib : libs.asIterable(Blob.class)) {
       libBlobs.add(lib);
     }

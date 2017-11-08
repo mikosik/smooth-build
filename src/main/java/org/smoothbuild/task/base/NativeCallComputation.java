@@ -16,14 +16,17 @@ public class NativeCallComputation implements Computation {
     this.function = function;
   }
 
+  @Override
   public HashCode hash() {
     return nativeCallComputationHash(function);
   }
 
+  @Override
   public Type resultType() {
     return function.type();
   }
 
+  @Override
   public Output execute(Input input, ContainerImpl container) {
     Value result = function.invoke(container, input.values());
     return new Output(result, container.messages());

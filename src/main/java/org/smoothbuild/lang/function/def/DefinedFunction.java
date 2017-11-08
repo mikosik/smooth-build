@@ -34,10 +34,12 @@ public class DefinedFunction extends AbstractFunction {
     return root;
   }
 
+  @Override
   public Expression createCallExpression(List<Expression> args, boolean isGenerated,
       Location location) {
     checkArgument(!isGenerated);
     return new Expression(type(), asList(root), location) {
+      @Override
       public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
         Scope<Evaluator> functionScope = scope();
         for (int i = 0; i < args.size(); i++) {

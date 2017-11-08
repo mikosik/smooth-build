@@ -24,6 +24,7 @@ import org.smoothbuild.util.Streams;
 public class MemoryFileSystem implements FileSystem {
   private final MemoryDir root = new MemoryDir(null, Path.root());
 
+  @Override
   public PathState pathState(Path path) {
     MemoryElement element = findElement(path);
     if (element == null) {
@@ -35,10 +36,12 @@ public class MemoryFileSystem implements FileSystem {
     return FILE;
   }
 
+  @Override
   public List<Path> files(Path dir) {
     return getDir(dir).childNames();
   }
 
+  @Override
   public void move(Path source, Path target) {
     if (pathState(source) == NOTHING) {
       throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
@@ -57,6 +60,7 @@ public class MemoryFileSystem implements FileSystem {
     delete(source);
   }
 
+  @Override
   public void delete(Path path) {
     if (path.isRoot()) {
       root.removeAllChildren();
@@ -71,10 +75,12 @@ public class MemoryFileSystem implements FileSystem {
     element.parent().removeChild(element);
   }
 
+  @Override
   public InputStream openInputStream(Path path) {
     return getFile(path).openInputStream();
   }
 
+  @Override
   public OutputStream openOutputStream(Path path) {
     if (pathState(path) == DIR) {
       throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
@@ -92,6 +98,7 @@ public class MemoryFileSystem implements FileSystem {
     }
   }
 
+  @Override
   public void createLink(Path link, Path target) {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
@@ -102,6 +109,7 @@ public class MemoryFileSystem implements FileSystem {
     dir.addChild(new MemoryLink(dir, name, targetElement));
   }
 
+  @Override
   public void createDir(Path path) {
     createDirImpl(path);
   }

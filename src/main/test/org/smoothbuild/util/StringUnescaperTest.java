@@ -81,6 +81,7 @@ public class StringUnescaperTest {
   private static Case shouldFailUnescaping(String escaped, int index) {
     return newCase("Unescaping [" + escaped + "] should fail at " + index,
         new Body() {
+          @Override
           public void run() throws Throwable {
             try {
               unescaped(escaped);

@@ -24,6 +24,7 @@ public class TypedName {
     return name;
   }
 
+  @Override
   public boolean equals(Object object) {
     if (!(object instanceof TypedName)) {
       return false;
@@ -33,6 +34,7 @@ public class TypedName {
         && name.equals(that.name);
   }
 
+  @Override
   public int hashCode() {
     return Objects.hash(type, name);
   }
@@ -43,6 +45,7 @@ public class TypedName {
     return typePart + namePart;
   }
 
+  @Override
   public String toString() {
     return type.toString() + " " + name.toString();
   }

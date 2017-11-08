@@ -43,6 +43,7 @@ import com.google.common.hash.Hasher;
 public class FunctionLoader {
   public static Function loadFunction(Functions loadedFunctions, FuncNode func) {
     return new Supplier<Function>() {
+      @Override
       public Function get() {
         List<Parameter> parameters = map(func.params(), this::createParameter);
         Signature signature = new Signature(func.get(Type.class), func.name(), parameters);
