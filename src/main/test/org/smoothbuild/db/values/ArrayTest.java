@@ -35,7 +35,7 @@ public class ArrayTest {
 
   @Test
   public void empty_array_is_empty() throws Exception {
-    when(valuesDb.arrayBuilder(STRING).build());
+    when(() -> valuesDb.arrayBuilder(STRING).build().asIterable(SString.class));
     thenReturned(emptyIterable());
   }
 
@@ -59,7 +59,7 @@ public class ArrayTest {
     given(arrayBuilder = valuesDb.arrayBuilder(STRING));
     given(sstring = valuesDb.string("abc"));
     given(arrayBuilder).add(sstring);
-    when(arrayBuilder).build();
+    when(() -> arrayBuilder.build().asIterable(SString.class));
     thenReturned(contains(sstring));
   }
 
@@ -72,7 +72,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(arrayBuilder).add(sstring3);
-    when(arrayBuilder.build());
+    when(() -> arrayBuilder.build().asIterable(SString.class));
     thenReturned(contains(sstring, sstring2, sstring3));
   }
 
@@ -82,7 +82,7 @@ public class ArrayTest {
     given(sstring = valuesDb.string("abc"));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring);
-    when(arrayBuilder.build());
+    when(() -> arrayBuilder.build().asIterable(SString.class));
     thenReturned(contains(sstring, sstring));
   }
 
@@ -144,7 +144,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(valuesDb.read(STRING_ARRAY, array.hash()));
+    when(() -> valuesDb.read(STRING_ARRAY, array.hash()).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 

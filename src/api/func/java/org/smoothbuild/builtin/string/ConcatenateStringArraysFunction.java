@@ -6,7 +6,7 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.value.SString;
 
 public class ConcatenateStringArraysFunction {
   @SmoothFunction
@@ -14,10 +14,10 @@ public class ConcatenateStringArraysFunction {
       Array with) {
     ArrayBuilder builder = container.create().arrayBuilder(STRING);
 
-    for (Value string : strings) {
+    for (SString string : strings.asIterable(SString.class)) {
       builder.add(string);
     }
-    for (Value string : with) {
+    for (SString string : with.asIterable(SString.class)) {
       builder.add(string);
     }
 

@@ -17,7 +17,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
@@ -27,8 +26,7 @@ public class JarFunction {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     BlobBuilder blobBuilder = container.create().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (Value fileValue : files) {
-        SFile file = (SFile) fileValue;
+      for (SFile file : files.asIterable(SFile.class)) {
         String path = file.path().value();
         if (duplicatesDetector.addValue(path)) {
           throw errorException("Cannot jar two files with the same path = " + path);

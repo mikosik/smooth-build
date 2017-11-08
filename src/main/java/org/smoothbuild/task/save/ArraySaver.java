@@ -27,7 +27,7 @@ public class ArraySaver implements Saver<Array> {
     smoothFileSystem.createDir(artifactPath);
 
     int i = 0;
-    for (Value value : array) {
+    for (Value value : array.asIterable(Value.class)) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path sourcePath = artifactPath.append(filePath);
       Path targetPath = targetPath(value);

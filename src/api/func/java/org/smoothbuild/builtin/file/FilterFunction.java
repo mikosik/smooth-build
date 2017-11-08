@@ -15,7 +15,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 public class FilterFunction {
   @SmoothFunction
@@ -23,8 +22,7 @@ public class FilterFunction {
     Predicate<Path> filter = createFilter(include.value());
     ArrayBuilder builder = container.create().arrayBuilder(FILE);
 
-    for (Value fileValue : files) {
-      SFile file = (SFile) fileValue;
+    for (SFile file : files.asIterable(SFile.class)) {
       if (filter.test(path(file.path().value()))) {
         builder.add(file);
       }

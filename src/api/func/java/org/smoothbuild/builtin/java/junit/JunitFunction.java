@@ -22,14 +22,13 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 public class JunitFunction {
   @SmoothFunction
   public static SString junit(Container container, Array libs, SString include) {
     ArrayList<Blob> libBlobs = new ArrayList<Blob>();
-    for (Value libValue : libs) {
-      libBlobs.add((Blob) libValue);
+    for (Blob lib : libs.asIterable(Blob.class)) {
+      libBlobs.add(lib);
     }
     Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libBlobs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);

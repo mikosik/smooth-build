@@ -18,7 +18,6 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
 public class TempDir {
@@ -57,8 +56,7 @@ public class TempDir {
   }
 
   private void writeFilesImpl(Array files) throws IOException {
-    for (Value fileValue : files) {
-      SFile file = (SFile) fileValue;
+    for (SFile file : files.asIterable(SFile.class)) {
       writeFileImpl(path(file.path().value()), file.content());
     }
   }

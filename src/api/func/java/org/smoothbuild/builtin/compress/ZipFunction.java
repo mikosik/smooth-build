@@ -14,7 +14,6 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
@@ -24,8 +23,7 @@ public class ZipFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = container.create().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder)) {
-      for (Value fileValue : files) {
-        SFile file = (SFile) fileValue;
+      for (SFile file : files.asIterable(SFile.class)) {
         String path = file.path().value();
         if (duplicatesDetector.addValue(path)) {
           throw errorException("Cannot zip two files with the same path = " + path);
