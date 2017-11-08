@@ -41,6 +41,7 @@ public class FindSemanticErrors {
 
   private static void unescapeStrings(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitString(StringNode string) {
         super.visitString(string);
         try {
@@ -55,6 +56,7 @@ public class FindSemanticErrors {
   private static void overridenBuiltinFunctions(List<ParseError> errors, Functions functions,
       Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitFunction(FuncNode func) {
         super.visitFunction(func);
         if (functions.contains(func.name())) {
@@ -67,6 +69,7 @@ public class FindSemanticErrors {
 
   private static void parametersReferenceWithParentheses(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
         if (ref.hasParentheses()) {
@@ -83,6 +86,7 @@ public class FindSemanticErrors {
         .addAll(map(ast.functions(), f -> f.name()))
         .build();
     new AstVisitor() {
+      @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         if (!all.contains(call.name())) {
@@ -95,6 +99,7 @@ public class FindSemanticErrors {
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
     Set<Name> defined = new HashSet<>();
     new AstVisitor() {
+      @Override
       public void visitFunction(FuncNode func) {
         super.visitFunction(func);
         if (defined.contains(func.name())) {
@@ -108,6 +113,7 @@ public class FindSemanticErrors {
 
   private static void duplicateParamNames(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitParams(List<ParamNode> params) {
         super.visitParams(params);
         Set<Name> names = new HashSet<>();
@@ -124,6 +130,7 @@ public class FindSemanticErrors {
 
   private static void nestedArrayTypeParams(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitParams(List<ParamNode> params) {
         super.visitParams(params);
         for (ParamNode node : params) {
@@ -139,6 +146,7 @@ public class FindSemanticErrors {
 
   private static void duplicateArgNames(List<ParseError> errors, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitArgs(List<ArgNode> args) {
         super.visitArgs(args);
         Set<Name> names = new HashSet<>();
@@ -157,6 +165,7 @@ public class FindSemanticErrors {
 
   private static void unknownArgNames(List<ParseError> errors, Functions functions, Ast ast) {
     new AstVisitor() {
+      @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         Set<Name> names = getParameters(call.name(), functions, ast);

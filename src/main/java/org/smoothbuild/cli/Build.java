@@ -39,6 +39,7 @@ public class Build implements Command {
     this.smoothExecutor = smoothExecutor;
   }
 
+  @Override
   public int run(String... names) {
     List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
     Maybe<Set<Name>> functionNames = parseArguments(argsWithoutFirst);

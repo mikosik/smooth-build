@@ -26,6 +26,7 @@ public class Array extends Value {
     this.hashedDb = hashedDb;
   }
 
+  @Override
   public ArrayType type() {
     return (ArrayType) super.type();
   }
@@ -52,6 +53,7 @@ public class Array extends Value {
     }
   }
 
+  @Override
   public String toString() {
     String elements = stream(asIterable(Value.class).spliterator(), false)
         .map(Object::toString)

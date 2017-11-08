@@ -42,14 +42,17 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
     thenReturned(instanceOf(BufferedOutputStream.class));
   }
 
+  @Override
   protected void createEmptyFile(Path path) throws IOException {
     createEmptyFile(path.value());
   }
 
+  @Override
   protected void createEmptyFile(String stringPath) throws IOException {
     createFile(stringPath, new byte[] {});
   }
 
+  @Override
   protected void createFile(Path path, byte[] content) throws IOException {
     createFile(path.value(), content);
   }

@@ -16,6 +16,7 @@ public class ArrayType extends Type {
     return elemType;
   }
 
+  @Override
   public final boolean equals(Object object) {
     if (object == null) {
       return false;
@@ -27,6 +28,7 @@ public class ArrayType extends Type {
     return this.name().equals(that.name()) && this.elemType.equals(that.elemType);
   }
 
+  @Override
   public final int hashCode() {
     return Objects.hash(13, elemType.hashCode());
   }

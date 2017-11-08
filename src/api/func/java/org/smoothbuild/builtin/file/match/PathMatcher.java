@@ -35,6 +35,7 @@ public class PathMatcher implements Predicate<Path> {
     this.patternParts = toParts(pattern);
   }
 
+  @Override
   public boolean test(Path path) {
     List<Path> pathParts = path.parts();
 

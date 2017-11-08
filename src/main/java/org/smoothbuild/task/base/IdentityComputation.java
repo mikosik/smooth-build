@@ -14,14 +14,17 @@ public class IdentityComputation implements Computation {
     this.type = type;
   }
 
+  @Override
   public HashCode hash() {
     return identityComputationHash();
   }
 
+  @Override
   public Type resultType() {
     return type;
   }
 
+  @Override
   public Output execute(Input input, ContainerImpl container) {
     return new Output(input.values().get(0));
   }

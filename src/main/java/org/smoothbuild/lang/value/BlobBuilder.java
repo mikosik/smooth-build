@@ -15,14 +15,17 @@ public class BlobBuilder extends OutputStream {
     this.marshaller = hashedDb.newMarshaller();
   }
 
+  @Override
   public void write(int b) throws IOException {
     marshaller.write(b);
   }
 
+  @Override
   public void write(byte b[]) throws IOException {
     marshaller.write(b, 0, b.length);
   }
 
+  @Override
   public void write(byte b[], int off, int len) {
     marshaller.write(b, off, len);
   }

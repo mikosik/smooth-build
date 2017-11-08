@@ -120,6 +120,7 @@ public class Path {
     }
   }
 
+  @Override
   public final boolean equals(Object object) {
     if (this == object) {
       return true;
@@ -131,10 +132,12 @@ public class Path {
     return false;
   }
 
+  @Override
   public final int hashCode() {
     return value.hashCode();
   }
 
+  @Override
   public String toString() {
     return "'" + value + "'";
   }

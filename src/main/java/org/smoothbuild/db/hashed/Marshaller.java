@@ -38,14 +38,17 @@ public class Marshaller extends OutputStream {
     write(toByteArray(intValue));
   }
 
+  @Override
   public void write(int b) {
     write(new byte[] { (byte) b });
   }
 
+  @Override
   public void write(byte b[]) {
     write(b, 0, b.length);
   }
 
+  @Override
   public void write(byte bytes[], int off, int len) {
     hasher.putBytes(bytes, off, len);
     try {
@@ -55,6 +58,7 @@ public class Marshaller extends OutputStream {
     }
   }
 
+  @Override
   public void close() {
     if (hash == null) {
       hash = hasher.hash();

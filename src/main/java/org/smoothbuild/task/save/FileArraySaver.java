@@ -24,6 +24,7 @@ public class FileArraySaver implements Saver<Array> {
     this.console = console;
   }
 
+  @Override
   public void save(Name name, Array fileArray) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
 

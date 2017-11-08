@@ -20,6 +20,7 @@ public class AssignNatives {
   public static Maybe<Ast> assignNatives(Ast ast, Map<Name, Native> natives) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
+      @Override
       public void visitFunction(FuncNode func) {
         super.visitFunction(func);
         if (natives.containsKey(func.name())) {

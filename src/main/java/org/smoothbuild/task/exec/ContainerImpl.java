@@ -37,6 +37,7 @@ public class ContainerImpl implements Container {
     return new ContainerImpl(fileSystem, memoryValuesDb(), new TempManager(fileSystem));
   }
 
+  @Override
   public ValueFactory create() {
     return valuesDb;
   }
@@ -45,6 +46,7 @@ public class ContainerImpl implements Container {
     return fileSystem;
   }
 
+  @Override
   public void log(Message message) {
     messages.add(message);
   }
@@ -53,6 +55,7 @@ public class ContainerImpl implements Container {
     return messages;
   }
 
+  @Override
   public TempDir createTempDir() {
     TempDir tempDir = tempManager.tempDir(valuesDb);
     tempDirs.add(tempDir);

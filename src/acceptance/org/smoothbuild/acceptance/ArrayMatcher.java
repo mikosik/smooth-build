@@ -22,10 +22,12 @@ public class ArrayMatcher extends TypeSafeMatcher<File> {
     this.expectedElements = expectedElements;
   }
 
+  @Override
   public void describeTo(Description description) {
     description.appendText("is array dir with elements = " + Arrays.toString(expectedElements));
   }
 
+  @Override
   protected boolean matchesSafely(File item) {
     try {
       return item.isDirectory() && containsExpectedElements(item)

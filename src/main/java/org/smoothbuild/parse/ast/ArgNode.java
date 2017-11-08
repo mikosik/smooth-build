@@ -59,6 +59,7 @@ public class ArgNode extends Node {
   }
 
   public static final Ordering<ArgNode> POSITION_ORDERING = new Ordering<ArgNode>() {
+    @Override
     public int compare(ArgNode argument1, ArgNode argument2) {
       int position1 = argument1.position();
       int position2 = argument2.position();

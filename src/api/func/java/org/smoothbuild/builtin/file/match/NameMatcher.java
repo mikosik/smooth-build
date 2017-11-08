@@ -25,6 +25,7 @@ public class NameMatcher implements Predicate<Path> {
     this.patternParts = pattern.parts();
   }
 
+  @Override
   public boolean test(Path path) {
     String string = path.value();
 
