@@ -11,16 +11,14 @@ import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
-import org.smoothbuild.lang.value.Value;
 
 public class PackagedJavaFileObjects {
   public static Iterable<InputClassFile> classesFromJars(Container container,
-      Iterable<Value> libraryJars) {
+      Iterable<Blob> libraryJars) {
     Set<InputClassFile> result = new HashSet<>();
-    for (Value jarBlobValue : libraryJars) {
-      Array files = UnzipFunction.unzip(container, ((Blob) jarBlobValue), isClassFilePredicate());
-      for (Value fileValues : files) {
-        SFile file = (SFile) fileValues;
+    for (Blob jarBlob : libraryJars) {
+      Array files = UnzipFunction.unzip(container, (jarBlob), isClassFilePredicate());
+      for (SFile file : files.asIterable(SFile.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
           throw errorException("File " + file.path()

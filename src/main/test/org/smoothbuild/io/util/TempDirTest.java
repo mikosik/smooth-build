@@ -25,6 +25,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SFile;
 import org.testory.common.Matcher;
 
 public class TempDirTest {
@@ -88,7 +89,7 @@ public class TempDirTest {
   @Test
   public void files_are_read_from_file_system() throws Exception {
     given(writeAndClose(fileSystem.openOutputStream(rootPath.append(path)), bytes));
-    when(tempDir.readFiles());
+    when(() -> tempDir.readFiles().asIterable(SFile.class));
     thenReturned(contains(file(valuesDb, path, bytes)));
   }
 

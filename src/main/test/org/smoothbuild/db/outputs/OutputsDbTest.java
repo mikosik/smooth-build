@@ -93,7 +93,8 @@ public class OutputsDbTest {
     given(file = file(valuesDb, path, bytes));
     given(array = valuesDb.arrayBuilder(FILE).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Iterable<?>) outputsDb.read(hash, FILE_ARRAY).result()).iterator().next());
+    when(((Array) outputsDb.read(hash, FILE_ARRAY).result()).asIterable(SFile.class).iterator()
+        .next());
     thenReturned(file);
   }
 
@@ -102,7 +103,8 @@ public class OutputsDbTest {
     given(blob = writeBlob(valuesDb, bytes));
     given(array = valuesDb.arrayBuilder(Types.BLOB).add(blob).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Iterable<?>) outputsDb.read(hash, BLOB_ARRAY).result()).iterator().next());
+    when(((Array) outputsDb.read(hash, BLOB_ARRAY).result()).asIterable(Blob.class).iterator()
+        .next());
     thenReturned(blob);
   }
 
@@ -111,7 +113,8 @@ public class OutputsDbTest {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(STRING).add(stringValue).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Iterable<?>) outputsDb.read(hash, STRING_ARRAY).result()).iterator().next());
+    when(((Array) outputsDb.read(hash, STRING_ARRAY).result()).asIterable(SString.class).iterator()
+        .next());
     thenReturned(stringValue);
   }
 

@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Value;
 
 public class NilTest {
   private ValuesDb valuesDb;
@@ -30,7 +31,7 @@ public class NilTest {
 
   @Test
   public void nil_array_is_empty() throws Exception {
-    when(valuesDb.arrayBuilder(NOTHING).build());
+    when(() -> valuesDb.arrayBuilder(NOTHING).build().asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 

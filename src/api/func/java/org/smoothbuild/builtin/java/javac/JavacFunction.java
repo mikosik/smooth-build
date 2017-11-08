@@ -24,9 +24,9 @@ import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 public class JavacFunction {
   @SmoothFunction
@@ -78,7 +78,7 @@ public class JavacFunction {
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
       try {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files);
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(SFile.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -142,14 +142,15 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Iterable<InputClassFile> libsClasses = classesFromJars(container, libs);
+      Iterable<InputClassFile> libsClasses = classesFromJars(container, libs.asIterable(
+          Blob.class));
       return new SandboxedJavaFileManager(fileManager, container, libsClasses);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Value> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (Value file : sourceFiles) {
-        result.add(new InputSourceFile((SFile) file));
+      for (SFile file : sourceFiles) {
+        result.add(new InputSourceFile(file));
       }
       return result;
     }
