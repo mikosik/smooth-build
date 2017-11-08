@@ -10,6 +10,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
@@ -17,7 +19,7 @@ import org.smoothbuild.lang.type.Type;
 
 public class ArgNodeTest {
   private ArgNode arg;
-  private final Location location = location("path", 1);
+  private final Location location = location(Paths.get("path"), 1);
   private final Name name = new Name("arg-name");
 
   @Test

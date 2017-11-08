@@ -38,7 +38,7 @@ public class ScriptParser {
       return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
 
-    ErrorListener errorListener = new ErrorListener(scriptFile.toString());
+    ErrorListener errorListener = new ErrorListener(scriptFile);
     SmoothLexer lexer = new SmoothLexer(antlrInputStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -52,9 +52,9 @@ public class ScriptParser {
 
   public static class ErrorListener implements ANTLRErrorListener {
     private final List<ParseError> errors = new ArrayList<>();
-    private final String file;
+    private final Path file;
 
-    public ErrorListener(String file) {
+    public ErrorListener(Path file) {
       this.file = file;
     }
 

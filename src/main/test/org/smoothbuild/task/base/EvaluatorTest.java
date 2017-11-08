@@ -6,6 +6,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.task.exec.ContainerImpl;
@@ -14,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 
 public class EvaluatorTest {
   private final String name = "name";
-  private final Location location = location("script.smooth", 1);
+  private final Location location = location(Paths.get("script.smooth"), 1);
 
   private Evaluator evaluator;
 

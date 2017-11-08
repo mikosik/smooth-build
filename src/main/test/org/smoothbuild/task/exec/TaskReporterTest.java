@@ -9,6 +9,7 @@ import static org.testory.Testory.thenCalled;
 import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.when;
 
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class TaskReporterTest {
 
   private static final class MyEvaluator extends Evaluator {
     private MyEvaluator(boolean isInternal) {
-      super(null, "name", isInternal, true, Location.location("script.smooth", 2),
+      super(null, "name", isInternal, true, Location.location(Paths.get("script.smooth"), 2),
           ImmutableList.of());
     }
 

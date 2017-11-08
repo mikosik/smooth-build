@@ -9,6 +9,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Location;
@@ -16,7 +18,7 @@ import org.smoothbuild.lang.message.Location;
 import com.google.common.collect.ImmutableList;
 
 public class TaskHashesTest {
-  private final Location location = Location.location("script.smooth", 2);
+  private final Location location = Location.location(Paths.get("script.smooth"), 2);
   private final ValuesDb valuesDb = memoryValuesDb();
 
   private Task dep;
