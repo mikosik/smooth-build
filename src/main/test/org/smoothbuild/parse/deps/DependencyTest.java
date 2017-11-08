@@ -2,6 +2,8 @@ package org.smoothbuild.parse.deps;
 
 import static org.smoothbuild.lang.message.Location.location;
 
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 
@@ -24,6 +26,6 @@ public class DependencyTest {
   }
 
   private static Dependency dependency(int line, String name) {
-    return new Dependency(location("script.smooth", line), new Name(name));
+    return new Dependency(location(Paths.get("script.smooth"), line), new Name(name));
   }
 }

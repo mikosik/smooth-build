@@ -5,6 +5,7 @@ import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 
 public class AstCreator {
-  public static Ast fromParseTree(String file, ModuleContext module) {
+  public static Ast fromParseTree(Path file, ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       private Set<Name> visibleParams = new HashSet<>();

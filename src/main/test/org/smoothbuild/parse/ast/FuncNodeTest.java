@@ -7,6 +7,8 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
@@ -14,7 +16,7 @@ import org.smoothbuild.lang.message.Location;
 import com.google.common.testing.EqualsTester;
 
 public class FuncNodeTest {
-  private final Location location = location("script.smooth", 1);
+  private final Location location = location(Paths.get("script.smooth"), 1);
   private FuncNode func;
 
   @Test
@@ -48,6 +50,7 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(null, new Name(name), asList(), null, location("script.smooth", line));
+    return new FuncNode(null, new Name(name), asList(), null,
+        location(Paths.get("script.smooth"), line));
   }
 }

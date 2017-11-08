@@ -29,7 +29,7 @@ import org.smoothbuild.util.Maybe;
 public class ModuleLoader {
   public static Maybe<Functions> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
-    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script.toString(), m));
+    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
     ast = ast.addErrors(a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
     ast = ast.addErrors(a -> assignTypes(functions, a));

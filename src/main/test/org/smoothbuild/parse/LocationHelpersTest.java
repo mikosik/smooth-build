@@ -7,6 +7,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
+import java.nio.file.Paths;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.Before;
@@ -36,7 +38,7 @@ public class LocationHelpersTest {
     given(willReturn(nameContext), argContext).name();
     given(willReturn(startToken), nameContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf("script.smooth", argContext));
+    given(location = locationOf(Paths.get("script.smooth"), argContext));
     when(location.line());
     thenReturned(line);
   }
@@ -46,7 +48,7 @@ public class LocationHelpersTest {
     given(willReturn(expressionContext), argContext).expr();
     given(willReturn(startToken), expressionContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf("script.smooth", argContext));
+    given(location = locationOf(Paths.get("script.smooth"), argContext));
     when(location.line());
     thenReturned(line);
   }
@@ -55,7 +57,7 @@ public class LocationHelpersTest {
   public void location_of_parser_rule_context() {
     given(willReturn(startToken), parserRuleContext).getStart();
     given(willReturn(line), startToken).getLine();
-    given(location = locationOf("script.smooth", parserRuleContext));
+    given(location = locationOf(Paths.get("script.smooth"), parserRuleContext));
     when(location.line());
     thenReturned(line);
   }
@@ -63,7 +65,7 @@ public class LocationHelpersTest {
   @Test
   public void location_of_token() {
     given(willReturn(line), startToken).getLine();
-    when(location = locationOf("script.smooth", startToken));
+    when(location = locationOf(Paths.get("script.smooth"), startToken));
     when(location.line());
     thenReturned(line);
   }

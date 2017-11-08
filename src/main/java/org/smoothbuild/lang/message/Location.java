@@ -2,27 +2,28 @@ package org.smoothbuild.lang.message;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class Location {
-  private final String file;
+  private final Path file;
   private final int line;
 
   public static Location commandLine() {
-    return new Location(null, -1);
+    return new Location(null, 1);
   }
 
-  public static Location location(String file, int line) {
-    checkArgument(0 < line);
+  public static Location location(Path file, int line) {
     return new Location(file, line);
   }
 
-  private Location(String file, int line) {
+  private Location(Path file, int line) {
+    checkArgument(0 < line);
     this.file = file;
     this.line = line;
   }
 
-  public String file() {
+  public Path file() {
     return file;
   }
 
@@ -46,7 +47,7 @@ public class Location {
   }
 
   public String toString() {
-    if (line == -1) {
+    if (file == null) {
       return "cmd line";
     } else {
       return file + ":" + line;

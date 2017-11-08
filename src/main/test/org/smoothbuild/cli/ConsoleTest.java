@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class ConsoleTest {
   public void final_summary_is_failed_when_code_error_was_printed() throws Exception {
     given(outputStream = new ByteArrayOutputStream());
     given(console = new Console(new PrintStream(outputStream)));
-    given(console).error(location("script.smooth", 13), "some message");
+    given(console).error(location(Paths.get("script.smooth"), 13), "some message");
     when(console).printFinalSummary();
     thenEqual(outputStream.toString(),
         "script.smooth:13: error: some message\n"
