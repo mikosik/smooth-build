@@ -46,7 +46,7 @@ public class TaskExecutor {
     reporter.report(task, isAlreadyCached);
   }
 
-  private <T extends Value> HashCode taskHash(Task task, Input input) {
+  public static <T extends Value> HashCode taskHash(Task task, Input input) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(task.hash().asBytes());
     hasher.putBytes(input.hash().asBytes());
