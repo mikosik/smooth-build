@@ -12,11 +12,11 @@ import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.Location;
 
-public class AbstractFunctionTest {
+public class FunctionTest {
   Name name;
   List<Parameter> parameters;
   Signature signature;
-  AbstractFunction function;
+  Function function;
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {
@@ -49,7 +49,7 @@ public class AbstractFunctionTest {
     thenReturned(parameters);
   }
 
-  public static class MyAbstractFunction extends AbstractFunction {
+  public static class MyAbstractFunction extends Function {
     public MyAbstractFunction(Signature signature) {
       super(signature);
     }
