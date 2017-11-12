@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.base.AbstractFunction;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
@@ -16,7 +16,7 @@ import org.smoothbuild.util.Dag;
  *
  * @see NativeFunction
  */
-public class DefinedFunction extends AbstractFunction {
+public class DefinedFunction extends Function {
   private final Dag<Expression> definition;
 
   public DefinedFunction(Signature signature, Dag<Expression> definition) {

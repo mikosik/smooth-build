@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-import org.smoothbuild.lang.function.base.AbstractFunction;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -26,7 +26,7 @@ import com.google.common.hash.HashCode;
  *
  * @see DefinedFunction
  */
-public class NativeFunction extends AbstractFunction {
+public class NativeFunction extends Function {
   private final Native nativ;
   private final HashCode hash;
   private final boolean isCacheable;

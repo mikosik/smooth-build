@@ -1,19 +1,35 @@
 package org.smoothbuild.lang.function.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public interface Function {
-  public Signature signature();
+public abstract class Function {
+  private final Signature signature;
 
-  public Type type();
+  public Function(Signature signature) {
+    this.signature = checkNotNull(signature);
+  }
 
-  public Name name();
+  public Signature signature() {
+    return signature;
+  }
 
-  public ImmutableList<Parameter> parameters();
+  public Type type() {
+    return signature.type();
+  }
 
-  public Expression createCallExpression(boolean isGenerated, Location location);
+  public Name name() {
+    return signature.name();
+  }
+
+  public ImmutableList<Parameter> parameters() {
+    return signature.parameters();
+  }
+
+  public abstract Expression createCallExpression(boolean isGenerated, Location location);
 }
