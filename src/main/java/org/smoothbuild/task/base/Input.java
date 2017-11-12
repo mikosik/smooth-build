@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.List;
 
@@ -9,7 +9,6 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
@@ -18,11 +17,7 @@ public class Input {
   private final HashCode hash;
 
   public static Input fromResults(List<Dag<Task>> children) {
-    return Input.fromResults(children.stream().map(Dag::elem).collect(toList()));
-  }
-
-  public static Input fromResults(Iterable<? extends Task> deps) {
-    return fromValues(toResults(deps));
+    return fromValues(toResults(children));
   }
 
   public static Input fromValues(Iterable<? extends Value> values) {
@@ -42,12 +37,10 @@ public class Input {
     return hash;
   }
 
-  private static ImmutableList<Value> toResults(Iterable<? extends Task> deps) {
-    Builder<Value> builder = ImmutableList.builder();
-    for (Task task : deps) {
-      builder.add(task.output().result());
-    }
-    return builder.build();
+  private static ImmutableList<Value> toResults(List<Dag<Task>> deps) {
+    return deps.stream()
+        .map(t -> t.elem().output().result())
+        .collect(toImmutableList());
   }
 
   private static HashCode calculateHash(Iterable<? extends Value> values) {
