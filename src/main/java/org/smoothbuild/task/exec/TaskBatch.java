@@ -9,7 +9,9 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -17,7 +19,7 @@ import com.google.common.collect.ImmutableList.Builder;
 public class TaskBatch {
   private final TaskExecutor taskExecutor;
   private final ValuesDb valuesDb;
-  private final List<Task> rootTasks;
+  private final List<Dag<Task>> rootTasks;
 
   @Inject
   public TaskBatch(TaskExecutor taskExecutor, ValuesDb valuesDb) {
@@ -26,48 +28,50 @@ public class TaskBatch {
     this.rootTasks = new ArrayList<>();
   }
 
-  public <T extends Value> Task createTasks(Expression expression) {
-    Task root = createTasksImpl(expression.createEvaluator(valuesDb, null));
+  public <T extends Value> Dag<Task> createTasks(Dag<Expression> expression) {
+    Dag<Task> root = createTasksImpl(expression.elem().createEvaluator(expression.children(),
+        valuesDb, null));
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends Value> Task createTasksImpl(Evaluator evaluator) {
-    ImmutableList<Task> dependencies = createTasksImpl(evaluator.dependencies());
-    return new Task(evaluator, dependencies);
+  private <T extends Value> Dag<Task> createTasksImpl(Dag<Evaluator> evaluator) {
+    List<Dag<Task>> children = createTasksImpl(evaluator.children());
+    return new Dag<Task>(new Task(evaluator.elem()), children);
   }
 
-  private ImmutableList<Task> createTasksImpl(ImmutableList<? extends Evaluator> evaluators) {
-    Builder<Task> builder = ImmutableList.builder();
-    for (Evaluator evaluator : evaluators) {
-      Task executor = createTasksImpl(evaluator);
+  private List<Dag<Task>> createTasksImpl(List<Dag<Evaluator>> evaluators) {
+    Builder<Dag<Task>> builder = ImmutableList.builder();
+    for (Dag<Evaluator> evaluator : evaluators) {
+      Dag<Task> executor = createTasksImpl(evaluator);
       builder.add(executor);
     }
     return builder.build();
   }
 
   public void executeAll() {
-    for (Task task : rootTasks) {
+    for (Dag<Task> task : rootTasks) {
       executeGraph(task);
-      if (task.graphContainsErrors()) {
+      if (task.elem().graphContainsErrors()) {
         return;
       }
     }
   }
 
-  private void executeGraph(Task task) {
-    for (Task subTask : task.dependencies()) {
+  private void executeGraph(Dag<Task> task) {
+    for (Dag<Task> subTask : task.children()) {
       executeGraph(subTask);
-      if (subTask.graphContainsErrors()) {
+      if (subTask.elem().graphContainsErrors()) {
         return;
       }
     }
-    taskExecutor.execute(task);
+    taskExecutor.execute(task.elem(), Input.fromResults(task.children()));
   }
 
   public boolean containsErrors() {
     return rootTasks
         .stream()
+        .map(Dag::elem)
         .anyMatch(Task::graphContainsErrors);
   }
 }

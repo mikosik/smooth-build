@@ -2,8 +2,6 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
@@ -12,7 +10,6 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ContainerImpl;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Evaluator {
@@ -21,40 +18,33 @@ public class Evaluator {
   private final boolean isInternal;
   private final boolean isCacheable;
   private final Location location;
-  private final ImmutableList<Evaluator> dependencies;
 
   public static Evaluator valueEvaluator(Value value, Location location) {
-    return new Evaluator(new ValueComputation(value), value.type().name(), true, true, location,
-        ImmutableList.of());
+    return new Evaluator(new ValueComputation(value), value.type().name(), true, true, location);
   }
 
-  public static Evaluator arrayEvaluator(ArrayType arrayType, Location location,
-      List<Evaluator> dependencies) {
-    return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true,
-        location,
-        dependencies);
+  public static Evaluator arrayEvaluator(ArrayType arrayType, Location location) {
+    return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, location);
   }
 
   public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
-      Location location, List<Evaluator> dependencies) {
+      Location location) {
     return new Evaluator(new NativeCallComputation(function), function.name().toString(),
-        isInternal, function.isCacheable(), location, dependencies);
+        isInternal, function.isCacheable(), location);
   }
 
-  public static Evaluator virtualEvaluator(DefinedFunction function, Location location,
-      List<Evaluator> dependencies) {
+  public static Evaluator callEvaluator(DefinedFunction function, Location location) {
     return new Evaluator(new IdentityComputation(function.type()), function.name().toString(),
-        false, true, location, dependencies);
+        false, true, location);
   }
 
   public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,
-      Location location, List<Evaluator> dependencies) {
+      Location location) {
     this.computation = computation;
     this.name = checkNotNull(name);
     this.isInternal = isInternal;
     this.isCacheable = isCacheable;
     this.location = checkNotNull(location);
-    this.dependencies = ImmutableList.copyOf(dependencies);
   }
 
   public HashCode hash() {
@@ -79,10 +69,6 @@ public class Evaluator {
 
   public Location location() {
     return location;
-  }
-
-  public ImmutableList<Evaluator> dependencies() {
-    return dependencies;
   }
 
   public Output evaluate(Input input, ContainerImpl container) {

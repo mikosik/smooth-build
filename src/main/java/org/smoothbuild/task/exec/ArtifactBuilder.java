@@ -1,7 +1,5 @@
 package org.smoothbuild.task.exec;
 
-import static java.util.Arrays.asList;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,11 +13,12 @@ import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
+import org.smoothbuild.util.Dag;
 
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
   private final TaskBatch taskBatch;
-  private final Map<Name, Task> artifacts;
+  private final Map<Name, Dag<Task>> artifacts;
 
   @Inject
   public ArtifactBuilder(ArtifactSaver artifactSaver, TaskBatch taskBatch) {
@@ -29,17 +28,16 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function function) {
-    Expression expression =
-        function.createCallExpression(asList(), false, Location.commandLine());
-    artifacts.put(function.name(), taskBatch.createTasks(expression));
+    Expression expression = function.createCallExpression(false, Location.commandLine());
+    artifacts.put(function.name(), taskBatch.createTasks(new Dag<>(expression)));
   }
 
   public void runBuild() {
     taskBatch.executeAll();
     if (!taskBatch.containsErrors()) {
-      for (Entry<Name, Task> artifact : artifacts.entrySet()) {
+      for (Entry<Name, Dag<Task>> artifact : artifacts.entrySet()) {
         Name name = artifact.getKey();
-        Task task = artifact.getValue();
+        Task task = artifact.getValue().elem();
         Value value = task.output().result();
         artifactSaver.save(name, value);
       }

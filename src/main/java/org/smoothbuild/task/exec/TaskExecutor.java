@@ -7,6 +7,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputsDb;
 import org.smoothbuild.io.util.SmoothJar;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
 
@@ -28,8 +29,8 @@ public class TaskExecutor {
     this.containerProvider = containerProvider;
   }
 
-  public <T extends Value> void execute(Task task) {
-    HashCode hash = taskHash(task);
+  public <T extends Value> void execute(Task task, Input input) {
+    HashCode hash = taskHash(task, input);
     boolean isAlreadyCached = outputsDb.contains(hash);
     if (isAlreadyCached) {
       Output output = outputsDb.read(hash, task.resultType());
@@ -37,7 +38,7 @@ public class TaskExecutor {
     } else {
       ContainerImpl container = containerProvider.get();
       try {
-        task.execute(container);
+        task.execute(container, input);
       } finally {
         container.destroy();
       }
@@ -48,10 +49,11 @@ public class TaskExecutor {
     reporter.report(task, isAlreadyCached);
   }
 
-  private <T extends Value> HashCode taskHash(Task task) {
+  private <T extends Value> HashCode taskHash(Task task, Input input) {
     Hasher hasher = Hash.newHasher();
     hasher.putBytes(smoothJarHash.asBytes());
     hasher.putBytes(task.hash().asBytes());
+    hasher.putBytes(input.hash().asBytes());
     return hasher.hash();
   }
 }

@@ -4,11 +4,12 @@ import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.util.Dag;
 
 public class Parameter extends TypedName {
-  private final Expression defaultValue;
+  private final Dag<Expression> defaultValue;
 
-  public Parameter(Type type, Name name, Expression defaultValue) {
+  public Parameter(Type type, Name name, Dag<Expression> defaultValue) {
     super(type, name);
     this.defaultValue = defaultValue;
   }
@@ -17,7 +18,7 @@ public class Parameter extends TypedName {
     return defaultValue == null;
   }
 
-  public Expression defaultValueExpression() {
+  public Dag<Expression> defaultValueExpression() {
     return defaultValue;
   }
 

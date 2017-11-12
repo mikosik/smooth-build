@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import java.util.List;
-
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
@@ -17,6 +15,5 @@ public interface Function {
 
   public ImmutableList<Parameter> parameters();
 
-  public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-      Location location);
+  public Expression createCallExpression(boolean isGenerated, Location location);
 }

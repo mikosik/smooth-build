@@ -22,8 +22,6 @@ import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
 
-import com.google.common.collect.ImmutableList;
-
 public class TaskReporterTest {
   Console console = mock(Console.class);
   TaskReporter taskReporter = new TaskReporter(console);
@@ -65,13 +63,12 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyEvaluator(isInternal), ImmutableList.of());
+    return new Task(new MyEvaluator(isInternal));
   }
 
   private static final class MyEvaluator extends Evaluator {
     private MyEvaluator(boolean isInternal) {
-      super(null, "name", isInternal, true, Location.location(Paths.get("script.smooth"), 2),
-          ImmutableList.of());
+      super(null, "name", isInternal, true, Location.location(Paths.get("script.smooth"), 2));
     }
 
     @Override

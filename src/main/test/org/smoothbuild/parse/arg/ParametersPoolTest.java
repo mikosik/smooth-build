@@ -16,10 +16,10 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -42,7 +42,7 @@ public class ParametersPoolTest {
   public void taking_unknown_param_throws_exception() {
     given(parametersPool = new ParametersPool(asList(), asList()));
     when(parametersPool).take(
-        new Parameter(STRING, new Name("unknownName"), mock(Expression.class)));
+        new Parameter(STRING, new Name("unknownName"), mock(Dag.class)));
     thenThrown(IllegalArgumentException.class);
   }
 
@@ -101,7 +101,7 @@ public class ParametersPoolTest {
 
   @Test
   public void optional_blob_param_is_available_in_optional_set_of_blob_pool() throws Exception {
-    given(parameter = new Parameter(BLOB, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(BLOB)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -117,7 +117,7 @@ public class ParametersPoolTest {
 
   @Test
   public void optional_blob_param_is_available_in_optional_set_of_file_pool() throws Exception {
-    given(parameter = new Parameter(BLOB, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(FILE)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -133,7 +133,7 @@ public class ParametersPoolTest {
 
   @Test
   public void optional_file_param_is_available_in_optional_set_of_file_pool() throws Exception {
-    given(parameter = new Parameter(FILE, name, mock(Expression.class)));
+    given(parameter = new Parameter(FILE, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(FILE)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -150,7 +150,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(STRING_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -168,7 +168,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(BLOB_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -186,7 +186,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -204,7 +204,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(FILE_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -222,7 +222,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -240,7 +240,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -258,7 +258,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(FILE_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.assignableFrom(NIL)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -328,7 +328,7 @@ public class ParametersPoolTest {
 
   @Test
   public void all_optional_params_contains_required_blob_param() throws Exception {
-    given(parameter = new Parameter(BLOB, name, mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));
@@ -336,7 +336,7 @@ public class ParametersPoolTest {
 
   @Test
   public void all_optional_params_contains_required_file_param() throws Exception {
-    given(parameter = new Parameter(FILE, name, mock(Expression.class)));
+    given(parameter = new Parameter(FILE, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));
@@ -344,7 +344,7 @@ public class ParametersPoolTest {
 
   @Test
   public void all_optional_params_contains_required_string_array_param() throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Expression.class)));
+    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));

@@ -1,7 +1,12 @@
 package org.smoothbuild.task.base;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -11,6 +16,10 @@ import com.google.common.hash.Hasher;
 public class Input {
   private final ImmutableList<Value> values;
   private final HashCode hash;
+
+  public static Input fromResults(List<Dag<Task>> children) {
+    return Input.fromResults(children.stream().map(Dag::elem).collect(toList()));
+  }
 
   public static Input fromResults(Iterable<? extends Task> deps) {
     return fromValues(toResults(deps));
