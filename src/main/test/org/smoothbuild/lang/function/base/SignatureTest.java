@@ -12,8 +12,8 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.util.Dag;
 
 public class SignatureTest {
   private final Type type = STRING;
@@ -39,8 +39,8 @@ public class SignatureTest {
 
   @Test
   public void test_to_string() throws Exception {
-    given(parameter = new Parameter(BLOB, new Name("blob"), mock(Expression.class)));
-    given(parameter2 = new Parameter(FILE, new Name("file"), mock(Expression.class)));
+    given(parameter = new Parameter(BLOB, new Name("blob"), mock(Dag.class)));
+    given(parameter2 = new Parameter(FILE, new Name("file"), mock(Dag.class)));
     when(new Signature(STRING, name, asList(parameter, parameter2))).toString();
     thenReturned(STRING.name() + " " + name + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

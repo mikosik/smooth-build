@@ -1,12 +1,13 @@
 package org.smoothbuild.lang.expr;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
   private final Type type = STRING;
@@ -55,11 +57,12 @@ public class ExpressionTest {
 
   public static class MyExpression extends Expression {
     public MyExpression(Type type, Location location) {
-      super(type, asList(), location);
+      super(type, location);
     }
 
     @Override
-    public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+        Scope<Dag<Evaluator>> scope) {
       return null;
     }
   }

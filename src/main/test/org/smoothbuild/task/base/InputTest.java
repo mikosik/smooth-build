@@ -82,7 +82,7 @@ public class InputTest {
     given(sstring1 = valuesDb.string("abc"));
     given(willReturn(new Output(sstring1)), depTask1).output();
     given(input = Input.fromResults(asList(depTask1)));
-    given(input2 = Input.fromResults(asList()));
+    given(input2 = Input.fromValues(asList()));
     when(input).hash();
     thenReturned(not(input2.hash()));
   }

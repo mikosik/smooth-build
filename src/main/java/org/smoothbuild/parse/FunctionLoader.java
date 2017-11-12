@@ -36,6 +36,7 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
+import org.smoothbuild.util.Dag;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
@@ -53,7 +54,7 @@ public class FunctionLoader {
           boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
           return new NativeFunction(nativ, signature, isCacheable, hash);
         } else {
-          Expression expression = createExpression(func.expr());
+          Dag<Expression> expression = createExpression(func.expr());
           return new DefinedFunction(signature, expression);
         }
       }
@@ -68,13 +69,13 @@ public class FunctionLoader {
       private Parameter createParameter(ParamNode p) {
         Type type = p.type().get(Type.class);
         Name name = p.name();
-        Expression defaultValue = p.hasDefaultValue()
+        Dag<Expression> defaultValue = p.hasDefaultValue()
             ? createExpression(p.defaultValue())
             : null;
         return new Parameter(type, name, defaultValue);
       }
 
-      private Expression createExpression(ExprNode expr) {
+      private Dag<Expression> createExpression(ExprNode expr) {
         if (expr instanceof CallNode) {
           return createCall((CallNode) expr);
         }
@@ -91,18 +92,19 @@ public class FunctionLoader {
             + " without children.");
       }
 
-      private Expression createReference(RefNode ref) {
-        return new BoundValueExpression(ref.get(Type.class), ref.name(), ref.location());
+      private Dag<Expression> createReference(RefNode ref) {
+        return new Dag<>(new BoundValueExpression(ref.get(Type.class), ref.name(), ref.location()));
       }
 
-      private Expression createCall(CallNode call) {
+      private Dag<Expression> createCall(CallNode call) {
         Function function = loadedFunctions.get(call.name());
-        List<Expression> expressions = createSortedArgumentExpressions(call, function);
-        return function.createCallExpression(expressions, false, call.location());
+        List<Dag<Expression>> expressions = createSortedArgumentExpressions(call, function);
+        return new Dag<>(function.createCallExpression(false, call.location()), expressions);
       }
 
-      private List<Expression> createSortedArgumentExpressions(CallNode call, Function function) {
-        Map<TypedName, Expression> assignedExpressions = call
+      private List<Dag<Expression>> createSortedArgumentExpressions(CallNode call,
+          Function function) {
+        Map<TypedName, Dag<Expression>> assignedExpressions = call
             .args()
             .stream()
             .collect(toMap(a -> a.get(TypedName.class), a -> createExpression(a.expr())));
@@ -115,31 +117,33 @@ public class FunctionLoader {
             .collect(toImmutableList());
       }
 
-      private Expression createStringLiteral(StringNode string) {
-        return new StringLiteralExpression(string.get(String.class), string.location());
+      private Dag<Expression> createStringLiteral(StringNode string) {
+        return new Dag<>(new StringLiteralExpression(string.get(String.class), string.location()));
       }
 
-      private Expression createArray(ArrayNode array) {
-        List<Expression> exprList = map(array.elements(), this::createExpression);
+      private Dag<Expression> createArray(ArrayNode array) {
+        List<Dag<Expression>> exprList = map(array.elements(), this::createExpression);
         return createArray(array, exprList);
       }
 
-      private Expression createArray(ArrayNode array, List<Expression> elements) {
+      private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
         ArrayType type = (ArrayType) array.get(Type.class);
-        List<Expression> converted = map(elements, e -> implicitConversion(type.elemType(), e));
-        return new ArrayExpression(type, converted, array.location());
+        List<Dag<Expression>> converted = map(elements, e -> implicitConversion(type.elemType(),
+            e));
+        return new Dag<>(new ArrayExpression(type, array.location()), converted);
       }
 
-      public <T extends Value> Expression implicitConversion(Type destinationType,
-          Expression source) {
-        Type sourceType = source.type();
-        if (sourceType.equals(destinationType)) {
+      public <T extends Value> Dag<Expression> implicitConversion(Type destinationType,
+          Dag<Expression> source) {
+        Expression elem = source.elem();
+        Type type = elem.type();
+        if (type.equals(destinationType)) {
           return source;
         }
 
-        Name functionName = Conversions.convertFunctionName(sourceType, destinationType);
+        Name functionName = Conversions.convertFunctionName(type, destinationType);
         Function function = loadedFunctions.get(functionName);
-        return function.createCallExpression(asList(source), true, source.location());
+        return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
       }
     }.get();
   }

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.List;
 
@@ -9,8 +10,7 @@ import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.util.Dag;
 
 /**
  * Expression in smooth language.
@@ -18,11 +18,9 @@ import com.google.common.collect.ImmutableList;
 public abstract class Expression {
   private final Type type;
   private final Location location;
-  private final ImmutableList<Expression> dependencies;
 
-  public Expression(Type type, List<Expression> dependencies, Location location) {
+  public Expression(Type type, Location location) {
     this.type = checkNotNull(type);
-    this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = checkNotNull(location);
   }
 
@@ -34,17 +32,14 @@ public abstract class Expression {
     return location;
   }
 
-  public ImmutableList<Expression> dependencies() {
-    return dependencies;
-  }
-
-  protected ImmutableList<Evaluator> createDependenciesEvaluator(ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    return dependencies
+  public static List<Dag<Evaluator>> createChildrenEvaluators(List<Dag<Expression>> children,
+      ValuesDb valuesDb, Scope<Dag<Evaluator>> scope) {
+    return children
         .stream()
-        .map(e -> e.createEvaluator(valuesDb, scope))
-        .collect(ImmutableList.toImmutableList());
+        .map(c -> c.elem().createEvaluator(c.children(), valuesDb, scope))
+        .collect(toImmutableList());
   }
 
-  public abstract Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope);
+  public abstract Dag<Evaluator> createEvaluator(List<Dag<Expression>> children,
+      ValuesDb valuesDb, Scope<Dag<Evaluator>> scope);
 }

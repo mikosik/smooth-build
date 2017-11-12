@@ -2,16 +2,14 @@ package org.smoothbuild.lang.function.nativ;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
-import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.function.base.AbstractFunction;
-import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.ErrorMessage;
@@ -19,7 +17,6 @@ import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -54,15 +51,8 @@ public class NativeFunction extends AbstractFunction {
   }
 
   @Override
-  public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-      Location location) {
-    return new Expression(type(), args, location) {
-      @Override
-      public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-        return nativeCallEvaluator(NativeFunction.this, isGenerated, location,
-            createDependenciesEvaluator(valuesDb, scope));
-      }
-    };
+  public Expression createCallExpression(boolean isGenerated, Location location) {
+    return new NativeCallExpression(this, isGenerated, location);
   }
 
   public Value invoke(ContainerImpl container, List<Value> arguments) {

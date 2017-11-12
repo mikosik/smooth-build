@@ -55,8 +55,7 @@ public class AbstractFunctionTest {
     }
 
     @Override
-    public Expression createCallExpression(List<Expression> args, boolean isGenerated,
-        Location location) {
+    public Expression createCallExpression(boolean isGenerated, Location location) {
       return null;
     }
   }

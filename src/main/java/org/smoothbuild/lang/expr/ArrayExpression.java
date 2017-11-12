@@ -9,18 +9,20 @@ import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;
 
-  public ArrayExpression(ArrayType arrayType, List<Expression> elements,
-      Location location) {
-    super(arrayType, elements, location);
+  public ArrayExpression(ArrayType arrayType, Location location) {
+    super(arrayType, location);
     this.arrayType = arrayType;
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    return arrayEvaluator(arrayType, location(), createDependenciesEvaluator(valuesDb, scope));
+  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Dag<Evaluator>> scope) {
+    return new Dag<>(arrayEvaluator(arrayType, location()),
+        createChildrenEvaluators(children, valuesDb, scope));
   }
 }
