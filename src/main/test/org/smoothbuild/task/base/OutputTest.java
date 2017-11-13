@@ -57,6 +57,30 @@ public class OutputTest {
   }
 
   @Test
+  public void output_created_without_messages_is_cacheable() throws Exception {
+    given(sstring = valuesDb.string("abc"));
+    given(output = new Output(sstring));
+    when(() -> output.isCacheable());
+    thenReturned(true);
+  }
+
+  @Test
+  public void output_created_with_messages_is_cacheable() throws Exception {
+    given(sstring = valuesDb.string("abc"));
+    given(output = new Output(sstring, messages));
+    when(() -> output.isCacheable());
+    thenReturned(true);
+  }
+
+  @Test
+  public void output_created_as_not_cacheable_is_not_cacheable() throws Exception {
+    given(sstring = valuesDb.string("abc"));
+    given(output = new Output(sstring, messages, false));
+    when(() -> output.isCacheable());
+    thenReturned(false);
+  }
+
+  @Test
   public void value_throws_exception_when_no_value_is_present() throws Exception {
     given(output = new Output(messages));
     when(output).result();
