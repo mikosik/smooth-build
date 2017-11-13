@@ -1,12 +1,17 @@
 package org.smoothbuild.acceptance.lang;
 
+import static java.util.regex.Pattern.DOTALL;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
 import static org.testory.Testory.then;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -23,6 +28,7 @@ import org.smoothbuild.acceptance.lang.nativ.ReturnNull;
 import org.smoothbuild.acceptance.lang.nativ.SameName;
 import org.smoothbuild.acceptance.lang.nativ.SameName2;
 import org.smoothbuild.acceptance.lang.nativ.ThrowException;
+import org.smoothbuild.acceptance.lang.nativ.ThrowRandomException;
 import org.smoothbuild.acceptance.lang.nativ.WithoutContainer;
 import org.smoothbuild.lang.plugin.Container;
 
@@ -203,6 +209,28 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     then(output(), containsString(
         "Function throwException threw java exception from its native code:\n"));
     then(output(), containsString("java.lang.UnsupportedOperationException"));
+  }
+
+  @Test
+  public void error_wrapping_exception_from_native_is_not_cached() throws Exception {
+    givenNativeJar(ThrowRandomException.class);
+    givenScript("String throwRandomException();\n"
+        + "      result = throwRandomException;");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    String timestamp1 = fetchTimestamp(output());
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    String timestamp2 = fetchTimestamp(output());
+    then(timestamp1, not(equalTo(timestamp2)));
+  }
+
+  private static String fetchTimestamp(String text) {
+    Pattern pattern = Pattern.compile(".*java.lang.UnsupportedOperationException: ([0-9]*).*",
+        DOTALL);
+    Matcher matcher = pattern.matcher(text);
+    matcher.matches();
+    return matcher.group(1);
   }
 
   @Test

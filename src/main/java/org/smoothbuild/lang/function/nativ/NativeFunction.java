@@ -79,12 +79,13 @@ public class NativeFunction extends Function {
       Throwable cause = e.getCause();
       if (cause instanceof MessageException) {
         container.log(((MessageException) cause).message());
+        return new Output(null, container.messages());
       } else {
         container.log(new ErrorMessage("Function " + name()
             + " threw java exception from its native code:\n"
             + getStackTraceAsString(cause)));
+        return new Output(null, container.messages(), false);
       }
-      return new Output(null, container.messages());
     }
   }
 
