@@ -4,7 +4,6 @@ import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationH
 
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -28,7 +27,6 @@ public class NativeCallComputation implements Computation {
 
   @Override
   public Output execute(Input input, ContainerImpl container) {
-    Value result = function.invoke(container, input.values());
-    return new Output(result, container.messages());
+    return function.invoke(container, input.values());
   }
 }
