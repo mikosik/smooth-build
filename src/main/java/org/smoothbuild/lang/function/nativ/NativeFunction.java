@@ -17,6 +17,7 @@ import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.Container;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
 
 import com.google.common.hash.HashCode;
@@ -55,7 +56,7 @@ public class NativeFunction extends Function {
     return new NativeCallExpression(this, isGenerated, location);
   }
 
-  public Value invoke(ContainerImpl container, List<Value> arguments) {
+  public Output invoke(ContainerImpl container, List<Value> arguments) {
     try {
       Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
       if (result == null) {
@@ -63,14 +64,15 @@ public class NativeFunction extends Function {
           container.log(new ErrorMessage("Function " + name()
               + " has faulty native implementation: it returned 'null' but logged no error."));
         }
-        return null;
+        return new Output(null, container.messages());
       }
       if (!type().equals(result.type())) {
         container.log(new ErrorMessage("Function " + name()
             + " has faulty native implementation: Its result type is " + type()
             + " but it returned value of type " + result.type() + "."));
+        return new Output(null, container.messages());
       }
-      return result;
+      return new Output(result, container.messages());
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
@@ -82,7 +84,7 @@ public class NativeFunction extends Function {
             + " threw java exception from its native code:\n"
             + getStackTraceAsString(cause)));
       }
-      return null;
+      return new Output(null, container.messages());
     }
   }
 
