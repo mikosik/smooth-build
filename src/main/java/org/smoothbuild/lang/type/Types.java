@@ -76,26 +76,19 @@ public class Types {
       return type1;
     }
     if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
-      Type elemType1 = ((ArrayType) type1).elemType();
-      Type elemType2 = ((ArrayType) type2).elemType();
-      Type commonSuperType = commonSuperType(elemType1, elemType2);
-      return commonSuperType == null ? null : arrayOf(commonSuperType);
+      return commonSuperType((ArrayType) type1, (ArrayType) type2);
     }
-    if (type1.equals(BLOB)) {
-      if (type2.equals(BLOB) || type2.equals(FILE)) {
-        return BLOB;
-      } else {
-        return null;
-      }
-    } else if (type1.equals(FILE)) {
-      if (type2.equals(FILE)) {
-        return FILE;
-      } else if (type2.equals(BLOB)) {
-        return BLOB;
-      } else {
-        return null;
-      }
+    if (type1.equals(BLOB) && type2.equals(FILE)) {
+      return BLOB;
+    }
+    if (type1.equals(FILE) && type2.equals(BLOB)) {
+      return BLOB;
     }
     return null;
+  }
+
+  private static Type commonSuperType(ArrayType type1, ArrayType type2) {
+    Type commonSuperType = commonSuperType(type1.elemType(), type2.elemType());
+    return commonSuperType == null ? null : arrayOf(commonSuperType);
   }
 }
