@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Location;
 
-public class TaskHashesTest {
+public class TaskHashTest {
   private final Location location = Location.location(Paths.get("script.smooth"), 2);
   private final ValuesDb valuesDb = memoryValuesDb();
 
