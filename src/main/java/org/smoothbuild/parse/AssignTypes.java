@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
-import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.basicTypes;
@@ -155,7 +155,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return NIL;
+          return arrayOf(NOTHING);
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (nonInferable.equals(firstType)) {

@@ -1,12 +1,10 @@
 package org.smoothbuild.task.save;
 
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 
 import javax.inject.Inject;
 
@@ -28,10 +26,10 @@ public class ArtifactSaver {
     builder.put(STRING, new StringSaver(fileSystem));
     builder.put(BLOB, new BlobSaver(fileSystem));
     builder.put(FILE, new FileSaver(fileSystem));
-    builder.put(STRING_ARRAY, new ArraySaver(fileSystem));
-    builder.put(BLOB_ARRAY, new ArraySaver(fileSystem));
-    builder.put(FILE_ARRAY, new FileArraySaver(fileSystem, console));
-    builder.put(NIL, new ArraySaver(fileSystem));
+    builder.put(arrayOf(STRING), new ArraySaver(fileSystem));
+    builder.put(arrayOf(BLOB), new ArraySaver(fileSystem));
+    builder.put(arrayOf(FILE), new FileArraySaver(fileSystem, console));
+    builder.put(arrayOf(NOTHING), new ArraySaver(fileSystem));
     this.saversMap = builder.build();
   }
 

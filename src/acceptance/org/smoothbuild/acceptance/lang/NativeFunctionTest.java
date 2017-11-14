@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.then;
 
 import java.util.regex.Matcher;
@@ -181,7 +181,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'oneStringParameter' parameter 'string' has type [String] "
-            + "so its native implementation type must be " + STRING_ARRAY.jType().getCanonicalName()
+            + "so its native implementation type must be " + arrayOf(STRING).jType().getCanonicalName()
             + " but it is " + STRING.jType().getCanonicalName() + ".\n"));
   }
 

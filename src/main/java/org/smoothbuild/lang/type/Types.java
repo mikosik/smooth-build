@@ -13,10 +13,6 @@ public class Types {
   public static final Type BLOB = new Type("Blob", Blob.class);
   public static final Type FILE = new Type("File", SFile.class);
   public static final Type NOTHING = new Type("Nothing", Nothing.class);
-  public static final ArrayType STRING_ARRAY = new ArrayType(STRING);
-  public static final ArrayType BLOB_ARRAY = new ArrayType(BLOB);
-  public static final ArrayType FILE_ARRAY = new ArrayType(FILE);
-  public static final ArrayType NIL = new ArrayType(NOTHING);
 
   /*
    * Not each type can be used in every place. Each set below represent one place
@@ -26,11 +22,11 @@ public class Types {
 
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
-  public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(STRING_ARRAY,
-      BLOB_ARRAY, FILE_ARRAY, NIL);
+  public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(arrayOf(STRING),
+      arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
 
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
-      STRING_ARRAY, BLOB_ARRAY, FILE_ARRAY, NIL);
+      arrayOf(STRING), arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
 
   /*
    * A few handy mappings.

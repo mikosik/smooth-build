@@ -2,12 +2,10 @@ package org.smoothbuild.parse.arg;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Types.NIL;
+import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -150,126 +148,126 @@ public class ParametersPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(STRING), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(STRING_ARRAY)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(STRING))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_string_array_param_is_available_in_required_set_of_string_array_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(STRING), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(STRING_ARRAY)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(STRING))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(BLOB), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(BLOB_ARRAY)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(BLOB))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_blob_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(BLOB), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(BLOB_ARRAY)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(BLOB))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(BLOB), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(FILE))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(BLOB), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(FILE))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(FILE), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(FILE))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_file_array_param_is_available_in_required_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(FILE), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(FILE_ARRAY)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(FILE))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(STRING), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(NIL)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_string_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(STRING), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(BLOB), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(NIL)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(BLOB_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(BLOB), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(FILE), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
-    when(parametersPool.assignableFrom(NIL)).optionalParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_file_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(FILE_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(FILE), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
-    when(parametersPool.assignableFrom(NIL)).requiredParameters();
+    when(parametersPool.assignableFrom(arrayOf(NOTHING))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -301,7 +299,7 @@ public class ParametersPoolTest {
 
   @Test
   public void available_required_params_contains_required_string_array_param() throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, null));
+    given(parameter = new Parameter(arrayOf(STRING), name, null));
     given(parametersPool = new ParametersPool(asList(), asList(parameter)));
     when(parametersPool.allRequired());
     thenReturned(ImmutableSet.of(parameter));
@@ -344,7 +342,7 @@ public class ParametersPoolTest {
 
   @Test
   public void all_optional_params_contains_required_string_array_param() throws Exception {
-    given(parameter = new Parameter(STRING_ARRAY, name, mock(Dag.class)));
+    given(parameter = new Parameter(arrayOf(STRING), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(asList(parameter), asList()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));
