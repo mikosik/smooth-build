@@ -1,8 +1,8 @@
 package org.smoothbuild.db.values;
 
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

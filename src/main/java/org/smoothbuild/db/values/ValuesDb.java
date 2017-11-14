@@ -1,6 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.lang.type.Types.arrayOf;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.value.SFile.storeFileInDb;
 import static org.smoothbuild.lang.value.SString.storeStringInDb;
 

@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 
 import java.util.Objects;
 
@@ -28,7 +28,8 @@ public class Conversions {
 
     builder.put(new TypeConversion(FILE, BLOB), new Name("fileToBlob"));
     builder.put(new TypeConversion(arrayOf(FILE), arrayOf(BLOB)), new Name("fileArrayToBlobArray"));
-    builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(STRING)), new Name("nilToStringArray"));
+    builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(STRING)), new Name(
+        "nilToStringArray"));
     builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(BLOB)), new Name("nilToBlobArray"));
     builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(FILE)), new Name("nilToFileArray"));
 

@@ -4,10 +4,10 @@ import static java.util.regex.Pattern.DOTALL;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.then;
 
 import java.util.regex.Matcher;
@@ -181,7 +181,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'oneStringParameter' parameter 'string' has type [String] "
-            + "so its native implementation type must be " + arrayOf(STRING).jType().getCanonicalName()
+            + "so its native implementation type must be " + arrayOf(STRING).jType()
+                .getCanonicalName()
             + " but it is " + STRING.jType().getCanonicalName() + ".\n"));
   }
 

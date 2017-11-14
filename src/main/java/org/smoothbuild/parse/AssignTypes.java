@@ -2,9 +2,9 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.lang.type.Types.commonSuperType;
 import static org.smoothbuild.lang.type.Types.isConvertible;
@@ -183,7 +183,7 @@ public class AssignTypes {
               + "."));
           return nonInferable;
         }
-        return Types.arrayOf(superType);
+        return arrayOf(superType);
       }
 
       @Override

@@ -1,11 +1,11 @@
 package org.smoothbuild.parse.arg;
 
 import static java.util.Arrays.asList;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
