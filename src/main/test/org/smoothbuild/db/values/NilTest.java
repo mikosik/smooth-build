@@ -2,8 +2,8 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.NIL;
 import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -26,7 +26,7 @@ public class NilTest {
   public void type_of_nil_is_nil() throws Exception {
     given(array = valuesDb.arrayBuilder(NOTHING).build());
     when(array.type());
-    thenReturned(NIL);
+    thenReturned(arrayOf(NOTHING));
   }
 
   @Test

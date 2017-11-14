@@ -8,11 +8,10 @@ import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.type.Types.ALL_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
-import static org.smoothbuild.lang.type.Types.NIL;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.NOTHING;
+import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 
 import org.junit.runner.RunWith;
 import org.quackery.Case;
@@ -37,8 +36,8 @@ public class ConversionsTest {
   private static Case testConversion(Type from, Type to) {
     boolean canConvert = from.equals(to) ||
         from.equals(FILE) && to.equals(BLOB) ||
-        from.equals(FILE_ARRAY) && to.equals(BLOB_ARRAY) ||
-        from.equals(NIL) && (to instanceof ArrayType);
+        from.equals(arrayOf(FILE)) && to.equals(arrayOf(BLOB)) ||
+        from.equals(arrayOf(NOTHING)) && (to instanceof ArrayType);
     String canOrCannot = canConvert ? "can" : "cannot";
     return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> assertEquals(
         canConvert(from, to), canConvert));
@@ -48,10 +47,10 @@ public class ConversionsTest {
   public static Suite test_convert_function_name() {
     return suite("test convert function name")
         .add(testConvertFunctionName(FILE, BLOB, "fileToBlob"))
-        .add(testConvertFunctionName(FILE_ARRAY, BLOB_ARRAY, "fileArrayToBlobArray"))
-        .add(testConvertFunctionName(NIL, STRING_ARRAY, "nilToStringArray"))
-        .add(testConvertFunctionName(NIL, BLOB_ARRAY, "nilToBlobArray"))
-        .add(testConvertFunctionName(NIL, FILE_ARRAY, "nilToFileArray"));
+        .add(testConvertFunctionName(arrayOf(FILE), arrayOf(BLOB), "fileArrayToBlobArray"))
+        .add(testConvertFunctionName(arrayOf(NOTHING), arrayOf(STRING), "nilToStringArray"))
+        .add(testConvertFunctionName(arrayOf(NOTHING), arrayOf(BLOB), "nilToBlobArray"))
+        .add(testConvertFunctionName(arrayOf(NOTHING), arrayOf(FILE), "nilToFileArray"));
   }
 
   private static Case testConvertFunctionName(Type from, Type to, String functionName) {

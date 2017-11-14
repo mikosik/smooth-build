@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -132,7 +132,7 @@ public class ArrayTest {
     given(arrayBuilder).add(valuesDb.string("abc"));
     given(arrayBuilder).add(valuesDb.string("def"));
     given(array = arrayBuilder.build());
-    when(valuesDb.read(STRING_ARRAY, array.hash()));
+    when(valuesDb.read(arrayOf(STRING), array.hash()));
     thenReturned(array);
   }
 
@@ -144,7 +144,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> valuesDb.read(STRING_ARRAY, array.hash()).asIterable(SString.class));
+    when(() -> valuesDb.read(arrayOf(STRING), array.hash()).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 
@@ -156,7 +156,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(valuesDb.read(STRING_ARRAY, array.hash()).hash());
+    when(valuesDb.read(arrayOf(STRING), array.hash()).hash());
     thenReturned(array.hash());
   }
 

@@ -5,11 +5,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.BLOB_ARRAY;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -93,7 +91,7 @@ public class OutputsDbTest {
     given(file = file(valuesDb, path, bytes));
     given(array = valuesDb.arrayBuilder(FILE).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, FILE_ARRAY).result()).asIterable(SFile.class).iterator()
+    when(((Array) outputsDb.read(hash, arrayOf(FILE)).result()).asIterable(SFile.class).iterator()
         .next());
     thenReturned(file);
   }
@@ -103,7 +101,7 @@ public class OutputsDbTest {
     given(blob = writeBlob(valuesDb, bytes));
     given(array = valuesDb.arrayBuilder(Types.BLOB).add(blob).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, BLOB_ARRAY).result()).asIterable(Blob.class).iterator()
+    when(((Array) outputsDb.read(hash, arrayOf(BLOB)).result()).asIterable(Blob.class).iterator()
         .next());
     thenReturned(blob);
   }
@@ -113,7 +111,7 @@ public class OutputsDbTest {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(STRING).add(stringValue).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, STRING_ARRAY).result()).asIterable(SString.class).iterator()
+    when(((Array) outputsDb.read(hash, arrayOf(STRING)).result()).asIterable(SString.class).iterator()
         .next());
     thenReturned(stringValue);
   }

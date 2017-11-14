@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.STRING_ARRAY;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
@@ -64,7 +64,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(STRING_ARRAY, location)));
+    given(task = new Task(arrayEvaluator(arrayOf(STRING), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("3e790fa50b6a9b6a4c0c4ac933de2461b321a3f0"));
@@ -72,7 +72,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_non_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(STRING_ARRAY, location)));
+    given(task = new Task(arrayEvaluator(arrayOf(STRING), location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("4fc92bc42737d06c9f0864a811e510322f4096f2"));

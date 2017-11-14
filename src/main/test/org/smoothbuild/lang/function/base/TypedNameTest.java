@@ -1,7 +1,8 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.smoothbuild.lang.type.Types.FILE_ARRAY;
+import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
+import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -86,7 +87,7 @@ public class TypedNameTest {
     List<TypedName> names = new ArrayList<>();
     names.add(new TypedName(STRING, new Name("param1")));
     names.add(new TypedName(STRING, new Name("param2-with-very-long")));
-    names.add(new TypedName(FILE_ARRAY, new Name("param3")));
+    names.add(new TypedName(arrayOf(FILE), new Name("param3")));
 
     when(TypedName.iterableToString(names));
     thenReturned(""
