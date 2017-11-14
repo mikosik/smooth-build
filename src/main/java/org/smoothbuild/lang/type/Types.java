@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
+
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -42,10 +43,6 @@ public class Types {
    */
   public static ImmutableSet<Type> allTypes() {
     return ALL_TYPES;
-  }
-
-  public static <T extends Value> ArrayType arrayOf(Type elemType) {
-    return new ArrayType(elemType);
   }
 
   public static Type basicTypeFromString(String string) {

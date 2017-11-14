@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static java.util.Arrays.asList;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.type.Types.ALL_TYPES;
@@ -11,7 +12,6 @@ import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 
 import org.junit.runner.RunWith;
 import org.quackery.Case;

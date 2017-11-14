@@ -4,13 +4,13 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -106,7 +106,7 @@ public class TypesTest {
 
   @Test
   public void string_array_name() throws Exception {
-    given(type = Types.arrayOf(STRING));
+    given(type = arrayOf(STRING));
     when(() -> type.name());
     thenReturned("[String]");
   }

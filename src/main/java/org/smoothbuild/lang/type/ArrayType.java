@@ -7,7 +7,11 @@ import org.smoothbuild.lang.value.Array;
 public class ArrayType extends Type {
   private final Type elemType;
 
-  protected ArrayType(Type elemType) {
+  public static ArrayType arrayOf(Type elemType) {
+    return new ArrayType(elemType);
+  }
+
+  private ArrayType(Type elemType) {
     super("[" + elemType.name() + "]", Array.class);
     this.elemType = elemType;
   }

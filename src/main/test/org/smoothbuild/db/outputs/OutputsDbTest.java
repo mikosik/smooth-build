@@ -4,10 +4,10 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.arrayOf;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -111,7 +111,8 @@ public class OutputsDbTest {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(STRING).add(stringValue).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, arrayOf(STRING)).result()).asIterable(SString.class).iterator()
+    when(((Array) outputsDb.read(hash, arrayOf(STRING)).result()).asIterable(SString.class)
+        .iterator()
         .next());
     thenReturned(stringValue);
   }
