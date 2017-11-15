@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableSet;
 public class Types {
   public static final Type STRING = new Type("String", SString.class);
   public static final Type BLOB = new Type("Blob", Blob.class);
-  public static final Type FILE = new Type("File", SFile.class);
+  public static final Type FILE = new StructType("File", SFile.class, BLOB);
   public static final Type NOTHING = new Type("Nothing", Nothing.class);
 
   /*
