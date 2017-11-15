@@ -54,10 +54,6 @@ public class Types {
     return null;
   }
 
-  public static boolean isConvertible(Type from, Type to) {
-    return to.equals(commonSuperType(to, from));
-  }
-
   public static Type commonSuperType(Type type1, Type type2) {
     if (type1.equals(type2)) {
       return type1;
