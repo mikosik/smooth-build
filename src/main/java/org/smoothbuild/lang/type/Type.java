@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.Types.NOTHING;
+
 import java.util.Objects;
 
 import org.smoothbuild.lang.value.Value;
@@ -22,6 +24,22 @@ public class Type {
 
   public Class<? extends Value> jType() {
     return jType;
+  }
+
+  public boolean isAssignableFrom(Type type) {
+    if (type.equals(NOTHING)) {
+      return true;
+    }
+    if (this.equals(type)) {
+      return true;
+    }
+    if (type instanceof StructType) {
+      return isAssignableFrom(((StructType) type).directConvertibleTo());
+    }
+    if (this instanceof ArrayType && type instanceof ArrayType) {
+      return ((ArrayType) this).elemType().isAssignableFrom(((ArrayType) type).elemType());
+    }
+    return false;
   }
 
   @Override

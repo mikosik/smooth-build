@@ -3,9 +3,11 @@ package org.smoothbuild.lang.type;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
+import static org.smoothbuild.lang.type.Types.ALL_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
@@ -46,6 +48,60 @@ public class TypesTest {
     assertEquals(arrayOf(BLOB).elemType(), BLOB);
     assertEquals(arrayOf(FILE).elemType(), FILE);
     assertEquals(arrayOf(NOTHING).elemType(), NOTHING);
+  }
+
+  @Test
+  public void each_type_is_assignable_to_itself() throws Exception {
+    for (Type type : ALL_TYPES) {
+      assertTrue(type.isAssignableFrom(type));
+    }
+  }
+
+  @Test
+  public void each_type_is_assignable_from_nothing() throws Exception {
+    for (Type type : ALL_TYPES) {
+      assertTrue(type.isAssignableFrom(type));
+    }
+  }
+
+  @Test
+  public void blob_is_assignable_from_file() throws Exception {
+    assertTrue(BLOB.isAssignableFrom(FILE));
+  }
+
+  @Test
+  public void blob_is_not_assignable_from_string() throws Exception {
+    assertFalse(BLOB.isAssignableFrom(STRING));
+  }
+
+  @Test
+  public void blob_array_is_assignable_from_file_array() throws Exception {
+    assertTrue(arrayOf(BLOB).isAssignableFrom(arrayOf(FILE)));
+  }
+
+  @Test
+  public void file_is_not_assignable_from_blob() throws Exception {
+    assertFalse(FILE.isAssignableFrom(BLOB));
+  }
+
+  @Test
+  public void file_array_is_not_assignable_from_blob_array() throws Exception {
+    assertFalse(arrayOf(FILE).isAssignableFrom(arrayOf(BLOB)));
+  }
+
+  @Test
+  public void file_is_not_assignable_from_string() throws Exception {
+    assertFalse(FILE.isAssignableFrom(STRING));
+  }
+
+  @Test
+  public void string_is_not_assignable_from_blob() throws Exception {
+    assertFalse(STRING.isAssignableFrom(BLOB));
+  }
+
+  @Test
+  public void string_is_not_assignable_from_file() throws Exception {
+    assertFalse(STRING.isAssignableFrom(FILE));
   }
 
   @Test
