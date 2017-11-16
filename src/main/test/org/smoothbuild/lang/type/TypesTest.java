@@ -305,15 +305,22 @@ public class TypesTest {
     assertClosest(arrayOf(STRING), arrayOf(BLOB), null, builder);
     assertClosest(arrayOf(STRING), arrayOf(FILE), null, builder);
     assertClosest(arrayOf(STRING), arrayOf(NOTHING), arrayOf(STRING), builder);
+    assertClosest(arrayOf(STRING), NOTHING, arrayOf(STRING), builder);
 
     assertClosest(arrayOf(BLOB), arrayOf(BLOB), arrayOf(BLOB), builder);
     assertClosest(arrayOf(BLOB), arrayOf(FILE), arrayOf(BLOB), builder);
     assertClosest(arrayOf(BLOB), arrayOf(NOTHING), arrayOf(BLOB), builder);
+    assertClosest(arrayOf(BLOB), NOTHING, arrayOf(BLOB), builder);
 
     assertClosest(arrayOf(FILE), arrayOf(FILE), arrayOf(FILE), builder);
     assertClosest(arrayOf(FILE), arrayOf(NOTHING), arrayOf(FILE), builder);
+    assertClosest(arrayOf(FILE), NOTHING, arrayOf(FILE), builder);
 
     assertClosest(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
+    assertClosest(arrayOf(NOTHING), NOTHING, arrayOf(NOTHING), builder);
+
+    assertClosest(arrayOf(FILE), new StructType("Struct", SString.class, arrayOf(BLOB)),
+        arrayOf(BLOB), builder);
 
     String errors = builder.toString();
     if (0 < errors.length()) {

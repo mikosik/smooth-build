@@ -2,6 +2,9 @@ package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SFile;
@@ -55,29 +58,53 @@ public class Types {
   }
 
   public static Type closestCommonConvertibleTo(Type type1, Type type2) {
-    if (type1.equals(type2)) {
-      return type1;
+    /*
+     * Algorithm below works correctly for all smooth types currently existing in
+     * smooth but doesn't work when it is possible to define user struct types. It
+     * will fail when conversion chain contains cycle (for example struct type is
+     * convertible to itself) or conversion chain has infinite length (for example
+     * structure X is convertible to its array [X])
+     */
+    Deque<Type> chain1 = conversionChain(type1);
+    Deque<Type> chain2 = conversionChain(type2);
+
+    Type type = null;
+    while (!chain1.isEmpty() && !chain2.isEmpty() && chain1.peekLast().equals(chain2.peekLast())) {
+      type = chain1.peekLast();
+      chain1.removeLast();
+      chain2.removeLast();
     }
-    if (type1.equals(NOTHING)) {
-      return type2;
+
+    if (type == null) {
+      Type last1 = chain1.peekLast();
+      Type last2 = chain2.peekLast();
+      boolean isNothing1 = last1.coreType().equals(NOTHING);
+      boolean isNothing2 = last2.coreType().equals(NOTHING);
+      if (isNothing1 && isNothing2) {
+        type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
+      } else if (isNothing1) {
+        type = firstWithDepthNotLowerThan(chain2, last1.coreDepth());
+      } else if (isNothing2) {
+        type = firstWithDepthNotLowerThan(chain1, last2.coreDepth());
+      }
     }
-    if (type2.equals(NOTHING)) {
-      return type1;
-    }
-    if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
-      return closestCommonConvertibleTo((ArrayType) type1, (ArrayType) type2);
-    }
-    if (type1.equals(BLOB) && type2.equals(FILE)) {
-      return BLOB;
-    }
-    if (type1.equals(FILE) && type2.equals(BLOB)) {
-      return BLOB;
-    }
-    return null;
+    return type;
   }
 
-  private static Type closestCommonConvertibleTo(ArrayType type1, ArrayType type2) {
-    Type commonSuperType = closestCommonConvertibleTo(type1.elemType(), type2.elemType());
-    return commonSuperType == null ? null : arrayOf(commonSuperType);
+  private static Deque<Type> conversionChain(Type type) {
+    Deque<Type> chain = new ArrayDeque<>();
+    while (type != null) {
+      chain.add(type);
+      type = type.directConvertibleTo();
+    }
+    return chain;
+  }
+
+  private static Type firstWithDepthNotLowerThan(Deque<Type> chain, int depth) {
+    return chain
+        .stream()
+        .filter(t -> depth <= t.coreDepth())
+        .findFirst()
+        .orElse(null);
   }
 }
