@@ -6,7 +6,7 @@ import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.basicTypes;
-import static org.smoothbuild.lang.type.Types.commonSuperType;
+import static org.smoothbuild.lang.type.Types.closestCommonConvertibleTo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +166,7 @@ public class AssignTypes {
           if (nonInferable.equals(type)) {
             return nonInferable;
           }
-          superType = commonSuperType(superType, type);
+          superType = closestCommonConvertibleTo(superType, type);
 
           if (superType == null) {
             errors.add(new ParseError(array,
