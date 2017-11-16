@@ -235,52 +235,52 @@ public class TypesTest {
   }
 
   @Test
-  public void common_super_type() throws Exception {
+  public void closest_common_convertible_to() throws Exception {
     StringBuilder builder = new StringBuilder();
 
-    assertCommonSuperType(STRING, STRING, STRING, builder);
-    assertCommonSuperType(STRING, BLOB, null, builder);
-    assertCommonSuperType(STRING, FILE, null, builder);
-    assertCommonSuperType(STRING, NOTHING, STRING, builder);
-    assertCommonSuperType(STRING, arrayOf(STRING), null, builder);
-    assertCommonSuperType(STRING, arrayOf(BLOB), null, builder);
-    assertCommonSuperType(STRING, arrayOf(FILE), null, builder);
-    assertCommonSuperType(STRING, arrayOf(NOTHING), null, builder);
+    assertClosest(STRING, STRING, STRING, builder);
+    assertClosest(STRING, BLOB, null, builder);
+    assertClosest(STRING, FILE, null, builder);
+    assertClosest(STRING, NOTHING, STRING, builder);
+    assertClosest(STRING, arrayOf(STRING), null, builder);
+    assertClosest(STRING, arrayOf(BLOB), null, builder);
+    assertClosest(STRING, arrayOf(FILE), null, builder);
+    assertClosest(STRING, arrayOf(NOTHING), null, builder);
 
-    assertCommonSuperType(BLOB, BLOB, BLOB, builder);
-    assertCommonSuperType(BLOB, FILE, BLOB, builder);
-    assertCommonSuperType(BLOB, NOTHING, BLOB, builder);
-    assertCommonSuperType(BLOB, arrayOf(STRING), null, builder);
-    assertCommonSuperType(BLOB, arrayOf(BLOB), null, builder);
-    assertCommonSuperType(BLOB, arrayOf(FILE), null, builder);
-    assertCommonSuperType(BLOB, arrayOf(NOTHING), null, builder);
+    assertClosest(BLOB, BLOB, BLOB, builder);
+    assertClosest(BLOB, FILE, BLOB, builder);
+    assertClosest(BLOB, NOTHING, BLOB, builder);
+    assertClosest(BLOB, arrayOf(STRING), null, builder);
+    assertClosest(BLOB, arrayOf(BLOB), null, builder);
+    assertClosest(BLOB, arrayOf(FILE), null, builder);
+    assertClosest(BLOB, arrayOf(NOTHING), null, builder);
 
-    assertCommonSuperType(FILE, FILE, FILE, builder);
-    assertCommonSuperType(FILE, NOTHING, FILE, builder);
-    assertCommonSuperType(FILE, arrayOf(STRING), null, builder);
-    assertCommonSuperType(FILE, arrayOf(BLOB), null, builder);
-    assertCommonSuperType(FILE, arrayOf(FILE), null, builder);
-    assertCommonSuperType(FILE, arrayOf(NOTHING), null, builder);
+    assertClosest(FILE, FILE, FILE, builder);
+    assertClosest(FILE, NOTHING, FILE, builder);
+    assertClosest(FILE, arrayOf(STRING), null, builder);
+    assertClosest(FILE, arrayOf(BLOB), null, builder);
+    assertClosest(FILE, arrayOf(FILE), null, builder);
+    assertClosest(FILE, arrayOf(NOTHING), null, builder);
 
-    assertCommonSuperType(NOTHING, NOTHING, NOTHING, builder);
-    assertCommonSuperType(NOTHING, arrayOf(STRING), arrayOf(STRING), builder);
-    assertCommonSuperType(NOTHING, arrayOf(BLOB), arrayOf(BLOB), builder);
-    assertCommonSuperType(NOTHING, arrayOf(FILE), arrayOf(FILE), builder);
-    assertCommonSuperType(NOTHING, arrayOf(NOTHING), arrayOf(NOTHING), builder);
+    assertClosest(NOTHING, NOTHING, NOTHING, builder);
+    assertClosest(NOTHING, arrayOf(STRING), arrayOf(STRING), builder);
+    assertClosest(NOTHING, arrayOf(BLOB), arrayOf(BLOB), builder);
+    assertClosest(NOTHING, arrayOf(FILE), arrayOf(FILE), builder);
+    assertClosest(NOTHING, arrayOf(NOTHING), arrayOf(NOTHING), builder);
 
-    assertCommonSuperType(arrayOf(STRING), arrayOf(STRING), arrayOf(STRING), builder);
-    assertCommonSuperType(arrayOf(STRING), arrayOf(BLOB), null, builder);
-    assertCommonSuperType(arrayOf(STRING), arrayOf(FILE), null, builder);
-    assertCommonSuperType(arrayOf(STRING), arrayOf(NOTHING), arrayOf(STRING), builder);
+    assertClosest(arrayOf(STRING), arrayOf(STRING), arrayOf(STRING), builder);
+    assertClosest(arrayOf(STRING), arrayOf(BLOB), null, builder);
+    assertClosest(arrayOf(STRING), arrayOf(FILE), null, builder);
+    assertClosest(arrayOf(STRING), arrayOf(NOTHING), arrayOf(STRING), builder);
 
-    assertCommonSuperType(arrayOf(BLOB), arrayOf(BLOB), arrayOf(BLOB), builder);
-    assertCommonSuperType(arrayOf(BLOB), arrayOf(FILE), arrayOf(BLOB), builder);
-    assertCommonSuperType(arrayOf(BLOB), arrayOf(NOTHING), arrayOf(BLOB), builder);
+    assertClosest(arrayOf(BLOB), arrayOf(BLOB), arrayOf(BLOB), builder);
+    assertClosest(arrayOf(BLOB), arrayOf(FILE), arrayOf(BLOB), builder);
+    assertClosest(arrayOf(BLOB), arrayOf(NOTHING), arrayOf(BLOB), builder);
 
-    assertCommonSuperType(arrayOf(FILE), arrayOf(FILE), arrayOf(FILE), builder);
-    assertCommonSuperType(arrayOf(FILE), arrayOf(NOTHING), arrayOf(FILE), builder);
+    assertClosest(arrayOf(FILE), arrayOf(FILE), arrayOf(FILE), builder);
+    assertClosest(arrayOf(FILE), arrayOf(NOTHING), arrayOf(FILE), builder);
 
-    assertCommonSuperType(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
+    assertClosest(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
 
     String errors = builder.toString();
     if (0 < errors.length()) {
@@ -288,18 +288,17 @@ public class TypesTest {
     }
   }
 
-  private static void assertCommonSuperType(Type type1, Type type2, Type expected,
-      StringBuilder builder) {
-    assertCommonSuperTypeImpl(type1, type2, expected, builder);
-    assertCommonSuperTypeImpl(type2, type1, expected, builder);
+  private static void assertClosest(Type type1, Type type2, Type expected, StringBuilder builder) {
+    assertClosestImpl(type1, type2, expected, builder);
+    assertClosestImpl(type2, type1, expected, builder);
   }
 
-  private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected,
+  private static void assertClosestImpl(Type type1, Type type2, Type expected,
       StringBuilder builder) {
-    Type actual = Types.commonSuperType(type1, type2);
+    Type actual = Types.closestCommonConvertibleTo(type1, type2);
     if (!Objects.equal(expected, actual)) {
-      builder.append("commonSuperType(" + type1 + "," + type2 + ") = " + actual + " but should = "
-          + expected + "\n");
+      builder.append("closestCommonConvertibleTo(" + type1 + "," + type2 + ") = " + actual
+          + " but should = " + expected + "\n");
     }
   }
 }

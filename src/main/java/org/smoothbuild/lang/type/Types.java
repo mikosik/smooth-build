@@ -54,7 +54,7 @@ public class Types {
     return null;
   }
 
-  public static Type commonSuperType(Type type1, Type type2) {
+  public static Type closestCommonConvertibleTo(Type type1, Type type2) {
     if (type1.equals(type2)) {
       return type1;
     }
@@ -65,7 +65,7 @@ public class Types {
       return type1;
     }
     if (type1 instanceof ArrayType && type2 instanceof ArrayType) {
-      return commonSuperType((ArrayType) type1, (ArrayType) type2);
+      return closestCommonConvertibleTo((ArrayType) type1, (ArrayType) type2);
     }
     if (type1.equals(BLOB) && type2.equals(FILE)) {
       return BLOB;
@@ -76,8 +76,8 @@ public class Types {
     return null;
   }
 
-  private static Type commonSuperType(ArrayType type1, ArrayType type2) {
-    Type commonSuperType = commonSuperType(type1.elemType(), type2.elemType());
+  private static Type closestCommonConvertibleTo(ArrayType type1, ArrayType type2) {
+    Type commonSuperType = closestCommonConvertibleTo(type1.elemType(), type2.elemType());
     return commonSuperType == null ? null : arrayOf(commonSuperType);
   }
 }
