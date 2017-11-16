@@ -160,15 +160,15 @@ public class AssignTypes {
         if (nonInferable.equals(firstType)) {
           return nonInferable;
         }
-        Type superType = firstType;
+        Type elemType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
           if (nonInferable.equals(type)) {
             return nonInferable;
           }
-          superType = closestCommonConvertibleTo(superType, type);
+          elemType = closestCommonConvertibleTo(elemType, type);
 
-          if (superType == null) {
+          if (elemType == null) {
             errors.add(new ParseError(array,
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type '" + firstType + "' while element at index " + i
@@ -176,13 +176,13 @@ public class AssignTypes {
             return nonInferable;
           }
         }
-        if (!basicTypes().contains(superType)) {
+        if (!basicTypes().contains(elemType)) {
           errors.add(new ParseError(array, "Array cannot contain element with type '"
-              + superType + "'. Only following types are allowed: " + basicTypes()
+              + elemType + "'. Only following types are allowed: " + basicTypes()
               + "."));
           return nonInferable;
         }
-        return arrayOf(superType);
+        return arrayOf(elemType);
       }
 
       @Override
