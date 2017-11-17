@@ -26,6 +26,10 @@ public class Type {
     return jType;
   }
 
+  public Type directConvertibleTo() {
+    return null;
+  }
+
   public boolean isAssignableFrom(Type type) {
     if (type.equals(NOTHING)) {
       return true;

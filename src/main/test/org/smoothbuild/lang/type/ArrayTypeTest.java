@@ -22,4 +22,11 @@ public class ArrayTypeTest {
     assertEquals(arrayOf(FILE), arrayOf(arrayOf(FILE)).elemType());
     assertEquals(arrayOf(NOTHING), arrayOf(arrayOf(NOTHING)).elemType());
   }
+
+  @Test
+  public void direct_convertible_to() throws Exception {
+    assertEquals(arrayOf(BLOB), arrayOf(FILE).directConvertibleTo());
+    assertEquals(null, arrayOf(STRING).directConvertibleTo());
+    assertEquals(null, arrayOf(NOTHING).directConvertibleTo());
+  }
 }
