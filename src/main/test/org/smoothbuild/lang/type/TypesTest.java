@@ -32,6 +32,21 @@ public class TypesTest {
   private ArrayType type;
 
   @Test
+  public void core_type() throws Exception {
+    assertEquals(STRING, STRING.coreType());
+    assertEquals(FILE, FILE.coreType());
+    assertEquals(NOTHING, NOTHING.coreType());
+
+    assertEquals(STRING, arrayOf(STRING).coreType());
+    assertEquals(FILE, arrayOf(FILE).coreType());
+    assertEquals(NOTHING, arrayOf(NOTHING).coreType());
+
+    assertEquals(STRING, arrayOf(arrayOf(STRING)).coreType());
+    assertEquals(FILE, arrayOf(arrayOf(FILE)).coreType());
+    assertEquals(NOTHING, arrayOf(arrayOf(NOTHING)).coreType());
+  }
+
+  @Test
   public void basic_types() {
     when(basicTypes());
     thenReturned(containsInAnyOrder(STRING, BLOB, FILE, NOTHING));

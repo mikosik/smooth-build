@@ -26,6 +26,10 @@ public class Type {
     return jType;
   }
 
+  public Type coreType() {
+    return this;
+  }
+
   public Type directConvertibleTo() {
     return null;
   }
