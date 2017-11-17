@@ -49,4 +49,11 @@ public class ArrayType extends Type {
     }
     return 0;
   }
+
+  public static Type deepestElemType(Type type) {
+    if (type instanceof ArrayType) {
+      return deepestElemType(((ArrayType) type).elemType);
+    }
+    return type;
+  }
 }
