@@ -2,7 +2,6 @@ package org.smoothbuild.lang.type;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.ArrayType.deepestElemType;
 import static org.smoothbuild.lang.type.ArrayType.depthOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
@@ -48,20 +47,5 @@ public class ArrayTypeTest {
     assertEquals(2, depthOf(arrayOf(arrayOf(BLOB))));
     assertEquals(2, depthOf(arrayOf(arrayOf(FILE))));
     assertEquals(2, depthOf(arrayOf(arrayOf(NOTHING))));
-  }
-
-  @Test
-  public void deepest_elem_type() throws Exception {
-    assertEquals(STRING, deepestElemType(STRING));
-    assertEquals(FILE, deepestElemType(FILE));
-    assertEquals(NOTHING, deepestElemType(NOTHING));
-
-    assertEquals(STRING, deepestElemType(arrayOf(STRING)));
-    assertEquals(FILE, deepestElemType(arrayOf(FILE)));
-    assertEquals(NOTHING, deepestElemType(arrayOf(NOTHING)));
-
-    assertEquals(STRING, deepestElemType(arrayOf(STRING)));
-    assertEquals(FILE, deepestElemType(arrayOf(FILE)));
-    assertEquals(NOTHING, deepestElemType(arrayOf(NOTHING)));
   }
 }
