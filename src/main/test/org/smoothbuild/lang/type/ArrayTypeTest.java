@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
+import static org.smoothbuild.lang.type.ArrayType.depthOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
@@ -28,5 +29,23 @@ public class ArrayTypeTest {
     assertEquals(arrayOf(BLOB), arrayOf(FILE).directConvertibleTo());
     assertEquals(null, arrayOf(STRING).directConvertibleTo());
     assertEquals(null, arrayOf(NOTHING).directConvertibleTo());
+  }
+
+  @Test
+  public void depth_of() throws Exception {
+    assertEquals(0, depthOf(STRING));
+    assertEquals(0, depthOf(BLOB));
+    assertEquals(0, depthOf(FILE));
+    assertEquals(0, depthOf(NOTHING));
+
+    assertEquals(1, depthOf(arrayOf(STRING)));
+    assertEquals(1, depthOf(arrayOf(BLOB)));
+    assertEquals(1, depthOf(arrayOf(FILE)));
+    assertEquals(1, depthOf(arrayOf(NOTHING)));
+
+    assertEquals(2, depthOf(arrayOf(arrayOf(STRING))));
+    assertEquals(2, depthOf(arrayOf(arrayOf(BLOB))));
+    assertEquals(2, depthOf(arrayOf(arrayOf(FILE))));
+    assertEquals(2, depthOf(arrayOf(arrayOf(NOTHING))));
   }
 }
