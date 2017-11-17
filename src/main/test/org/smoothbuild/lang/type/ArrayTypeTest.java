@@ -12,14 +12,14 @@ import org.junit.Test;
 public class ArrayTypeTest {
   @Test
   public void array_elem_types() {
-    assertEquals(arrayOf(STRING).elemType(), STRING);
-    assertEquals(arrayOf(BLOB).elemType(), BLOB);
-    assertEquals(arrayOf(FILE).elemType(), FILE);
-    assertEquals(arrayOf(NOTHING).elemType(), NOTHING);
+    assertEquals(STRING, arrayOf(STRING).elemType());
+    assertEquals(BLOB, arrayOf(BLOB).elemType());
+    assertEquals(FILE, arrayOf(FILE).elemType());
+    assertEquals(NOTHING, arrayOf(NOTHING).elemType());
 
-    assertEquals(arrayOf(arrayOf(STRING)).elemType(), arrayOf(STRING));
-    assertEquals(arrayOf(arrayOf(BLOB)).elemType(), arrayOf(BLOB));
-    assertEquals(arrayOf(arrayOf(FILE)).elemType(), arrayOf(FILE));
-    assertEquals(arrayOf(arrayOf(NOTHING)).elemType(), arrayOf(NOTHING));
+    assertEquals(arrayOf(STRING), arrayOf(arrayOf(STRING)).elemType());
+    assertEquals(arrayOf(BLOB), arrayOf(arrayOf(BLOB)).elemType());
+    assertEquals(arrayOf(FILE), arrayOf(arrayOf(FILE)).elemType());
+    assertEquals(arrayOf(NOTHING), arrayOf(arrayOf(NOTHING)).elemType());
   }
 }
