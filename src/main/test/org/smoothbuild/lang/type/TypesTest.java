@@ -47,6 +47,24 @@ public class TypesTest {
   }
 
   @Test
+  public void core_depth() throws Exception {
+    assertEquals(0, STRING.coreDepth());
+    assertEquals(0, BLOB.coreDepth());
+    assertEquals(0, FILE.coreDepth());
+    assertEquals(0, NOTHING.coreDepth());
+
+    assertEquals(1, arrayOf(STRING).coreDepth());
+    assertEquals(1, arrayOf(BLOB).coreDepth());
+    assertEquals(1, arrayOf(FILE).coreDepth());
+    assertEquals(1, arrayOf(NOTHING).coreDepth());
+
+    assertEquals(2, arrayOf(arrayOf(STRING)).coreDepth());
+    assertEquals(2, arrayOf(arrayOf(BLOB)).coreDepth());
+    assertEquals(2, arrayOf(arrayOf(FILE)).coreDepth());
+    assertEquals(2, arrayOf(arrayOf(NOTHING)).coreDepth());
+  }
+
+  @Test
   public void basic_types() {
     when(basicTypes());
     thenReturned(containsInAnyOrder(STRING, BLOB, FILE, NOTHING));

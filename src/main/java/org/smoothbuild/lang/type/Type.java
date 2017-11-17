@@ -30,6 +30,10 @@ public class Type {
     return this;
   }
 
+  public int coreDepth() {
+    return 0;
+  }
+
   public Type directConvertibleTo() {
     return null;
   }
