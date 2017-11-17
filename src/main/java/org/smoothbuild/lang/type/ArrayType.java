@@ -42,4 +42,11 @@ public class ArrayType extends Type {
   public final int hashCode() {
     return Objects.hash(13, elemType.hashCode());
   }
+
+  public static int depthOf(Type type) {
+    if (type instanceof ArrayType) {
+      return 1 + depthOf(((ArrayType) type).elemType);
+    }
+    return 0;
+  }
 }
