@@ -26,6 +26,11 @@ public class ArrayType extends Type {
   }
 
   @Override
+  public int coreDepth() {
+    return 1 + elemType.coreDepth();
+  }
+
+  @Override
   public ArrayType directConvertibleTo() {
     Type elemConvertibleTo = elemType.directConvertibleTo();
     return elemConvertibleTo == null ? null : arrayOf(elemConvertibleTo);
@@ -46,12 +51,5 @@ public class ArrayType extends Type {
   @Override
   public final int hashCode() {
     return Objects.hash(13, elemType.hashCode());
-  }
-
-  public static int depthOf(Type type) {
-    if (type instanceof ArrayType) {
-      return 1 + depthOf(((ArrayType) type).elemType);
-    }
-    return 0;
   }
 }
