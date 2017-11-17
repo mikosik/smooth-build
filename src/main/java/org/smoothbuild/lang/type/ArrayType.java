@@ -21,6 +21,12 @@ public class ArrayType extends Type {
   }
 
   @Override
+  public ArrayType directConvertibleTo() {
+    Type elemConvertibleTo = elemType.directConvertibleTo();
+    return elemConvertibleTo == null ? null : arrayOf(elemConvertibleTo);
+  }
+
+  @Override
   public final boolean equals(Object object) {
     if (object == null) {
       return false;

@@ -12,6 +12,7 @@ public class StructType extends Type {
     this.directConvertibleTo = directConvertibleTo;
   }
 
+  @Override
   public Type directConvertibleTo() {
     return directConvertibleTo;
   }
