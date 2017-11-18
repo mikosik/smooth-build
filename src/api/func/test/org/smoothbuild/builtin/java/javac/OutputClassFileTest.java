@@ -13,13 +13,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Streams;
 
 public class OutputClassFileTest {
-  private final Container container = containerImpl();
+  private final NativeApi nativeApi = containerImpl();
   private final Path path = Path.path("my/path");
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 
@@ -28,8 +28,8 @@ public class OutputClassFileTest {
 
   @Test
   public void open_output_stream() throws IOException {
-    given(fileArrayBuilder = container.create().arrayBuilder(FILE));
-    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, container));
+    given(fileArrayBuilder = nativeApi.create().arrayBuilder(FILE));
+    given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
     Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
     when(() -> fileArrayBuilder.build().asIterable(SFile.class));
     thenReturned(contains(file(memoryValuesDb(), path, bytes)));
@@ -37,8 +37,8 @@ public class OutputClassFileTest {
 
   @Test
   public void get_name_returns_file_path() throws Exception {
-    given(outputClassFile = new OutputClassFile(container.create().arrayBuilder(FILE), path,
-        container));
+    given(outputClassFile = new OutputClassFile(nativeApi.create().arrayBuilder(FILE), path,
+        nativeApi));
     when(outputClassFile.getName());
     thenReturned("/" + path.value());
   }

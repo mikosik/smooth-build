@@ -16,7 +16,7 @@ import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.WarningMessage;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -25,12 +25,12 @@ import org.smoothbuild.lang.value.SString;
 
 public class JunitFunction {
   @SmoothFunction
-  public static SString junit(Container container, Array libs, SString include) {
+  public static SString junit(NativeApi nativeApi, Array libs, SString include) {
     ArrayList<Blob> libBlobs = new ArrayList<>();
     for (Blob lib : libs.asIterable(Blob.class)) {
       libBlobs.add(lib);
     }
-    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(container, libBlobs);
+    Map<String, SFile> binaryNameToClassFile = binaryNameToClassFile(nativeApi, libBlobs);
     FileClassLoader classLoader = new FileClassLoader(binaryNameToClassFile);
     ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
@@ -46,17 +46,17 @@ public class JunitFunction {
           Result result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
             for (Failure failure : result.getFailures()) {
-              container.log(new ErrorMessage("test failed: " + failure.toString() + "\n" + failure
+              nativeApi.log(new ErrorMessage("test failed: " + failure.toString() + "\n" + failure
                   .getTrace()));
             }
-            return container.create().string("FAILURE");
+            return nativeApi.create().string("FAILURE");
           }
         }
       }
       if (testCount == 0) {
-        container.log(new WarningMessage("No junit tests found."));
+        nativeApi.log(new WarningMessage("No junit tests found."));
       }
-      return container.create().string("SUCCESS");
+      return nativeApi.create().string("SUCCESS");
     } finally {
       Thread.currentThread().setContextClassLoader(origClassLoader);
     }

@@ -8,20 +8,20 @@ import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.InfoMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.WarningMessage;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
-  private final Container container;
+  private final NativeApi nativeApi;
   private boolean errorReported;
 
-  public LoggingDiagnosticListener(Container container) {
-    this.container = container;
+  public LoggingDiagnosticListener(NativeApi nativeApi) {
+    this.nativeApi = nativeApi;
     this.errorReported = false;
   }
 
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-    container.log(newMessage(diagnostic));
+    nativeApi.log(newMessage(diagnostic));
     errorReported = true;
   }
 

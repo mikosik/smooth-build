@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
@@ -16,12 +16,12 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(Container container,
+  public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, SFile> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
-      Array fileArray = UnzipFunction.unzip(container, jarBlob, isClassFilePredicate());
+      Array fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
       for (SFile classFile : fileArray.asIterable(SFile.class)) {
         String classFilePath = classFile.path().value();
         String binaryName = toBinaryName(classFilePath);

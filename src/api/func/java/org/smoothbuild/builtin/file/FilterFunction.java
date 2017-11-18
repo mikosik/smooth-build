@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -18,9 +18,9 @@ import org.smoothbuild.lang.value.SString;
 
 public class FilterFunction {
   @SmoothFunction
-  public static Array filter(Container container, Array files, SString include) {
+  public static Array filter(NativeApi nativeApi, Array files, SString include) {
     Predicate<Path> filter = createFilter(include.value());
-    ArrayBuilder builder = container.create().arrayBuilder(FILE);
+    ArrayBuilder builder = nativeApi.create().arrayBuilder(FILE);
 
     for (SFile file : files.asIterable(SFile.class)) {
       if (filter.test(path(file.path().value()))) {

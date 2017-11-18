@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SFile;
@@ -22,20 +22,20 @@ import org.smoothbuild.util.CommandExecutor;
 public class AidlFunction {
 
   @SmoothFunction
-  public static SFile aidl(Container container, SString apiLevel, SString buildToolsVersion,
+  public static SFile aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
       SFile interfaceFile) throws InterruptedException {
-    return execute(container, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
+    return execute(nativeApi, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
   }
 
-  private static SFile execute(Container container, String buildToolsVersion, String apiLevel,
+  private static SFile execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
       SFile interfaceFile) throws InterruptedException {
     String aidlBinary = AndroidSdk.getAidlBinaryPath(buildToolsVersion).toString();
     String frameworkAidl = AndroidSdk.getFrameworkAidl(apiLevel).toString();
 
-    TempDir inputFilesDir = container.createTempDir();
+    TempDir inputFilesDir = nativeApi.createTempDir();
     inputFilesDir.writeFile(interfaceFile);
 
-    TempDir outputFilesDir = container.createTempDir();
+    TempDir outputFilesDir = nativeApi.createTempDir();
 
     List<String> command = new ArrayList<>();
     command.add(aidlBinary);
