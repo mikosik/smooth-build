@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -10,5 +10,5 @@ public interface Computation {
 
   public Type resultType();
 
-  public Output execute(Input input, ContainerImpl container);
+  public Output execute(Input input, Container container);
 }

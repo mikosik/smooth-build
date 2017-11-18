@@ -7,7 +7,7 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -29,11 +29,11 @@ public class ArrayComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, ContainerImpl container) {
+  public Output execute(Input input, Container container) {
     return new Output(inputToArray(input, container));
   }
 
-  private Array inputToArray(Input input, ContainerImpl container) {
+  private Array inputToArray(Input input, Container container) {
     ArrayBuilder builder = container.create().arrayBuilder(arrayType.elemType());
     for (Value value : input.values()) {
       builder.add(value);

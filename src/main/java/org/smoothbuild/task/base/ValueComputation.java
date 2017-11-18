@@ -4,7 +4,7 @@ import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -26,7 +26,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, ContainerImpl container) {
+  public Output execute(Input input, Container container) {
     return new Output(value);
   }
 }

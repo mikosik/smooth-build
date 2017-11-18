@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -25,7 +25,7 @@ public class IdentityComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, ContainerImpl container) {
+  public Output execute(Input input, Container container) {
     return new Output(input.values().get(0));
   }
 }

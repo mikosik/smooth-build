@@ -12,12 +12,12 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 public class FileReader {
-  private final ContainerImpl container;
+  private final Container container;
 
-  public FileReader(ContainerImpl container) {
+  public FileReader(Container container) {
     this.container = container;
   }
 

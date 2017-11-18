@@ -14,12 +14,12 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 public class FilesFunction {
   @SmoothFunction
   @NotCacheable
-  public static Array files(ContainerImpl container, SString dir) {
+  public static Array files(Container container, SString dir) {
     Path path = validatedProjectPath("dir", dir);
     FileSystem fileSystem = container.fileSystem();
 
@@ -39,7 +39,7 @@ public class FilesFunction {
     }
   }
 
-  private static Array readFiles(ContainerImpl container, FileSystem fileSystem, Path dir) {
+  private static Array readFiles(Container container, FileSystem fileSystem, Path dir) {
     ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(FILE);
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
