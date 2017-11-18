@@ -37,7 +37,7 @@ public class BlobArrayTest {
   @Test
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(array = valuesDb.read(arrayOf(BLOB), hash));
+    given(array = (Array) valuesDb.read(arrayOf(BLOB), hash));
     when(array).asIterable(Blob.class);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
