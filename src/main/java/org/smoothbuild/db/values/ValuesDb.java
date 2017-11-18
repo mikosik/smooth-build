@@ -67,10 +67,6 @@ public class ValuesDb implements ValueFactory {
     return storeStringInDb(string, hashedDb);
   }
 
-  public Array read(ArrayType type, HashCode hash) {
-    return (Array) read((Type) type, hash);
-  }
-
   public Value read(Type type, HashCode hash) {
     return valueConstructor(type).apply(hash);
   }

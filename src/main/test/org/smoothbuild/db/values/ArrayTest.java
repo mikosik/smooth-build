@@ -144,7 +144,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> valuesDb.read(arrayOf(STRING), array.hash()).asIterable(SString.class));
+    when(() -> ((Array) valuesDb.read(arrayOf(STRING), array.hash())).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 
