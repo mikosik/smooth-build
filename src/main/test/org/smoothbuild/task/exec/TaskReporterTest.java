@@ -72,7 +72,7 @@ public class TaskReporterTest {
     }
 
     @Override
-    public Output evaluate(Input input, ContainerImpl container) {
+    public Output evaluate(Input input, Container container) {
       return null;
     }
   }

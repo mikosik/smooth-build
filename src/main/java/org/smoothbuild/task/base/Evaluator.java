@@ -8,7 +8,7 @@ import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -71,7 +71,7 @@ public class Evaluator {
     return location;
   }
 
-  public Output evaluate(Input input, ContainerImpl container) {
+  public Output evaluate(Input input, Container container) {
     return computation.execute(input, container);
   }
 }

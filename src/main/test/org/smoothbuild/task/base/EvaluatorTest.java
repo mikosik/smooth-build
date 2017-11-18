@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.smoothbuild.lang.message.Location;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 public class EvaluatorTest {
   private final String name = "name";
@@ -64,7 +64,7 @@ public class EvaluatorTest {
     }
 
     @Override
-    public Output evaluate(Input input, ContainerImpl container) {
+    public Output evaluate(Input input, Container container) {
       return null;
     }
   }

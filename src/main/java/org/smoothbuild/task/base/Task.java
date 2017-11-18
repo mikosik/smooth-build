@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -42,7 +42,7 @@ public class Task {
     return evaluator.location();
   }
 
-  public void execute(ContainerImpl container, Input input) {
+  public void execute(Container container, Input input) {
     output = evaluator.evaluate(input, container);
   }
 

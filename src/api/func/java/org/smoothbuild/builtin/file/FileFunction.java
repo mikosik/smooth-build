@@ -10,12 +10,12 @@ import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {
   @SmoothFunction
   @NotCacheable
-  public static SFile file(ContainerImpl container, SString path) {
+  public static SFile file(Container container, SString path) {
     Path validatedPath = validatedProjectPath("path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
       throw errorException("Reading file from '.smooth' dir is not allowed.");

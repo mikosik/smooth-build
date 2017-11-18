@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
+import static org.smoothbuild.task.exec.Container.container;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -22,7 +22,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest {
-  private final NativeApi nativeApi = containerImpl();
+  private final NativeApi nativeApi = container();
   private Blob blob;
   private SFile file1;
   private SFile file2;

@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
+import static org.smoothbuild.task.exec.Container.container;
 import static org.smoothbuild.testing.common.JarTester.jar;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -20,7 +20,7 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 
 public class PackagedJavaFileObjectsTest {
-  private final NativeApi nativeApi = containerImpl();
+  private final NativeApi nativeApi = container();
   private SFile file1;
   private SFile file2;
   private Blob jar;

@@ -16,11 +16,11 @@ import com.google.common.hash.Hasher;
 public class TaskExecutor {
   private final OutputsDb outputsDb;
   private final TaskReporter reporter;
-  private final Provider<ContainerImpl> containerProvider;
+  private final Provider<Container> containerProvider;
 
   @Inject
   public TaskExecutor(OutputsDb outputsDb, TaskReporter reporter,
-      Provider<ContainerImpl> containerProvider) {
+      Provider<Container> containerProvider) {
     this.outputsDb = outputsDb;
     this.reporter = reporter;
     this.containerProvider = containerProvider;
@@ -33,7 +33,7 @@ public class TaskExecutor {
       Output output = outputsDb.read(hash, task.resultType());
       task.setOutput(output);
     } else {
-      ContainerImpl container = containerProvider.get();
+      Container container = containerProvider.get();
       try {
         task.execute(container, input);
       } finally {

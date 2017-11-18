@@ -28,7 +28,7 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.util.Maybe;
 
 public class FindNatives {
@@ -91,7 +91,7 @@ public class FindNatives {
 
   private static boolean hasContainerParameter(Method method) {
     Class<?>[] types = method.getParameterTypes();
-    return types.length != 0 && (types[0] == NativeApi.class || types[0] == ContainerImpl.class);
+    return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
   private static String error(JarFile jarFile, Method method, String message) {

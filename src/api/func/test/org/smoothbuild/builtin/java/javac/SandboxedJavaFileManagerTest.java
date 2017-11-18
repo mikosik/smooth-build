@@ -1,7 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
-import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
+import static org.smoothbuild.task.exec.Container.container;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
@@ -18,7 +18,7 @@ import org.smoothbuild.lang.plugin.NativeApi;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final NativeApi nativeApi = containerImpl();
+  private final NativeApi nativeApi = container();
   private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
   private SandboxedJavaFileManager manager;
 

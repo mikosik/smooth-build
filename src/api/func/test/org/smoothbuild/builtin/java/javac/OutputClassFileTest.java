@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.java.javac;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.task.exec.ContainerImpl.containerImpl;
+import static org.smoothbuild.task.exec.Container.container;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -19,7 +19,7 @@ import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.util.Streams;
 
 public class OutputClassFileTest {
-  private final NativeApi nativeApi = containerImpl();
+  private final NativeApi nativeApi = container();
   private final Path path = Path.path("my/path");
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 

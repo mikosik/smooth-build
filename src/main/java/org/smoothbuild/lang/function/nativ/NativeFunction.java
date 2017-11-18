@@ -18,7 +18,7 @@ import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
-import org.smoothbuild.task.exec.ContainerImpl;
+import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
@@ -56,7 +56,7 @@ public class NativeFunction extends Function {
     return new NativeCallExpression(this, isGenerated, location);
   }
 
-  public Output invoke(ContainerImpl container, List<Value> arguments) {
+  public Output invoke(Container container, List<Value> arguments) {
     try {
       Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
       if (result == null) {

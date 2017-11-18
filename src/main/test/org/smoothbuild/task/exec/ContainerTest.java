@@ -21,37 +21,37 @@ import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 
-public class ContainerImplTest {
+public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final TempManager tempDirProvider = mock(TempManager.class);
 
-  private ContainerImpl containerImpl;
+  private Container container;
   private Message message;
   private TempDir tempDir;
 
   @Before
   public void before() {
-    given(containerImpl = new ContainerImpl(fileSystem, memoryValuesDb(), tempDirProvider));
+    given(container = new Container(fileSystem, memoryValuesDb(), tempDirProvider));
   }
 
   @Test
   public void file_system() throws Exception {
-    when(containerImpl.fileSystem());
+    when(container.fileSystem());
     thenReturned(same(fileSystem));
   }
 
   @Test
   public void messages_are_logged() throws Exception {
     given(message = new ErrorMessage("message"));
-    when(containerImpl).log(message);
-    then(containerImpl.messages(), contains(message));
+    when(container).log(message);
+    then(container.messages(), contains(message));
   }
 
   @Test
   public void create_temp_dir_call_is_forwarded_to_temp_dir_manager() throws Exception {
     given(tempDir = mock(TempDir.class));
     given(willReturn(tempDir), tempDirProvider).tempDir(any(ValuesDb.class));
-    when(containerImpl).createTempDir();
+    when(container).createTempDir();
     thenReturned(tempDir);
   }
 }
