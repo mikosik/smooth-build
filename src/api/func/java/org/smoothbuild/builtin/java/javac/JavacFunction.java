@@ -21,7 +21,7 @@ import javax.tools.ToolProvider;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.WarningMessage;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -30,9 +30,9 @@ import org.smoothbuild.lang.value.SString;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array javac(Container container, Array sources, Array libs, SString source,
+  public static Array javac(NativeApi nativeApi, Array sources, Array libs, SString source,
       SString target) {
-    return new Worker(container, sources, libs, source, target).execute();
+    return new Worker(nativeApi, sources, libs, source, target).execute();
   }
 
   private static class Worker {
@@ -42,19 +42,19 @@ public class JavacFunction {
         "1.5", "5", "1.6", "6", "1.7", "7", "1.8", "8");
 
     private final JavaCompiler compiler;
-    private final Container container;
+    private final NativeApi nativeApi;
     private final Array sources;
     private final Array libs;
     private final SString source;
     private final SString target;
 
-    public Worker(Container container,
+    public Worker(NativeApi nativeApi,
         Array sources,
         Array libs,
         SString source,
         SString target) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
-      this.container = container;
+      this.nativeApi = nativeApi;
       this.sources = sources;
       this.libs = libs;
       this.source = source;
@@ -73,7 +73,7 @@ public class JavacFunction {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
-      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(container);
+      LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
       Iterable<String> options = options();
       SandboxedJavaFileManager fileManager = fileManager(diagnostic);
 
@@ -84,8 +84,8 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          container.log(new WarningMessage("Param 'sources' is empty list."));
-          return container.create().arrayBuilder(FILE).build();
+          nativeApi.log(new WarningMessage("Param 'sources' is empty list."));
+          return nativeApi.create().arrayBuilder(FILE).build();
         }
 
         // run compilation task
@@ -96,12 +96,12 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          container.log(new ErrorMessage(
+          nativeApi.log(new ErrorMessage(
               "Internal error: Compilation failed but JavaCompiler reported no error message."));
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          container.log(new WarningMessage(additionalInfo));
+          nativeApi.log(new WarningMessage(additionalInfo));
         }
         return fileManager.resultClassfiles();
       } finally {
@@ -142,9 +142,9 @@ public class JavacFunction {
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Iterable<InputClassFile> libsClasses = classesFromJars(container, libs.asIterable(
+      Iterable<InputClassFile> libsClasses = classesFromJars(nativeApi, libs.asIterable(
           Blob.class));
-      return new SandboxedJavaFileManager(fileManager, container, libsClasses);
+      return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<SFile> sourceFiles) {

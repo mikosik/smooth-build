@@ -13,10 +13,10 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ValueFactory;
 
-public class ContainerImpl implements Container {
+public class ContainerImpl implements NativeApi {
   private final FileSystem fileSystem;
   private final ValuesDb valuesDb;
   private final TempManager tempManager;

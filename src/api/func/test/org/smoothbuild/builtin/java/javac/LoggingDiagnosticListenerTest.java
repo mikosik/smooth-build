@@ -16,11 +16,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class LoggingDiagnosticListenerTest {
   private final Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
-  private final Container container = mock(Container.class);
+  private final NativeApi nativeApi = mock(NativeApi.class);
   private LoggingDiagnosticListener listener;
 
   @Before
@@ -31,21 +31,21 @@ public class LoggingDiagnosticListenerTest {
 
   @Test
   public void diagnostic_is_reported_as_error() {
-    given(listener = new LoggingDiagnosticListener(container));
+    given(listener = new LoggingDiagnosticListener(nativeApi));
     when(listener).report(diagnostic);
-    thenCalled(container).log(any(Message.class, instanceOf(ErrorMessage.class)));
+    thenCalled(nativeApi).log(any(Message.class, instanceOf(ErrorMessage.class)));
   }
 
   @Test
   public void initially_no_error_is_reported() throws Exception {
-    given(listener = new LoggingDiagnosticListener(container));
+    given(listener = new LoggingDiagnosticListener(nativeApi));
     when(listener).errorReported();
     thenReturned(false);
   }
 
   @Test
   public void error_reported_returns_true_when_diagnostic_has_been_reported() throws Exception {
-    given(listener = new LoggingDiagnosticListener(container));
+    given(listener = new LoggingDiagnosticListener(nativeApi));
     given(listener).report(diagnostic);
     when(listener).errorReported();
     thenReturned(true);

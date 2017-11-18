@@ -15,12 +15,12 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.message.MessageException;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 
 public class PackagedJavaFileObjectsTest {
-  private final Container container = containerImpl();
+  private final NativeApi nativeApi = containerImpl();
   private SFile file1;
   private SFile file2;
   private Blob jar;
@@ -30,7 +30,7 @@ public class PackagedJavaFileObjectsTest {
     given(file1 = file(memoryValuesDb(), path("my/package/MyKlass.class")));
     given(file2 = file(memoryValuesDb(), path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
-    when(classesFromJars(container, asList(jar)));
+    when(classesFromJars(nativeApi, asList(jar)));
     thenReturned(containsInAnyOrder(new InputClassFile(file1), new InputClassFile(file2)));
   }
 
@@ -38,7 +38,7 @@ public class PackagedJavaFileObjectsTest {
   public void duplicateClassFileException() throws Exception {
     given(file1 = file(memoryValuesDb(), path("my/package/MyKlass.class")));
     given(jar = jar(file1));
-    when(() -> classesFromJars(container, asList(jar, jar)));
+    when(() -> classesFromJars(nativeApi, asList(jar, jar)));
     thenThrown(MessageException.class);
   }
 }

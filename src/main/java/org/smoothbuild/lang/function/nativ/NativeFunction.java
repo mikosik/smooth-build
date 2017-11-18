@@ -15,7 +15,7 @@ import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.MessageException;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.exec.ContainerImpl;
@@ -89,9 +89,9 @@ public class NativeFunction extends Function {
     }
   }
 
-  private static Object[] createArguments(Container container, List<Value> arguments) {
+  private static Object[] createArguments(NativeApi nativeApi, List<Value> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
-    nativeArguments[0] = container;
+    nativeArguments[0] = nativeApi;
     for (int i = 0; i < arguments.size(); i++) {
       nativeArguments[i + 1] = arguments.get(i);
     }

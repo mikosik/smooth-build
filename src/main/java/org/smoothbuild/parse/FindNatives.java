@@ -26,7 +26,7 @@ import java.util.jar.JarInputStream;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.ContainerImpl;
 import org.smoothbuild.util.Maybe;
@@ -74,7 +74,7 @@ public class FindNatives {
                 } else if (!hasContainerParameter(method)) {
                   errors.add(error(jarFile, method,
                       "Providing method should have first parameter of type "
-                          + Container.class.getCanonicalName() + "."));
+                          + NativeApi.class.getCanonicalName() + "."));
                 } else {
                   result.put(name, new Native(method, jarFile));
                 }
@@ -91,7 +91,7 @@ public class FindNatives {
 
   private static boolean hasContainerParameter(Method method) {
     Class<?>[] types = method.getParameterTypes();
-    return types.length != 0 && (types[0] == Container.class || types[0] == ContainerImpl.class);
+    return types.length != 0 && (types[0] == NativeApi.class || types[0] == ContainerImpl.class);
   }
 
   private static String error(JarFile jarFile, Method method, String message) {

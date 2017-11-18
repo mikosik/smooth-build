@@ -21,7 +21,7 @@ import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.IllegalPathException;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -33,13 +33,13 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
   @SmoothFunction
-  public static Array unzip(Container container, Blob blob) {
-    return unzip(container, blob, x -> true);
+  public static Array unzip(NativeApi nativeApi, Blob blob) {
+    return unzip(nativeApi, blob, x -> true);
   }
 
-  public static Array unzip(Container container, Blob blob, Predicate<String> filter) {
+  public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(FILE);
+    ArrayBuilder fileArrayBuilder = nativeApi.create().arrayBuilder(FILE);
     try {
       File tempFile = copyToTempFile(blob);
       try (ZipFile zipFile = new ZipFile(tempFile)) {
@@ -48,7 +48,7 @@ public class UnzipFunction {
           ZipEntry entry = entries.nextElement();
           String name = entry.getName();
           if (!name.endsWith("/") && filter.test(name)) {
-            SFile unzippedEntry = unzipEntry(container, zipFile.getInputStream(entry), entry);
+            SFile unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
             String fileName = unzippedEntry.path().value();
             if (duplicatesDetector.addValue(fileName)) {
               throw errorException("archive contains two files with the same path = " + fileName);
@@ -72,7 +72,7 @@ public class UnzipFunction {
     return tempFile;
   }
 
-  private static SFile unzipEntry(Container container, InputStream inputStream, ZipEntry entry) {
+  private static SFile unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
     try {
       path(fileName);
@@ -80,15 +80,15 @@ public class UnzipFunction {
       throw errorException("File in archive has illegal name = '" + fileName + "'");
     }
 
-    SString path = container.create().string(fileName);
-    Blob content = unzipEntryContent(container, inputStream);
-    return container.create().file(path, content);
+    SString path = nativeApi.create().string(fileName);
+    Blob content = unzipEntryContent(nativeApi, inputStream);
+    return nativeApi.create().file(path, content);
   }
 
-  private static Blob unzipEntryContent(Container container, InputStream inputStream) {
+  private static Blob unzipEntryContent(NativeApi nativeApi, InputStream inputStream) {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     try {
-      BlobBuilder contentBuilder = container.create().blobBuilder();
+      BlobBuilder contentBuilder = nativeApi.create().blobBuilder();
       try (OutputStream outputStream = contentBuilder) {
         int len;
         while ((len = inputStream.read(buffer)) > 0) {

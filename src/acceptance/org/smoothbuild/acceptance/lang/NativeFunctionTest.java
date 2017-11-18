@@ -30,7 +30,7 @@ import org.smoothbuild.acceptance.lang.nativ.SameName2;
 import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 import org.smoothbuild.acceptance.lang.nativ.ThrowRandomException;
 import org.smoothbuild.acceptance.lang.nativ.WithoutContainer;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
@@ -133,7 +133,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     then(output(), containsString("Invalid function native implementation in build.jar provided by "
         + WithoutContainer.class.getCanonicalName()
         + ".function: Providing method should have first parameter of type "
-        + Container.class.getCanonicalName() + ".\n"));
+        + NativeApi.class.getCanonicalName() + ".\n"));
   }
 
   @Test

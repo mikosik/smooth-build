@@ -7,7 +7,7 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SFile;
@@ -18,14 +18,14 @@ public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBuilder fileArrayBuilder;
   private final Path path;
   private final BlobBuilder contentBuilder;
-  private final Container container;
+  private final NativeApi nativeApi;
 
-  public OutputClassFile(ArrayBuilder fileArrayBuilder, Path path, Container container) {
+  public OutputClassFile(ArrayBuilder fileArrayBuilder, Path path, NativeApi nativeApi) {
     super(URI.create("class:///" + path.value()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
-    this.container = container;
-    this.contentBuilder = container.create().blobBuilder();
+    this.nativeApi = nativeApi;
+    this.contentBuilder = nativeApi.create().blobBuilder();
   }
 
   @Override
@@ -35,8 +35,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         outputStream.close();
-        SString pathString = container.create().string(path.value());
-        SFile file = container.create().file(pathString, contentBuilder.build());
+        SString pathString = nativeApi.create().string(path.value());
+        SFile file = nativeApi.create().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     };

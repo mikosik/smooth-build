@@ -8,7 +8,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -18,10 +18,10 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
   @SmoothFunction
-  public static Blob zip(Container container, Array files) {
+  public static Blob zip(NativeApi nativeApi, Array files) {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    BlobBuilder blobBuilder = container.create().blobBuilder();
+    BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder)) {
       for (SFile file : files.asIterable(SFile.class)) {
         String path = file.path().value();

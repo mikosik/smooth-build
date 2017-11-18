@@ -5,7 +5,7 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.CommandExecutor;
 
-public interface Container {
+public interface NativeApi {
   public ValueFactory create();
 
   public void log(Message message);

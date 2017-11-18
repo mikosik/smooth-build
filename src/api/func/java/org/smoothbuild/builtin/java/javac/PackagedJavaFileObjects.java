@@ -7,17 +7,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 
 public class PackagedJavaFileObjects {
-  public static Iterable<InputClassFile> classesFromJars(Container container,
+  public static Iterable<InputClassFile> classesFromJars(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
     Set<InputClassFile> result = new HashSet<>();
     for (Blob jarBlob : libraryJars) {
-      Array files = UnzipFunction.unzip(container, (jarBlob), isClassFilePredicate());
+      Array files = UnzipFunction.unzip(nativeApi, (jarBlob), isClassFilePredicate());
       for (SFile file : files.asIterable(SFile.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {

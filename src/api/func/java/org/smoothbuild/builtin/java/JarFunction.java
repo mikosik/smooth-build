@@ -11,7 +11,7 @@ import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
 import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -21,10 +21,10 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
   @SmoothFunction
-  public static Blob jar(Container container, Array files, Blob manifest) {
+  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
-    BlobBuilder blobBuilder = container.create().blobBuilder();
+    BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (SFile file : files.asIterable(SFile.class)) {
         String path = file.path().value();

@@ -18,21 +18,21 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-  private final Container container;
+  private final NativeApi nativeApi;
   private final Map<String, Set<JavaFileObject>> packageToJavaFileObjects;
   private final ArrayBuilder resultClassFiles;
 
-  SandboxedJavaFileManager(StandardJavaFileManager fileManager, Container container,
+  SandboxedJavaFileManager(StandardJavaFileManager fileManager, NativeApi nativeApi,
       Iterable<InputClassFile> objects) {
     super(fileManager);
-    this.container = container;
+    this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = container.create().arrayBuilder(FILE);
+    this.resultClassFiles = nativeApi.create().arrayBuilder(FILE);
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(
@@ -59,7 +59,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
       FileObject sibling) throws IOException {
     if (location == StandardLocation.CLASS_OUTPUT && kind == Kind.CLASS) {
       Path classFilePath = path(className.replace('.', '/') + ".class");
-      return new OutputClassFile(resultClassFiles, classFilePath, container);
+      return new OutputClassFile(resultClassFiles, classFilePath, nativeApi);
     } else {
       return super.getJavaFileForOutput(location, className, kind, sibling);
     }

@@ -16,13 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest {
-  private final Container container = containerImpl();
+  private final NativeApi nativeApi = containerImpl();
   private Blob blob;
   private SFile file1;
   private SFile file2;
@@ -32,7 +32,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = file(memoryValuesDb(), path("a/Klass.class")));
     given(file2 = file(memoryValuesDb(), path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(container, asList(blob)));
+    when(binaryNameToClassFile(nativeApi, asList(blob)));
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
   }
 
@@ -48,7 +48,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = file(memoryValuesDb(), path("a/Klass.txt")));
     given(file2 = file(memoryValuesDb(), path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(container, asList(blob)).entrySet());
+    when(binaryNameToClassFile(nativeApi, asList(blob)).entrySet());
     thenReturned(empty());
   }
 }
