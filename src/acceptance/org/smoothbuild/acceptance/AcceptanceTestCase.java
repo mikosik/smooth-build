@@ -89,6 +89,10 @@ public class AcceptanceTestCase {
     whenSmooth(join("help", args));
   }
 
+  protected void whenSmoothList(String... args) {
+    whenSmooth(join("list", args));
+  }
+
   protected void whenSmoothVersion(String... args) {
     whenSmooth(join("version", args));
   }

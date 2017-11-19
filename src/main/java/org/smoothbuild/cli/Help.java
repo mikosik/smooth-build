@@ -6,6 +6,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.cli.Commands.BUILD;
 import static org.smoothbuild.cli.Commands.CLEAN;
 import static org.smoothbuild.cli.Commands.HELP;
+import static org.smoothbuild.cli.Commands.LIST;
 
 public class Help implements Command {
   @Override
@@ -22,6 +23,9 @@ public class Help implements Command {
           break;
         case HELP:
           System.out.println(helpDescription());
+          break;
+        case LIST:
+          System.out.println(listDescription());
           break;
         case Commands.VERSION:
           System.out.print(versionDescription());
@@ -42,6 +46,7 @@ public class Help implements Command {
     append(builder, "build", buildShortDescription());
     append(builder, "clean", cleanShortDescription());
     append(builder, "help", helpShortDescription());
+    append(builder, "list", listShortDescription());
     append(builder, "version", versionShortDescription());
     return builder.toString();
   }
@@ -77,6 +82,13 @@ public class Help implements Command {
         + "  <command>  command for which help is printed";
   }
 
+  private static String listDescription() {
+    return "usage: smooth list\n"
+        + "\n"
+        + listShortDescription() + "\n"
+        + "\n";
+  }
+
   private static String versionDescription() {
     return "usage: smooth version\n"
         + "\n"
@@ -94,6 +106,10 @@ public class Help implements Command {
 
   private static String helpShortDescription() {
     return "Print help about given command";
+  }
+
+  private static String listShortDescription() {
+    return "Print arg-less user defined functions";
   }
 
   private static String versionShortDescription() {

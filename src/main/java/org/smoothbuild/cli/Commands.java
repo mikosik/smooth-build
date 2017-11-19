@@ -15,6 +15,7 @@ public class Commands {
   public static final String BUILD = "build";
   public static final String CLEAN = "clean";
   public static final String HELP = "help";
+  public static final String LIST = "list";
   public static final String VERSION = "version";
 
   public static int execute(String[] args) {
@@ -28,6 +29,8 @@ public class Commands {
         return runCommand(Clean.class, args);
       case HELP:
         return runCommand(Help.class, args);
+      case LIST:
+        return runCommand(List.class, args);
       case VERSION:
         return runCommand(Version.class, args);
       default:
