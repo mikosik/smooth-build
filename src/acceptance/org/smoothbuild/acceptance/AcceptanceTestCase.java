@@ -89,6 +89,10 @@ public class AcceptanceTestCase {
     whenSmooth(join("clean", args));
   }
 
+  protected void whenSmoothVersion(String... args) {
+    whenSmooth(join("version", args));
+  }
+
   private static String[] join(String command, String[] args) {
     ArrayList<String> result = new ArrayList<>();
     result.add(command);
