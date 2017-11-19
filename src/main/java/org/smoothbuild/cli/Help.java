@@ -23,6 +23,9 @@ public class Help implements Command {
         case HELP:
           System.out.println(helpDescription());
           break;
+        case Commands.VERSION:
+          System.out.print(versionDescription());
+          break;
         default:
           System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
           return EXIT_CODE_ERROR;
@@ -39,6 +42,7 @@ public class Help implements Command {
     append(builder, "build", buildShortDescription());
     append(builder, "clean", cleanShortDescription());
     append(builder, "help", helpShortDescription());
+    append(builder, "version", versionShortDescription());
     return builder.toString();
   }
 
@@ -73,6 +77,13 @@ public class Help implements Command {
         + "  <command>  command for which help is printed";
   }
 
+  private static String versionDescription() {
+    return "usage: smooth version\n"
+        + "\n"
+        + versionShortDescription() + "\n"
+        + "\n";
+  }
+
   private static String buildShortDescription() {
     return "Build artifact(s) by running specified function(s)";
   }
@@ -83,5 +94,9 @@ public class Help implements Command {
 
   private static String helpShortDescription() {
     return "Print help about given command";
+  }
+
+  private static String versionShortDescription() {
+    return "Print smooth build version number";
   }
 }

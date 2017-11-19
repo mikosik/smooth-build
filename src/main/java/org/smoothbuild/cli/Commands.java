@@ -15,6 +15,7 @@ public class Commands {
   public static final String BUILD = "build";
   public static final String CLEAN = "clean";
   public static final String HELP = "help";
+  public static final String VERSION = "version";
 
   public static int execute(String[] args) {
     if (args.length == 0) {
@@ -27,6 +28,8 @@ public class Commands {
         return runCommand(Clean.class, args);
       case HELP:
         return runCommand(Help.class, args);
+      case VERSION:
+        return runCommand(Version.class, args);
       default:
         System.out.println("smooth: '" + args[0]
             + "' is not a smooth command. See 'smooth help'.");
