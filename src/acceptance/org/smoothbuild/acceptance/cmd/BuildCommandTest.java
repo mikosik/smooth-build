@@ -36,7 +36,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
-    then(output(), containsString("error: Unknown function 'nonexistentFunction'.\n"));
+    then(output(), containsString("error: Unknown function 'nonexistentFunction'.\n"
+        + "Use 'smooth list' to see all available functions.\n"));
   }
 
   @Test
