@@ -81,12 +81,12 @@ public class AcceptanceTestCase {
     whenSmooth(join("build", args));
   }
 
-  protected void whenSmoothHelp(String... args) {
-    whenSmooth(join("help", args));
-  }
-
   protected void whenSmoothClean(String... args) {
     whenSmooth(join("clean", args));
+  }
+
+  protected void whenSmoothHelp(String... args) {
+    whenSmooth(join("help", args));
   }
 
   protected void whenSmoothVersion(String... args) {
