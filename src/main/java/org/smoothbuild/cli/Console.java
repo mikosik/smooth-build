@@ -113,7 +113,7 @@ public class Console {
     }
   }
 
-  private void println(String line) {
+  public void println(String line) {
     printStream.println(line);
   }
 

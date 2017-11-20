@@ -75,4 +75,16 @@ public class ArtifactTest extends AcceptanceTestCase {
         "Can't store result of 'result' as it contains files with duplicated paths:\n"
             + "  file.txt\n"));
   }
+
+  @Test
+  public void info_about_stored_artifacts_is_printed_to_console() throws Exception {
+    givenScript("result1 = 'abc';"
+        + "      result2 = 'abc';"
+        + "      result3 = 'abc';");
+    whenSmoothBuild("result2 result3 result1");
+    thenFinishedWithSuccess();
+    then(output(), containsString("result1 -> '.smooth/artifacts/result1'\n"
+        + "result2 -> '.smooth/artifacts/result2'\n"
+        + "result3 -> '.smooth/artifacts/result3'\n"));
+  }
 }
