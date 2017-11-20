@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+Version 0.14.0 (2017.11.20)
+---------------------------
+
  * added 'smooth list' subcommand
  * added 'smooth version' subcommand
  * native function implementation must be also declared in smooth module using smooth language
