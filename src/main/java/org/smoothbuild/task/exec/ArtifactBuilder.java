@@ -41,6 +41,7 @@ public class ArtifactBuilder {
   public void runBuild() {
     taskBatch.executeAll();
     if (!taskBatch.containsErrors()) {
+      console.println("built artifact(s):");
       for (Entry<Name, Dag<Task>> artifact : artifacts.entrySet()) {
         Name name = artifact.getKey();
         Task task = artifact.getValue().elem();
