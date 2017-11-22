@@ -10,8 +10,9 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -30,35 +31,27 @@ import org.smoothbuild.lang.value.SString;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array javac(NativeApi nativeApi, Array sources, Array libs, SString source,
-      SString target) {
-    return new Worker(nativeApi, sources, libs, source, target).execute();
+  public static Array javac_(NativeApi nativeApi, Array sources, Array libs, Array options) {
+    return new Worker(nativeApi, sources, libs, options).execute();
   }
 
   private static class Worker {
-    private static final Set<String> SOURCE_VALUES = unmodifiableSet("1.3", "1.4", "1.5", "5",
-        "1.6", "6", "1.7", "7", "1.8", "8");
-    private static final Set<String> TARGET_VALUES = unmodifiableSet("1.1", "1.2", "1.3", "1.4",
-        "1.5", "5", "1.6", "6", "1.7", "7", "1.8", "8");
-
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
     private final Array sources;
     private final Array libs;
-    private final SString source;
-    private final SString target;
+    private final Array options;
 
-    public Worker(NativeApi nativeApi,
+    public Worker(
+        NativeApi nativeApi,
         Array sources,
         Array libs,
-        SString source,
-        SString target) {
+        Array options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
       this.sources = sources;
       this.libs = libs;
-      this.source = source;
-      this.target = target;
+      this.options = options;
     }
 
     public Array execute() {
@@ -114,29 +107,9 @@ public class JavacFunction {
     }
 
     private Iterable<String> options() {
-      List<String> result = new ArrayList<>();
-
-      if (!source.value().isEmpty()) {
-        String sourceArg = source.value();
-        if (!SOURCE_VALUES.contains(sourceArg)) {
-          throw errorException("Parameter source has illegal value = '" + sourceArg + "'.\n"
-              + "Only following values are allowed " + SOURCE_VALUES + "\n");
-        }
-        result.add("-source");
-        result.add(sourceArg);
-      }
-
-      if (!target.value().isEmpty()) {
-        String targetArg = target.value();
-        if (!TARGET_VALUES.contains(targetArg)) {
-          throw errorException("Parameter target has illegal value = '" + targetArg + "'.\n"
-              + "Only following values are allowed " + TARGET_VALUES);
-        }
-        result.add("-target");
-        result.add(targetArg);
-      }
-
-      return result;
+      return StreamSupport.stream(options.asIterable(SString.class).spliterator(), false)
+          .map(SString::value)
+          .collect(Collectors.toList());
     }
 
     private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {

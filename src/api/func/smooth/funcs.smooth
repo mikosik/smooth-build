@@ -45,8 +45,18 @@ Blob jar(
 [File] javac(
   [File] sources,
   [Blob] libs = [],
-  String source = "1.5",
-  String target = "1.5",
+  String source = "1.8",
+  String target = "1.8",
+  [String] options = [],
+) = javac_(
+    sources = sources,
+    libs = libs,
+    options = concatenateStringArrays(["-source", source, "-target", target], with = options)); 
+
+[File] javac_(
+  [File] sources,
+  [Blob] libs = [],
+  [String] options = [],
 );
 
 String junit(
