@@ -9,6 +9,7 @@ java source code files passed via 'sources' parameter depend on.
 should be compatible with.
  * String __target__ - Version of JVM for which *.class files should
 be genereated.
+ * [String] __options__ array of command line options
 
 Returns __[File]__ with compiled java classes (*.class files).
 

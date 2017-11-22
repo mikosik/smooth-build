@@ -89,7 +89,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(source='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Parameter source has illegal value = '0.9'."));
+    then(output(), containsString("invalid source release: 0.9"));
   }
 
   @Test
@@ -98,7 +98,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(target='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Parameter target has illegal value = '0.9'."));
+    then(output(), containsString("invalid target release: 0.9"));
   }
 
   @Test

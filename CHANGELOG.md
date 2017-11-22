@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * added 'options' parameter to 'javac' function in platform API
  * build artifacts are reported to console
 
 Version 0.14.0 (2017.11.20)
