@@ -83,7 +83,8 @@ public class ArtifactTest extends AcceptanceTestCase {
         + "      result3 = 'abc';");
     whenSmoothBuild("result2 result3 result1");
     thenFinishedWithSuccess();
-    then(output(), containsString("result1 -> '.smooth/artifacts/result1'\n"
+    then(output(), containsString("built artifact(s):\n"
+        + "result1 -> '.smooth/artifacts/result1'\n"
         + "result2 -> '.smooth/artifacts/result2'\n"
         + "result3 -> '.smooth/artifacts/result3'\n"));
   }
