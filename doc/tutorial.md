@@ -9,7 +9,8 @@ One of the simplest non trivial build files is:
 release.jar = files("//src") | javac | jar;
 ```
 
-This script defines `release.jar` function that performs following tasks:
+This script defines `release.jar` function that does not have any parameters
+and performs following tasks:
 
  * Invokes `files` function that takes all files (recursively)
  from `src` directory located at project's root. Double slashes `//` denote
@@ -45,14 +46,16 @@ passed as argument to it) is of one of following types:
  * **String** - Sequence of characters
  * **Blob** - Sequence of bytes
  * **File** - Single file - compound object that has a content (Blob) and path associated with it (String).
- * Array ( **[String]**, **[Blob]**, **[File]** )
+ * **Nothing** - type that is convertible to any other type but it is not possible to create value of such type.
+ * Array ( **[String]**, **[Blob]**, **[File]**, **[Nothing]** )
 
 Smooth language is strongly typed and statically checked.
 Value can be assigned to given function parameter if value's type
-is assignable to that parameter's type.
-Each type is assignable to itself.
-File can be assigned to Blob.
-[File] can be assigned to [Blob].
+is equal to or convertible to that parameter's type.
+File is convertible to Blob.
+Array of some type A ([A]) is convertible to array of type B ([B])
+when A is convertible to B.
+Nothing is convertible to any type.
 
 
 ### Functions
@@ -83,14 +86,14 @@ release.jar = jar(classes("//src"));
 As you noticed Smooth contains String literals which are specified
 by enclosing its charcters inside double quotes as in most languages.
 Another literal that you find useful is an array literal that lets you
-create vaue of `[String]`, `[Blob]` and `[File]` types.
-Array literal is comma separated list of expressions enclosed inside brackets `[]`.
+create vaue of `[String]`, `[Blob]` `[File]` and `[Nothing]` types.
+Array literal is comma separated list of expressions enclosed inside brackets `[` `]`.
+Empty array literal `[]` has type `[Nothing]` and can is convertible to any other array type.
 
 ```
-stringValue1 = "README.md";
-stringValue2 = "tutorial.md";
+stringValue = "README.md";
+stringArrayValue = ["one", "two", "three"];
 fileArrayValue = [file(stringValue1), file(stringValue2)];
-docs.zip = zip(fileArrayValue);
 ```
 
 
@@ -98,12 +101,12 @@ docs.zip = zip(fileArrayValue);
 
 Most functions can accept more than one argument.
 One example is
-[javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md)
-which has four parameters.
-Despite that we kept passing only one argument in all above examples.
-It didn't cause any error as smooth was capable to infer parameter
-this argument should be assigned to by comparing its type with parameter types.
-Parameters left without match are assigned default value of given type.
+[javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md).
+Despite that we kept passing only one argument in all above examples,
+it didn't cause any error as smooth was capable to infer, to which parameter
+this argument should be assigned, by comparing argument's type with function
+parameter types.
+Parameters left without match are assigned parameter's default value.
 
 However if there's ambiguity (smooth is not able to deduce which arguments
 should be assigned to which parameters) then it fails with error.
@@ -125,9 +128,9 @@ smooth code when you understand this algorithm from brute force perspective):
  2. For arguments without explicit assignment algorithm generates
  all possible set of assignments that met following criteria:
     * each argument is assigned exactly once
-    * each required parameter is assigned exactly once
-    * each not required parameter is assigned at most once
-    * each argument is assigned to parameter which type is assignable from
+    * each parameter without default value is assigned exactly once
+    * each parameter with default value is assigned at most once
+    * each argument is assigned to parameter which type is convertible from
     that argument type
  3. If there's exactly one set of assignments generated in 2.
  then it is chosen, otherwise algorithm fails with ambiguity.
