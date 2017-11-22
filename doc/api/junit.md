@@ -2,12 +2,10 @@
 
 Executes junit tests and fails if any of the test fail.
 
- * [Blob] __libs__ - Array of jar files containing test classes and all
-library classes needed for test to run.
-All classes which names end with Test will be run.
- * String __include__ - Pattern matching java class files from which
-tests should be run. Works the same way as 'include' param
-in [filter](filter.md) function.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | libs | [Blob] | [] | Array of jar files containing test classes and all library classes needed for test to run. |
+ | include | String | "**/*Test.class" | Pattern matching java class files from which tests should be run. Works the same way as 'include' param in [filter](filter.md) function. |
 
 Returns __String__ equal to 'SUCCESS'.
 

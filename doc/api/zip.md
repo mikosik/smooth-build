@@ -2,7 +2,9 @@
 
 Zips an array of files.
 
- * [File] __files__ - files to be compressed (zipped).
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | files | [File] |   | Files to be compressed (zipped). |
 
 Returns __Blob__ containing compressed files.
 

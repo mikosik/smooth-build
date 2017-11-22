@@ -2,10 +2,10 @@
 
 Concatenates two [String].
 
- * [String] __strings__ - Array of Strings to be concatenated with array passed
-via "with" parameter.
- * [String] __with__ - Array of Strings to be concatenated with array passed
-via "blobs" parameter.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | strings | [String] |   | Array of Strings to be concatenated with array passed via "with" parameter. |
+ | with    | [String] |   | Array of Strings to be concatenated with array passed via "blobs" parameter. |
 
 Returns __[String]__ containing all Strings from first and second argument.
 

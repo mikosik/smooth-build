@@ -2,7 +2,9 @@
 
 Unzips files from given zip file.
 
- * Blob __blob__ - Zip to be uncompressed.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | blob | Blob |   | Zip to be uncompressed. |
 
 Returns __[File]__ - arrays of File uncompressed from given zip.
 

@@ -2,12 +2,11 @@
 
 Generates java class source code from android aidl file.
 
- * String __apiLevel__ - Android API level of platform which framework.aidl
-file should be used.
- * String __buildToolsVersion__ - Version of android build tools that should.
-be used (this is the name of the directory in android sdk that contains aidl
-binary file - for example "17.0.0").
- * File __interfaceFile__ - aidl file which is converted to java class.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | apiLevel | String |   | Android API level of platform which framework.aidl file should be used. |
+ | buildToolsVersion | String |   | Version of android build tools that should be used (this is the name of the directory in android sdk that contains aidl binary file - for example "17.0.0"). |
+ | interfaceFile | File |   | aidl file which is converted to java class. |
 
 Returns __File__ containing java source code of generated class.
 
