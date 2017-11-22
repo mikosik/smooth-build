@@ -84,12 +84,6 @@ public class Console {
   }
 
   public void printFinalSummary() {
-    String message = isErrorReported() ? "FAILED :(" : "SUCCESS :)";
-    println(GROUP_PREFIX + message);
-    printMessageStats();
-  }
-
-  private void printMessageStats() {
     printStat(errorCount, "error(s)");
     printStat(warningCount, "warning(s)");
     printStat(infoCount, "info(s)");

@@ -4,14 +4,9 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.lang.message.Location.location;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,51 +63,14 @@ public class ConsoleTest {
   // printFinalSummary()
 
   @Test
-  public void final_summary_is_success_when_only_warning_was_logged() throws Exception {
-    console.print(name, asList(new WarningMessage("message string")));
-    console.printFinalSummary();
-
-    String expected = " + GROUP NAME\n"
-        + "   + WARNING: message string\n"
-        + " + SUCCESS :)\n"
-        + "   + 1 warning(s)\n";
-    assertEquals(expected, outputStream.toString());
-  }
-
-  @Test
   public void final_summary_is_failed_when_error_was_logged() throws Exception {
     console.print(name, asList(new ErrorMessage("message string")));
     console.printFinalSummary();
 
     String expected = " + GROUP NAME\n"
         + "   + ERROR: message string\n"
-        + " + FAILED :(\n"
         + "   + 1 error(s)\n";
     assertEquals(expected, outputStream.toString());
-  }
-
-  @Test
-  public void final_summary_is_failed_when_code_error_was_printed() throws Exception {
-    given(outputStream = new ByteArrayOutputStream());
-    given(console = new Console(new PrintStream(outputStream)));
-    given(console).error(location(Paths.get("script.smooth"), 13), "some message");
-    when(console).printFinalSummary();
-    thenEqual(outputStream.toString(),
-        "script.smooth:13: error: some message\n"
-            + " + FAILED :(\n"
-            + "   + 1 error(s)\n");
-  }
-
-  @Test
-  public void final_summary_is_failed_when_error_was_printed() throws Exception {
-    given(outputStream = new ByteArrayOutputStream());
-    given(console = new Console(new PrintStream(outputStream)));
-    given(console).error("some message");
-    when(console).printFinalSummary();
-    thenEqual(outputStream.toString(),
-        "error: some message\n"
-            + " + FAILED :(\n"
-            + "   + 1 error(s)\n");
   }
 
   @Test
@@ -139,7 +97,6 @@ public class ConsoleTest {
       builder.append("   + ERROR: error string\n");
     }
 
-    builder.append(" + FAILED :(\n");
     builder.append("   + 3 error(s)\n");
     builder.append("   + 2 warning(s)\n");
     builder.append("   + 1 info(s)\n");
