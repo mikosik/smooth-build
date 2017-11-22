@@ -71,16 +71,8 @@ public class JunitFunction {
   }
 
   private static Predicate<Path> createFilter(SString includeParam) {
-    if (includeParam == null || includeParam.value().isEmpty()) {
-      return createFilter("**/*Test.class");
-    } else {
-      return createFilter(includeParam.value());
-    }
-  }
-
-  private static Predicate<Path> createFilter(String includeExpression) {
     try {
-      return pathMatcher(includeExpression);
+      return pathMatcher(includeParam.value());
     } catch (IllegalPathPatternException e) {
       throw errorException("Parameter 'include' has illegal value. " + e.getMessage());
     }
