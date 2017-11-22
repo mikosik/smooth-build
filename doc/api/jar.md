@@ -2,8 +2,10 @@
 
 Jars an array of files.
 
- * [File] __files__ - files to be compressed (jared).
- * Blob __manifest__ - Content of manifest file.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | files | [File] |   | Files to be compressed (jared). |
+ | manifest | Blob | File("META-INF/MANIFEST.MF", toBlob("")) | Content of manifest file. |
 
 Returns __Blob__ containing compressed files.
 
@@ -11,5 +13,5 @@ Returns __Blob__ containing compressed files.
 
 Jars all files from "src" directory.
 ```
-app.jar = files("//src") | jar() ;
+app.jar = files("//src") | jar ;
 ```

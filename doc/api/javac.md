@@ -2,14 +2,13 @@
 
 Compiles array of java files.
 
- * [File] __sources__ (_required_) - Array of java files to be compiled.
- * [Blob] __libs__ - Array of jars containing libraries (*.class files) that
-java source code files passed via 'sources' parameter depend on.
- * String __source__ - Version of Java language that given 'sources' files
-should be compatible with.
- * String __target__ - Version of JVM for which *.class files should
-be genereated.
- * [String] __options__ array of command line options
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | sources | [File] |   | Array of java files to be compiled. |
+ | libs | [Blob] | [] | Array of jars containing libraries (*.class files) that java source code files passed via 'sources' parameter depend on. |
+ | source | String | "1.8" | Version of Java language that given 'sources' files should be compatible with. |
+ | target | String | "1.8" | Version of JVM for which *.class files should be generated. |
+ | options | [String] | [] | Array of command line options. |
 
 Returns __[File]__ with compiled java classes (*.class files).
 

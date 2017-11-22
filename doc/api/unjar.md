@@ -2,7 +2,9 @@
 
 Unjars files from given jar file.
 
- * Blob __jar__ - Jar to be uncompressed.
+ | Name | Type | Default | Description |
+ | ---- | ---- | ------- | ----------- |
+ | jar | Blob |   | Jar to be uncompressed. |
 
 Returns __[File]__ - arrays of File uncompressed from given jar.
 
