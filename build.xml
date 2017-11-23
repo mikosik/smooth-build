@@ -1,4 +1,4 @@
-<project xmlns:ivy="antlib:org.apache.ivy.ant" name="smooth-build" basedir="." default="all">
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="smooth-build" default="all">
 
     <property name="zipped.dir" value="smooth"/>
 
