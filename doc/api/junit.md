@@ -4,7 +4,8 @@ Executes junit tests and fails if any of the test fail.
 
  | Name | Type | Default | Description |
  | ---- | ---- | ------- | ----------- |
- | libs | [Blob] | [] | Array of jar files containing test classes and all library classes needed for test to run. |
+ | tests | Blob |   | Jar file containing test classes. |
+ | deps | [Blob] |   | Array of jars containing junit implementation and other dependencies needed to run tests. |
  | include | String | "**/*Test.class" | Pattern matching java class files from which tests should be run. Works the same way as 'include' param in [filter](filter.md) function. |
 
 Returns __String__ equal to 'SUCCESS'.

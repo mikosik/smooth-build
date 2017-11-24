@@ -60,7 +60,8 @@ Blob jar(
 );
 
 String junit(
-  [Blob] libs = [],
+  Blob tests,
+  [Blob] deps = [],
   String include = "**/*Test.class",
 );
 

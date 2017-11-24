@@ -140,8 +140,6 @@
 
     <path id="classpath.for.api.func.java">
         <path refid="classpath.with.main.java"/>
-        <!-- TODO can be removed once junit function becomes separate plugin -->
-        <pathelement location="${lib.junit}"/>
     </path>
 
     <target name="compile-api.func.java" depends="compile-main.java">
@@ -353,10 +351,6 @@
 
     <target name="funcs-jar-file" depends="compile-api.func.java">
         <jar destfile="${dir.build.funcs.jar}">
-            <!-- TODO can be removed once junit function becomes separate plugin -->
-            <zipfileset excludes="* META-INF/**" src="${lib.junit}"/>
-            <zipfileset excludes="* META-INF/**" src="${lib.hamcrest}"/>
-
             <zipfileset dir="${dir.build.class.api.func.java}"/>
             <zipfileset file="LICENSE"/>
         </jar>
@@ -403,6 +397,7 @@
                 <path refid="classpath.with.acceptance"/>
             </classpath>
             <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+            <env key="repository_dir" value="${basedir}"/>
             <formatter type="brief" usefile="false"/>
             <batchtest todir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
