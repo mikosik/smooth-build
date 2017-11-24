@@ -11,23 +11,36 @@ public class JunitTest extends AcceptanceTestCase {
   private static final String SUCCESSFUL_TEST_CLASS = "MyClassTest";
 
   @Test
-  public void junit_function_succeeds_when_all_junit_tests_succeed() throws Exception {
-    givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
+  public void junit_fails_when_deps_doesnt_contain_junit_jar() throws Exception {
+    givenJunitCopied();
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
-    givenScript("fakeJunit = files('//junit') | javac() | jar();\n"
-        + "srcJar = files('//src') | javac(libs=[fakeJunit()]) | jar();"
-        + " result = junit(libs=[srcJar()]);");
+    givenScript("junitJars = files('//junit') ;\n"
+        + "      srcJar = files('//src') | javac(libs=junitJars) | jar;"
+        + "      result = junit(tests=srcJar, deps=[]);");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?"));
+  }
+
+  @Test
+  public void junit_function_succeeds_when_all_junit_tests_succeed() throws Exception {
+    givenJunitCopied();
+    givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
+    givenScript("junitJars = files('//junit') ;\n"
+        + "      srcJar = files('//src') | javac(libs=junitJars) | jar;"
+        + "      result = junit(tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
 
   @Test
   public void junit_function_fails_when_junit_test_fails() throws Exception {
-    givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
+    givenJunitCopied();
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
-    givenScript("fakeJunit = files('//junit') | javac() | jar();\n"
-        + "srcJar = files('//src') | javac(libs=[fakeJunit()]) | jar();"
-        + " result = junit(libs=[srcJar()]);");
+    givenScript("junitJars = files('//junit') ;\n"
+        + "      srcJar = files('//src') | javac(libs=junitJars) | jar;"
+        + "      result = junit(tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("test failed"));
@@ -35,11 +48,11 @@ public class JunitTest extends AcceptanceTestCase {
 
   @Test
   public void warning_is_logged_when_no_test_is_found() throws Exception {
-    givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
+    givenJunitCopied();
     givenDir("src");
-    givenScript("fakeJunit = files('//junit') | javac() | jar();\n"
-        + "srcJar = files('//src') | javac(libs=[fakeJunit()]) | jar();"
-        + " result = junit(libs=[srcJar()]);");
+    givenScript("junitJars = files('//junit') ;\n"
+        + "      srcJar = files('//src') | javac(libs=junitJars) | jar;"
+        + "      result = junit(tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(output(), containsString("No junit tests found."));
@@ -47,13 +60,14 @@ public class JunitTest extends AcceptanceTestCase {
 
   @Test
   public void only_test_matching_pattern_are_executed() throws Exception {
-    givenFile("junit/org/junit/Test.java", testAnnotationSourceCode());
+    givenJunitCopied();
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
 
-    givenScript("fakeJunit = files('//junit') | javac() | jar();\n"
-        + "srcJar = files('//src') | javac(libs=[fakeJunit()]) | jar();\n"
-        + "result = junit(libs=[srcJar()], include='" + SUCCESSFUL_TEST_CLASS + ".class');");
+    givenScript("junitJars = files('//junit') ;\n"
+        + "      srcJar = files('//src') | javac(libs=junitJars) | jar;"
+        + "      result = junit(include='" + SUCCESSFUL_TEST_CLASS
+        + ".class', tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
@@ -63,26 +77,6 @@ public class JunitTest extends AcceptanceTestCase {
         + "  @org.junit.Test\n"
         + "  public void testMyMethod() {\n"
         + "  }\n"
-        + "}\n";
-  }
-
-  private static String testAnnotationSourceCode() {
-    return "package org.junit;\n"
-        + "import java.lang.annotation.ElementType;\n"
-        + "import java.lang.annotation.Retention;\n"
-        + "import java.lang.annotation.RetentionPolicy;\n"
-        + "import java.lang.annotation.Target;\n"
-        + "\n"
-        + "@Retention(RetentionPolicy.RUNTIME)\n"
-        + "@Target({ ElementType.METHOD })\n"
-        + "public @interface Test {\n"
-        + "  static class None extends Throwable {\n"
-        + "    private static final long serialVersionUID = 1L;\n"
-        + "    private None() {\n"
-        + "    }\n"
-        + "  }\n"
-        + "  Class<? extends Throwable> expected() default None.class;\n"
-        + "  long timeout() default 0L;\n"
         + "}\n";
   }
 

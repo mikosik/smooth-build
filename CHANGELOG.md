@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * added 'deps' parameter to 'junit' function and require junit implementation to be passed via it
  * added 'options' parameter to 'javac' function in platform API
  * build artifacts are reported to console
 

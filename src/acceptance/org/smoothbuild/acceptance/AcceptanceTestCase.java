@@ -18,6 +18,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -36,6 +40,7 @@ public class AcceptanceTestCase {
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
   private static String SMOOTH_BINARY_PATH;
+  private static String REPOSITORY_DIR;
 
   private File projectDir;
   private Integer exitCode;
@@ -75,6 +80,23 @@ public class AcceptanceTestCase {
 
   protected void givenDir(String path) throws IOException {
     file(path).mkdirs();
+  }
+
+  protected void givenJunitCopied() {
+    copyLib("junit-4.12.jar", "junit/");
+    copyLib("hamcrest-core-1.3.jar", "junit/");
+  }
+
+  private Path copyLib(String jar, String dirInsideProject) {
+    try {
+      Path destinationDir = projectDir.toPath().resolve(dirInsideProject);
+      destinationDir.toFile().mkdirs();
+      return Files.copy(
+          Paths.get(repositoryDir(), "lib/ivy/" + jar),
+          destinationDir.resolve(jar));
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   protected void whenSmoothBuild(String... args) {
@@ -135,11 +157,23 @@ public class AcceptanceTestCase {
   }
 
   private synchronized static String smoothBinaryPath() {
+    initializePaths();
+    return SMOOTH_BINARY_PATH;
+  }
+
+  private synchronized static String repositoryDir() {
+    initializePaths();
+    return REPOSITORY_DIR;
+  }
+
+  private static void initializePaths() {
     if (SMOOTH_BINARY_PATH == null) {
       String smoothHome = System.getenv("smooth_home_dir");
+      String repositoryDir = System.getenv("repository_dir");
       if (smoothHome == null) {
         try {
           File repoDir = new File(".").getCanonicalFile();
+          repositoryDir = repoDir.toString();
           ProcessBuilder processBuilder = new ProcessBuilder("ant", "install-smooth");
           processBuilder.directory(repoDir);
           Process process = processBuilder.start();
@@ -168,8 +202,8 @@ public class AcceptanceTestCase {
         }
       }
       SMOOTH_BINARY_PATH = smoothHome + "/smooth";
+      REPOSITORY_DIR = repositoryDir;
     }
-    return SMOOTH_BINARY_PATH;
   }
 
   private static Callable<ByteArrayOutputStream> streamReadingCallable(InputStream inputStream) {
