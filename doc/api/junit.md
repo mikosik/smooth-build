@@ -14,19 +14,15 @@ Returns __String__ equal to 'SUCCESS'.
 
 Takes all files from "src" directory, compiles them and executes all tests
 among them.
-Note that in current releases there's no need to pass jar with junit classes.
-Junit binaries are embedded inside smooth-all.jar.
-This will probably change in future so it would be easy to update junit
- library without updating smooth version.
 
 ```
 testJar = files("//src") | javac | jar;
 test = [ testJar ]  | junit;
 ```
 
-Takes all files from "src" directory, compiles them and executes only tests from classes which names end with 'Test'.
+Takes all files from "src" directory, compiles them and executes only tests from `org.smoothbuild` package and its subpackages recursively which class name ends with `Test`.
 
 ```
 testJar = files("//src") | javac | jar;
-test = [ testJar ]  | junit(include="**/*Test.class");
+test = [ testJar ]  | junit(include="org/smoothbuild/**/*Test.class");
 ```
