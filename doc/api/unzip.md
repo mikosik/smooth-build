@@ -12,6 +12,6 @@ Returns __[File]__ - arrays of File uncompressed from given zip.
 Uncompresses all files from "zips/myZip.zip" file.
 
 ```
-files = file("//zips/myZip.zip") | unzip() ;
+files = file("//zips/myZip.zip") | unzip ;
 ```
 
