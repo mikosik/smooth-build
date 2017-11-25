@@ -12,7 +12,7 @@ public class PathTest extends AcceptanceTestCase {
   @Test
   public void path_function() throws IOException {
     givenFile("file1.txt", "abc");
-    givenScript("result = file('//file1.txt') | path();");
+    givenScript("result = file('//file1.txt') | path;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("file1.txt"));

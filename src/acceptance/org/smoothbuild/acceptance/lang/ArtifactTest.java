@@ -22,7 +22,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_blob_artifact() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result = file('//file.txt') | content();");
+    givenScript("result = file('//file.txt') | content;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
