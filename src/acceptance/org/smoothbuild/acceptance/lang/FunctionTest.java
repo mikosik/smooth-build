@@ -40,7 +40,7 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void direct_function_recursion_is_forbidden() throws IOException {
-    givenScript("function1 = function1();");
+    givenScript("function1 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
     then(output(), containsString("Function call graph contains cycle"));
@@ -48,7 +48,7 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void indirect_function_recursion_with_two_steps_is_forbidden() throws IOException {
-    givenScript("function1 = function2(); function2 = function1();");
+    givenScript("function1 = function2; function2 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
     then(output(), containsString("Function call graph contains cycle"));
@@ -56,7 +56,7 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void indirect_recursion_with_three_steps_is_forbidden() throws IOException {
-    givenScript("function1 = function2(); function2 = function3(); function3 = function1();");
+    givenScript("function1 = function2; function2 = function3; function3 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
     then(output(), containsString("Function call graph contains cycle"));

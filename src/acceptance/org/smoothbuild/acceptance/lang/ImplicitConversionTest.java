@@ -13,7 +13,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   @Test
   public void file_is_implicitly_converted_to_blob() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result = file('//file.txt') | toString();");
+    givenScript("result = file('//file.txt') | toString;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
