@@ -17,5 +17,5 @@ Returns __[File]__ with compiled java classes (*.class files).
 Takes all files from "src" directory and compiles them.
 
 ```
-classFiles = files("//src") | javac() ;
+classFiles = files("//src") | javac ;
 ```
