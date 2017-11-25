@@ -23,6 +23,7 @@ import org.smoothbuild.acceptance.lang.nativ.NonPublicMethod;
 import org.smoothbuild.acceptance.lang.nativ.NonStaticMethod;
 import org.smoothbuild.acceptance.lang.nativ.OneStringParameter;
 import org.smoothbuild.acceptance.lang.nativ.ReportError;
+import org.smoothbuild.acceptance.lang.nativ.ReportTwoErrors;
 import org.smoothbuild.acceptance.lang.nativ.ReportWarningAndReturnNull;
 import org.smoothbuild.acceptance.lang.nativ.ReturnNull;
 import org.smoothbuild.acceptance.lang.nativ.SameName;
@@ -210,6 +211,18 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     then(output(), containsString(
         "Function throwException threw java exception from its native code:\n"));
     then(output(), containsString("java.lang.UnsupportedOperationException"));
+  }
+
+  @Test
+  public void error_thrown_as_exception_from_native_is_reported_along_errors_logged_via_native_api()
+      throws Exception {
+    givenNativeJar(ReportTwoErrors.class);
+    givenScript("String reportTwoErrors(String message1, String message2);\n"
+        + "      result = reportTwoErrors(message1='first error', message2='second error');");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("first error\n"));
+    then(output(), containsString("second error\n"));
   }
 
   @Test
