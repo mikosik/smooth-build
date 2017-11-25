@@ -86,7 +86,9 @@ public class Build implements Command {
     }
     Set<Name> result = duplicatesDetector.getUniqueValues();
     if (result.isEmpty()) {
-      return error("error: Specify at least one function to be executed.");
+      return error("error: Specify at least one function to be executed.\n"
+          + "Use 'smooth list' to see all available functions.");
+
     }
     return value(result);
   }

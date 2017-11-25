@@ -28,7 +28,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenEqual(output(), "error: Specify at least one function to be executed.\n");
+    thenEqual(output(), "error: Specify at least one function to be executed.\n"
+        + "Use 'smooth list' to see all available functions.\n");
   }
 
   @Test
