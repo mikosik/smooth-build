@@ -24,7 +24,7 @@ testJar = files("//src") | javac | jar;
 test = [ testJar ]  | junit;
 ```
 
-Takes all files from "src" directory, compiles them and executes ony tests from classes which names end with 'Test'.
+Takes all files from "src" directory, compiles them and executes only tests from classes which names end with 'Test'.
 
 ```
 testJar = files("//src") | javac | jar;
