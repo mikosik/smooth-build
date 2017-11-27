@@ -46,6 +46,14 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void store_array_of_nothings_artifact() throws Exception {
+    givenScript("result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
   public void store_array_of_blobs_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
