@@ -38,15 +38,15 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void store_string_array_artifact() throws Exception {
-    givenScript("result = ['abc', 'def']  ;");
+  public void store_array_of_strings_artifact() throws Exception {
+    givenScript("result = ['abc', 'def'];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
   @Test
-  public void store_blob_array_artifact() throws Exception {
+  public void store_array_of_blobs_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript("result = [content(file('//file1.txt')), content(file('//file2.txt'))];");
@@ -56,7 +56,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void store_file_array_artifact() throws Exception {
+  public void store_array_of_files_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript("result = [file('//file1.txt'), file('//file2.txt')];");
@@ -66,7 +66,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void cannot_store_file_array_with_duplicated_paths() throws Exception {
+  public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     givenFile("file.txt", "abc");
     givenScript("result = [file('//file.txt'), file('//file.txt')];");
     whenSmoothBuild("result");
