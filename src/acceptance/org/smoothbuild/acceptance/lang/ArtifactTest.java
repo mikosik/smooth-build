@@ -38,6 +38,14 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void store_empty_array_of_strings_artifact() throws Exception {
+    givenScript("[String] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
   public void store_array_of_strings_artifact() throws Exception {
     givenScript("result = ['abc', 'def'];");
     whenSmoothBuild("result");
@@ -54,6 +62,14 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void store_empty_array_of_blobs_artifact() throws Exception {
+    givenScript("[Blob] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
   public void store_array_of_blobs_artifact() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
@@ -61,6 +77,14 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
+  }
+
+  @Test
+  public void store_empty_array_of_files_artifact() throws Exception {
+    givenScript("[File] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
   }
 
   @Test
