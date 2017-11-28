@@ -38,6 +38,16 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void storing_function_with_underscore_in_name_converts_last_underscore_to_dot()
+      throws Exception {
+    givenFile("file.txt", "abc");
+    givenScript("my_result_file_txt = content(file('//file.txt'));");
+    whenSmoothBuild("my_result_file_txt");
+    thenFinishedWithSuccess();
+    then(artifact("my_result_file.txt"), hasContent("abc"));
+  }
+
+  @Test
   public void store_empty_array_of_strings_artifact() throws Exception {
     givenScript("[String] result = [];");
     whenSmoothBuild("result");
