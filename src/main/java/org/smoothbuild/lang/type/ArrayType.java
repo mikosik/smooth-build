@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import java.util.Objects;
-
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
 
@@ -42,22 +40,5 @@ public class ArrayType extends Type {
   public ArrayType directConvertibleTo() {
     Type elemConvertibleTo = elemType.directConvertibleTo();
     return elemConvertibleTo == null ? null : arrayOf(elemConvertibleTo);
-  }
-
-  @Override
-  public final boolean equals(Object object) {
-    if (object == null) {
-      return false;
-    }
-    if (!ArrayType.class.equals(object.getClass())) {
-      return false;
-    }
-    ArrayType that = (ArrayType) object;
-    return this.name().equals(that.name()) && this.elemType.equals(that.elemType);
-  }
-
-  @Override
-  public final int hashCode() {
-    return Objects.hash(13, elemType.hashCode());
   }
 }

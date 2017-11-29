@@ -3,7 +3,6 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
@@ -78,19 +77,17 @@ public class Type {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null) {
+    if (object instanceof Type) {
+      Type that = (Type) object;
+      return this.name.equals(that.name);
+    } else {
       return false;
     }
-    if (!Type.class.equals(object.getClass())) {
-      return false;
-    }
-    Type that = (Type) object;
-    return this.name.equals(that.name) && this.jType.equals(that.jType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, jType);
+    return name.hashCode();
   }
 
   @Override
