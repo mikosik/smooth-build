@@ -8,6 +8,7 @@ import java.util.Deque;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -15,7 +16,7 @@ import com.google.common.collect.ImmutableSet;
 public class Types {
   public static final Type STRING = new Type("String", SString.class);
   public static final Type BLOB = new Type("Blob", Blob.class);
-  public static final Type FILE = createFileType();
+  public static final StructType FILE = createFileType();
   public static final Type NOTHING = new Type("Nothing", Nothing.class);
 
   private static StructType createFileType() {
