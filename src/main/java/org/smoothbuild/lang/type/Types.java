@@ -10,13 +10,21 @@ import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
   public static final Type STRING = new Type("String", SString.class);
   public static final Type BLOB = new Type("Blob", Blob.class);
-  public static final Type FILE = new StructType("File", SFile.class, BLOB);
+  public static final Type FILE = createFileType();
   public static final Type NOTHING = new Type("Nothing", Nothing.class);
+
+  private static StructType createFileType() {
+    ImmutableMap<String, Type> fields = ImmutableMap.of(
+        "content", BLOB,
+        "name", STRING);
+    return new StructType("File", SFile.class, fields);
+  }
 
   /*
    * Not each type can be used in every place. Each set below represent one place
