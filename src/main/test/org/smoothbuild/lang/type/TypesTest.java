@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
@@ -79,7 +80,7 @@ public class TypesTest {
 
   @Test
   public void is_assignable_from() throws Exception {
-    StructType name = new StructType("Name", SString.class, STRING);
+    StructType name = new StructType("Name", SString.class, ImmutableMap.of("field", STRING));
     List<Type> types = asList(
         STRING, arrayOf(STRING), arrayOf(arrayOf(STRING)),
         BLOB, arrayOf(BLOB), arrayOf(arrayOf(BLOB)),
@@ -319,7 +320,8 @@ public class TypesTest {
     assertClosest(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
     assertClosest(arrayOf(NOTHING), NOTHING, arrayOf(NOTHING), builder);
 
-    assertClosest(arrayOf(FILE), new StructType("Struct", SString.class, arrayOf(BLOB)),
+    assertClosest(arrayOf(FILE),
+        new StructType("Struct", SString.class, ImmutableMap.of("field", arrayOf(BLOB))),
         arrayOf(BLOB), builder);
 
     String errors = builder.toString();

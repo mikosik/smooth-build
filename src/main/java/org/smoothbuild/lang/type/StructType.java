@@ -4,17 +4,24 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.value.Value;
 
-public class StructType extends Type {
-  private final Type directConvertibleTo;
+import com.google.common.collect.ImmutableMap;
 
-  protected StructType(String name, Class<? extends Value> jType, Type directConvertibleTo) {
+public class StructType extends Type {
+  private final ImmutableMap<String, Type> fields;
+
+  protected StructType(String name, Class<? extends Value> jType,
+      ImmutableMap<String, Type> fields) {
     super(name, jType);
-    this.directConvertibleTo = directConvertibleTo;
+    this.fields = fields;
+  }
+
+  public ImmutableMap<String, Type> fields() {
+    return fields;
   }
 
   @Override
   public Type directConvertibleTo() {
-    return directConvertibleTo;
+    return fields.values().iterator().next();
   }
 
   @Override
