@@ -22,16 +22,16 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 
 public class JunitFunction {
   @SmoothFunction
   public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include) {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
-    Map<String, SFile> testFiles = stream(unzipped.asIterable(SFile.class).spliterator(), false)
-        .collect(toMap(f -> toBinaryName(f.path().value()), identity()));
-    Map<String, SFile> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
+    Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
+        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).value()), identity()));
+    Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
     testFiles
         .entrySet()
         .stream()
@@ -51,7 +51,7 @@ public class JunitFunction {
       Predicate<Path> filter = createFilter(include);
       int testCount = 0;
       for (String binaryName : testFiles.keySet()) {
-        Path filePath = path(testFiles.get(binaryName).path().value());
+        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).value());
         if (filter.test(filePath)) {
           testCount++;
           Class<?> testClass = loadClass(classLoader, binaryName);
@@ -74,7 +74,7 @@ public class JunitFunction {
     }
   }
 
-  private static JUnitCoreWrapper createJUnitCore(Map<String, SFile> binaryNameToClassFile,
+  private static JUnitCoreWrapper createJUnitCore(Map<String, Struct> binaryNameToClassFile,
       FileClassLoader classLoader) {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
       return JUnitCoreWrapper.newInstance(loadClass(classLoader, "org.junit.runner.JUnitCore"));

@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.hash.HashCode;
 
@@ -38,7 +38,7 @@ public class FileArrayTest {
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
     given(array = (Array) valuesDb.read(arrayOf(FILE), hash));
-    when(array).asIterable(SFile.class);
+    when(array).asIterable(Struct.class);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

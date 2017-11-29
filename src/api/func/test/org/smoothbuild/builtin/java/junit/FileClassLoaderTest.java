@@ -15,13 +15,13 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.reflect.Classes;
 
 public class FileClassLoaderTest {
   private final ValuesDb valuesDb = memoryValuesDb();
   private FileClassLoader fileClassLoader;
-  private SFile file;
+  private Struct file;
   private Class<MyClass> klass;
 
   @Test
@@ -33,13 +33,13 @@ public class FileClassLoaderTest {
     thenReturned(same(fileClassLoader));
   }
 
-  private static Map<String, SFile> map(String name, SFile file) {
-    HashMap<String, SFile> result = new HashMap<>();
+  private static Map<String, Struct> map(String name, Struct file) {
+    HashMap<String, Struct> result = new HashMap<>();
     result.put(name, file);
     return result;
   }
 
-  private SFile createByteCodeFile(Class<?> klass) throws IOException {
+  private Struct createByteCodeFile(Class<?> klass) throws IOException {
     return file(valuesDb, path(binaryPath(klass)), Classes.bytecode(klass));
   }
 

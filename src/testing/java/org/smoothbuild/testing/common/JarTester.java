@@ -10,14 +10,15 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 
 public class JarTester {
 
-  public static Blob jar(SFile... files) throws IOException {
+  public static Blob jar(Struct... files) throws IOException {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     try (JarOutputStream jarOutputStream = new JarOutputStream(outputStream)) {
-      for (SFile file : files) {
+      for (Struct file : files) {
         addEntry(jarOutputStream, file);
       }
     }
@@ -25,10 +26,10 @@ public class JarTester {
     return blob(memoryValuesDb(), outputStream.toByteArray());
   }
 
-  private static void addEntry(JarOutputStream jarOutputStream, SFile file) throws IOException {
-    JarEntry entry = new JarEntry(file.path().value());
+  private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
+    JarEntry entry = new JarEntry(((SString) file.get("path")).value());
     jarOutputStream.putNextEntry(entry);
-    jarOutputStream.write(toByteArray(file.content().openInputStream()));
+    jarOutputStream.write(toByteArray(((Blob) file.get("content")).openInputStream()));
     jarOutputStream.closeEntry();
   }
 }

@@ -17,12 +17,12 @@ import org.junit.Test;
 import org.smoothbuild.lang.message.MessageException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 
 public class PackagedJavaFileObjectsTest {
   private final NativeApi nativeApi = container();
-  private SFile file1;
-  private SFile file2;
+  private Struct file1;
+  private Struct file2;
   private Blob jar;
 
   @Test

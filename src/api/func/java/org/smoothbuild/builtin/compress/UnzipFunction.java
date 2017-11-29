@@ -27,7 +27,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -48,8 +48,8 @@ public class UnzipFunction {
           ZipEntry entry = entries.nextElement();
           String name = entry.getName();
           if (!name.endsWith("/") && filter.test(name)) {
-            SFile unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
-            String fileName = unzippedEntry.path().value();
+            Struct unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+            String fileName = ((SString) unzippedEntry.get("path")).value();
             if (duplicatesDetector.addValue(fileName)) {
               throw errorException("archive contains two files with the same path = " + fileName);
             }
@@ -72,7 +72,7 @@ public class UnzipFunction {
     return tempFile;
   }
 
-  private static SFile unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
+  private static Struct unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
     String fileName = entry.getName();
     try {
       path(fileName);

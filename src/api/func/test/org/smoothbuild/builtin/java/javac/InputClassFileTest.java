@@ -14,14 +14,14 @@ import java.net.URI;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 
 public class InputClassFileTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final ValuesDb valuesDb = memoryValuesDb();
   private InputClassFile inputClassFile;
   private final Path path = path("a/b/MyClass.class");
-  private SFile file;
+  private Struct file;
 
   @Test(expected = IllegalArgumentException.class)
   public void file_without_class_extension_is_forbidden() throws Exception {

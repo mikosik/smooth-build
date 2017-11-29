@@ -17,7 +17,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Streams;
 
 public class TempDir {
@@ -56,21 +57,23 @@ public class TempDir {
   }
 
   private void writeFilesImpl(Array files) throws IOException {
-    for (SFile file : files.asIterable(SFile.class)) {
-      writeFileImpl(path(file.path().value()), file.content());
+    for (Struct file : files.asIterable(Struct.class)) {
+      writeFileImpl(file);
     }
   }
 
-  public void writeFile(SFile file) {
+  public void writeFile(Struct file) {
     assertNotDestroyed();
     try {
-      writeFileImpl(path(file.path().value()), file.content());
+      writeFileImpl(file);
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
   }
 
-  private void writeFileImpl(Path path, Blob content) throws IOException {
+  private void writeFileImpl(Struct file) throws IOException {
+    Path path = path(((SString) file.get("path")).value());
+    Blob content = (Blob) file.get("content");
     InputStream inputStream = content.openInputStream();
     OutputStream outputStream = fileSystem.openOutputStream(rootPath.append(path));
     Streams.copy(inputStream, outputStream);
@@ -89,7 +92,7 @@ public class TempDir {
     ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(FILE);
     for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
       Blob content = readContentImpl(path);
-      SFile file = valuesDb.file(valuesDb.string(path.value()), content);
+      Struct file = valuesDb.file(valuesDb.string(path.value()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();

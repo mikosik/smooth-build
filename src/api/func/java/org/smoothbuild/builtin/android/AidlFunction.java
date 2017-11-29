@@ -15,20 +15,20 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.CommandExecutor;
 
 public class AidlFunction {
 
   @SmoothFunction
-  public static SFile aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
-      SFile interfaceFile) throws InterruptedException {
+  public static Struct aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
+      Struct interfaceFile) throws InterruptedException {
     return execute(nativeApi, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
   }
 
-  private static SFile execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
-      SFile interfaceFile) throws InterruptedException {
+  private static Struct execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
+      Struct interfaceFile) throws InterruptedException {
     String aidlBinary = AndroidSdk.getAidlBinaryPath(buildToolsVersion).toString();
     String frameworkAidl = AndroidSdk.getFrameworkAidl(apiLevel).toString();
 
@@ -41,25 +41,25 @@ public class AidlFunction {
     command.add(aidlBinary);
     command.add("-p" + frameworkAidl);
     command.add("-o" + outputFilesDir.rootOsPath());
-    command.add(inputFilesDir.asOsPath(path(interfaceFile.path().value())));
+    command.add(inputFilesDir.asOsPath(path(((SString) interfaceFile.get("path")).value())));
 
     executeCommand(command);
     return onlyElement(outputFilesDir.readFiles());
   }
 
-  private static SFile onlyElement(Array outputFiles) {
-    Iterator<SFile> iterator = outputFiles.asIterable(SFile.class).iterator();
+  private static Struct onlyElement(Array outputFiles) {
+    Iterator<Struct> iterator = outputFiles.asIterable(Struct.class).iterator();
     if (!iterator.hasNext()) {
       throw errorException(AIDL_BINARY
           + " binary should return exactly one file but returned zero.");
     }
-    SFile result = iterator.next();
+    Struct result = iterator.next();
     if (iterator.hasNext()) {
       StringBuilder builder = new StringBuilder();
       builder.append(AIDL_BINARY);
       builder.append("binary should return exactly one file but it returned following files:\n");
-      for (SFile file : outputFiles.asIterable(SFile.class)) {
-        builder.append(file.path().value());
+      for (Struct file : outputFiles.asIterable(Struct.class)) {
+        builder.append(((SString) file.get("path")).value());
         builder.append("\n");
       }
       throw errorException(builder.toString());

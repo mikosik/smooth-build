@@ -13,13 +13,13 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 
 public class InputSourceFileTest {
   private final ValuesDb valuesDb = memoryValuesDb();
   private Path path;
   private String content;
-  private SFile file;
+  private Struct file;
 
   @Test
   public void get_char_content_returns_file_content() throws IOException {

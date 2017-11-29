@@ -13,7 +13,7 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 
 public class FilterFunction {
@@ -22,8 +22,8 @@ public class FilterFunction {
     Predicate<Path> filter = createFilter(include.value());
     ArrayBuilder builder = nativeApi.create().arrayBuilder(FILE);
 
-    for (SFile file : files.asIterable(SFile.class)) {
-      if (filter.test(path(file.path().value()))) {
+    for (Struct file : files.asIterable(Struct.class)) {
+      if (filter.test(path(((SString) file.get("path")).value()))) {
         builder.add(file);
       }
     }

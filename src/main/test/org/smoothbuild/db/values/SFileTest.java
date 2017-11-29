@@ -16,7 +16,8 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
@@ -27,8 +28,8 @@ public class SFileTest {
   private final String otherPath = "other/path";
 
   private ValuesDb valuesDb;
-  private SFile file;
-  private SFile file2;
+  private Struct file;
+  private Struct file2;
   private HashCode hash;
 
   @Before
@@ -58,14 +59,14 @@ public class SFileTest {
   @Test
   public void path_contains_path_passed_to_builder() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(file.path()).value();
+    when((SString) file.get("path")).value();
     thenReturned(path);
   }
 
   @Test
   public void content_contains_data_passed_to_builder() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(inputStreamToByteArray(file.content().openInputStream()));
+    when(inputStreamToByteArray(((Blob) file.get("content")).openInputStream()));
     thenReturned(bytes);
   }
 
@@ -73,7 +74,7 @@ public class SFileTest {
   public void file_hash_is_different_of_its_content_hash() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
     when(file.hash());
-    thenReturned(not(file.content().hash()));
+    thenReturned(not(((Blob) file.get("content")).hash()));
   }
 
   @Test
@@ -176,25 +177,25 @@ public class SFileTest {
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(((SFile) valuesDb.read(FILE, file.hash())).content());
-    thenReturned(file.content());
+    when((Blob) ((Struct) valuesDb.read(FILE, file.hash())).get("content"));
+    thenReturned((Blob) file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(((SFile) valuesDb.read(FILE, file.hash())).path());
-    thenReturned(file.path());
+    when((SString) ((Struct) valuesDb.read(FILE, file.hash())).get("path"));
+    thenReturned((SString) file.get("path"));
   }
 
   @Test
   public void to_string_contains_type_name_path_and_bytes_count() throws Exception {
     given(file = createFile(valuesDb, path, new byte[] { 1, 2, 3 }));
     when(file).toString();
-    thenReturned("File(" + path + " Blob(3 bytes))");
+    thenReturned("File(content=Blob(3 bytes), path=" + path + ")");
   }
 
-  private static SFile createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
+  private static Struct createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
     return valuesDb.file(valuesDb.string(path), createBlob(valuesDb, content));
   }
 

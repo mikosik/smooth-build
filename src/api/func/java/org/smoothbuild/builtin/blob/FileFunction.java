@@ -7,12 +7,12 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 
 public class FileFunction {
   @SmoothFunction
-  public static SFile File(NativeApi nativeApi, SString path, Blob content) {
+  public static Struct File(NativeApi nativeApi, SString path, Blob content) {
     try {
       Path.path(path.value());
     } catch (IllegalPathException e) {

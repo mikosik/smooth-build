@@ -7,19 +7,21 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 
 public class FileClassLoader extends ClassLoader {
-  private final Map<String, SFile> binaryNameToFile;
+  private final Map<String, Struct> binaryNameToFile;
 
-  public FileClassLoader(Map<String, SFile> binaryNameToFile) {
+  public FileClassLoader(Map<String, Struct> binaryNameToFile) {
     super(FileClassLoader.class.getClassLoader());
     this.binaryNameToFile = binaryNameToFile;
   }
 
   @Override
   public Class<?> findClass(String name) throws ClassNotFoundException {
-    SFile file = binaryNameToFile.get(name);
+    Struct file = binaryNameToFile.get(name);
     if (file == null) {
       throw new ClassNotFoundException(name);
     }
@@ -27,11 +29,11 @@ public class FileClassLoader extends ClassLoader {
     return defineClass(name, byteArray, 0, byteArray.length);
   }
 
-  private byte[] fileToByteArray(SFile file) {
+  private byte[] fileToByteArray(Struct file) {
     try {
-      return inputStreamToByteArray(file.content().openInputStream());
+      return inputStreamToByteArray(((Blob) file.get("content")).openInputStream());
     } catch (IOException e) {
-      throw new FileSystemException("Error reading from " + file.path() + ". Java exception is:\n"
+      throw new FileSystemException("Error reading from " + (SString) file.get("path") + ". Java exception is:\n"
           + stackTraceToString(e));
     }
   }

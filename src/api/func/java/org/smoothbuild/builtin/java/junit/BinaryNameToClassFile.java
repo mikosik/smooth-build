@@ -11,19 +11,20 @@ import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, SFile> binaryNameToClassFile(NativeApi nativeApi,
+  public static Map<String, Struct> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    Map<String, SFile> binaryNameToClassFile = new HashMap<>();
+    Map<String, Struct> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
       Array fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (SFile classFile : fileArray.asIterable(SFile.class)) {
-        String classFilePath = classFile.path().value();
+      for (Struct classFile : fileArray.asIterable(Struct.class)) {
+        String classFilePath = ((SString) classFile.get("path")).value();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
           throw errorException("File " + classFilePath

@@ -2,9 +2,12 @@ package org.smoothbuild.lang.type;
 
 import java.util.Objects;
 
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class StructType extends Type {
   private final ImmutableMap<String, Type> fields;
@@ -13,6 +16,11 @@ public class StructType extends Type {
       ImmutableMap<String, Type> fields) {
     super(name, jType);
     this.fields = fields;
+  }
+
+  @Override
+  public Value newValue(HashCode hash, HashedDb hashedDb) {
+    return new Struct(hash, this, hashedDb);
   }
 
   public ImmutableMap<String, Type> fields() {

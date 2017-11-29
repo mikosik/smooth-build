@@ -6,19 +6,21 @@ import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 
 public class InputSourceFile extends SimpleJavaFileObject {
-  private final SFile file;
+  private final Struct file;
 
-  public InputSourceFile(SFile file) {
-    super(URI.create("string:///" + file.path().value()), Kind.SOURCE);
+  public InputSourceFile(Struct file) {
+    super(URI.create("string:///" + ((SString) file.get("path")).value()), Kind.SOURCE);
     this.file = file;
   }
 
   @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-    try (Scanner scanner = new Scanner(file.content().openInputStream(), "UTF-8")) {
+    try (Scanner scanner = new Scanner(((Blob) file.get("content")).openInputStream(), "UTF-8")) {
       scanner.useDelimiter("\\A");
       return scanner.hasNext() ? scanner.next() : "";
     }

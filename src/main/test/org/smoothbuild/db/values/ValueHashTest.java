@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
@@ -24,7 +24,7 @@ public class ValueHashTest {
   private ValuesDb valuesDb;
   private SString sstring;
   private Blob blob;
-  private SFile file;
+  private Struct file;
   private Array array;
 
   @Before
@@ -123,7 +123,7 @@ public class ValueHashTest {
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
-  private static SFile createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
+  private static Struct createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
     return valuesDb.file(valuesDb.string(path), createBlob(valuesDb, content));
   }
 

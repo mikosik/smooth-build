@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.Streams;
 
 public class OutputClassFileTest {
@@ -31,7 +31,7 @@ public class OutputClassFileTest {
     given(fileArrayBuilder = nativeApi.create().arrayBuilder(FILE));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
     Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
-    when(() -> fileArrayBuilder.build().asIterable(SFile.class));
+    when(() -> fileArrayBuilder.build().asIterable(Struct.class));
     thenReturned(contains(file(memoryValuesDb(), path, bytes)));
   }
 
