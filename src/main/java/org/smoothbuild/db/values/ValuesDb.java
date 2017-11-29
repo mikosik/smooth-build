@@ -4,8 +4,6 @@ import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.value.SFile.storeFileInDb;
 import static org.smoothbuild.lang.value.SString.storeStringInDb;
 
-import java.util.function.Function;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -14,8 +12,6 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
-import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -68,28 +64,6 @@ public class ValuesDb implements ValueFactory {
   }
 
   public Value read(Type type, HashCode hash) {
-    return valueConstructor(type).apply(hash);
-  }
-
-  private Function<HashCode, ? extends Value> valueConstructor(Type type) {
-    if (type.equals(Types.STRING)) {
-      return (hash) -> new SString(hash, hashedDb);
-    }
-    if (type.equals(Types.BLOB)) {
-      return (hash) -> new Blob(hash, hashedDb);
-    }
-    if (type.equals(Types.FILE)) {
-      return (hash) -> new SFile(hash, hashedDb);
-    }
-    if (type.equals(Types.NOTHING)) {
-      return (hash) -> {
-        throw new UnsupportedOperationException("Nothing cannot be constructed.");
-      };
-    }
-    if (type instanceof ArrayType) {
-      ArrayType arrayType = (ArrayType) type;
-      return (hash) -> new Array(hash, arrayType, hashedDb);
-    }
-    throw new RuntimeException("Unexpected type: " + type);
+    return type.newValue(hash, hashedDb);
   }
 }
