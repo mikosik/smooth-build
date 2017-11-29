@@ -17,7 +17,7 @@ import com.google.common.hash.HashCode;
 public class Array extends Value {
   private final HashedDb hashedDb;
 
-  public Array(HashCode hash, ArrayType arrayType, HashedDb hashedDb) {
+  public Array(ArrayType arrayType, HashCode hash, HashedDb hashedDb) {
     super(arrayType, hash);
     this.hashedDb = hashedDb;
   }

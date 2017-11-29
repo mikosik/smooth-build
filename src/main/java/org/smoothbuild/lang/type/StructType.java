@@ -20,7 +20,7 @@ public class StructType extends Type {
 
   @Override
   public Value newValue(HashCode hash, HashedDb hashedDb) {
-    return new Struct(hash, this, hashedDb);
+    return new Struct(this, hash, hashedDb);
   }
 
   public ImmutableMap<String, Type> fields() {
