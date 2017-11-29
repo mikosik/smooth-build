@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.List;
-import java.util.function.Function;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
@@ -16,13 +15,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Array extends Value {
-  private final Function<HashCode, ? extends Value> valueConstructor;
   private final HashedDb hashedDb;
 
-  public Array(HashCode hash, ArrayType arrayType,
-      Function<HashCode, ? extends Value> valueConstructor, HashedDb hashedDb) {
+  public Array(HashCode hash, ArrayType arrayType, HashedDb hashedDb) {
     super(arrayType, hash);
-    this.valueConstructor = valueConstructor;
     this.hashedDb = hashedDb;
   }
 
@@ -32,13 +28,13 @@ public class Array extends Value {
   }
 
   public static Array storeArrayInDb(List<? extends Value> elements, ArrayType arrayType,
-      Function<HashCode, ? extends Value> valueConstructor, HashedDb hashedDb) {
+      HashedDb hashedDb) {
     Marshaller marshaller = hashedDb.newMarshaller();
     for (Value element : elements) {
       marshaller.writeHash(element.hash());
     }
     marshaller.close();
-    return new Array(marshaller.hash(), arrayType, valueConstructor, hashedDb);
+    return arrayType.newValue(marshaller.hash(), hashedDb);
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
@@ -47,7 +43,7 @@ public class Array extends Value {
       ImmutableList.Builder<T> builder = ImmutableList.builder();
       HashCode elementHash = null;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
-        builder.add((T) valueConstructor.apply(elementHash));
+        builder.add((T) type().elemType().newValue(elementHash, hashedDb));
       }
       return builder.build();
     }

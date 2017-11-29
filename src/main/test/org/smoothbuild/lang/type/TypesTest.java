@@ -2,9 +2,11 @@ package org.smoothbuild.lang.type;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.BLOB;
@@ -14,7 +16,10 @@ import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.testory.Testory.given;
+import static org.testory.Testory.then;
+import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.util.HashSet;
@@ -22,7 +27,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.SFile;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.testing.db.values.ValueCreators;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
@@ -30,7 +39,45 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
+  private HashedDb hashedDb;
   private ArrayType type;
+  private SString string;
+  private SFile file;
+  private Array array;
+
+  @Test
+  public void new_value_for_nothing_throws_exception() throws Exception {
+    given(hashedDb = new HashedDb());
+    given(string = SString.storeStringInDb("abc", hashedDb));
+    when(() -> NOTHING.newValue(string.hash(), hashedDb));
+    thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void new_value_for_basic_type() throws Exception {
+    given(hashedDb = new HashedDb());
+    given(string = SString.storeStringInDb("abc", hashedDb));
+    when(() -> ((SString) STRING.newValue(string.hash(), hashedDb)).value());
+    thenReturned("abc");
+  }
+
+  @Test
+  public void new_value_for_struct_type() throws Exception {
+    given(hashedDb = new HashedDb());
+    given(file = ValueCreators.file(hashedDb, path("file path")));
+    when(file = (SFile) FILE.newValue(file.hash(), hashedDb));
+    thenEqual(file.path().value(), "file path");
+  }
+
+  @Test
+  public void new_value_for_array_type() throws Exception {
+    given(hashedDb = new HashedDb());
+    given(string = SString.storeStringInDb("abc", hashedDb));
+    given(array = ValueCreators.array(hashedDb, STRING, string));
+    when(array = arrayOf(STRING).newValue(array.hash(), hashedDb));
+    then(array.asIterable(SString.class), iterableWithSize(1));
+    thenEqual(array.asIterable(SString.class).iterator().next().value(), "abc");
+  }
 
   @Test
   public void core_type() throws Exception {

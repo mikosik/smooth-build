@@ -2,7 +2,10 @@ package org.smoothbuild.lang.type;
 
 import java.util.Objects;
 
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
+
+import com.google.common.hash.HashCode;
 
 public class ArrayType extends Type {
   private final Type elemType;
@@ -14,6 +17,11 @@ public class ArrayType extends Type {
   private ArrayType(Type elemType) {
     super("[" + elemType.name() + "]", Array.class);
     this.elemType = elemType;
+  }
+
+  @Override
+  public Array newValue(HashCode hash, HashedDb hashedDb) {
+    return new Array(hash, this, hashedDb);
   }
 
   public Type elemType() {

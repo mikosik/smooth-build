@@ -22,7 +22,7 @@ public class Types {
   private static StructType createFileType() {
     ImmutableMap<String, Type> fields = ImmutableMap.of(
         "content", BLOB,
-        "name", STRING);
+        "path", STRING);
     return new StructType("File", SFile.class, fields);
   }
 

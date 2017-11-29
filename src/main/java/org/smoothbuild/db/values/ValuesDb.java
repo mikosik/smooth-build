@@ -49,7 +49,7 @@ public class ValuesDb implements ValueFactory {
   }
 
   private ArrayBuilder createArrayBuilder(ArrayType type) {
-    return new ArrayBuilder(type, valueConstructor(type.elemType()), hashedDb);
+    return new ArrayBuilder(type, hashedDb);
   }
 
   @Override
@@ -88,13 +88,8 @@ public class ValuesDb implements ValueFactory {
     }
     if (type instanceof ArrayType) {
       ArrayType arrayType = (ArrayType) type;
-      return (hash) -> arrayMarshaller(arrayType, valueConstructor(arrayType.elemType()), hash);
+      return (hash) -> new Array(hash, arrayType, hashedDb);
     }
     throw new RuntimeException("Unexpected type: " + type);
-  }
-
-  private Array arrayMarshaller(ArrayType type,
-      Function<HashCode, ? extends Value> valueConstructor, HashCode hash) {
-    return new Array(hash, type, valueConstructor, hashedDb);
   }
 }

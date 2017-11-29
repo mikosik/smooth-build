@@ -4,23 +4,17 @@ import static org.smoothbuild.lang.value.Array.storeArrayInDb;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ArrayType;
 
-import com.google.common.hash.HashCode;
-
 public class ArrayBuilder {
   private final ArrayType type;
-  private final Function<HashCode, ? extends Value> elementMarshaller;
   private final HashedDb hashedDb;
   private final List<Value> elements;
 
-  public ArrayBuilder(ArrayType type, Function<HashCode, ? extends Value> elementMarshaller,
-      HashedDb hashedDb) {
+  public ArrayBuilder(ArrayType type, HashedDb hashedDb) {
     this.type = type;
-    this.elementMarshaller = elementMarshaller;
     this.hashedDb = hashedDb;
     this.elements = new ArrayList<>();
   }
@@ -40,6 +34,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return storeArrayInDb(elements, type, elementMarshaller, hashedDb);
+    return storeArrayInDb(elements, type, hashedDb);
   }
 }

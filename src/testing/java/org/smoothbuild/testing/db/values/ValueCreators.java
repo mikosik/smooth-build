@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Type;
@@ -19,11 +20,20 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
+  public static <T extends Value> Array array(HashedDb hashedDb, Type elementType,
+      Value... elements) {
+    return array(new ValuesDb(hashedDb), elementType, elements);
+  }
+
   public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
       Value... elements) {
     ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(elementType);
     stream(elements).forEach(arrayBuilder::add);
     return arrayBuilder.build();
+  }
+
+  public static SFile file(HashedDb hashedDb, Path path) {
+    return file(new ValuesDb(hashedDb), path);
   }
 
   public static SFile file(ValuesDb valuesDb, Path path) {
