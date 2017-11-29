@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.value;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Map;
@@ -33,6 +34,7 @@ public class Struct extends Value {
   }
 
   public Value get(String name) {
+    checkArgument(fields.containsKey(name), name);
     return fields.get(name);
   }
 
