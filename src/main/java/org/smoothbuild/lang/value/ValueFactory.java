@@ -5,7 +5,7 @@ import org.smoothbuild.lang.type.Type;
 public interface ValueFactory {
   public ArrayBuilder arrayBuilder(Type elementType);
 
-  public SFile file(SString path, Blob content);
+  public Struct file(SString path, Blob content);
 
   public BlobBuilder blobBuilder();
 

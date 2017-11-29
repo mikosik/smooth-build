@@ -10,22 +10,24 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 
 public class InputClassFile extends SimpleJavaFileObject {
-  private final SFile file;
+  private final Struct file;
   private final String binaryName;
   private final String aPackage;
 
-  public InputClassFile(SFile file) {
-    super(URI.create("jar:///" + ":" + file.path().value()), Kind.CLASS);
+  public InputClassFile(Struct file) {
+    super(URI.create("jar:///" + ":" + ((SString) file.get("path")).value()), Kind.CLASS);
 
-    if (!file.path().value().endsWith(Kind.CLASS.extension)) {
+    if (!((SString) file.get("path")).value().endsWith(Kind.CLASS.extension)) {
       throw new IllegalArgumentException();
     }
 
     this.file = file;
-    this.binaryName = toBinaryName(file.path().value());
+    this.binaryName = toBinaryName(((SString) file.get("path")).value());
     this.aPackage = binaryNameToPackage(binaryName);
   }
 
@@ -39,7 +41,7 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public InputStream openInputStream() throws IOException {
-    return file.content().openInputStream();
+    return ((Blob) file.get("content")).openInputStream();
   }
 
   @Override
@@ -48,11 +50,11 @@ public class InputClassFile extends SimpleJavaFileObject {
   }
 
   private boolean equals(InputClassFile inputClassFile) {
-    return Objects.equals(file.path(), inputClassFile.file.path());
+    return Objects.equals((SString) file.get("path"), (SString) inputClassFile.file.get("path"));
   }
 
   @Override
   public int hashCode() {
-    return file.path().hashCode();
+    return ((SString) file.get("path")).hashCode();
   }
 }

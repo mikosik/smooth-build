@@ -29,7 +29,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.db.values.ValueCreators;
 
@@ -42,7 +42,7 @@ public class TypesTest {
   private HashedDb hashedDb;
   private ArrayType type;
   private SString string;
-  private SFile file;
+  private Struct file;
   private Array array;
 
   @Test
@@ -65,8 +65,8 @@ public class TypesTest {
   public void new_value_for_struct_type() throws Exception {
     given(hashedDb = new HashedDb());
     given(file = ValueCreators.file(hashedDb, path("file path")));
-    when(file = (SFile) FILE.newValue(file.hash(), hashedDb));
-    thenEqual(file.path().value(), "file path");
+    when(file = (Struct) FILE.newValue(file.hash(), hashedDb));
+    thenEqual(((SString) file.get("path")).value(), "file path");
   }
 
   @Test

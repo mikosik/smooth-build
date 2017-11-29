@@ -16,7 +16,9 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -34,7 +36,7 @@ public class ArtifactSaver {
     if (value instanceof Array) {
       saveArray(name, (Array) value);
     } else if (value.type().equals(FILE)) {
-      saveValue(name, ((SFile) value).content());
+      saveValue(name, (Blob) ((Struct) value).get("content"));
     } else {
       saveValue(name, value);
     }
@@ -78,10 +80,10 @@ public class ArtifactSaver {
     // create empty dir for us.
     fileSystem.createDir(artifactPath);
 
-    for (SFile file : fileArray.asIterable(SFile.class)) {
-      Path sourcePath = artifactPath.append(path(file.path().value()));
-      if (!duplicatesDetector.addValue(file.path().value())) {
-        Path targetPath = targetPath(file.content());
+    for (Struct file : fileArray.asIterable(Struct.class)) {
+      Path sourcePath = artifactPath.append(path(((SString) file.get("path")).value()));
+      if (!duplicatesDetector.addValue(((SString) file.get("path")).value())) {
+        Path targetPath = targetPath((Blob) file.get("content"));
         fileSystem.createLink(sourcePath, targetPath);
       }
     }

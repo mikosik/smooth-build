@@ -33,7 +33,7 @@ import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.util.Streams;
@@ -53,7 +53,7 @@ public class OutputsDbTest {
 
   private Message message;
   private Array array;
-  private SFile file;
+  private Struct file;
   private Blob blob;
   private SString stringValue;
   private final String string = "some string";
@@ -91,7 +91,7 @@ public class OutputsDbTest {
     given(file = file(valuesDb, path, bytes));
     given(array = valuesDb.arrayBuilder(FILE).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, arrayOf(FILE)).result()).asIterable(SFile.class).iterator()
+    when(((Array) outputsDb.read(hash, arrayOf(FILE)).result()).asIterable(Struct.class).iterator()
         .next());
     thenReturned(file);
   }

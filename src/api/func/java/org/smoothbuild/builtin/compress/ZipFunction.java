@@ -13,7 +13,8 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
@@ -23,8 +24,8 @@ public class ZipFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder)) {
-      for (SFile file : files.asIterable(SFile.class)) {
-        String path = file.path().value();
+      for (Struct file : files.asIterable(Struct.class)) {
+        String path = ((SString) file.get("path")).value();
         if (duplicatesDetector.addValue(path)) {
           throw errorException("Cannot zip two files with the same path = " + path);
         }
@@ -36,11 +37,11 @@ public class ZipFunction {
     return blobBuilder.build();
   }
 
-  private static void zipFile(SFile file, ZipOutputStream zipOutputStream, byte[] buffer)
+  private static void zipFile(Struct file, ZipOutputStream zipOutputStream, byte[] buffer)
       throws IOException {
-    ZipEntry entry = new ZipEntry(file.path().value());
+    ZipEntry entry = new ZipEntry(((SString) file.get("path")).value());
     zipOutputStream.putNextEntry(entry);
-    try (InputStream inputStream = file.content().openInputStream()) {
+    try (InputStream inputStream = ((Blob) file.get("content")).openInputStream()) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {
         zipOutputStream.write(buffer, 0, readCount);

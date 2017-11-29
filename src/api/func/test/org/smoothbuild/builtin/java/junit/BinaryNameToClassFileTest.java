@@ -18,14 +18,14 @@ import java.util.Map;
 import org.junit.Test;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest {
   private final NativeApi nativeApi = container();
   private Blob blob;
-  private SFile file1;
-  private SFile file2;
+  private Struct file1;
+  private Struct file2;
 
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException {
@@ -36,8 +36,8 @@ public class BinaryNameToClassFileTest {
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
   }
 
-  private static Map<String, SFile> mapOf(String name1, SFile file1, String name2, SFile file2) {
-    HashMap<String, SFile> result = new HashMap<>();
+  private static Map<String, Struct> mapOf(String name1, Struct file1, String name2, Struct file2) {
+    HashMap<String, Struct> result = new HashMap<>();
     result.put(name1, file1);
     result.put(name2, file2);
     return result;

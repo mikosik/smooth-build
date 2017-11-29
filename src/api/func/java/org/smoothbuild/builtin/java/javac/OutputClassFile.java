@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.ForwardingOutputStream;
 
@@ -36,7 +36,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       public void close() throws IOException {
         outputStream.close();
         SString pathString = nativeApi.create().string(path.value());
-        SFile file = nativeApi.create().file(pathString, contentBuilder.build());
+        Struct file = nativeApi.create().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     };

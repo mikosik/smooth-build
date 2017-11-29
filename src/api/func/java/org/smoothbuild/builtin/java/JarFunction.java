@@ -16,7 +16,8 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SFile;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
@@ -26,8 +27,8 @@ public class JarFunction {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (SFile file : files.asIterable(SFile.class)) {
-        String path = file.path().value();
+      for (Struct file : files.asIterable(Struct.class)) {
+        String path = ((SString) file.get("path")).value();
         if (duplicatesDetector.addValue(path)) {
           throw errorException("Cannot jar two files with the same path = " + path);
         }
@@ -51,10 +52,10 @@ public class JarFunction {
     }
   }
 
-  private static void jarFile(SFile file, JarOutputStream jarOutputStream, byte[] buffer)
+  private static void jarFile(Struct file, JarOutputStream jarOutputStream, byte[] buffer)
       throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(file.path().value()));
-    try (InputStream inputStream = file.content().openInputStream()) {
+    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).value()));
+    try (InputStream inputStream = ((Blob) file.get("content")).openInputStream()) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {
         jarOutputStream.write(buffer, 0, readCount);
