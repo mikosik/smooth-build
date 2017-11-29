@@ -71,7 +71,7 @@ public class ValueHashTest {
   public void hash_of_some_file_is_stable() throws Exception {
     given(file = createFile(valuesDb, "abc", new byte[] { 1, 2, 3 }));
     when(() -> file.hash());
-    thenReturned(HashCode.fromString("f4ca6ed218869153e4ef2d8ac0d913127f340f79"));
+    thenReturned(HashCode.fromString("1ce3b9471d98112a84420bd7d3f6374a4f270658"));
   }
 
   @Test
