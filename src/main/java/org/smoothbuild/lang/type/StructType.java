@@ -2,7 +2,6 @@ package org.smoothbuild.lang.type;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
@@ -16,7 +15,7 @@ public class StructType extends Type {
   }
 
   @Override
-  public Value newValue(HashCode hash, HashedDb hashedDb) {
+  public Struct newValue(HashCode hash, HashedDb hashedDb) {
     return new Struct(this, hash, hashedDb);
   }
 

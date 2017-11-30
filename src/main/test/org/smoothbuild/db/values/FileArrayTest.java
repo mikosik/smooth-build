@@ -37,7 +37,7 @@ public class FileArrayTest {
   @Test
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(array = (Array) valuesDb.read(arrayOf(FILE), hash));
+    given(array = valuesDb.read(arrayOf(FILE), hash));
     when(array).asIterable(Struct.class);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

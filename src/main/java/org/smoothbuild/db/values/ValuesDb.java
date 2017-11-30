@@ -13,6 +13,7 @@ import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -71,6 +72,14 @@ public class ValuesDb implements ValueFactory {
   @Override
   public SString string(String string) {
     return storeStringInDb(string, hashedDb);
+  }
+
+  public Array read(ArrayType type, HashCode hash) {
+    return type.newValue(hash, hashedDb);
+  }
+
+  public Struct read(StructType type, HashCode hash) {
+    return type.newValue(hash, hashedDb);
   }
 
   public Value read(Type type, HashCode hash) {
