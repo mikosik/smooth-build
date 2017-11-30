@@ -29,8 +29,8 @@ import java.util.Set;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.testing.db.values.ValueCreators;
 
 import com.google.common.base.Objects;
@@ -127,7 +127,7 @@ public class TypesTest {
 
   @Test
   public void is_assignable_from() throws Exception {
-    StructType name = new StructType("Name", SString.class, ImmutableMap.of("field", STRING));
+    StructType name = new StructType("Name", ImmutableMap.of("field", STRING));
     List<Type> types = asList(
         STRING, arrayOf(STRING), arrayOf(arrayOf(STRING)),
         BLOB, arrayOf(BLOB), arrayOf(arrayOf(BLOB)),
@@ -367,8 +367,7 @@ public class TypesTest {
     assertClosest(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
     assertClosest(arrayOf(NOTHING), NOTHING, arrayOf(NOTHING), builder);
 
-    assertClosest(arrayOf(FILE),
-        new StructType("Struct", SString.class, ImmutableMap.of("field", arrayOf(BLOB))),
+    assertClosest(arrayOf(FILE), new StructType("Struct", ImmutableMap.of("field", arrayOf(BLOB))),
         arrayOf(BLOB), builder);
 
     String errors = builder.toString();

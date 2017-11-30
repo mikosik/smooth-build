@@ -7,7 +7,6 @@ import java.util.Deque;
 
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.collect.ImmutableMap;
@@ -23,7 +22,7 @@ public class Types {
     ImmutableMap<String, Type> fields = ImmutableMap.of(
         "content", BLOB,
         "path", STRING);
-    return new StructType("File", Struct.class, fields);
+    return new StructType("File", fields);
   }
 
   /*
