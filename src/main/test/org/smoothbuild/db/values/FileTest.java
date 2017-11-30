@@ -21,7 +21,7 @@ import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
-public class SFileTest {
+public class FileTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
   private final String path = "path";
