@@ -10,9 +10,8 @@ import com.google.common.hash.HashCode;
 public class StructType extends Type {
   private final ImmutableMap<String, Type> fields;
 
-  protected StructType(String name, Class<? extends Value> jType,
-      ImmutableMap<String, Type> fields) {
-    super(name, jType);
+  protected StructType(String name, ImmutableMap<String, Type> fields) {
+    super(name, Struct.class);
     this.fields = fields;
   }
 
