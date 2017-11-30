@@ -16,8 +16,8 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.hash.HashCode;
 
@@ -177,15 +177,15 @@ public class FileTest {
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((Blob) ((Struct) valuesDb.read(FILE, file.hash())).get("content"));
-    thenReturned((Blob) file.get("content"));
+    when(valuesDb.read(FILE, file.hash()).get("content"));
+    thenReturned(file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((SString) ((Struct) valuesDb.read(FILE, file.hash())).get("path"));
-    thenReturned((SString) file.get("path"));
+    when((SString) valuesDb.read(FILE, file.hash()).get("path"));
+    thenReturned(file.get("path"));
   }
 
   @Test
@@ -195,7 +195,8 @@ public class FileTest {
     thenReturned("File(content=Blob(3 bytes), path=" + path + ")");
   }
 
-  private static Struct createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
+  private static Struct createFile(ValuesDb valuesDb, String path, byte[] content)
+      throws Exception {
     return valuesDb.file(valuesDb.string(path), createBlob(valuesDb, content));
   }
 

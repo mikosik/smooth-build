@@ -37,7 +37,7 @@ public class StringArrayTest {
   @Test
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(array = (Array) valuesDb.read(arrayOf(STRING), hash));
+    given(array = valuesDb.read(arrayOf(STRING), hash));
     when(array).asIterable(SString.class);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

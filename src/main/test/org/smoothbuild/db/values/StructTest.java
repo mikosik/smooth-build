@@ -174,7 +174,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person2 = (Struct) valuesDb.read(personType(), person.hash()));
+    when(person2 = valuesDb.read(personType(), person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }
