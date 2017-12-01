@@ -8,7 +8,6 @@ import java.util.Deque;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
