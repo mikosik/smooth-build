@@ -34,33 +34,30 @@ public class TypesTest {
   @Test
   public void core_type() throws Exception {
     assertEquals(STRING, STRING.coreType());
-    assertEquals(FILE, FILE.coreType());
+    assertEquals(personType(), personType().coreType());
     assertEquals(NOTHING, NOTHING.coreType());
 
     assertEquals(STRING, arrayOf(STRING).coreType());
-    assertEquals(FILE, arrayOf(FILE).coreType());
+    assertEquals(personType(), arrayOf(personType()).coreType());
     assertEquals(NOTHING, arrayOf(NOTHING).coreType());
 
     assertEquals(STRING, arrayOf(arrayOf(STRING)).coreType());
-    assertEquals(FILE, arrayOf(arrayOf(FILE)).coreType());
+    assertEquals(personType(), arrayOf(arrayOf(personType())).coreType());
     assertEquals(NOTHING, arrayOf(arrayOf(NOTHING)).coreType());
   }
 
   @Test
   public void core_depth() throws Exception {
     assertEquals(0, STRING.coreDepth());
-    assertEquals(0, BLOB.coreDepth());
-    assertEquals(0, FILE.coreDepth());
+    assertEquals(0, personType().coreDepth());
     assertEquals(0, NOTHING.coreDepth());
 
     assertEquals(1, arrayOf(STRING).coreDepth());
-    assertEquals(1, arrayOf(BLOB).coreDepth());
-    assertEquals(1, arrayOf(FILE).coreDepth());
+    assertEquals(1, arrayOf(personType()).coreDepth());
     assertEquals(1, arrayOf(NOTHING).coreDepth());
 
     assertEquals(2, arrayOf(arrayOf(STRING)).coreDepth());
-    assertEquals(2, arrayOf(arrayOf(BLOB)).coreDepth());
-    assertEquals(2, arrayOf(arrayOf(FILE)).coreDepth());
+    assertEquals(2, arrayOf(arrayOf(personType())).coreDepth());
     assertEquals(2, arrayOf(arrayOf(NOTHING)).coreDepth());
   }
 
@@ -79,28 +76,27 @@ public class TypesTest {
 
   @Test
   public void is_assignable_from() throws Exception {
-    StructType name = new StructType("Name", ImmutableMap.of("field", STRING));
     List<Type> types = asList(
         STRING, arrayOf(STRING), arrayOf(arrayOf(STRING)),
         BLOB, arrayOf(BLOB), arrayOf(arrayOf(BLOB)),
         FILE, arrayOf(FILE), arrayOf(arrayOf(FILE)),
-        name, arrayOf(name), arrayOf(arrayOf(name)),
+        personType(), arrayOf(personType()), arrayOf(arrayOf(personType())),
         NOTHING, arrayOf(NOTHING), arrayOf(arrayOf(NOTHING)));
     Set<Conversion> conversions = ImmutableSet.of(
         new Conversion(STRING, STRING),
-        new Conversion(STRING, name),
+        new Conversion(STRING, personType()),
         new Conversion(STRING, NOTHING),
         new Conversion(BLOB, BLOB),
         new Conversion(BLOB, NOTHING),
         new Conversion(BLOB, FILE),
         new Conversion(FILE, FILE),
         new Conversion(FILE, NOTHING),
-        new Conversion(name, name),
-        new Conversion(name, NOTHING),
+        new Conversion(personType(), personType()),
+        new Conversion(personType(), NOTHING),
         new Conversion(NOTHING, NOTHING),
 
         new Conversion(arrayOf(STRING), arrayOf(STRING)),
-        new Conversion(arrayOf(STRING), arrayOf(name)),
+        new Conversion(arrayOf(STRING), arrayOf(personType())),
         new Conversion(arrayOf(STRING), arrayOf(NOTHING)),
         new Conversion(arrayOf(STRING), NOTHING),
         new Conversion(arrayOf(BLOB), arrayOf(BLOB)),
@@ -110,14 +106,14 @@ public class TypesTest {
         new Conversion(arrayOf(FILE), arrayOf(FILE)),
         new Conversion(arrayOf(FILE), arrayOf(NOTHING)),
         new Conversion(arrayOf(FILE), NOTHING),
-        new Conversion(arrayOf(name), arrayOf(name)),
-        new Conversion(arrayOf(name), arrayOf(NOTHING)),
-        new Conversion(arrayOf(name), NOTHING),
+        new Conversion(arrayOf(personType()), arrayOf(personType())),
+        new Conversion(arrayOf(personType()), arrayOf(NOTHING)),
+        new Conversion(arrayOf(personType()), NOTHING),
         new Conversion(arrayOf(NOTHING), arrayOf(NOTHING)),
         new Conversion(arrayOf(NOTHING), NOTHING),
 
         new Conversion(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(STRING))),
-        new Conversion(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(name))),
+        new Conversion(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(personType()))),
         new Conversion(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(NOTHING))),
         new Conversion(arrayOf(arrayOf(STRING)), arrayOf(NOTHING)),
         new Conversion(arrayOf(arrayOf(STRING)), NOTHING),
@@ -130,10 +126,10 @@ public class TypesTest {
         new Conversion(arrayOf(arrayOf(FILE)), arrayOf(arrayOf(NOTHING))),
         new Conversion(arrayOf(arrayOf(FILE)), arrayOf(NOTHING)),
         new Conversion(arrayOf(arrayOf(FILE)), NOTHING),
-        new Conversion(arrayOf(arrayOf(name)), arrayOf(arrayOf(name))),
-        new Conversion(arrayOf(arrayOf(name)), arrayOf(arrayOf(NOTHING))),
-        new Conversion(arrayOf(arrayOf(name)), arrayOf(NOTHING)),
-        new Conversion(arrayOf(arrayOf(name)), NOTHING),
+        new Conversion(arrayOf(arrayOf(personType())), arrayOf(arrayOf(personType()))),
+        new Conversion(arrayOf(arrayOf(personType())), arrayOf(arrayOf(NOTHING))),
+        new Conversion(arrayOf(arrayOf(personType())), arrayOf(NOTHING)),
+        new Conversion(arrayOf(arrayOf(personType())), NOTHING),
         new Conversion(arrayOf(arrayOf(NOTHING)), arrayOf(arrayOf(NOTHING))),
         new Conversion(arrayOf(arrayOf(NOTHING)), arrayOf(NOTHING)),
         new Conversion(arrayOf(arrayOf(NOTHING)), NOTHING));
@@ -175,17 +171,22 @@ public class TypesTest {
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(NOTHING);
     tester.addEqualityGroup(STRING);
     tester.addEqualityGroup(BLOB);
     tester.addEqualityGroup(FILE);
+    tester.addEqualityGroup(personType());
+    tester.addEqualityGroup(NOTHING);
+
     tester.addEqualityGroup(arrayOf(STRING), arrayOf(STRING));
     tester.addEqualityGroup(arrayOf(BLOB), arrayOf(BLOB));
     tester.addEqualityGroup(arrayOf(FILE), arrayOf(FILE));
+    tester.addEqualityGroup(arrayOf(personType()), arrayOf(personType()));
     tester.addEqualityGroup(arrayOf(NOTHING), arrayOf(NOTHING));
+
     tester.addEqualityGroup(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(STRING)));
     tester.addEqualityGroup(arrayOf(arrayOf(BLOB)), arrayOf(arrayOf(BLOB)));
     tester.addEqualityGroup(arrayOf(arrayOf(FILE)), arrayOf(arrayOf(FILE)));
+    tester.addEqualityGroup(arrayOf(arrayOf(personType())), arrayOf(arrayOf(personType())));
     tester.addEqualityGroup(arrayOf(arrayOf(NOTHING)), arrayOf(arrayOf(NOTHING)));
     tester.testEquals();
   }
@@ -340,5 +341,9 @@ public class TypesTest {
       builder.append("closestCommonConvertibleTo(" + type1 + "," + type2 + ") = " + actual
           + " but should = " + expected + "\n");
     }
+  }
+
+  private static StructType personType() {
+    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
   }
 }

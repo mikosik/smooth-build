@@ -2,7 +2,6 @@ package org.smoothbuild.db.values;
 
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.util.Streams.writeAndClose;
@@ -12,19 +11,21 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ValueHashTest {
   private ValuesDb valuesDb;
   private SString sstring;
   private Blob blob;
-  private Struct file;
+  private Struct struct;
   private Array array;
 
   @Before
@@ -61,17 +62,17 @@ public class ValueHashTest {
   }
 
   @Test
-  public void hash_of_empty_file_is_stable() throws Exception {
-    given(file = createFile(valuesDb, "", new byte[] {}));
-    when(() -> file.hash());
-    thenReturned(HashCode.fromString("43b1e995dbead10e335145327cf24f8d0ec38f88"));
+  public void hash_of_empty_struct_is_stable() throws Exception {
+    given(struct = createStruct(valuesDb, "John", "Doe"));
+    when(() -> struct.hash());
+    thenReturned(HashCode.fromString("bc6915c8051b7fd49d11c5082976f70f9526d07b"));
   }
 
   @Test
-  public void hash_of_some_file_is_stable() throws Exception {
-    given(file = createFile(valuesDb, "abc", new byte[] { 1, 2, 3 }));
-    when(() -> file.hash());
-    thenReturned(HashCode.fromString("1ce3b9471d98112a84420bd7d3f6374a4f270658"));
+  public void hash_of_some_struct_is_stable() throws Exception {
+    given(struct = createStruct(valuesDb, "John", "Doe"));
+    when(() -> struct.hash());
+    thenReturned(HashCode.fromString("bc6915c8051b7fd49d11c5082976f70f9526d07b"));
   }
 
   @Test
@@ -103,17 +104,19 @@ public class ValueHashTest {
   }
 
   @Test
-  public void hash_of_empty_file_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(FILE).build());
+  public void hash_of_empty_struct_array_is_stable() throws Exception {
+    given(struct = createStruct(valuesDb, "John", "Doe"));
+    given(array = valuesDb.arrayBuilder(personType()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
   @Test
-  public void hash_of_non_empty_file_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(FILE).add(createFile(valuesDb, "", new byte[] {})).build());
+  public void hash_of_non_empty_struct_array_is_stable() throws Exception {
+    given(struct = createStruct(valuesDb, "John", "Doe"));
+    given(array = valuesDb.arrayBuilder(personType()).add(struct).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("bc3752dfc291fcf61ec7c65a02f83fb3c7576f4e"));
+    thenReturned(HashCode.fromString("d4ef59c09655067daa0c8a69b542221615e47c7f"));
   }
 
   @Test
@@ -123,13 +126,21 @@ public class ValueHashTest {
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
-  private static Struct createFile(ValuesDb valuesDb, String path, byte[] content) throws Exception {
-    return valuesDb.file(valuesDb.string(path), createBlob(valuesDb, content));
+  private static Struct createStruct(ValuesDb valuesDb, String firstName, String lastName)
+      throws Exception {
+    return valuesDb.structBuilder(personType())
+        .set("firstName", valuesDb.string(firstName))
+        .set("lastName", valuesDb.string(lastName))
+        .build();
   }
 
   private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
     writeAndClose(blobBuilder, content);
     return blobBuilder.build();
+  }
+
+  private static StructType personType() {
+    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
   }
 }

@@ -1,7 +1,6 @@
 package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.lang.message.Location.location;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -24,21 +23,21 @@ public class ArgNodeTest {
 
   @Test
   public void named_arg_has_name() throws Exception {
-    given(arg = new ArgNode(0, name, expr(FILE), location));
+    given(arg = new ArgNode(0, name, expr(STRING), location));
     when(() -> arg.hasName());
     thenReturned(true);
   }
 
   @Test
   public void nameless_arg_does_not_have_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(FILE), location));
+    given(arg = new ArgNode(0, null, expr(STRING), location));
     when(() -> arg.hasName());
     thenReturned(false);
   }
 
   @Test
   public void nameless_arg_throws_exception_when_asked_for_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(FILE), location));
+    given(arg = new ArgNode(0, null, expr(STRING), location));
     when(() -> arg.name());
     thenThrown(IllegalStateException.class);
   }
