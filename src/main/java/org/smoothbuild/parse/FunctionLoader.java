@@ -9,12 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
@@ -42,7 +45,14 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
-  public static Function loadFunction(Functions loadedFunctions, FuncNode func) {
+  private final ValuesDb valuesDb;
+
+  @Inject
+  public FunctionLoader(ValuesDb valuesDb) {
+    this.valuesDb = valuesDb;
+  }
+
+  public Function loadFunction(Functions loadedFunctions, FuncNode func) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
@@ -118,7 +128,8 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createStringLiteral(StringNode string) {
-        return new Dag<>(new StringLiteralExpression(string.get(String.class), string.location()));
+        Value literal = valuesDb.string(string.get(String.class));
+        return new Dag<>(new LiteralExpression(literal, string.location()));
       }
 
       private Dag<Expression> createArray(ArrayNode array) {

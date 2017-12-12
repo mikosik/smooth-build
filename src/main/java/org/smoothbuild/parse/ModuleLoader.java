@@ -5,7 +5,6 @@ import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
-import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortedByDependencies;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -15,6 +14,8 @@ import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.Functions;
@@ -27,7 +28,14 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
-  public static Maybe<Functions> loadModule(Functions functions, Path script) {
+  private final FunctionLoader functionLoader;
+
+  @Inject
+  public ModuleLoader(FunctionLoader functionLoader) {
+    this.functionLoader = functionLoader;
+  }
+
+  public Maybe<Functions> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
     ast = invoke(ast, a -> findSemanticErrors(functions, a));
@@ -39,11 +47,11 @@ public class ModuleLoader {
     return invoke(ast, a -> loadFunctions(functions, a));
   }
 
-  private static Maybe<Functions> loadFunctions(Functions functions, Ast ast) {
+  private Maybe<Functions> loadFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
     for (FuncNode node : ast.functions()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<Function> function = invokeWrap(all, a -> loadFunction(a, node));
+      Maybe<Function> function = invokeWrap(all, a -> functionLoader.loadFunction(a, node));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
