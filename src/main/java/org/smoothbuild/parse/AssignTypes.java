@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.lang.type.Types.closestCommonConvertibleTo;
+import static org.smoothbuild.util.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,13 @@ import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
+import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class AssignTypes {
-  public static List<ParseError> assignTypes(Functions functions, Ast ast) {
+  public static Maybe<Ast> assignTypes(Functions functions, Ast ast) {
     final Type nonInferable = new Type("<NonInferable>", Value.class) {};
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
@@ -209,6 +211,6 @@ public class AssignTypes {
         string.set(Type.class, STRING);
       }
     }.visitAst(ast);
-    return errors;
+    return maybe(ast, errors);
   }
 }
