@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
@@ -20,12 +21,13 @@ import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
+import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
-  public static List<ParseError> findSemanticErrors(Functions functions, Ast ast) {
+  public static Maybe<Ast> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     unescapeStrings(errors, ast);
     overridenBuiltinFunctions(errors, functions, ast);
@@ -36,7 +38,7 @@ public class FindSemanticErrors {
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
     nestedArrayTypeParams(errors, ast);
-    return errors;
+    return maybe(ast, errors);
   }
 
   private static void unescapeStrings(List<ParseError> errors, Ast ast) {

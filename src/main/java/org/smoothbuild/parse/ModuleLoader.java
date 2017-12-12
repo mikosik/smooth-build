@@ -30,10 +30,10 @@ public class ModuleLoader {
   public static Maybe<Functions> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
-    ast = ast.addErrors(a -> findSemanticErrors(functions, a));
+    ast = invoke(ast, a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
-    ast = ast.addErrors(a -> assignTypes(functions, a));
-    ast = ast.addErrors(a -> assignArgsToParams(functions, a));
+    ast = invoke(ast, a -> assignTypes(functions, a));
+    ast = invoke(ast, a -> assignArgsToParams(functions, a));
     Maybe<Map<Name, Native>> natives = findNatives(changeExtension(script, "jar"));
     ast = invoke(ast, natives, (a, n) -> assignNatives(a, n));
     return invoke(ast, a -> loadFunctions(functions, a));
