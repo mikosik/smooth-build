@@ -3,7 +3,6 @@ package org.smoothbuild.cli;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
-import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
@@ -18,6 +17,7 @@ import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.Maybe;
@@ -28,14 +28,16 @@ public class Build implements Command {
   private final SmoothPaths paths;
   private final Console console;
   private final TempManager tempManager;
+  private final ModuleLoader moduleLoader;
   private final SmoothExecutor smoothExecutor;
 
   @Inject
   public Build(SmoothPaths paths, Console console, TempManager tempManager,
-      SmoothExecutor smoothExecutor) {
+      ModuleLoader moduleLoader, SmoothExecutor smoothExecutor) {
     this.paths = paths;
     this.console = console;
     this.tempManager = tempManager;
+    this.moduleLoader = moduleLoader;
     this.smoothExecutor = smoothExecutor;
   }
 
@@ -63,10 +65,11 @@ public class Build implements Command {
   }
 
   private Maybe<Functions> loadFunctions() {
-    Maybe<Functions> convert = loadModule(new Functions(), paths.convertModule());
-    Maybe<Functions> funcs = loadModule(new Functions(), paths.funcsModule());
+    Maybe<Functions> convert = moduleLoader.loadModule(new Functions(), paths.convertModule());
+    Maybe<Functions> funcs = moduleLoader.loadModule(new Functions(), paths.funcsModule());
     Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
-    Maybe<Functions> userFunctions = invoke(builtin, b -> loadModule(b, paths.defaultScript()));
+    Maybe<Functions> userFunctions = invoke(
+        builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
     return invokeWrap(userFunctions, builtin, (u, b) -> b.addAll(u));
   }
 

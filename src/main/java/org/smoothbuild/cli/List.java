@@ -2,7 +2,6 @@ package org.smoothbuild.cli;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 
@@ -10,16 +9,19 @@ import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.parse.ModuleLoader;
 import org.smoothbuild.util.Maybe;
 
 public class List implements Command {
   private final SmoothPaths paths;
   private final Console console;
+  private final ModuleLoader moduleLoader;
 
   @Inject
-  public List(SmoothPaths paths, Console console) {
+  public List(SmoothPaths paths, Console console, ModuleLoader moduleLoader) {
     this.paths = paths;
     this.console = console;
+    this.moduleLoader = moduleLoader;
   }
 
   @Override
@@ -45,10 +47,9 @@ public class List implements Command {
   }
 
   private Maybe<Functions> userDefinedFunctions() {
-    Maybe<Functions> convert = loadModule(new Functions(), paths.convertModule());
-    Maybe<Functions> funcs = loadModule(new Functions(), paths.funcsModule());
-    Maybe<Functions> builtin1 = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
-    Maybe<Functions> builtin = builtin1;
-    return invoke(builtin, b -> loadModule(b, paths.defaultScript()));
+    Maybe<Functions> convert = moduleLoader.loadModule(new Functions(), paths.convertModule());
+    Maybe<Functions> funcs = moduleLoader.loadModule(new Functions(), paths.funcsModule());
+    Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
+    return invoke(builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
   }
 }
