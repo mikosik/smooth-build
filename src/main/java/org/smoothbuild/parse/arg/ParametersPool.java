@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
@@ -21,7 +20,6 @@ import com.google.common.collect.Sets;
 
 public class ParametersPool {
   private final TypeSystem typeSystem;
-  private final ImmutableMap<Name, ParameterInfo> parameters;
   private final ImmutableMap<Type, TypedParametersPool> typePools;
   private final Map<Type, Set<ParameterInfo>> optionalParametersMap;
   private final Map<Type, Set<ParameterInfo>> requiredParametersMap;
@@ -29,16 +27,9 @@ public class ParametersPool {
   public ParametersPool(TypeSystem typeSystem, Collection<? extends ParameterInfo> optional,
       Collection<? extends ParameterInfo> required) {
     this.typeSystem = typeSystem;
-    this.parameters = createTypedNamesMap(required, optional);
     this.optionalParametersMap = createParametersMap(optional);
     this.requiredParametersMap = createParametersMap(required);
     this.typePools = createTypePools(optionalParametersMap, requiredParametersMap);
-  }
-
-  public ParameterInfo take(Name name) {
-    ParameterInfo parameter = parameters.get(name);
-    checkArgument(parameter != null);
-    return take(parameter);
   }
 
   public ParameterInfo take(ParameterInfo parameter) {
@@ -113,18 +104,5 @@ public class ParametersPool {
       map.put(type, set);
     }
     return map;
-  }
-
-  public static ImmutableMap<Name, ParameterInfo> createTypedNamesMap(
-      Iterable<? extends ParameterInfo> names1,
-      Iterable<? extends ParameterInfo> names2) {
-    ImmutableMap.Builder<Name, ParameterInfo> builder = ImmutableMap.builder();
-    for (ParameterInfo element : names1) {
-      builder.put(element.name(), element);
-    }
-    for (ParameterInfo element : names2) {
-      builder.put(element.name(), element);
-    }
-    return builder.build();
   }
 }
