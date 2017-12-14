@@ -8,16 +8,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 
 public class ArgsStringHelper {
   public static String assignedArgsToString(CallNode call) {
-    Map<TypedName, ArgNode> paramToArgMap = createMap(call);
-    int maxParamType = TypedName.longestType(paramToArgMap.keySet());
-    int maxParamName = TypedName.longestName(paramToArgMap.keySet());
+    Map<ParameterInfo, ArgNode> paramToArgMap = createMap(call);
+    int maxParamType = ParameterInfo.longestType(paramToArgMap.keySet());
+    int maxParamName = ParameterInfo.longestName(paramToArgMap.keySet());
     int maxArgType = longestArgType(paramToArgMap.values());
     int maxArgName = longestArgName(paramToArgMap.values());
     int maxPosition = longestArgPosition(paramToArgMap.values());
@@ -33,12 +33,12 @@ public class ArgsStringHelper {
         .collect(joining());
   }
 
-  private static Map<TypedName, ArgNode> createMap(CallNode call) {
+  private static Map<ParameterInfo, ArgNode> createMap(CallNode call) {
     return call
         .args()
         .stream()
-        .filter(a -> a.has(TypedName.class))
-        .collect(toMap(a -> a.get(TypedName.class), Function.identity()));
+        .filter(a -> a.has(ParameterInfo.class))
+        .collect(toMap(a -> a.get(ParameterInfo.class), Function.identity()));
   }
 
   public static String argsToString(Collection<ArgNode> availableArgs) {

@@ -20,17 +20,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 
 public class TypedParametersPoolTest {
-  private final TypedName string1 = new TypedName(STRING, new Name("string1"));
-  private final TypedName string2 = new TypedName(STRING, new Name("string2"));
-  private final TypedName string3 = new TypedName(STRING, new Name("string3"));
-  private final TypedName blob = new TypedName(BLOB, new Name("blob"));
+  private final ParameterInfo string1 = new ParameterInfo(STRING, new Name("string1"));
+  private final ParameterInfo string2 = new ParameterInfo(STRING, new Name("string2"));
+  private final ParameterInfo string3 = new ParameterInfo(STRING, new Name("string3"));
+  private final ParameterInfo blob = new ParameterInfo(BLOB, new Name("blob"));
 
-  private Set<TypedName> optional;
-  private Set<TypedName> required;
-  private Set<TypedName> noParameters;
+  private Set<ParameterInfo> optional;
+  private Set<ParameterInfo> required;
+  private Set<ParameterInfo> noParameters;
   private TypedParametersPool pool;
 
   @Before

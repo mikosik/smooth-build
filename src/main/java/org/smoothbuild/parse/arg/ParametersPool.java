@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 
@@ -21,13 +21,13 @@ import com.google.common.collect.Sets;
 
 public class ParametersPool {
   private final TypeSystem typeSystem;
-  private final ImmutableMap<Name, TypedName> parameters;
+  private final ImmutableMap<Name, ParameterInfo> parameters;
   private final ImmutableMap<Type, TypedParametersPool> typePools;
-  private final Map<Type, Set<TypedName>> optionalParametersMap;
-  private final Map<Type, Set<TypedName>> requiredParametersMap;
+  private final Map<Type, Set<ParameterInfo>> optionalParametersMap;
+  private final Map<Type, Set<ParameterInfo>> requiredParametersMap;
 
-  public ParametersPool(TypeSystem typeSystem, List<? extends TypedName> optional,
-      List<? extends TypedName> required) {
+  public ParametersPool(TypeSystem typeSystem, List<? extends ParameterInfo> optional,
+      List<? extends ParameterInfo> required) {
     this.typeSystem = typeSystem;
     this.parameters = createTypedNamesMap(required, optional);
     this.optionalParametersMap = createParametersMap(optional);
@@ -35,19 +35,19 @@ public class ParametersPool {
     this.typePools = createTypePools(optionalParametersMap, requiredParametersMap);
   }
 
-  public TypedName take(Name name) {
-    TypedName parameter = parameters.get(name);
+  public ParameterInfo take(Name name) {
+    ParameterInfo parameter = parameters.get(name);
     checkArgument(parameter != null);
     return take(parameter);
   }
 
-  public TypedName take(TypedName parameter) {
+  public ParameterInfo take(ParameterInfo parameter) {
     boolean hasBeenRemoved = remove(parameter);
     checkArgument(hasBeenRemoved);
     return parameter;
   }
 
-  private boolean remove(TypedName parameter) {
+  private boolean remove(ParameterInfo parameter) {
     if (requiredParametersMap.get(parameter.type()).contains(parameter)) {
       return requiredParametersMap.get(parameter.type()).remove(parameter);
     } else {
@@ -59,16 +59,16 @@ public class ParametersPool {
     return typePools.get(type);
   }
 
-  public Set<TypedName> allRequired() {
-    Set<TypedName> result = new HashSet<>();
+  public Set<ParameterInfo> allRequired() {
+    Set<ParameterInfo> result = new HashSet<>();
     for (TypedParametersPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.requiredParameters());
     }
     return result;
   }
 
-  public Set<TypedName> allOptional() {
-    Set<TypedName> result = new HashSet<>();
+  public Set<ParameterInfo> allOptional() {
+    Set<ParameterInfo> result = new HashSet<>();
     for (TypedParametersPool typedParamPool : typePools.values()) {
       Iterables.addAll(result, typedParamPool.optionalParameters());
     }
@@ -76,22 +76,22 @@ public class ParametersPool {
   }
 
   private ImmutableMap<Type, TypedParametersPool> createTypePools(
-      Map<Type, Set<TypedName>> optionalParametersMap,
-      Map<Type, Set<TypedName>> requiredParametersMap) {
+      Map<Type, Set<ParameterInfo>> optionalParametersMap,
+      Map<Type, Set<ParameterInfo>> requiredParametersMap) {
 
     Builder<Type, TypedParametersPool> builder = ImmutableMap.builder();
     for (Type type : allTypes()) {
-      Set<TypedName> optional = parametersAssignableFromType(type, optionalParametersMap);
-      Set<TypedName> required = parametersAssignableFromType(type, requiredParametersMap);
+      Set<ParameterInfo> optional = parametersAssignableFromType(type, optionalParametersMap);
+      Set<ParameterInfo> required = parametersAssignableFromType(type, requiredParametersMap);
       builder.put(type, new TypedParametersPool(optional, required));
     }
 
     return builder.build();
   }
 
-  private Set<TypedName> parametersAssignableFromType(Type type,
-      Map<Type, Set<TypedName>> paramsMap) {
-    Set<TypedName> parameters = paramsMap.get(type);
+  private Set<ParameterInfo> parametersAssignableFromType(Type type,
+      Map<Type, Set<ParameterInfo>> paramsMap) {
+    Set<ParameterInfo> parameters = paramsMap.get(type);
     for (Type currentType : allTypes()) {
       if (typeSystem.canConvert(type, currentType)) {
         parameters = Sets.union(parameters, paramsMap.get(currentType));
@@ -100,12 +100,12 @@ public class ParametersPool {
     return parameters;
   }
 
-  private static Map<Type, Set<TypedName>> createParametersMap(
-      Iterable<? extends TypedName> names) {
-    Map<Type, Set<TypedName>> map = new HashMap<>();
+  private static Map<Type, Set<ParameterInfo>> createParametersMap(
+      Iterable<? extends ParameterInfo> names) {
+    Map<Type, Set<ParameterInfo>> map = new HashMap<>();
     for (Type type : allTypes()) {
-      Set<TypedName> set = new HashSet<>();
-      for (TypedName name : names) {
+      Set<ParameterInfo> set = new HashSet<>();
+      for (ParameterInfo name : names) {
         if (name.type().equals(type)) {
           set.add(name);
         }
@@ -115,14 +115,14 @@ public class ParametersPool {
     return map;
   }
 
-  public static ImmutableMap<Name, TypedName> createTypedNamesMap(
-      Iterable<? extends TypedName> names1,
-      Iterable<? extends TypedName> names2) {
-    ImmutableMap.Builder<Name, TypedName> builder = ImmutableMap.builder();
-    for (TypedName element : names1) {
+  public static ImmutableMap<Name, ParameterInfo> createTypedNamesMap(
+      Iterable<? extends ParameterInfo> names1,
+      Iterable<? extends ParameterInfo> names2) {
+    ImmutableMap.Builder<Name, ParameterInfo> builder = ImmutableMap.builder();
+    for (ParameterInfo element : names1) {
       builder.put(element.name(), element);
     }
-    for (TypedName element : names2) {
+    for (ParameterInfo element : names2) {
       builder.put(element.name(), element);
     }
     return builder.build();

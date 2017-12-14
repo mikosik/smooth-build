@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.Types;
@@ -58,7 +58,7 @@ public class AssignArgsToParams {
         if (processNamelessArguments(call, parametersPool)) {
           return;
         }
-        Set<TypedName> missingRequiredParameters = parametersPool.allRequired();
+        Set<ParameterInfo> missingRequiredParameters = parametersPool.allRequired();
         if (missingRequiredParameters.size() != 0) {
           errors.add(new ParseError(call,
               missingRequiredArgsMessage(call, missingRequiredParameters)));
@@ -78,15 +78,15 @@ public class AssignArgsToParams {
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
           if (function.has(List.class)) {
-            List<TypedName> typedNames = function.get(List.class);
+            List<ParameterInfo> parameterInfos = function.get(List.class);
             List<ParamNode> paramNodes = function.params();
-            List<TypedName> required = new ArrayList<>();
-            List<TypedName> optional = new ArrayList<>();
+            List<ParameterInfo> required = new ArrayList<>();
+            List<ParameterInfo> optional = new ArrayList<>();
             for (int i = 0; i < paramNodes.size(); i++) {
               if (paramNodes.get(i).hasDefaultValue()) {
-                optional.add(typedNames.get(i));
+                optional.add(parameterInfos.get(i));
               } else {
-                required.add(typedNames.get(i));
+                required.add(parameterInfos.get(i));
               }
             }
             return new ParametersPool(typeSystem, optional, required);
@@ -96,11 +96,11 @@ public class AssignArgsToParams {
       }
 
       private String missingRequiredArgsMessage(CallNode call,
-          Set<TypedName> missingRequiredParameters) {
+          Set<ParameterInfo> missingRequiredParameters) {
         return "Not all parameters required by '" + call.name()
             + "' function has been specified.\n"
             + "Missing required parameters:\n"
-            + TypedName.iterableToString(missingRequiredParameters)
+            + ParameterInfo.iterableToString(missingRequiredParameters)
             + "All correct 'parameters <- arguments' assignments:\n"
             + ArgsStringHelper.assignedArgsToString(call);
       }
@@ -114,10 +114,10 @@ public class AssignArgsToParams {
             .collect(toImmutableList());
         for (ArgNode arg : namedArgs) {
           Name name = arg.name();
-          TypedName parameter = parametersPool.take(name);
+          ParameterInfo parameter = parametersPool.take(name);
           Type paramType = parameter.type();
           if (typeSystem.canConvert(arg.get(Type.class), paramType)) {
-            arg.set(TypedName.class, parameter);
+            arg.set(ParameterInfo.class, parameter);
           } else {
             failed = true;
             errors.add(new ParseError(arg,
@@ -142,8 +142,8 @@ public class AssignArgsToParams {
 
             if (argsSize == 1 && availableTypedParams.hasCandidate()) {
               ArgNode onlyArgument = availableArguments.iterator().next();
-              TypedName candidateParameter = availableTypedParams.candidate();
-              onlyArgument.set(TypedName.class, candidateParameter);
+              ParameterInfo candidateParameter = availableTypedParams.candidate();
+              onlyArgument.set(ParameterInfo.class, candidateParameter);
               parametersPool.take(candidateParameter);
             } else {
               String message = ambiguousAssignmentErrorMessage(

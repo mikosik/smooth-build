@@ -6,7 +6,7 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.Dag;
 
-public class Parameter extends TypedName {
+public class Parameter extends ParameterInfo {
   private final Dag<Expression> defaultValue;
 
   public Parameter(Type type, Name name, Dag<Expression> defaultValue) {
