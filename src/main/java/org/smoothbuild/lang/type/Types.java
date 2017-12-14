@@ -33,8 +33,6 @@ public class Types {
 
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
-  public static final ImmutableSet<ArrayType> ARRAY_TYPES = ImmutableSet.of(arrayOf(STRING),
-      arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
 
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
       arrayOf(STRING), arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
