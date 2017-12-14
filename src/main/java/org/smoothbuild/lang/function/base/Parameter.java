@@ -10,12 +10,8 @@ public class Parameter extends ParameterInfo {
   private final Dag<Expression> defaultValue;
 
   public Parameter(Type type, Name name, Dag<Expression> defaultValue) {
-    super(type, name);
+    super(type, name, defaultValue == null);
     this.defaultValue = defaultValue;
-  }
-
-  public boolean isRequired() {
-    return defaultValue == null;
   }
 
   public Dag<Expression> defaultValueExpression() {

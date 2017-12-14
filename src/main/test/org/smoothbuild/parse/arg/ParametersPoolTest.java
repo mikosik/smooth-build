@@ -33,7 +33,7 @@ public class ParametersPoolTest {
   @Test
   public void existing_param_can_be_taken_from_pool() {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     when(parametersPool).take(parameter);
     thenReturned(same(parameter));
@@ -51,7 +51,7 @@ public class ParametersPoolTest {
   @Test
   public void param_cannot_be_taken_twice_from_pool() {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     given(parametersPool).take(parameter);
     when(parametersPool).take(parameter);
@@ -63,7 +63,7 @@ public class ParametersPoolTest {
   @Test
   public void existing_param_can_be_taken_from_pool_by_name() {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     when(parametersPool).take(parameter.name());
     thenReturned(same(parameter));
@@ -80,7 +80,7 @@ public class ParametersPoolTest {
   @Test
   public void param_cannot_be_taken_by_name_twice() {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     given(parametersPool).take(parameter.name());
     when(parametersPool).take(parameter.name());
@@ -92,7 +92,7 @@ public class ParametersPoolTest {
   @Test
   public void optional_string_param_is_available_in_optional_set_of_string_pool() throws Exception {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     when(parametersPool.assignableFrom(STRING)).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
@@ -354,7 +354,7 @@ public class ParametersPoolTest {
   @Test
   public void all_optional_params_contains_optional_string_param() throws Exception {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));
@@ -390,7 +390,7 @@ public class ParametersPoolTest {
   @Test
   public void all_optional_params_does_not_contain_taken_param() throws Exception {
     given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name));
+    given(parameter = new ParameterInfo(STRING, name, true));
     given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
     given(parametersPool.take(parameter));
     when(parametersPool.allOptional());

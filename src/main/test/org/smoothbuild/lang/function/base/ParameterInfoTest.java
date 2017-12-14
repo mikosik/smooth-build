@@ -24,26 +24,26 @@ public class ParameterInfoTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new ParameterInfo(null, name));
+    when(() -> new ParameterInfo(null, name, true));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new ParameterInfo(type, null));
+    when(() -> new ParameterInfo(type, null, true));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type_getter() throws Exception {
-    given(parameterInfo = new ParameterInfo(type, name));
+    given(parameterInfo = new ParameterInfo(type, name, true));
     when(() -> parameterInfo.type());
     thenReturned(type);
   }
 
   @Test
   public void name_getter() throws Exception {
-    given(parameterInfo = new ParameterInfo(type, name));
+    given(parameterInfo = new ParameterInfo(type, name, true));
     when(() -> parameterInfo.name());
     thenReturned(name);
   }
@@ -52,32 +52,32 @@ public class ParameterInfoTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new ParameterInfo(STRING, new Name("equal")),
-        new ParameterInfo(STRING, new Name("equal")));
+        new ParameterInfo(STRING, new Name("equal"), true),
+        new ParameterInfo(STRING, new Name("equal"), true));
     for (Type type : Types.allTypes()) {
-      tester.addEqualityGroup(new ParameterInfo(type, name));
-      tester.addEqualityGroup(new ParameterInfo(type, new Name("name2")));
+      tester.addEqualityGroup(new ParameterInfo(type, name, true));
+      tester.addEqualityGroup(new ParameterInfo(type, new Name("name2"), true));
     }
     tester.testEquals();
   }
 
   @Test
   public void to_padded_string() {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
     when(parameterInfo.toPaddedString(10, 13));
     thenReturned("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
     when(parameterInfo.toPaddedString(1, 1));
     thenReturned("String: myName");
   }
 
   @Test
   public void to_string() throws Exception {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
     when(() -> parameterInfo.toString());
     thenReturned("String myName");
   }
@@ -85,9 +85,9 @@ public class ParameterInfoTest {
   @Test
   public void params_to_string() {
     List<ParameterInfo> names = new ArrayList<>();
-    names.add(new ParameterInfo(STRING, new Name("param1")));
-    names.add(new ParameterInfo(STRING, new Name("param2-with-very-long")));
-    names.add(new ParameterInfo(arrayOf(BLOB), new Name("param3")));
+    names.add(new ParameterInfo(STRING, new Name("param1"), true));
+    names.add(new ParameterInfo(STRING, new Name("param2-with-very-long"), true));
+    names.add(new ParameterInfo(arrayOf(BLOB), new Name("param3"), true));
 
     when(ParameterInfo.iterableToString(names));
     thenReturned(""
