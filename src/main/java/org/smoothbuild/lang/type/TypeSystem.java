@@ -12,14 +12,14 @@ import org.smoothbuild.lang.function.base.Name;
 
 import com.google.common.collect.ImmutableMap;
 
-public class Conversions {
+public class TypeSystem {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
-  public static boolean canConvert(Type from, Type to) {
+  public boolean canConvert(Type from, Type to) {
     return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from, to));
   }
 
-  public static Name convertFunctionName(Type from, Type to) {
+  public Name convertFunctionName(Type from, Type to) {
     return CONVERSIONS.get(new TypeConversion(from, to));
   }
 

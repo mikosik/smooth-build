@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.AssignTypes.assignTypes;
 import static org.smoothbuild.parse.FindNatives.findNatives;
@@ -28,10 +27,12 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
+  private final AssignArgsToParams assignArgsToParams;
   private final FunctionLoader functionLoader;
 
   @Inject
-  public ModuleLoader(FunctionLoader functionLoader) {
+  public ModuleLoader(AssignArgsToParams assignArgsToParams, FunctionLoader functionLoader) {
+    this.assignArgsToParams = assignArgsToParams;
     this.functionLoader = functionLoader;
   }
 
@@ -41,7 +42,7 @@ public class ModuleLoader {
     ast = invoke(ast, a -> findSemanticErrors(functions, a));
     ast = invoke(ast, a -> sortedByDependencies(functions, a));
     ast = invoke(ast, a -> assignTypes(functions, a));
-    ast = invoke(ast, a -> assignArgsToParams(functions, a));
+    ast = invoke(ast, a -> assignArgsToParams.run(functions, a));
     Maybe<Map<Name, Native>> natives = findNatives(changeExtension(script, "jar"));
     ast = invoke(ast, natives, (a, n) -> assignNatives(a, n));
     return invoke(ast, a -> loadFunctions(functions, a));

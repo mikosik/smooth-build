@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
@@ -194,7 +193,7 @@ public class TypesTest {
     Set<Type> visited = new HashSet<>();
     for (Type type : allTypes()) {
       for (Type visitedType : visited) {
-        assertFalse(canConvert(visitedType, type));
+        assertFalse(new TypeSystem().canConvert(visitedType, type));
       }
       visited.add(type);
     }

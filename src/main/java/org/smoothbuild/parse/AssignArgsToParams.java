@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 import static org.smoothbuild.util.Lists.filter;
@@ -14,11 +13,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
@@ -33,7 +35,14 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  public static Maybe<Ast> assignArgsToParams(Functions functions, Ast ast) {
+  private final TypeSystem typeSystem;
+
+  @Inject
+  public AssignArgsToParams(TypeSystem typeSystem) {
+    this.typeSystem = typeSystem;
+  }
+
+  public Maybe<Ast> run(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
@@ -62,6 +71,7 @@ public class AssignArgsToParams {
         if (functions.contains(name)) {
           List<Parameter> parameters = functions.get(name).signature().parameters();
           return new ParametersPool(
+              typeSystem,
               filter(parameters, not(Parameter::isRequired)),
               filter(parameters, Parameter::isRequired));
         }
@@ -79,7 +89,7 @@ public class AssignArgsToParams {
                 required.add(typedNames.get(i));
               }
             }
-            return new ParametersPool(optional, required);
+            return new ParametersPool(typeSystem, optional, required);
           }
         }
         return null;
@@ -106,7 +116,7 @@ public class AssignArgsToParams {
           Name name = arg.name();
           TypedName parameter = parametersPool.take(name);
           Type paramType = parameter.type();
-          if (canConvert(arg.get(Type.class), paramType)) {
+          if (typeSystem.canConvert(arg.get(Type.class), paramType)) {
             arg.set(TypedName.class, parameter);
           } else {
             failed = true;
