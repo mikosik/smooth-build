@@ -58,35 +58,6 @@ public class ParametersPoolTest {
     thenThrown(IllegalArgumentException.class);
   }
 
-  // take(String)
-
-  @Test
-  public void existing_param_can_be_taken_from_pool_by_name() {
-    given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name, true));
-    given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
-    when(parametersPool).take(parameter.name());
-    thenReturned(same(parameter));
-  }
-
-  @Test
-  public void taking_unknown_param_by_name_throws_exception() {
-    given(typeSystem = new TypeSystem());
-    given(parametersPool = new ParametersPool(typeSystem, asList(), asList()));
-    when(parametersPool).take(new Name("unknownName"));
-    thenThrown(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void param_cannot_be_taken_by_name_twice() {
-    given(typeSystem = new TypeSystem());
-    given(parameter = new ParameterInfo(STRING, name, true));
-    given(parametersPool = new ParametersPool(typeSystem, asList(parameter), asList()));
-    given(parametersPool).take(parameter.name());
-    when(parametersPool).take(parameter.name());
-    thenThrown(IllegalArgumentException.class);
-  }
-
   // assignableFrom()
 
   @Test
