@@ -5,8 +5,6 @@ import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Conversions.canConvert;
-import static org.smoothbuild.lang.type.Conversions.convertFunctionName;
 import static org.smoothbuild.lang.type.Types.ALL_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
@@ -21,7 +19,7 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.function.base.Name;
 
 @RunWith(QuackeryRunner.class)
-public class ConversionsTest {
+public class TypeSystemTest {
   @Quackery
   public static Suite can_convert() {
     Suite suite = suite("test canConvert");
@@ -39,8 +37,9 @@ public class ConversionsTest {
         from.equals(arrayOf(FILE)) && to.equals(arrayOf(BLOB)) ||
         from.equals(arrayOf(NOTHING)) && (to instanceof ArrayType);
     String canOrCannot = canConvert ? "can" : "cannot";
-    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to), () -> assertEquals(
-        canConvert(from, to), canConvert));
+    TypeSystem typeSystem = new TypeSystem();
+    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to),
+        () -> assertEquals(typeSystem.canConvert(from, to), canConvert));
   }
 
   @Quackery
@@ -54,7 +53,7 @@ public class ConversionsTest {
   }
 
   private static Case testConvertFunctionName(Type from, Type to, String functionName) {
-    return newCase(format("{0} to {1} is named {2}", from, to, functionName), () -> assertEquals(
-        convertFunctionName(from, to), new Name(functionName)));
+    return newCase(format("{0} to {1} is named {2}", from, to, functionName),
+        () -> assertEquals(new TypeSystem().convertFunctionName(from, to), new Name(functionName)));
   }
 }

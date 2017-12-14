@@ -29,8 +29,8 @@ import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.Conversions;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
@@ -46,10 +46,12 @@ import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
   private final ValuesDb valuesDb;
+  private final TypeSystem typeSystem;
 
   @Inject
-  public FunctionLoader(ValuesDb valuesDb) {
+  public FunctionLoader(ValuesDb valuesDb, TypeSystem typeSystem) {
     this.valuesDb = valuesDb;
+    this.typeSystem = typeSystem;
   }
 
   public Function loadFunction(Functions loadedFunctions, FuncNode func) {
@@ -152,7 +154,7 @@ public class FunctionLoader {
           return source;
         }
 
-        Name functionName = Conversions.convertFunctionName(type, destinationType);
+        Name functionName = typeSystem.convertFunctionName(type, destinationType);
         Function function = loadedFunctions.get(functionName);
         return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
       }

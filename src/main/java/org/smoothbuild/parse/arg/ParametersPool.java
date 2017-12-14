@@ -1,7 +1,6 @@
 package org.smoothbuild.parse.arg;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.type.Conversions.canConvert;
 import static org.smoothbuild.lang.type.Types.allTypes;
 
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import java.util.Set;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.TypedName;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -20,12 +20,15 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 public class ParametersPool {
+  private final TypeSystem typeSystem;
   private final ImmutableMap<Name, TypedName> parameters;
   private final ImmutableMap<Type, TypedParametersPool> typePools;
   private final Map<Type, Set<TypedName>> optionalParametersMap;
   private final Map<Type, Set<TypedName>> requiredParametersMap;
 
-  public ParametersPool(List<? extends TypedName> optional, List<? extends TypedName> required) {
+  public ParametersPool(TypeSystem typeSystem, List<? extends TypedName> optional,
+      List<? extends TypedName> required) {
+    this.typeSystem = typeSystem;
     this.parameters = createTypedNamesMap(required, optional);
     this.optionalParametersMap = createParametersMap(optional);
     this.requiredParametersMap = createParametersMap(required);
@@ -72,7 +75,7 @@ public class ParametersPool {
     return result;
   }
 
-  private static ImmutableMap<Type, TypedParametersPool> createTypePools(
+  private ImmutableMap<Type, TypedParametersPool> createTypePools(
       Map<Type, Set<TypedName>> optionalParametersMap,
       Map<Type, Set<TypedName>> requiredParametersMap) {
 
@@ -86,11 +89,11 @@ public class ParametersPool {
     return builder.build();
   }
 
-  private static Set<TypedName> parametersAssignableFromType(Type type,
+  private Set<TypedName> parametersAssignableFromType(Type type,
       Map<Type, Set<TypedName>> paramsMap) {
     Set<TypedName> parameters = paramsMap.get(type);
     for (Type currentType : allTypes()) {
-      if (canConvert(type, currentType)) {
+      if (typeSystem.canConvert(type, currentType)) {
         parameters = Sets.union(parameters, paramsMap.get(currentType));
       }
     }
