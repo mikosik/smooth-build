@@ -17,34 +17,34 @@ import org.smoothbuild.lang.type.Types;
 
 import com.google.common.testing.EqualsTester;
 
-public class TypedNameTest {
+public class ParameterInfoTest {
   private final Name name = new Name("name");
   private final Type type = STRING;
-  private TypedName typedName;
+  private ParameterInfo parameterInfo;
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new TypedName(null, name));
+    when(() -> new ParameterInfo(null, name));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new TypedName(type, null));
+    when(() -> new ParameterInfo(type, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type_getter() throws Exception {
-    given(typedName = new TypedName(type, name));
-    when(() -> typedName.type());
+    given(parameterInfo = new ParameterInfo(type, name));
+    when(() -> parameterInfo.type());
     thenReturned(type);
   }
 
   @Test
   public void name_getter() throws Exception {
-    given(typedName = new TypedName(type, name));
-    when(() -> typedName.name());
+    given(parameterInfo = new ParameterInfo(type, name));
+    when(() -> parameterInfo.name());
     thenReturned(name);
   }
 
@@ -52,44 +52,44 @@ public class TypedNameTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new TypedName(STRING, new Name("equal")),
-        new TypedName(STRING, new Name("equal")));
+        new ParameterInfo(STRING, new Name("equal")),
+        new ParameterInfo(STRING, new Name("equal")));
     for (Type type : Types.allTypes()) {
-      tester.addEqualityGroup(new TypedName(type, name));
-      tester.addEqualityGroup(new TypedName(type, new Name("name2")));
+      tester.addEqualityGroup(new ParameterInfo(type, name));
+      tester.addEqualityGroup(new ParameterInfo(type, new Name("name2")));
     }
     tester.testEquals();
   }
 
   @Test
   public void to_padded_string() {
-    given(typedName = new TypedName(STRING, new Name("myName")));
-    when(typedName.toPaddedString(10, 13));
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    when(parameterInfo.toPaddedString(10, 13));
     thenReturned("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    given(typedName = new TypedName(STRING, new Name("myName")));
-    when(typedName.toPaddedString(1, 1));
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    when(parameterInfo.toPaddedString(1, 1));
     thenReturned("String: myName");
   }
 
   @Test
   public void to_string() throws Exception {
-    given(typedName = new TypedName(STRING, new Name("myName")));
-    when(() -> typedName.toString());
+    given(parameterInfo = new ParameterInfo(STRING, new Name("myName")));
+    when(() -> parameterInfo.toString());
     thenReturned("String myName");
   }
 
   @Test
   public void params_to_string() {
-    List<TypedName> names = new ArrayList<>();
-    names.add(new TypedName(STRING, new Name("param1")));
-    names.add(new TypedName(STRING, new Name("param2-with-very-long")));
-    names.add(new TypedName(arrayOf(BLOB), new Name("param3")));
+    List<ParameterInfo> names = new ArrayList<>();
+    names.add(new ParameterInfo(STRING, new Name("param1")));
+    names.add(new ParameterInfo(STRING, new Name("param2-with-very-long")));
+    names.add(new ParameterInfo(arrayOf(BLOB), new Name("param3")));
 
-    when(TypedName.iterableToString(names));
+    when(ParameterInfo.iterableToString(names));
     thenReturned(""
         + "  String: param1               \n"
         + "  String: param2-with-very-long\n"

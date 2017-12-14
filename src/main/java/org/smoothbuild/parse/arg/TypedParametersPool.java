@@ -2,7 +2,7 @@ package org.smoothbuild.parse.arg;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
@@ -14,19 +14,19 @@ import com.google.common.collect.Sets;
  * well.
  */
 public class TypedParametersPool {
-  private final Set<TypedName> optionalParameters;
-  private final Set<TypedName> requiredParameters;
+  private final Set<ParameterInfo> optionalParameters;
+  private final Set<ParameterInfo> requiredParameters;
 
-  public TypedParametersPool(Set<TypedName> optionalParameters, Set<TypedName> requiredParameters) {
+  public TypedParametersPool(Set<ParameterInfo> optionalParameters, Set<ParameterInfo> requiredParameters) {
     this.optionalParameters = optionalParameters;
     this.requiredParameters = requiredParameters;
   }
 
-  public Set<TypedName> optionalParameters() {
+  public Set<ParameterInfo> optionalParameters() {
     return optionalParameters;
   }
 
-  public Set<TypedName> requiredParameters() {
+  public Set<ParameterInfo> requiredParameters() {
     return requiredParameters;
   }
 
@@ -35,7 +35,7 @@ public class TypedParametersPool {
         || (requiredParameters.size() == 0 && optionalParameters.size() == 1);
   }
 
-  public TypedName candidate() {
+  public ParameterInfo candidate() {
     Preconditions.checkState(hasCandidate(), "No candidate available");
     if (requiredParameters.isEmpty()) {
       return optionalParameters.iterator().next();
@@ -45,7 +45,7 @@ public class TypedParametersPool {
   }
 
   public String toFormattedString() {
-    return TypedName.iterableToString(Sets.union(requiredParameters, optionalParameters));
+    return ParameterInfo.iterableToString(Sets.union(requiredParameters, optionalParameters));
   }
 
   public boolean isEmpty() {

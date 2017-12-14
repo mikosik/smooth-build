@@ -23,7 +23,7 @@ import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
@@ -116,10 +116,10 @@ public class FunctionLoader {
 
       private List<Dag<Expression>> createSortedArgumentExpressions(CallNode call,
           Function function) {
-        Map<TypedName, Dag<Expression>> assignedExpressions = call
+        Map<ParameterInfo, Dag<Expression>> assignedExpressions = call
             .args()
             .stream()
-            .collect(toMap(a -> a.get(TypedName.class), a -> createExpression(a.expr())));
+            .collect(toMap(a -> a.get(ParameterInfo.class), a -> createExpression(a.expr())));
         return function
             .parameters()
             .stream()

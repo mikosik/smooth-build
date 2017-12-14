@@ -15,7 +15,7 @@ import java.util.Map;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Scope;
-import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -65,7 +65,7 @@ public class AssignTypes {
         Type type = funcType(func);
         func.set(Type.class, type);
         functionTypes.put(func.name(), type);
-        List<TypedName> parameters = createParameters(func.params());
+        List<ParameterInfo> parameters = createParameters(func.params());
         if (parameters != null) {
           func.set(List.class, parameters);
         }
@@ -97,11 +97,11 @@ public class AssignTypes {
         }
       }
 
-      private List<TypedName> createParameters(List<ParamNode> params) {
-        Builder<TypedName> builder = ImmutableList.builder();
+      private List<ParameterInfo> createParameters(List<ParamNode> params) {
+        Builder<ParameterInfo> builder = ImmutableList.builder();
         for (ParamNode param : params) {
-          if (param.has(TypedName.class)) {
-            builder.add(param.get(TypedName.class));
+          if (param.has(ParameterInfo.class)) {
+            builder.add(param.get(ParameterInfo.class));
           } else {
             return null;
           }
@@ -115,7 +115,7 @@ public class AssignTypes {
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
         if (type != nonInferable) {
-          param.set(TypedName.class, new TypedName(param.get(Type.class), param.name()));
+          param.set(ParameterInfo.class, new ParameterInfo(param.get(Type.class), param.name()));
           if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != nonInferable) {
             Type valueType = param.defaultValue().get((Type.class));
             if (!type.isAssignableFrom(valueType)) {
