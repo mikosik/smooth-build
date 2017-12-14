@@ -12,7 +12,6 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
-import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -59,12 +58,6 @@ public class TypesTest {
     assertEquals(2, arrayOf(arrayOf(STRING)).coreDepth());
     assertEquals(2, arrayOf(arrayOf(personType())).coreDepth());
     assertEquals(2, arrayOf(arrayOf(NOTHING)).coreDepth());
-  }
-
-  @Test
-  public void basic_types() {
-    when(basicTypes());
-    thenReturned(containsInAnyOrder(STRING, BLOB, FILE, NOTHING));
   }
 
   @Test

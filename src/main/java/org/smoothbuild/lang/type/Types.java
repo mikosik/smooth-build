@@ -39,14 +39,6 @@ public class Types {
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
       arrayOf(STRING), arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
 
-  /*
-   * A few handy mappings.
-   */
-
-  public static ImmutableSet<Type> basicTypes() {
-    return BASIC_TYPES;
-  }
-
   /**
    * All smooth types available in smooth language. Returned list is sorted using
    * type - subtype relationship. Each type comes before all of its subtypes.
