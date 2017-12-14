@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class SetTest {
+public class SetsTest {
   private Set<String> set;
 
   @Test
