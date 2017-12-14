@@ -23,10 +23,10 @@ import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 
 public class TypedParametersPoolTest {
-  private final ParameterInfo string1 = new ParameterInfo(STRING, new Name("string1"));
-  private final ParameterInfo string2 = new ParameterInfo(STRING, new Name("string2"));
-  private final ParameterInfo string3 = new ParameterInfo(STRING, new Name("string3"));
-  private final ParameterInfo blob = new ParameterInfo(BLOB, new Name("blob"));
+  private final ParameterInfo string1 = new ParameterInfo(STRING, new Name("string1"), true);
+  private final ParameterInfo string2 = new ParameterInfo(STRING, new Name("string2"), true);
+  private final ParameterInfo string3 = new ParameterInfo(STRING, new Name("string3"), true);
+  private final ParameterInfo blob = new ParameterInfo(BLOB, new Name("blob"), true);
 
   private Set<ParameterInfo> optional;
   private Set<ParameterInfo> required;

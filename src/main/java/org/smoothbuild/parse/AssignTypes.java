@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
@@ -115,7 +115,9 @@ public class AssignTypes {
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
         if (type != nonInferable) {
-          param.set(ParameterInfo.class, new ParameterInfo(param.get(Type.class), param.name()));
+          ParameterInfo info = new ParameterInfo(
+              param.get(Type.class), param.name(), !param.hasDefaultValue());
+          param.set(ParameterInfo.class, info);
           if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != nonInferable) {
             Type valueType = param.defaultValue().get((Type.class));
             if (!type.isAssignableFrom(valueType)) {
