@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.basicTypes;
 import static org.smoothbuild.lang.type.Types.closestCommonConvertibleTo;
 import static org.smoothbuild.util.Maybe.maybe;
 
@@ -17,6 +16,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.function.base.TypedName;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.lang.value.Value;
@@ -178,10 +178,8 @@ public class AssignTypes {
             return nonInferable;
           }
         }
-        if (!basicTypes().contains(elemType)) {
-          errors.add(new ParseError(array, "Array cannot contain element with type '"
-              + elemType + "'. Only following types are allowed: " + basicTypes()
-              + "."));
+        if (elemType instanceof ArrayType) {
+          errors.add(new ParseError(array, "Array type cannot be nested."));
           return nonInferable;
         }
         return arrayOf(elemType);

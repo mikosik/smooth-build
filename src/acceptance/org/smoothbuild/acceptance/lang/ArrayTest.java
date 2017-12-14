@@ -83,7 +83,7 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("myArray = []; result = [ myArray ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Array cannot contain element with type '[Nothing]'."));
+    then(output(), containsString("Array type cannot be nested."));
   }
 
   @Test
@@ -91,17 +91,7 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result = [ [] ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Array cannot contain element with type '[Nothing]'."));
-  }
-
-  @Test
-  public void nested_arrays_error_message_contains_allowed_types() throws IOException {
-    givenScript("result = [ [] ];");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Array cannot contain element with type '[Nothing]'."
-            + " Only following types are allowed: [String, Blob, File, Nothing].\n"));
+    then(output(), containsString("Array type cannot be nested."));
   }
 
   @Test
