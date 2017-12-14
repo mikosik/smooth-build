@@ -3,21 +3,24 @@ package org.smoothbuild.parse;
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.util.function.Function.identity;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
-import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Maybe.maybe;
+import static org.smoothbuild.util.Sets.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
@@ -29,7 +32,6 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -48,13 +50,16 @@ public class AssignArgsToParams {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        ParametersPool parametersPool = parametersPool(call);
-        if (parametersPool == null) {
+        Set<ParameterInfo> parameters = functionParameters(call);
+        if (parameters == null) {
           return;
         }
-        if (processNamedArguments(call, parametersPool)) {
+        if (processNamedArguments(call, parameters)) {
           return;
         }
+        ParametersPool parametersPool = new ParametersPool(typeSystem,
+            filter(parameters, not(ParameterInfo::isRequired)),
+            filter(parameters, ParameterInfo::isRequired));
         if (processNamelessArguments(call, parametersPool)) {
           return;
         }
@@ -66,30 +71,15 @@ public class AssignArgsToParams {
         }
       }
 
-      private ParametersPool parametersPool(CallNode call) {
+      private Set<ParameterInfo> functionParameters(CallNode call) {
         Name name = call.name();
         if (functions.contains(name)) {
-          List<Parameter> parameters = functions.get(name).signature().parameters();
-          return new ParametersPool(
-              typeSystem,
-              filter(parameters, not(Parameter::isRequired)),
-              filter(parameters, Parameter::isRequired));
+          return new HashSet<>(functions.get(name).signature().parameters());
         }
         if (ast.nameToFunctionMap().containsKey(name)) {
           FuncNode function = ast.nameToFunctionMap().get(name);
           if (function.has(List.class)) {
-            List<ParameterInfo> parameterInfos = function.get(List.class);
-            List<ParamNode> paramNodes = function.params();
-            List<ParameterInfo> required = new ArrayList<>();
-            List<ParameterInfo> optional = new ArrayList<>();
-            for (int i = 0; i < paramNodes.size(); i++) {
-              if (paramNodes.get(i).hasDefaultValue()) {
-                optional.add(parameterInfos.get(i));
-              } else {
-                required.add(parameterInfos.get(i));
-              }
-            }
-            return new ParametersPool(typeSystem, optional, required);
+            return new HashSet<>(function.get(List.class));
           }
         }
         return null;
@@ -105,19 +95,23 @@ public class AssignArgsToParams {
             + ArgsStringHelper.assignedArgsToString(call);
       }
 
-      private boolean processNamedArguments(CallNode call, ParametersPool parametersPool) {
+      private boolean processNamedArguments(CallNode call,
+          Set<ParameterInfo> parameters) {
         boolean failed = false;
         List<ArgNode> namedArgs = call
             .args()
             .stream()
             .filter(a -> a.hasName())
             .collect(toImmutableList());
+        Map<Name, ParameterInfo> map = parameters
+            .stream()
+            .collect(toImmutableMap(p -> p.name(), identity()));
         for (ArgNode arg : namedArgs) {
-          Name name = arg.name();
-          ParameterInfo parameter = parametersPool.take(name);
+          ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
           if (typeSystem.canConvert(arg.get(Type.class), paramType)) {
             arg.set(ParameterInfo.class, parameter);
+            parameters.remove(parameter);
           } else {
             failed = true;
             errors.add(new ParseError(arg,

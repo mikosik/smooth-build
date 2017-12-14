@@ -3,9 +3,9 @@ package org.smoothbuild.parse.arg;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.lang.type.Types.allTypes;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,8 +26,8 @@ public class ParametersPool {
   private final Map<Type, Set<ParameterInfo>> optionalParametersMap;
   private final Map<Type, Set<ParameterInfo>> requiredParametersMap;
 
-  public ParametersPool(TypeSystem typeSystem, List<? extends ParameterInfo> optional,
-      List<? extends ParameterInfo> required) {
+  public ParametersPool(TypeSystem typeSystem, Collection<? extends ParameterInfo> optional,
+      Collection<? extends ParameterInfo> required) {
     this.typeSystem = typeSystem;
     this.parameters = createTypedNamesMap(required, optional);
     this.optionalParametersMap = createParametersMap(optional);
