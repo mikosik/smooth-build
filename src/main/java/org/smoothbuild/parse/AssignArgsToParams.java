@@ -1,14 +1,14 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Predicates.not;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.Sets.filter;
 import static java.util.function.Function.identity;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
+import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Maybe.maybe;
-import static org.smoothbuild.util.Sets.filter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,21 +54,13 @@ public class AssignArgsToParams {
         if (parameters == null) {
           return;
         }
-        if (processNamedArguments(call, parameters)) {
+        if (assignNamedArguments(call, parameters)) {
           return;
         }
-        ParametersPool parametersPool = new ParametersPool(typeSystem,
-            filter(parameters, not(ParameterInfo::isRequired)),
-            filter(parameters, ParameterInfo::isRequired));
-        if (processNamelessArguments(call, parametersPool)) {
+        if (assignNamelessArguments(call, parameters)) {
           return;
         }
-        Set<ParameterInfo> missingRequiredParameters = parametersPool.allRequired();
-        if (missingRequiredParameters.size() != 0) {
-          errors.add(new ParseError(call,
-              missingRequiredArgsMessage(call, missingRequiredParameters)));
-          return;
-        }
+        failWhenUnassignedRequiredParameterIsLeft(errors, call, parameters);
       }
 
       private Set<ParameterInfo> functionParameters(CallNode call) {
@@ -85,24 +77,10 @@ public class AssignArgsToParams {
         return null;
       }
 
-      private String missingRequiredArgsMessage(CallNode call,
-          Set<ParameterInfo> missingRequiredParameters) {
-        return "Not all parameters required by '" + call.name()
-            + "' function has been specified.\n"
-            + "Missing required parameters:\n"
-            + ParameterInfo.iterableToString(missingRequiredParameters)
-            + "All correct 'parameters <- arguments' assignments:\n"
-            + ArgsStringHelper.assignedArgsToString(call);
-      }
-
-      private boolean processNamedArguments(CallNode call,
+      private boolean assignNamedArguments(CallNode call,
           Set<ParameterInfo> parameters) {
         boolean failed = false;
-        List<ArgNode> namedArgs = call
-            .args()
-            .stream()
-            .filter(a -> a.hasName())
-            .collect(toImmutableList());
+        List<ArgNode> namedArgs = filter(call.args(), ArgNode::hasName);
         Map<Name, ParameterInfo> map = parameters
             .stream()
             .collect(toImmutableMap(p -> p.name(), identity()));
@@ -122,7 +100,10 @@ public class AssignArgsToParams {
         return failed;
       }
 
-      private boolean processNamelessArguments(CallNode call, ParametersPool parametersPool) {
+      private boolean assignNamelessArguments(CallNode call, Set<ParameterInfo> parameters) {
+        ParametersPool parametersPool = new ParametersPool(typeSystem,
+            filter(parameters, not(ParameterInfo::isRequired)),
+            filter(parameters, ParameterInfo::isRequired));
         ImmutableMultimap<Type, ArgNode> namelessArgs = call
             .args()
             .stream()
@@ -133,12 +114,12 @@ public class AssignArgsToParams {
           int argsSize = availableArguments.size();
           if (0 < argsSize) {
             TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
-
             if (argsSize == 1 && availableTypedParams.hasCandidate()) {
               ArgNode onlyArgument = availableArguments.iterator().next();
               ParameterInfo candidateParameter = availableTypedParams.candidate();
               onlyArgument.set(ParameterInfo.class, candidateParameter);
               parametersPool.take(candidateParameter);
+              parameters.remove(candidateParameter);
             } else {
               String message = ambiguousAssignmentErrorMessage(
                   call, availableArguments, availableTypedParams);
@@ -148,6 +129,26 @@ public class AssignArgsToParams {
           }
         }
         return false;
+      }
+
+      private void failWhenUnassignedRequiredParameterIsLeft(List<ParseError> errors, CallNode call,
+          Set<ParameterInfo> parameters) {
+        Set<ParameterInfo> unassignedRequiredParameters = filter(parameters, p -> p.isRequired());
+        if (!unassignedRequiredParameters.isEmpty()) {
+          errors.add(new ParseError(call,
+              missingRequiredArgsMessage(call, unassignedRequiredParameters)));
+          return;
+        }
+      }
+
+      private String missingRequiredArgsMessage(CallNode call,
+          Set<ParameterInfo> missingRequiredParameters) {
+        return "Not all parameters required by '" + call.name()
+            + "' function has been specified.\n"
+            + "Missing required parameters:\n"
+            + ParameterInfo.iterableToString(missingRequiredParameters)
+            + "All correct 'parameters <- arguments' assignments:\n"
+            + ArgsStringHelper.assignedArgsToString(call);
       }
 
       private String ambiguousAssignmentErrorMessage(CallNode call,
