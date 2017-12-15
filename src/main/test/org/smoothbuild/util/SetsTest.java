@@ -12,9 +12,34 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableSet;
 
 public class SetsTest {
   private Set<String> set;
+
+  @Test
+  public void set_with_no_elements() throws Exception {
+    when(() -> set());
+    thenReturned(new HashSet<>());
+  }
+
+  @Test
+  public void set_with_one_element() throws Exception {
+    when(() -> set("abc"));
+    thenReturned(ImmutableSet.of("abc"));
+  }
+
+  @Test
+  public void set_with_two_elements() throws Exception {
+    when(() -> set("abc", "def"));
+    thenReturned(ImmutableSet.of("abc", "def"));
+  }
+
+  @Test
+  public void set_with_three_elements() throws Exception {
+    when(() -> set("abc", "def", "ghi"));
+    thenReturned(ImmutableSet.of("abc", "def", "ghi"));
+  }
 
   @Test
   public void mapping_empty_returns_empty() throws Exception {
