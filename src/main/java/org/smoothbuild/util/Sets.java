@@ -12,14 +12,14 @@ public class Sets {
     return Arrays.stream(elements).collect(toSet());
   }
 
-  public static <T, R> Set<R> map(Set<T> set, Function<? super T, ? extends R> function) {
+  public static <E, R> Set<R> map(Set<E> set, Function<? super E, ? extends R> function) {
     return set
         .stream()
         .map(function)
         .collect(toSet());
   }
 
-  public static <T> Set<T> filter(Set<T> set, Predicate<? super T> predicate) {
+  public static <E> Set<E> filter(Set<E> set, Predicate<? super E> predicate) {
     return set
         .stream()
         .filter(predicate)
