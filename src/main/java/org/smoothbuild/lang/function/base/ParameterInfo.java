@@ -2,6 +2,8 @@ package org.smoothbuild.lang.function.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
+import static com.google.common.collect.Streams.stream;
+import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
@@ -59,12 +61,10 @@ public class ParameterInfo {
   public static String iterableToString(Iterable<ParameterInfo> names) {
     int typeLength = longestType(names);
     int nameLength = longestName(names);
-
-    StringBuilder builder = new StringBuilder();
-    for (ParameterInfo name : names) {
-      builder.append("  " + name.toPaddedString(typeLength, nameLength) + "\n");
-    }
-    return builder.toString();
+    return stream(names)
+        .map(p -> "  " + p.toPaddedString(typeLength, nameLength) + "\n")
+        .sorted()
+        .collect(joining());
   }
 
   public static int longestType(Iterable<ParameterInfo> names) {
