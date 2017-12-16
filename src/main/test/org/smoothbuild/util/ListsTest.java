@@ -1,8 +1,11 @@
 package org.smoothbuild.util;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.filter;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 import static org.testory.Testory.given;
@@ -20,6 +23,30 @@ import com.google.common.base.Predicates;
 
 public class ListsTest {
   private List<String> list;
+
+  @Test
+  public void list_with_no_elements() throws Exception {
+    when(() -> list());
+    thenReturned(empty());
+  }
+
+  @Test
+  public void list_with_one_element() throws Exception {
+    when(() -> list("abc"));
+    thenReturned(contains("abc"));
+  }
+
+  @Test
+  public void list_with_two_elements() throws Exception {
+    when(() -> list("abc", "def"));
+    thenReturned(contains("abc", "def"));
+  }
+
+  @Test
+  public void list_with_three_elements() throws Exception {
+    when(() -> list("abc", "def", "ghi"));
+    thenReturned(contains("abc", "def", "ghi"));
+  }
 
   @Test
   public void concat_to_empty() throws Exception {

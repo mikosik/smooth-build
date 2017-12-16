@@ -3,11 +3,16 @@ package org.smoothbuild.util;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Lists {
+  public static <E> List<E> list(E... elements) {
+    return Arrays.asList(elements);
+  }
+
   public static <E> List<E> concat(List<E> list, E element) {
     List<E> result = new ArrayList<>(list);
     result.add(element);
