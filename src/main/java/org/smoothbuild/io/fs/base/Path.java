@@ -1,9 +1,9 @@
 package org.smoothbuild.io.fs.base;
 
-import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.quote;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.util.Lists.list;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ public class Path {
     failIf(value.startsWith("/"), "Path cannot start with slash character '/'.");
     failIf(value.endsWith("/"), "Path cannot end with slash character '/'.");
     failIf(value.contains("//"), "Path cannot contain two slashes (//) in a row");
-    failIf(asList(value.split(quote(SEPARATOR))).contains("."),
+    failIf(list(value.split(quote(SEPARATOR))).contains("."),
         "Path cannot contain '.' element.");
-    failIf(asList(value.split(quote(SEPARATOR))).contains(".."),
+    failIf(list(value.split(quote(SEPARATOR))).contains(".."),
         "Path cannot contain '..' element.");
     return new Path(value);
   }
