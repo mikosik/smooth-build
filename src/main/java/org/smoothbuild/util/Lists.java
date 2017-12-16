@@ -14,21 +14,21 @@ public class Lists {
     return result;
   }
 
-  public static <T> List<T> filter(List<T> list, Predicate<? super T> predicate) {
+  public static <E> List<E> filter(List<E> list, Predicate<? super E> predicate) {
     return list
         .stream()
         .filter(predicate)
         .collect(toList());
   }
 
-  public static <T, R> List<R> map(List<T> list, Function<? super T, ? extends R> function) {
+  public static <E, R> List<R> map(List<E> list, Function<? super E, ? extends R> function) {
     return list
         .stream()
         .map(function)
         .collect(toList());
   }
 
-  public static <T> List<T> sane(List<T> list) {
+  public static <E> List<E> sane(List<E> list) {
     return list == null ? new ArrayList<>() : list;
   }
 }
