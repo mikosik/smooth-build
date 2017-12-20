@@ -5,6 +5,7 @@ import static com.google.common.collect.ImmutableListMultimap.toImmutableListMul
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Sets.filter;
 import static java.util.function.Function.identity;
+import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 import static org.smoothbuild.util.Lists.filter;
@@ -24,7 +25,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
-import org.smoothbuild.lang.type.Types;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
@@ -109,23 +109,21 @@ public class AssignArgsToParams {
             .stream()
             .filter(a -> !a.hasName())
             .collect(toImmutableListMultimap(a -> a.get(Type.class), a -> a));
-        for (Type type : Types.allTypes()) {
+        for (Type type : sortedTypes(namelessArgs.keySet())) {
           Collection<ArgNode> availableArguments = namelessArgs.get(type);
           int argsSize = availableArguments.size();
-          if (0 < argsSize) {
-            TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
-            if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-              ArgNode onlyArgument = availableArguments.iterator().next();
-              ParameterInfo candidateParameter = availableTypedParams.candidate();
-              onlyArgument.set(ParameterInfo.class, candidateParameter);
-              parametersPool.take(candidateParameter);
-              parameters.remove(candidateParameter);
-            } else {
-              String message = ambiguousAssignmentErrorMessage(
-                  call, availableArguments, availableTypedParams);
-              errors.add(new ParseError(call, message));
-              return true;
-            }
+          TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
+          if (argsSize == 1 && availableTypedParams.hasCandidate()) {
+            ArgNode onlyArgument = availableArguments.iterator().next();
+            ParameterInfo candidateParameter = availableTypedParams.candidate();
+            onlyArgument.set(ParameterInfo.class, candidateParameter);
+            parametersPool.take(candidateParameter);
+            parameters.remove(candidateParameter);
+          } else {
+            String message = ambiguousAssignmentErrorMessage(
+                call, availableArguments, availableTypedParams);
+            errors.add(new ParseError(call, message));
+            return true;
           }
         }
         return false;
