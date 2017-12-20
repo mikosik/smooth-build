@@ -2,6 +2,7 @@ package org.smoothbuild.lang.function.base;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
+import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 
 public class ParameterInfoTest {
@@ -54,7 +57,7 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(STRING, new Name("equal"), true),
         new ParameterInfo(STRING, new Name("equal"), true));
-    for (Type type : Types.allTypes()) {
+    for (Type type : ImmutableList.of(STRING, arrayOf(STRING), BLOB, NOTHING, personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, new Name("name2"), true));
     }
@@ -94,5 +97,9 @@ public class ParameterInfoTest {
         + "  String: param1               \n"
         + "  String: param2-with-very-long\n"
         + "  [Blob]: param3               \n");
+  }
+
+  private static StructType personType() {
+    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
   }
 }
