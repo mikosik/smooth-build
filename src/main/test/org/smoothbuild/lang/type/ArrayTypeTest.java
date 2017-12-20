@@ -2,16 +2,32 @@ package org.smoothbuild.lang.type;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
+import static org.smoothbuild.lang.type.ArrayType.arrayWithDepth;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArrayTypeTest {
+  @Test
+  public void array_with_depth_fails_for_negative_depth() throws Exception {
+    when(() -> arrayWithDepth(STRING, -1));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void array_with_depth() throws Exception {
+    assertEquals(STRING, arrayWithDepth(STRING, 0));
+    assertEquals(arrayOf(STRING), arrayWithDepth(STRING, 1));
+    assertEquals(arrayOf(arrayOf(STRING)), arrayWithDepth(STRING, 2));
+  }
+
   @Test
   public void array_elem_types() {
     assertEquals(STRING, arrayOf(STRING).elemType());
