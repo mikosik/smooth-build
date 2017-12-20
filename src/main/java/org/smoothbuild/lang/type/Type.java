@@ -3,11 +3,13 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.value.Value;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 /**
@@ -16,6 +18,7 @@ import com.google.common.hash.HashCode;
 public class Type {
   private final String name;
   private final Class<? extends Value> jType;
+  private ImmutableList<Type> hierarchy;
 
   protected Type(String name, Class<? extends Value> jType) {
     this.name = name;
@@ -53,6 +56,23 @@ public class Type {
 
   public int coreDepth() {
     return 0;
+  }
+
+  public List<Type> hierarchy() {
+    ImmutableList<Type> h = hierarchy;
+    if (h == null) {
+      Type superType = directConvertibleTo();
+      if (superType == null) {
+        h = ImmutableList.of(this);
+      } else {
+        h = ImmutableList.<Type> builder()
+            .addAll(superType.hierarchy())
+            .add(this)
+            .build();
+      }
+      hierarchy = h;
+    }
+    return h;
   }
 
   public Type directConvertibleTo() {

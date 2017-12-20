@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.allTypes;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -57,6 +58,22 @@ public class TypesTest {
     assertEquals(2, arrayOf(arrayOf(STRING)).coreDepth());
     assertEquals(2, arrayOf(arrayOf(personType())).coreDepth());
     assertEquals(2, arrayOf(arrayOf(NOTHING)).coreDepth());
+  }
+
+  @Test
+  public void hierarchy() throws Exception {
+    assertEquals(list(STRING), STRING.hierarchy());
+    assertEquals(list(STRING, personType()), personType().hierarchy());
+    assertEquals(list(NOTHING), NOTHING.hierarchy());
+
+    assertEquals(list(arrayOf(STRING)), arrayOf(STRING).hierarchy());
+    assertEquals(list(arrayOf(STRING), arrayOf(personType())), arrayOf(personType()).hierarchy());
+    assertEquals(list(arrayOf(NOTHING)), arrayOf(NOTHING).hierarchy());
+
+    assertEquals(list(arrayOf(arrayOf(STRING))), arrayOf(arrayOf(STRING)).hierarchy());
+    assertEquals(list(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(personType()))),
+        arrayOf(arrayOf(personType())).hierarchy());
+    assertEquals(list(arrayOf(arrayOf(NOTHING))), arrayOf(arrayOf(NOTHING)).hierarchy());
   }
 
   @Test
