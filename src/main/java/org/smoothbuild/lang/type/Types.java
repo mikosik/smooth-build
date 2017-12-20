@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Lists.reverse;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 
 import java.util.List;
 
@@ -32,17 +31,6 @@ public class Types {
 
   private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
       NOTHING);
-
-  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.of(STRING, BLOB, FILE, NOTHING,
-      arrayOf(STRING), arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
-
-  /**
-   * All smooth types available in smooth language. Returned list is sorted using type - subtype
-   * relationship. Each type comes before all of its subtypes.
-   */
-  public static ImmutableSet<Type> allTypes() {
-    return ALL_TYPES;
-  }
 
   public static Type basicTypeFromString(String string) {
     for (Type type : BASIC_TYPES) {

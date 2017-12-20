@@ -1,22 +1,18 @@
 package org.smoothbuild.lang.type;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
 import static org.smoothbuild.lang.type.Types.STRING;
-import static org.smoothbuild.lang.type.Types.allTypes;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -74,13 +70,6 @@ public class TypesTest {
     assertEquals(list(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(personType()))),
         arrayOf(arrayOf(personType())).hierarchy());
     assertEquals(list(arrayOf(arrayOf(NOTHING))), arrayOf(arrayOf(NOTHING)).hierarchy());
-  }
-
-  @Test
-  public void all_types() {
-    when(allTypes());
-    thenReturned(containsInAnyOrder(STRING, BLOB, FILE, NOTHING, arrayOf(STRING), arrayOf(BLOB),
-        arrayOf(FILE), arrayOf(NOTHING)));
   }
 
   @Test
@@ -203,17 +192,6 @@ public class TypesTest {
   @Test
   public void to_string() {
     assertEquals("String", STRING.toString());
-  }
-
-  @Test
-  public void all_types_returns_list_sorted_by_super_type_dependency() {
-    Set<Type> visited = new HashSet<>();
-    for (Type type : allTypes()) {
-      for (Type visitedType : visited) {
-        assertFalse(new TypeSystem().canConvert(visitedType, type));
-      }
-      visited.add(type);
-    }
   }
 
   @Test
