@@ -5,7 +5,6 @@ import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.ALL_TYPES;
 import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.lang.type.Types.NOTHING;
@@ -18,13 +17,17 @@ import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.function.base.Name;
 
+import com.google.common.collect.ImmutableSet;
+
 @RunWith(QuackeryRunner.class)
 public class TypeSystemTest {
   @Quackery
   public static Suite can_convert() {
     Suite suite = suite("test canConvert");
-    for (Type from : ALL_TYPES) {
-      for (Type to : ALL_TYPES) {
+    ImmutableSet<Type> types = ImmutableSet.of(STRING, BLOB, FILE, NOTHING, arrayOf(STRING),
+        arrayOf(BLOB), arrayOf(FILE), arrayOf(NOTHING));
+    for (Type from : types) {
+      for (Type to : types) {
         suite = suite.add(testConversion(from, to));
       }
     }
