@@ -79,6 +79,10 @@ public class Type {
     return null;
   }
 
+  public boolean isNothing() {
+    return name.equals("Nothing");
+  }
+
   public boolean isAssignableFrom(Type type) {
     if (type.equals(NOTHING)) {
       return true;
