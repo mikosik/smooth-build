@@ -4,7 +4,6 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Math.max;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.type.ArrayType.arrayWithDepth;
-import static org.smoothbuild.lang.type.Types.NOTHING;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,9 +21,11 @@ public class TypeHierarchy {
     List<Type> sorted = new ArrayList<>();
     Set<Type> alreadySorted = new HashSet<>();
     int nothingMaxDepth = -1;
+    Type nothing = null;
     for (Type type : uniqueTypes) {
       if (type.coreType().isNothing()) {
         nothingMaxDepth = max(nothingMaxDepth, type.coreDepth());
+        nothing = type.coreType();
       } else {
         for (Type t : type.hierarchy()) {
           if (!alreadySorted.contains(t)) {
@@ -35,7 +36,7 @@ public class TypeHierarchy {
       }
     }
     for (int i = nothingMaxDepth; 0 <= i; i--) {
-      sorted.add(arrayWithDepth(NOTHING, i));
+      sorted.add(arrayWithDepth(nothing, i));
     }
     return sorted
         .stream()
