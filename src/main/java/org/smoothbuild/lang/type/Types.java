@@ -56,8 +56,8 @@ public class Types {
     if (type == null) {
       Type last1 = hierarchy1.get(0);
       Type last2 = hierarchy2.get(0);
-      boolean isNothing1 = last1.coreType().equals(NOTHING);
-      boolean isNothing2 = last2.coreType().equals(NOTHING);
+      boolean isNothing1 = last1.coreType().isNothing();
+      boolean isNothing2 = last2.coreType().isNothing();
       if (isNothing1 && isNothing2) {
         type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
       } else if (isNothing1) {

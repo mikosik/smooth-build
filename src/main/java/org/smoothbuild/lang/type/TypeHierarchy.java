@@ -23,7 +23,7 @@ public class TypeHierarchy {
     Set<Type> alreadySorted = new HashSet<>();
     int nothingMaxDepth = -1;
     for (Type type : uniqueTypes) {
-      if (type.coreType().equals(NOTHING)) {
+      if (type.coreType().isNothing()) {
         nothingMaxDepth = max(nothingMaxDepth, type.coreDepth());
       } else {
         for (Type t : type.hierarchy()) {
