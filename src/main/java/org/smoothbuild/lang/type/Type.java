@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.Types.NOTHING;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -84,7 +82,7 @@ public class Type {
   }
 
   public boolean isAssignableFrom(Type type) {
-    if (type.equals(NOTHING)) {
+    if (type.isNothing()) {
       return true;
     }
     if (this.equals(type)) {
