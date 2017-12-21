@@ -2,6 +2,8 @@ package org.smoothbuild.lang.type;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.Types.BLOB;
@@ -70,6 +72,15 @@ public class TypesTest {
     assertEquals(list(arrayOf(arrayOf(STRING)), arrayOf(arrayOf(personType()))),
         arrayOf(arrayOf(personType())).hierarchy());
     assertEquals(list(arrayOf(arrayOf(NOTHING))), arrayOf(arrayOf(NOTHING)).hierarchy());
+  }
+
+  @Test
+  public void is_nothing() throws Exception {
+    assertTrue(NOTHING.isNothing());
+    assertFalse(STRING.isNothing());
+    assertFalse(BLOB.isNothing());
+    assertFalse(FILE.isNothing());
+    assertFalse(personType().isNothing());
   }
 
   @Test
