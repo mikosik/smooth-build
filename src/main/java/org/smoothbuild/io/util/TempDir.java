@@ -3,7 +3,6 @@ package org.smoothbuild.io.util;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
-import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,8 +16,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.Streams;
 
 public class TempDir {
@@ -89,7 +88,7 @@ public class TempDir {
   }
 
   private Array readFilesImpl() throws IOException {
-    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(FILE);
+    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(valuesDb.types().file());
     for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
       Blob content = readContentImpl(path);
       Struct file = valuesDb.file(valuesDb.string(path.value()), content);

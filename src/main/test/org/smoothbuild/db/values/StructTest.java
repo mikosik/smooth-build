@@ -2,7 +2,6 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -14,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
@@ -197,6 +198,7 @@ public class StructTest {
   }
 
   private static StructType personType() {
-    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
+    Type string = new TypeSystem().string();
+    return new StructType("Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.string;
 
-import static org.smoothbuild.lang.type.Types.STRING;
-
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -12,7 +10,7 @@ public class ConcatenateStringArraysFunction {
   @SmoothFunction
   public static Array concatenateStringArrays(NativeApi nativeApi, Array strings,
       Array with) {
-    ArrayBuilder builder = nativeApi.create().arrayBuilder(STRING);
+    ArrayBuilder builder = nativeApi.create().arrayBuilder(nativeApi.types().string());
 
     for (SString string : strings.asIterable(SString.class)) {
       builder.add(string);

@@ -1,9 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,12 +12,18 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 
 public class ParameterInfoTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+
   private final Name name = new Name("name");
   private final Type type = STRING;
   private ParameterInfo parameterInfo;

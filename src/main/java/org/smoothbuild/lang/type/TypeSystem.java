@@ -1,19 +1,62 @@
 package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 
 import java.util.Objects;
 
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SString;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
-public class TypeSystem {
+public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
+  private static final Type STRING = new Type("String", SString.class);
+  private static final Type BLOB = new Type("Blob", Blob.class);
+  private static final StructType FILE = createFileType();
+  private static final Type NOTHING = new Type("Nothing", Nothing.class);
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
+
+  private static StructType createFileType() {
+    ImmutableMap<String, Type> fields = ImmutableMap.of(
+        "content", BLOB,
+        "path", STRING);
+    return new StructType("File", fields);
+  }
+
+  private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
+      NOTHING);
+
+  @Override
+  public Type string() {
+    return STRING;
+  }
+
+  @Override
+  public Type blob() {
+    return BLOB;
+  }
+
+  @Override
+  public StructType file() {
+    return FILE;
+  }
+
+  @Override
+  public Type nothing() {
+    return NOTHING;
+  }
+
+  public Type basicTypeFromString(String string) {
+    for (Type type : BASIC_TYPES) {
+      if (type.name().equals(string)) {
+        return type;
+      }
+    }
+    return null;
+  }
 
   public boolean canConvert(Type from, Type to) {
     return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from, to));

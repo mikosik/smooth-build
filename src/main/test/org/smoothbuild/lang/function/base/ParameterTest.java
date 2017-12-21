@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
@@ -9,9 +8,12 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
+  private static final Type STRING = new TypeSystem().string();
   private final Name name = new Name("name");
   private Parameter parameter;
 

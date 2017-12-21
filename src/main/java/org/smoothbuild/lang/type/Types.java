@@ -4,43 +4,7 @@ import static com.google.common.collect.Lists.reverse;
 
 import java.util.List;
 
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SString;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 public class Types {
-  public static final Type STRING = new Type("String", SString.class);
-  public static final Type BLOB = new Type("Blob", Blob.class);
-  public static final StructType FILE = createFileType();
-  public static final Type NOTHING = new Type("Nothing", Nothing.class);
-
-  private static StructType createFileType() {
-    ImmutableMap<String, Type> fields = ImmutableMap.of(
-        "content", BLOB,
-        "path", STRING);
-    return new StructType("File", fields);
-  }
-
-  /*
-   * Not each type can be used in every place. Each set below represent one place where smooth type
-   * can be used and contains all smooth types that can be used there.
-   */
-
-  private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      NOTHING);
-
-  public static Type basicTypeFromString(String string) {
-    for (Type type : BASIC_TYPES) {
-      if (type.name().equals(string)) {
-        return type;
-      }
-    }
-    return null;
-  }
-
   public static Type closestCommonConvertibleTo(Type type1, Type type2) {
     /*
      * Algorithm below works correctly for all smooth types currently existing in smooth but doesn't

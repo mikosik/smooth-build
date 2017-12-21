@@ -1,10 +1,6 @@
 package org.smoothbuild.parse.arg;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -17,12 +13,19 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableSet;
 
 public class ParametersPoolTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+  private static final Type FILE = TYPE_SYSTEM.file();
+  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+
   private final Name name = new Name("NAME");
   private TypeSystem typeSystem;
   private ParameterInfo parameter;

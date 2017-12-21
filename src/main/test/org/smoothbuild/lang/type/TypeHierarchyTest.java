@@ -3,8 +3,6 @@ package org.smoothbuild.lang.type;
 import static com.google.common.collect.Collections2.permutations;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -16,6 +14,10 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableMap;
 
 public class TypeHierarchyTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+
   @Test
   public void sorted_types_for_empty_hierarchy() throws Exception {
     assertSortedOrder(list());

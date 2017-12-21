@@ -20,6 +20,7 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.type.TypeSystem;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
@@ -31,7 +32,8 @@ public class ContainerTest {
 
   @Before
   public void before() {
-    given(container = new Container(fileSystem, memoryValuesDb(), tempDirProvider));
+    given(container = new Container(fileSystem, memoryValuesDb(), new TypeSystem(),
+        tempDirProvider));
   }
 
   @Test

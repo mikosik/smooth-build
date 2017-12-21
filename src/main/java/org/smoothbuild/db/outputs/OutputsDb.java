@@ -15,7 +15,7 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
@@ -26,11 +26,13 @@ import com.google.common.hash.HashCode;
 public class OutputsDb {
   private final HashedDb hashedDb;
   private final ValuesDb valuesDb;
+  private final TypeSystem typeSystem;
 
   @Inject
-  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb) {
+  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, TypeSystem typeSystem) {
     this.hashedDb = hashedDb;
     this.valuesDb = valuesDb;
+    this.typeSystem = typeSystem;
   }
 
   public void write(HashCode taskHash, Output output) {
@@ -62,7 +64,7 @@ public class OutputsDb {
       for (int i = 0; i < size; i++) {
         int messageType = unmarshaller.readInt();
         HashCode messageStringHash = unmarshaller.readHash();
-        SString messageSString = (SString) valuesDb.read(Types.STRING, messageStringHash);
+        SString messageSString = (SString) valuesDb.read(typeSystem.string(), messageStringHash);
         String messageString = messageSString.value();
         messages.add(newMessage(messageType, messageString));
       }

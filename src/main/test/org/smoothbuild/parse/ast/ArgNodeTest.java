@@ -1,7 +1,6 @@
 package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.lang.message.Location.location;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -15,8 +14,12 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 public class ArgNodeTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+
   private ArgNode arg;
   private final Location location = location(Paths.get("path"), 1);
   private final Name name = new Name("arg-name");

@@ -1,16 +1,22 @@
 package org.smoothbuild.lang.value;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.lang.type.Type;
 
 public class BlobBuilder extends OutputStream {
+  private final Type type;
   private final HashedDb hashedDb;
   private final Marshaller marshaller;
 
-  public BlobBuilder(HashedDb hashedDb) {
+  public BlobBuilder(Type type, HashedDb hashedDb) {
+    checkArgument(type.name().equals("Blob"));
+    this.type = type;
     this.hashedDb = hashedDb;
     this.marshaller = hashedDb.newMarshaller();
   }
@@ -32,6 +38,6 @@ public class BlobBuilder extends OutputStream {
 
   public Blob build() {
     marshaller.close();
-    return new Blob(marshaller.hash(), hashedDb);
+    return new Blob(type, marshaller.hash(), hashedDb);
   }
 }

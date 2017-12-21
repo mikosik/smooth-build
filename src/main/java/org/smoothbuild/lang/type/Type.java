@@ -33,7 +33,8 @@ public class Type {
 
   public Value newValue(HashCode hash, HashedDb hashedDb) {
     try {
-      return jType.getConstructor(HashCode.class, HashedDb.class).newInstance(hash, hashedDb);
+      return jType.getConstructor(Type.class, HashCode.class, HashedDb.class)
+          .newInstance(this, hash, hashedDb);
     } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
         | SecurityException e) {
       throw new RuntimeException(e);

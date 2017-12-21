@@ -3,7 +3,6 @@ package org.smoothbuild.io.util;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
@@ -23,12 +22,17 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
 import org.testory.common.Matcher;
 
 public class TempDirTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type FILE = TYPE_SYSTEM.file();
+
   private final Path path = path("my/path");
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final Path rootPath = path("fake/path");

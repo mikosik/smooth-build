@@ -1,9 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -12,6 +9,8 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -22,6 +21,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ValueHashTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+
   private ValuesDb valuesDb;
   private SString sstring;
   private Blob blob;

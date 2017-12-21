@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.task.exec.Container.container;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -28,7 +27,7 @@ public class OutputClassFileTest {
 
   @Test
   public void open_output_stream() throws IOException {
-    given(fileArrayBuilder = nativeApi.create().arrayBuilder(FILE));
+    given(fileArrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().file()));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
     Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
     when(() -> fileArrayBuilder.build().asIterable(Struct.class));
@@ -37,8 +36,8 @@ public class OutputClassFileTest {
 
   @Test
   public void get_name_returns_file_path() throws Exception {
-    given(outputClassFile = new OutputClassFile(nativeApi.create().arrayBuilder(FILE), path,
-        nativeApi));
+    given(outputClassFile = new OutputClassFile(nativeApi.create()
+        .arrayBuilder(nativeApi.types().file()), path, nativeApi));
     when(outputClassFile.getName());
     thenReturned("/" + path.value());
   }

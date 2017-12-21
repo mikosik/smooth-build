@@ -2,7 +2,6 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.BLOB;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
@@ -14,12 +13,17 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 
 import com.google.common.hash.HashCode;
 
 public class BlobTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
   private ValuesDb valuesDb;
