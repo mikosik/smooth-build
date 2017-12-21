@@ -2,7 +2,6 @@ package org.smoothbuild.db.values;
 
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Struct;
 
@@ -45,6 +46,7 @@ public class StructArrayTest {
   }
 
   private static StructType personType() {
-    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
+    Type string = new TypeSystem().string();
+    return new StructType("Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

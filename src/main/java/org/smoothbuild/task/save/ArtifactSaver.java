@@ -2,7 +2,6 @@ package org.smoothbuild.task.save;
 
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 
@@ -15,28 +14,30 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ArtifactSaver {
   private final FileSystem fileSystem;
+  private final TypeSystem typeSystem;
   private final Console console;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, TypeSystem typeSystem, Console console) {
     this.fileSystem = fileSystem;
+    this.typeSystem = typeSystem;
     this.console = console;
   }
 
   public void save(Name name, Value value) {
     if (value instanceof Array) {
       saveArray(name, (Array) value);
-    } else if (value.type().equals(FILE)) {
-      saveValue(name, (Blob) ((Struct) value).get("content"));
+    } else if (value.type().equals(typeSystem.file())) {
+      saveValue(name, ((Struct) value).get("content"));
     } else {
       saveValue(name, value);
     }
@@ -44,7 +45,7 @@ public class ArtifactSaver {
 
   private void saveArray(Name name, Array array) {
     Type elemType = array.type().elemType();
-    if (elemType.equals(FILE)) {
+    if (elemType.equals(typeSystem.file())) {
       saveFileArray(name, array);
     } else {
       saveValueArray(name, array);
@@ -83,7 +84,7 @@ public class ArtifactSaver {
     for (Struct file : fileArray.asIterable(Struct.class)) {
       Path sourcePath = artifactPath.append(path(((SString) file.get("path")).value()));
       if (!duplicatesDetector.addValue(((SString) file.get("path")).value())) {
-        Path targetPath = targetPath((Blob) file.get("content"));
+        Path targetPath = targetPath(file.get("content"));
         fileSystem.createLink(sourcePath, targetPath);
       }
     }

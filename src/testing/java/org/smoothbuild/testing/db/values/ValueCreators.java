@@ -10,19 +10,20 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
   public static <T extends Value> Array array(HashedDb hashedDb, Type elementType,
       Value... elements) {
-    return array(new ValuesDb(hashedDb), elementType, elements);
+    return array(new ValuesDb(hashedDb, new TypeSystem()), elementType, elements);
   }
 
   public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
@@ -33,7 +34,7 @@ public class ValueCreators {
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {
-    return file(new ValuesDb(hashedDb), path);
+    return file(new ValuesDb(hashedDb, new TypeSystem()), path);
   }
 
   public static Struct file(ValuesDb valuesDb, Path path) {

@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.compress;
 import static java.io.File.createTempFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.message.MessageException.errorException;
-import static org.smoothbuild.lang.type.Types.FILE;
 import static org.smoothbuild.util.Streams.copy;
 
 import java.io.BufferedOutputStream;
@@ -27,8 +26,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
@@ -39,7 +38,7 @@ public class UnzipFunction {
 
   public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder fileArrayBuilder = nativeApi.create().arrayBuilder(FILE);
+    ArrayBuilder fileArrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().file());
     try {
       File tempFile = copyToTempFile(blob);
       try (ZipFile zipFile = new ZipFile(tempFile)) {

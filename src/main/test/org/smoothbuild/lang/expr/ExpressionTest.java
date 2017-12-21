@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -15,11 +14,12 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
-  private final Type type = STRING;
+  private final Type type = new TypeSystem().string();
   private Location location;
 
   private MyExpression expression;

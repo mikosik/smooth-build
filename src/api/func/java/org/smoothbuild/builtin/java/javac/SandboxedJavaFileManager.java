@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
     super(fileManager);
     this.nativeApi = nativeApi;
     this.packageToJavaFileObjects = groupIntoPackages(objects);
-    this.resultClassFiles = nativeApi.create().arrayBuilder(FILE);
+    this.resultClassFiles = nativeApi.create().arrayBuilder(nativeApi.types().file());
   }
 
   private static Map<String, Set<JavaFileObject>> groupIntoPackages(

@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -12,10 +10,13 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.util.Dag;
 
 public class SignatureTest {
-  private final Type type = STRING;
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
   private final Name name = new Name("name");
   private final List<Parameter> parameters = asList();
   private Parameter parameter;
@@ -28,12 +29,12 @@ public class SignatureTest {
 
   @Test(expected = NullPointerException.class)
   public void null_name_is_forbidden() {
-    new Signature(type, null, parameters);
+    new Signature(STRING, null, parameters);
   }
 
   @Test(expected = NullPointerException.class)
   public void null_param_is_forbidden() {
-    new Signature(type, name, null);
+    new Signature(STRING, name, null);
   }
 
   @Test

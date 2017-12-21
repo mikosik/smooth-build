@@ -14,19 +14,24 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final ValuesDb valuesDb;
+  private final TypeSystem typeSystem;
   private final TempManager tempManager;
   private final List<Message> messages;
   private final List<TempDir> tempDirs;
 
   @Inject
-  public Container(FileSystem fileSystem, ValuesDb valuesDb, TempManager tempManager) {
+  public Container(FileSystem fileSystem, ValuesDb valuesDb, TypeSystem typeSystem,
+      TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.valuesDb = valuesDb;
+    this.typeSystem = typeSystem;
     this.tempManager = tempManager;
     this.messages = new ArrayList<>();
     this.tempDirs = new ArrayList<>();
@@ -34,12 +39,18 @@ public class Container implements NativeApi {
 
   public static Container container() {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new Container(fileSystem, memoryValuesDb(), new TempManager(fileSystem));
+    return new Container(
+        fileSystem, memoryValuesDb(), new TypeSystem(), new TempManager(fileSystem));
   }
 
   @Override
   public ValueFactory create() {
     return valuesDb;
+  }
+
+  @Override
+  public Types types() {
+    return typeSystem;
   }
 
   public FileSystem fileSystem() {

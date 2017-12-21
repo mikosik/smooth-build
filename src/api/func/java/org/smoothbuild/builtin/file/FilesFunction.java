@@ -4,7 +4,6 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
 import static org.smoothbuild.lang.message.MessageException.errorException;
-import static org.smoothbuild.lang.type.Types.FILE;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -40,7 +39,7 @@ public class FilesFunction {
   }
 
   private static Array readFiles(Container container, FileSystem fileSystem, Path dir) {
-    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(FILE);
+    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(container.types().file());
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {

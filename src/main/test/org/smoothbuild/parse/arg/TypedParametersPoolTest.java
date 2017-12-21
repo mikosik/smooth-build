@@ -4,8 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.then;
@@ -21,8 +19,14 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 public class TypedParametersPoolTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+
   private final ParameterInfo string1 = new ParameterInfo(STRING, new Name("string1"), true);
   private final ParameterInfo string2 = new ParameterInfo(STRING, new Name("string2"), true);
   private final ParameterInfo string3 = new ParameterInfo(STRING, new Name("string3"), true);

@@ -2,7 +2,6 @@ package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -12,11 +11,14 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
 public class SStringTest {
+  private static final Type STRING = new TypeSystem().string();
   private ValuesDb valuesDb;
   private SString sstring;
   private final String string = "my string";

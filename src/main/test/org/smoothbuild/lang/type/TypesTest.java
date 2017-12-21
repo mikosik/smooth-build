@@ -6,10 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.BLOB;
-import static org.smoothbuild.lang.type.Types.FILE;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -26,6 +22,12 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
 public class TypesTest {
+  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
+  private static final Type STRING = TYPE_SYSTEM.string();
+  private static final Type BLOB = TYPE_SYSTEM.blob();
+  private static final Type FILE = TYPE_SYSTEM.file();
+  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+
   private ArrayType type;
 
   @Test
@@ -206,64 +208,10 @@ public class TypesTest {
   }
 
   @Test
-  public void string_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("String"));
-    thenReturned(STRING);
-  }
-
-  @Test
-  public void blob_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("Blob"));
-    thenReturned(BLOB);
-  }
-
-  @Test
-  public void file_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("File"));
-    thenReturned(FILE);
-  }
-
-  @Test
-  public void nothing_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("Nothing"));
-    thenReturned(NOTHING);
-  }
-
-  @Test
   public void string_array_name() throws Exception {
     given(type = arrayOf(STRING));
     when(() -> type.name());
     thenReturned("[String]");
-  }
-
-  @Test
-  public void string_array_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("[String]"));
-    thenReturned(null);
-  }
-
-  @Test
-  public void blob_array_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("[Blob]"));
-    thenReturned(null);
-  }
-
-  @Test
-  public void file_array_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("[File]"));
-    thenReturned(null);
-  }
-
-  @Test
-  public void nil_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("[Nothing]"));
-    thenReturned(null);
-  }
-
-  @Test
-  public void unknown_type_basic_type_from_string() throws Exception {
-    when(Types.basicTypeFromString("notAType"));
-    thenReturned(null);
   }
 
   @Test

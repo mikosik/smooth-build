@@ -3,8 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.NOTHING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.smoothbuild.lang.type.Types.closestCommonConvertibleTo;
 import static org.smoothbuild.util.Maybe.maybe;
 
@@ -12,13 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.Types;
+import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -37,7 +37,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class AssignTypes {
-  public static Maybe<Ast> assignTypes(Functions functions, Ast ast) {
+  private final TypeSystem typeSystem;
+
+  @Inject
+  public AssignTypes(TypeSystem typeSystem) {
+    this.typeSystem = typeSystem;
+  }
+
+  public Maybe<Ast> assignTypes(Functions functions, Ast ast) {
     final Type nonInferable = new Type("<NonInferable>", Value.class) {};
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
@@ -142,7 +149,7 @@ public class AssignTypes {
           Type inferredElemType = createType(elementType);
           return inferredElemType == null ? null : arrayOf(inferredElemType);
         }
-        Type result = Types.basicTypeFromString(type.name());
+        Type result = typeSystem.basicTypeFromString(type.name());
         if (result == null) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
@@ -158,7 +165,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return arrayOf(NOTHING);
+          return arrayOf(typeSystem.nothing());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (nonInferable.equals(firstType)) {
@@ -208,7 +215,7 @@ public class AssignTypes {
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, STRING);
+        string.set(Type.class, typeSystem.string());
       }
     }.visitAst(ast);
     return maybe(ast, errors);

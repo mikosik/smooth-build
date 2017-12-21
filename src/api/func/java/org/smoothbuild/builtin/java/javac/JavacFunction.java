@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.java.javac;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
 import static org.smoothbuild.lang.message.MessageException.errorException;
-import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -26,8 +25,8 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class JavacFunction {
   @SmoothFunction
@@ -78,7 +77,7 @@ public class JavacFunction {
          */
         if (!inputSourceFiles.iterator().hasNext()) {
           nativeApi.log(new WarningMessage("Param 'sources' is empty list."));
-          return nativeApi.create().arrayBuilder(FILE).build();
+          return nativeApi.create().arrayBuilder(nativeApi.types().file()).build();
         }
 
         // run compilation task

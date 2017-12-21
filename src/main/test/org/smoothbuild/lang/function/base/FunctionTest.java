@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.function.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -11,12 +10,15 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 public class FunctionTest {
-  Name name;
-  List<Parameter> parameters;
-  Signature signature;
-  Function function;
+  private static final Type STRING = new TypeSystem().string();
+  private Name name;
+  private List<Parameter> parameters;
+  private Signature signature;
+  private Function function;
 
   @Test(expected = NullPointerException.class)
   public void nullSignatureIsForbidden() throws Exception {

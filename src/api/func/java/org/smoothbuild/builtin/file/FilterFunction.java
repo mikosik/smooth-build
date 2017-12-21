@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.message.MessageException.errorException;
-import static org.smoothbuild.lang.type.Types.FILE;
 
 import java.util.function.Predicate;
 
@@ -13,14 +12,14 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class FilterFunction {
   @SmoothFunction
   public static Array filter(NativeApi nativeApi, Array files, SString include) {
     Predicate<Path> filter = createFilter(include.value());
-    ArrayBuilder builder = nativeApi.create().arrayBuilder(FILE);
+    ArrayBuilder builder = nativeApi.create().arrayBuilder(nativeApi.types().file());
 
     for (Struct file : files.asIterable(Struct.class)) {
       if (filter.test(path(((SString) file.get("path")).value()))) {

@@ -3,14 +3,17 @@ package org.smoothbuild.lang.function.base;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.base.ParameterOrdering.PARAMETER_ORDERING;
-import static org.smoothbuild.lang.type.Types.STRING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeSystem;
 
 public class ParameterOrderingTest {
+  private static final Type STRING = new TypeSystem().string();
+
   private Parameter parameter1;
   private Parameter parameter2;
   private Parameter parameter3;
