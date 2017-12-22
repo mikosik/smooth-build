@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.type.Types.closestCommonConvertibleTo;
 import static org.smoothbuild.util.Maybe.maybe;
 
 import java.util.ArrayList;
@@ -177,7 +176,7 @@ public class AssignTypes {
           if (nonInferable.equals(type)) {
             return nonInferable;
           }
-          elemType = closestCommonConvertibleTo(elemType, type);
+          elemType = elemType.commonSuperType(type);
 
           if (elemType == null) {
             errors.add(new ParseError(array,

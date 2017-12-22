@@ -215,58 +215,58 @@ public class TypesTest {
   }
 
   @Test
-  public void closest_common_convertible_to() throws Exception {
+  public void common_super_type() throws Exception {
     StringBuilder builder = new StringBuilder();
 
-    assertClosest(STRING, STRING, STRING, builder);
-    assertClosest(STRING, BLOB, null, builder);
-    assertClosest(STRING, FILE, null, builder);
-    assertClosest(STRING, NOTHING, STRING, builder);
-    assertClosest(STRING, arrayOf(STRING), null, builder);
-    assertClosest(STRING, arrayOf(BLOB), null, builder);
-    assertClosest(STRING, arrayOf(FILE), null, builder);
-    assertClosest(STRING, arrayOf(NOTHING), null, builder);
+    assertCommon(STRING, STRING, STRING, builder);
+    assertCommon(STRING, BLOB, null, builder);
+    assertCommon(STRING, FILE, null, builder);
+    assertCommon(STRING, NOTHING, STRING, builder);
+    assertCommon(STRING, arrayOf(STRING), null, builder);
+    assertCommon(STRING, arrayOf(BLOB), null, builder);
+    assertCommon(STRING, arrayOf(FILE), null, builder);
+    assertCommon(STRING, arrayOf(NOTHING), null, builder);
 
-    assertClosest(BLOB, BLOB, BLOB, builder);
-    assertClosest(BLOB, FILE, BLOB, builder);
-    assertClosest(BLOB, NOTHING, BLOB, builder);
-    assertClosest(BLOB, arrayOf(STRING), null, builder);
-    assertClosest(BLOB, arrayOf(BLOB), null, builder);
-    assertClosest(BLOB, arrayOf(FILE), null, builder);
-    assertClosest(BLOB, arrayOf(NOTHING), null, builder);
+    assertCommon(BLOB, BLOB, BLOB, builder);
+    assertCommon(BLOB, FILE, BLOB, builder);
+    assertCommon(BLOB, NOTHING, BLOB, builder);
+    assertCommon(BLOB, arrayOf(STRING), null, builder);
+    assertCommon(BLOB, arrayOf(BLOB), null, builder);
+    assertCommon(BLOB, arrayOf(FILE), null, builder);
+    assertCommon(BLOB, arrayOf(NOTHING), null, builder);
 
-    assertClosest(FILE, FILE, FILE, builder);
-    assertClosest(FILE, NOTHING, FILE, builder);
-    assertClosest(FILE, arrayOf(STRING), null, builder);
-    assertClosest(FILE, arrayOf(BLOB), null, builder);
-    assertClosest(FILE, arrayOf(FILE), null, builder);
-    assertClosest(FILE, arrayOf(NOTHING), null, builder);
+    assertCommon(FILE, FILE, FILE, builder);
+    assertCommon(FILE, NOTHING, FILE, builder);
+    assertCommon(FILE, arrayOf(STRING), null, builder);
+    assertCommon(FILE, arrayOf(BLOB), null, builder);
+    assertCommon(FILE, arrayOf(FILE), null, builder);
+    assertCommon(FILE, arrayOf(NOTHING), null, builder);
 
-    assertClosest(NOTHING, NOTHING, NOTHING, builder);
-    assertClosest(NOTHING, arrayOf(STRING), arrayOf(STRING), builder);
-    assertClosest(NOTHING, arrayOf(BLOB), arrayOf(BLOB), builder);
-    assertClosest(NOTHING, arrayOf(FILE), arrayOf(FILE), builder);
-    assertClosest(NOTHING, arrayOf(NOTHING), arrayOf(NOTHING), builder);
+    assertCommon(NOTHING, NOTHING, NOTHING, builder);
+    assertCommon(NOTHING, arrayOf(STRING), arrayOf(STRING), builder);
+    assertCommon(NOTHING, arrayOf(BLOB), arrayOf(BLOB), builder);
+    assertCommon(NOTHING, arrayOf(FILE), arrayOf(FILE), builder);
+    assertCommon(NOTHING, arrayOf(NOTHING), arrayOf(NOTHING), builder);
 
-    assertClosest(arrayOf(STRING), arrayOf(STRING), arrayOf(STRING), builder);
-    assertClosest(arrayOf(STRING), arrayOf(BLOB), null, builder);
-    assertClosest(arrayOf(STRING), arrayOf(FILE), null, builder);
-    assertClosest(arrayOf(STRING), arrayOf(NOTHING), arrayOf(STRING), builder);
-    assertClosest(arrayOf(STRING), NOTHING, arrayOf(STRING), builder);
+    assertCommon(arrayOf(STRING), arrayOf(STRING), arrayOf(STRING), builder);
+    assertCommon(arrayOf(STRING), arrayOf(BLOB), null, builder);
+    assertCommon(arrayOf(STRING), arrayOf(FILE), null, builder);
+    assertCommon(arrayOf(STRING), arrayOf(NOTHING), arrayOf(STRING), builder);
+    assertCommon(arrayOf(STRING), NOTHING, arrayOf(STRING), builder);
 
-    assertClosest(arrayOf(BLOB), arrayOf(BLOB), arrayOf(BLOB), builder);
-    assertClosest(arrayOf(BLOB), arrayOf(FILE), arrayOf(BLOB), builder);
-    assertClosest(arrayOf(BLOB), arrayOf(NOTHING), arrayOf(BLOB), builder);
-    assertClosest(arrayOf(BLOB), NOTHING, arrayOf(BLOB), builder);
+    assertCommon(arrayOf(BLOB), arrayOf(BLOB), arrayOf(BLOB), builder);
+    assertCommon(arrayOf(BLOB), arrayOf(FILE), arrayOf(BLOB), builder);
+    assertCommon(arrayOf(BLOB), arrayOf(NOTHING), arrayOf(BLOB), builder);
+    assertCommon(arrayOf(BLOB), NOTHING, arrayOf(BLOB), builder);
 
-    assertClosest(arrayOf(FILE), arrayOf(FILE), arrayOf(FILE), builder);
-    assertClosest(arrayOf(FILE), arrayOf(NOTHING), arrayOf(FILE), builder);
-    assertClosest(arrayOf(FILE), NOTHING, arrayOf(FILE), builder);
+    assertCommon(arrayOf(FILE), arrayOf(FILE), arrayOf(FILE), builder);
+    assertCommon(arrayOf(FILE), arrayOf(NOTHING), arrayOf(FILE), builder);
+    assertCommon(arrayOf(FILE), NOTHING, arrayOf(FILE), builder);
 
-    assertClosest(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
-    assertClosest(arrayOf(NOTHING), NOTHING, arrayOf(NOTHING), builder);
+    assertCommon(arrayOf(NOTHING), arrayOf(NOTHING), arrayOf(NOTHING), builder);
+    assertCommon(arrayOf(NOTHING), NOTHING, arrayOf(NOTHING), builder);
 
-    assertClosest(arrayOf(FILE), new StructType("Struct", ImmutableMap.of("field", arrayOf(BLOB))),
+    assertCommon(arrayOf(FILE), new StructType("Struct", ImmutableMap.of("field", arrayOf(BLOB))),
         arrayOf(BLOB), builder);
 
     String errors = builder.toString();
@@ -275,16 +275,16 @@ public class TypesTest {
     }
   }
 
-  private static void assertClosest(Type type1, Type type2, Type expected, StringBuilder builder) {
-    assertClosestImpl(type1, type2, expected, builder);
-    assertClosestImpl(type2, type1, expected, builder);
+  private static void assertCommon(Type type1, Type type2, Type expected, StringBuilder builder) {
+    assertCommonSuperTypeImpl(type1, type2, expected, builder);
+    assertCommonSuperTypeImpl(type2, type1, expected, builder);
   }
 
-  private static void assertClosestImpl(Type type1, Type type2, Type expected,
+  private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected,
       StringBuilder builder) {
-    Type actual = Types.closestCommonConvertibleTo(type1, type2);
+    Type actual = type1.commonSuperType(type2);
     if (!Objects.equal(expected, actual)) {
-      builder.append("closestCommonConvertibleTo(" + type1 + "," + type2 + ") = " + actual
+      builder.append(type1 + ".commonSuperType(" + type2 + ") = " + actual
           + " but should = " + expected + "\n");
     }
   }
