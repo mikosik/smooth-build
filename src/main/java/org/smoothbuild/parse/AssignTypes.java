@@ -16,9 +16,9 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -34,6 +34,7 @@ import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 
 public class AssignTypes {
   private final TypeSystem typeSystem;
@@ -44,7 +45,7 @@ public class AssignTypes {
   }
 
   public Maybe<Ast> assignTypes(Functions functions, Ast ast) {
-    final Type nonInferable = new Type("<NonInferable>", Value.class) {};
+    final Type nonInferable = new StructType("<NonInferable>", ImmutableMap.of()) {};
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()

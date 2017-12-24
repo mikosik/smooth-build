@@ -5,18 +5,15 @@ import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import java.util.Objects;
 
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SString;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
-  private static final Type STRING = new Type("String", SString.class);
-  private static final Type BLOB = new Type("Blob", Blob.class);
+  private static final Type STRING = new StringType();
+  private static final Type BLOB = new BlobType();
   private static final StructType FILE = createFileType();
-  private static final Type NOTHING = new Type("Nothing", Nothing.class);
+  private static final Type NOTHING = new NothingType();
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
   private static StructType createFileType() {
