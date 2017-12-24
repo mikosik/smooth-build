@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.util.Maybe.maybe;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -45,7 +43,7 @@ public class AssignTypes {
   }
 
   public Maybe<Ast> assignTypes(Functions functions, Ast ast) {
-    final Type nonInferable = new StructType("<NonInferable>", ImmutableMap.of()) {};
+    final Type nonInferable = typeSystem.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()
@@ -147,9 +145,9 @@ public class AssignTypes {
         if (type instanceof ArrayTypeNode) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           Type inferredElemType = createType(elementType);
-          return inferredElemType == null ? null : arrayOf(inferredElemType);
+          return inferredElemType == null ? null : typeSystem.array(inferredElemType);
         }
-        Type result = typeSystem.basicTypeFromString(type.name());
+        Type result = typeSystem.nonArrayTypeFromString(type.name());
         if (result == null) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
@@ -165,7 +163,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return arrayOf(typeSystem.nothing());
+          return typeSystem.array(typeSystem.nothing());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (nonInferable.equals(firstType)) {
@@ -191,7 +189,7 @@ public class AssignTypes {
           errors.add(new ParseError(array, "Array type cannot be nested."));
           return nonInferable;
         }
-        return arrayOf(elemType);
+        return typeSystem.array(elemType);
       }
 
       @Override

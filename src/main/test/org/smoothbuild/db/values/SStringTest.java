@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -10,15 +9,16 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
 public class SStringTest {
-  private static final Type STRING = new TypeSystem().string();
+  private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private SString sstring;
   private final String string = "my string";
@@ -27,14 +27,16 @@ public class SStringTest {
 
   @Before
   public void before() {
-    valuesDb = memoryValuesDb();
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
   @Test
   public void type_of_sstring_is_sstring() throws Exception {
     given(sstring = valuesDb.string(string));
     when(sstring).type();
-    thenReturned(STRING);
+    thenReturned(typeSystem.string());
   }
 
   @Test
@@ -95,7 +97,7 @@ public class SStringTest {
   public void sstring_can_be_fetch_by_hash() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(valuesDb.read(STRING, hash));
+    when(valuesDb.read(typeSystem.string(), hash));
     thenReturned(sstring);
   }
 
@@ -103,7 +105,7 @@ public class SStringTest {
   public void sstring_fetched_by_hash_has_same_value() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(((SString) valuesDb.read(STRING, hash)).value());
+    when(((SString) valuesDb.read(typeSystem.string(), hash)).value());
     thenReturned(string);
   }
 
@@ -117,7 +119,7 @@ public class SStringTest {
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(sstring = (SString) valuesDb.read(STRING, hash));
+    given(sstring = (SString) valuesDb.read(typeSystem.string(), hash));
     when(sstring).value();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

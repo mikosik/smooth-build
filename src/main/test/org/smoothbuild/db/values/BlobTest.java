@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
@@ -12,20 +11,19 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 
 import com.google.common.hash.HashCode;
 
 public class BlobTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
+  private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private BlobBuilder blobBuilder;
   private Blob blob;
@@ -34,7 +32,9 @@ public class BlobTest {
 
   @Before
   public void before() {
-    valuesDb = memoryValuesDb();
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
   @Test
@@ -49,7 +49,7 @@ public class BlobTest {
   public void type_of_blob_is_blob() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     when(blob).type();
-    thenReturned(BLOB);
+    thenReturned(typeSystem.blob());
   }
 
   @Test
@@ -147,7 +147,7 @@ public class BlobTest {
   public void blob_can_be_fetch_by_hash() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(valuesDb.read(BLOB, hash));
+    when(valuesDb.read(typeSystem.blob(), hash));
     thenReturned(blob);
   }
 
@@ -155,7 +155,7 @@ public class BlobTest {
   public void blob_fetched_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToByteArray(((Blob) valuesDb.read(BLOB, hash)).openInputStream()));
+    when(inputStreamToByteArray(((Blob) valuesDb.read(typeSystem.blob(), hash)).openInputStream()));
     thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 
@@ -175,7 +175,7 @@ public class BlobTest {
   @Test
   public void reading_not_stored_blob_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(blob = (Blob) valuesDb.read(BLOB, hash));
+    given(blob = (Blob) valuesDb.read(typeSystem.blob(), hash));
     when(blob).openInputStream();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

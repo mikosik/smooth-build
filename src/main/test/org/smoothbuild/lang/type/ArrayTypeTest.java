@@ -1,41 +1,47 @@
 package org.smoothbuild.lang.type;
 
 import static org.junit.Assert.assertEquals;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
 public class ArrayTypeTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-  private static final Type FILE = TYPE_SYSTEM.file();
-  private static final Type NOTHING = TYPE_SYSTEM.nothing();
+  private final TypeSystem typeSystem = new TypeSystem();
+  private final Type type = typeSystem.type();
+  private final Type string = typeSystem.string();
+  private final Type blob = typeSystem.blob();
+  private final Type file = typeSystem.file();
+  private final Type nothing = typeSystem.nothing();
 
   @Test
   public void array_elem_types() {
-    assertEquals(STRING, arrayOf(STRING).elemType());
-    assertEquals(BLOB, arrayOf(BLOB).elemType());
-    assertEquals(personType(), arrayOf(personType()).elemType());
-    assertEquals(NOTHING, arrayOf(NOTHING).elemType());
+    assertEquals(type, typeSystem.array(type).elemType());
+    assertEquals(string, typeSystem.array(string).elemType());
+    assertEquals(blob, typeSystem.array(blob).elemType());
+    assertEquals(personType(), typeSystem.array(personType()).elemType());
+    assertEquals(nothing, typeSystem.array(nothing).elemType());
 
-    assertEquals(arrayOf(STRING), arrayOf(arrayOf(STRING)).elemType());
-    assertEquals(arrayOf(BLOB), arrayOf(arrayOf(BLOB)).elemType());
-    assertEquals(arrayOf(personType()), arrayOf(arrayOf(personType())).elemType());
-    assertEquals(arrayOf(NOTHING), arrayOf(arrayOf(NOTHING)).elemType());
+    assertEquals(typeSystem.array(type), typeSystem.array(typeSystem.array(type)).elemType());
+    assertEquals(typeSystem.array(string), typeSystem.array(typeSystem.array(string)).elemType());
+    assertEquals(typeSystem.array(blob), typeSystem.array(typeSystem.array(blob)).elemType());
+    assertEquals(typeSystem.array(personType()), typeSystem.array(typeSystem.array(personType()))
+        .elemType());
+    assertEquals(typeSystem.array(nothing), typeSystem.array(typeSystem.array(nothing))
+        .elemType());
   }
 
   @Test
   public void direct_convertible_to() throws Exception {
-    assertEquals(arrayOf(BLOB), arrayOf(FILE).directConvertibleTo());
-    assertEquals(arrayOf(STRING), arrayOf(personType()).directConvertibleTo());
-    assertEquals(null, arrayOf(STRING).directConvertibleTo());
-    assertEquals(null, arrayOf(NOTHING).directConvertibleTo());
+    assertEquals(typeSystem.array(blob), typeSystem.array(file).directConvertibleTo());
+    assertEquals(typeSystem.array(string), typeSystem.array(personType())
+        .directConvertibleTo());
+    assertEquals(null, typeSystem.array(string).directConvertibleTo());
+    assertEquals(null, typeSystem.array(nothing).directConvertibleTo());
   }
 
-  private static StructType personType() {
-    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
+  private StructType personType() {
+    return typeSystem.struct(
+        "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

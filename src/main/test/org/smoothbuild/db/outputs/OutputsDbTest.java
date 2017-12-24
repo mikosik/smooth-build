@@ -2,9 +2,7 @@ package org.smoothbuild.db.outputs;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -20,14 +18,11 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -39,16 +34,12 @@ import org.smoothbuild.util.Streams;
 import com.google.common.hash.HashCode;
 
 public class OutputsDbTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-
-  private final ValuesDb valuesDb = memoryValuesDb();
-  private final FileSystem fileSystem = new MemoryFileSystem();
-  private final HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(
-      fileSystem));
-  private final OutputsDb outputsDb = new OutputsDb(hashedDb, valuesDb, new TypeSystem());
+  private final HashedDb hashedDbValues = new HashedDb();
+  private final HashedDb hashedDbOutputs = new HashedDb();
+  private final TypeSystem typeSystem = new TypeSystem(new TypesDb(hashedDbValues));
+  private final ValuesDb valuesDb = new ValuesDb(hashedDbValues, typeSystem);
+  private final OutputsDb outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, typeSystem);
   private final HashCode hash = Hash.string("abc");
-  private final TypeSystem typeSystem = new TypeSystem();
 
   private final byte[] bytes = new byte[] {};
   private final Path path = path("file/path");
@@ -93,7 +84,7 @@ public class OutputsDbTest {
     given(file = file(valuesDb, path, bytes));
     given(array = valuesDb.arrayBuilder(typeSystem.file()).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, arrayOf(typeSystem.file())).result())
+    when(((Array) outputsDb.read(hash, typeSystem.array(typeSystem.file())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -101,9 +92,9 @@ public class OutputsDbTest {
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
-    given(array = valuesDb.arrayBuilder(BLOB).add(blob).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.blob()).add(blob).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, arrayOf(typeSystem.blob())).result())
+    when(((Array) outputsDb.read(hash, typeSystem.array(typeSystem.blob())).result())
         .asIterable(Blob.class).iterator().next());
     thenReturned(blob);
   }
@@ -113,7 +104,7 @@ public class OutputsDbTest {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(typeSystem.string()).add(stringValue).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, arrayOf(typeSystem.string())).result())
+    when(((Array) outputsDb.read(hash, typeSystem.array(typeSystem.string())).result())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
   }

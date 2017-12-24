@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
@@ -12,9 +11,10 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -23,14 +23,12 @@ import org.smoothbuild.lang.value.Struct;
 import com.google.common.hash.HashCode;
 
 public class FileTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final StructType FILE = TYPE_SYSTEM.file();
-
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
   private final String path = "path";
   private final String otherPath = "other/path";
 
+  private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private Struct file;
   private Struct file2;
@@ -38,7 +36,9 @@ public class FileTest {
 
   @Before
   public void before() {
-    valuesDb = memoryValuesDb();
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
   @Test
@@ -57,7 +57,7 @@ public class FileTest {
   public void type_of_sfile_is_file() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
     when(file).type();
-    thenReturned(FILE);
+    thenReturned(typeSystem.file());
   }
 
   @Test
@@ -174,21 +174,21 @@ public class FileTest {
   @Test
   public void file_can_be_read_by_hash() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(valuesDb.read(FILE, file.hash()));
+    when(valuesDb.read(typeSystem.file(), file.hash()));
     thenReturned(file);
   }
 
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(valuesDb.read(FILE, file.hash()).get("content"));
+    when(valuesDb.read(typeSystem.file(), file.hash()).get("content"));
     thenReturned(file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((SString) valuesDb.read(FILE, file.hash()).get("path"));
+    when((SString) valuesDb.read(typeSystem.file(), file.hash()).get("path"));
     thenReturned(file.get("path"));
   }
 
@@ -213,7 +213,7 @@ public class FileTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(valuesDb).read(FILE, hash);
+    when(valuesDb).read(typeSystem.file(), hash);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

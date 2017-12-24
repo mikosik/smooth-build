@@ -6,8 +6,8 @@ import org.smoothbuild.lang.value.SString;
 import com.google.common.hash.HashCode;
 
 public class StringType extends Type {
-  protected StringType() {
-    super("String", SString.class);
+  protected StringType(TypeType type, HashCode hash) {
+    super(type, hash, "String", SString.class);
   }
 
   @Override

@@ -1,8 +1,6 @@
 package org.smoothbuild.task.base;
 
 import static java.util.Arrays.asList;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
@@ -16,30 +14,36 @@ import static org.testory.Testory.willReturn;
 
 import java.nio.file.Paths;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.hash.HashCode;
 
 public class TaskHashTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-
   private final Location location = Location.location(Paths.get("script.smooth"), 2);
-  private final ValuesDb valuesDb = memoryValuesDb();
-
+  private TypeSystem typeSystem;
+  private ValuesDb valuesDb;
   private Evaluator evaluator;
   private Task task;
   private Task task2;
   private Input input;
   private NativeFunction nativeFunction;
   private DefinedFunction definedFunction;
+
+  @Before
+  public void before() {
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(hashedDb));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
+  }
 
   @Test
   public void hashes_of_tasks_with_same_evaluator_are_equal() throws Exception {
@@ -68,7 +72,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(arrayOf(STRING), location)));
+    given(task = new Task(arrayEvaluator(typeSystem.array(typeSystem.string()), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("3e790fa50b6a9b6a4c0c4ac933de2461b321a3f0"));
@@ -76,7 +80,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_non_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(arrayOf(STRING), location)));
+    given(task = new Task(arrayEvaluator(typeSystem.array(typeSystem.string()), location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("4fc92bc42737d06c9f0864a811e510322f4096f2"));
@@ -108,7 +112,7 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_call_evaluator_and_one_element_input_is_stable() throws Exception {
     given(definedFunction = mock(DefinedFunction.class));
-    given(willReturn(STRING), definedFunction).type();
+    given(willReturn(typeSystem.string()), definedFunction).type();
     given(willReturn(new Name("name")), definedFunction).name();
     given(task = new Task(callEvaluator(definedFunction, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"))));

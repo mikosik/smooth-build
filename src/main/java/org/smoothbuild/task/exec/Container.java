@@ -1,12 +1,11 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -16,6 +15,7 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
@@ -39,8 +39,11 @@ public class Container implements NativeApi {
 
   public static Container container() {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new Container(
-        fileSystem, memoryValuesDb(), new TypeSystem(), new TempManager(fileSystem));
+    HashedDb hashedDb = new HashedDb();
+    TypesDb typesDb = new TypesDb(hashedDb);
+    TypeSystem typeSystem = new TypeSystem(typesDb);
+    ValuesDb valuesDb = new ValuesDb(hashedDb, typeSystem);
+    return new Container(fileSystem, valuesDb, typeSystem, new TempManager(fileSystem));
   }
 
   @Override

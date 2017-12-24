@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.plugin;
 
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 
 public interface Types {
@@ -7,7 +8,9 @@ public interface Types {
 
   public Type blob();
 
+  public Type nothing();
+
   public Type file();
 
-  public Type nothing();
+  public ArrayType array(Type elementType);
 }

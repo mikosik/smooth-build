@@ -23,14 +23,14 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 
 public class TypedParametersPoolTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
+  private final TypeSystem typeSystem = new TypeSystem();
+  private final Type string = typeSystem.string();
+  private final Type blobT = typeSystem.blob();
 
-  private final ParameterInfo string1 = new ParameterInfo(STRING, new Name("string1"), true);
-  private final ParameterInfo string2 = new ParameterInfo(STRING, new Name("string2"), true);
-  private final ParameterInfo string3 = new ParameterInfo(STRING, new Name("string3"), true);
-  private final ParameterInfo blob = new ParameterInfo(BLOB, new Name("blob"), true);
+  private final ParameterInfo string1 = new ParameterInfo(string, new Name("string1"), true);
+  private final ParameterInfo string2 = new ParameterInfo(string, new Name("string2"), true);
+  private final ParameterInfo string3 = new ParameterInfo(string, new Name("string3"), true);
+  private final ParameterInfo blob = new ParameterInfo(blobT, new Name("blob"), true);
 
   private Set<ParameterInfo> optional;
   private Set<ParameterInfo> required;

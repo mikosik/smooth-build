@@ -1,53 +1,68 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.function.base.Name;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
-  private static final Type STRING = new StringType();
-  private static final Type BLOB = new BlobType();
-  private static final StructType FILE = createFileType();
-  private static final Type NOTHING = new NothingType();
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
-  private static StructType createFileType() {
-    ImmutableMap<String, Type> fields = ImmutableMap.of(
-        "content", BLOB,
-        "path", STRING);
-    return new StructType("File", fields);
+  private final TypesDb typesDb;
+
+  @Inject
+  public TypeSystem(TypesDb typesDb) {
+    this.typesDb = typesDb;
   }
 
-  private static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(STRING, BLOB, FILE,
-      NOTHING);
+  public TypeSystem() {
+    this(new TypesDb(new HashedDb()));
+  }
+
+  public Type type() {
+    return typesDb.type();
+  }
 
   @Override
   public Type string() {
-    return STRING;
+    return typesDb.string();
   }
 
   @Override
   public Type blob() {
-    return BLOB;
-  }
-
-  @Override
-  public StructType file() {
-    return FILE;
+    return typesDb.blob();
   }
 
   @Override
   public Type nothing() {
-    return NOTHING;
+    return typesDb.nothing();
   }
 
-  public Type basicTypeFromString(String string) {
-    for (Type type : BASIC_TYPES) {
+  @Override
+  public ArrayType array(Type elementType) {
+    return typesDb.array(elementType);
+  }
+
+  public StructType struct(String name, ImmutableMap<String, Type> fields) {
+    return typesDb.struct(name, fields);
+  }
+
+  @Override
+  public StructType file() {
+    ImmutableMap<String, Type> fields = ImmutableMap.of(
+        "content", typesDb.blob(),
+        "path", typesDb.string());
+    return typesDb.struct("File", fields);
+  }
+
+  public Type nonArrayTypeFromString(String string) {
+    for (Type type : list(string(), blob(), nothing(), file())) {
       if (type.name().equals(string)) {
         return type;
       }
@@ -56,31 +71,28 @@ public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
   }
 
   public boolean canConvert(Type from, Type to) {
-    return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from, to));
+    return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from.name(), to.name()));
   }
 
   public Name convertFunctionName(Type from, Type to) {
-    return CONVERSIONS.get(new TypeConversion(from, to));
+    return CONVERSIONS.get(new TypeConversion(from.name(), to.name()));
   }
 
   private static ImmutableMap<TypeConversion, Name> createConversions() {
     ImmutableMap.Builder<TypeConversion, Name> builder = ImmutableMap.builder();
-
-    builder.put(new TypeConversion(FILE, BLOB), new Name("fileToBlob"));
-    builder.put(new TypeConversion(arrayOf(FILE), arrayOf(BLOB)), new Name("fileArrayToBlobArray"));
-    builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(STRING)), new Name(
-        "nilToStringArray"));
-    builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(BLOB)), new Name("nilToBlobArray"));
-    builder.put(new TypeConversion(arrayOf(NOTHING), arrayOf(FILE)), new Name("nilToFileArray"));
-
+    builder.put(new TypeConversion("File", "Blob"), new Name("fileToBlob"));
+    builder.put(new TypeConversion("[File]", "[Blob]"), new Name("fileArrayToBlobArray"));
+    builder.put(new TypeConversion("[Nothing]", "[String]"), new Name("nilToStringArray"));
+    builder.put(new TypeConversion("[Nothing]", "[Blob]"), new Name("nilToBlobArray"));
+    builder.put(new TypeConversion("[Nothing]", "[File]"), new Name("nilToFileArray"));
     return builder.build();
   }
 
   private static class TypeConversion {
-    private final Type from;
-    private final Type to;
+    private final String from;
+    private final String to;
 
-    private TypeConversion(Type from, Type to) {
+    private TypeConversion(String from, String to) {
       this.from = from;
       this.to = to;
     }
