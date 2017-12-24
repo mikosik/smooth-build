@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function.base;
 
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -19,14 +18,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 
 public class ParameterInfoTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-  private static final Type NOTHING = TYPE_SYSTEM.nothing();
-
   private final Name name = new Name("name");
-  private final Type type = STRING;
   private ParameterInfo parameterInfo;
+  private final TypeSystem typeSystem = new TypeSystem();
+  private final Type string = typeSystem.string();
+  private final Type blob = typeSystem.blob();
+  private final Type type = string;
+  private final Type nothing = typeSystem.nothing();
 
   @Test
   public void null_type_is_forbidden() {
@@ -58,9 +56,10 @@ public class ParameterInfoTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new ParameterInfo(STRING, new Name("equal"), true),
-        new ParameterInfo(STRING, new Name("equal"), true));
-    for (Type type : ImmutableList.of(STRING, arrayOf(STRING), BLOB, NOTHING, personType())) {
+        new ParameterInfo(string, new Name("equal"), true),
+        new ParameterInfo(string, new Name("equal"), true));
+    for (Type type : ImmutableList.of(string, typeSystem.array(string), blob, nothing,
+        personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, new Name("name2"), true));
     }
@@ -69,21 +68,21 @@ public class ParameterInfoTest {
 
   @Test
   public void to_padded_string() {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
     when(parameterInfo.toPaddedString(10, 13));
     thenReturned("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
     when(parameterInfo.toPaddedString(1, 1));
     thenReturned("String: myName");
   }
 
   @Test
   public void to_string() throws Exception {
-    given(parameterInfo = new ParameterInfo(STRING, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
     when(() -> parameterInfo.toString());
     thenReturned("String myName");
   }
@@ -91,9 +90,9 @@ public class ParameterInfoTest {
   @Test
   public void params_to_string() {
     List<ParameterInfo> names = new ArrayList<>();
-    names.add(new ParameterInfo(STRING, new Name("param1"), true));
-    names.add(new ParameterInfo(STRING, new Name("param2-with-very-long"), true));
-    names.add(new ParameterInfo(arrayOf(BLOB), new Name("param3"), true));
+    names.add(new ParameterInfo(string, new Name("param1"), true));
+    names.add(new ParameterInfo(string, new Name("param2-with-very-long"), true));
+    names.add(new ParameterInfo(typeSystem.array(blob), new Name("param3"), true));
 
     when(ParameterInfo.iterableToString(names));
     thenReturned(""
@@ -102,7 +101,8 @@ public class ParameterInfoTest {
         + "  [Blob]: param3               \n");
   }
 
-  private static StructType personType() {
-    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
+  private StructType personType() {
+    return typeSystem.struct(
+        "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

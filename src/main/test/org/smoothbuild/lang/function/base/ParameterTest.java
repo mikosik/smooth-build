@@ -13,20 +13,20 @@ import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
-  private static final Type STRING = new TypeSystem().string();
+  private final Type string = new TypeSystem().string();
   private final Name name = new Name("name");
   private Parameter parameter;
 
   @Test
   public void optional_parameter_creates_optional_parameter() throws Exception {
-    given(parameter = new Parameter(STRING, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Dag.class)));
     when(parameter).isRequired();
     thenReturned(false);
   }
 
   @Test
   public void required_parameter_creates_required_parameter() throws Exception {
-    given(parameter = new Parameter(STRING, name, null));
+    given(parameter = new Parameter(string, name, null));
     when(parameter).isRequired();
     thenReturned(true);
   }
@@ -39,48 +39,48 @@ public class ParameterTest {
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new Parameter(STRING, null, mock(Dag.class)));
+    when(() -> new Parameter(string, null, mock(Dag.class)));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type_getter() throws Exception {
-    given(parameter = new Parameter(STRING, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Dag.class)));
     when(() -> parameter.type());
-    thenReturned(STRING);
+    thenReturned(string);
   }
 
   @Test
   public void name_getter() throws Exception {
-    given(parameter = new Parameter(STRING, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Dag.class)));
     when(() -> parameter.name());
     thenReturned(name);
   }
 
   @Test
   public void getters() {
-    when(parameter = new Parameter(STRING, name, null));
-    thenEqual(parameter.type(), STRING);
+    when(parameter = new Parameter(string, name, null));
+    thenEqual(parameter.type(), string);
     thenEqual(parameter.name(), name);
   }
 
   @Test
   public void parameter_without_default_value_is_required() throws Exception {
-    given(parameter = new Parameter(STRING, name, null));
+    given(parameter = new Parameter(string, name, null));
     when(() -> parameter.isRequired());
     thenReturned(true);
   }
 
   @Test
   public void parameter_with_default_value_is_not_required() throws Exception {
-    given(parameter = new Parameter(STRING, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Dag.class)));
     when(() -> parameter.isRequired());
     thenReturned(false);
   }
 
   @Test
   public void to_string() {
-    given(parameter = new Parameter(STRING, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Dag.class)));
     when(parameter.toString());
     thenReturned("Param(String: name)");
   }

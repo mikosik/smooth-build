@@ -6,8 +6,8 @@ import org.smoothbuild.lang.value.Blob;
 import com.google.common.hash.HashCode;
 
 public class BlobType extends Type {
-  protected BlobType() {
-    super("Blob", Blob.class);
+  protected BlobType(TypeType type, HashCode hash) {
+    super(type, hash, "Blob", Blob.class);
   }
 
   @Override

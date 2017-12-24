@@ -13,12 +13,13 @@ import com.google.common.hash.HashCode;
 /**
  * Type in smooth language.
  */
-public abstract class Type {
+public abstract class Type extends Value {
   private final String name;
   private final Class<? extends Value> jType;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(String name, Class<? extends Value> jType) {
+  protected Type(TypeType type, HashCode hash, String name, Class<? extends Value> jType) {
+    super(type, hash);
     this.name = name;
     this.jType = jType;
   }

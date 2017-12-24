@@ -1,7 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -13,6 +11,7 @@ import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -37,8 +36,8 @@ public class ValuesDb implements ValueFactory {
 
   public static ValuesDb memoryValuesDb() {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
-    return new ValuesDb(new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem)),
-        new TypeSystem());
+    HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem));
+    return new ValuesDb(hashedDb, new TypeSystem(new TypesDb(hashedDb)));
   }
 
   public Types types() {
@@ -47,7 +46,7 @@ public class ValuesDb implements ValueFactory {
 
   @Override
   public ArrayBuilder arrayBuilder(Type elementType) {
-    ArrayType arrayType = arrayOf(elementType);
+    ArrayType arrayType = typeSystem.array(elementType);
     if (arrayType == null) {
       throw new IllegalArgumentException("Cannot create array with element of type " + elementType);
     }

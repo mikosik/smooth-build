@@ -1,6 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -8,9 +7,11 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -21,11 +22,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ValueHashTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-  private static final Type NOTHING = TYPE_SYSTEM.nothing();
-
+  private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private SString sstring;
   private Blob blob;
@@ -34,7 +31,9 @@ public class ValueHashTest {
 
   @Before
   public void before() {
-    valuesDb = memoryValuesDb();
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
   @Test
@@ -81,28 +80,29 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_empty_string_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(STRING).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.string()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
   @Test
   public void hash_of_non_empty_string_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(STRING).add(valuesDb.string("")).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.string()).add(valuesDb.string("")).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("be1bdec0aa74b4dcb079943e70528096cca985f8"));
   }
 
   @Test
   public void hash_of_empty_blob_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(BLOB).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.blob()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
   @Test
   public void hash_of_non_empty_blob_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(BLOB).add(createBlob(valuesDb, new byte[] {})).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.blob()).add(
+        createBlob(valuesDb, new byte[] {})).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("be1bdec0aa74b4dcb079943e70528096cca985f8"));
   }
@@ -125,12 +125,12 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_empty_nothing_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(NOTHING).build());
+    given(array = valuesDb.arrayBuilder(typeSystem.nothing()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
   }
 
-  private static Struct createStruct(ValuesDb valuesDb, String firstName, String lastName)
+  private Struct createStruct(ValuesDb valuesDb, String firstName, String lastName)
       throws Exception {
     return valuesDb.structBuilder(personType())
         .set("firstName", valuesDb.string(firstName))
@@ -144,7 +144,9 @@ public class ValueHashTest {
     return blobBuilder.build();
   }
 
-  private static StructType personType() {
-    return new StructType("Person", ImmutableMap.of("firstName", STRING, "lastName", STRING));
+  private StructType personType() {
+    Type string = typeSystem.string();
+    return typeSystem.struct(
+        "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

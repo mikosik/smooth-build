@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -11,10 +10,12 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
@@ -23,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class StructTest {
+  private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private HashCode hash;
   private SString firstName;
@@ -33,7 +35,9 @@ public class StructTest {
 
   @Before
   public void before() {
-    valuesDb = memoryValuesDb();
+    HashedDb hashedDb = new HashedDb();
+    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
   @Test
@@ -197,8 +201,9 @@ public class StructTest {
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 
-  private static StructType personType() {
-    Type string = new TypeSystem().string();
-    return new StructType("Person", ImmutableMap.of("firstName", string, "lastName", string));
+  private StructType personType() {
+    Type string = typeSystem.string();
+    return typeSystem.struct(
+        "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

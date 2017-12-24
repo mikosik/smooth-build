@@ -6,14 +6,12 @@ import org.smoothbuild.lang.value.Array;
 import com.google.common.hash.HashCode;
 
 public class ArrayType extends Type {
+  private final ArrayType superType;
   private final Type elemType;
 
-  public static ArrayType arrayOf(Type elemType) {
-    return new ArrayType(elemType);
-  }
-
-  private ArrayType(Type elemType) {
-    super("[" + elemType.name() + "]", Array.class);
+  protected ArrayType(TypeType type, HashCode hash, ArrayType superType, Type elemType) {
+    super(type, hash, "[" + elemType.name() + "]", Array.class);
+    this.superType = superType;
     this.elemType = elemType;
   }
 
@@ -38,7 +36,6 @@ public class ArrayType extends Type {
 
   @Override
   public ArrayType directConvertibleTo() {
-    Type elemConvertibleTo = elemType.directConvertibleTo();
-    return elemConvertibleTo == null ? null : arrayOf(elemConvertibleTo);
+    return superType;
   }
 }

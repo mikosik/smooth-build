@@ -13,7 +13,7 @@ public class Value {
   private final HashCode hash;
 
   public Value(Type type, HashCode hash) {
-    this.type = checkNotNull(type);
+    this.type = type;
     this.hash = checkNotNull(hash);
   }
 
@@ -22,7 +22,11 @@ public class Value {
   }
 
   public Type type() {
-    return type;
+    if (type == null) {
+      return (Type) this;
+    } else {
+      return type;
+    }
   }
 
   @Override

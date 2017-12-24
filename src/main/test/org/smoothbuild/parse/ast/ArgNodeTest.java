@@ -17,30 +17,28 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 
 public class ArgNodeTest {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-
-  private ArgNode arg;
+  private final Type string = new TypeSystem().string();
   private final Location location = location(Paths.get("path"), 1);
   private final Name name = new Name("arg-name");
+  private ArgNode arg;
 
   @Test
   public void named_arg_has_name() throws Exception {
-    given(arg = new ArgNode(0, name, expr(STRING), location));
+    given(arg = new ArgNode(0, name, expr(string), location));
     when(() -> arg.hasName());
     thenReturned(true);
   }
 
   @Test
   public void nameless_arg_does_not_have_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(STRING), location));
+    given(arg = new ArgNode(0, null, expr(string), location));
     when(() -> arg.hasName());
     thenReturned(false);
   }
 
   @Test
   public void nameless_arg_throws_exception_when_asked_for_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(STRING), location));
+    given(arg = new ArgNode(0, null, expr(string), location));
     when(() -> arg.name());
     thenThrown(IllegalStateException.class);
   }
@@ -61,32 +59,32 @@ public class ArgNodeTest {
 
   @Test
   public void type_and_name_of_named_argument() throws Exception {
-    given(arg = new ArgNode(1, name, expr(STRING), location));
-    given(arg).set(Type.class, STRING);
+    given(arg = new ArgNode(1, name, expr(string), location));
+    given(arg).set(Type.class, string);
     when(arg).typeAndName();
     thenReturned("String:" + name);
   }
 
   @Test
   public void nameless_argument_to_string() throws Exception {
-    given(arg = new ArgNode(1, null, expr(STRING), location));
-    given(arg).set(Type.class, STRING);
+    given(arg = new ArgNode(1, null, expr(string), location));
+    given(arg).set(Type.class, string);
     when(arg).typeAndName();
     thenReturned("String:<nameless>");
   }
 
   @Test
   public void to_padded_string() throws Exception {
-    given(arg = new ArgNode(1, new Name("myName"), expr(STRING), location));
-    given(arg).set(Type.class, STRING);
+    given(arg = new ArgNode(1, new Name("myName"), expr(string), location));
+    given(arg).set(Type.class, string);
     when(arg).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       [" + location.toString() + "]");
   }
 
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
-    given(arg = new ArgNode(1, new Name("myName"), expr(STRING), location));
-    given(arg).set(Type.class, STRING);
+    given(arg = new ArgNode(1, new Name("myName"), expr(string), location));
+    given(arg).set(Type.class, string);
     when(arg).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 [" + location.toString() + "]");
   }

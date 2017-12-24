@@ -4,7 +4,6 @@ import static java.util.regex.Pattern.DOTALL;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.type.ArrayType.arrayOf;
 import static org.testory.Testory.then;
 
 import java.util.regex.Matcher;
@@ -29,15 +28,12 @@ import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 import org.smoothbuild.acceptance.lang.nativ.ThrowRandomException;
 import org.smoothbuild.acceptance.lang.nativ.WithoutContainer;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
-  private static final TypeSystem TYPE_SYSTEM = new TypeSystem();
-  private static final Type STRING = TYPE_SYSTEM.string();
-  private static final Type BLOB = TYPE_SYSTEM.blob();
-  private static final Type FILE = TYPE_SYSTEM.file();
-
   @Test
   public void native_can_return_passed_argument() throws Exception {
     givenNativeJar(OneStringParameter.class);
@@ -186,9 +182,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'oneStringParameter' parameter 'string' has type [String] "
-            + "so its native implementation type must be " + arrayOf(STRING).jType()
-                .getCanonicalName()
-            + " but it is " + STRING.jType().getCanonicalName() + ".\n"));
+            + "so its native implementation type must be " + Array.class.getCanonicalName()
+            + " but it is " + SString.class.getCanonicalName() + ".\n"));
   }
 
   @Test
@@ -201,8 +196,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     then(output(), containsString(
         "Function 'fileParameter' parameter 'file' has type Blob "
-            + "so its native implementation type must be " + BLOB.jType().getCanonicalName()
-            + " but it is " + FILE.jType().getCanonicalName() + ".\n"));
+            + "so its native implementation type must be " + Blob.class.getCanonicalName()
+            + " but it is " + Struct.class.getCanonicalName() + ".\n"));
   }
 
   @Test

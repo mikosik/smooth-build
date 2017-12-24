@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -13,6 +12,7 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -21,6 +21,7 @@ import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
@@ -32,8 +33,10 @@ public class ContainerTest {
 
   @Before
   public void before() {
-    given(container = new Container(fileSystem, memoryValuesDb(), new TypeSystem(),
-        tempDirProvider));
+    HashedDb hashedDb = new HashedDb();
+    TypeSystem typeSystem = new TypeSystem(new TypesDb(hashedDb));
+    ValuesDb valuesDb = new ValuesDb(hashedDb, typeSystem);
+    container = new Container(fileSystem, valuesDb, typeSystem, tempDirProvider);
   }
 
   @Test

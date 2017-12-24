@@ -11,6 +11,7 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -23,7 +24,7 @@ import org.smoothbuild.util.Streams;
 public class ValueCreators {
   public static <T extends Value> Array array(HashedDb hashedDb, Type elementType,
       Value... elements) {
-    return array(new ValuesDb(hashedDb, new TypeSystem()), elementType, elements);
+    return array(valuesDb(hashedDb), elementType, elements);
   }
 
   public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
@@ -34,7 +35,7 @@ public class ValueCreators {
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {
-    return file(new ValuesDb(hashedDb, new TypeSystem()), path);
+    return file(valuesDb(hashedDb), path);
   }
 
   public static Struct file(ValuesDb valuesDb, Path path) {
@@ -55,5 +56,10 @@ public class ValueCreators {
       throw new RuntimeException(e);
     }
     return builder.build();
+  }
+
+  private static ValuesDb valuesDb(HashedDb hashedDb) {
+    TypeSystem typeSystem = new TypeSystem(new TypesDb(hashedDb));
+    return new ValuesDb(hashedDb, typeSystem);
   }
 }
