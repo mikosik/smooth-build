@@ -49,6 +49,19 @@ public class HashedDbTest {
   }
 
   @Test
+  public void written_string_can_be_read_back() throws Exception {
+    given(hash = hashedDb.writeString("abc"));
+    when(() -> hashedDb.readString(hash));
+    thenReturned("abc");
+  }
+
+  @Test
+  public void not_written_string_cannot_be_read_back() throws Exception {
+    when(() -> hashedDb.readString(Hash.string("abc")));
+    thenThrown(HashedDbException.class);
+  }
+
+  @Test
   public void written_single_byte_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(17);
