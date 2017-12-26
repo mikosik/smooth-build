@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.smoothbuild.lang.type.ArrayType.arrayOf;
-import static org.smoothbuild.lang.value.SString.storeStringInDb;
 
 import javax.inject.Inject;
 
@@ -79,7 +78,7 @@ public class ValuesDb implements ValueFactory {
 
   @Override
   public SString string(String string) {
-    return storeStringInDb(typeSystem.string(), string, hashedDb);
+    return new SString(typeSystem.string(), hashedDb.writeString(string), hashedDb);
   }
 
   public Array read(ArrayType type, HashCode hash) {
