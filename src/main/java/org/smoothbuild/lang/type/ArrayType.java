@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
 
@@ -9,15 +7,6 @@ import com.google.common.hash.HashCode;
 
 public class ArrayType extends Type {
   private final Type elemType;
-
-  public static Type arrayWithDepth(Type coreType, int depth) {
-    checkArgument(0 <= depth);
-    Type result = coreType;
-    for (int i = 0; i < depth; i++) {
-      result = arrayOf(result);
-    }
-    return result;
-  }
 
   public static ArrayType arrayOf(Type elemType) {
     return new ArrayType(elemType);
