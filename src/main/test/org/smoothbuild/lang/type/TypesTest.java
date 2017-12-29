@@ -385,6 +385,21 @@ public class TypesTest {
   }
 
   @Test
+  public void array_element_types() {
+    assertEquals(type, array(type).elemType());
+    assertEquals(string, array(string).elemType());
+    assertEquals(blob, array(blob).elemType());
+    assertEquals(personType(), array(personType()).elemType());
+    assertEquals(nothing, array(nothing).elemType());
+
+    assertEquals(array(type), array(array(type)).elemType());
+    assertEquals(array(string), array(array(string)).elemType());
+    assertEquals(array(blob), array(array(blob)).elemType());
+    assertEquals(array(personType()), array(array(personType())).elemType());
+    assertEquals(array(nothing), array(array(nothing)).elemType());
+  }
+
+  @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(typeSystem.type(), typeSystem.type());
@@ -405,7 +420,7 @@ public class TypesTest {
     tester.addEqualityGroup(array(array(string)), array(array(string)));
     tester.addEqualityGroup(array(array(blob)), array(array(blob)));
     tester.addEqualityGroup(array(array(file)), array(array(file)));
-    tester.addEqualityGroup(array(array(personType())), typeSystem.array(array(personType())));
+    tester.addEqualityGroup(array(array(personType())), array(array(personType())));
     tester.addEqualityGroup(array(array(nothing)), array(array(nothing)));
     tester.testEquals();
   }
