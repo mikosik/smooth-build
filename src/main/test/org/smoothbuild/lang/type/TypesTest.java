@@ -137,6 +137,30 @@ public class TypesTest {
     assertHierarchy(list(array(array(nothing))));
   }
 
+  @Test
+  public void direct_convertible_to() throws Exception {
+    assertEquals(null, type.directConvertibleTo());
+    assertEquals(null, string.directConvertibleTo());
+    assertEquals(null, blob.directConvertibleTo());
+    assertEquals(blob, file.directConvertibleTo());
+    assertEquals(string, personType().directConvertibleTo());
+    assertEquals(null, nothing.directConvertibleTo());
+
+    assertEquals(null, array(type).directConvertibleTo());
+    assertEquals(null, array(string).directConvertibleTo());
+    assertEquals(null, array(blob).directConvertibleTo());
+    assertEquals(array(blob), array(file).directConvertibleTo());
+    assertEquals(array(string), array(personType()).directConvertibleTo());
+    assertEquals(null, array(nothing).directConvertibleTo());
+
+    assertEquals(null, array(array(type)).directConvertibleTo());
+    assertEquals(null, array(array(string)).directConvertibleTo());
+    assertEquals(null, array(array(blob)).directConvertibleTo());
+    assertEquals(array(array(blob)), array(array(file)).directConvertibleTo());
+    assertEquals(array(array(string)), array(array(personType())).directConvertibleTo());
+    assertEquals(null, array(array(nothing)).directConvertibleTo());
+  }
+
   private static void assertHierarchy(List<Type> hierarchy) {
     Type type;
     given(type = hierarchy.get(hierarchy.size() - 1));

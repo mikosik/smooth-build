@@ -11,7 +11,6 @@ public class ArrayTypeTest {
   private final Type type = typeSystem.type();
   private final Type string = typeSystem.string();
   private final Type blob = typeSystem.blob();
-  private final Type file = typeSystem.file();
   private final Type nothing = typeSystem.nothing();
 
   @Test
@@ -29,15 +28,6 @@ public class ArrayTypeTest {
         .elemType());
     assertEquals(typeSystem.array(nothing), typeSystem.array(typeSystem.array(nothing))
         .elemType());
-  }
-
-  @Test
-  public void direct_convertible_to() throws Exception {
-    assertEquals(typeSystem.array(blob), typeSystem.array(file).directConvertibleTo());
-    assertEquals(typeSystem.array(string), typeSystem.array(personType())
-        .directConvertibleTo());
-    assertEquals(null, typeSystem.array(string).directConvertibleTo());
-    assertEquals(null, typeSystem.array(nothing).directConvertibleTo());
   }
 
   private StructType personType() {
