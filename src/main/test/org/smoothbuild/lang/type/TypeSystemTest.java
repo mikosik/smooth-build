@@ -72,6 +72,13 @@ public class TypeSystemTest {
   }
 
   @Test
+  public void type_non_array_type_from_string() throws Exception {
+    given(typeSystem = new TypeSystem());
+    when(typeSystem.nonArrayTypeFromString("Type"));
+    thenReturned(typeSystem.type());
+  }
+
+  @Test
   public void string_non_array_type_from_string() throws Exception {
     given(typeSystem = new TypeSystem());
     when(typeSystem.nonArrayTypeFromString("String"));
@@ -97,6 +104,13 @@ public class TypeSystemTest {
     given(typeSystem = new TypeSystem());
     when(typeSystem.nonArrayTypeFromString("Nothing"));
     thenReturned(typeSystem.nothing());
+  }
+
+  @Test
+  public void type_array_non_array_type_from_string() throws Exception {
+    given(typeSystem = new TypeSystem());
+    when(typeSystem.nonArrayTypeFromString("[Type]"));
+    thenReturned(null);
   }
 
   @Test

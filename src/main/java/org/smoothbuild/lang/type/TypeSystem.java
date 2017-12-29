@@ -62,7 +62,7 @@ public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
   }
 
   public Type nonArrayTypeFromString(String string) {
-    for (Type type : list(string(), blob(), nothing(), file())) {
+    for (Type type : list(type(), string(), blob(), nothing(), file())) {
       if (type.name().equals(string)) {
         return type;
       }
