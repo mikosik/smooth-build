@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,6 +13,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Blob;
+import org.smoothbuild.lang.value.Nothing;
+import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
@@ -28,7 +32,65 @@ public class TypesTest {
   private final Type file = typeSystem.file();
   private final Type nothing = typeSystem.nothing();
 
-  private ArrayType arrayType;
+  @Test
+  public void name() {
+    assertEquals("Type", type.name());
+    assertEquals("String", string.name());
+    assertEquals("Blob", blob.name());
+    assertEquals("File", file.name());
+    assertEquals("Person", personType().name());
+    assertEquals("Nothing", nothing.name());
+
+    assertEquals("[Type]", array(type).name());
+    assertEquals("[String]", array(string).name());
+    assertEquals("[Blob]", array(blob).name());
+    assertEquals("[File]", array(file).name());
+    assertEquals("[Person]", array(personType()).name());
+    assertEquals("[Nothing]", array(nothing).name());
+
+    assertEquals("[[Type]]", array(array(type)).name());
+    assertEquals("[[String]]", array(array(string)).name());
+    assertEquals("[[Blob]]", array(array(blob)).name());
+    assertEquals("[[File]]", array(array(file)).name());
+    assertEquals("[[Person]]", array(array(personType())).name());
+    assertEquals("[[Nothing]]", array(array(nothing)).name());
+  }
+
+  @Test
+  public void to_string() {
+    assertEquals("Type", type.toString());
+    assertEquals("String", string.toString());
+    assertEquals("Blob", blob.toString());
+    assertEquals("File", file.toString());
+    assertEquals("Nothing", nothing.toString());
+
+    assertEquals("[Type]", array(type).toString());
+    assertEquals("[String]", array(string).toString());
+    assertEquals("[Blob]", array(blob).toString());
+    assertEquals("[File]", array(file).toString());
+    assertEquals("[Nothing]", array(nothing).toString());
+
+    assertEquals("[[Type]]", array(array(type)).toString());
+    assertEquals("[[String]]", array(array(string)).toString());
+    assertEquals("[[Blob]]", array(array(blob)).toString());
+    assertEquals("[[File]]", array(array(file)).toString());
+    assertEquals("[[Person]]", array(array(personType())).toString());
+    assertEquals("[[Nothing]]", array(array(nothing)).toString());
+  }
+
+  @Test
+  public void jType() {
+    assertEquals(Type.class, type.jType());
+    assertEquals(SString.class, string.jType());
+    assertEquals(Blob.class, blob.jType());
+    assertEquals(Struct.class, file.jType());
+    assertEquals(Nothing.class, nothing.jType());
+    assertEquals(Array.class, array(type).jType());
+    assertEquals(Array.class, array(string).jType());
+    assertEquals(Array.class, array(blob).jType());
+    assertEquals(Array.class, array(file).jType());
+    assertEquals(Array.class, array(nothing).jType());
+  }
 
   @Test
   public void core_type() throws Exception {
@@ -37,13 +99,13 @@ public class TypesTest {
     assertEquals(personType(), personType().coreType());
     assertEquals(nothing, nothing.coreType());
 
-    assertEquals(string, typeSystem.array(string).coreType());
-    assertEquals(personType(), typeSystem.array(personType()).coreType());
-    assertEquals(nothing, typeSystem.array(nothing).coreType());
+    assertEquals(string, array(string).coreType());
+    assertEquals(personType(), array(personType()).coreType());
+    assertEquals(nothing, array(nothing).coreType());
 
-    assertEquals(string, typeSystem.array(typeSystem.array(string)).coreType());
-    assertEquals(personType(), typeSystem.array(typeSystem.array(personType())).coreType());
-    assertEquals(nothing, typeSystem.array(typeSystem.array(nothing)).coreType());
+    assertEquals(string, array(array(string)).coreType());
+    assertEquals(personType(), array(array(personType())).coreType());
+    assertEquals(nothing, array(array(nothing)).coreType());
   }
 
   @Test
@@ -53,33 +115,33 @@ public class TypesTest {
     assertEquals(0, personType().coreDepth());
     assertEquals(0, nothing.coreDepth());
 
-    assertEquals(1, typeSystem.array(string).coreDepth());
-    assertEquals(1, typeSystem.array(personType()).coreDepth());
-    assertEquals(1, typeSystem.array(nothing).coreDepth());
+    assertEquals(1, array(string).coreDepth());
+    assertEquals(1, array(personType()).coreDepth());
+    assertEquals(1, array(nothing).coreDepth());
 
-    assertEquals(2, typeSystem.array(typeSystem.array(string)).coreDepth());
-    assertEquals(2, typeSystem.array(typeSystem.array(personType())).coreDepth());
-    assertEquals(2, typeSystem.array(typeSystem.array(nothing)).coreDepth());
+    assertEquals(2, array(array(string)).coreDepth());
+    assertEquals(2, array(array(personType())).coreDepth());
+    assertEquals(2, array(array(nothing)).coreDepth());
   }
 
   @Test
   public void hierarchy() throws Exception {
-    assertEquals(list(string), string.hierarchy());
-    assertEquals(list(string, personType()), personType().hierarchy());
-    assertEquals(list(nothing), nothing.hierarchy());
+    assertHierarchy(list(string));
+    assertHierarchy(list(string, personType()));
+    assertHierarchy(list(nothing));
+    assertHierarchy(list(array(string)));
+    assertHierarchy(list(array(string), array(personType())));
+    assertHierarchy(list(array(nothing)));
+    assertHierarchy(list(array(array(string))));
+    assertHierarchy(list(array(array(string)), array(array(personType()))));
+    assertHierarchy(list(array(array(nothing))));
+  }
 
-    assertEquals(list(typeSystem.array(string)), typeSystem.array(string).hierarchy());
-    assertEquals(list(typeSystem.array(string), typeSystem.array(personType())),
-        typeSystem.array(personType()).hierarchy());
-    assertEquals(list(typeSystem.array(nothing)), typeSystem.array(nothing).hierarchy());
-
-    assertEquals(list(typeSystem.array(typeSystem.array(string))),
-        typeSystem.array(typeSystem.array(string)).hierarchy());
-    assertEquals(list(typeSystem.array(typeSystem.array(string)),
-        typeSystem.array(typeSystem.array(personType()))),
-        typeSystem.array(typeSystem.array(personType())).hierarchy());
-    assertEquals(list(typeSystem.array(typeSystem.array(nothing))),
-        typeSystem.array(typeSystem.array(nothing)).hierarchy());
+  private static void assertHierarchy(List<Type> hierarchy) {
+    Type type;
+    given(type = hierarchy.get(hierarchy.size() - 1));
+    when(() -> type.hierarchy());
+    thenReturned(hierarchy);
   }
 
   @Test
@@ -90,35 +152,35 @@ public class TypesTest {
     assertFalse(blob.isNothing());
     assertFalse(file.isNothing());
     assertFalse(personType().isNothing());
-    assertFalse(typeSystem.array(nothing).isNothing());
-    assertFalse(typeSystem.array(type).isNothing());
-    assertFalse(typeSystem.array(string).isNothing());
-    assertFalse(typeSystem.array(blob).isNothing());
-    assertFalse(typeSystem.array(file).isNothing());
-    assertFalse(typeSystem.array(personType()).isNothing());
+    assertFalse(array(nothing).isNothing());
+    assertFalse(array(type).isNothing());
+    assertFalse(array(string).isNothing());
+    assertFalse(array(blob).isNothing());
+    assertFalse(array(file).isNothing());
+    assertFalse(array(personType()).isNothing());
   }
 
   @Test
   public void is_assignable_from() throws Exception {
     List<Type> types = asList(
         type,
-        typeSystem.array(type),
-        typeSystem.array(typeSystem.array(type)),
+        array(type),
+        array(array(type)),
         string,
-        typeSystem.array(string),
-        typeSystem.array(typeSystem.array(string)),
+        array(string),
+        array(array(string)),
         blob,
-        typeSystem.array(blob),
-        typeSystem.array(typeSystem.array(blob)),
+        array(blob),
+        array(array(blob)),
         file,
-        typeSystem.array(file),
-        typeSystem.array(typeSystem.array(file)),
+        array(file),
+        array(array(file)),
         personType(),
-        typeSystem.array(personType()),
-        typeSystem.array(typeSystem.array(personType())),
+        array(personType()),
+        array(array(personType())),
         nothing,
-        typeSystem.array(nothing),
-        typeSystem.array(typeSystem.array(nothing)));
+        array(nothing),
+        array(array(nothing)));
     Set<Conversion> conversions = ImmutableSet.of(
         new Conversion(type, type),
         new Conversion(type, nothing),
@@ -134,101 +196,51 @@ public class TypesTest {
         new Conversion(personType(), nothing),
         new Conversion(nothing, nothing),
 
-        new Conversion(typeSystem.array(type), typeSystem.array(type)),
-        new Conversion(typeSystem.array(type), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(type), nothing),
-        new Conversion(typeSystem.array(string), typeSystem.array(string)),
-        new Conversion(typeSystem.array(string), typeSystem.array(personType())),
-        new Conversion(typeSystem.array(string), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(string), nothing),
-        new Conversion(typeSystem.array(blob), typeSystem.array(blob)),
-        new Conversion(typeSystem.array(blob), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(blob), nothing),
-        new Conversion(typeSystem.array(blob), typeSystem.array(file)),
-        new Conversion(typeSystem.array(file), typeSystem.array(file)),
-        new Conversion(typeSystem.array(file), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(file), nothing),
-        new Conversion(typeSystem.array(personType()), typeSystem.array(personType())),
-        new Conversion(typeSystem.array(personType()), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(personType()), nothing),
-        new Conversion(typeSystem.array(nothing), typeSystem.array(nothing)),
-        new Conversion(typeSystem.array(nothing), nothing),
+        new Conversion(array(type), array(type)),
+        new Conversion(array(type), array(nothing)),
+        new Conversion(array(type), nothing),
+        new Conversion(array(string), array(string)),
+        new Conversion(array(string), array(personType())),
+        new Conversion(array(string), array(nothing)),
+        new Conversion(array(string), nothing),
+        new Conversion(array(blob), array(blob)),
+        new Conversion(array(blob), array(nothing)),
+        new Conversion(array(blob), nothing),
+        new Conversion(array(blob), array(file)),
+        new Conversion(array(file), array(file)),
+        new Conversion(array(file), array(nothing)),
+        new Conversion(array(file), nothing),
+        new Conversion(array(personType()), array(personType())),
+        new Conversion(array(personType()), array(nothing)),
+        new Conversion(array(personType()), nothing),
+        new Conversion(array(nothing), array(nothing)),
+        new Conversion(array(nothing), nothing),
 
-        new Conversion(
-            typeSystem.array(typeSystem.array(type)),
-            typeSystem.array(typeSystem.array(type))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(type)),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(type)),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(type)),
-            nothing),
-        new Conversion(
-            typeSystem.array(typeSystem.array(string)),
-            typeSystem.array(typeSystem.array(string))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(string)),
-            typeSystem.array(typeSystem.array(personType()))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(string)),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(string)),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(string)),
-            nothing),
-        new Conversion(
-            typeSystem.array(typeSystem.array(blob)),
-            typeSystem.array(typeSystem.array(blob))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(blob)),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(blob)),
-            typeSystem.array(typeSystem.array(file))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(blob)),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(blob)),
-            nothing),
-        new Conversion(
-            typeSystem.array(typeSystem.array(file)),
-            typeSystem.array(typeSystem.array(file))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(file)),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(file)),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(file)),
-            nothing),
-        new Conversion(
-            typeSystem.array(typeSystem.array(personType())),
-            typeSystem.array(typeSystem.array(personType()))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(personType())),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(personType())),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(personType())),
-            nothing),
-        new Conversion(
-            typeSystem.array(typeSystem.array(nothing)),
-            typeSystem.array(typeSystem.array(nothing))),
-        new Conversion(
-            typeSystem.array(typeSystem.array(nothing)),
-            typeSystem.array(nothing)),
-        new Conversion(
-            typeSystem.array(typeSystem.array(nothing)),
-            nothing));
+        new Conversion(array(array(type)), array(array(type))),
+        new Conversion(array(array(type)), array(array(nothing))),
+        new Conversion(array(array(type)), array(nothing)),
+        new Conversion(array(array(type)), nothing),
+        new Conversion(array(array(string)), array(array(string))),
+        new Conversion(array(array(string)), array(array(personType()))),
+        new Conversion(array(array(string)), array(array(nothing))),
+        new Conversion(array(array(string)), array(nothing)),
+        new Conversion(array(array(string)), nothing),
+        new Conversion(array(array(blob)), array(array(blob))),
+        new Conversion(array(array(blob)), array(array(nothing))),
+        new Conversion(array(array(blob)), array(array(file))),
+        new Conversion(array(array(blob)), array(nothing)),
+        new Conversion(array(array(blob)), nothing),
+        new Conversion(array(array(file)), array(array(file))),
+        new Conversion(array(array(file)), array(array(nothing))),
+        new Conversion(array(array(file)), array(nothing)),
+        new Conversion(array(array(file)), nothing),
+        new Conversion(array(array(personType())), array(array(personType()))),
+        new Conversion(array(array(personType())), array(array(nothing))),
+        new Conversion(array(array(personType())), array(nothing)),
+        new Conversion(array(array(personType())), nothing),
+        new Conversion(array(array(nothing)), array(array(nothing))),
+        new Conversion(array(array(nothing)), array(nothing)),
+        new Conversion(array(array(nothing)), nothing));
     for (Type destination : types) {
       for (Type source : types) {
         boolean expected = conversions.contains(new Conversion(destination, source));
@@ -265,6 +277,90 @@ public class TypesTest {
   }
 
   @Test
+  public void common_super_type() throws Exception {
+    assertCommon(type, type, type);
+    assertCommon(type, string, null);
+    assertCommon(type, blob, null);
+    assertCommon(type, file, null);
+    assertCommon(type, nothing, type);
+    assertCommon(type, array(type), null);
+    assertCommon(type, array(string), null);
+    assertCommon(type, array(blob), null);
+    assertCommon(type, array(file), null);
+    assertCommon(type, array(nothing), null);
+
+    assertCommon(string, string, string);
+    assertCommon(string, blob, null);
+    assertCommon(string, file, null);
+    assertCommon(string, nothing, string);
+    assertCommon(string, array(string), null);
+    assertCommon(string, array(type), null);
+    assertCommon(string, array(blob), null);
+    assertCommon(string, array(file), null);
+    assertCommon(string, array(nothing), null);
+
+    assertCommon(blob, blob, blob);
+    assertCommon(blob, file, blob);
+    assertCommon(blob, nothing, blob);
+    assertCommon(blob, array(type), null);
+    assertCommon(blob, array(string), null);
+    assertCommon(blob, array(blob), null);
+    assertCommon(blob, array(file), null);
+    assertCommon(blob, array(nothing), null);
+
+    assertCommon(file, file, file);
+    assertCommon(file, nothing, file);
+    assertCommon(file, array(type), null);
+    assertCommon(file, array(string), null);
+    assertCommon(file, array(blob), null);
+    assertCommon(file, array(file), null);
+    assertCommon(file, array(nothing), null);
+
+    assertCommon(nothing, nothing, nothing);
+    assertCommon(nothing, array(type), array(type));
+    assertCommon(nothing, array(string), array(string));
+    assertCommon(nothing, array(blob), array(blob));
+    assertCommon(nothing, array(file), array(file));
+    assertCommon(nothing, array(nothing), array(nothing));
+
+    assertCommon(array(type), array(type), array(type));
+    assertCommon(array(type), array(string), null);
+    assertCommon(array(type), array(blob), null);
+    assertCommon(array(type), array(file), null);
+    assertCommon(array(type), array(nothing), array(type));
+    assertCommon(array(string), array(string), array(string));
+    assertCommon(array(string), array(blob), null);
+    assertCommon(array(string), array(file), null);
+    assertCommon(array(string), array(nothing), array(string));
+    assertCommon(array(string), nothing, array(string));
+
+    assertCommon(array(blob), array(blob), array(blob));
+    assertCommon(array(blob), array(file), array(blob));
+    assertCommon(array(blob), array(nothing), array(blob));
+    assertCommon(array(blob), nothing, array(blob));
+
+    assertCommon(array(file), array(file), array(file));
+    assertCommon(array(file), array(nothing), array(file));
+    assertCommon(array(file), nothing, array(file));
+
+    assertCommon(array(nothing), array(nothing), array(nothing));
+    assertCommon(array(nothing), nothing, array(nothing));
+
+    assertCommon(array(file), typeSystem.struct("Struct", ImmutableMap.of("field", array(blob))),
+        array(blob));
+  }
+
+  private static void assertCommon(Type type1, Type type2, Type expected) {
+    assertCommonSuperTypeImpl(type1, type2, expected);
+    assertCommonSuperTypeImpl(type2, type1, expected);
+  }
+
+  private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected) {
+    when(() -> type1.commonSuperType(type2));
+    thenReturned(expected);
+  }
+
+  @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(typeSystem.type(), typeSystem.type());
@@ -274,148 +370,28 @@ public class TypesTest {
     tester.addEqualityGroup(personType(), personType());
     tester.addEqualityGroup(typeSystem.nothing(), typeSystem.nothing());
 
-    tester.addEqualityGroup(typeSystem.array(type), typeSystem.array(type));
-    tester.addEqualityGroup(typeSystem.array(string), typeSystem.array(string));
-    tester.addEqualityGroup(typeSystem.array(blob), typeSystem.array(blob));
-    tester.addEqualityGroup(typeSystem.array(file), typeSystem.array(file));
-    tester.addEqualityGroup(typeSystem.array(personType()), typeSystem.array(personType()));
-    tester.addEqualityGroup(typeSystem.array(nothing), typeSystem.array(nothing));
+    tester.addEqualityGroup(array(type), array(type));
+    tester.addEqualityGroup(array(string), array(string));
+    tester.addEqualityGroup(array(blob), array(blob));
+    tester.addEqualityGroup(array(file), array(file));
+    tester.addEqualityGroup(array(personType()), array(personType()));
+    tester.addEqualityGroup(array(nothing), array(nothing));
 
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(type)), typeSystem.array(
-        typeSystem.array(type)));
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(string)), typeSystem.array(
-        typeSystem.array(string)));
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(blob)), typeSystem.array(
-        typeSystem.array(blob)));
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(file)), typeSystem.array(
-        typeSystem.array(file)));
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(personType())), typeSystem
-        .array(typeSystem.array(personType())));
-    tester.addEqualityGroup(typeSystem.array(typeSystem.array(nothing)), typeSystem.array(
-        typeSystem.array(nothing)));
+    tester.addEqualityGroup(array(array(type)), array(array(type)));
+    tester.addEqualityGroup(array(array(string)), array(array(string)));
+    tester.addEqualityGroup(array(array(blob)), array(array(blob)));
+    tester.addEqualityGroup(array(array(file)), array(array(file)));
+    tester.addEqualityGroup(array(array(personType())), typeSystem.array(array(personType())));
+    tester.addEqualityGroup(array(array(nothing)), array(array(nothing)));
     tester.testEquals();
-  }
-
-  @Test
-  public void to_string() {
-    assertEquals("String", string.toString());
-  }
-
-  @Test
-  public void string_array_name() throws Exception {
-    given(arrayType = typeSystem.array(string));
-    when(() -> arrayType.name());
-    thenReturned("[String]");
-  }
-
-  @Test
-  public void common_super_type() throws Exception {
-    StringBuilder builder = new StringBuilder();
-
-    assertCommon(type, type, type, builder);
-    assertCommon(type, string, null, builder);
-    assertCommon(type, blob, null, builder);
-    assertCommon(type, file, null, builder);
-    assertCommon(type, nothing, type, builder);
-    assertCommon(type, typeSystem.array(type), null, builder);
-    assertCommon(type, typeSystem.array(string), null, builder);
-    assertCommon(type, typeSystem.array(blob), null, builder);
-    assertCommon(type, typeSystem.array(file), null, builder);
-    assertCommon(type, typeSystem.array(nothing), null, builder);
-
-    assertCommon(string, string, string, builder);
-    assertCommon(string, blob, null, builder);
-    assertCommon(string, file, null, builder);
-    assertCommon(string, nothing, string, builder);
-    assertCommon(string, typeSystem.array(string), null, builder);
-    assertCommon(string, typeSystem.array(type), null, builder);
-    assertCommon(string, typeSystem.array(blob), null, builder);
-    assertCommon(string, typeSystem.array(file), null, builder);
-    assertCommon(string, typeSystem.array(nothing), null, builder);
-
-    assertCommon(blob, blob, blob, builder);
-    assertCommon(blob, file, blob, builder);
-    assertCommon(blob, nothing, blob, builder);
-    assertCommon(blob, typeSystem.array(type), null, builder);
-    assertCommon(blob, typeSystem.array(string), null, builder);
-    assertCommon(blob, typeSystem.array(blob), null, builder);
-    assertCommon(blob, typeSystem.array(file), null, builder);
-    assertCommon(blob, typeSystem.array(nothing), null, builder);
-
-    assertCommon(file, file, file, builder);
-    assertCommon(file, nothing, file, builder);
-    assertCommon(file, typeSystem.array(type), null, builder);
-    assertCommon(file, typeSystem.array(string), null, builder);
-    assertCommon(file, typeSystem.array(blob), null, builder);
-    assertCommon(file, typeSystem.array(file), null, builder);
-    assertCommon(file, typeSystem.array(nothing), null, builder);
-
-    assertCommon(nothing, nothing, nothing, builder);
-    assertCommon(nothing, typeSystem.array(type), typeSystem.array(type), builder);
-    assertCommon(nothing, typeSystem.array(string), typeSystem.array(string), builder);
-    assertCommon(nothing, typeSystem.array(blob), typeSystem.array(blob), builder);
-    assertCommon(nothing, typeSystem.array(file), typeSystem.array(file), builder);
-    assertCommon(nothing, typeSystem.array(nothing), typeSystem.array(nothing), builder);
-
-    assertCommon(typeSystem.array(type), typeSystem.array(type), typeSystem.array(type),
-        builder);
-    assertCommon(typeSystem.array(type), typeSystem.array(string), null, builder);
-    assertCommon(typeSystem.array(type), typeSystem.array(blob), null, builder);
-    assertCommon(typeSystem.array(type), typeSystem.array(file), null, builder);
-    assertCommon(typeSystem.array(type), typeSystem.array(nothing), typeSystem.array(type),
-        builder);
-    assertCommon(typeSystem.array(string), typeSystem.array(string), typeSystem.array(string),
-        builder);
-    assertCommon(typeSystem.array(string), typeSystem.array(blob), null, builder);
-    assertCommon(typeSystem.array(string), typeSystem.array(file), null, builder);
-    assertCommon(typeSystem.array(string), typeSystem.array(nothing), typeSystem.array(
-        string), builder);
-    assertCommon(typeSystem.array(string), nothing, typeSystem.array(string), builder);
-
-    assertCommon(typeSystem.array(blob), typeSystem.array(blob), typeSystem.array(blob),
-        builder);
-    assertCommon(typeSystem.array(blob), typeSystem.array(file), typeSystem.array(blob),
-        builder);
-    assertCommon(typeSystem.array(blob), typeSystem.array(nothing), typeSystem.array(blob),
-        builder);
-    assertCommon(typeSystem.array(blob), nothing, typeSystem.array(blob), builder);
-
-    assertCommon(typeSystem.array(file), typeSystem.array(file), typeSystem.array(file),
-        builder);
-    assertCommon(typeSystem.array(file), typeSystem.array(nothing), typeSystem.array(file),
-        builder);
-    assertCommon(typeSystem.array(file), nothing, typeSystem.array(file), builder);
-
-    assertCommon(typeSystem.array(nothing), typeSystem.array(nothing), typeSystem.array(
-        nothing), builder);
-    assertCommon(typeSystem.array(nothing), nothing, typeSystem.array(nothing), builder);
-
-    assertCommon(typeSystem.array(file),
-        typeSystem.struct("Struct", ImmutableMap.of("field", typeSystem.array(blob))),
-        typeSystem.array(blob), builder);
-
-    String errors = builder.toString();
-    if (0 < errors.length()) {
-      fail(errors);
-    }
-  }
-
-  private static void assertCommon(Type type1, Type type2, Type expected, StringBuilder builder) {
-    assertCommonSuperTypeImpl(type1, type2, expected, builder);
-    assertCommonSuperTypeImpl(type2, type1, expected, builder);
-  }
-
-  private static void assertCommonSuperTypeImpl(Type type1, Type type2, Type expected,
-      StringBuilder builder) {
-    Type actual = type1.commonSuperType(type2);
-    if (!Objects.equal(expected, actual)) {
-      builder.append(type1 + ".commonSuperType(" + type2 + ") = " + actual
-          + " but should = " + expected + "\n");
-    }
   }
 
   private StructType personType() {
     return typeSystem.struct(
         "Person", ImmutableMap.of("firstName", string, "lastName", string));
+  }
+
+  private ArrayType array(Type elementType) {
+    return typeSystem.array(elementType);
   }
 }
