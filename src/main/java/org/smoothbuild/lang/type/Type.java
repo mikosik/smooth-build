@@ -131,21 +131,6 @@ public abstract class Type extends Value {
   }
 
   @Override
-  public boolean equals(Object object) {
-    if (object instanceof Type) {
-      Type that = (Type) object;
-      return this.name.equals(that.name);
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return name.hashCode();
-  }
-
-  @Override
   public String toString() {
     return name;
   }
