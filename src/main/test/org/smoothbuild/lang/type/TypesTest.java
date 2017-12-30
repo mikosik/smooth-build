@@ -125,6 +125,30 @@ public class TypesTest {
   }
 
   @Test
+  public void super_type() throws Exception {
+    assertEquals(null, type.superType());
+    assertEquals(null, string.superType());
+    assertEquals(null, blob.superType());
+    assertEquals(blob, file.superType());
+    assertEquals(string, personType().superType());
+    assertEquals(null, nothing.superType());
+
+    assertEquals(null, array(type).superType());
+    assertEquals(null, array(string).superType());
+    assertEquals(null, array(blob).superType());
+    assertEquals(array(blob), array(file).superType());
+    assertEquals(array(string), array(personType()).superType());
+    assertEquals(null, array(nothing).superType());
+
+    assertEquals(null, array(array(type)).superType());
+    assertEquals(null, array(array(string)).superType());
+    assertEquals(null, array(array(blob)).superType());
+    assertEquals(array(array(blob)), array(array(file)).superType());
+    assertEquals(array(array(string)), array(array(personType())).superType());
+    assertEquals(null, array(array(nothing)).superType());
+  }
+
+  @Test
   public void hierarchy() throws Exception {
     assertHierarchy(list(string));
     assertHierarchy(list(string, personType()));
@@ -135,30 +159,6 @@ public class TypesTest {
     assertHierarchy(list(array(array(string))));
     assertHierarchy(list(array(array(string)), array(array(personType()))));
     assertHierarchy(list(array(array(nothing))));
-  }
-
-  @Test
-  public void direct_convertible_to() throws Exception {
-    assertEquals(null, type.directConvertibleTo());
-    assertEquals(null, string.directConvertibleTo());
-    assertEquals(null, blob.directConvertibleTo());
-    assertEquals(blob, file.directConvertibleTo());
-    assertEquals(string, personType().directConvertibleTo());
-    assertEquals(null, nothing.directConvertibleTo());
-
-    assertEquals(null, array(type).directConvertibleTo());
-    assertEquals(null, array(string).directConvertibleTo());
-    assertEquals(null, array(blob).directConvertibleTo());
-    assertEquals(array(blob), array(file).directConvertibleTo());
-    assertEquals(array(string), array(personType()).directConvertibleTo());
-    assertEquals(null, array(nothing).directConvertibleTo());
-
-    assertEquals(null, array(array(type)).directConvertibleTo());
-    assertEquals(null, array(array(string)).directConvertibleTo());
-    assertEquals(null, array(array(blob)).directConvertibleTo());
-    assertEquals(array(array(blob)), array(array(file)).directConvertibleTo());
-    assertEquals(array(array(string)), array(array(personType())).directConvertibleTo());
-    assertEquals(null, array(array(nothing)).directConvertibleTo());
   }
 
   private static void assertHierarchy(List<Type> hierarchy) {

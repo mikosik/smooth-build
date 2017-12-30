@@ -7,7 +7,7 @@ import com.google.common.hash.HashCode;
 
 public class BlobType extends Type {
   protected BlobType(HashCode hash, TypeType type) {
-    super(hash, type, "Blob", Blob.class);
+    super(hash, type, null, "Blob", Blob.class);
   }
 
   @Override

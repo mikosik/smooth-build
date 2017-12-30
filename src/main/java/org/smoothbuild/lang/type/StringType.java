@@ -7,7 +7,7 @@ import com.google.common.hash.HashCode;
 
 public class StringType extends Type {
   protected StringType(HashCode hash, TypeType type) {
-    super(hash, type, "String", SString.class);
+    super(hash, type, null, "String", SString.class);
   }
 
   @Override

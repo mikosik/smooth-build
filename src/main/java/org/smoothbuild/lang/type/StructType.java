@@ -10,8 +10,12 @@ public class StructType extends Type {
   private final ImmutableMap<String, Type> fields;
 
   public StructType(HashCode hash, TypeType type, String name, ImmutableMap<String, Type> fields) {
-    super(hash, type, name, Struct.class);
+    super(hash, type, calculateSuperType(fields), name, Struct.class);
     this.fields = fields;
+  }
+
+  private static Type calculateSuperType(ImmutableMap<String, Type> fields) {
+    return fields.size() == 0 ? null : fields.values().iterator().next();
   }
 
   @Override
@@ -21,10 +25,5 @@ public class StructType extends Type {
 
   public ImmutableMap<String, Type> fields() {
     return fields;
-  }
-
-  @Override
-  public Type directConvertibleTo() {
-    return fields.values().iterator().next();
   }
 }
