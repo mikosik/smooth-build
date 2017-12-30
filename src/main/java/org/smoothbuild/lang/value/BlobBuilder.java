@@ -38,6 +38,6 @@ public class BlobBuilder extends OutputStream {
 
   public Blob build() {
     marshaller.close();
-    return new Blob(type, marshaller.hash(), hashedDb);
+    return new Blob(marshaller.hash(), type, hashedDb);
   }
 }

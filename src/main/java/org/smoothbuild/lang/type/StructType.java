@@ -9,14 +9,14 @@ import com.google.common.hash.HashCode;
 public class StructType extends Type {
   private final ImmutableMap<String, Type> fields;
 
-  public StructType(TypeType type, HashCode hash, String name, ImmutableMap<String, Type> fields) {
-    super(type, hash, name, Struct.class);
+  public StructType(HashCode hash, TypeType type, String name, ImmutableMap<String, Type> fields) {
+    super(hash, type, name, Struct.class);
     this.fields = fields;
   }
 
   @Override
   public Struct newValue(HashCode hash, HashedDb hashedDb) {
-    return new Struct(this, hash, hashedDb);
+    return new Struct(hash, this, hashedDb);
   }
 
   public ImmutableMap<String, Type> fields() {

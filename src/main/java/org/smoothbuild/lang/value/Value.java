@@ -9,12 +9,12 @@ import org.smoothbuild.lang.type.Type;
 import com.google.common.hash.HashCode;
 
 public class Value {
-  private final Type type;
   private final HashCode hash;
+  private final Type type;
 
-  public Value(Type type, HashCode hash) {
-    this.type = type;
+  public Value(HashCode hash, Type type) {
     this.hash = checkNotNull(hash);
+    this.type = type;
   }
 
   public HashCode hash() {

@@ -8,7 +8,7 @@ public class TypeType extends Type {
   private final TypesDb typesDb;
 
   protected TypeType(HashCode hash, TypesDb typesDb) {
-    super(null, hash, "Type", Type.class);
+    super(hash, null, "Type", Type.class);
     this.typesDb = typesDb;
   }
 

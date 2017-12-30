@@ -77,7 +77,7 @@ public class ValuesDb implements ValueFactory {
 
   @Override
   public SString string(String string) {
-    return new SString(typeSystem.string(), hashedDb.writeString(string), hashedDb);
+    return new SString(hashedDb.writeString(string), typeSystem.string(), hashedDb);
   }
 
   public Array read(ArrayType type, HashCode hash) {
