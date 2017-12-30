@@ -17,8 +17,8 @@ import com.google.common.hash.HashCode;
 public class Struct extends Value {
   private final ImmutableMap<String, Value> fields;
 
-  public Struct(StructType type, HashCode hash, HashedDb hashedDb) {
-    super(type, hash);
+  public Struct(HashCode hash, StructType type, HashedDb hashedDb) {
+    super(hash, type);
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
       Builder<String, Value> builder = ImmutableMap.builder();
       for (Map.Entry<String, Type> entry : type().fields().entrySet()) {

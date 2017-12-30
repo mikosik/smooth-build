@@ -17,8 +17,8 @@ import com.google.common.io.CountingInputStream;
 public class Blob extends Value {
   private final HashedDb hashedDB;
 
-  public Blob(Type type, HashCode hash, HashedDb hashedDb) {
-    super(type, hash);
+  public Blob(HashCode hash, Type type, HashedDb hashedDb) {
+    super(hash, type);
     checkArgument(type.name().equals("Blob"));
     this.hashedDB = checkNotNull(hashedDb);
   }

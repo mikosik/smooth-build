@@ -9,15 +9,15 @@ public class ArrayType extends Type {
   private final ArrayType superType;
   private final Type elemType;
 
-  protected ArrayType(TypeType type, HashCode hash, ArrayType superType, Type elemType) {
-    super(type, hash, "[" + elemType.name() + "]", Array.class);
+  protected ArrayType(HashCode hash, TypeType type, ArrayType superType, Type elemType) {
+    super(hash, type, "[" + elemType.name() + "]", Array.class);
     this.superType = superType;
     this.elemType = elemType;
   }
 
   @Override
   public Array newValue(HashCode hash, HashedDb hashedDb) {
-    return new Array(this, hash, hashedDb);
+    return new Array(hash, this, hashedDb);
   }
 
   public Type elemType() {

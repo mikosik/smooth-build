@@ -29,15 +29,15 @@ public class TypesDb {
   }
 
   public StringType string() {
-    return new StringType(type(), writeBasicType("String"));
+    return new StringType(writeBasicType("String"), type());
   }
 
   public BlobType blob() {
-    return new BlobType(type(), writeBasicType("Blob"));
+    return new BlobType(writeBasicType("Blob"), type());
   }
 
   public NothingType nothing() {
-    return new NothingType(type(), writeBasicType("Nothing"));
+    return new NothingType(writeBasicType("Nothing"), type());
   }
 
   private HashCode writeBasicType(String name) {
@@ -54,7 +54,7 @@ public class TypesDb {
       marshaller.writeHash(elementType.hash());
       marshaller.close();
       ArrayType superType = possiblyNullArrayType(elementType.directConvertibleTo());
-      return new ArrayType(type(), marshaller.hash(), superType, elementType);
+      return new ArrayType(marshaller.hash(), type(), superType, elementType);
     }
   }
 
@@ -67,7 +67,7 @@ public class TypesDb {
       marshaller.writeHash(hashedDb.writeString(name));
       marshaller.writeHash(writeFields(fields));
       marshaller.close();
-      return new StructType(type(), marshaller.hash(), name, fields);
+      return new StructType(marshaller.hash(), type(), name, fields);
     }
   }
 
@@ -97,17 +97,17 @@ public class TypesDb {
         case "Type":
           return new TypeType(hash, this);
         case "String":
-          return new StringType(type(), hash);
+          return new StringType(hash, type());
         case "Blob":
-          return new BlobType(type(), hash);
+          return new BlobType(hash, type());
         case "Nothing":
-          return new NothingType(type(), hash);
+          return new NothingType(hash, type());
         case "":
           Type elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.directConvertibleTo());
-          return new ArrayType(type(), hash, superType, elementType);
+          return new ArrayType(hash, type(), superType, elementType);
         default:
-          return new StructType(type(), hash, name, readFields(unmarshaller.readHash()));
+          return new StructType(hash, type(), name, readFields(unmarshaller.readHash()));
       }
     }
   }

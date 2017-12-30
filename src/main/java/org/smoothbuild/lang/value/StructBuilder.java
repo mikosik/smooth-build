@@ -39,6 +39,6 @@ public class StructBuilder {
       }
     }
     marshaller.close();
-    return new Struct(type, marshaller.hash(), hashedDb);
+    return new Struct(marshaller.hash(), type, hashedDb);
   }
 }
