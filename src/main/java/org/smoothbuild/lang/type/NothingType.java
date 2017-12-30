@@ -8,7 +8,7 @@ import com.google.common.hash.HashCode;
 
 public class NothingType extends Type {
   protected NothingType(HashCode hash, TypeType type) {
-    super(hash, type, "Nothing", Nothing.class);
+    super(hash, type, null, "Nothing", Nothing.class);
   }
 
   @Override

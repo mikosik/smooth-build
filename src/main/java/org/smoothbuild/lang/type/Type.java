@@ -14,12 +14,15 @@ import com.google.common.hash.HashCode;
  * Type in smooth language.
  */
 public abstract class Type extends Value {
+  private final Type superType;
   private final String name;
   private final Class<? extends Value> jType;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(HashCode hash, TypeType type, String name, Class<? extends Value> jType) {
+  protected Type(HashCode hash, TypeType type, Type superType, String name,
+      Class<? extends Value> jType) {
     super(hash, type);
+    this.superType = superType;
     this.name = name;
     this.jType = jType;
   }
@@ -45,12 +48,11 @@ public abstract class Type extends Value {
   public List<Type> hierarchy() {
     ImmutableList<Type> h = hierarchy;
     if (h == null) {
-      Type superType = directConvertibleTo();
-      if (superType == null) {
+      if (superType() == null) {
         h = ImmutableList.of(this);
       } else {
         h = ImmutableList.<Type> builder()
-            .addAll(superType.hierarchy())
+            .addAll(superType().hierarchy())
             .add(this)
             .build();
       }
@@ -59,8 +61,8 @@ public abstract class Type extends Value {
     return h;
   }
 
-  public Type directConvertibleTo() {
-    return null;
+  public Type superType() {
+    return superType;
   }
 
   public boolean isNothing() {
@@ -75,7 +77,7 @@ public abstract class Type extends Value {
       return true;
     }
     if (type instanceof StructType) {
-      return isAssignableFrom(((StructType) type).directConvertibleTo());
+      return isAssignableFrom(((StructType) type).superType());
     }
     if (this instanceof ArrayType && type instanceof ArrayType) {
       return ((ArrayType) this).elemType().isAssignableFrom(((ArrayType) type).elemType());

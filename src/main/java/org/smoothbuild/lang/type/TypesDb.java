@@ -53,7 +53,7 @@ public class TypesDb {
       marshaller.writeHash(hashedDb.writeString(""));
       marshaller.writeHash(elementType.hash());
       marshaller.close();
-      ArrayType superType = possiblyNullArrayType(elementType.directConvertibleTo());
+      ArrayType superType = possiblyNullArrayType(elementType.superType());
       return new ArrayType(marshaller.hash(), type(), superType, elementType);
     }
   }
@@ -104,7 +104,7 @@ public class TypesDb {
           return new NothingType(hash, type());
         case "":
           Type elementType = read(unmarshaller.readHash());
-          ArrayType superType = possiblyNullArrayType(elementType.directConvertibleTo());
+          ArrayType superType = possiblyNullArrayType(elementType.superType());
           return new ArrayType(hash, type(), superType, elementType);
         default:
           return new StructType(hash, type(), name, readFields(unmarshaller.readHash()));
