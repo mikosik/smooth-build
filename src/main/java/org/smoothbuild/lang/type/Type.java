@@ -20,8 +20,8 @@ public abstract class Type extends Value {
   private ImmutableList<Type> hierarchy;
 
   protected Type(HashCode hash, TypeType type, Type superType, String name,
-      Class<? extends Value> jType) {
-    super(hash, type);
+      Class<? extends Value> jType, HashedDb hashedDb) {
+    super(hash, type, hashedDb);
     this.superType = superType;
     this.name = name;
     this.jType = jType;

@@ -8,8 +8,9 @@ import com.google.common.hash.HashCode;
 public class ArrayType extends Type {
   private final Type elemType;
 
-  protected ArrayType(HashCode hash, TypeType type, ArrayType superType, Type elemType) {
-    super(hash, type, superType, "[" + elemType.name() + "]", Array.class);
+  protected ArrayType(HashCode hash, TypeType type, ArrayType superType, Type elemType,
+      HashedDb hashedDb) {
+    super(hash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb);
     this.elemType = elemType;
   }
 

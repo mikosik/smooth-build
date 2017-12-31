@@ -7,7 +7,7 @@ import com.google.common.hash.HashCode;
 public final class Nothing extends Value {
 
   private Nothing() {
-    super(null, null);
+    super(null, null, null);
   }
 
   @Override

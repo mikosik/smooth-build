@@ -34,7 +34,7 @@ public class TypesDb {
 
   public TypeType type() {
     if (type == null) {
-      type = new TypeType(writeBasicType("Type"), this);
+      type = new TypeType(writeBasicType("Type"), this, hashedDb);
       cache.put(type.hash(), type);
     }
     return type;
@@ -42,7 +42,7 @@ public class TypesDb {
 
   public StringType string() {
     if (string == null) {
-      string = new StringType(writeBasicType("String"), type());
+      string = new StringType(writeBasicType("String"), type(), hashedDb);
       cache.put(string.hash(), string);
     }
     return string;
@@ -50,7 +50,7 @@ public class TypesDb {
 
   public BlobType blob() {
     if (blob == null) {
-      blob = new BlobType(writeBasicType("Blob"), type());
+      blob = new BlobType(writeBasicType("Blob"), type(), hashedDb);
       cache.put(blob.hash(), blob);
     }
     return blob;
@@ -58,7 +58,7 @@ public class TypesDb {
 
   public NothingType nothing() {
     if (nothing == null) {
-      nothing = new NothingType(writeBasicType("Nothing"), type());
+      nothing = new NothingType(writeBasicType("Nothing"), type(), hashedDb);
       cache.put(nothing.hash(), nothing);
     }
     return nothing;
@@ -78,7 +78,7 @@ public class TypesDb {
       marshaller.writeHash(elementType.hash());
       marshaller.close();
       ArrayType superType = possiblyNullArrayType(elementType.superType());
-      return cache(new ArrayType(marshaller.hash(), type(), superType, elementType));
+      return cache(new ArrayType(marshaller.hash(), type(), superType, elementType, hashedDb));
     }
   }
 
@@ -91,7 +91,7 @@ public class TypesDb {
       marshaller.writeHash(hashedDb.writeString(name));
       marshaller.writeHash(writeFields(fields));
       marshaller.close();
-      return cache(new StructType(marshaller.hash(), type(), name, fields));
+      return cache(new StructType(marshaller.hash(), type(), name, fields, hashedDb));
     }
   }
 
@@ -132,9 +132,10 @@ public class TypesDb {
           case "":
             Type elementType = read(unmarshaller.readHash());
             ArrayType superType = possiblyNullArrayType(elementType.superType());
-            return cache(new ArrayType(hash, type(), superType, elementType));
+            return cache(new ArrayType(hash, type(), superType, elementType, hashedDb));
           default:
-            return cache(new StructType(hash, type(), name, readFields(unmarshaller.readHash())));
+            ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
+            return cache(new StructType(hash, type(), name, fields, hashedDb));
         }
       }
     }

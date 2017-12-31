@@ -18,7 +18,7 @@ public class Struct extends Value {
   private final ImmutableMap<String, Value> fields;
 
   public Struct(HashCode hash, StructType type, HashedDb hashedDb) {
-    super(hash, type);
+    super(hash, type, hashedDb);
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
       Builder<String, Value> builder = ImmutableMap.builder();
       for (Map.Entry<String, Type> entry : type().fields().entrySet()) {
