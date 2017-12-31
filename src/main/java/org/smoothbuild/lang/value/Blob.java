@@ -14,13 +14,13 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 
 public class Blob extends Value {
-  public Blob(HashCode hash, Type type, HashedDb hashedDb) {
-    super(hash, type, hashedDb);
+  public Blob(HashCode dataHash, Type type, HashedDb hashedDb) {
+    super(dataHash, type, hashedDb);
     checkArgument(type.name().equals("Blob"));
   }
 
   public InputStream openInputStream() {
-    return hashedDb.newUnmarshaller(hash());
+    return hashedDb.newUnmarshaller(dataHash());
   }
 
   @Override

@@ -147,7 +147,7 @@ public class BlobTest {
   public void blob_can_be_fetch_by_hash() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(() -> typeSystem.blob().newValue(hash));
+    when(() -> valuesDb.get(hash));
     thenReturned(blob);
   }
 
@@ -155,7 +155,7 @@ public class BlobTest {
   public void blob_fetched_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToByteArray(typeSystem.blob().newValue(hash).openInputStream()));
+    when(inputStreamToByteArray(((Blob) valuesDb.get(hash)).openInputStream()));
     thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 

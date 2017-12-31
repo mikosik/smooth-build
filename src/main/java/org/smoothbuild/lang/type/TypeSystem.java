@@ -10,6 +10,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.function.base.Name;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.hash.HashCode;
 
 public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
@@ -59,6 +60,10 @@ public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
         "content", typesDb.blob(),
         "path", typesDb.string());
     return typesDb.struct("File", fields);
+  }
+
+  public Type read(HashCode hash) {
+    return typesDb.read(hash);
   }
 
   public Type nonArrayTypeFromString(String string) {
@@ -111,5 +116,10 @@ public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
     public int hashCode() {
       return Objects.hash(from, to);
     }
+  }
+
+  // TODO remove
+  public TypesDb typesDb() {
+    return typesDb;
   }
 }

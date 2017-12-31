@@ -8,6 +8,7 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
@@ -18,16 +19,21 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
+
+import com.google.common.hash.HashCode;
 
 public class ValuesDb implements ValueFactory {
   private final HashedDb hashedDb;
   private final TypeSystem typeSystem;
+  private final Instantiator instantiator;
 
   @Inject
   public ValuesDb(@Values HashedDb hashedDb, TypeSystem typeSystem) {
     this.hashedDb = hashedDb;
     this.typeSystem = typeSystem;
+    this.instantiator = new Instantiator(hashedDb, typeSystem.typesDb());
   }
 
   public static ValuesDb memoryValuesDb() {
@@ -74,5 +80,9 @@ public class ValuesDb implements ValueFactory {
   @Override
   public SString string(String string) {
     return new SString(hashedDb.writeString(string), typeSystem.string(), hashedDb);
+  }
+
+  public Value get(HashCode hash) {
+    return instantiator.instantiate(hash);
   }
 }

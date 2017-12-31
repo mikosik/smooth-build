@@ -19,9 +19,17 @@ public abstract class Type extends Value {
   private final Class<? extends Value> jType;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(HashCode hash, TypeType type, Type superType, String name,
+  protected Type(HashCode dataHash, TypeType type, Type superType, String name,
       Class<? extends Value> jType, HashedDb hashedDb) {
-    super(hash, type, hashedDb);
+    super(dataHash, type, hashedDb);
+    this.superType = superType;
+    this.name = name;
+    this.jType = jType;
+  }
+
+  protected Type(HashCode hash, HashCode dataHash, TypeType type, Type superType, String name,
+      Class<? extends Value> jType, HashedDb hashedDb) {
+    super(hash, dataHash, type, hashedDb);
     this.superType = superType;
     this.name = name;
     this.jType = jType;
@@ -35,7 +43,7 @@ public abstract class Type extends Value {
     return jType;
   }
 
-  public abstract Value newValue(HashCode hash);
+  public abstract Value newValue(HashCode dataHash);
 
   public Type coreType() {
     return this;

@@ -97,7 +97,7 @@ public class SStringTest {
   public void sstring_can_be_fetch_by_hash() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(typeSystem.string().newValue(hash));
+    when(valuesDb.get(hash));
     thenReturned(sstring);
   }
 
@@ -105,7 +105,7 @@ public class SStringTest {
   public void sstring_fetched_by_hash_has_same_value() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(typeSystem.string().newValue(hash).value());
+    when(((SString) valuesDb.get(hash)).value());
     thenReturned(string);
   }
 

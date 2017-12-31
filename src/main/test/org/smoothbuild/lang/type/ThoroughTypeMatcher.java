@@ -24,6 +24,7 @@ public class ThoroughTypeMatcher extends TypeSafeMatcher<Type> {
   protected boolean matchesSafely(Type item) {
     return type.name().equals(item.name())
         && type.hash().equals(item.hash())
+        && type.dataHash().equals(item.dataHash())
         && type.isNothing() == item.isNothing()
         && type.coreDepth() == item.coreDepth()
         && type.hierarchy().equals(item.hierarchy())

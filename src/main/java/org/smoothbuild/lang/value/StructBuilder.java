@@ -43,8 +43,8 @@ public class StructBuilder {
         .stream()
         .map(name -> fields.get(name).hash())
         .toArray(HashCode[]::new);
-    HashCode hash = hashedDb.writeHashes(hashes);
-    return new Struct(hash, type, hashedDb);
+    HashCode dataHash = hashedDb.writeHashes(hashes);
+    return type.newValue(dataHash);
   }
 
   private List<String> fieldNames() {

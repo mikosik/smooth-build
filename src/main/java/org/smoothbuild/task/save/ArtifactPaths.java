@@ -11,7 +11,7 @@ import org.smoothbuild.lang.value.Value;
 
 public class ArtifactPaths {
   public static Path targetPath(Value value) {
-    return VALUES_DB_PATH.append(Hash.toPath(value.hash()));
+    return VALUES_DB_PATH.append(Hash.toPath(value.dataHash()));
   }
 
   public static Path artifactPath(Name name) {

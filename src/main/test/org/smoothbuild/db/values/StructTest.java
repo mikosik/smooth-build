@@ -169,7 +169,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(() -> personType().newValue(person.hash()));
+    when(() -> valuesDb.get(person.hash()));
     thenReturned(person);
   }
 
@@ -179,7 +179,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person2 = personType().newValue(person.hash()));
+    when(person2 = (Struct) valuesDb.get(person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }
