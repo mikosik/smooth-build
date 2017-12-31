@@ -13,7 +13,7 @@ public class TypeType extends Type {
   }
 
   @Override
-  public Type newValue(HashCode hash, HashedDb hashedDb) {
+  public Type newValue(HashCode hash) {
     return typesDb.read(hash);
   }
 }

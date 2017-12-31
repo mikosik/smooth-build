@@ -22,7 +22,7 @@ public class Struct extends Value {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
       Builder<String, Value> builder = ImmutableMap.builder();
       for (Map.Entry<String, Type> entry : type().fields().entrySet()) {
-        builder.put(entry.getKey(), entry.getValue().newValue(unmarshaller.readHash(), hashedDb));
+        builder.put(entry.getKey(), entry.getValue().newValue(unmarshaller.readHash()));
       }
       fields = builder.build();
     }

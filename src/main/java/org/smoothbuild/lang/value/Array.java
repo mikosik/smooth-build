@@ -31,7 +31,7 @@ public class Array extends Value {
       marshaller.writeHash(element.hash());
     }
     marshaller.close();
-    return arrayType.newValue(marshaller.hash(), hashedDb);
+    return arrayType.newValue(marshaller.hash());
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
@@ -40,7 +40,7 @@ public class Array extends Value {
       ImmutableList.Builder<T> builder = ImmutableList.builder();
       HashCode elementHash = null;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
-        builder.add((T) type().elemType().newValue(elementHash, hashedDb));
+        builder.add((T) type().elemType().newValue(elementHash));
       }
       return builder.build();
     }

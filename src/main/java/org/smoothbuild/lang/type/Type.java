@@ -35,7 +35,7 @@ public abstract class Type extends Value {
     return jType;
   }
 
-  public abstract Value newValue(HashCode hash, HashedDb hashedDb);
+  public abstract Value newValue(HashCode hash);
 
   public Type coreType() {
     return this;

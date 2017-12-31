@@ -81,14 +81,14 @@ public class ValuesDb implements ValueFactory {
   }
 
   public Array read(ArrayType type, HashCode hash) {
-    return type.newValue(hash, hashedDb);
+    return type.newValue(hash);
   }
 
   public Struct read(StructType type, HashCode hash) {
-    return type.newValue(hash, hashedDb);
+    return type.newValue(hash);
   }
 
   public Value read(Type type, HashCode hash) {
-    return type.newValue(hash, hashedDb);
+    return type.newValue(hash);
   }
 }

@@ -20,7 +20,7 @@ public class StructType extends Type {
   }
 
   @Override
-  public Struct newValue(HashCode hash, HashedDb hashedDb) {
+  public Struct newValue(HashCode hash) {
     return new Struct(hash, this, hashedDb);
   }
 

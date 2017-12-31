@@ -15,7 +15,7 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Array newValue(HashCode hash, HashedDb hashedDb) {
+  public Array newValue(HashCode hash) {
     return new Array(hash, this, hashedDb);
   }
 
