@@ -147,7 +147,7 @@ public class BlobTest {
   public void blob_can_be_fetch_by_hash() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(valuesDb.read(typeSystem.blob(), hash));
+    when(() -> typeSystem.blob().newValue(hash));
     thenReturned(blob);
   }
 
@@ -155,7 +155,7 @@ public class BlobTest {
   public void blob_fetched_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToByteArray(((Blob) valuesDb.read(typeSystem.blob(), hash)).openInputStream()));
+    when(inputStreamToByteArray(typeSystem.blob().newValue(hash).openInputStream()));
     thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 
@@ -175,7 +175,7 @@ public class BlobTest {
   @Test
   public void reading_not_stored_blob_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(blob = (Blob) valuesDb.read(typeSystem.blob(), hash));
+    given(blob = typeSystem.blob().newValue(hash));
     when(blob).openInputStream();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

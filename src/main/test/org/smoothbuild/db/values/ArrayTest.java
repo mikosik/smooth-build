@@ -136,7 +136,7 @@ public class ArrayTest {
     given(arrayBuilder).add(valuesDb.string("abc"));
     given(arrayBuilder).add(valuesDb.string("def"));
     given(array = arrayBuilder.build());
-    when(valuesDb.read(typeSystem.array(typeSystem.string()), array.hash()));
+    when(typeSystem.array(typeSystem.string()).newValue(array.hash()));
     thenReturned(array);
   }
 
@@ -148,7 +148,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> (valuesDb.read(typeSystem.array(typeSystem.string()), array.hash())).asIterable(
+    when(() -> (typeSystem.array(typeSystem.string()).newValue(array.hash())).asIterable(
         SString.class));
     thenReturned(contains(sstring, sstring2));
   }
@@ -161,7 +161,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(valuesDb.read(typeSystem.array(typeSystem.string()), array.hash()).hash());
+    when(typeSystem.array(typeSystem.string()).newValue(array.hash()).hash());
     thenReturned(array.hash());
   }
 

@@ -12,17 +12,13 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
-import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
-
-import com.google.common.hash.HashCode;
 
 public class ValuesDb implements ValueFactory {
   private final HashedDb hashedDb;
@@ -78,17 +74,5 @@ public class ValuesDb implements ValueFactory {
   @Override
   public SString string(String string) {
     return new SString(hashedDb.writeString(string), typeSystem.string(), hashedDb);
-  }
-
-  public Array read(ArrayType type, HashCode hash) {
-    return type.newValue(hash);
-  }
-
-  public Struct read(StructType type, HashCode hash) {
-    return type.newValue(hash);
-  }
-
-  public Value read(Type type, HashCode hash) {
-    return type.newValue(hash);
   }
 }

@@ -64,7 +64,7 @@ public class OutputsDb {
       for (int i = 0; i < size; i++) {
         int messageType = unmarshaller.readInt();
         HashCode messageStringHash = unmarshaller.readHash();
-        SString messageSString = (SString) valuesDb.read(typeSystem.string(), messageStringHash);
+        SString messageSString = typeSystem.string().newValue(messageStringHash);
         String messageString = messageSString.value();
         messages.add(newMessage(messageType, messageString));
       }
@@ -73,7 +73,7 @@ public class OutputsDb {
         return new Output(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = valuesDb.read(type, resultObjectHash);
+        Value value = type.newValue(resultObjectHash);
         return new Output(value, messages);
       }
     }
