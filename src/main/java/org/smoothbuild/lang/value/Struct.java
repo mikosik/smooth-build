@@ -15,17 +15,10 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 
 public class Struct extends Value {
-  private final ImmutableMap<String, Value> fields;
+  private ImmutableMap<String, Value> fields;
 
   public Struct(HashCode hash, StructType type, HashedDb hashedDb) {
     super(hash, type, hashedDb);
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
-      Builder<String, Value> builder = ImmutableMap.builder();
-      for (Map.Entry<String, Type> entry : type().fields().entrySet()) {
-        builder.put(entry.getKey(), entry.getValue().newValue(unmarshaller.readHash()));
-      }
-      fields = builder.build();
-    }
   }
 
   @Override
@@ -34,15 +27,29 @@ public class Struct extends Value {
   }
 
   public Value get(String name) {
+    ImmutableMap<String, Value> fields = fields();
     checkArgument(fields.containsKey(name), name);
     return fields.get(name);
+  }
+
+  private ImmutableMap<String, Value> fields() {
+    if (fields == null) {
+      try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash())) {
+        Builder<String, Value> builder = ImmutableMap.builder();
+        for (Map.Entry<String, Type> entry : type().fields().entrySet()) {
+          builder.put(entry.getKey(), entry.getValue().newValue(unmarshaller.readHash()));
+        }
+        fields = builder.build();
+      }
+    }
+    return fields;
   }
 
   @Override
   public String toString() {
     return type().name()
         + "("
-        + fields
+        + fields()
             .entrySet()
             .stream()
             .map(f -> f.getKey() + "=" + f.getValue().toString())

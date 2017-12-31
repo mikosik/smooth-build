@@ -213,7 +213,7 @@ public class FileTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(() -> typeSystem.file().newValue(hash));
+    when(() -> typeSystem.file().newValue(hash).get("field"));
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

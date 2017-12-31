@@ -197,7 +197,7 @@ public class StructTest {
   @Test
   public void reading_not_stored_struct_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(() -> personType().newValue(hash));
+    when(() -> personType().newValue(hash).get("name"));
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 
