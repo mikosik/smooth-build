@@ -25,22 +25,22 @@ public class TypeSystem implements org.smoothbuild.lang.plugin.Types {
     this(new TypesDb(new HashedDb()));
   }
 
-  public Type type() {
+  public TypeType type() {
     return typesDb.type();
   }
 
   @Override
-  public Type string() {
+  public StringType string() {
     return typesDb.string();
   }
 
   @Override
-  public Type blob() {
+  public BlobType blob() {
     return typesDb.blob();
   }
 
   @Override
-  public Type nothing() {
+  public NothingType nothing() {
     return typesDb.nothing();
   }
 
