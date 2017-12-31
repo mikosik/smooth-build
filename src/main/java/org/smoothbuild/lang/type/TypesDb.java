@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.inject.Inject;
@@ -14,10 +16,16 @@ import com.google.common.hash.HashCode;
 
 public class TypesDb {
   private final HashedDb hashedDb;
+  private final Map<HashCode, Type> cache;
+  private TypeType type;
+  private StringType string;
+  private BlobType blob;
+  private NothingType nothing;
 
   @Inject
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
+    this.cache = new HashMap<>();
   }
 
   public TypesDb() {
@@ -25,19 +33,35 @@ public class TypesDb {
   }
 
   public TypeType type() {
-    return new TypeType(writeBasicType("Type"), this);
+    if (type == null) {
+      type = new TypeType(writeBasicType("Type"), this);
+      cache.put(type.hash(), type);
+    }
+    return type;
   }
 
   public StringType string() {
-    return new StringType(writeBasicType("String"), type());
+    if (string == null) {
+      string = new StringType(writeBasicType("String"), type());
+      cache.put(string.hash(), string);
+    }
+    return string;
   }
 
   public BlobType blob() {
-    return new BlobType(writeBasicType("Blob"), type());
+    if (blob == null) {
+      blob = new BlobType(writeBasicType("Blob"), type());
+      cache.put(blob.hash(), blob);
+    }
+    return blob;
   }
 
   public NothingType nothing() {
-    return new NothingType(writeBasicType("Nothing"), type());
+    if (nothing == null) {
+      nothing = new NothingType(writeBasicType("Nothing"), type());
+      cache.put(nothing.hash(), nothing);
+    }
+    return nothing;
   }
 
   private HashCode writeBasicType(String name) {
@@ -54,7 +78,7 @@ public class TypesDb {
       marshaller.writeHash(elementType.hash());
       marshaller.close();
       ArrayType superType = possiblyNullArrayType(elementType.superType());
-      return new ArrayType(marshaller.hash(), type(), superType, elementType);
+      return cache(new ArrayType(marshaller.hash(), type(), superType, elementType));
     }
   }
 
@@ -67,7 +91,7 @@ public class TypesDb {
       marshaller.writeHash(hashedDb.writeString(name));
       marshaller.writeHash(writeFields(fields));
       marshaller.close();
-      return new StructType(marshaller.hash(), type(), name, fields);
+      return cache(new StructType(marshaller.hash(), type(), name, fields));
     }
   }
 
@@ -91,23 +115,27 @@ public class TypesDb {
   }
 
   public Type read(HashCode hash) {
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
-      String name = hashedDb.readString(unmarshaller.readHash());
-      switch (name) {
-        case "Type":
-          return new TypeType(hash, this);
-        case "String":
-          return new StringType(hash, type());
-        case "Blob":
-          return new BlobType(hash, type());
-        case "Nothing":
-          return new NothingType(hash, type());
-        case "":
-          Type elementType = read(unmarshaller.readHash());
-          ArrayType superType = possiblyNullArrayType(elementType.superType());
-          return new ArrayType(hash, type(), superType, elementType);
-        default:
-          return new StructType(hash, type(), name, readFields(unmarshaller.readHash()));
+    if (cache.containsKey(hash)) {
+      return cache.get(hash);
+    } else {
+      try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
+        String name = hashedDb.readString(unmarshaller.readHash());
+        switch (name) {
+          case "Type":
+            return type();
+          case "String":
+            return string();
+          case "Blob":
+            return blob();
+          case "Nothing":
+            return nothing();
+          case "":
+            Type elementType = read(unmarshaller.readHash());
+            ArrayType superType = possiblyNullArrayType(elementType.superType());
+            return cache(new ArrayType(hash, type(), superType, elementType));
+          default:
+            return cache(new StructType(hash, type(), name, readFields(unmarshaller.readHash())));
+        }
       }
     }
   }
@@ -124,6 +152,16 @@ public class TypesDb {
         }
       }
       return builder.build();
+    }
+  }
+
+  private <T extends Type> T cache(T type) {
+    HashCode hash = type.hash();
+    if (cache.containsKey(hash)) {
+      return (T) cache.get(hash);
+    } else {
+      cache.put(hash, type);
+      return type;
     }
   }
 }
