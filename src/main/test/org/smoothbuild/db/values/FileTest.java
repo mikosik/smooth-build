@@ -174,21 +174,21 @@ public class FileTest {
   @Test
   public void file_can_be_read_by_hash() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(valuesDb.read(typeSystem.file(), file.hash()));
+    when(typeSystem.file().newValue(file.hash()));
     thenReturned(file);
   }
 
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(valuesDb.read(typeSystem.file(), file.hash()).get("content"));
+    when(typeSystem.file().newValue(file.hash()).get("content"));
     thenReturned(file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((SString) valuesDb.read(typeSystem.file(), file.hash()).get("path"));
+    when((SString) typeSystem.file().newValue(file.hash()).get("path"));
     thenReturned(file.get("path"));
   }
 
@@ -213,7 +213,7 @@ public class FileTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(valuesDb).read(typeSystem.file(), hash);
+    when(() -> typeSystem.file().newValue(hash));
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

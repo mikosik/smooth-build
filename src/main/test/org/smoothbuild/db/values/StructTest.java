@@ -169,7 +169,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(valuesDb.read(personType(), person.hash()));
+    when(() -> personType().newValue(person.hash()));
     thenReturned(person);
   }
 
@@ -179,7 +179,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person2 = valuesDb.read(personType(), person.hash()));
+    when(person2 = personType().newValue(person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }
@@ -197,13 +197,12 @@ public class StructTest {
   @Test
   public void reading_not_stored_struct_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(() -> valuesDb.read(personType(), hash));
+    when(() -> personType().newValue(hash));
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 
   private StructType personType() {
     Type string = typeSystem.string();
-    return typeSystem.struct(
-        "Person", ImmutableMap.of("firstName", string, "lastName", string));
+    return typeSystem.struct("Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

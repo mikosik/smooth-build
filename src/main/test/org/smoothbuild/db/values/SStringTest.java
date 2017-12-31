@@ -97,7 +97,7 @@ public class SStringTest {
   public void sstring_can_be_fetch_by_hash() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(valuesDb.read(typeSystem.string(), hash));
+    when(typeSystem.string().newValue(hash));
     thenReturned(sstring);
   }
 
@@ -105,7 +105,7 @@ public class SStringTest {
   public void sstring_fetched_by_hash_has_same_value() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(((SString) valuesDb.read(typeSystem.string(), hash)).value());
+    when(typeSystem.string().newValue(hash).value());
     thenReturned(string);
   }
 
@@ -119,7 +119,7 @@ public class SStringTest {
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(sstring = (SString) valuesDb.read(typeSystem.string(), hash));
+    given(sstring = typeSystem.string().newValue(hash));
     when(sstring).value();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
