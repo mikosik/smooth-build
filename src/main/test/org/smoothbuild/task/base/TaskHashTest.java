@@ -59,7 +59,7 @@ public class TaskHashTest {
     given(task = new Task(valueEvaluator(valuesDb.string(""), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("812921907a645ce26fa53019db69f9827621070b"));
+    thenReturned(HashCode.fromString("1953ba8a385d0a5ad9196d7e8847ac591200d8cd"));
   }
 
   @Test
@@ -67,7 +67,7 @@ public class TaskHashTest {
     given(task = new Task(valueEvaluator(valuesDb.string("value"), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("7507bd5f417d485cd255203dddebda388b45183a"));
+    thenReturned(HashCode.fromString("61800426bf62c17e363be934d09e6d8b8171a153"));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class TaskHashTest {
     given(task = new Task(arrayEvaluator(typeSystem.array(typeSystem.string()), location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("4fc92bc42737d06c9f0864a811e510322f4096f2"));
+    thenReturned(HashCode.fromString("fb8f11ee885679573b7d199247665fd83adcc4b0"));
   }
 
   @Test
@@ -106,7 +106,7 @@ public class TaskHashTest {
     given(task = new Task(nativeCallEvaluator(nativeFunction, false, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("931f19ada9b33792b779f484188f2f1a2aee3a4f"));
+    thenReturned(HashCode.fromString("004f47baf3927badbe890ac4683267bb7efcda9a"));
   }
 
   @Test
@@ -117,6 +117,6 @@ public class TaskHashTest {
     given(task = new Task(callEvaluator(definedFunction, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"))));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("2670248a1ce9d25fb5c92ea85c153ad28f57cb4b"));
+    thenReturned(HashCode.fromString("a7ab89c804b206bb6162ec2f06dea846befd5d5e"));
   }
 }

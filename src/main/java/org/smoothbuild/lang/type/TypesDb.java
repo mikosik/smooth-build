@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Unmarshaller;
+import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
 
 import com.google.common.collect.ImmutableMap;
@@ -34,7 +34,7 @@ public class TypesDb {
 
   public TypeType type() {
     if (type == null) {
-      type = new TypeType(writeBasicType("Type"), this, hashedDb);
+      type = new TypeType(writeBasicTypeData("Type"), this, hashedDb);
       cache.put(type.hash(), type);
     }
     return type;
@@ -42,7 +42,7 @@ public class TypesDb {
 
   public StringType string() {
     if (string == null) {
-      string = new StringType(writeBasicType("String"), type(), hashedDb);
+      string = new StringType(writeBasicTypeData("String"), type(), hashedDb);
       cache.put(string.hash(), string);
     }
     return string;
@@ -50,7 +50,7 @@ public class TypesDb {
 
   public BlobType blob() {
     if (blob == null) {
-      blob = new BlobType(writeBasicType("Blob"), type(), hashedDb);
+      blob = new BlobType(writeBasicTypeData("Blob"), type(), hashedDb);
       cache.put(blob.hash(), blob);
     }
     return blob;
@@ -58,20 +58,21 @@ public class TypesDb {
 
   public NothingType nothing() {
     if (nothing == null) {
-      nothing = new NothingType(writeBasicType("Nothing"), type(), hashedDb);
+      nothing = new NothingType(writeBasicTypeData("Nothing"), type(), hashedDb);
       cache.put(nothing.hash(), nothing);
     }
     return nothing;
   }
 
-  private HashCode writeBasicType(String name) {
+  private HashCode writeBasicTypeData(String name) {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
   public ArrayType array(Type elementType) {
-    HashCode hash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
+    HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     ArrayType superType = possiblyNullArrayType(elementType.superType());
-    return cache(new ArrayType(hash, type(), superType, elementType, hashedDb));
+    Instantiator instantiator = new Instantiator(hashedDb, this);
+    return cache(new ArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
   }
 
   private ArrayType possiblyNullArrayType(Type elementType) {
@@ -80,7 +81,8 @@ public class TypesDb {
 
   public StructType struct(String name, ImmutableMap<String, Type> fields) {
     HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
-    return cache(new StructType(hash, type(), name, fields, hashedDb));
+    Instantiator instantiator = new Instantiator(hashedDb, this);
+    return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb));
   }
 
   private HashCode writeFields(ImmutableMap<String, Type> fields) {
@@ -100,25 +102,53 @@ public class TypesDb {
     if (cache.containsKey(hash)) {
       return cache.get(hash);
     } else {
-      try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
-        String name = hashedDb.readString(unmarshaller.readHash());
-        switch (name) {
-          case "Type":
-            return type();
-          case "String":
-            return string();
-          case "Blob":
-            return blob();
-          case "Nothing":
-            return nothing();
-          case "":
-            Type elementType = read(unmarshaller.readHash());
-            ArrayType superType = possiblyNullArrayType(elementType.superType());
-            return cache(new ArrayType(hash, type(), superType, elementType, hashedDb));
-          default:
-            ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
-            return cache(new StructType(hash, type(), name, fields, hashedDb));
-        }
+      List<HashCode> hashes = hashedDb.readHashes(hash);
+      switch (hashes.size()) {
+        case 1:
+          if (!type().hash().equals(hash)) {
+            throw new CorruptedValueException(
+                "Expected " + type() + " value but got value which hash is " + hash);
+          }
+          return type();
+        case 2:
+          HashCode typeTypeHash = hashes.get(0);
+          if (!type().hash().equals(typeTypeHash)) {
+            throw new CorruptedValueException(
+                "Expected " + type() + " value but got value which hash is " + typeTypeHash);
+          }
+          HashCode typeDataHash = hashes.get(1);
+          return readFromDataHash(typeDataHash);
+        default:
+          throw newCorruptedMerkleRootException(hash, hashes.size());
+      }
+    }
+  }
+
+  private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
+    return new CorruptedValueException(
+        hash, "Its merkle tree root has " + childCount + " children.");
+  }
+
+  protected Type readFromDataHash(HashCode typeDataHash) {
+    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
+      String name = hashedDb.readString(unmarshaller.readHash());
+      switch (name) {
+        case "String":
+          return string();
+        case "Blob":
+          return blob();
+        case "Nothing":
+          return nothing();
+        case "":
+          Type elementType = read(unmarshaller.readHash());
+          ArrayType superType = possiblyNullArrayType(elementType.superType());
+          Instantiator instantiator = new Instantiator(hashedDb, this);
+          return cache(new ArrayType(typeDataHash, type(), superType, elementType, instantiator,
+              hashedDb));
+        default:
+          ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
+          Instantiator instantiator2 = new Instantiator(hashedDb, this);
+          return cache(new StructType(typeDataHash, type(), name, fields, instantiator2, hashedDb));
       }
     }
   }
@@ -128,7 +158,7 @@ public class TypesDb {
     for (HashCode fieldHash : hashedDb.readHashes(hash)) {
       List<HashCode> hashes = hashedDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
-        throw new HashedDbException("Corrupted field data");
+        throw newCorruptedMerkleRootException(hash, hashes.size());
       }
       String fieldName = hashedDb.readString(hashes.get(0));
       Type fieldType = read(hashes.get(1));

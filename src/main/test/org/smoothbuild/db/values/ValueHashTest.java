@@ -40,63 +40,63 @@ public class ValueHashTest {
   public void hash_of_empty_string_is_stable() throws Exception {
     given(sstring = valuesDb.string(""));
     when(sstring).hash();
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("0af6d4b68d3dadc04f1fd8d207702afd4809a0c2"));
   }
 
   @Test
   public void hash_of_some_string_is_stable() throws Exception {
     given(sstring = valuesDb.string("abc"));
     when(sstring).hash();
-    thenReturned(HashCode.fromString("a9993e364706816aba3e25717850c26c9cd0d89d"));
+    thenReturned(HashCode.fromString("4d3465c4280a64e3a6c2272fc48e971d102eac93"));
   }
 
   @Test
   public void hash_of_empty_blob_is_stable() throws Exception {
     given(blob = valuesDb.blobBuilder().build());
     when(() -> blob.hash());
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("6915b0de6d40fc94df5c229b46da15e34d7c232b"));
   }
 
   @Test
   public void hash_of_some_blob_is_stable() throws Exception {
     given(blob = createBlob(valuesDb, new byte[] { 1, 2, 3 }));
     when(() -> blob.hash());
-    thenReturned(HashCode.fromString("7037807198c22a7d2b0807371d763779a84fdfcf"));
+    thenReturned(HashCode.fromString("e8c40738ed9655dcc5cdc344654c20aa365a75bf"));
   }
 
   @Test
   public void hash_of_empty_struct_is_stable() throws Exception {
     given(struct = createStruct(valuesDb, "John", "Doe"));
     when(() -> struct.hash());
-    thenReturned(HashCode.fromString("bc6915c8051b7fd49d11c5082976f70f9526d07b"));
+    thenReturned(HashCode.fromString("a94de85056893e6464baa8ded12a9a765c5b56fc"));
   }
 
   @Test
   public void hash_of_some_struct_is_stable() throws Exception {
     given(struct = createStruct(valuesDb, "John", "Doe"));
     when(() -> struct.hash());
-    thenReturned(HashCode.fromString("bc6915c8051b7fd49d11c5082976f70f9526d07b"));
+    thenReturned(HashCode.fromString("a94de85056893e6464baa8ded12a9a765c5b56fc"));
   }
 
   @Test
   public void hash_of_empty_string_array_is_stable() throws Exception {
     given(array = valuesDb.arrayBuilder(typeSystem.string()).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("b2d4a44801204a93da825d1b4db4ef4af2787d82"));
   }
 
   @Test
   public void hash_of_non_empty_string_array_is_stable() throws Exception {
     given(array = valuesDb.arrayBuilder(typeSystem.string()).add(valuesDb.string("")).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("be1bdec0aa74b4dcb079943e70528096cca985f8"));
+    thenReturned(HashCode.fromString("98370fae56927d0832578f133ca73ff1f58fe415"));
   }
 
   @Test
   public void hash_of_empty_blob_array_is_stable() throws Exception {
     given(array = valuesDb.arrayBuilder(typeSystem.blob()).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("000c25ccefc9fbd916400c36eb99bd2610f507ea"));
   }
 
   @Test
@@ -104,7 +104,7 @@ public class ValueHashTest {
     given(array = valuesDb.arrayBuilder(typeSystem.blob()).add(
         createBlob(valuesDb, new byte[] {})).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("be1bdec0aa74b4dcb079943e70528096cca985f8"));
+    thenReturned(HashCode.fromString("3dd2f9efc115cc922304f91df183bc8359df9ec8"));
   }
 
   @Test
@@ -112,7 +112,7 @@ public class ValueHashTest {
     given(struct = createStruct(valuesDb, "John", "Doe"));
     given(array = valuesDb.arrayBuilder(personType()).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("21187af9783689f62abc2f1e10fb76233d167af8"));
   }
 
   @Test
@@ -120,14 +120,14 @@ public class ValueHashTest {
     given(struct = createStruct(valuesDb, "John", "Doe"));
     given(array = valuesDb.arrayBuilder(personType()).add(struct).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("d4ef59c09655067daa0c8a69b542221615e47c7f"));
+    thenReturned(HashCode.fromString("28c181c073e198d5ca5f233ac682a7a09f0aeb63"));
   }
 
   @Test
   public void hash_of_empty_nothing_array_is_stable() throws Exception {
     given(array = valuesDb.arrayBuilder(typeSystem.nothing()).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+    thenReturned(HashCode.fromString("034da224a1b3f7e2d2702ce8c5dd986f11b9b08a"));
   }
 
   private Struct createStruct(ValuesDb valuesDb, String firstName, String lastName)

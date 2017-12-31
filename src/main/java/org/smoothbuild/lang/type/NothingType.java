@@ -7,12 +7,12 @@ import org.smoothbuild.lang.value.Value;
 import com.google.common.hash.HashCode;
 
 public class NothingType extends Type {
-  protected NothingType(HashCode hash, TypeType type, HashedDb hashedDb) {
-    super(hash, type, null, "Nothing", Nothing.class, hashedDb);
+  protected NothingType(HashCode dataHash, TypeType type, HashedDb hashedDb) {
+    super(dataHash, type, null, "Nothing", Nothing.class, hashedDb);
   }
 
   @Override
-  public Value newValue(HashCode hash) {
+  public Value newValue(HashCode dataHash) {
     throw new RuntimeException("Cannot create value of type 'Nothing'.");
   }
 }

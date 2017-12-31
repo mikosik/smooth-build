@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
+import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.InfoMessage;
@@ -64,7 +65,12 @@ public class OutputsDb {
       for (int i = 0; i < size; i++) {
         int messageType = unmarshaller.readInt();
         HashCode messageStringHash = unmarshaller.readHash();
-        SString messageSString = typeSystem.string().newValue(messageStringHash);
+        Value messageValue = valuesDb.get(messageStringHash);
+        if (!typeSystem.string().equals(messageValue.type())) {
+          throw new CorruptedValueException(messageStringHash, "Expected message of type "
+              + typeSystem.string() + " but got " + messageValue.type());
+        }
+        SString messageSString = (SString) messageValue;
         String messageString = messageSString.value();
         messages.add(newMessage(messageType, messageString));
       }
@@ -73,7 +79,11 @@ public class OutputsDb {
         return new Output(messages);
       } else {
         HashCode resultObjectHash = unmarshaller.readHash();
-        Value value = type.newValue(resultObjectHash);
+        Value value = valuesDb.get(resultObjectHash);
+        if (!type.equals(value.type())) {
+          throw new CorruptedValueException(resultObjectHash, "Expected result with type " + type
+              + " but got " + value.type());
+        }
         return new Output(value, messages);
       }
     }

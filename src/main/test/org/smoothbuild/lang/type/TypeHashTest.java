@@ -10,17 +10,17 @@ import com.google.common.hash.HashCode;
 
 public class TypeHashTest {
   @Test
-  public void hash_of_string_type_is_stable() throws Exception {
+  public void hashes_of_types_are_stable() throws Exception {
     TypeSystem typeSystem = new TypeSystem();
-    assertHash(typeSystem.type(), "9774f308a7b1110d0958c8c9120db3d6745b3e53");
-    assertHash(typeSystem.string(), "8c842ebb68ca09f033419a6336859e8ae372a227");
-    assertHash(typeSystem.blob(), "56f5f4cdcad173aaae82a89df1a7cda54f22fad9");
-    assertHash(typeSystem.nothing(), "2aa542ce2fd5ad73acd4c33b26d91132ecc71e73");
-    assertHash(typeSystem.array(typeSystem.type()), "15f42011e71f81d36c9f4e4ba86f6ddc10bc7b63");
-    assertHash(typeSystem.array(typeSystem.string()), "d3a0aa3689e91679c81f6474fefe902e0be785e8");
-    assertHash(typeSystem.array(typeSystem.blob()), "86a1fa106e1f0c89d05f24bb0da1a709dd965b2a");
-    assertHash(typeSystem.array(typeSystem.nothing()), "84e4384bcf54b9dfcf841db1e3df4d9b91356e72");
-    assertHash(structType(typeSystem), "4921efcb53d2545cca3d32b4372205d372ea2581");
+    assertHash(typeSystem.type(), "7b5ffbdc620f77f806320ba5562ccfcafae2214b");
+    assertHash(typeSystem.string(), "7561a6b22d5fe8e18dec31904e0e9cdf6644ca96");
+    assertHash(typeSystem.blob(), "6cb65ce7804fbcabff468d1d7aca46d4b5279f00");
+    assertHash(typeSystem.nothing(), "9044640e5b343d11e66b356a82564b618d8df7e6");
+    assertHash(typeSystem.array(typeSystem.type()), "a3000ef0acab0cdcb657fd32a0ffbc84242030a8");
+    assertHash(typeSystem.array(typeSystem.string()), "e512d5a472c0a1f893f98e42f06477a1a0a1a675");
+    assertHash(typeSystem.array(typeSystem.blob()), "a9e9aaa1450fee5c9a1a18a9c2cf1674e6ee611b");
+    assertHash(typeSystem.array(typeSystem.nothing()), "5338d0bb9718388a329374e779726c6ed0a4d6d4");
+    assertHash(structType(typeSystem), "a23d6de28f8161a221df3720bf89429ef9b4c62c");
   }
 
   private StructType structType(TypeSystem typeSystem) {

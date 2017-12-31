@@ -4,18 +4,23 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
-import java.util.List;
-
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Array extends Value {
-  public Array(HashCode hash, ArrayType arrayType, HashedDb hashedDb) {
-    super(hash, arrayType, hashedDb);
+  private final Instantiator instantiator;
+
+  public Array(HashCode dataHash, ArrayType arrayType, Instantiator instantiator,
+      HashedDb hashedDb) {
+    super(dataHash, arrayType, hashedDb);
+    this.instantiator = instantiator;
   }
 
   @Override
@@ -23,22 +28,21 @@ public class Array extends Value {
     return (ArrayType) super.type();
   }
 
-  public static Array storeArrayInDb(List<? extends Value> elements, ArrayType arrayType,
-      HashedDb hashedDb) {
-    HashCode[] elementHashes = elements
-        .stream()
-        .map(Value::hash)
-        .toArray(HashCode[]::new);
-    return arrayType.newValue(hashedDb.writeHashes(elementHashes));
-  }
-
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
-    Preconditions.checkArgument(clazz.isAssignableFrom(type().elemType().jType()));
     Type elemType = type().elemType();
-    return hashedDb.readHashes(hash())
+    Preconditions.checkArgument(clazz.isAssignableFrom(elemType.jType()));
+    ImmutableList<Value> values = hashedDb
+        .readHashes(dataHash())
         .stream()
-        .map(h -> (T) elemType.newValue(h))
+        .map(h -> instantiator.instantiate(h))
         .collect(toImmutableList());
+    for (Value value : values) {
+      if (!value.type().equals(elemType)) {
+        throw new CorruptedValueException(hash(), "It is array with type " + type()
+            + " but one of its element has type " + value.type());
+      }
+    }
+    return (ImmutableList<T>) values;
   }
 
   @Override

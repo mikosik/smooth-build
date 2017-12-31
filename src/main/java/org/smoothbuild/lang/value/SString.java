@@ -8,13 +8,13 @@ import org.smoothbuild.lang.type.Type;
 import com.google.common.hash.HashCode;
 
 public class SString extends Value {
-  public SString(HashCode hash, Type type, HashedDb hashedDb) {
-    super(hash, type, hashedDb);
+  public SString(HashCode dataHash, Type type, HashedDb hashedDb) {
+    super(dataHash, type, hashedDb);
     checkArgument(type.name().equals("String"));
   }
 
   public String value() {
-    return hashedDb.readString(hash());
+    return hashedDb.readString(dataHash());
   }
 
   @Override

@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Array;
 
@@ -7,16 +9,18 @@ import com.google.common.hash.HashCode;
 
 public class ArrayType extends Type {
   private final Type elemType;
+  private final Instantiator instantiator;
 
-  protected ArrayType(HashCode hash, TypeType type, ArrayType superType, Type elemType,
-      HashedDb hashedDb) {
-    super(hash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb);
-    this.elemType = elemType;
+  protected ArrayType(HashCode dataHash, TypeType type, ArrayType superType,
+      Type elemType, Instantiator instantiator, HashedDb hashedDb) {
+    super(dataHash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb);
+    this.elemType = checkNotNull(elemType);
+    this.instantiator = checkNotNull(instantiator);
   }
 
   @Override
-  public Array newValue(HashCode hash) {
-    return new Array(hash, this, hashedDb);
+  public Array newValue(HashCode dataHash) {
+    return new Array(dataHash, this, instantiator, hashedDb);
   }
 
   public Type elemType() {

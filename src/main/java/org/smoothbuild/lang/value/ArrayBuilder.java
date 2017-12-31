@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.value;
 
-import static org.smoothbuild.lang.value.Array.storeArrayInDb;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ArrayType;
+
+import com.google.common.hash.HashCode;
 
 public class ArrayBuilder {
   private final ArrayType type;
@@ -34,6 +34,10 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return storeArrayInDb(elements, type, hashedDb);
+    HashCode[] elementHashes = elements
+        .stream()
+        .map(Value::hash)
+        .toArray(HashCode[]::new);
+    return type.newValue(hashedDb.writeHashes(elementHashes));
   }
 }

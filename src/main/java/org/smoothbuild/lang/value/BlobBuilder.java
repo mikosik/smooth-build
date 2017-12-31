@@ -7,14 +7,16 @@ import java.io.OutputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.BlobType;
+
+import com.google.common.hash.HashCode;
 
 public class BlobBuilder extends OutputStream {
-  private final Type type;
+  private final BlobType type;
   private final HashedDb hashedDb;
   private final Marshaller marshaller;
 
-  public BlobBuilder(Type type, HashedDb hashedDb) {
+  public BlobBuilder(BlobType type, HashedDb hashedDb) {
     checkArgument(type.name().equals("Blob"));
     this.type = type;
     this.hashedDb = hashedDb;
@@ -38,6 +40,7 @@ public class BlobBuilder extends OutputStream {
 
   public Blob build() {
     marshaller.close();
-    return new Blob(marshaller.hash(), type, hashedDb);
+    HashCode dataHash = marshaller.hash();
+    return new Blob(dataHash, type, hashedDb);
   }
 }

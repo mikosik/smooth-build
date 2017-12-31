@@ -11,17 +11,31 @@ import com.google.common.hash.HashCode;
 
 public class Value {
   private final HashCode hash;
+  private final HashCode dataHash;
   private final Type type;
   protected final HashedDb hashedDb;
 
-  public Value(HashCode hash, Type type, HashedDb hashedDb) {
+  public Value(HashCode dataHash, Type type, HashedDb hashedDb) {
+    this(calculateHash(type, dataHash, hashedDb), dataHash, type, hashedDb);
+  }
+
+  public Value(HashCode hash, HashCode dataHash, Type type, HashedDb hashedDb) {
     this.hash = checkNotNull(hash);
+    this.dataHash = checkNotNull(dataHash);
     this.type = type;
     this.hashedDb = checkNotNull(hashedDb);
   }
 
+  public static HashCode calculateHash(Type type, HashCode dataHash, HashedDb hashedDb) {
+    return hashedDb.writeHashes(type.hash(), dataHash);
+  }
+
   public HashCode hash() {
     return hash;
+  }
+
+  public HashCode dataHash() {
+    return dataHash;
   }
 
   public Type type() {

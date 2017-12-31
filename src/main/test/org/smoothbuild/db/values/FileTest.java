@@ -174,21 +174,21 @@ public class FileTest {
   @Test
   public void file_can_be_read_by_hash() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(typeSystem.file().newValue(file.hash()));
+    when(valuesDb.get(file.hash()));
     thenReturned(file);
   }
 
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(typeSystem.file().newValue(file.hash()).get("content"));
+    when(((Struct) valuesDb.get(file.hash())).get("content"));
     thenReturned(file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((SString) typeSystem.file().newValue(file.hash()).get("path"));
+    when(() -> ((Struct) valuesDb.get(file.hash())).get("path"));
     thenReturned(file.get("path"));
   }
 

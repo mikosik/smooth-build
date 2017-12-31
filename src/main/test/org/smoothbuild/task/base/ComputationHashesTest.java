@@ -53,7 +53,8 @@ public class ComputationHashesTest {
   }
 
   @Test
-  public void native_call_computation_has_different_hash_for_different_functions() throws Exception {
+  public void native_call_computation_has_different_hash_for_different_functions()
+      throws Exception {
     given(function = mock(NativeFunction.class));
     given(willReturn(Hash.integer(1)), function).hash();
     given(function2 = mock(NativeFunction.class));
