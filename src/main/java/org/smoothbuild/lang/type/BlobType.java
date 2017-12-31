@@ -11,7 +11,7 @@ public class BlobType extends Type {
   }
 
   @Override
-  public Blob newValue(HashCode hash, HashedDb hashedDb) {
+  public Blob newValue(HashCode hash) {
     return new Blob(hash, this, hashedDb);
   }
 }

@@ -11,7 +11,7 @@ public class StringType extends Type {
   }
 
   @Override
-  public SString newValue(HashCode hash, HashedDb hashedDb) {
+  public SString newValue(HashCode hash) {
     return new SString(hash, this, hashedDb);
   }
 }

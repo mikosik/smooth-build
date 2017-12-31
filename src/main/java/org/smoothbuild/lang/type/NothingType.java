@@ -12,7 +12,7 @@ public class NothingType extends Type {
   }
 
   @Override
-  public Value newValue(HashCode hash, HashedDb hashedDb) {
+  public Value newValue(HashCode hash) {
     throw new RuntimeException("Cannot create value of type 'Nothing'.");
   }
 }
