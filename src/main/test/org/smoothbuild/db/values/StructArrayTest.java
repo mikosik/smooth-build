@@ -29,7 +29,7 @@ public class StructArrayTest {
   @Before
   public void before() {
     HashedDb hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(new HashedDb()));
+    typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
 
