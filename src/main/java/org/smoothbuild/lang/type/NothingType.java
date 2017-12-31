@@ -7,8 +7,8 @@ import org.smoothbuild.lang.value.Value;
 import com.google.common.hash.HashCode;
 
 public class NothingType extends Type {
-  protected NothingType(HashCode hash, TypeType type) {
-    super(hash, type, null, "Nothing", Nothing.class);
+  protected NothingType(HashCode hash, TypeType type, HashedDb hashedDb) {
+    super(hash, type, null, "Nothing", Nothing.class, hashedDb);
   }
 
   @Override

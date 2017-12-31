@@ -15,11 +15,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Array extends Value {
-  private final HashedDb hashedDb;
-
   public Array(HashCode hash, ArrayType arrayType, HashedDb hashedDb) {
-    super(hash, arrayType);
-    this.hashedDb = hashedDb;
+    super(hash, arrayType, hashedDb);
   }
 
   @Override

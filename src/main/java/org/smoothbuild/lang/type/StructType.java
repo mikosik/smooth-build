@@ -9,8 +9,9 @@ import com.google.common.hash.HashCode;
 public class StructType extends Type {
   private final ImmutableMap<String, Type> fields;
 
-  public StructType(HashCode hash, TypeType type, String name, ImmutableMap<String, Type> fields) {
-    super(hash, type, calculateSuperType(fields), name, Struct.class);
+  public StructType(HashCode hash, TypeType type, String name, ImmutableMap<String, Type> fields,
+      HashedDb hashedDb) {
+    super(hash, type, calculateSuperType(fields), name, Struct.class, hashedDb);
     this.fields = fields;
   }
 

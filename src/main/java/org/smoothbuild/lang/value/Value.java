@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
 
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
@@ -11,10 +12,12 @@ import com.google.common.hash.HashCode;
 public class Value {
   private final HashCode hash;
   private final Type type;
+  protected final HashedDb hashedDb;
 
-  public Value(HashCode hash, Type type) {
+  public Value(HashCode hash, Type type, HashedDb hashedDb) {
     this.hash = checkNotNull(hash);
     this.type = type;
+    this.hashedDb = checkNotNull(hashedDb);
   }
 
   public HashCode hash() {

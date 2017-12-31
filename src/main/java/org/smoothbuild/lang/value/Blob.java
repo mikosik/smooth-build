@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,16 +14,13 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingInputStream;
 
 public class Blob extends Value {
-  private final HashedDb hashedDB;
-
   public Blob(HashCode hash, Type type, HashedDb hashedDb) {
-    super(hash, type);
+    super(hash, type, hashedDb);
     checkArgument(type.name().equals("Blob"));
-    this.hashedDB = checkNotNull(hashedDb);
   }
 
   public InputStream openInputStream() {
-    return hashedDB.newUnmarshaller(hash());
+    return hashedDb.newUnmarshaller(hash());
   }
 
   @Override
