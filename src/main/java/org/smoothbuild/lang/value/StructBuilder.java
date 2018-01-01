@@ -1,14 +1,16 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+
+import com.google.common.hash.HashCode;
 
 public class StructBuilder {
   private final StructType type;
@@ -29,16 +31,28 @@ public class StructBuilder {
   }
 
   public Struct build() {
-    Marshaller marshaller = hashedDb.newMarshaller();
-    for (Map.Entry<String, Type> entry : type.fields().entrySet()) {
-      String name = entry.getKey();
-      if (fields.containsKey(name)) {
-        marshaller.writeHash(fields.get(name).hash());
-      } else {
-        throw new IllegalStateException("Field " + name + " hasn't been specified.");
-      }
+    List<String> names = fieldNames();
+    List<String> unspecified = names
+        .stream()
+        .filter(e -> !fields.containsKey(e))
+        .collect(toImmutableList());
+    if (0 < unspecified.size()) {
+      throw new IllegalStateException("Field " + unspecified.get(0) + " hasn't been specified.");
     }
-    marshaller.close();
-    return new Struct(marshaller.hash(), type, hashedDb);
+    HashCode[] hashes = names
+        .stream()
+        .map(name -> fields.get(name).hash())
+        .toArray(HashCode[]::new);
+    HashCode hash = hashedDb.writeHashes(hashes);
+    return new Struct(hash, type, hashedDb);
+  }
+
+  private List<String> fieldNames() {
+    return type
+        .fields()
+        .entrySet()
+        .stream()
+        .map(e -> e.getKey())
+        .collect(toImmutableList());
   }
 }
