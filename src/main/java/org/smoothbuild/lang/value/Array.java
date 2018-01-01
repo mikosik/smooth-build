@@ -25,7 +25,10 @@ public class Array extends Value {
 
   public static Array storeArrayInDb(List<? extends Value> elements, ArrayType arrayType,
       HashedDb hashedDb) {
-    HashCode[] elementHashes = elements.stream().map(Value::hash).toArray(HashCode[]::new);
+    HashCode[] elementHashes = elements
+        .stream()
+        .map(Value::hash)
+        .toArray(HashCode[]::new);
     return arrayType.newValue(hashedDb.writeHashes(elementHashes));
   }
 
