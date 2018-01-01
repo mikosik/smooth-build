@@ -1,17 +1,16 @@
 package org.smoothbuild.lang.value;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Array extends Value {
@@ -26,24 +25,17 @@ public class Array extends Value {
 
   public static Array storeArrayInDb(List<? extends Value> elements, ArrayType arrayType,
       HashedDb hashedDb) {
-    Marshaller marshaller = hashedDb.newMarshaller();
-    for (Value element : elements) {
-      marshaller.writeHash(element.hash());
-    }
-    marshaller.close();
-    return arrayType.newValue(marshaller.hash());
+    HashCode[] elementHashes = elements.stream().map(Value::hash).toArray(HashCode[]::new);
+    return arrayType.newValue(hashedDb.writeHashes(elementHashes));
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
     Preconditions.checkArgument(clazz.isAssignableFrom(type().elemType().jType()));
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash())) {
-      ImmutableList.Builder<T> builder = ImmutableList.builder();
-      HashCode elementHash = null;
-      while ((elementHash = unmarshaller.tryReadHash()) != null) {
-        builder.add((T) type().elemType().newValue(elementHash));
-      }
-      return builder.build();
-    }
+    Type elemType = type().elemType();
+    return hashedDb.readHashes(hash())
+        .stream()
+        .map(h -> (T) elemType.newValue(h))
+        .collect(toImmutableList());
   }
 
   @Override

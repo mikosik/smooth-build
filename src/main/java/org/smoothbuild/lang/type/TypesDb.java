@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.type;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
 
@@ -65,21 +65,13 @@ public class TypesDb {
   }
 
   private HashCode writeBasicType(String name) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      marshaller.writeHash(hashedDb.writeString(name));
-      marshaller.close();
-      return marshaller.hash();
-    }
+    return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
   public ArrayType array(Type elementType) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      marshaller.writeHash(hashedDb.writeString(""));
-      marshaller.writeHash(elementType.hash());
-      marshaller.close();
-      ArrayType superType = possiblyNullArrayType(elementType.superType());
-      return cache(new ArrayType(marshaller.hash(), type(), superType, elementType, hashedDb));
-    }
+    HashCode hash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
+    ArrayType superType = possiblyNullArrayType(elementType.superType());
+    return cache(new ArrayType(hash, type(), superType, elementType, hashedDb));
   }
 
   private ArrayType possiblyNullArrayType(Type elementType) {
@@ -87,31 +79,21 @@ public class TypesDb {
   }
 
   public StructType struct(String name, ImmutableMap<String, Type> fields) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      marshaller.writeHash(hashedDb.writeString(name));
-      marshaller.writeHash(writeFields(fields));
-      marshaller.close();
-      return cache(new StructType(marshaller.hash(), type(), name, fields, hashedDb));
-    }
+    HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
+    return cache(new StructType(hash, type(), name, fields, hashedDb));
   }
 
   private HashCode writeFields(ImmutableMap<String, Type> fields) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      for (Entry<String, Type> field : fields.entrySet()) {
-        marshaller.writeHash(writeField(field.getKey(), field.getValue()));
-      }
-      marshaller.close();
-      return marshaller.hash();
-    }
+    return hashedDb.writeHashes(
+        fields
+            .entrySet()
+            .stream()
+            .map(f -> writeField(f.getKey(), f.getValue()))
+            .toArray(HashCode[]::new));
   }
 
   private HashCode writeField(String name, Type type) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      marshaller.writeHash(hashedDb.writeString(name));
-      marshaller.writeHash(type.hash());
-      marshaller.close();
-      return marshaller.hash();
-    }
+    return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
   }
 
   public Type read(HashCode hash) {
@@ -142,18 +124,17 @@ public class TypesDb {
   }
 
   private ImmutableMap<String, Type> readFields(HashCode hash) {
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(hash)) {
-      ImmutableMap.Builder<String, Type> builder = ImmutableMap.builder();
-      HashCode elementHash = null;
-      while ((elementHash = unmarshaller.tryReadHash()) != null) {
-        try (Unmarshaller fieldUnmarshaller = hashedDb.newUnmarshaller(elementHash)) {
-          HashCode nameHash = fieldUnmarshaller.readHash();
-          HashCode typeHash = fieldUnmarshaller.readHash();
-          builder.put(hashedDb.readString(nameHash), read(typeHash));
-        }
+    ImmutableMap.Builder<String, Type> builder = ImmutableMap.builder();
+    for (HashCode fieldHash : hashedDb.readHashes(hash)) {
+      List<HashCode> hashes = hashedDb.readHashes(fieldHash);
+      if (hashes.size() != 2) {
+        throw new HashedDbException("Corrupted field data");
       }
-      return builder.build();
+      String fieldName = hashedDb.readString(hashes.get(0));
+      Type fieldType = read(hashes.get(1));
+      builder.put(fieldName, fieldType);
     }
+    return builder.build();
   }
 
   private <T extends Type> T cache(T type) {
