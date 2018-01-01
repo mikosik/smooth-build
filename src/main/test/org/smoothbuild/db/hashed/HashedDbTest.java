@@ -3,6 +3,7 @@ package org.smoothbuild.db.hashed;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -58,6 +59,40 @@ public class HashedDbTest {
   @Test
   public void not_written_string_cannot_be_read_back() throws Exception {
     when(() -> hashedDb.readString(Hash.string("abc")));
+    thenThrown(HashedDbException.class);
+  }
+
+  @Test
+  public void written_empty_sequence_of_hashes_can_be_read_back() throws Exception {
+    given(hash = hashedDb.writeHashes());
+    when(() -> hashedDb.readHashes(hash));
+    thenReturned(list());
+  }
+
+  @Test
+  public void written_one_element_sequence_of_hashes_can_be_read_back() throws Exception {
+    given(hash = hashedDb.writeHashes(Hash.string("abc")));
+    when(() -> hashedDb.readHashes(hash));
+    thenReturned(list(Hash.string("abc")));
+  }
+
+  @Test
+  public void written_two_elements_sequence_of_hashes_can_be_read_back() throws Exception {
+    given(hash = hashedDb.writeHashes(Hash.string("abc"), Hash.string("def")));
+    when(() -> hashedDb.readHashes(hash));
+    thenReturned(list(Hash.string("abc"), Hash.string("def")));
+  }
+
+  @Test
+  public void not_written_sequence_of_hashes_cannot_be_read_back() throws Exception {
+    when(() -> hashedDb.readHashes(Hash.string("abc")));
+    thenThrown(HashedDbException.class);
+  }
+
+  @Test
+  public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
+    given(hash = hashedDb.writeString("12345"));
+    when(() -> hashedDb.readHashes(hash));
     thenThrown(HashedDbException.class);
   }
 
