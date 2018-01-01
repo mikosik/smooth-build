@@ -4,6 +4,8 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -50,6 +52,27 @@ public class HashedDb {
     } catch (IOException e) {
       throw new HashedDbException("IO error occurred while reading " + hash + " value.");
     }
+  }
+
+  public HashCode writeHashes(HashCode... hashes) {
+    try (Marshaller marshaller = newMarshaller()) {
+      for (HashCode hashCode : hashes) {
+        marshaller.writeHash(hashCode);
+      }
+      marshaller.close();
+      return marshaller.hash();
+    }
+  }
+
+  public List<HashCode> readHashes(HashCode hash) {
+    List<HashCode> result = new ArrayList<>();
+    try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
+      HashCode elementHash = null;
+      while ((elementHash = unmarshaller.tryReadHash()) != null) {
+        result.add(elementHash);
+      }
+    }
+    return result;
   }
 
   public Unmarshaller newUnmarshaller(HashCode hash) {
