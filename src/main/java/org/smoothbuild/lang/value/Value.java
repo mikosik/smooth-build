@@ -26,7 +26,7 @@ public class Value {
     this.hashedDb = checkNotNull(hashedDb);
   }
 
-  public static HashCode calculateHash(Type type, HashCode dataHash, HashedDb hashedDb) {
+  private static HashCode calculateHash(Type type, HashCode dataHash, HashedDb hashedDb) {
     return hashedDb.writeHashes(type.hash(), dataHash);
   }
 
