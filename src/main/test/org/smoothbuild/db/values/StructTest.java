@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class StructTest {
+  private HashedDb hashedDb;
   private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private HashCode hash;
@@ -35,7 +36,7 @@ public class StructTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -169,7 +170,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(() -> valuesDb.get(person.hash()));
+    when(() -> new ValuesDb(hashedDb).get(person.hash()));
     thenReturned(person);
   }
 
@@ -179,7 +180,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person2 = (Struct) valuesDb.get(person.hash()));
+    when(person2 = (Struct) new ValuesDb(hashedDb).get(person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }

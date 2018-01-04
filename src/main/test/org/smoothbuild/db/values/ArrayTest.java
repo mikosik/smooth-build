@@ -20,6 +20,7 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
 public class ArrayTest {
+  private HashedDb hashedDb;
   private ValuesDb valuesDb;
   private Blob blob;
   private SString sstring;
@@ -31,7 +32,7 @@ public class ArrayTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -131,36 +132,36 @@ public class ArrayTest {
   }
 
   @Test
-  public void array_can_be_read_back() throws Exception {
+  public void array_can_be_read_by_hash() throws Exception {
     given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
     given(arrayBuilder).add(valuesDb.string("abc"));
     given(arrayBuilder).add(valuesDb.string("def"));
     given(array = arrayBuilder.build());
-    when(() -> valuesDb.get(array.hash()));
+    when(() -> new ValuesDb(hashedDb).get(array.hash()));
     thenReturned(array);
   }
 
   @Test
-  public void array_read_back_contains_same_elements() throws Exception {
+  public void array_read_by_hash_contains_same_elements() throws Exception {
     given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> ((Array) valuesDb.get(array.hash())).asIterable(SString.class));
+    when(() -> ((Array) new ValuesDb(hashedDb).get(array.hash())).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 
   @Test
-  public void array_read_back_has_same_hash() throws Exception {
+  public void array_read_by_hash_has_same_hash() throws Exception {
     given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> valuesDb.get(array.hash()).hash());
+    when(() -> new ValuesDb(hashedDb).get(array.hash()).hash());
     thenReturned(array.hash());
   }
 
@@ -175,5 +176,4 @@ public class ArrayTest {
     when(array).toString();
     thenReturned("[abc, def]");
   }
-
 }

@@ -23,6 +23,7 @@ import com.google.common.hash.HashCode;
 public class BlobTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
+  private HashedDb hashedDb;
   private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private BlobBuilder blobBuilder;
@@ -32,7 +33,7 @@ public class BlobTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -144,18 +145,18 @@ public class BlobTest {
   }
 
   @Test
-  public void blob_can_be_fetch_by_hash() throws Exception {
+  public void blob_can_be_read_by_hash() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(() -> valuesDb.get(hash));
+    when(() -> new ValuesDb(hashedDb).get(hash));
     thenReturned(blob);
   }
 
   @Test
-  public void blob_fetched_by_hash_has_same_content() throws Exception {
+  public void blob_read_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToByteArray(((Blob) valuesDb.get(hash)).openInputStream()));
+    when(inputStreamToByteArray(((Blob) new ValuesDb(hashedDb).get(hash)).openInputStream()));
     thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 

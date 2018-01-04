@@ -28,6 +28,7 @@ public class FileTest {
   private final String path = "path";
   private final String otherPath = "other/path";
 
+  private HashedDb hashedDb;
   private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private Struct file;
@@ -36,7 +37,7 @@ public class FileTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -174,21 +175,21 @@ public class FileTest {
   @Test
   public void file_can_be_read_by_hash() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(valuesDb.get(file.hash()));
+    when(() -> new ValuesDb(hashedDb).get(file.hash()));
     thenReturned(file);
   }
 
   @Test
   public void file_read_by_hash_has_same_content() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(((Struct) valuesDb.get(file.hash())).get("content"));
+    when(((Struct) new ValuesDb(hashedDb).get(file.hash())).get("content"));
     thenReturned(file.get("content"));
   }
 
   @Test
   public void file_read_by_hash_has_same_path() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when(() -> ((Struct) valuesDb.get(file.hash())).get("path"));
+    when(() -> ((Struct) new ValuesDb(hashedDb).get(file.hash())).get("path"));
     thenReturned(file.get("path"));
   }
 

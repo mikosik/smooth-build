@@ -14,13 +14,14 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
 public class NilTest {
+  private HashedDb hashedDb;
   private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private Array array;
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -35,6 +36,20 @@ public class NilTest {
   @Test
   public void nil_array_is_empty() throws Exception {
     when(() -> valuesDb.arrayBuilder(typeSystem.nothing()).build().asIterable(Value.class));
+    thenReturned(emptyIterable());
+  }
+
+  @Test
+  public void nil_can_be_read_by_hash() throws Exception {
+    given(array = valuesDb.arrayBuilder(typeSystem.nothing()).build());
+    when(() -> new ValuesDb(hashedDb).get(array.hash()));
+    thenReturned(array);
+  }
+
+  @Test
+  public void nil_read_by_hash_has_no_elements() throws Exception {
+    given(array = valuesDb.arrayBuilder(typeSystem.nothing()).build());
+    when(() -> ((Array) new ValuesDb(hashedDb).get(array.hash())).asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 
