@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.value;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -17,7 +15,6 @@ public class BlobBuilder extends OutputStream {
   private final Marshaller marshaller;
 
   public BlobBuilder(BlobType type, HashedDb hashedDb) {
-    checkArgument(type.name().equals("Blob"));
     this.type = type;
     this.hashedDb = hashedDb;
     this.marshaller = hashedDb.newMarshaller();
