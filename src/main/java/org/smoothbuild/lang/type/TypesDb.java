@@ -17,6 +17,7 @@ import com.google.common.hash.HashCode;
 public class TypesDb {
   private final HashedDb hashedDb;
   private final Map<HashCode, Type> cache;
+  private final Instantiator instantiator;
   private TypeType type;
   private StringType string;
   private BlobType blob;
@@ -26,6 +27,7 @@ public class TypesDb {
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new HashMap<>();
+    this.instantiator = new Instantiator(hashedDb, this);
   }
 
   public TypesDb() {
@@ -71,7 +73,6 @@ public class TypesDb {
   public ArrayType array(Type elementType) {
     HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     ArrayType superType = possiblyNullArrayType(elementType.superType());
-    Instantiator instantiator = new Instantiator(hashedDb, this);
     return cache(new ArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
   }
 
@@ -81,7 +82,6 @@ public class TypesDb {
 
   public StructType struct(String name, ImmutableMap<String, Type> fields) {
     HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
-    Instantiator instantiator = new Instantiator(hashedDb, this);
     return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb));
   }
 
@@ -142,13 +142,11 @@ public class TypesDb {
         case "":
           Type elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.superType());
-          Instantiator instantiator = new Instantiator(hashedDb, this);
           return cache(new ArrayType(typeDataHash, type(), superType, elementType, instantiator,
               hashedDb));
         default:
           ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
-          Instantiator instantiator2 = new Instantiator(hashedDb, this);
-          return cache(new StructType(typeDataHash, type(), name, fields, instantiator2, hashedDb));
+          return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
       }
     }
   }
