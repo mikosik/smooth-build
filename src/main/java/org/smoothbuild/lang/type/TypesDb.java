@@ -124,11 +124,6 @@ public class TypesDb {
     }
   }
 
-  private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
-    return new CorruptedValueException(
-        hash, "Its merkle tree root has " + childCount + " children.");
-  }
-
   protected Type readFromDataHash(HashCode typeDataHash) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
       String name = hashedDb.readString(unmarshaller.readHash());
@@ -173,5 +168,10 @@ public class TypesDb {
       cache.put(hash, type);
       return type;
     }
+  }
+
+  private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
+    return new CorruptedValueException(
+        hash, "Its merkle tree root has " + childCount + " children.");
   }
 }
