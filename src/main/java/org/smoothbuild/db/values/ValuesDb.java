@@ -36,6 +36,10 @@ public class ValuesDb implements ValueFactory {
     this.instantiator = new Instantiator(hashedDb, typeSystem.typesDb());
   }
 
+  public ValuesDb(HashedDb hashedDb) {
+    this(hashedDb, new TypeSystem(new TypesDb(hashedDb)));
+  }
+
   public static ValuesDb memoryValuesDb() {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem));

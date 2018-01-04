@@ -18,6 +18,7 @@ import org.smoothbuild.lang.value.SString;
 import com.google.common.hash.HashCode;
 
 public class SStringTest {
+  private HashedDb hashedDb;
   private TypeSystem typeSystem;
   private ValuesDb valuesDb;
   private SString sstring;
@@ -27,7 +28,7 @@ public class SStringTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    hashedDb = new HashedDb();
     typeSystem = new TypeSystem(new TypesDb(hashedDb));
     valuesDb = new ValuesDb(hashedDb, typeSystem);
   }
@@ -94,18 +95,18 @@ public class SStringTest {
   }
 
   @Test
-  public void sstring_can_be_fetch_by_hash() throws Exception {
+  public void sstring_can_be_read_back_by_hash() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(valuesDb.get(hash));
+    when(() -> new ValuesDb(hashedDb).get(hash));
     thenReturned(sstring);
   }
 
   @Test
-  public void sstring_fetched_by_hash_has_same_value() throws Exception {
+  public void sstring_read_back_by_hash_has_same_value() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(((SString) valuesDb.get(hash)).value());
+    when(() -> ((SString) new ValuesDb(hashedDb).get(hash)).value());
     thenReturned(string);
   }
 
