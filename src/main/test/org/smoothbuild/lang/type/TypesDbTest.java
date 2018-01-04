@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.ThoroughTypeMatcher.typeMatchingThoroughly;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -18,6 +20,7 @@ public class TypesDbTest {
   private TypesDb typesDb;
   private ImmutableMap<String, Type> fields;
   private Type type;
+  private Type type2;
   private ArrayType arrayType;
   private StructType structType;
 
@@ -25,6 +28,16 @@ public class TypesDbTest {
   public void before() {
     given(hashedDb = new HashedDb());
     given(typesDb = new TypesDb(hashedDb));
+  }
+
+  @Test
+  public void struct_type_with_different_field_order_has_different_hash() throws Exception {
+    given(type = typesDb.struct("Struct",
+        ImmutableMap.of("a", typesDb.string(), "b", typesDb.string())));
+    given(type2 = typesDb.struct("Struct",
+        ImmutableMap.of("b", typesDb.string(), "a", typesDb.string())));
+    when(() -> type.hash());
+    thenReturned(not(equalTo(type2.hash())));
   }
 
   @Test
