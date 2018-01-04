@@ -42,7 +42,7 @@ public class Struct extends Value {
       ImmutableMap<String, Type> fieldTypes = type().fields();
       if (hashes.size() != fieldTypes.size()) {
         throw new CorruptedValueException(hash(), "Its type is " + type() + " with "
-            + fieldTypes.size() + " fields but its data hash merkle tree contains "
+            + fieldTypes.size() + " fields but its data hash Merkle tree contains "
             + hashes.size() + " children.");
       }
       int i = 0;
