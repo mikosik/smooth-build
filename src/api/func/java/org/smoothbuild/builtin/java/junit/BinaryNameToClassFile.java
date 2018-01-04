@@ -24,7 +24,7 @@ public class BinaryNameToClassFile {
     for (Blob jarBlob : libraryJars) {
       Array fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
       for (Struct classFile : fileArray.asIterable(Struct.class)) {
-        String classFilePath = ((SString) classFile.get("path")).value();
+        String classFilePath = ((SString) classFile.get("path")).data();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
           throw errorException("File " + classFilePath

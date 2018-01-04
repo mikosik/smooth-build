@@ -13,12 +13,12 @@ public class SString extends Value {
     checkArgument(type.name().equals("String"));
   }
 
-  public String value() {
+  public String data() {
     return hashedDb.readString(dataHash());
   }
 
   @Override
   public String toString() {
-    return value();
+    return data();
   }
 }

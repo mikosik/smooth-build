@@ -28,7 +28,7 @@ public class JarFunction {
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (Struct file : files.asIterable(Struct.class)) {
-        String path = ((SString) file.get("path")).value();
+        String path = ((SString) file.get("path")).data();
         if (duplicatesDetector.addValue(path)) {
           throw errorException("Cannot jar two files with the same path = " + path);
         }
@@ -54,7 +54,7 @@ public class JarFunction {
 
   private static void jarFile(Struct file, JarOutputStream jarOutputStream, byte[] buffer)
       throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).value()));
+    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).data()));
     try (InputStream inputStream = ((Blob) file.get("content")).openInputStream()) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {

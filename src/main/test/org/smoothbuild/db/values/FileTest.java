@@ -64,7 +64,7 @@ public class FileTest {
   @Test
   public void path_contains_path_passed_to_builder() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
-    when((SString) file.get("path")).value();
+    when((SString) file.get("path")).data();
     thenReturned(path);
   }
 

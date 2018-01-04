@@ -129,7 +129,7 @@ public class OutputsDbTest {
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
     given(outputsDb).write(hash, new Output(stringValue, asList()));
-    when(((SString) outputsDb.read(hash, typeSystem.string()).result()).value());
+    when(((SString) outputsDb.read(hash, typeSystem.string()).result()).data());
     thenReturned(string);
   }
 

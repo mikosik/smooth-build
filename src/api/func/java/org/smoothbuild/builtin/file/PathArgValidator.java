@@ -11,12 +11,12 @@ public class PathArgValidator {
   private static final String PROJECT_ROOT = "//";
 
   public static Path validatedProjectPath(String name, SString stringValue) {
-    String value = stringValue.value();
+    String value = stringValue.data();
     if (!value.startsWith(PROJECT_ROOT)) {
       throw errorException("Param '" + name + "' has illegal value. It should start with \""
           + PROJECT_ROOT + "\" which represents project's root dir.");
     }
-    return validatedPath(name, stringValue.value().substring(PROJECT_ROOT.length()));
+    return validatedPath(name, stringValue.data().substring(PROJECT_ROOT.length()));
   }
 
   private static Path validatedPath(String name, String value) {

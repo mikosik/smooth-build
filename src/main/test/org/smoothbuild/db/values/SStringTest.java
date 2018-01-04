@@ -41,16 +41,16 @@ public class SStringTest {
   }
 
   @Test
-  public void value_returns_java_string() throws Exception {
+  public void data_returns_java_string() throws Exception {
     given(sstring = valuesDb.string(string));
-    when(sstring).value();
+    when(sstring).data();
     thenReturned(string);
   }
 
   @Test
-  public void value_returns_empty_java_string_for_empty_sstring() throws Exception {
+  public void data_returns_empty_java_string_for_empty_sstring() throws Exception {
     given(sstring = valuesDb.string(""));
-    when(sstring).value();
+    when(sstring).data();
     thenReturned("");
   }
 
@@ -103,10 +103,10 @@ public class SStringTest {
   }
 
   @Test
-  public void sstring_read_back_by_hash_has_same_value() throws Exception {
+  public void sstring_read_back_by_hash_has_same_data() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(() -> ((SString) new ValuesDb(hashedDb).get(hash)).value());
+    when(() -> ((SString) new ValuesDb(hashedDb).get(hash)).data());
     thenReturned(string);
   }
 
@@ -121,7 +121,7 @@ public class SStringTest {
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
     given(sstring = typeSystem.string().newValue(hash));
-    when(sstring).value();
+    when(sstring).data();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

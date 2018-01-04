@@ -14,7 +14,7 @@ public class FileFunction {
   @SmoothFunction
   public static Struct File(NativeApi nativeApi, SString path, Blob content) {
     try {
-      Path.path(path.value());
+      Path.path(path.data());
     } catch (IllegalPathException e) {
       throw errorException("Param '" + "path" + "' has illegal value. " + e.getMessage());
     }
