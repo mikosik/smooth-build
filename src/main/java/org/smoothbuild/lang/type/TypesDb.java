@@ -172,6 +172,6 @@ public class TypesDb {
 
   private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
     return new CorruptedValueException(
-        hash, "Its merkle tree root has " + childCount + " children.");
+        hash, "Its Merkle tree root has " + childCount + " children.");
   }
 }

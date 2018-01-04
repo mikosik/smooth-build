@@ -21,7 +21,7 @@ public class Instantiator {
     List<HashCode> hashes = hashedDb.readHashes(hash);
     switch (hashes.size()) {
       case 1:
-        // If Merkle Tree root has only one child then it must
+        // If Merkle tree root has only one child then it must
         // be Type("Type") smooth value. Let TypesDb handle and verify it.
         return typesDb.read(hash);
       case 2:
@@ -29,7 +29,7 @@ public class Instantiator {
         return type.newValue(hashes.get(1));
       default:
         throw new CorruptedValueException(
-            hash, "Its merkle tree root has " + hashes.size() + " children");
+            hash, "Its Merkle tree root has " + hashes.size() + " children");
     }
   }
 }
