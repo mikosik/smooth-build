@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.reverse;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public abstract class Type extends Value {
       Class<? extends Value> jType, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     this.superType = superType;
-    this.name = name;
-    this.jType = jType;
+    this.name = checkNotNull(name);
+    this.jType = checkNotNull(jType);
   }
 
   protected Type(HashCode hash, HashCode dataHash, TypeType type, Type superType, String name,
