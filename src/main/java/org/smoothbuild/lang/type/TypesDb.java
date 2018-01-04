@@ -111,13 +111,13 @@ public class TypesDb {
           }
           return type();
         case 2:
-          HashCode typeTypeHash = hashes.get(0);
-          if (!type().hash().equals(typeTypeHash)) {
+          HashCode typeHash = hashes.get(0);
+          if (!type().hash().equals(typeHash)) {
             throw new CorruptedValueException(
-                "Expected " + type() + " value but got value which hash is " + typeTypeHash);
+                "Expected " + type() + " value but got value which hash is " + typeHash);
           }
-          HashCode typeDataHash = hashes.get(1);
-          return readFromDataHash(typeDataHash);
+          HashCode dataHash = hashes.get(1);
+          return readFromDataHash(dataHash);
         default:
           throw newCorruptedMerkleRootException(hash, hashes.size());
       }
