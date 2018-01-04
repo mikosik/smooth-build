@@ -24,7 +24,7 @@ public class AidlFunction {
   @SmoothFunction
   public static Struct aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
       Struct interfaceFile) throws InterruptedException {
-    return execute(nativeApi, buildToolsVersion.value(), apiLevel.value(), interfaceFile);
+    return execute(nativeApi, buildToolsVersion.data(), apiLevel.data(), interfaceFile);
   }
 
   private static Struct execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
@@ -41,7 +41,7 @@ public class AidlFunction {
     command.add(aidlBinary);
     command.add("-p" + frameworkAidl);
     command.add("-o" + outputFilesDir.rootOsPath());
-    command.add(inputFilesDir.asOsPath(path(((SString) interfaceFile.get("path")).value())));
+    command.add(inputFilesDir.asOsPath(path(((SString) interfaceFile.get("path")).data())));
 
     executeCommand(command);
     return onlyElement(outputFilesDir.readFiles());
@@ -59,7 +59,7 @@ public class AidlFunction {
       builder.append(AIDL_BINARY);
       builder.append("binary should return exactly one file but it returned following files:\n");
       for (Struct file : outputFiles.asIterable(Struct.class)) {
-        builder.append(((SString) file.get("path")).value());
+        builder.append(((SString) file.get("path")).data());
         builder.append("\n");
       }
       throw errorException(builder.toString());

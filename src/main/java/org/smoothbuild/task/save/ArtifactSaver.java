@@ -82,8 +82,8 @@ public class ArtifactSaver {
     fileSystem.createDir(artifactPath);
 
     for (Struct file : fileArray.asIterable(Struct.class)) {
-      Path sourcePath = artifactPath.append(path(((SString) file.get("path")).value()));
-      if (!duplicatesDetector.addValue(((SString) file.get("path")).value())) {
+      Path sourcePath = artifactPath.append(path(((SString) file.get("path")).data()));
+      if (!duplicatesDetector.addValue(((SString) file.get("path")).data())) {
         Path targetPath = targetPath(file.get("content"));
         fileSystem.createLink(sourcePath, targetPath);
       }

@@ -10,7 +10,7 @@ import org.smoothbuild.lang.value.SString;
 public class ReportTwoErrors {
   @SmoothFunction
   public static SString reportTwoErrors(NativeApi nativeApi, SString message1, SString message2) {
-    nativeApi.log(new ErrorMessage(message1.value()));
-    throw errorException(message2.value());
+    nativeApi.log(new ErrorMessage(message1.data()));
+    throw errorException(message2.data());
   }
 }

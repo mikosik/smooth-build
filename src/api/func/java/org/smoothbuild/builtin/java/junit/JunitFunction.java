@@ -30,7 +30,7 @@ public class JunitFunction {
   public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include) {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
     Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
-        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).value()), identity()));
+        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).data()), identity()));
     Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
     testFiles
         .entrySet()
@@ -51,7 +51,7 @@ public class JunitFunction {
       Predicate<Path> filter = createFilter(include);
       int testCount = 0;
       for (String binaryName : testFiles.keySet()) {
-        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).value());
+        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).data());
         if (filter.test(filePath)) {
           testCount++;
           Class<?> testClass = loadClass(classLoader, binaryName);
@@ -93,7 +93,7 @@ public class JunitFunction {
 
   private static Predicate<Path> createFilter(SString includeParam) {
     try {
-      return pathMatcher(includeParam.value());
+      return pathMatcher(includeParam.data());
     } catch (IllegalPathPatternException e) {
       throw errorException("Parameter 'include' has illegal value. " + e.getMessage());
     }

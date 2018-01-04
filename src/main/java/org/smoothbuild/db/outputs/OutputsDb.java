@@ -71,7 +71,7 @@ public class OutputsDb {
               + typeSystem.string() + " but got " + messageValue.type());
         }
         SString messageSString = (SString) messageValue;
-        String messageString = messageSString.value();
+        String messageString = messageSString.data();
         messages.add(newMessage(messageType, messageString));
       }
 

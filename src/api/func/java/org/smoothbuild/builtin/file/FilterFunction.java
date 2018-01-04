@@ -18,11 +18,11 @@ import org.smoothbuild.lang.value.Struct;
 public class FilterFunction {
   @SmoothFunction
   public static Array filter(NativeApi nativeApi, Array files, SString include) {
-    Predicate<Path> filter = createFilter(include.value());
+    Predicate<Path> filter = createFilter(include.data());
     ArrayBuilder builder = nativeApi.create().arrayBuilder(nativeApi.types().file());
 
     for (Struct file : files.asIterable(Struct.class)) {
-      if (filter.test(path(((SString) file.get("path")).value()))) {
+      if (filter.test(path(((SString) file.get("path")).data()))) {
         builder.add(file);
       }
     }

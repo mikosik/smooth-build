@@ -9,6 +9,6 @@ import org.smoothbuild.lang.value.SString;
 public class ReportError {
   @SmoothFunction
   public static SString reportError(NativeApi nativeApi, SString message) {
-    throw errorException(message.value());
+    throw errorException(message.data());
   }
 }

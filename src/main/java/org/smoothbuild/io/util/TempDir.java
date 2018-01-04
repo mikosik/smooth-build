@@ -71,7 +71,7 @@ public class TempDir {
   }
 
   private void writeFileImpl(Struct file) throws IOException {
-    Path path = path(((SString) file.get("path")).value());
+    Path path = path(((SString) file.get("path")).data());
     Blob content = (Blob) file.get("content");
     InputStream inputStream = content.openInputStream();
     OutputStream outputStream = fileSystem.openOutputStream(rootPath.append(path));

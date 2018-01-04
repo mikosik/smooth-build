@@ -20,14 +20,14 @@ public class InputClassFile extends SimpleJavaFileObject {
   private final String aPackage;
 
   public InputClassFile(Struct file) {
-    super(URI.create("jar:///" + ":" + ((SString) file.get("path")).value()), Kind.CLASS);
+    super(URI.create("jar:///" + ":" + ((SString) file.get("path")).data()), Kind.CLASS);
 
-    if (!((SString) file.get("path")).value().endsWith(Kind.CLASS.extension)) {
+    if (!((SString) file.get("path")).data().endsWith(Kind.CLASS.extension)) {
       throw new IllegalArgumentException();
     }
 
     this.file = file;
-    this.binaryName = toBinaryName(((SString) file.get("path")).value());
+    this.binaryName = toBinaryName(((SString) file.get("path")).data());
     this.aPackage = binaryNameToPackage(binaryName);
   }
 

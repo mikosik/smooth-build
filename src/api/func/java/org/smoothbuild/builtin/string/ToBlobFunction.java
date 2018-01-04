@@ -21,7 +21,7 @@ public class ToBlobFunction {
   public static Blob stringToBlob(NativeApi nativeApi, SString string) {
     BlobBuilder builder = nativeApi.create().blobBuilder();
     try (OutputStreamWriter writer = new OutputStreamWriter(builder, CHARSET)) {
-      writer.write(string.value());
+      writer.write(string.data());
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
