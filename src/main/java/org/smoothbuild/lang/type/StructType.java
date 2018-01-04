@@ -15,7 +15,7 @@ public class StructType extends Type {
   public StructType(HashCode dataHash, TypeType type, String name,
       ImmutableMap<String, Type> fields, Instantiator instantiator, HashedDb hashedDb) {
     super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb);
-    this.fields = fields;
+    this.fields = checkNotNull(fields);
     this.instantiator = checkNotNull(instantiator);
   }
 
