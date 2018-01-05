@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Struct;
@@ -21,26 +20,26 @@ public class FileArrayTest {
   private ValuesDb valuesDb;
   private Array array;
   private HashCode hash;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
 
   @Before
   public void before() {
     HashedDb hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
   public void type_of_file_array_is_file_array() throws Exception {
-    given(array = valuesDb.arrayBuilder(typeSystem.file()).build());
+    given(array = valuesDb.arrayBuilder(typesDb.file()).build());
     when(array.type());
-    thenReturned(typeSystem.array(typeSystem.file()));
+    thenReturned(typesDb.array(typesDb.file()));
   }
 
   @Test
   public void reading_elements_from_not_stored_file_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(array = typeSystem.array(typeSystem.file()).newValue(hash));
+    given(array = typesDb.array(typesDb.file()).newValue(hash));
     when(array).asIterable(Struct.class);
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

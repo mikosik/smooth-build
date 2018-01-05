@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -29,7 +28,7 @@ public class FileTest {
   private final String otherPath = "other/path";
 
   private HashedDb hashedDb;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Struct file;
   private Struct file2;
@@ -38,8 +37,8 @@ public class FileTest {
   @Before
   public void before() {
     hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
@@ -58,7 +57,7 @@ public class FileTest {
   public void type_of_sfile_is_file() throws Exception {
     given(file = createFile(valuesDb, path, bytes));
     when(file).type();
-    thenReturned(typeSystem.file());
+    thenReturned(typesDb.file());
   }
 
   @Test
@@ -214,7 +213,7 @@ public class FileTest {
   @Test
   public void reading_not_stored_file_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    when(() -> typeSystem.file().newValue(hash).get("field"));
+    when(() -> typesDb.file().newValue(hash).get("field"));
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }
 }

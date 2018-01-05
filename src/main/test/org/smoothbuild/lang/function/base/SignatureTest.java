@@ -10,13 +10,13 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
 
 public class SignatureTest {
-  private final TypeSystem typeSystem = new TypeSystem();
-  private final Type string = typeSystem.string();
-  private final Type blob = typeSystem.blob();
+  private final TypesDb typesDb = new TypesDb();
+  private final Type string = typesDb.string();
+  private final Type blob = typesDb.blob();
   private final Name name = new Name("name");
   private final List<Parameter> parameters = asList();
   private Parameter parameter;

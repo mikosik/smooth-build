@@ -22,15 +22,15 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
@@ -46,12 +46,12 @@ import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
   private final ValuesDb valuesDb;
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
 
   @Inject
-  public FunctionLoader(ValuesDb valuesDb, TypeSystem typeSystem) {
+  public FunctionLoader(ValuesDb valuesDb, TypesDb typesDb) {
     this.valuesDb = valuesDb;
-    this.typeSystem = typeSystem;
+    this.typesDb = typesDb;
   }
 
   public Function loadFunction(Functions loadedFunctions, FuncNode func) {
@@ -154,7 +154,7 @@ public class FunctionLoader {
           return source;
         }
 
-        Name functionName = typeSystem.convertFunctionName(type, destinationType);
+        Name functionName = typesDb.convertFunctionName(type, destinationType);
         Function function = loadedFunctions.get(functionName);
         return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
       }

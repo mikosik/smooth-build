@@ -22,7 +22,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -34,7 +33,7 @@ public class TempDirTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final Path rootPath = path("fake/path");
 
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private FileSystem fileSystem;
   private TempDir tempDir;
@@ -43,8 +42,8 @@ public class TempDirTest {
   @Before
   public void before() {
     HashedDb hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
     fileSystem = new MemoryFileSystem();
     tempDir = new TempDir(valuesDb, fileSystem, rootPath);
   }
@@ -77,14 +76,14 @@ public class TempDirTest {
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    given(array = array(valuesDb, typeSystem.file(), file(valuesDb, path, bytes)));
+    given(array = array(valuesDb, typesDb.file(), file(valuesDb, path, bytes)));
     when(tempDir).writeFiles(array);
     thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
   }
 
   @Test
   public void writing_files_after_destroy_throws_exception() throws Exception {
-    given(array = array(valuesDb, typeSystem.file(), file(valuesDb, path, bytes)));
+    given(array = array(valuesDb, typesDb.file(), file(valuesDb, path, bytes)));
     given(tempDir).destroy();
     when(tempDir).writeFiles(array);
     thenThrown(IllegalStateException.class);

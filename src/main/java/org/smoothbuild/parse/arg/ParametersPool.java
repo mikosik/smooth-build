@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -20,7 +19,7 @@ public class ParametersPool {
   private final Map<Type, Set<ParameterInfo>> optionalParametersMap;
   private final Map<Type, Set<ParameterInfo>> requiredParametersMap;
 
-  public ParametersPool(TypeSystem typeSystem, Set<? extends ParameterInfo> optional,
+  public ParametersPool(Set<? extends ParameterInfo> optional,
       Set<? extends ParameterInfo> required) {
     this.types = createAllTypes(optional, required);
     this.optionalParametersMap = createParametersMap(types, optional);

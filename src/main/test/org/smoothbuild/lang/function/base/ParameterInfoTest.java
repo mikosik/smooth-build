@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -20,11 +20,11 @@ import com.google.common.testing.EqualsTester;
 public class ParameterInfoTest {
   private final Name name = new Name("name");
   private ParameterInfo parameterInfo;
-  private final TypeSystem typeSystem = new TypeSystem();
-  private final Type string = typeSystem.string();
-  private final Type blob = typeSystem.blob();
+  private final TypesDb typesDb = new TypesDb();
+  private final Type string = typesDb.string();
+  private final Type blob = typesDb.blob();
   private final Type type = string;
-  private final Type nothing = typeSystem.nothing();
+  private final Type nothing = typesDb.nothing();
 
   @Test
   public void null_type_is_forbidden() {
@@ -58,7 +58,7 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(string, new Name("equal"), true),
         new ParameterInfo(string, new Name("equal"), true));
-    for (Type type : ImmutableList.of(string, typeSystem.array(string), blob, nothing,
+    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, nothing,
         personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, new Name("name2"), true));
@@ -92,7 +92,7 @@ public class ParameterInfoTest {
     List<ParameterInfo> names = new ArrayList<>();
     names.add(new ParameterInfo(string, new Name("param1"), true));
     names.add(new ParameterInfo(string, new Name("param2-with-very-long"), true));
-    names.add(new ParameterInfo(typeSystem.array(blob), new Name("param3"), true));
+    names.add(new ParameterInfo(typesDb.array(blob), new Name("param3"), true));
 
     when(ParameterInfo.iterableToString(names));
     thenReturned(""
@@ -102,7 +102,7 @@ public class ParameterInfoTest {
   }
 
   private StructType personType() {
-    return typeSystem.struct(
+    return typesDb.struct(
         "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

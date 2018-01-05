@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 
@@ -19,7 +18,7 @@ import com.google.common.hash.HashCode;
 
 public class SStringTest {
   private HashedDb hashedDb;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private SString sstring;
   private final String string = "my string";
@@ -29,15 +28,15 @@ public class SStringTest {
   @Before
   public void before() {
     hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
   public void type_of_sstring_is_sstring() throws Exception {
     given(sstring = valuesDb.string(string));
     when(sstring).type();
-    thenReturned(typeSystem.string());
+    thenReturned(typesDb.string());
   }
 
   @Test
@@ -120,7 +119,7 @@ public class SStringTest {
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(sstring = typeSystem.string().newValue(hash));
+    given(sstring = typesDb.string().newValue(hash));
     when(sstring).data();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

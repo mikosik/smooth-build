@@ -14,49 +14,49 @@ import com.google.common.hash.HashCode;
 
 public abstract class AbstractTypeTestCase {
   protected HashedDb hashedDb;
-  protected TypeSystem typeSystem;
+  protected TypesDb typesDb;
   protected Type type;
   protected HashCode hash;
 
   @Before
   public void before() {
     given(hashedDb = new HashedDb());
-    given(typeSystem = new TypeSystem(new TypesDb(hashedDb)));
+    given(typesDb = new TypesDb(hashedDb));
   }
 
-  protected abstract Type getType(TypeSystem typeSystem);
+  protected abstract Type getType(TypesDb typesDb);
 
   @Test
   public void type_can_be_read_back() throws Exception {
-    given(type = getType(typeSystem));
-    when(() -> newTypeSystem().read(type.hash()));
+    given(type = getType(typesDb));
+    when(() -> newTypesDb().read(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 
   @Test
   public void type_is_cached() throws Exception {
-    given(type = getType(typeSystem));
-    when(() -> getType(typeSystem));
+    given(type = getType(typesDb));
+    when(() -> getType(typesDb));
     thenReturned(same(type));
   }
 
   @Test
   public void type_is_cached_when_read_by_hash() throws Exception {
-    given(type = getType(typeSystem));
-    when(() -> typeSystem.read(type.hash()));
+    given(type = getType(typesDb));
+    when(() -> typesDb.read(type.hash()));
     thenReturned(same(type));
   }
 
   @Test
   public void type_is_cached_when_read_twice_by_hash() throws Exception {
-    given(hash = getType(typeSystem).hash());
-    given(typeSystem = newTypeSystem());
-    given(type = typeSystem.read(hash));
-    when(() -> typeSystem.read(hash));
+    given(hash = getType(typesDb).hash());
+    given(typesDb = newTypesDb());
+    given(type = typesDb.read(hash));
+    when(() -> typesDb.read(hash));
     thenReturned(same(type));
   }
 
-  private TypeSystem newTypeSystem() {
-    return new TypeSystem(new TypesDb(hashedDb));
+  private TypesDb newTypesDb() {
+    return new TypesDb(hashedDb);
   }
 }

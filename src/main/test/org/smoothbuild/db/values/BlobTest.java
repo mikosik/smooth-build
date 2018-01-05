@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -24,7 +23,7 @@ public class BlobTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
   private final byte[] otherBytes = new byte[] { 4, 5, 6 };
   private HashedDb hashedDb;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private BlobBuilder blobBuilder;
   private Blob blob;
@@ -34,8 +33,8 @@ public class BlobTest {
   @Before
   public void before() {
     hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
@@ -50,7 +49,7 @@ public class BlobTest {
   public void type_of_blob_is_blob() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     when(blob).type();
-    thenReturned(typeSystem.blob());
+    thenReturned(typesDb.blob());
   }
 
   @Test
@@ -176,7 +175,7 @@ public class BlobTest {
   @Test
   public void reading_not_stored_blob_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(blob = typeSystem.blob().newValue(hash));
+    given(blob = typesDb.blob().newValue(hash));
     when(blob).openInputStream();
     thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
   }

@@ -11,7 +11,6 @@ import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -26,33 +25,33 @@ import com.google.common.hash.HashCode;
 
 public class ValuesDb implements ValueFactory {
   private final HashedDb hashedDb;
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
   private final Instantiator instantiator;
 
   @Inject
-  public ValuesDb(@Values HashedDb hashedDb, TypeSystem typeSystem) {
+  public ValuesDb(@Values HashedDb hashedDb, TypesDb typesDb) {
     this.hashedDb = hashedDb;
-    this.typeSystem = typeSystem;
-    this.instantiator = new Instantiator(hashedDb, typeSystem.typesDb());
+    this.typesDb = typesDb;
+    this.instantiator = new Instantiator(hashedDb, typesDb);
   }
 
   public ValuesDb(HashedDb hashedDb) {
-    this(hashedDb, new TypeSystem(new TypesDb(hashedDb)));
+    this(hashedDb, new TypesDb(hashedDb));
   }
 
   public static ValuesDb memoryValuesDb() {
     MemoryFileSystem fileSystem = new MemoryFileSystem();
     HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem));
-    return new ValuesDb(hashedDb, new TypeSystem(new TypesDb(hashedDb)));
+    return new ValuesDb(hashedDb, new TypesDb(hashedDb));
   }
 
   public Types types() {
-    return typeSystem;
+    return typesDb;
   }
 
   @Override
   public ArrayBuilder arrayBuilder(Type elementType) {
-    ArrayType arrayType = typeSystem.array(elementType);
+    ArrayType arrayType = typesDb.array(elementType);
     if (arrayType == null) {
       throw new IllegalArgumentException("Cannot create array with element of type " + elementType);
     }
@@ -70,7 +69,7 @@ public class ValuesDb implements ValueFactory {
 
   @Override
   public Struct file(SString path, Blob content) {
-    return structBuilder(typeSystem.file())
+    return structBuilder(typesDb.file())
         .set("content", content)
         .set("path", path)
         .build();
@@ -78,12 +77,12 @@ public class ValuesDb implements ValueFactory {
 
   @Override
   public BlobBuilder blobBuilder() {
-    return new BlobBuilder(typeSystem.blob(), hashedDb);
+    return new BlobBuilder(typesDb.blob(), hashedDb);
   }
 
   @Override
   public SString string(String string) {
-    return new SString(hashedDb.writeString(string), typeSystem.string(), hashedDb);
+    return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
   }
 
   public Value get(HashCode hash) {

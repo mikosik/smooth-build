@@ -20,7 +20,6 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class ContainerTest {
@@ -34,9 +33,9 @@ public class ContainerTest {
   @Before
   public void before() {
     HashedDb hashedDb = new HashedDb();
-    TypeSystem typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    ValuesDb valuesDb = new ValuesDb(hashedDb, typeSystem);
-    container = new Container(fileSystem, valuesDb, typeSystem, tempDirProvider);
+    TypesDb typesDb = new TypesDb(hashedDb);
+    ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
+    container = new Container(fileSystem, valuesDb, typesDb, tempDirProvider);
   }
 
   @Test

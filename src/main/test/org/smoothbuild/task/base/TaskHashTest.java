@@ -22,14 +22,13 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.hash.HashCode;
 
 public class TaskHashTest {
   private final Location location = Location.location(Paths.get("script.smooth"), 2);
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Evaluator evaluator;
   private Task task;
@@ -41,8 +40,8 @@ public class TaskHashTest {
   @Before
   public void before() {
     HashedDb hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
@@ -72,7 +71,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(typeSystem.array(typeSystem.string()), location)));
+    given(task = new Task(arrayEvaluator(typesDb.array(typesDb.string()), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("3e790fa50b6a9b6a4c0c4ac933de2461b321a3f0"));
@@ -80,7 +79,7 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_non_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(typeSystem.array(typeSystem.string()), location)));
+    given(task = new Task(arrayEvaluator(typesDb.array(typesDb.string()), location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("fb8f11ee885679573b7d199247665fd83adcc4b0"));
@@ -112,7 +111,7 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_call_evaluator_and_one_element_input_is_stable() throws Exception {
     given(definedFunction = mock(DefinedFunction.class));
-    given(willReturn(typeSystem.string()), definedFunction).type();
+    given(willReturn(typesDb.string()), definedFunction).type();
     given(willReturn(new Name("name")), definedFunction).name();
     given(task = new Task(callEvaluator(definedFunction, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"))));

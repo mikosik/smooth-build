@@ -1,9 +1,12 @@
 package org.smoothbuild.lang.type;
 
+import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.quackery.Case.newCase;
+import static org.quackery.Suite.suite;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,6 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.quackery.Case;
+import org.quackery.Quackery;
+import org.quackery.Suite;
+import org.quackery.junit.QuackeryRunner;
+import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
@@ -24,13 +33,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 
+@RunWith(QuackeryRunner.class)
 public class TypesTest {
-  private final TypeSystem typeSystem = new TypeSystem();
-  private final Type type = typeSystem.type();
-  private final Type string = typeSystem.string();
-  private final Type blob = typeSystem.blob();
-  private final Type file = typeSystem.file();
-  private final Type nothing = typeSystem.nothing();
+  private static final TypesDb typesDb = new TypesDb();
+  private static final Type type = typesDb.type();
+  private static final Type string = typesDb.string();
+  private static final Type blob = typesDb.blob();
+  private static final Type file = typesDb.file();
+  private static final Type nothing = typesDb.nothing();
 
   @Test
   public void name() {
@@ -376,7 +386,7 @@ public class TypesTest {
     assertCommon(array(nothing), array(nothing), array(nothing));
     assertCommon(array(nothing), nothing, array(nothing));
 
-    assertCommon(array(file), typeSystem.struct("Struct", ImmutableMap.of("field", array(blob))),
+    assertCommon(array(file), typesDb.struct("Struct", ImmutableMap.of("field", array(blob))),
         array(blob));
   }
 
@@ -408,12 +418,12 @@ public class TypesTest {
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(typeSystem.type(), typeSystem.type());
-    tester.addEqualityGroup(typeSystem.string(), typeSystem.string());
-    tester.addEqualityGroup(typeSystem.blob(), typeSystem.blob());
-    tester.addEqualityGroup(typeSystem.file(), typeSystem.file());
+    tester.addEqualityGroup(typesDb.type(), typesDb.type());
+    tester.addEqualityGroup(typesDb.string(), typesDb.string());
+    tester.addEqualityGroup(typesDb.blob(), typesDb.blob());
+    tester.addEqualityGroup(typesDb.file(), typesDb.file());
     tester.addEqualityGroup(personType(), personType());
-    tester.addEqualityGroup(typeSystem.nothing(), typeSystem.nothing());
+    tester.addEqualityGroup(typesDb.nothing(), typesDb.nothing());
 
     tester.addEqualityGroup(array(type), array(type));
     tester.addEqualityGroup(array(string), array(string));
@@ -432,11 +442,120 @@ public class TypesTest {
   }
 
   private StructType personType() {
-    return typeSystem.struct(
+    return typesDb.struct(
         "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 
   private ArrayType array(Type elementType) {
-    return typeSystem.array(elementType);
+    return typesDb.array(elementType);
+  }
+
+  @Quackery
+  public static Suite can_convert() {
+    Suite suite = suite("test canConvert");
+    TypesDb typesDb = new TypesDb();
+    ImmutableSet<Type> types = ImmutableSet.of(string, blob, file, nothing,
+        typesDb.array(string), typesDb.array(blob), typesDb.array(file),
+        typesDb.array(nothing));
+    for (Type from : types) {
+      for (Type to : types) {
+        suite = suite.add(testConversion(from, to));
+      }
+    }
+    return suite;
+  }
+
+  private static Case testConversion(Type from, Type to) {
+    TypesDb typesDb = new TypesDb();
+    boolean canConvert = from.equals(to) ||
+        from.equals(file) && to.equals(blob) ||
+        from.equals(typesDb.array(file)) && to.equals(typesDb.array(blob)) ||
+        from.equals(typesDb.array(nothing)) && (to instanceof ArrayType);
+    String canOrCannot = canConvert ? "can" : "cannot";
+    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to),
+        () -> assertEquals(typesDb.canConvert(from, to), canConvert));
+  }
+
+  @Quackery
+  public static Suite test_convert_function_name() {
+    TypesDb db = new TypesDb();
+    return suite("test convert function name")
+        .add(testConvertFunctionName(file, blob, "fileToBlob"))
+        .add(testConvertFunctionName(db.array(file), db.array(blob), "fileArrayToBlobArray"))
+        .add(testConvertFunctionName(db.array(nothing), db.array(string), "nilToStringArray"))
+        .add(testConvertFunctionName(db.array(nothing), db.array(blob), "nilToBlobArray"))
+        .add(testConvertFunctionName(db.array(nothing), db.array(file), "nilToFileArray"));
+  }
+
+  private static Case testConvertFunctionName(Type from, Type to, String functionName) {
+    return newCase(format("{0} to {1} is named {2}", from, to, functionName),
+        () -> assertEquals(new TypesDb().convertFunctionName(from, to), new Name(
+            functionName)));
+  }
+
+  @Test
+  public void type_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("Type"));
+    thenReturned(typesDb.type());
+  }
+
+  @Test
+  public void string_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("String"));
+    thenReturned(typesDb.string());
+  }
+
+  @Test
+  public void blob_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("Blob"));
+    thenReturned(typesDb.blob());
+  }
+
+  @Test
+  public void file_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("File"));
+    thenReturned(typesDb.file());
+  }
+
+  @Test
+  public void nothing_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("Nothing"));
+    thenReturned(typesDb.nothing());
+  }
+
+  @Test
+  public void type_array_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("[Type]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void string_array_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("[String]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void blob_array_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("[Blob]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void file_array_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("[File]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void nil_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("[Nothing]"));
+    thenReturned(null);
+  }
+
+  @Test
+  public void unknown_type_non_array_type_from_string() throws Exception {
+    when(typesDb.nonArrayTypeFromString("notAType"));
+    thenReturned(null);
   }
 }

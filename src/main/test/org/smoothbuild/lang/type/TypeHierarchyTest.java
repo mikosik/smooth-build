@@ -13,9 +13,9 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableMap;
 
 public class TypeHierarchyTest {
-  private final TypeSystem typeSystem = new TypeSystem();
-  private final Type string = typeSystem.string();
-  private final Type nothing = typeSystem.nothing();
+  private final TypesDb typesDb = new TypesDb();
+  private final Type string = typesDb.string();
+  private final Type nothing = typesDb.nothing();
 
   @Test
   public void sorted_types_for_empty_hierarchy() throws Exception {
@@ -34,24 +34,24 @@ public class TypeHierarchyTest {
 
   @Test
   public void sorted_types_for_two_related_array_types() throws Exception {
-    assertSortedOrder(list(typeSystem.array(string), typeSystem.array(personType())));
+    assertSortedOrder(list(typesDb.array(string), typesDb.array(personType())));
   }
 
   @Test
   public void sorted_types_for_two_related_array_of_array_types() throws Exception {
-    assertSortedOrder(list(typeSystem.array(typeSystem.array(string)), typeSystem.array(
-        typeSystem.array(personType()))));
+    assertSortedOrder(list(typesDb.array(typesDb.array(string)), typesDb.array(
+        typesDb.array(personType()))));
   }
 
   @Test
   public void sorted_nothings() throws Exception {
-    assertSortedOrder(list(typeSystem.array(typeSystem.array(nothing)), typeSystem.array(
+    assertSortedOrder(list(typesDb.array(typesDb.array(nothing)), typesDb.array(
         nothing), nothing));
   }
 
   @Test
   public void sorted_nothings_without_middle_one() throws Exception {
-    assertSortedOrder(list(typeSystem.array(typeSystem.array(nothing)), nothing));
+    assertSortedOrder(list(typesDb.array(typesDb.array(nothing)), nothing));
   }
 
   @Test
@@ -61,7 +61,7 @@ public class TypeHierarchyTest {
 
   @Test
   public void sorted_array_types_comes_before_array_of_nothing() throws Exception {
-    assertSortedOrder(list(typeSystem.array(string), typeSystem.array(nothing)));
+    assertSortedOrder(list(typesDb.array(string), typesDb.array(nothing)));
   }
 
   @Test
@@ -78,7 +78,7 @@ public class TypeHierarchyTest {
   }
 
   private StructType personType() {
-    return typeSystem.struct(
+    return typesDb.struct(
         "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }

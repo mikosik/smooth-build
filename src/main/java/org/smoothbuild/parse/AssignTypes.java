@@ -16,7 +16,7 @@ import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -35,15 +35,15 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class AssignTypes {
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
 
   @Inject
-  public AssignTypes(TypeSystem typeSystem) {
-    this.typeSystem = typeSystem;
+  public AssignTypes(TypesDb typesDb) {
+    this.typesDb = typesDb;
   }
 
   public Maybe<Ast> assignTypes(Functions functions, Ast ast) {
-    final Type nonInferable = typeSystem.struct("<NonInferable>", ImmutableMap.of());
+    final Type nonInferable = typesDb.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
         .nameToFunctionMap()
@@ -146,9 +146,9 @@ public class AssignTypes {
         if (type instanceof ArrayTypeNode) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           Type inferredElemType = createType(elementType);
-          return inferredElemType == null ? null : typeSystem.array(inferredElemType);
+          return inferredElemType == null ? null : typesDb.array(inferredElemType);
         }
-        Type result = typeSystem.nonArrayTypeFromString(type.name());
+        Type result = typesDb.nonArrayTypeFromString(type.name());
         if (result == null) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
@@ -164,7 +164,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return typeSystem.array(typeSystem.nothing());
+          return typesDb.array(typesDb.nothing());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (nonInferable.equals(firstType)) {
@@ -190,7 +190,7 @@ public class AssignTypes {
           errors.add(new ParseError(array, "Array type cannot be nested."));
           return nonInferable;
         }
-        return typeSystem.array(elemType);
+        return typesDb.array(elemType);
       }
 
       @Override
@@ -214,7 +214,7 @@ public class AssignTypes {
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, typeSystem.string());
+        string.set(Type.class, typesDb.string());
       }
     }.visitAst(ast);
     return maybe(ast, errors);
