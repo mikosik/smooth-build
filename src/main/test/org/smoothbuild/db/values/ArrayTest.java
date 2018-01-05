@@ -166,14 +166,14 @@ public class ArrayTest {
   }
 
   @Test
-  public void to_string_contains_all_elements_in_square_brackets() throws Exception {
+  public void to_string() throws Exception {
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(array).toString();
-    thenReturned("[abc, def]");
+    when(() -> array.toString());
+    thenReturned("[String](...):" + array.hash());
   }
 }

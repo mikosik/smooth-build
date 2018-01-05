@@ -45,7 +45,7 @@ public class AssignNatives {
         Class<?> resultJType = method.getReturnType();
         if (!resultType.jType().equals(resultJType)) {
           errors.add(new ParseError(func, "Function '" + func.name() + "' has result type "
-              + resultType + " so its native implementation result type must be "
+              + resultType.name() + " so its native implementation result type must be "
               + resultType.jType().getCanonicalName() + " but it is "
               + resultJType.getCanonicalName() + "."));
           return;
@@ -74,7 +74,7 @@ public class AssignNatives {
           if (!paramType.jType().equals(paramJType)) {
             errors.add(new ParseError(func, "Function '" + func.name()
                 + "' parameter '" + declaredName + "' has type "
-                + paramType + " so its native implementation type must be "
+                + paramType.name() + " so its native implementation type must be "
                 + paramType.jType().getCanonicalName() + " but it is "
                 + paramJType.getCanonicalName() + "."));
             return;

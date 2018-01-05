@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.stream.Collectors.joining;
 
 import java.util.List;
 import java.util.Map;
@@ -60,17 +59,5 @@ public class Struct extends Value {
       fields = builder.build();
     }
     return fields;
-  }
-
-  @Override
-  public String toString() {
-    return type().name()
-        + "("
-        + fields()
-            .entrySet()
-            .stream()
-            .map(f -> f.getKey() + "=" + f.getValue().toString())
-            .collect(joining(", "))
-        + ")";
   }
 }

@@ -92,8 +92,9 @@ public class AssignTypes {
             if (type != nonInferable && exprType != nonInferable && !type.isAssignableFrom(
                 exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
-                  + "' expression is " + exprType
-                  + " which is not convertable to function's declared result type " + type + "."));
+                  + "' expression is " + exprType.name()
+                  + " which is not convertable to function's declared result type " + type.name()
+                  + "."));
             }
             return type;
           } else {
@@ -127,8 +128,8 @@ public class AssignTypes {
             Type valueType = param.defaultValue().get((Type.class));
             if (!type.isAssignableFrom(valueType)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
-                  + "' is of type " + type + " so it cannot have default value of type "
-                  + valueType + "."));
+                  + "' is of type " + type.name() + " so it cannot have default value of type "
+                  + valueType.name() + "."));
             }
           }
         }
@@ -180,8 +181,8 @@ public class AssignTypes {
           if (elemType == null) {
             errors.add(new ParseError(array,
                 "Array cannot contain elements of incompatible types.\n"
-                    + "First element has type '" + firstType + "' while element at index " + i
-                    + " has type '" + type + "'."));
+                    + "First element has type '" + firstType.name()
+                    + "' while element at index " + i + " has type '" + type.name() + "'."));
             return nonInferable;
           }
         }

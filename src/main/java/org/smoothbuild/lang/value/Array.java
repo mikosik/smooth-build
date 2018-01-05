@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.StreamSupport.stream;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
@@ -43,13 +41,5 @@ public class Array extends Value {
       }
     }
     return (ImmutableList<T>) values;
-  }
-
-  @Override
-  public String toString() {
-    String elements = stream(asIterable(Value.class).spliterator(), false)
-        .map(Object::toString)
-        .collect(joining(", "));
-    return "[" + elements + "]";
   }
 }

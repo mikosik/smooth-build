@@ -58,24 +58,30 @@ public class TypesTest {
 
   @Test
   public void to_string() {
-    assertEquals("Type", type.toString());
-    assertEquals("String", string.toString());
-    assertEquals("Blob", blob.toString());
-    assertEquals("File", file.toString());
-    assertEquals("Nothing", nothing.toString());
+    assertEquals("Type(\"Type\"):" + type.hash(), type.toString());
+    assertEquals("Type(\"String\"):" + string.hash(), string.toString());
+    assertEquals("Type(\"Blob\"):" + blob.hash(), blob.toString());
+    assertEquals("Type(\"File\"):" + file.hash(), file.toString());
+    assertEquals("Type(\"Person\"):" + personType().hash(), personType().toString());
+    assertEquals("Type(\"Nothing\"):" + nothing.hash(), nothing.toString());
 
-    assertEquals("[Type]", array(type).toString());
-    assertEquals("[String]", array(string).toString());
-    assertEquals("[Blob]", array(blob).toString());
-    assertEquals("[File]", array(file).toString());
-    assertEquals("[Nothing]", array(nothing).toString());
+    assertEquals("Type(\"[Type]\"):" + array(type).hash(), array(type).toString());
+    assertEquals("Type(\"[String]\"):" + array(string).hash(), array(string).toString());
+    assertEquals("Type(\"[Blob]\"):" + array(blob).hash(), array(blob).toString());
+    assertEquals("Type(\"[File]\"):" + array(file).hash(), array(file).toString());
+    assertEquals("Type(\"[Person]\"):" + array(personType()).hash(),
+        array(personType()).toString());
+    assertEquals("Type(\"[Nothing]\"):" + array(nothing).hash(), array(nothing).toString());
 
-    assertEquals("[[Type]]", array(array(type)).toString());
-    assertEquals("[[String]]", array(array(string)).toString());
-    assertEquals("[[Blob]]", array(array(blob)).toString());
-    assertEquals("[[File]]", array(array(file)).toString());
-    assertEquals("[[Person]]", array(array(personType())).toString());
-    assertEquals("[[Nothing]]", array(array(nothing)).toString());
+    assertEquals("Type(\"[[Type]]\"):" + array(array(type)).hash(), array(array(type)).toString());
+    assertEquals("Type(\"[[String]]\"):" + array(array(string)).hash(),
+        array(array(string)).toString());
+    assertEquals("Type(\"[[Blob]]\"):" + array(array(blob)).hash(), array(array(blob)).toString());
+    assertEquals("Type(\"[[File]]\"):" + array(array(file)).hash(), array(array(file)).toString());
+    assertEquals("Type(\"[[Person]]\"):" + array(array(personType())).hash(),
+        array(array(personType())).toString());
+    assertEquals("Type(\"[[Nothing]]\"):" + array(array(nothing)).hash(),
+        array(array(nothing)).toString());
   }
 
   @Test

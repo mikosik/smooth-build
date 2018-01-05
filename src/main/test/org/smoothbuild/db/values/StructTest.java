@@ -206,8 +206,8 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person).toString();
-    thenReturned("Person(firstName=John, lastName=Doe)");
+    when(() -> person.toString());
+    thenReturned("Person(...):" + person.hash());
   }
 
   @Test
