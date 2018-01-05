@@ -16,9 +16,4 @@ public class SString extends Value {
   public String data() {
     return hashedDb.readString(dataHash());
   }
-
-  @Override
-  public String toString() {
-    return data();
-  }
 }

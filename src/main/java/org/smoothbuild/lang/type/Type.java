@@ -143,6 +143,6 @@ public abstract class Type extends Value {
 
   @Override
   public String toString() {
-    return name;
+    return type().name + "(\"" + name + "\"):" + hash();
   }
 }

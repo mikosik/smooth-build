@@ -113,8 +113,8 @@ public class SStringTest {
   @Test
   public void to_string_contains_string_value() throws Exception {
     given(sstring = valuesDb.string(string));
-    when(sstring).toString();
-    thenReturned(string);
+    when(() -> sstring.toString());
+    thenReturned("String(...):" + sstring.hash());
   }
 
   @Test

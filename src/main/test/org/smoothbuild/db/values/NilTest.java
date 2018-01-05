@@ -54,8 +54,9 @@ public class NilTest {
   }
 
   @Test
-  public void nil_to_string_contains_square_brackets() throws Exception {
-    when(valuesDb.arrayBuilder(typeSystem.nothing()).build().toString());
-    thenReturned("[]");
+  public void nil_to_string() throws Exception {
+    given(array = valuesDb.arrayBuilder(typeSystem.nothing()).build());
+    when(() -> array.toString());
+    thenReturned("[Nothing](...):" + array.hash());
   }
 }

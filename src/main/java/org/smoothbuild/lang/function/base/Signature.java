@@ -52,7 +52,7 @@ public class Signature {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append(type.toString() + " " + name.toString() + "(");
+    builder.append(type.name() + " " + name.toString() + "(");
     int count = 0;
     for (Parameter parameter : parameters) {
       if (count != 0) {

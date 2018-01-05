@@ -59,4 +59,9 @@ public class Value {
   public int hashCode() {
     return hash.hashCode();
   }
+
+  @Override
+  public String toString() {
+    return type.name() + "(...):" + hash();
+  }
 }

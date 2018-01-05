@@ -68,8 +68,8 @@ public class NativeFunction extends Function {
       }
       if (!type().equals(result.type())) {
         container.log(new ErrorMessage("Function " + name()
-            + " has faulty native implementation: Its result type is " + type()
-            + " but it returned value of type " + result.type() + "."));
+            + " has faulty native implementation: Its result type is " + type().name()
+            + " but it returned value of type " + result.type().name() + "."));
         return new Output(null, container.messages());
       }
       return new Output(result, container.messages());

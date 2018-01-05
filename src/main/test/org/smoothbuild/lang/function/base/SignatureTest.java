@@ -38,7 +38,7 @@ public class SignatureTest {
   }
 
   @Test
-  public void test_to_string() throws Exception {
+  public void to_string() throws Exception {
     given(parameter = new Parameter(blob, new Name("blob"), mock(Dag.class)));
     given(parameter2 = new Parameter(string, new Name("string"), mock(Dag.class)));
     when(new Signature(string, name, asList(parameter, parameter2))).toString();

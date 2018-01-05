@@ -161,10 +161,10 @@ public class BlobTest {
   }
 
   @Test
-  public void to_string_contains_type_name_and_bytes_count() throws Exception {
+  public void to_string() throws Exception {
     given(blob = createBlob(valuesDb, new byte[] { 1, 2, 3 }));
-    when(blob).toString();
-    thenReturned("Blob(3 bytes)");
+    when(() -> blob.toString());
+    thenReturned("Blob(...):" + blob.hash());
   }
 
   private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {

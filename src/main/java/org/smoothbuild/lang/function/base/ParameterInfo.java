@@ -55,7 +55,7 @@ public class ParameterInfo {
 
   @Override
   public String toString() {
-    return type.toString() + " " + name.toString();
+    return type.name() + " " + name.toString();
   }
 
   public static String iterableToString(Iterable<ParameterInfo> names) {

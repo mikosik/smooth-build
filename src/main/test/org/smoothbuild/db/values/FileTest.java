@@ -194,10 +194,10 @@ public class FileTest {
   }
 
   @Test
-  public void to_string_contains_type_name_path_and_bytes_count() throws Exception {
+  public void to_string() throws Exception {
     given(file = createFile(valuesDb, path, new byte[] { 1, 2, 3 }));
-    when(file).toString();
-    thenReturned("File(content=Blob(3 bytes), path=" + path + ")");
+    when(() -> file.toString());
+    thenReturned("File(...):" + file.hash());
   }
 
   private static Struct createFile(ValuesDb valuesDb, String path, byte[] content)
