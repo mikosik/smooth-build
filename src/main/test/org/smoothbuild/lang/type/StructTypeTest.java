@@ -23,6 +23,12 @@ public class StructTypeTest extends AbstractTypeTestCase {
   }
 
   @Test
+  public void struct_type_without_fields_can_be_created() throws Exception {
+    when(() -> typeSystem.struct("Struct", ImmutableMap.of()));
+    thenReturned();
+  }
+
+  @Test
   public void struct_type_with_different_field_order_has_different_hash() throws Exception {
     given(type = typeSystem.struct("Struct",
         ImmutableMap.of("a", typeSystem.string(), "b", typeSystem.string())));
