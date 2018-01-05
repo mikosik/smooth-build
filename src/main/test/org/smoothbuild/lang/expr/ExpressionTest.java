@@ -14,12 +14,12 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
-  private final Type type = new TypeSystem().string();
+  private final Type type = new TypesDb().string();
   private Location location;
 
   private MyExpression expression;

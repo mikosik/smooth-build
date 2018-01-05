@@ -16,7 +16,7 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.WarningMessage;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
@@ -27,13 +27,13 @@ import com.google.common.hash.HashCode;
 public class OutputsDb {
   private final HashedDb hashedDb;
   private final ValuesDb valuesDb;
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
 
   @Inject
-  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, TypeSystem typeSystem) {
+  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, TypesDb typesDb) {
     this.hashedDb = hashedDb;
     this.valuesDb = valuesDb;
-    this.typeSystem = typeSystem;
+    this.typesDb = typesDb;
   }
 
   public void write(HashCode taskHash, Output output) {
@@ -66,9 +66,9 @@ public class OutputsDb {
         int messageType = unmarshaller.readInt();
         HashCode messageStringHash = unmarshaller.readHash();
         Value messageValue = valuesDb.get(messageStringHash);
-        if (!typeSystem.string().equals(messageValue.type())) {
+        if (!typesDb.string().equals(messageValue.type())) {
           throw new CorruptedValueException(messageStringHash, "Expected message of type "
-              + typeSystem.string() + " but got " + messageValue.type());
+              + typesDb.string() + " but got " + messageValue.type());
         }
         SString messageSString = (SString) messageValue;
         String messageString = messageSString.data();

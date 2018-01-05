@@ -20,12 +20,12 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 
 public class TypedParametersPoolTest {
-  private final TypeSystem typeSystem = new TypeSystem();
-  private final Type string = typeSystem.string();
-  private final Type blobT = typeSystem.blob();
+  private final TypesDb typesDb = new TypesDb();
+  private final Type string = typesDb.string();
+  private final Type blobT = typesDb.blob();
 
   private final ParameterInfo string1 = new ParameterInfo(string, new Name("string1"), true);
   private final ParameterInfo string2 = new ParameterInfo(string, new Name("string2"), true);

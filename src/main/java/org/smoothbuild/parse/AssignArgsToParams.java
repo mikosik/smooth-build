@@ -24,7 +24,7 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
@@ -37,11 +37,11 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
 
   @Inject
-  public AssignArgsToParams(TypeSystem typeSystem) {
-    this.typeSystem = typeSystem;
+  public AssignArgsToParams(TypesDb typesDb) {
+    this.typesDb = typesDb;
   }
 
   public Maybe<Ast> run(Functions functions, Ast ast) {
@@ -87,7 +87,7 @@ public class AssignArgsToParams {
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
-          if (typeSystem.canConvert(arg.get(Type.class), paramType)) {
+          if (typesDb.canConvert(arg.get(Type.class), paramType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {
@@ -101,7 +101,7 @@ public class AssignArgsToParams {
       }
 
       private boolean assignNamelessArguments(CallNode call, Set<ParameterInfo> parameters) {
-        ParametersPool parametersPool = new ParametersPool(typeSystem,
+        ParametersPool parametersPool = new ParametersPool(
             filter(parameters, not(ParameterInfo::isRequired)),
             filter(parameters, ParameterInfo::isRequired));
         ImmutableMultimap<Type, ArgNode> namelessArgs = call

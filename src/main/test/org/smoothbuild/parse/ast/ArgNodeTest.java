@@ -14,10 +14,10 @@ import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 
 public class ArgNodeTest {
-  private final Type string = new TypeSystem().string();
+  private final Type string = new TypesDb().string();
   private final Location location = location(Paths.get("path"), 1);
   private final Name name = new Name("arg-name");
   private ArgNode arg;

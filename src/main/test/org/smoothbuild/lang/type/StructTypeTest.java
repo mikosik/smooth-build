@@ -17,33 +17,32 @@ public class StructTypeTest extends AbstractTypeTestCase {
   private ImmutableMap<String, Type> fields;
 
   @Override
-  protected Type getType(TypeSystem typeSystem) {
-    return typeSystem.struct("Struct",
-        ImmutableMap.of("a", typeSystem.string(), "b", typeSystem.string()));
+  protected Type getType(TypesDb typesDb) {
+    return typesDb.struct("Struct", ImmutableMap.of("a", typesDb.string(), "b", typesDb.string()));
   }
 
   @Test
   public void struct_type_without_fields_can_be_created() throws Exception {
-    when(() -> typeSystem.struct("Struct", ImmutableMap.of()));
+    when(() -> typesDb.struct("Struct", ImmutableMap.of()));
     thenReturned();
   }
 
   @Test
   public void struct_type_with_different_field_order_has_different_hash() throws Exception {
-    given(type = typeSystem.struct("Struct",
-        ImmutableMap.of("a", typeSystem.string(), "b", typeSystem.string())));
-    given(type2 = typeSystem.struct("Struct",
-        ImmutableMap.of("b", typeSystem.string(), "a", typeSystem.string())));
+    given(type = typesDb.struct("Struct",
+        ImmutableMap.of("a", typesDb.string(), "b", typesDb.string())));
+    given(type2 = typesDb.struct("Struct",
+        ImmutableMap.of("b", typesDb.string(), "a", typesDb.string())));
     when(() -> type.hash());
     thenReturned(not(equalTo(type2.hash())));
   }
 
   @Test
   public void two_level_deep_struct_type_can_be_read_back() throws Exception {
-    given(fields = ImmutableMap.of("field1", typeSystem.string(), "field2", typeSystem.string()));
-    given(type = typeSystem.struct("TypeName", fields));
-    given(fields = ImmutableMap.of("field1", typeSystem.string(), "field2", type));
-    given(type = typeSystem.struct("TypeName2", fields));
+    given(fields = ImmutableMap.of("field1", typesDb.string(), "field2", typesDb.string()));
+    given(type = typesDb.struct("TypeName", fields));
+    given(fields = ImmutableMap.of("field1", typesDb.string(), "field2", type));
+    given(type = typesDb.struct("TypeName2", fields));
     when(() -> new TypesDb(hashedDb).read(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }

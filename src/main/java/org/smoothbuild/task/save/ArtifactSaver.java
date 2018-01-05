@@ -14,7 +14,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
@@ -23,20 +23,20 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final TypeSystem typeSystem;
+  private final TypesDb typesDb;
   private final Console console;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, TypeSystem typeSystem, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, TypesDb typesDb, Console console) {
     this.fileSystem = fileSystem;
-    this.typeSystem = typeSystem;
+    this.typesDb = typesDb;
     this.console = console;
   }
 
   public void save(Name name, Value value) {
     if (value instanceof Array) {
       saveArray(name, (Array) value);
-    } else if (value.type().equals(typeSystem.file())) {
+    } else if (value.type().equals(typesDb.file())) {
       saveValue(name, ((Struct) value).get("content"));
     } else {
       saveValue(name, value);
@@ -45,7 +45,7 @@ public class ArtifactSaver {
 
   private void saveArray(Name name, Array array) {
     Type elemType = array.type().elemType();
-    if (elemType.equals(typeSystem.file())) {
+    if (elemType.equals(typesDb.file())) {
       saveFileArray(name, array);
     } else {
       saveValueArray(name, array);

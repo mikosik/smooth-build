@@ -12,7 +12,6 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -28,31 +27,31 @@ public class ArrayTest {
   private SString sstring3;
   private Array array;
   private ArrayBuilder arrayBuilder;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
 
   @Before
   public void before() {
     hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
   public void empty_array_is_empty() throws Exception {
-    when(() -> valuesDb.arrayBuilder(typeSystem.string()).build().asIterable(SString.class));
+    when(() -> valuesDb.arrayBuilder(typesDb.string()).build().asIterable(SString.class));
     thenReturned(emptyIterable());
   }
 
   @Test
   public void adding_null_is_forbidden() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     when(arrayBuilder).add(sstring);
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(blob = mock(Blob.class));
     when(arrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
@@ -60,7 +59,7 @@ public class ArrayTest {
 
   @Test
   public void array_contains_added_element() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(arrayBuilder).add(sstring);
     when(() -> arrayBuilder.build().asIterable(SString.class));
@@ -69,7 +68,7 @@ public class ArrayTest {
 
   @Test
   public void array_contains_added_elements_in_correct_order() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(sstring3 = valuesDb.string("ghi"));
@@ -82,7 +81,7 @@ public class ArrayTest {
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring);
@@ -92,17 +91,17 @@ public class ArrayTest {
 
   @Test
   public void arrays_with_same_elements_have_same_hash() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
-    when(valuesDb.arrayBuilder(typeSystem.string()).add(sstring).add(sstring2).build().hash());
-    thenReturned(valuesDb.arrayBuilder(typeSystem.string()).add(sstring).add(sstring2).build()
+    when(valuesDb.arrayBuilder(typesDb.string()).add(sstring).add(sstring2).build().hash());
+    thenReturned(valuesDb.arrayBuilder(typesDb.string()).add(sstring).add(sstring2).build()
         .hash());
   }
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(arrayBuilder).add(sstring);
     given(array = arrayBuilder.build());
@@ -113,27 +112,27 @@ public class ArrayTest {
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes()
       throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
-    when(valuesDb.arrayBuilder(typeSystem.string()).add(sstring).add(sstring2).build().hash());
-    thenReturned(not(valuesDb.arrayBuilder(typeSystem.string()).add(sstring2).add(sstring).build()
+    when(valuesDb.arrayBuilder(typesDb.string()).add(sstring).add(sstring2).build().hash());
+    thenReturned(not(valuesDb.arrayBuilder(typesDb.string()).add(sstring2).add(sstring).build()
         .hash()));
   }
 
   @Test
   public void array_with_one_more_element_have_different_hash() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
-    when(valuesDb.arrayBuilder(typeSystem.string()).add(sstring).build().hash());
-    thenReturned(not(valuesDb.arrayBuilder(typeSystem.string()).add(sstring2).add(sstring).build()
+    when(valuesDb.arrayBuilder(typesDb.string()).add(sstring).build().hash());
+    thenReturned(not(valuesDb.arrayBuilder(typesDb.string()).add(sstring2).add(sstring).build()
         .hash()));
   }
 
   @Test
   public void array_can_be_read_by_hash() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(arrayBuilder).add(valuesDb.string("abc"));
     given(arrayBuilder).add(valuesDb.string("def"));
     given(array = arrayBuilder.build());
@@ -143,7 +142,7 @@ public class ArrayTest {
 
   @Test
   public void array_read_by_hash_contains_same_elements() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(arrayBuilder).add(sstring);
@@ -155,7 +154,7 @@ public class ArrayTest {
 
   @Test
   public void array_read_by_hash_has_same_hash() throws Exception {
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
     given(arrayBuilder).add(sstring);
@@ -169,7 +168,7 @@ public class ArrayTest {
   public void to_string() throws Exception {
     given(sstring = valuesDb.string("abc"));
     given(sstring2 = valuesDb.string("def"));
-    given(arrayBuilder = valuesDb.arrayBuilder(typeSystem.string()));
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());

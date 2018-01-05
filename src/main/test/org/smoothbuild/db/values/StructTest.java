@@ -14,7 +14,6 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeSystem;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
@@ -26,7 +25,7 @@ import com.google.common.hash.HashCode;
 
 public class StructTest {
   private HashedDb hashedDb;
-  private TypeSystem typeSystem;
+  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private HashCode hash;
   private SString firstName;
@@ -39,8 +38,8 @@ public class StructTest {
   @Before
   public void before() {
     hashedDb = new HashedDb();
-    typeSystem = new TypeSystem(new TypesDb(hashedDb));
-    valuesDb = new ValuesDb(hashedDb, typeSystem);
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
   }
 
   @Test
@@ -57,7 +56,7 @@ public class StructTest {
 
   @Test
   public void setting_field_to_value_of_wrong_type_throws_exception() throws Exception {
-    given(array = valuesDb.arrayBuilder(typeSystem.string()).build());
+    given(array = valuesDb.arrayBuilder(typesDb.string()).build());
     when(() -> valuesDb.structBuilder(personType()).set("firstName", array));
     thenThrown(IllegalArgumentException.class);
   }
@@ -218,7 +217,7 @@ public class StructTest {
   }
 
   private StructType personType() {
-    Type string = typeSystem.string();
-    return typeSystem.struct("Person", ImmutableMap.of("firstName", string, "lastName", string));
+    Type string = typesDb.string();
+    return typesDb.struct("Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 }
