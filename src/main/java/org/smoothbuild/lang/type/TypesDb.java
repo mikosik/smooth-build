@@ -5,7 +5,6 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -13,15 +12,12 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.plugin.Types;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class TypesDb implements Types {
-  private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
-
   private final HashedDb hashedDb;
   private final Map<HashCode, Type> cache;
   private final Instantiator instantiator;
@@ -198,48 +194,5 @@ public class TypesDb implements Types {
   private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
     return new CorruptedValueException(
         hash, "Its Merkle tree root has " + childCount + " children.");
-  }
-
-  public boolean canConvert(Type from, Type to) {
-    return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from.name(), to.name()));
-  }
-
-  public Name convertFunctionName(Type from, Type to) {
-    return CONVERSIONS.get(new TypeConversion(from.name(), to.name()));
-  }
-
-  private static ImmutableMap<TypeConversion, Name> createConversions() {
-    ImmutableMap.Builder<TypeConversion, Name> builder = ImmutableMap.builder();
-    builder.put(new TypeConversion("File", "Blob"), new Name("fileToBlob"));
-    builder.put(new TypeConversion("[File]", "[Blob]"), new Name("fileArrayToBlobArray"));
-    builder.put(new TypeConversion("[Nothing]", "[String]"), new Name("nilToStringArray"));
-    builder.put(new TypeConversion("[Nothing]", "[Blob]"), new Name("nilToBlobArray"));
-    builder.put(new TypeConversion("[Nothing]", "[File]"), new Name("nilToFileArray"));
-    return builder.build();
-  }
-
-  private static class TypeConversion {
-    private final String from;
-    private final String to;
-
-    private TypeConversion(String from, String to) {
-      this.from = from;
-      this.to = to;
-    }
-
-    @Override
-    public boolean equals(Object object) {
-      return object instanceof TypeConversion && equals((TypeConversion) object);
-    }
-
-    private boolean equals(TypeConversion typeConversion) {
-      return Objects.equals(from, typeConversion.from)
-          && Objects.equals(to, typeConversion.to);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(from, to);
-    }
   }
 }
