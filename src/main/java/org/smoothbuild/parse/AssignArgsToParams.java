@@ -5,6 +5,7 @@ import static com.google.common.collect.ImmutableListMultimap.toImmutableListMul
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Sets.filter;
 import static java.util.function.Function.identity;
+import static org.smoothbuild.lang.type.TypeConversions.canConvert;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
@@ -18,13 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
@@ -37,14 +35,7 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  private final TypesDb typesDb;
-
-  @Inject
-  public AssignArgsToParams(TypesDb typesDb) {
-    this.typesDb = typesDb;
-  }
-
-  public Maybe<Ast> run(Functions functions, Ast ast) {
+  public static Maybe<Ast> assignArgsToParams(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
@@ -87,7 +78,7 @@ public class AssignArgsToParams {
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
-          if (typesDb.canConvert(arg.get(Type.class), paramType)) {
+          if (canConvert(arg.get(Type.class), paramType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {

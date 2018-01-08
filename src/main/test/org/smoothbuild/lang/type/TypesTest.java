@@ -7,6 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
+import static org.smoothbuild.lang.type.TypeConversions.canConvert;
+import static org.smoothbuild.lang.type.TypeConversions.convertFunctionName;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -473,7 +475,7 @@ public class TypesTest {
         from.equals(typesDb.array(nothing)) && (to instanceof ArrayType);
     String canOrCannot = canConvert ? "can" : "cannot";
     return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to),
-        () -> assertEquals(typesDb.canConvert(from, to), canConvert));
+        () -> assertEquals(canConvert(from, to), canConvert));
   }
 
   @Quackery
@@ -489,8 +491,7 @@ public class TypesTest {
 
   private static Case testConvertFunctionName(Type from, Type to, String functionName) {
     return newCase(format("{0} to {1} is named {2}", from, to, functionName),
-        () -> assertEquals(new TypesDb().convertFunctionName(from, to), new Name(
-            functionName)));
+        () -> assertEquals(convertFunctionName(from, to), new Name(functionName)));
   }
 
   @Test

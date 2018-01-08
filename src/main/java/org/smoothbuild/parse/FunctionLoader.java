@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.lang.type.TypeConversions.convertFunctionName;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -30,7 +31,6 @@ import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
@@ -46,12 +46,10 @@ import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
   private final ValuesDb valuesDb;
-  private final TypesDb typesDb;
 
   @Inject
-  public FunctionLoader(ValuesDb valuesDb, TypesDb typesDb) {
+  public FunctionLoader(ValuesDb valuesDb) {
     this.valuesDb = valuesDb;
-    this.typesDb = typesDb;
   }
 
   public Function loadFunction(Functions loadedFunctions, FuncNode func) {
@@ -154,7 +152,7 @@ public class FunctionLoader {
           return source;
         }
 
-        Name functionName = typesDb.convertFunctionName(type, destinationType);
+        Name functionName = convertFunctionName(type, destinationType);
         Function function = loadedFunctions.get(functionName);
         return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
       }
