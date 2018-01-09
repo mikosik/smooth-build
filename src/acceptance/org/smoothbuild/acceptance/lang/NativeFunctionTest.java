@@ -249,7 +249,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void error_reported_is_logged() throws Exception {
     givenNativeJar(ReportError.class);
-    givenScript("String reportError(String message);\n"
+    givenScript("Nothing reportError(String message);\n"
         + "      result = reportError('error_reported_is_logged');");
     whenSmoothBuild("result");
     thenFinishedWithError();
