@@ -2,9 +2,9 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
+import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
-import static org.smoothbuild.task.base.ComputationHashes.throwExceptionComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -17,6 +17,7 @@ import java.util.HashSet;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
@@ -39,7 +40,7 @@ public class ComputationHashesTest {
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
-    given(hashes.add(throwExceptionComputationHash()));
+    given(hashes.add(convertComputationHash(new TypesDb().string())));
     when(hashes).size();
     thenReturned(5);
   }
@@ -63,5 +64,11 @@ public class ComputationHashesTest {
     given(willReturn(Hash.integer(2)), function2).hash();
     when(nativeCallComputationHash(function));
     thenReturned(not(nativeCallComputationHash(function2)));
+  }
+
+  @Test
+  public void convert_computation_has_different_hash_for_different_types() throws Exception {
+    when(convertComputationHash(new TypesDb().string()));
+    thenReturned(not(convertComputationHash(new TypesDb().blob())));
   }
 }

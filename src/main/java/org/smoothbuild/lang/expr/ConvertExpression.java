@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.task.base.Evaluator.convertFromNothingEvaluator;
+import static org.smoothbuild.task.base.Evaluator.convertEvaluator;
 
 import java.util.List;
 
@@ -11,15 +11,15 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
-public class ConvertFromNothingExpression extends Expression {
-  public ConvertFromNothingExpression(Type type, Location location) {
+public class ConvertExpression extends Expression {
+  public ConvertExpression(Type type, Location location) {
     super(type, location);
   }
 
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    return new Dag<Evaluator>(convertFromNothingEvaluator(type(), location()),
+    return new Dag<Evaluator>(convertEvaluator(type(), location()),
         createChildrenEvaluators(children, valuesDb, scope));
   }
 }
