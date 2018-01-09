@@ -38,9 +38,9 @@ public class Evaluator {
         false, true, location);
   }
 
-  public static Evaluator convertFromNothingEvaluator(Type type, Location location) {
+  public static Evaluator convertEvaluator(Type type, Location location) {
     return new Evaluator(
-        new ThrowExceptionComputation(type), "conversion_from_Nothing", true, true, location);
+        new ConvertComputation(type), "conversion_from_Nothing", true, true, location);
   }
 
   public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,

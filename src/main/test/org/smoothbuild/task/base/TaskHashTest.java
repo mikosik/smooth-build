@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static java.util.Arrays.asList;
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
-import static org.smoothbuild.task.base.Evaluator.convertFromNothingEvaluator;
+import static org.smoothbuild.task.base.Evaluator.convertEvaluator;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 import static org.smoothbuild.task.exec.TaskExecutor.taskHash;
@@ -123,18 +123,18 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_convert_from_nothing_evaluator_and_empty_input_is_stable()
       throws Exception {
-    given(task = new Task(convertFromNothingEvaluator(typesDb.string(), location)));
+    given(task = new Task(convertEvaluator(typesDb.string(), location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("e37a386dd933aa7e25bf32f436b1070e6bb8d619"));
+    thenReturned(HashCode.fromString("26aed9a5ff23729834755b52514701d2681ada48"));
   }
 
   @Test
   public void hash_of_task_with_convert_from_nothing_evaluator_and_one_element_input_is_stable()
       throws Exception {
-    given(task = new Task(Evaluator.convertFromNothingEvaluator(typesDb.string(), location)));
+    given(task = new Task(Evaluator.convertEvaluator(typesDb.string(), location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"))));
     when(() -> taskHash(task, input));
-    thenReturned(HashCode.fromString("5a2fd586678d5ed74634630a424cc28e4882a9c9"));
+    thenReturned(HashCode.fromString("97382aab8df3c290f2b3d69a69d208fb708ff4bd"));
   }
 }

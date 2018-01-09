@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.type.TypeConversions.convertFunctionName;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
-import org.smoothbuild.lang.expr.ConvertFromNothingExpression;
+import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.function.Functions;
@@ -152,14 +151,7 @@ public class FunctionLoader {
         if (sourceType.equals(destinationType)) {
           return source;
         }
-        if (sourceType.isNothing()) {
-          return new Dag<>(
-              new ConvertFromNothingExpression(destinationType, elem.location()), asList(source));
-        }
-
-        Name functionName = convertFunctionName(sourceType, destinationType);
-        Function function = loadedFunctions.get(functionName);
-        return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
+        return new Dag<>(new ConvertExpression(destinationType, elem.location()), asList(source));
       }
     }.get();
   }

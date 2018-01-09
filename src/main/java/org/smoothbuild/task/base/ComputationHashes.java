@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
@@ -23,8 +24,8 @@ public class ComputationHashes {
     return hash(3, function.hash());
   }
 
-  public static HashCode throwExceptionComputationHash() {
-    return hash(4);
+  public static HashCode convertComputationHash(Type destinationType) {
+    return hash(4, destinationType.hash());
   }
 
   private static HashCode hash(int id, HashCode hash) {
