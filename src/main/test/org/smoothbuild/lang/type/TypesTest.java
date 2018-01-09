@@ -7,7 +7,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.type.TypeConversions.canConvert;
 import static org.smoothbuild.lang.type.TypeConversions.convertFunctionName;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
@@ -450,32 +449,6 @@ public class TypesTest {
 
   private ArrayType array(Type elementType) {
     return typesDb.array(elementType);
-  }
-
-  @Quackery
-  public static Suite can_convert() {
-    Suite suite = suite("test canConvert");
-    TypesDb typesDb = new TypesDb();
-    ImmutableSet<Type> types = ImmutableSet.of(string, blob, file, nothing,
-        typesDb.array(string), typesDb.array(blob), typesDb.array(file),
-        typesDb.array(nothing));
-    for (Type from : types) {
-      for (Type to : types) {
-        suite = suite.add(testConversion(from, to));
-      }
-    }
-    return suite;
-  }
-
-  private static Case testConversion(Type from, Type to) {
-    TypesDb typesDb = new TypesDb();
-    boolean canConvert = from.equals(to) ||
-        from.equals(file) && to.equals(blob) ||
-        from.equals(typesDb.array(file)) && to.equals(typesDb.array(blob)) ||
-        from.equals(typesDb.array(nothing)) && (to instanceof ArrayType);
-    String canOrCannot = canConvert ? "can" : "cannot";
-    return newCase(format("{0} convert from {1} to {2}", canOrCannot, from, to),
-        () -> assertEquals(canConvert(from, to), canConvert));
   }
 
   @Quackery

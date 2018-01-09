@@ -1,6 +1,7 @@
 Change Log
 ==========
 
+ * bugfix: conversion from Nothing to any smooth type should be possible
  * disallowed '.' and '-' characters in function and parameter names
  * added 'deps' parameter to 'junit' function and require junit implementation to be passed via it
  * added 'options' parameter to 'javac' function in platform API

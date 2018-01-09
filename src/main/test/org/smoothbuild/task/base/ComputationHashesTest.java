@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
+import static org.smoothbuild.task.base.ComputationHashes.throwExceptionComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -38,8 +39,9 @@ public class ComputationHashesTest {
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
+    given(hashes.add(throwExceptionComputationHash()));
     when(hashes).size();
-    thenReturned(4);
+    thenReturned(5);
   }
 
   @Test
