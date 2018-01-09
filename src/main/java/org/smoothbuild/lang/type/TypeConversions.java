@@ -10,7 +10,7 @@ public class TypeConversions {
   private static final ImmutableMap<TypeConversion, Name> CONVERSIONS = createConversions();
 
   public static boolean canConvert(Type from, Type to) {
-    return from.equals(to) || CONVERSIONS.containsKey(new TypeConversion(from.name(), to.name()));
+    return to.isAssignableFrom(from);
   }
 
   public static Name convertFunctionName(Type from, Type to) {

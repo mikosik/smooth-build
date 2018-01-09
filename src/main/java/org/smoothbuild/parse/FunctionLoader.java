@@ -17,6 +17,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
+import org.smoothbuild.lang.expr.ConvertFromNothingExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.function.Functions;
@@ -147,12 +148,16 @@ public class FunctionLoader {
       public <T extends Value> Dag<Expression> implicitConversion(Type destinationType,
           Dag<Expression> source) {
         Expression elem = source.elem();
-        Type type = elem.type();
-        if (type.equals(destinationType)) {
+        Type sourceType = elem.type();
+        if (sourceType.equals(destinationType)) {
           return source;
         }
+        if (sourceType.isNothing()) {
+          return new Dag<>(
+              new ConvertFromNothingExpression(destinationType, elem.location()), asList(source));
+        }
 
-        Name functionName = convertFunctionName(type, destinationType);
+        Name functionName = convertFunctionName(sourceType, destinationType);
         Function function = loadedFunctions.get(functionName);
         return new Dag<>(function.createCallExpression(true, elem.location()), asList(source));
       }
