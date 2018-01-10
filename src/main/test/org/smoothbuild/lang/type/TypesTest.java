@@ -1,13 +1,9 @@
 package org.smoothbuild.lang.type;
 
-import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.type.TypeConversions.convertFunctionName;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -18,11 +14,7 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Nothing;
@@ -449,22 +441,6 @@ public class TypesTest {
 
   private ArrayType array(Type elementType) {
     return typesDb.array(elementType);
-  }
-
-  @Quackery
-  public static Suite test_convert_function_name() {
-    TypesDb db = new TypesDb();
-    return suite("test convert function name")
-        .add(testConvertFunctionName(file, blob, "fileToBlob"))
-        .add(testConvertFunctionName(db.array(file), db.array(blob), "fileArrayToBlobArray"))
-        .add(testConvertFunctionName(db.array(nothing), db.array(string), "nilToStringArray"))
-        .add(testConvertFunctionName(db.array(nothing), db.array(blob), "nilToBlobArray"))
-        .add(testConvertFunctionName(db.array(nothing), db.array(file), "nilToFileArray"));
-  }
-
-  private static Case testConvertFunctionName(Type from, Type to, String functionName) {
-    return newCase(format("{0} to {1} is named {2}", from, to, functionName),
-        () -> assertEquals(convertFunctionName(from, to), new Name(functionName)));
   }
 
   @Test

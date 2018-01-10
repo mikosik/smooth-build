@@ -5,7 +5,6 @@ import static com.google.common.collect.ImmutableListMultimap.toImmutableListMul
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Sets.filter;
 import static java.util.function.Function.identity;
-import static org.smoothbuild.lang.type.TypeConversions.canConvert;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
@@ -78,7 +77,7 @@ public class AssignArgsToParams {
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
-          if (canConvert(arg.get(Type.class), paramType)) {
+          if (paramType.isAssignableFrom(arg.get(Type.class))) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {
