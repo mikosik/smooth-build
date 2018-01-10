@@ -34,6 +34,7 @@ public class StructTest {
   private StructBuilder builder;
   private Struct person;
   private Struct person2;
+  private Struct struct;
 
   @Before
   public void before() {
@@ -97,6 +98,23 @@ public class StructTest {
     given(builder = valuesDb.structBuilder(personType()).set("firstName", firstName));
     when(() -> builder.build());
     thenThrown(exception(new IllegalStateException("Field lastName hasn't been specified.")));
+  }
+
+  @Test
+  public void super_value_is_equal_to_first_value() throws Exception {
+    given(firstName = valuesDb.string("John"));
+    given(lastName = valuesDb.string("Doe"));
+    given(person = valuesDb.structBuilder(
+        personType()).set("firstName", firstName).set("lastName", lastName).build());
+    when(() -> person.superValue());
+    thenReturned(firstName);
+  }
+
+  @Test
+  public void super_value_is_null_when_struct_type_has_no_fields() throws Exception {
+    given(struct = valuesDb.structBuilder(typesDb.struct("MyStruct", ImmutableMap.of())).build());
+    when(() -> struct.superValue());
+    thenReturned(null);
   }
 
   @Test

@@ -35,6 +35,11 @@ public class Struct extends Value {
     return fields.get(name);
   }
 
+  public Value superValue() {
+    ImmutableMap<String, Value> fields = fields();
+    return fields.size() == 0 ? null : fields.values().iterator().next();
+  }
+
   private ImmutableMap<String, Value> fields() {
     if (fields == null) {
       List<HashCode> hashes = hashedDb.readHashes(dataHash());
