@@ -65,9 +65,7 @@ public class Build implements Command {
   }
 
   private Maybe<Functions> loadFunctions() {
-    Maybe<Functions> convert = moduleLoader.loadModule(new Functions(), paths.convertModule());
-    Maybe<Functions> funcs = moduleLoader.loadModule(new Functions(), paths.funcsModule());
-    Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
+    Maybe<Functions> builtin = moduleLoader.loadModule(new Functions(), paths.funcsModule());
     Maybe<Functions> userFunctions = invoke(
         builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
     return invokeWrap(userFunctions, builtin, (u, b) -> b.addAll(u));

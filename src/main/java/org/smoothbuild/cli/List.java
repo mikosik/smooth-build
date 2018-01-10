@@ -3,7 +3,6 @@ package org.smoothbuild.cli;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.util.Maybe.invoke;
-import static org.smoothbuild.util.Maybe.invokeWrap;
 
 import javax.inject.Inject;
 
@@ -47,9 +46,7 @@ public class List implements Command {
   }
 
   private Maybe<Functions> userDefinedFunctions() {
-    Maybe<Functions> convert = moduleLoader.loadModule(new Functions(), paths.convertModule());
-    Maybe<Functions> funcs = moduleLoader.loadModule(new Functions(), paths.funcsModule());
-    Maybe<Functions> builtin = invokeWrap(convert, funcs, (c, f) -> c.addAll(f));
+    Maybe<Functions> builtin = moduleLoader.loadModule(new Functions(), paths.funcsModule());
     return invoke(builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
   }
 }
