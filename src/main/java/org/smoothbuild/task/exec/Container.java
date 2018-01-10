@@ -20,17 +20,14 @@ import org.smoothbuild.lang.value.ValueFactory;
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final ValuesDb valuesDb;
-  private final TypesDb typesDb;
   private final TempManager tempManager;
   private final List<Message> messages;
   private final List<TempDir> tempDirs;
 
   @Inject
-  public Container(FileSystem fileSystem, ValuesDb valuesDb, TypesDb typesDb,
-      TempManager tempManager) {
+  public Container(FileSystem fileSystem, ValuesDb valuesDb, TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.valuesDb = valuesDb;
-    this.typesDb = typesDb;
     this.tempManager = tempManager;
     this.messages = new ArrayList<>();
     this.tempDirs = new ArrayList<>();
@@ -41,7 +38,7 @@ public class Container implements NativeApi {
     HashedDb hashedDb = new HashedDb();
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    return new Container(fileSystem, valuesDb, typesDb, new TempManager(fileSystem));
+    return new Container(fileSystem, valuesDb, new TempManager(fileSystem));
   }
 
   @Override
@@ -51,7 +48,7 @@ public class Container implements NativeApi {
 
   @Override
   public Types types() {
-    return typesDb;
+    return valuesDb.types();
   }
 
   public FileSystem fileSystem() {
