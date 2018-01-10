@@ -35,7 +35,7 @@ public class ContainerTest {
     HashedDb hashedDb = new HashedDb();
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    container = new Container(fileSystem, valuesDb, typesDb, tempDirProvider);
+    container = new Container(fileSystem, valuesDb, tempDirProvider);
   }
 
   @Test
