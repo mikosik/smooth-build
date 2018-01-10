@@ -378,9 +378,6 @@ public class TypesTest {
 
     assertCommon(array(nothing), array(nothing), array(nothing));
     assertCommon(array(nothing), nothing, array(nothing));
-
-    assertCommon(array(file), typesDb.struct("Struct", ImmutableMap.of("field", array(blob))),
-        array(blob));
   }
 
   private static void assertCommon(Type type1, Type type2, Type expected) {
