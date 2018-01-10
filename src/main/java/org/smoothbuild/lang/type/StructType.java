@@ -20,7 +20,15 @@ public class StructType extends Type {
   }
 
   private static Type calculateSuperType(ImmutableMap<String, Type> fields) {
-    return fields.size() == 0 ? null : fields.values().iterator().next();
+    if (fields.size() == 0) {
+      return null;
+    } else {
+      Type superType = fields.values().iterator().next();
+      if (superType instanceof ArrayType || superType.isNothing()) {
+        throw new IllegalArgumentException();
+      }
+      return superType;
+    }
   }
 
   @Override

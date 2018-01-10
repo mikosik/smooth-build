@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.type.ThoroughTypeMatcher.typeMatchingThoroughly;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
@@ -25,6 +26,26 @@ public class StructTypeTest extends AbstractTypeTestCase {
   public void struct_type_without_fields_can_be_created() throws Exception {
     when(() -> typesDb.struct("Struct", ImmutableMap.of()));
     thenReturned();
+  }
+
+  @Test
+  public void first_field_type_cannot_be_nothing() throws Exception {
+    when(() -> typesDb.struct("Struct", ImmutableMap.of("field", typesDb.nothing())));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void first_field_type_cannot_be_nothing_array() throws Exception {
+    when(() -> typesDb.struct(
+        "Struct", ImmutableMap.of("field", typesDb.array(typesDb.nothing()))));
+    thenThrown(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void first_field_type_cannot_be_array() throws Exception {
+    when(() -> typesDb.struct(
+        "Struct", ImmutableMap.of("field", typesDb.array(typesDb.string()))));
+    thenThrown(IllegalArgumentException.class);
   }
 
   @Test
