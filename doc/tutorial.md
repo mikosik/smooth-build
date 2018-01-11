@@ -6,10 +6,10 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release.jar = files("//src") | javac | jar;
+release_jar = files("//src") | javac | jar;
 ```
 
-This script defines `release.jar` function that does not have any parameters
+This script defines `release_jar` function that does not have any parameters
 and performs following tasks:
 
  * Invokes `files` function that takes all files (recursively)
@@ -23,14 +23,15 @@ Note that there's no need to explicitly create temporary directory for *.class
 files as they are passed as parameter to `jar` function straight from `javac`
 output.
 
-You can invoke execution of `release.jar` function from command line by running:
+You can invoke execution of `release_jar` function from command line by running:
 
 ```
-smooth build release.jar
+smooth build release_jar
 ```
 
-Above command executes `release.jar` function and stores its result
-as `release.jar` file in `.smooth/artifacts` directory.
+Above command executes `release_jar` function and stores its result
+as `release.jar` file (`_jar` suffixes are automatically converted to `.jar`)
+in `.smooth/artifacts` directory.
 If you want to try examples yourself then
 [download and install smooth](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
 first.
@@ -65,19 +66,19 @@ initial example is just syntactic sugar for more standard function calls.
 Initial example can be refactored into:
 
 ```
-release.jar = jar(javac(files("//src")));
+release_jar = jar(javac(files("//src")));
 ```
 
 This version is less readable though it is more familiar to people
 coming from imperative languages.
 
-Functions declared in `build.smooth` (for example `release.jar`)
+Functions declared in `build.smooth` (for example `release_jar`)
 can be used the same way as builtin functions (like `javac`).
 We can refactor our initial example by splitting it into two functions:
 
 ```
 classes(String sourcePath) = files(sourcePath) | javac;
-release.jar = jar(classes("//src"));
+release_jar = jar(classes("//src"));
 ```
 
 
@@ -116,7 +117,7 @@ In the following example we need to explicitly name `source` parameter, as
 without it, smooth wouldnt' be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
-release.jar = files("//src") | javac(source="1.8") | jar;
+release_jar = files("//src") | javac(source="1.8") | jar;
 ```
 
 Matching arguments to parameters works according to following algorithm
@@ -144,7 +145,7 @@ This may be a nuisanance as you have to use nested function calls in such cases.
 
 If you run build command twice for any example shown above,
 you will notice that second run completes almost instantly.
-That's because output from `release.jar` function has been cached
+That's because output from `release_jar` function has been cached
 by smooth.
 This is nothing extraordinary as most build tools reuse result
 from previous execution.
