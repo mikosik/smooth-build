@@ -98,7 +98,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_is_implicitly_converted_to_string_array() throws IOException {
-    givenScript("[String] result =[];");
+    givenScript("[String] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
