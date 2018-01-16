@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
+import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
 
 import java.io.IOException;
@@ -12,11 +13,151 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArrayTest extends AcceptanceTestCase {
 
   @Test
-  public void empty_array() throws Exception {
+  public void empty_array_of_nothings() throws Exception {
     givenScript("result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void empty_array_of_strings() throws Exception {
+    givenScript("[String] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void empty_array_of_blobs() throws Exception {
+    givenScript("[Blob] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void empty_array_of_files() throws Exception {
+    givenScript("[File] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void array_of_strings() throws Exception {
+    givenScript("result = ['abc', 'def'];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith("abc", "def"));
+  }
+
+  @Test
+  public void array_of_blobs() throws Exception {
+    givenFile("file1.txt", "abc");
+    givenFile("file2.txt", "def");
+    givenScript("result = [content(file('//file1.txt')), content(file('//file2.txt'))];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith("abc", "def"));
+  }
+
+  @Test
+  public void array_of_files() throws Exception {
+    givenFile("file1.txt", "abc");
+    givenFile("file2.txt", "def");
+    givenScript("result = [file('//file1.txt'), file('//file2.txt')];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_nothings() throws Exception {
+    givenScript("[[Nothing]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void array_of_arrays_of_nothings_with_one_element() throws Exception {
+    givenScript("[[Nothing]] result = [[]];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith(new Object[] { new Object[] {} }));
+  }
+
+  @Test
+  public void array_of_arrays_of_nothings_with_two_elements() throws Exception {
+    givenScript("[[Nothing]] result = [[], []];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith(new Object[] { new Object[] {}, new Object[] {} }));
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_strings() throws Exception {
+    givenScript("[[String]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_blobs() throws Exception {
+    givenScript("[[Blob]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_files() throws Exception {
+    givenScript("[[File]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void array_of_arrays_of_strings() throws Exception {
+    givenScript("[[String]] result = [[], ['abc'], ['def', 'ghi']];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith(
+        new Object[] {},
+        new Object[] { "abc" },
+        new Object[] { "def", "ghi" }));
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_arrays_of_nothings() throws Exception {
+    givenScript("[[[Nothing]]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith());
+  }
+
+  @Test
+  public void array_of_arrays_of_arrays_of_strings() throws Exception {
+    givenScript("[[[String]]] result = [[[]], [['abc'], ['def', 'ghi']]];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith(
+        new Object[] { new Object[] {} },
+        new Object[] { new Object[] { "abc" }, new Object[] { "def", "ghi" } }));
+  }
+
+  @Test
+  public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
+    givenFile("file.txt", "abc");
+    givenScript("result = [file('//file.txt'), file('//file.txt')];");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString(
+        "Can't store array of Files as it contains files with duplicated paths:\n"
+            + "  file.txt\n"));
   }
 
   @Test
@@ -76,22 +217,6 @@ public class ArrayTest extends AcceptanceTestCase {
     then(output(), containsString(
         "build.smooth:1: error: Array cannot contain elements of incompatible types.\n"
             + "First element has type 'String' while element at index 1 has type 'Blob'.\n"));
-  }
-
-  @Test
-  public void nesting_is_forbidden() throws IOException {
-    givenScript("myArray = []; result = [ myArray ];");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString("Array type cannot be nested."));
-  }
-
-  @Test
-  public void direct_nesting_is_forbidden() throws IOException {
-    givenScript("result = [ [] ];");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString("Array type cannot be nested."));
   }
 
   @Test

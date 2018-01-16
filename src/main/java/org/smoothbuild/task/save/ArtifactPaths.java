@@ -15,10 +15,14 @@ public class ArtifactPaths {
   }
 
   public static Path artifactPath(Name name) {
-    return ARTIFACTS_PATH.append(path(toFileName(name)));
+    return artifactPath(path(toFileName(name)));
   }
 
-  private static String toFileName(Name name) {
+  public static Path artifactPath(Path path) {
+    return ARTIFACTS_PATH.append(path);
+  }
+
+  public static String toFileName(Name name) {
     String string = name.toString();
     int index = string.lastIndexOf('_');
     if (index == -1) {
