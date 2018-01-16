@@ -14,7 +14,6 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
-import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -185,10 +184,6 @@ public class AssignTypes {
                     + "' while element at index " + i + " has type '" + type.name() + "'."));
             return nonInferable;
           }
-        }
-        if (elemType instanceof ArrayType) {
-          errors.add(new ParseError(array, "Array type cannot be nested."));
-          return nonInferable;
         }
         return typesDb.array(elemType);
       }

@@ -114,7 +114,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
-        "Can't store result of 'result' as it contains files with duplicated paths:\n"
+        "Can't store array of Files as it contains files with duplicated paths:\n"
             + "  file.txt\n"));
   }
 
