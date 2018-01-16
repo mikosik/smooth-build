@@ -64,8 +64,8 @@ public class FunctionLoader {
           boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
           return new NativeFunction(nativ, signature, isCacheable, hash);
         } else {
-          Dag<Expression> expression = createExpression(func.expr());
-          return new DefinedFunction(signature, expression);
+          return new DefinedFunction(signature,
+              implicitConversion(signature.type(), createExpression(func.expr())));
         }
       }
 
