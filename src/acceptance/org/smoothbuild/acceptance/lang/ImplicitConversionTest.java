@@ -80,7 +80,7 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   @Test
   public void file_is_implicitly_converted_to_blob() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result = file('//file.txt') | toString;");
+    givenScript("File result = file('//file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -90,32 +90,31 @@ public class ImplicitConversionTest extends AcceptanceTestCase {
   public void file_array_is_implicitly_converted_to_blob_array() throws IOException {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript(
-        "result = concatenateBlobArrays([file('//file1.txt')], with=[file('//file2.txt')]);");
+    givenScript("[Blob] result = [file('//file1.txt'), file('//file2.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
   }
 
   @Test
-  public void nothing_array_is_implicitly_converted_to_string_array() throws IOException {
-    givenScript("result = concatenateStringArrays([], with=[]);");
+  public void empty_array_is_implicitly_converted_to_string_array() throws IOException {
+    givenScript("[String] result =[];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
   @Test
-  public void nothing_array_is_implicitly_converted_to_blob_array() throws IOException {
-    givenScript("result = concatenateBlobArrays([], with=[]);");
+  public void empty_array_is_implicitly_converted_to_blob_array() throws IOException {
+    givenScript("[Blob] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
   @Test
-  public void nothing_array_is_implicitly_converted_to_file_array() throws IOException {
-    givenScript("result = concatenateFileArrays([], with=[]);");
+  public void empty_array_is_implicitly_converted_to_file_array() throws IOException {
+    givenScript("[File] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
