@@ -20,10 +20,6 @@ public class TempManager {
     this.fileSystem = fileSystem;
   }
 
-  public void removeTemps() {
-    fileSystem.delete(TEMPORARY_PATH);
-  }
-
   public Path tempPath() {
     id++;
     return TEMPORARY_PATH.append(path(Integer.toString(id)));
