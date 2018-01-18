@@ -39,7 +39,6 @@ public class ArtifactBuilder {
   }
 
   public void runBuild() {
-    artifactSaver.clean();
     taskBatch.executeAll();
     if (!taskBatch.containsErrors()) {
       console.println("built artifact(s):");

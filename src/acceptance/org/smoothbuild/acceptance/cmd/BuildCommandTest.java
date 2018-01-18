@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.cmd;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
@@ -64,6 +65,16 @@ public class BuildCommandTest extends AcceptanceTestCase {
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
     thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
+  }
+
+  @Test
+  public void build_command_clears_artifacts_dir() throws Exception {
+    given(path = ARTIFACTS_PATH.value() + "/file.txt");
+    givenFile(path, "content");
+    givenScript("syntactically incorrect script");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(!file(path).exists());
   }
 
   @Test

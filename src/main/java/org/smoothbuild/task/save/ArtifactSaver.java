@@ -35,10 +35,6 @@ public class ArtifactSaver {
     this.console = console;
   }
 
-  public void clean() {
-    fileSystem.delete(artifactPath(Path.root()));
-  }
-
   public void save(Name name, Value value) {
     Path path = path(toFileName(name));
     if (value instanceof Array) {

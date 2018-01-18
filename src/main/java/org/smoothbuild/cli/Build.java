@@ -1,7 +1,9 @@
 package org.smoothbuild.cli;
 
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invoke;
@@ -14,7 +16,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
-import org.smoothbuild.io.util.TempManager;
+import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ModuleLoader;
@@ -27,18 +29,18 @@ import com.google.common.collect.ImmutableList;
 public class Build implements Command {
   private final SmoothPaths paths;
   private final Console console;
-  private final TempManager tempManager;
   private final ModuleLoader moduleLoader;
   private final SmoothExecutor smoothExecutor;
+  private final FileSystem fileSystem;
 
   @Inject
-  public Build(SmoothPaths paths, Console console, TempManager tempManager,
-      ModuleLoader moduleLoader, SmoothExecutor smoothExecutor) {
+  public Build(SmoothPaths paths, Console console, ModuleLoader moduleLoader,
+      SmoothExecutor smoothExecutor, FileSystem fileSystem) {
     this.paths = paths;
     this.console = console;
-    this.tempManager = tempManager;
     this.moduleLoader = moduleLoader;
     this.smoothExecutor = smoothExecutor;
+    this.fileSystem = fileSystem;
   }
 
   @Override
@@ -51,7 +53,8 @@ public class Build implements Command {
       }
       return EXIT_CODE_ERROR;
     }
-    tempManager.removeTemps();
+    fileSystem.delete(ARTIFACTS_PATH);
+    fileSystem.delete(TEMPORARY_PATH);
     Maybe<Functions> functions = loadFunctions();
     if (functions.hasValue()) {
       smoothExecutor.execute(functions.value(), functionNames.value());
