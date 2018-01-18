@@ -2,7 +2,6 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
@@ -52,16 +51,6 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void smooth_temp_dir_is_deleted_before_build_starts() throws Exception {
-    given(path = TEMPORARY_PATH.value() + "/file.txt");
-    givenFile(path, "");
-    givenScript("syntactically incorrect script");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenEqual(file(path).exists(), false);
-  }
-
-  @Test
   public void build_command_with_illegal_function_name_prints_error() throws Exception {
     givenScript("result = 'abc';");
     whenSmoothBuild("illegal^name");
@@ -77,11 +66,13 @@ public class BuildCommandTest extends AcceptanceTestCase {
     thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
   }
 
+  @Test
   public void build_command_clears_temporary_dir() throws Exception {
-    givenFile(TEMPORARY_PATH.append(path("file")).value(), "content");
-    givenScript("result = 'abc';");
+    given(path = TEMPORARY_PATH.value() + "/file.txt");
+    givenFile(path, "content");
+    givenScript("syntactically incorrect script");
     whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(!file(TEMPORARY_PATH.append(path("file")).value()).exists());
+    thenFinishedWithError();
+    then(!file(path).exists());
   }
 }
