@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classesFromJars;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -19,8 +18,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
-import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.message.WarningMessage;
+import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -55,8 +53,9 @@ public class JavacFunction {
 
     public Array execute() {
       if (compiler == null) {
-        throw errorException("Couldn't find JavaCompiler implementation. "
+        nativeApi.log().error("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
+        throw new AbortException();
       }
       return compile(sources);
     }
@@ -76,7 +75,7 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          nativeApi.log(new WarningMessage("Param 'sources' is empty list."));
+          nativeApi.log().warning("Param 'sources' is empty list.");
           return nativeApi.create().arrayBuilder(nativeApi.types().file()).build();
         }
 
@@ -88,12 +87,12 @@ public class JavacFunction {
 
         // tidy up
         if (!success && !diagnostic.errorReported()) {
-          nativeApi.log(new ErrorMessage(
-              "Internal error: Compilation failed but JavaCompiler reported no error message."));
+          nativeApi.log().error(
+              "Internal error: Compilation failed but JavaCompiler reported no error message.");
         }
         String additionalInfo = additionalCompilerOutput.toString();
         if (!additionalInfo.isEmpty()) {
-          nativeApi.log(new WarningMessage(additionalInfo));
+          nativeApi.log().warning(additionalInfo);
         }
         return fileManager.resultClassfiles();
       } finally {

@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.plugin;
 
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.CommandExecutor;
 
@@ -10,7 +9,7 @@ public interface NativeApi {
 
   public Types types();
 
-  public void log(Message message);
+  public MessageLogger log();
 
   /**
    * Creates temporary dir in native Operating System. Such dir is automatically deleted by smooth

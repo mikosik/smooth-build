@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.android;
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
 import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.CommandExecutor;
 
 public class AidlFunction {
@@ -29,8 +28,8 @@ public class AidlFunction {
 
   private static Struct execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
       Struct interfaceFile) throws InterruptedException {
-    String aidlBinary = AndroidSdk.getAidlBinaryPath(buildToolsVersion).toString();
-    String frameworkAidl = AndroidSdk.getFrameworkAidl(apiLevel).toString();
+    String aidlBinary = AndroidSdk.getAidlBinaryPath(nativeApi, buildToolsVersion).toString();
+    String frameworkAidl = AndroidSdk.getFrameworkAidl(nativeApi, apiLevel).toString();
 
     TempDir inputFilesDir = nativeApi.createTempDir();
     inputFilesDir.writeFile(interfaceFile);
@@ -43,15 +42,18 @@ public class AidlFunction {
     command.add("-o" + outputFilesDir.rootOsPath());
     command.add(inputFilesDir.asOsPath(path(((SString) interfaceFile.get("path")).data())));
 
-    executeCommand(command);
-    return onlyElement(outputFilesDir.readFiles());
+    if (executeCommand(nativeApi, command)) {
+      return null;
+    }
+    return onlyElement(nativeApi, outputFilesDir.readFiles());
   }
 
-  private static Struct onlyElement(Array outputFiles) {
+  private static Struct onlyElement(NativeApi nativeApi, Array outputFiles) {
     Iterator<Struct> iterator = outputFiles.asIterable(Struct.class).iterator();
     if (!iterator.hasNext()) {
-      throw errorException(AIDL_BINARY
+      nativeApi.log().error(AIDL_BINARY
           + " binary should return exactly one file but returned zero.");
+      return null;
     }
     Struct result = iterator.next();
     if (iterator.hasNext()) {
@@ -62,20 +64,25 @@ public class AidlFunction {
         builder.append(((SString) file.get("path")).data());
         builder.append("\n");
       }
-      throw errorException(builder.toString());
+      nativeApi.log().error(builder.toString());
+      return null;
     }
     return result;
   }
 
-  private static void executeCommand(List<String> command) throws InterruptedException {
+  private static boolean executeCommand(NativeApi nativeApi, List<String> command)
+      throws InterruptedException {
     try {
       int exitValue = CommandExecutor.execute(command);
       if (exitValue != 0) {
-        throw errorException(AIDL_BINARY + " binary returned non zero exit value = " + exitValue);
+        nativeApi.log().error(AIDL_BINARY + " binary returned non zero exit value = " + exitValue);
+        return true;
       }
     } catch (IOException e) {
-      throw errorException(binaryFailedMessage(command, e));
+      nativeApi.log().error(binaryFailedMessage(command, e));
+      return true;
     }
+    return false;
   }
 
   private static String binaryFailedMessage(List<String> command, IOException e) {

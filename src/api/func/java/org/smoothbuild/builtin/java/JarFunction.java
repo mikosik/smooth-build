@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.java;
 
-import static org.smoothbuild.lang.message.MessageException.errorException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,8 +14,8 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
@@ -30,7 +28,8 @@ public class JarFunction {
       for (Struct file : files.asIterable(Struct.class)) {
         String path = ((SString) file.get("path")).data();
         if (duplicatesDetector.addValue(path)) {
-          throw errorException("Cannot jar two files with the same path = " + path);
+          nativeApi.log().error("Cannot jar two files with the same path = " + path);
+          return null;
         }
         jarFile(file, jarOutputStream, buffer);
       }

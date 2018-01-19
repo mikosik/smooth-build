@@ -19,8 +19,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -37,7 +37,8 @@ public class OutputsDbTest {
   private final HashedDb hashedDbOutputs = new HashedDb();
   private final TypesDb typesDb = new TypesDb(hashedDbValues);
   private final ValuesDb valuesDb = new ValuesDb(hashedDbValues, typesDb);
-  private final OutputsDb outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, typesDb);
+  private final MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
+  private final OutputsDb outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
   private final HashCode hash = Hash.string("abc");
 
   private final byte[] bytes = new byte[] {};
@@ -72,7 +73,7 @@ public class OutputsDbTest {
   @Test
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string("abc"));
-    given(message = new ErrorMessage("message string"));
+    given(message = messagesDb.error("message string"));
     given(outputsDb).write(hash, new Output(stringValue, asList(message)));
     when(outputsDb.read(hash, typesDb.string()).messages());
     thenReturned(contains(message));

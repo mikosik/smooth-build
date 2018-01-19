@@ -5,22 +5,26 @@ import static org.smoothbuild.builtin.java.junit.ReflectionUtil.runReflexivelyAn
 
 import java.util.List;
 
+import org.smoothbuild.lang.plugin.NativeApi;
+
 public class ResultWrapper {
+  private final NativeApi nativeApi;
   private final Object result;
 
-  public ResultWrapper(Object result) {
+  public ResultWrapper(NativeApi nativeApi, Object result) {
+    this.nativeApi = nativeApi;
     this.result = result;
   }
 
   public boolean wasSuccessful() {
-    return runReflexivelyAndCast(Boolean.class, result, "wasSuccessful");
+    return runReflexivelyAndCast(nativeApi, Boolean.class, result, "wasSuccessful");
   }
 
   public List<FailureWrapper> getFailures() {
-    List<?> failures = runReflexivelyAndCast(List.class, result, "getFailures");
+    List<?> failures = runReflexivelyAndCast(nativeApi, List.class, result, "getFailures");
     return failures
         .stream()
-        .map(FailureWrapper::new)
+        .map(f -> new FailureWrapper(nativeApi, f))
         .collect(toList());
   }
 }

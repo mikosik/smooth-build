@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -19,20 +18,23 @@ public class FilesFunction {
   @SmoothFunction
   @NotCacheable
   public static Array files(Container container, SString dir) {
-    Path path = validatedProjectPath("dir", dir);
+    Path path = validatedProjectPath(container, "dir", dir);
     FileSystem fileSystem = container.fileSystem();
 
     if (path.startsWith(SMOOTH_DIR)) {
-      throw errorException("Listing files from " + SMOOTH_DIR + " dir is not allowed.");
+      container.log().error("Listing files from " + SMOOTH_DIR + " dir is not allowed.");
+      return null;
     }
 
     switch (fileSystem.pathState(path)) {
       case DIR:
         return readFiles(container, fileSystem, path);
       case FILE:
-        throw errorException("Dir " + path + " doesn't exist. It is a file.");
+        container.log().error("Dir " + path + " doesn't exist. It is a file.");
+        return null;
       case NOTHING:
-        throw errorException("Dir " + path + " doesn't exist.");
+        container.log().error("Dir " + path + " doesn't exist.");
+        return null;
       default:
         throw new RuntimeException("Broken 'files' function implementation: unreachable case");
     }

@@ -6,11 +6,8 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.message.InfoMessage;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.message.WarningMessage;
 
 import com.google.common.base.Splitter;
 
@@ -68,14 +65,14 @@ public class Console {
   }
 
   private void incrementCount(Message message) {
-    if (message instanceof ErrorMessage) {
+    if (message.isError()) {
       errorCount++;
-    } else if (message instanceof WarningMessage) {
+    } else if (message.isWarning()) {
       warningCount++;
-    } else if (message instanceof InfoMessage) {
+    } else if (message.isInfo()) {
       infoCount++;
     } else {
-      throw new RuntimeException("Unknown message type: " + message.getClass().getCanonicalName());
+      throw new RuntimeException("Unknown message severity: " + message.severity());
     }
   }
 

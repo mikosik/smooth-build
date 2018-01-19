@@ -1,12 +1,10 @@
 package org.smoothbuild.lang.message;
 
+import static com.google.common.collect.Streams.stream;
+
 public class Messages {
   public static boolean containsErrors(Iterable<Message> messages) {
-    for (Message message : messages) {
-      if (message instanceof ErrorMessage) {
-        return true;
-      }
-    }
-    return false;
+    return stream(messages)
+        .anyMatch(Message::isError);
   }
 }
