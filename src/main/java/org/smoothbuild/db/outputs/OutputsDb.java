@@ -43,8 +43,8 @@ public class OutputsDb {
     marshaller.writeInt(messages.size());
     for (Message message : messages) {
       SString messageString = valuesDb.string(message.message());
-
-      marshaller.writeInt(messageTypeToInt(message));
+      SString messageKindString = valuesDb.string(messageTypeToString(message));
+      marshaller.writeHash(messageKindString.hash());
       marshaller.writeHash(messageString.hash());
     }
 
@@ -63,16 +63,21 @@ public class OutputsDb {
       int size = unmarshaller.readInt();
       List<Message> messages = new ArrayList<>();
       for (int i = 0; i < size; i++) {
-        int messageType = unmarshaller.readInt();
+        HashCode messageKindHash = unmarshaller.readHash();
+        Value messageKind = valuesDb.get(messageKindHash);
+        if (!typesDb.string().equals(messageKind.type())) {
+          throw new CorruptedValueException(messageKindHash, "Expected message of type "
+              + typesDb.string() + " but got " + messageKind.type());
+        }
         HashCode messageStringHash = unmarshaller.readHash();
         Value messageValue = valuesDb.get(messageStringHash);
         if (!typesDb.string().equals(messageValue.type())) {
           throw new CorruptedValueException(messageStringHash, "Expected message of type "
               + typesDb.string() + " but got " + messageValue.type());
         }
-        SString messageSString = (SString) messageValue;
-        String messageString = messageSString.data();
-        messages.add(newMessage(messageType, messageString));
+        String kindString = ((SString) messageKind).data();
+        String messageString = ((SString) messageValue).data();
+        messages.add(newMessage(kindString, messageString));
       }
 
       if (Messages.containsErrors(messages)) {
@@ -89,30 +94,30 @@ public class OutputsDb {
     }
   }
 
-  private static int messageTypeToInt(Message message) {
+  private static String messageTypeToString(Message message) {
     if (message instanceof ErrorMessage) {
-      return 0;
+      return "error";
     }
     if (message instanceof WarningMessage) {
-      return 1;
+      return "warning";
     }
     if (message instanceof InfoMessage) {
-      return 2;
+      return "info";
     }
     throw new RuntimeException("Unsupported Message type: " + message.getClass()
         .getCanonicalName());
   }
 
-  private static Message newMessage(int type, String message) {
-    if (type == 0) {
-      return new ErrorMessage(message);
+  private static Message newMessage(String type, String message) {
+    switch (type) {
+      case "error":
+        return new ErrorMessage(message);
+      case "warning":
+        new WarningMessage(message);
+      case "info":
+        new InfoMessage(message);
+      default:
+        throw new RuntimeException("Illegal message type. Outputs DB corrupted?");
     }
-    if (type == 1) {
-      return new WarningMessage(message);
-    }
-    if (type == 2) {
-      return new InfoMessage(message);
-    }
-    throw new RuntimeException("Illegal message type. Outputs DB corrupted?");
   }
 }
