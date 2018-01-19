@@ -16,22 +16,23 @@ import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.message.WarningMessage;
+import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
 
 public class TaskReporterTest {
-  Console console = mock(Console.class);
-  TaskReporter taskReporter = new TaskReporter(console);
-  List<Message> messages;
-  Task task;
+  private final Console console = mock(Console.class);
+  private final TaskReporter taskReporter = new TaskReporter(console);
+  private final MessagesDb messagesDb = new MessagesDb();
+  private List<Message> messages;
+  private Task task;
 
   @Test
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
-    given(messages = asList(new WarningMessage("message")));
+    given(messages = asList(messagesDb.warning("message")));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(console).print(header(task, false), messages);
@@ -46,7 +47,7 @@ public class TaskReporterTest {
 
   @Test
   public void non_internal_task_with_message_is_printed() {
-    given(messages = asList(new WarningMessage("message")));
+    given(messages = asList(messagesDb.warning("message")));
     given(task = createTask(false));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);

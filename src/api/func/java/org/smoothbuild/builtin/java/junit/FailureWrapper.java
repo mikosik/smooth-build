@@ -2,15 +2,19 @@ package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.builtin.java.junit.ReflectionUtil.runReflexivelyAndCast;
 
+import org.smoothbuild.lang.plugin.NativeApi;
+
 public class FailureWrapper {
+  private final NativeApi nativeApi;
   private final Object failure;
 
-  public FailureWrapper(Object failure) {
+  public FailureWrapper(NativeApi nativeApi, Object failure) {
+    this.nativeApi = nativeApi;
     this.failure = failure;
   }
 
   public String getTrace() {
-    return runReflexivelyAndCast(String.class, failure, "getTrace");
+    return runReflexivelyAndCast(nativeApi, String.class, failure, "getTrace");
   }
 
   @Override

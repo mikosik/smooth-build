@@ -14,14 +14,15 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.value.SString;
 
 public class OutputTest {
   private final ValuesDb valuesDb = memoryValuesDb();
+  private final MessagesDb messagesDb = new MessagesDb();
   private Output output;
-  private final List<Message> messages = asList(new ErrorMessage(""));
+  private final List<Message> messages = asList(messagesDb.error(""));
   private SString sstring;
   private SString otherSstring;
 

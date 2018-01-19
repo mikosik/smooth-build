@@ -8,22 +8,21 @@ import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNam
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.message.WarningMessage;
+import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class JunitFunction {
   @SmoothFunction
@@ -32,41 +31,39 @@ public class JunitFunction {
     Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
         .collect(toMap(f -> toBinaryName(((SString) f.get("path")).data()), identity()));
     Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
-    testFiles
-        .entrySet()
-        .stream()
-        .forEach(e -> {
-          if (allFiles.containsKey(e.getKey())) {
-            throw errorException("Both 'tests' and 'deps' contains class " + e.getValue());
-          } else {
-            allFiles.put(e.getKey(), e.getValue());
-          }
-        });
+    for (Entry<String, Struct> entry : testFiles.entrySet()) {
+      if (allFiles.containsKey(entry.getKey())) {
+        nativeApi.log().error("Both 'tests' and 'deps' contains class " + entry.getValue());
+        return null;
+      } else {
+        allFiles.put(entry.getKey(), entry.getValue());
+      }
+    }
 
     FileClassLoader classLoader = new FileClassLoader(allFiles);
     ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
     try {
-      JUnitCoreWrapper jUnitCore = createJUnitCore(allFiles, classLoader);
-      Predicate<Path> filter = createFilter(include);
+      JUnitCoreWrapper jUnitCore = createJUnitCore(nativeApi, allFiles, classLoader);
+      Predicate<Path> filter = createFilter(nativeApi, include);
       int testCount = 0;
       for (String binaryName : testFiles.keySet()) {
         Path filePath = path(((SString) testFiles.get(binaryName).get("path")).data());
         if (filter.test(filePath)) {
           testCount++;
-          Class<?> testClass = loadClass(classLoader, binaryName);
+          Class<?> testClass = loadClass(nativeApi, classLoader, binaryName);
           ResultWrapper result = jUnitCore.run(testClass);
           if (!result.wasSuccessful()) {
             for (FailureWrapper failure : result.getFailures()) {
-              nativeApi.log(new ErrorMessage(
-                  "test failed: " + failure.toString() + "\n" + failure.getTrace()));
+              nativeApi.log().error(
+                  "test failed: " + failure.toString() + "\n" + failure.getTrace());
             }
             return nativeApi.create().string("FAILURE");
           }
         }
       }
       if (testCount == 0) {
-        nativeApi.log(new WarningMessage("No junit tests found."));
+        nativeApi.log().warning("No junit tests found.");
       }
       return nativeApi.create().string("SUCCESS");
     } finally {
@@ -74,28 +71,34 @@ public class JunitFunction {
     }
   }
 
-  private static JUnitCoreWrapper createJUnitCore(Map<String, Struct> binaryNameToClassFile,
-      FileClassLoader classLoader) {
+  private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
+      Map<String, Struct> binaryNameToClassFile, FileClassLoader classLoader) {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
-      return JUnitCoreWrapper.newInstance(loadClass(classLoader, "org.junit.runner.JUnitCore"));
+      return JUnitCoreWrapper.newInstance(nativeApi,
+          loadClass(nativeApi, classLoader, "org.junit.runner.JUnitCore"));
     } else {
-      throw errorException("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
+      nativeApi.log().error(
+          "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
+      throw new AbortException();
     }
   }
 
-  private static Class<?> loadClass(FileClassLoader classLoader, String binaryName) {
+  private static Class<?> loadClass(NativeApi nativeApi, FileClassLoader classLoader,
+      String binaryName) {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      throw errorException("Couldn't find class for binaryName = " + binaryName);
+      nativeApi.log().error("Couldn't find class for binaryName = " + binaryName);
+      throw new AbortException();
     }
   }
 
-  private static Predicate<Path> createFilter(SString includeParam) {
+  private static Predicate<Path> createFilter(NativeApi nativeApi, SString includeParam) {
     try {
       return pathMatcher(includeParam.data());
     } catch (IllegalPathPatternException e) {
-      throw errorException("Parameter 'include' has illegal value. " + e.getMessage());
+      nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
+      throw new AbortException();
     }
   }
 }

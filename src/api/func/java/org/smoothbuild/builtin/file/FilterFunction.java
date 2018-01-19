@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import java.util.function.Predicate;
 
@@ -18,7 +17,13 @@ import org.smoothbuild.lang.value.Struct;
 public class FilterFunction {
   @SmoothFunction
   public static Array filter(NativeApi nativeApi, Array files, SString include) {
-    Predicate<Path> filter = createFilter(include.data());
+    Predicate<Path> filter = null;
+    try {
+      filter = pathMatcher(include.data());
+    } catch (IllegalPathPatternException e) {
+      nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
+      return null;
+    }
     ArrayBuilder builder = nativeApi.create().arrayBuilder(nativeApi.types().file());
 
     for (Struct file : files.asIterable(Struct.class)) {
@@ -28,13 +33,5 @@ public class FilterFunction {
     }
 
     return builder.build();
-  }
-
-  private static Predicate<Path> createFilter(String pattern) {
-    try {
-      return pathMatcher(pattern);
-    } catch (IllegalPathPatternException e) {
-      throw errorException("Parameter 'include' has illegal value. " + e.getMessage());
-    }
   }
 }

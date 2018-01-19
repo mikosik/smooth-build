@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.hamcrest.Matchers.instanceOf;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -14,26 +13,27 @@ import javax.tools.JavaFileObject;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class LoggingDiagnosticListenerTest {
   private final Diagnostic<? extends JavaFileObject> diagnostic = mock(Diagnostic.class);
   private final NativeApi nativeApi = mock(NativeApi.class);
+  private final MessageLogger messageLogger = mock(MessageLogger.class);
   private LoggingDiagnosticListener listener;
 
   @Before
   public void before() {
     given(willReturn(Diagnostic.Kind.ERROR), diagnostic).getKind();
     given(willReturn("diagnostic message"), diagnostic).getMessage(null);
+    given(willReturn(messageLogger), nativeApi).log();
   }
 
   @Test
   public void diagnostic_is_reported_as_error() {
     given(listener = new LoggingDiagnosticListener(nativeApi));
     when(listener).report(diagnostic);
-    thenCalled(nativeApi).log(any(Message.class, instanceOf(ErrorMessage.class)));
+    thenCalled(messageLogger).error(any(String.class));
   }
 
   @Test

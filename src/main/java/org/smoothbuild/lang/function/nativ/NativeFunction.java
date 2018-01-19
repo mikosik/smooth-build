@@ -12,9 +12,8 @@ import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Signature;
 import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.message.ErrorMessage;
 import org.smoothbuild.lang.message.Location;
-import org.smoothbuild.lang.message.MessageException;
+import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
@@ -60,16 +59,12 @@ public class NativeFunction extends Function {
     try {
       Value result = (Value) nativ.method().invoke(null, createArguments(container, arguments));
       if (result == null) {
-        if (!containsErrors(container.messages())) {
-          container.log(new ErrorMessage("Function " + name()
-              + " has faulty native implementation: it returned 'null' but logged no error."));
-        }
-        return new Output(null, container.messages());
+        return nullOutput(container);
       }
       if (!type().equals(result.type())) {
-        container.log(new ErrorMessage("Function " + name()
+        container.log().error("Function " + name()
             + " has faulty native implementation: Its result type is " + type().name()
-            + " but it returned value of type " + result.type().name() + "."));
+            + " but it returned value of type " + result.type().name() + ".");
         return new Output(null, container.messages());
       }
       return new Output(result, container.messages());
@@ -77,16 +72,23 @@ public class NativeFunction extends Function {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
-      if (cause instanceof MessageException) {
-        container.log(((MessageException) cause).message());
-        return new Output(null, container.messages());
+      if (cause instanceof AbortException) {
+        return nullOutput(container);
       } else {
-        container.log(new ErrorMessage("Function " + name()
+        container.log().error("Function " + name()
             + " threw java exception from its native code:\n"
-            + getStackTraceAsString(cause)));
+            + getStackTraceAsString(cause));
         return new Output(null, container.messages(), false);
       }
     }
+  }
+
+  private Output nullOutput(Container container) {
+    if (!containsErrors(container.messages())) {
+      container.log().error("Function " + name()
+          + " has faulty native implementation: it returned 'null' but logged no error.");
+    }
+    return new Output(null, container.messages());
   }
 
   private static Object[] createArguments(NativeApi nativeApi, List<Value> arguments) {

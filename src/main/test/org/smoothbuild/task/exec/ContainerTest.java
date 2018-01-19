@@ -1,6 +1,6 @@
 package org.smoothbuild.task.exec;
 
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -18,16 +18,13 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.message.ErrorMessage;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
   private final TempManager tempDirProvider = mock(TempManager.class);
-
   private Container container;
-  private Message message;
   private TempDir tempDir;
 
   @Before
@@ -35,7 +32,8 @@ public class ContainerTest {
     HashedDb hashedDb = new HashedDb();
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    container = new Container(fileSystem, valuesDb, tempDirProvider);
+    MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
+    container = new Container(fileSystem, valuesDb, messagesDb, tempDirProvider);
   }
 
   @Test
@@ -46,9 +44,10 @@ public class ContainerTest {
 
   @Test
   public void messages_are_logged() throws Exception {
-    given(message = new ErrorMessage("message"));
-    when(container).log(message);
-    then(container.messages(), contains(message));
+    when(container.log()).error("message");
+    then(container.messages().size(), equalTo(1));
+    then(container.messages().iterator().next().text(), equalTo("message"));
+    then(container.messages().iterator().next().severity(), equalTo("ERROR"));
   }
 
   @Test

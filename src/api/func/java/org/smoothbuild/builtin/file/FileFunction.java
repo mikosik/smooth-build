@@ -2,23 +2,23 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
-import static org.smoothbuild.lang.message.MessageException.errorException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {
   @SmoothFunction
   @NotCacheable
   public static Struct file(Container container, SString path) {
-    Path validatedPath = validatedProjectPath("path", path);
+    Path validatedPath = validatedProjectPath(container, "path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
-      throw errorException("Reading file from '.smooth' dir is not allowed.");
+      container.log().error("Reading file from '.smooth' dir is not allowed.");
+      return null;
     }
 
     FileSystem fileSystem = container.fileSystem();
@@ -27,9 +27,11 @@ public class FileFunction {
         FileReader reader = new FileReader(container);
         return reader.createFile(validatedPath, validatedPath);
       case DIR:
-        throw errorException("File " + validatedPath + " doesn't exist. It is a dir.");
+        container.log().error("File " + validatedPath + " doesn't exist. It is a dir.");
+        return null;
       case NOTHING:
-        throw errorException("File " + validatedPath + " doesn't exist.");
+        container.log().error("File " + validatedPath + " doesn't exist.");
+        return null;
       default:
         throw new RuntimeException("Broken 'file' function implementation: unreachable case");
     }
