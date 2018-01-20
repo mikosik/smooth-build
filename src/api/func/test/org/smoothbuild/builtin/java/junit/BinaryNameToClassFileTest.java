@@ -3,9 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.task.exec.Container.container;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -16,21 +14,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest {
-  private final NativeApi nativeApi = container();
+  private final NativeApi nativeApi = new Container();
   private Blob blob;
   private Struct file1;
   private Struct file2;
 
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException {
-    given(file1 = file(memoryValuesDb(), path("a/Klass.class")));
-    given(file2 = file(memoryValuesDb(), path("b/Klass.class")));
+    given(file1 = file(new ValuesDb(), path("a/Klass.class")));
+    given(file2 = file(new ValuesDb(), path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi, asList(blob)));
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
@@ -45,8 +45,8 @@ public class BinaryNameToClassFileTest {
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException {
-    given(file1 = file(memoryValuesDb(), path("a/Klass.txt")));
-    given(file2 = file(memoryValuesDb(), path("b/Klass.java")));
+    given(file1 = file(new ValuesDb(), path("a/Klass.txt")));
+    given(file2 = file(new ValuesDb(), path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi, asList(blob)).entrySet());
     thenReturned(empty());

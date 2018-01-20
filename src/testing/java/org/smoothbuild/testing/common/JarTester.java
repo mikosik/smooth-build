@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.common;
 
 import static com.google.common.io.ByteStreams.toByteArray;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 
 import java.io.ByteArrayOutputStream;
@@ -9,9 +8,10 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class JarTester {
 
@@ -23,7 +23,7 @@ public class JarTester {
       }
     }
 
-    return blob(memoryValuesDb(), outputStream.toByteArray());
+    return blob(new ValuesDb(), outputStream.toByteArray());
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {

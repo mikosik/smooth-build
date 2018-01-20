@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -16,7 +15,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Struct;
 
 public class InputSourceFileTest {
-  private final ValuesDb valuesDb = memoryValuesDb();
+  private final ValuesDb valuesDb = new ValuesDb();
   private Path path;
   private String content;
   private Struct file;
