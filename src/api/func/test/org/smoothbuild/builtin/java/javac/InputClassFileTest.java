@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
@@ -18,7 +17,7 @@ import org.smoothbuild.lang.value.Struct;
 
 public class InputClassFileTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
-  private final ValuesDb valuesDb = memoryValuesDb();
+  private final ValuesDb valuesDb = new ValuesDb();
   private InputClassFile inputClassFile;
   private final Path path = path("a/b/MyClass.class");
   private Struct file;

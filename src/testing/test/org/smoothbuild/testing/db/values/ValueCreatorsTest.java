@@ -1,6 +1,5 @@
 package org.smoothbuild.testing.db.values;
 
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.testory.Testory.given;
@@ -12,7 +11,7 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Blob;
 
 public class ValueCreatorsTest {
-  private final ValuesDb valuesDb = memoryValuesDb();
+  private final ValuesDb valuesDb = new ValuesDb();
   private Blob blob;
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 

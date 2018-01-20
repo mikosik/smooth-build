@@ -3,7 +3,6 @@ package org.smoothbuild.task.base;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.db.values.ValuesDb.memoryValuesDb;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -19,7 +18,7 @@ import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.value.SString;
 
 public class OutputTest {
-  private final ValuesDb valuesDb = memoryValuesDb();
+  private final ValuesDb valuesDb = new ValuesDb();
   private final MessagesDb messagesDb = new MessagesDb();
   private Output output;
   private final List<Message> messages = asList(messagesDb.error(""));

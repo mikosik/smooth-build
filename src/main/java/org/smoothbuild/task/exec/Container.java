@@ -36,13 +36,24 @@ public class Container implements NativeApi {
     this.messageLogger = new MessageLoggerImpl(messagesDb);
   }
 
-  public static Container container() {
-    MemoryFileSystem fileSystem = new MemoryFileSystem();
-    HashedDb hashedDb = new HashedDb();
-    TypesDb typesDb = new TypesDb(hashedDb);
-    ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
-    return new Container(fileSystem, valuesDb, messagesDb, new TempManager(fileSystem));
+  public Container() {
+    this(new MemoryFileSystem(), new HashedDb());
+  }
+
+  private Container(MemoryFileSystem fileSystem, HashedDb hashedDb) {
+    this(fileSystem, hashedDb, new TypesDb(hashedDb));
+  }
+
+  private Container(MemoryFileSystem fileSystem, HashedDb hashedDb, TypesDb typesDb) {
+    this(fileSystem, typesDb, new ValuesDb(hashedDb, typesDb));
+  }
+
+  private Container(MemoryFileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
+    this(fileSystem, valuesDb, new MessagesDb(valuesDb, typesDb));
+  }
+
+  private Container(MemoryFileSystem fileSystem, ValuesDb valuesDb, MessagesDb messagesDb) {
+    this(fileSystem, valuesDb, messagesDb, new TempManager(fileSystem));
   }
 
   @Override

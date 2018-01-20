@@ -3,9 +3,6 @@ package org.smoothbuild.db.values;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Instantiator;
@@ -35,14 +32,12 @@ public class ValuesDb implements ValueFactory {
     this.instantiator = new Instantiator(hashedDb, typesDb);
   }
 
-  public ValuesDb(HashedDb hashedDb) {
-    this(hashedDb, new TypesDb(hashedDb));
+  public ValuesDb() {
+    this(new HashedDb());
   }
 
-  public static ValuesDb memoryValuesDb() {
-    MemoryFileSystem fileSystem = new MemoryFileSystem();
-    HashedDb hashedDb = new HashedDb(fileSystem, Path.root(), new TempManager(fileSystem));
-    return new ValuesDb(hashedDb, new TypesDb(hashedDb));
+  public ValuesDb(HashedDb hashedDb) {
+    this(hashedDb, new TypesDb(hashedDb));
   }
 
   public Types types() {
