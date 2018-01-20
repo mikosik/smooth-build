@@ -3,6 +3,7 @@ package org.smoothbuild.db.values;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -64,6 +65,15 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     when(() -> arrayBuilder.build().asIterable(SString.class));
     thenReturned(contains(sstring));
+  }
+
+  @Test
+  public void array_contains_added_element_via_add_all_method() throws Exception {
+    given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
+    given(sstring = valuesDb.string("abc"));
+    given(arrayBuilder).addAll(list(sstring, sstring));
+    when(() -> arrayBuilder.build().asIterable(SString.class));
+    thenReturned(contains(sstring, sstring));
   }
 
   @Test
