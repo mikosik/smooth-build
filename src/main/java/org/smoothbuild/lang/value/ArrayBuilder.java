@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.value;
 
+import static com.google.common.collect.Streams.stream;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,11 @@ public class ArrayBuilder {
     this.type = type;
     this.hashedDb = hashedDb;
     this.elements = new ArrayList<>();
+  }
+
+  public ArrayBuilder addAll(Iterable<? extends Value> values) {
+    stream(values).forEach(this::add);
+    return this;
   }
 
   public ArrayBuilder add(Value elem) {
