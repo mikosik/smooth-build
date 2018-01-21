@@ -11,14 +11,8 @@ public class ConcatenateStringArraysFunction {
   public static Array concatenateStringArrays(NativeApi nativeApi, Array strings,
       Array with) {
     ArrayBuilder builder = nativeApi.create().arrayBuilder(nativeApi.types().string());
-
-    for (SString string : strings.asIterable(SString.class)) {
-      builder.add(string);
-    }
-    for (SString string : with.asIterable(SString.class)) {
-      builder.add(string);
-    }
-
+    builder.addAll(strings.asIterable(SString.class));
+    builder.addAll(with.asIterable(SString.class));
     return builder.build();
   }
 }
