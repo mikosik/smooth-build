@@ -37,7 +37,7 @@ public class Array extends Value {
     for (Value value : values) {
       if (!value.type().equals(elemType)) {
         throw new CorruptedValueException(hash(), "It is array with type " + type()
-            + " but one of its element has type " + value.type());
+            + " but one of its elements has type " + value.type());
       }
     }
     return (ImmutableList<T>) values;
