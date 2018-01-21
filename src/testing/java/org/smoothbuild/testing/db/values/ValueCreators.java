@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.db.values;
 
-import static java.util.Arrays.stream;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
@@ -27,9 +26,7 @@ public class ValueCreators {
 
   public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
       Value... elements) {
-    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(elementType);
-    stream(elements).forEach(arrayBuilder::add);
-    return arrayBuilder.build();
+    return valuesDb.arrayBuilder(elementType).addAll(list(elements)).build();
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {
