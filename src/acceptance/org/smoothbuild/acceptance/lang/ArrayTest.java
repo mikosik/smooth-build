@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ArrayTest extends AcceptanceTestCase {
-
   @Test
   public void empty_array_of_nothings() throws Exception {
     givenScript("result = [];");

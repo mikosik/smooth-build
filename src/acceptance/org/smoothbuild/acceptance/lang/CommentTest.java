@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class CommentTest extends AcceptanceTestCase {
-
   @Test
   public void full_line_comment() throws IOException {
     givenScript("# ((( full line comment '\n result = '';");

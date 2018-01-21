@@ -11,7 +11,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class MethodsTest {
-
   @Test
   public void is_public() throws Exception {
     Class<?> klass = MyClass.class;

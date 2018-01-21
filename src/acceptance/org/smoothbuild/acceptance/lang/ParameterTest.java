@@ -9,7 +9,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 
 public class ParameterTest extends AcceptanceTestCase {
-
   @Test
   public void no_parameters() throws Exception {
     givenScript("noParameters() = 'abc';"

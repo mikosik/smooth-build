@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ArtifactTest extends AcceptanceTestCase {
-
   @Test
   public void store_string_artifact() throws Exception {
     givenScript("result = 'abc';");

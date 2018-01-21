@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class JavaNamingTest {
-
   @Test
   public void binary_name_of_class_in_default_package_is_class_name() throws Exception {
     when(toBinaryName("MyClass.class"));

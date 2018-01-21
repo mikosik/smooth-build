@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FunctionTest extends AcceptanceTestCase {
-
   @Test
   public void illegal_function_name_is_forbidden() throws Exception {
     givenScript("function^name = 'abc';");

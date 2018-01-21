@@ -13,12 +13,11 @@ import java.util.HashSet;
 import org.junit.Test;
 
 public class DuplicatesDetectorTest {
-  String string1 = "string1";
-  String string2 = "string2";
-  String string3 = "string3";
-  String string4 = "string4";
-
-  DuplicatesDetector<String> duplicatesDetector;
+  private final String string1 = "string1";
+  private final String string2 = "string2";
+  private final String string3 = "string3";
+  private final String string4 = "string4";
+  private DuplicatesDetector<String> duplicatesDetector;
 
   @Test
   public void initially_has_no_duplicates() throws Exception {

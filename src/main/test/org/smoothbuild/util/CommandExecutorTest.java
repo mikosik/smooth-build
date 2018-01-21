@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 public class CommandExecutorTest {
-
   /**
    * This tests ensures that CommandExecutor closes all streams correctly so we
    * won't suffer from 'too many open files problem'. When it fails it provides
