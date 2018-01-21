@@ -10,8 +10,8 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class NameMatcherTest {
-  NameMatcher nameMatcher;
-  NamePattern pattern;
+  private NameMatcher nameMatcher;
+  private NamePattern pattern;
 
   @Test()
   public void double_star_pattern_is_forbidden() {

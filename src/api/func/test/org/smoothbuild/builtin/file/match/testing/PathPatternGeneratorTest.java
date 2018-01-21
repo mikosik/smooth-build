@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 public class PathPatternGeneratorTest {
-
   @Test
   public void all_possible_patterns_are_generated() {
     final List<String> generatedPatterns = new ArrayList<>();

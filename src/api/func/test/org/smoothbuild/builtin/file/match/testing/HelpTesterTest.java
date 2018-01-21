@@ -7,7 +7,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class HelpTesterTest {
-
   @Test
   public void empty_string_does_not_end_with_three_letters() {
     when(endsWithThreeLetters(""));

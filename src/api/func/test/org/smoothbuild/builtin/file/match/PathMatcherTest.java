@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 public class PathMatcherTest {
-
   @Test
   public void one_part_pattern_without_wildcards() throws Exception {
     assertPatternMatches("abc", "abc");

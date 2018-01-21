@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.smoothbuild.builtin.file.match.testing.NamePatternGenerator;
 
 public class NameMatcherMediumTest {
-
   @Test
   public void test_generated_patterns() throws Exception {
     NamePatternGenerator.generatePatterns(5, doTestPatternConsumer());

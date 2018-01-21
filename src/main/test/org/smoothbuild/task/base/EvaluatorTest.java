@@ -15,7 +15,6 @@ import org.smoothbuild.task.exec.Container;
 public class EvaluatorTest {
   private final String name = "name";
   private final Location location = location(Paths.get("script.smooth"), 1);
-
   private Evaluator evaluator;
 
   @Test

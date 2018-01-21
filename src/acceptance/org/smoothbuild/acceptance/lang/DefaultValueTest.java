@@ -10,7 +10,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 
 public class DefaultValueTest extends AcceptanceTestCase {
-
   @Test
   public void default_value_with_type_not_assignable_to_parameter_type_causes_error()
       throws Exception {

@@ -12,7 +12,6 @@ import java.util.function.Consumer;
 import org.junit.Test;
 
 public class MatchingNamesGeneratorTest {
-
   @Test
   public void test() {
     List<String> expected = new ArrayList<>();

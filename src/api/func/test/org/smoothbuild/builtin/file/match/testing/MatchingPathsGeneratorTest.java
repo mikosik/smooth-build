@@ -10,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 public class MatchingPathsGeneratorTest {
-
   @Test
   public void single_star_set_for_whole_name() {
     // given

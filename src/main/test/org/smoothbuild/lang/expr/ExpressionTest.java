@@ -21,7 +21,6 @@ import org.smoothbuild.util.Dag;
 public class ExpressionTest {
   private final Type type = new TypesDb().string();
   private Location location;
-
   private MyExpression expression;
 
   @Before

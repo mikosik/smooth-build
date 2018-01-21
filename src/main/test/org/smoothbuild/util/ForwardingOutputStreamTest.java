@@ -17,8 +17,9 @@ import org.junit.Test;
 import org.testory.TestoryAssertionError;
 
 public class ForwardingOutputStreamTest {
-  OutputStream outputStream = mock(OutputStream.class);
-  ForwardingOutputStream forwardingOutputStream = new ForwardingOutputStream(outputStream);
+  private final OutputStream outputStream = mock(OutputStream.class);
+  private final ForwardingOutputStream forwardingOutputStream = new ForwardingOutputStream(
+      outputStream);
 
   int oneByte = 33;
   byte[] bytes = new byte[] { 1, 2, 3 };

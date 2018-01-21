@@ -8,9 +8,9 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class EnvironmentVariableTest {
-  String name = "name";
-  String value = "value";
-  EnvironmentVariable environmentVariable;
+  private final String name = "name";
+  private final String value = "value";
+  private EnvironmentVariable environmentVariable;
 
   @Test
   public void name_returns_name_passed_to_constructor() throws Exception {

@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RecursiveDeleterTest {
-  List<File> files;
-  File root;
+  private List<File> files;
+  private File root;
 
   @Before
   public void before() throws IOException {

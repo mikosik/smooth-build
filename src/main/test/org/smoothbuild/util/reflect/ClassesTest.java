@@ -6,7 +6,6 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class ClassesTest {
-
   @Test
   public void binary_path_of_top_level_class() {
     when(Classes.binaryPath(String.class));
