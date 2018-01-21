@@ -13,6 +13,7 @@ import static org.testory.Testory.when;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -33,12 +34,12 @@ import org.smoothbuild.util.Streams;
 import com.google.common.hash.HashCode;
 
 public class OutputsDbTest {
-  private final HashedDb hashedDbValues = new HashedDb();
-  private final HashedDb hashedDbOutputs = new HashedDb();
-  private final TypesDb typesDb = new TypesDb(hashedDbValues);
-  private final ValuesDb valuesDb = new ValuesDb(hashedDbValues, typesDb);
-  private final MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
-  private final OutputsDb outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
+  private HashedDb hashedDbValues;
+  private HashedDb hashedDbOutputs;
+  private TypesDb typesDb;
+  private ValuesDb valuesDb;
+  private MessagesDb messagesDb;
+  private OutputsDb outputsDb;
   private final HashCode hash = Hash.string("abc");
 
   private final byte[] bytes = new byte[] {};
@@ -50,6 +51,16 @@ public class OutputsDbTest {
   private Blob blob;
   private SString stringValue;
   private final String string = "some string";
+
+  @Before
+  public void before() {
+    hashedDbValues = new HashedDb();
+    hashedDbOutputs = new HashedDb();
+    typesDb = new TypesDb(hashedDbValues);
+    valuesDb = new ValuesDb(hashedDbValues, typesDb);
+    messagesDb = new MessagesDb(valuesDb, typesDb);
+    outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
+  }
 
   @Test
   public void result_cache_does_not_contain_not_written_result() {
