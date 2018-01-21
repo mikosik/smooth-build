@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
@@ -70,8 +69,8 @@ public class OutputsDb {
       Value messagesValue = valuesDb.get(unmarshaller.readHash());
       ArrayType messageArrayType = typesDb.array(messagesDb.messageType());
       if (!messagesValue.type().equals(messageArrayType)) {
-        throw new CorruptedValueException(messagesValue.hash(), "Expected " + messageArrayType
-            + " but got " + messagesValue.type());
+        throw new CorruptedOutputException(taskHash, "Expected " + messageArrayType
+            + " as first child of its merkle root, but got " + messagesValue.type());
       }
 
       List<Message> messages = stream(((Array) messagesValue).asIterable(Struct.class))
@@ -79,8 +78,8 @@ public class OutputsDb {
           .collect(toImmutableList());
       messages.stream().forEach(m -> {
         if (!isValidSeverity(m.severity())) {
-          throw new CorruptedValueException("Task " + taskHash + " in outputsDb is corrupted. "
-              + "One of messages has invalid severity = '" + m.severity() + "'");
+          throw new CorruptedOutputException(taskHash,
+              "One of messages has invalid severity = '" + m.severity() + "'");
         }
       });
       if (Messages.containsErrors(messages)) {
@@ -89,8 +88,8 @@ public class OutputsDb {
         HashCode resultObjectHash = unmarshaller.readHash();
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
-          throw new CorruptedValueException(resultObjectHash, "Expected result with type " + type
-              + " but got " + value.type());
+          throw new CorruptedOutputException(taskHash, "Expected value of type " + type
+              + " as second child of its merkle root, but got " + value.type());
         }
         return new Output(value, messages);
       }
