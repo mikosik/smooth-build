@@ -48,9 +48,7 @@ public class Build implements Command {
     List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
     Maybe<Set<Name>> functionNames = parseArguments(argsWithoutFirst);
     if (!functionNames.hasValue()) {
-      for (Object error : functionNames.errors()) {
-        console.rawError(error);
-      }
+      console.rawErrors(functionNames.errors());
       return EXIT_CODE_ERROR;
     }
     fileSystem.delete(ARTIFACTS_PATH);
@@ -59,9 +57,7 @@ public class Build implements Command {
     if (functions.hasValue()) {
       smoothExecutor.execute(functions.value(), functionNames.value());
     } else {
-      for (Object error : functions.errors()) {
-        console.rawError(error);
-      }
+      console.rawErrors(functions.errors());
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;

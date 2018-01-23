@@ -37,9 +37,7 @@ public class List implements Command {
           .sorted()
           .forEach(n -> System.out.println(n));
     } else {
-      for (Object error : functions.errors()) {
-        console.rawError(error);
-      }
+      console.rawErrors(functions.errors());
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;

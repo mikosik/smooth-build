@@ -38,6 +38,12 @@ public class Console {
     errorCount++;
   }
 
+  public void rawErrors(java.util.List<? extends Object> errors) {
+    errors
+        .stream()
+        .forEach(this::rawError);
+  }
+
   public void rawError(Object error) {
     println(error.toString());
     errorCount++;
