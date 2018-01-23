@@ -43,18 +43,18 @@ Blob jar(
 );
 
 [File] javac(
-  [File] sources,
+  [File] srcs,
   [Blob] libs = [],
   String source = "1.8",
   String target = "1.8",
   [String] options = [],
 ) = javac_(
-    sources = sources,
+    srcs = srcs,
     libs = libs,
     options = concatenateStringArrays(["-source", source, "-target", target], with = options)); 
 
 [File] javac_(
-  [File] sources,
+  [File] srcs,
   [Blob] libs = [],
   [String] options = [],
 );
