@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+Version 0.15.0 (2018.01.23)
+---------------------------
+
  * allowed nested arrays in smooth language
  * bugfix: conversion from Nothing to any smooth type should be possible
  * disallowed '.' and '-' characters in function and parameter names
