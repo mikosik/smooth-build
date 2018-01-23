@@ -28,25 +28,25 @@ import org.smoothbuild.lang.value.Struct;
 
 public class JavacFunction {
   @SmoothFunction
-  public static Array javac_(NativeApi nativeApi, Array sources, Array libs, Array options) {
-    return new Worker(nativeApi, sources, libs, options).execute();
+  public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options) {
+    return new Worker(nativeApi, srcs, libs, options).execute();
   }
 
   private static class Worker {
     private final JavaCompiler compiler;
     private final NativeApi nativeApi;
-    private final Array sources;
+    private final Array srcs;
     private final Array libs;
     private final Array options;
 
     public Worker(
         NativeApi nativeApi,
-        Array sources,
+        Array srcs,
         Array libs,
         Array options) {
       this.compiler = ToolProvider.getSystemJavaCompiler();
       this.nativeApi = nativeApi;
-      this.sources = sources;
+      this.srcs = srcs;
       this.libs = libs;
       this.options = options;
     }
@@ -57,7 +57,7 @@ public class JavacFunction {
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
         throw new AbortException();
       }
-      return compile(sources);
+      return compile(srcs);
     }
 
     public Array compile(Array files) {
@@ -75,7 +75,7 @@ public class JavacFunction {
          * Java compiler fails miserably when there's no java files.
          */
         if (!inputSourceFiles.iterator().hasNext()) {
-          nativeApi.log().warning("Param 'sources' is empty list.");
+          nativeApi.log().warning("Param 'srcs' is empty list.");
           return nativeApi.create().arrayBuilder(nativeApi.types().file()).build();
         }
 

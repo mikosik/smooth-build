@@ -28,7 +28,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(output(), containsString("Param 'sources' is empty list."));
+    then(output(), containsString("Param 'srcs' is empty list."));
   }
 
   @Test
