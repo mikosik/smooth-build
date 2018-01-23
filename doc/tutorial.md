@@ -30,7 +30,8 @@ smooth build release_jar
 ```
 
 Above command executes `release_jar` function and stores its result
-as `release.jar` file (`_jar` suffixes are automatically converted to `.jar`)
+as `release.jar` file (it's the same as function name except that
+`_jar` suffix has been automatically converted to `.jar`)
 in `.smooth/artifacts` directory.
 If you want to try examples yourself then
 [download and install smooth](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
@@ -42,11 +43,11 @@ for a list of all builtin functions.
 
 ### Type system
 
-Each value in smooth language (that is returned by function or
-passed as argument to it) is of one of following types:
+Each value in smooth language (that is returned by a function or
+passed as an argument to it) has one of the following types:
  * **String** - Sequence of characters
  * **Blob** - Sequence of bytes
- * **File** - Single file - compound object that has a content (Blob) and path associated with it (String).
+ * **File** - Single file - compound value that has a content (Blob) and path associated with it (String).
  * **Nothing** - type that is convertible to any other type but it is not possible to create value of such type.
  * Array ( **[String]**, **[Blob]**, **[File]**, **[Nothing]** )
 
@@ -89,7 +90,7 @@ by enclosing its charcters inside double quotes as in most languages.
 Another literal that you find useful is an array literal that lets you
 create vaue of `[String]`, `[Blob]` `[File]` and `[Nothing]` types.
 Array literal is comma separated list of expressions enclosed inside brackets `[` `]`.
-Empty array literal `[]` has type `[Nothing]` and can is convertible to any other array type.
+Empty array literal `[]` has type `[Nothing]` and is convertible to any other array type.
 
 ```
 stringValue = "README.md";
@@ -127,12 +128,12 @@ smooth code when you understand this algorithm from brute force perspective):
  those parameters.
  If some parameter is assigned explicitly more than once then algorithm fails.
  2. For arguments without explicit assignment algorithm generates
- all possible set of assignments that met following criteria:
-    * each argument is assigned exactly once
+ all possible sets of assignments that meet following criteria:
+    * each argument is used in assignment exactly once
+    * each argument is assigned to parameter which type is convertible from that argument type
     * each parameter without default value is assigned exactly once
     * each parameter with default value is assigned at most once
-    * each argument is assigned to parameter which type is convertible from
-    that argument type
+
  3. If there's exactly one set of assignments generated in 2.
  then it is chosen, otherwise algorithm fails with ambiguity.
 
@@ -157,7 +158,7 @@ it just takes result from cache.
 
 You can see how it works by runing build for our initial example,
 then changing one of java files in `src` directory by adding empty
-line to it and then runing build again.
+spaces to the end of some line and then runing build again.
 When you run build second time, you will notice that javac task
 is reexecuted (as content of *.java files has changed)
 but because only formatting of the file changed,
