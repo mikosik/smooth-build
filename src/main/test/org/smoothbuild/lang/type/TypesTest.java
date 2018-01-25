@@ -443,7 +443,7 @@ public class TypesTest {
   @Test
   public void type_non_array_type_from_string() throws Exception {
     when(typesDb.nonArrayTypeFromString("Type"));
-    thenReturned(typesDb.type());
+    thenReturned(null);
   }
 
   @Test
