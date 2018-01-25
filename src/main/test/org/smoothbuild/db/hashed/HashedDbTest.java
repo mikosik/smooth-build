@@ -142,15 +142,6 @@ public class HashedDbTest {
   }
 
   @Test
-  public void written_int_can_be_read_back() throws Exception {
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller).writeInt(0x12345678);
-    given(marshaller).close();
-    when(hashedDb.newUnmarshaller(marshaller.hash()).readInt());
-    thenReturned(0x12345678);
-  }
-
-  @Test
   public void reading_int_when_db_has_too_few_bytes_causes_exception() throws Exception {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).write(new byte[1]);

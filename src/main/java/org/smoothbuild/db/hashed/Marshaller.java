@@ -1,6 +1,5 @@
 package org.smoothbuild.db.hashed;
 
-import static com.google.common.primitives.Ints.toByteArray;
 import static org.smoothbuild.db.hashed.Hash.toPath;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
@@ -32,10 +31,6 @@ public class Marshaller extends OutputStream {
 
   public void writeHash(HashCode hash) {
     write(hash.asBytes());
-  }
-
-  public void writeInt(int intValue) {
-    write(toByteArray(intValue));
   }
 
   @Override
