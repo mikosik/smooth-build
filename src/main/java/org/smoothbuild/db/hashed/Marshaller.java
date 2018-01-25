@@ -29,8 +29,9 @@ public class Marshaller extends OutputStream {
     this.outputStream = fileSystem.openOutputStream(tempPath);
   }
 
-  public void writeHash(HashCode hash) {
+  public Marshaller writeHash(HashCode hash) {
     write(hash.asBytes());
+    return this;
   }
 
   @Override
