@@ -57,6 +57,7 @@ Blob jar(
   [File] srcs,
   [Blob] libs = [],
   [String] options = [],
+  String javaVersion = javaVersion_(),
 );
 
 String javaVersion_();
