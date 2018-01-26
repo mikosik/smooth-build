@@ -59,6 +59,8 @@ Blob jar(
   [String] options = [],
 );
 
+String javaVersion_();
+
 String junit(
   Blob tests,
   [Blob] deps = [],
