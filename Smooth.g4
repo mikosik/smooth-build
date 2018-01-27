@@ -1,14 +1,14 @@
 grammar Smooth;
 
-module: func* EOF;
+module: func* EOF ;
 func: type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
 paramList: param ( ',' param )* ','? ;
 param: type name ( '=' expr )? ;
 pipe: expr ( p+='|' call )* ;
-expr : call | STRING | array;
-call: name ( p='(' argList? ')' )?;
+expr : call | STRING | array ;
+call: name ( p='(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
-arg: ( name '=' )? expr ; 
+arg: ( name '=' )? expr ;
 array: '[' ( expr (',' expr)* (',')? )?  ']' ;
 type: basicType | arrayType ;
 basicType: IDENTIFIER ;
