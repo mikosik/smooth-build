@@ -13,10 +13,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void illegal_function_name_is_forbidden() throws Exception {
-    givenScript("function^name = 'abc';");
-    whenSmoothBuild("function^name");
+    givenScript("function^name = 'abc';"
+        + "      result = 'abc';");
+    whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Illegal function name 'function^name'"));
   }
 
   @Test
