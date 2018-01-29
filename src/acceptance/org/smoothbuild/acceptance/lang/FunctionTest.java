@@ -21,11 +21,12 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void duplicate_function_is_forbidden() throws Exception {
-    givenScript("function1 = 'abc'; function1 = 'def';");
+    givenScript("function1 = 'abc';\n"
+        + "      function1 = 'def';\n");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "Function 'function1' is already defined.\n"));
+    then(output(), containsString("build.smooth:2: error: "
+        + "Function 'function1' is already defined at build.smooth:1.\n"));
   }
 
   @Test

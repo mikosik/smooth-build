@@ -6,8 +6,10 @@ import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
@@ -99,16 +101,17 @@ public class FindSemanticErrors {
   }
 
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
-    Set<Name> defined = new HashSet<>();
+    Map<Name, FuncNode> defined = new HashMap<>();
     new AstVisitor() {
       @Override
       public void visitFunction(FuncNode func) {
         super.visitFunction(func);
-        if (defined.contains(func.name())) {
-          errors.add(new ParseError(func, "Function '" + func.name()
-              + "' is already defined."));
+        Name name = func.name();
+        if (defined.containsKey(name)) {
+          errors.add(new ParseError(func, "Function '" + name
+              + "' is already defined at " + defined.get(name).location() + "."));
         }
-        defined.add(func.name());
+        defined.put(name, func);
       }
     }.visitAst(ast);
   }
