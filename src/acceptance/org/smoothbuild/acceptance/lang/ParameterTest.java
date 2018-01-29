@@ -130,7 +130,7 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void two_parameters_with_same_name_are_forbidden() throws Exception {
+  public void two_parameters_with_same_name_causes_error() throws Exception {
     givenScript("twoParameters(String name, String name) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
@@ -139,7 +139,7 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void parameter_with_unknown_type_is_forbidden() throws Exception {
+  public void parameter_with_unknown_type_causes_error() throws Exception {
     givenScript("func(Unknown string) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");

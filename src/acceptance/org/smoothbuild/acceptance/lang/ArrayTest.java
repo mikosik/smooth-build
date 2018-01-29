@@ -160,7 +160,7 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void empty_array_with_comma_is_forbidden() throws Exception {
+  public void empty_array_with_comma_causes_error() throws Exception {
     givenScript("result = [,];");
     whenSmoothBuild("result");
     thenFinishedWithError();
@@ -183,7 +183,7 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void array_with_two_trailing_commas_is_forbidden() throws Exception {
+  public void array_with_two_trailing_commas_causes_error() throws Exception {
     givenScript("result = ['abc',,];");
     whenSmoothBuild("result");
     thenFinishedWithError();
