@@ -7,17 +7,15 @@ import org.smoothbuild.lang.message.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class FuncNode extends Node {
+public class FuncNode extends NamedNode {
   private final TypeNode type;
-  private final Name name;
   private final List<ParamNode> params;
   private final ExprNode expr;
 
   public FuncNode(TypeNode type, Name name, List<ParamNode> params, ExprNode expr,
       Location location) {
-    super(location);
+    super(name, location);
     this.type = type;
-    this.name = name;
     this.params = ImmutableList.copyOf(params);
     this.expr = expr;
   }
@@ -28,10 +26,6 @@ public class FuncNode extends Node {
 
   public TypeNode type() {
     return type;
-  }
-
-  public Name name() {
-    return name;
   }
 
   public List<ParamNode> params() {
@@ -52,16 +46,16 @@ public class FuncNode extends Node {
       return false;
     }
     FuncNode that = (FuncNode) object;
-    return this.name.equals(that.name);
+    return this.name().equals(that.name());
   }
 
   @Override
   public final int hashCode() {
-    return name.hashCode();
+    return name().hashCode();
   }
 
   @Override
   public String toString() {
-    return "[" + name + ":" + location() + "]";
+    return "[" + name() + ":" + location() + "]";
   }
 }

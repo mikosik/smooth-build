@@ -9,15 +9,13 @@ import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Ordering;
 
-public class ArgNode extends Node {
+public class ArgNode extends NamedNode {
   private final int position;
-  private final Name name;
   private final ExprNode expr;
 
   public ArgNode(int position, Name name, ExprNode expr, Location location) {
-    super(location);
+    super(name, location);
     this.position = position;
-    this.name = name;
     this.expr = expr;
   }
 
@@ -26,12 +24,13 @@ public class ArgNode extends Node {
   }
 
   public boolean hasName() {
-    return name != null;
+    return super.name() != null;
   }
 
+  @Override
   public Name name() {
     checkState(hasName());
-    return name;
+    return super.name();
   }
 
   public String nameSanitized() {
