@@ -5,10 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Function {
+public abstract class Function implements Named {
   private final Signature signature;
   private final Location location;
 
@@ -21,6 +22,7 @@ public abstract class Function {
     return signature;
   }
 
+  @Override
   public Location location() {
     return location;
   }
@@ -29,6 +31,7 @@ public abstract class Function {
     return signature.type();
   }
 
+  @Override
   public String name() {
     return signature.name();
   }

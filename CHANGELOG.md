@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+next version
+---------------------------
+
+ * added user defined structure type to smooth language
+
 Version 0.15.0 (2018.01.23)
 ---------------------------
 
