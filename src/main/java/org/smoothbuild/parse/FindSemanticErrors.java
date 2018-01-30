@@ -7,6 +7,7 @@ import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -108,13 +109,14 @@ public class FindSemanticErrors {
       @Override
       public void visitParams(List<ParamNode> params) {
         super.visitParams(params);
-        Set<Name> names = new HashSet<>();
+        Map<Name, Location> names = new HashMap<>();
         for (ParamNode param : params) {
           Name name = param.name();
-          if (names.contains(name)) {
-            errors.add(new ParseError(param, "Duplicate parameter '" + name + "'."));
+          if (names.containsKey(name)) {
+            errors.add(new ParseError(param, "'" + name + "' is already defined at "
+                + names.get(name) + "."));
           }
-          names.add(name);
+          names.put(name, param.location());
         }
       }
     }.visitAst(ast);

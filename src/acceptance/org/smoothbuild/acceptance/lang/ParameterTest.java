@@ -129,11 +129,15 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Test
   public void two_parameters_with_same_name_causes_error() throws Exception {
-    givenScript("twoParameters(String name, String name) = 'abc';"
+    givenScript("twoParameters(    \n"
+        + "          String name1, \n"
+        + "          String name1  \n"
+        + "      ) = 'abc';        \n"
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Duplicate parameter 'name'.\n"));
+    then(output(), containsString(
+        "build.smooth:3: error: 'name1' is already defined at build.smooth:2.\n"));
   }
 
   @Test
