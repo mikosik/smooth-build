@@ -42,11 +42,15 @@ public class ModuleLoader {
       return maybeAst.errors();
     }
     Ast ast = maybeAst.value();
-    List<? extends Object> errors = findSemanticErrors(runtime.functions(), ast);
+    List<? extends Object> errors = findSemanticErrors(runtime, ast);
     if (!errors.isEmpty()) {
       return errors;
     }
     errors = ast.sortFuncsByDependencies(runtime.functions());
+    if (!errors.isEmpty()) {
+      return errors;
+    }
+    errors = ast.sortTypesByDependencies(runtime.types());
     if (!errors.isEmpty()) {
       return errors;
     }

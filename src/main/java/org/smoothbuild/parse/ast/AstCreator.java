@@ -18,20 +18,51 @@ import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
+import org.smoothbuild.antlr.SmoothParser.FieldContext;
+import org.smoothbuild.antlr.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
+import org.smoothbuild.antlr.SmoothParser.StructContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.message.Location;
 
 public class AstCreator {
   public static Ast fromParseTree(Path file, ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
+    List<StructNode> structs = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       private Set<String> visibleParams = new HashSet<>();
+
+      @Override
+      public Void visitStruct(StructContext struct) {
+        String name = struct.name().getText();
+        Location location = locationOf(file, struct.name());
+        List<FieldNode> fields = createFields(struct.fieldList());
+        structs.add(new StructNode(name, fields, location));
+        return null;
+      }
+
+      private List<FieldNode> createFields(FieldListContext fieldList) {
+        ArrayList<FieldNode> result = new ArrayList<>();
+        if (fieldList != null) {
+          for (FieldContext field : sane(fieldList.field())) {
+            result.add(createField(field));
+          }
+        }
+        return result;
+      }
+
+      private FieldNode createField(FieldContext field) {
+        TypeNode type = createType(field.type());
+        NameContext nameContext = field.name();
+        String name = nameContext.getText();
+        Location location = locationOf(file, nameContext);
+        return new FieldNode(type, name, location);
+      }
 
       @Override
       public Void visitFunc(FuncContext func) {
@@ -153,6 +184,6 @@ public class AstCreator {
         return new ArrayTypeNode(elementType, locationOf(file, arrayType));
       }
     }.visit(module);
-    return new Ast(nodes);
+    return new Ast(structs, nodes);
   }
 }

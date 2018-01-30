@@ -13,29 +13,32 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
+import org.smoothbuild.lang.type.RuntimeTypes;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
+import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
+import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 
 public class AssignTypes {
-  private final TypesDb typesDb;
+  private final RuntimeTypes types;
 
   @Inject
-  public AssignTypes(TypesDb typesDb) {
-    this.typesDb = typesDb;
+  public AssignTypes(RuntimeTypes types) {
+    this.types = types;
   }
 
   public List<ParseError> assignTypes(Functions functions, Ast ast) {
@@ -46,6 +49,32 @@ public class AssignTypes {
         .collect(toMap(Function::name, Function::type));
     new AstVisitor() {
       Scope<Type> scope;
+
+      @Override
+      public void visitStruct(StructNode struct) {
+        super.visitStruct(struct);
+        ImmutableMap.Builder<String, Type> builder = ImmutableMap.builder();
+        for (FieldNode field : struct.fields()) {
+          Type type = field.get(Type.class);
+          if (type == null) {
+            return;
+          } else {
+            builder.put(field.name(), type);
+          }
+        }
+        String name = struct.name();
+        if (types.hasType(name)) {
+          errors.add(new ParseError(struct, "'" + name + "' is already defined."));
+        } else {
+          types.struct(name, builder.build());
+        }
+      }
+
+      @Override
+      public void visitField(FieldNode field) {
+        super.visitField(field);
+        field.set(Type.class, field.type().get(Type.class));
+      }
 
       @Override
       public void visitFunc(FuncNode func) {
@@ -137,13 +166,14 @@ public class AssignTypes {
         if (type instanceof ArrayTypeNode) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           Type inferredElemType = createType(elementType);
-          return inferredElemType == null ? null : typesDb.array(inferredElemType);
+          return inferredElemType == null ? null : types.array(inferredElemType);
         }
-        Type result = typesDb.nonArrayTypeFromString(type.name());
-        if (result == null) {
+        if (types.hasType(type.name())) {
+          return types.getType(type.name());
+        } else {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
+          return null;
         }
-        return result;
       }
 
       @Override
@@ -155,7 +185,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return typesDb.array(typesDb.nothing());
+          return types.array(types.nothing());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {
@@ -177,7 +207,7 @@ public class AssignTypes {
             return null;
           }
         }
-        return typesDb.array(elemType);
+        return types.array(elemType);
       }
 
       @Override
@@ -201,7 +231,7 @@ public class AssignTypes {
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, typesDb.string());
+        string.set(Type.class, types.string());
       }
     }.visitAst(ast);
     return errors;

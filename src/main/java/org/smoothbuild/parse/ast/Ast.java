@@ -10,13 +10,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.type.RuntimeTypes;
 import org.smoothbuild.util.Maybe;
 
 public class Ast {
+  private List<StructNode> structs;
   private List<FuncNode> funcs;
+  private final Map<String, StructNode> nameToStructMap;
   private final Map<String, FuncNode> nameToFuncMap;
 
-  public Ast(List<FuncNode> funcs) {
+  public Ast(List<StructNode> structs, List<FuncNode> funcs) {
+    this.structs = structs;
+    this.nameToStructMap = structs
+        .stream()
+        .collect(toMap(StructNode::name, identity(), (a, b) -> a));
     this.funcs = funcs;
     this.nameToFuncMap = funcs
         .stream()
@@ -38,6 +45,10 @@ public class Ast {
     return nameToFuncMap.get(name);
   }
 
+  public List<StructNode> structs() {
+    return structs;
+  }
+
   public List<Object> sortFuncsByDependencies(Functions functions) {
     Maybe<List<String>> sortedNames = sortByDependencies(functions, this);
     if (sortedNames.hasValue()) {
@@ -45,6 +56,20 @@ public class Ast {
           .value()
           .stream()
           .map(n -> nameToFuncMap.get(n))
+          .collect(Collectors.toList());
+      return new ArrayList<>();
+    } else {
+      return sortedNames.errors();
+    }
+  }
+
+  public List<Object> sortTypesByDependencies(RuntimeTypes types) {
+    Maybe<List<String>> sortedNames = sortByDependencies(types, this);
+    if (sortedNames.hasValue()) {
+      this.structs = sortedNames
+          .value()
+          .stream()
+          .map(n -> nameToStructMap.get(n))
           .collect(Collectors.toList());
       return new ArrayList<>();
     } else {
