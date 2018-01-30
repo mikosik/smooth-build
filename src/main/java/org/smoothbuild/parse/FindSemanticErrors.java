@@ -20,6 +20,7 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
@@ -109,17 +110,22 @@ public class FindSemanticErrors {
       @Override
       public void visitParams(List<ParamNode> params) {
         super.visitParams(params);
-        Map<Name, Location> names = new HashMap<>();
-        for (ParamNode param : params) {
-          Name name = param.name();
-          if (names.containsKey(name)) {
-            errors.add(new ParseError(param, "'" + name + "' is already defined at "
-                + names.get(name) + "."));
-          }
-          names.put(name, param.location());
-        }
+        findDuplicateNames(errors, params);
       }
+
     }.visitAst(ast);
+  }
+
+  private static void findDuplicateNames(List<ParseError> errors, List<? extends NamedNode> named) {
+    Map<Name, Location> alreadyDefined = new HashMap<>();
+    for (NamedNode namedNode : named) {
+      Name name = namedNode.name();
+      if (alreadyDefined.containsKey(name)) {
+        errors.add(new ParseError(namedNode, "'" + name + "' is already defined at "
+            + alreadyDefined.get(name) + "."));
+      }
+      alreadyDefined.put(name, namedNode.location());
+    }
   }
 
   private static void duplicateArgNames(List<ParseError> errors, Ast ast) {
