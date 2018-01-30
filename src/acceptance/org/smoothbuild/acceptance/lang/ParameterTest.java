@@ -112,13 +112,11 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void nested_array_parameter_type_cannot_be_declared() throws Exception {
+  public void nested_array_parameter_type_can_be_declared() throws Exception {
     givenScript("oneParameter([[String]] array) = 'abc';"
-        + "result = 'def';");
+        + "result = oneParameter([['def']]);");
     whenSmoothBuild("result");
-    thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Nested array type is forbidden.\n"));
+    thenFinishedWithSuccess();
   }
 
   @Test

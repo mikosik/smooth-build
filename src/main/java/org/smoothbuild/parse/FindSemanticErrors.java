@@ -16,14 +16,12 @@ import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ast.ArgNode;
-import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -39,7 +37,6 @@ public class FindSemanticErrors {
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
-    nestedArrayTypeParams(errors, ast);
     return maybe(ast, errors);
   }
 
@@ -118,22 +115,6 @@ public class FindSemanticErrors {
             errors.add(new ParseError(param, "Duplicate parameter '" + name + "'."));
           }
           names.add(name);
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void nestedArrayTypeParams(List<ParseError> errors, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitParams(List<ParamNode> params) {
-        super.visitParams(params);
-        for (ParamNode node : params) {
-          TypeNode type = node.type();
-          if (type instanceof ArrayTypeNode
-              && ((ArrayTypeNode) type).elementType() instanceof ArrayTypeNode) {
-            errors.add(new ParseError(node, "Nested array type is forbidden."));
-          }
         }
       }
     }.visitAst(ast);
