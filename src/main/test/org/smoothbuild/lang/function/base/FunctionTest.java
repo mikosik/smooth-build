@@ -53,7 +53,7 @@ public class FunctionTest {
 
   public static class MyAbstractFunction extends Function {
     public MyAbstractFunction(Signature signature) {
-      super(signature);
+      super(signature, Location.commandLine());
     }
 
     @Override
