@@ -19,8 +19,8 @@ import org.smoothbuild.util.Dag;
 public class DefinedFunction extends Function {
   private final Dag<Expression> definition;
 
-  public DefinedFunction(Signature signature, Dag<Expression> definition) {
-    super(signature);
+  public DefinedFunction(Signature signature, Location location, Dag<Expression> definition) {
+    super(signature, location);
     this.definition = checkNotNull(definition);
   }
 

@@ -10,13 +10,19 @@ import com.google.common.collect.ImmutableList;
 
 public abstract class Function {
   private final Signature signature;
+  private final Location location;
 
-  public Function(Signature signature) {
+  public Function(Signature signature, Location location) {
     this.signature = checkNotNull(signature);
+    this.location = checkNotNull(location);
   }
 
   public Signature signature() {
     return signature;
+  }
+
+  public Location location() {
+    return location;
   }
 
   public Type type() {

@@ -31,8 +31,9 @@ public class NativeFunction extends Function {
   private final HashCode hash;
   private final boolean isCacheable;
 
-  public NativeFunction(Native nativ, Signature signature, boolean isCacheable, HashCode hash) {
-    super(signature);
+  public NativeFunction(Native nativ, Signature signature, Location location, boolean isCacheable,
+      HashCode hash) {
+    super(signature, location);
     this.nativ = nativ;
     this.hash = hash;
     this.isCacheable = isCacheable;
