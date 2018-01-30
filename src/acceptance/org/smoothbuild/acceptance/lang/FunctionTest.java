@@ -35,7 +35,7 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("file");
     thenFinishedWithError();
     then(output(), containsString("build.smooth:1: error: "
-        + "Function 'file' cannot override builtin function with the same name.\n"));
+        + "Function 'file' is already defined at"));
   }
 
   @Test

@@ -1,12 +1,12 @@
 package org.smoothbuild.parse;
 
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -32,7 +33,6 @@ public class FindSemanticErrors {
   public static Maybe<Ast> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     unescapeStrings(errors, ast);
-    overridenBuiltinFunctions(errors, functions, ast);
     parametersReferenceWithParentheses(errors, ast);
     undefinedElements(errors, functions, ast);
     duplicateFunctions(errors, functions, ast);
@@ -52,20 +52,6 @@ public class FindSemanticErrors {
           string.set(String.class, unescaped(string.value()));
         } catch (UnescapingFailedException e) {
           errors.add(new ParseError(string, e.getMessage()));
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void overridenBuiltinFunctions(List<ParseError> errors, Functions functions,
-      Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitFunction(FuncNode func) {
-        super.visitFunction(func);
-        if (functions.contains(func.name())) {
-          errors.add(new ParseError(func, "Function '" + func.name()
-              + "' cannot override builtin function with the same name."));
         }
       }
     }.visitAst(ast);
@@ -101,7 +87,11 @@ public class FindSemanticErrors {
   }
 
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
-    Map<Name, FuncNode> defined = new HashMap<>();
+    Map<Name, Location> defined = functions
+        .nameToFunctionMap()
+        .entrySet()
+        .stream()
+        .collect(toMap(e -> e.getKey(), e -> e.getValue().location()));
     new AstVisitor() {
       @Override
       public void visitFunction(FuncNode func) {
@@ -109,9 +99,9 @@ public class FindSemanticErrors {
         Name name = func.name();
         if (defined.containsKey(name)) {
           errors.add(new ParseError(func, "Function '" + name
-              + "' is already defined at " + defined.get(name).location() + "."));
+              + "' is already defined at " + defined.get(name) + "."));
         }
-        defined.put(name, func);
+        defined.put(name, func.location());
       }
     }.visitAst(ast);
   }
