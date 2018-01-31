@@ -7,7 +7,7 @@ import org.smoothbuild.lang.message.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallNode extends ExprNode {
+public class CallNode extends ExprNode implements Named {
   private final Name name;
   private final List<ArgNode> args;
 
@@ -17,6 +17,7 @@ public class CallNode extends ExprNode {
     this.args = ImmutableList.copyOf(args);
   }
 
+  @Override
   public Name name() {
     return name;
   }
