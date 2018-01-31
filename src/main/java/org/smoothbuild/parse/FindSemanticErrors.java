@@ -116,15 +116,15 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void findDuplicateNames(List<ParseError> errors, List<? extends NamedNode> named) {
+  private static void findDuplicateNames(List<ParseError> errors, List<? extends NamedNode> nodes) {
     Map<Name, Location> alreadyDefined = new HashMap<>();
-    for (NamedNode namedNode : named) {
-      Name name = namedNode.name();
+    for (NamedNode named : nodes) {
+      Name name = named.name();
       if (alreadyDefined.containsKey(name)) {
-        errors.add(new ParseError(namedNode, "'" + name + "' is already defined at "
+        errors.add(new ParseError(named, "'" + name + "' is already defined at "
             + alreadyDefined.get(name) + "."));
       }
-      alreadyDefined.put(name, namedNode.location());
+      alreadyDefined.put(name, named.location());
     }
   }
 
