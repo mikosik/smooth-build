@@ -34,7 +34,7 @@ public class SortByDependencies {
         stack.push(removeNext(notSorted));
       }
       DependencyStackElem stackTop = stack.peek();
-      Dependency missing = findUnreachableDependency(
+      Dependency missing = findNotYetProcessedDependency(
           availableFunctions, sorted, stackTop.dependencies());
       if (missing == null) {
         sorted.add(stack.pop().name());
@@ -51,7 +51,7 @@ public class SortByDependencies {
     return value(new Ast(Lists.map(sorted, n -> nodeMap.get(n))));
   }
 
-  private static Dependency findUnreachableDependency(Set<Name> availableFunctions,
+  private static Dependency findNotYetProcessedDependency(Set<Name> availableFunctions,
       List<Name> sorted, Set<Dependency> dependencies) {
     for (Dependency dependency : dependencies) {
       Name name = dependency.functionName();
