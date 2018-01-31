@@ -55,6 +55,15 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void indirect_recursion_via_argument_causes_error() throws IOException {
+    givenScript("String function1 = myIdentity(function1());"
+        + "      String myIdentity(String s) = s;");
+    whenSmoothBuild("function1");
+    thenFinishedWithError();
+    then(output(), containsString("Function call graph contains cycle"));
+  }
+
+  @Test
   public void indirect_recursion_with_three_steps_causes_error() throws IOException {
     givenScript("function1 = function2; function2 = function3; function3 = function1;");
     whenSmoothBuild("function1");
