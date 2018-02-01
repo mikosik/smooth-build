@@ -1,6 +1,5 @@
 package org.smoothbuild.parse.deps;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsSame.sameInstance;
 import static org.smoothbuild.lang.message.Location.location;
 import static org.testory.Testory.given;
@@ -15,7 +14,7 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ParseError;
-import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.NamedNode;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -26,9 +25,9 @@ public class DependencyStackTest {
   private final Name name4 = new Name("function4");
 
   private DependencyStack dependencyStack;
-  private DependencyStackElem elem1;
-  private DependencyStackElem elem2;
-  private DependencyStackElem elem3;
+  private StackElem elem1;
+  private StackElem elem2;
+  private StackElem elem3;
 
   @Test
   public void stack_is_empty_initially() {
@@ -157,15 +156,13 @@ public class DependencyStackTest {
             + name2 + location(Paths.get("script.smooth"), 2) + " -> " + name2 + "\n").toString());
   }
 
-  private DependencyStackElem elem(Name from, Name to, int location) {
-    DependencyStackElem elem = new DependencyStackElem(
-        new FuncNode(null, from, asList(), null, null), ImmutableSet.of());
-    elem.setMissing(new Dependency(location(Paths.get("script.smooth"), location), to));
+  private StackElem elem(Name from, Name to, int location) {
+    StackElem elem = new StackElem(from, ImmutableSet.of());
+    elem.setMissing(new NamedNode(to, location(Paths.get("script.smooth"), location)));
     return elem;
   }
 
-  private static DependencyStackElem elem() {
-    return new DependencyStackElem(new FuncNode(
-        null, new Name("name"), asList(), null, null), ImmutableSet.of());
+  private static StackElem elem() {
+    return new StackElem(new Name("name"), ImmutableSet.of());
   }
 }
