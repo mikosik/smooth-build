@@ -147,6 +147,15 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void function_with_unknown_result_type_causes_error() throws IOException {
+    givenScript("Unknown result = 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    then(output(), containsString("build.smooth:1: error: "
+        + "Unknown type 'Unknown'.\n"));
+  }
+
+  @Test
   public void function_with_array_of_nothing_as_result_type() throws IOException {
     givenScript("[Nothing] result = [];");
     whenSmoothBuild("result");

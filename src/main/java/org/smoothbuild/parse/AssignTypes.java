@@ -150,6 +150,7 @@ public class AssignTypes {
         Type result = typesDb.nonArrayTypeFromString(type.name());
         if (result == null) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
+          return nonInferable;
         }
         return result;
       }
