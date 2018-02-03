@@ -3,7 +3,6 @@ package org.smoothbuild.db.values;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
@@ -38,10 +37,6 @@ public class ValuesDb implements ValueFactory {
 
   public ValuesDb(HashedDb hashedDb) {
     this(hashedDb, new TypesDb(hashedDb));
-  }
-
-  public Types types() {
-    return typesDb;
   }
 
   @Override
