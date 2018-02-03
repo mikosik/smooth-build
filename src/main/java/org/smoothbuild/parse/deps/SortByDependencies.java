@@ -26,7 +26,8 @@ public class SortByDependencies {
   public static Maybe<Ast> functionsSortedByDependencies(Functions functions, Ast ast) {
     Map<Name, FuncNode> nodeMap = ast.nameToFunctionMap();
     Set<Name> globalNames = new HashSet<>(functions.names());
-    Maybe<List<Name>> sorted = sortByDependencies(nodeMap, funcNodeToStackElem(), globalNames);
+    Maybe<List<Name>> sorted = sortByDependencies(
+        "Function call graph", nodeMap, funcNodeToStackElem(), globalNames);
     return invokeWrap(sorted, s -> new Ast(Lists.map(s, n -> nodeMap.get(n))));
   }
 
@@ -44,11 +45,11 @@ public class SortByDependencies {
     };
   }
 
-  private static <T extends Named> Maybe<List<Name>> sortByDependencies(
+  private static <T extends Named> Maybe<List<Name>> sortByDependencies(String stackName,
       Map<Name, T> nodeMap, Function<T, StackElem> newStackElem, Set<Name> globalNames) {
     Map<Name, T> notSorted = new HashMap<>(nodeMap);
     List<Name> sorted = new ArrayList<>(nodeMap.size());
-    DependencyStack stack = new DependencyStack();
+    DependencyStack stack = new DependencyStack(stackName);
     while (!notSorted.isEmpty() || !stack.isEmpty()) {
       if (stack.isEmpty()) {
         T named = notSorted.remove(notSorted.keySet().iterator().next());
