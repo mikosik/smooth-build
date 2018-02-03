@@ -40,19 +40,19 @@ public class Container implements NativeApi {
     this(new MemoryFileSystem(), new HashedDb());
   }
 
-  private Container(MemoryFileSystem fileSystem, HashedDb hashedDb) {
+  public Container(FileSystem fileSystem, HashedDb hashedDb) {
     this(fileSystem, hashedDb, new TypesDb(hashedDb));
   }
 
-  private Container(MemoryFileSystem fileSystem, HashedDb hashedDb, TypesDb typesDb) {
+  public Container(FileSystem fileSystem, HashedDb hashedDb, TypesDb typesDb) {
     this(fileSystem, typesDb, new ValuesDb(hashedDb, typesDb));
   }
 
-  private Container(MemoryFileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
+  public Container(FileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
     this(fileSystem, valuesDb, new MessagesDb(valuesDb, typesDb));
   }
 
-  private Container(MemoryFileSystem fileSystem, ValuesDb valuesDb, MessagesDb messagesDb) {
+  public Container(FileSystem fileSystem, ValuesDb valuesDb, MessagesDb messagesDb) {
     this(fileSystem, valuesDb, messagesDb, new TempManager(fileSystem));
   }
 
@@ -81,7 +81,7 @@ public class Container implements NativeApi {
 
   @Override
   public TempDir createTempDir() {
-    TempDir tempDir = tempManager.tempDir(valuesDb);
+    TempDir tempDir = tempManager.tempDir(this);
     tempDirs.add(tempDir);
     return tempDir;
   }
