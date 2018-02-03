@@ -1,7 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.testory.Testory.any;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -53,7 +52,7 @@ public class ContainerTest {
   @Test
   public void create_temp_dir_call_is_forwarded_to_temp_dir_manager() throws Exception {
     given(tempDir = mock(TempDir.class));
-    given(willReturn(tempDir), tempDirProvider).tempDir(any(ValuesDb.class));
+    given(willReturn(tempDir), tempDirProvider).tempDir(container);
     when(container).createTempDir();
     thenReturned(tempDir);
   }

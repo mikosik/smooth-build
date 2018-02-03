@@ -26,6 +26,7 @@ import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.task.exec.Container;
 import org.testory.common.Matcher;
 
 public class TempDirTest {
@@ -45,7 +46,8 @@ public class TempDirTest {
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
     fileSystem = new MemoryFileSystem();
-    tempDir = new TempDir(valuesDb, fileSystem, rootPath);
+    Container container = new Container(fileSystem, typesDb, valuesDb);
+    tempDir = new TempDir(container, fileSystem, rootPath);
   }
 
   @Test

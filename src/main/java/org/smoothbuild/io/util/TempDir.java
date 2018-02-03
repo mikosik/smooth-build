@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
@@ -18,16 +17,17 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.util.Streams;
 
 public class TempDir {
-  private final ValuesDb valuesDb;
+  private final Container container;
   private final FileSystem fileSystem;
   private final Path rootPath;
   private boolean isDestroyed;
 
-  public TempDir(ValuesDb valuesDb, FileSystem fileSystem, Path rootPath) {
-    this.valuesDb = valuesDb;
+  public TempDir(Container container, FileSystem fileSystem, Path rootPath) {
+    this.container = container;
     this.fileSystem = fileSystem;
     this.rootPath = rootPath;
     this.isDestroyed = false;
@@ -88,10 +88,10 @@ public class TempDir {
   }
 
   private Array readFilesImpl() throws IOException {
-    ArrayBuilder arrayBuilder = valuesDb.arrayBuilder(valuesDb.types().file());
+    ArrayBuilder arrayBuilder = container.create().arrayBuilder(container.types().file());
     for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
       Blob content = readContentImpl(path);
-      Struct file = valuesDb.file(valuesDb.string(path.value()), content);
+      Struct file = container.create().file(container.create().string(path.value()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();
@@ -107,7 +107,7 @@ public class TempDir {
   }
 
   private Blob readContentImpl(Path path) throws IOException {
-    BlobBuilder blobBuilder = valuesDb.blobBuilder();
+    BlobBuilder blobBuilder = container.create().blobBuilder();
     Streams.copy(fileSystem.openInputStream(rootPath.append(path)), blobBuilder);
     return blobBuilder.build();
   }
