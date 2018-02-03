@@ -9,7 +9,12 @@ import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.Named;
 
 public class DependencyStack {
+  private final String name;
   private final Deque<StackElem> stack = new ArrayDeque<>();
+
+  public DependencyStack(String name) {
+    this.name = name;
+  }
 
   public boolean isEmpty() {
     return stack.isEmpty();
@@ -48,6 +53,6 @@ public class DependencyStack {
           + " -> " + missing.name() + "\n");
     }
     Location location = array[first].missing().location();
-    return new ParseError(location, "Function call graph contains cycle:\n" + builder.toString());
+    return new ParseError(location, name + " contains cycle:\n" + builder.toString());
   }
 }
