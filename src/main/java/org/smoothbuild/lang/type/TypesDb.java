@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
@@ -26,7 +24,6 @@ public class TypesDb implements Types {
   private BlobType blob;
   private NothingType nothing;
 
-  @Inject
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.cache = new HashMap<>();
