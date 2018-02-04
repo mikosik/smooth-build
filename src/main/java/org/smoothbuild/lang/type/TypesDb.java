@@ -10,12 +10,11 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
-import org.smoothbuild.lang.plugin.Types;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
-public class TypesDb implements Types {
+public class TypesDb {
   private final HashedDb hashedDb;
   private final Map<HashCode, Type> cache;
   private final Instantiator instantiator;
@@ -51,7 +50,6 @@ public class TypesDb implements Types {
     return type;
   }
 
-  @Override
   public StringType string() {
     if (string == null) {
       string = new StringType(writeBasicTypeData("String"), type(), hashedDb);
@@ -60,7 +58,6 @@ public class TypesDb implements Types {
     return string;
   }
 
-  @Override
   public BlobType blob() {
     if (blob == null) {
       blob = new BlobType(writeBasicTypeData("Blob"), type(), hashedDb);
@@ -69,7 +66,6 @@ public class TypesDb implements Types {
     return blob;
   }
 
-  @Override
   public NothingType nothing() {
     if (nothing == null) {
       nothing = new NothingType(writeBasicTypeData("Nothing"), type(), hashedDb);
@@ -82,7 +78,6 @@ public class TypesDb implements Types {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  @Override
   public ArrayType array(Type elementType) {
     HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     ArrayType superType = possiblyNullArrayType(elementType.superType());
@@ -93,7 +88,6 @@ public class TypesDb implements Types {
     return elementType == null ? null : array(elementType);
   }
 
-  @Override
   public StructType file() {
     return struct("File", ImmutableMap.of("content", blob(), "path", string()));
   }
