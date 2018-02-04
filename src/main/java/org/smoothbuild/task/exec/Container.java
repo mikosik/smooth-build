@@ -16,6 +16,7 @@ import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.type.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
 
@@ -51,7 +52,7 @@ public class Container implements NativeApi {
   }
 
   public Container(FileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
-    this(fileSystem, typesDb, valuesDb, new MessagesDb(valuesDb, typesDb));
+    this(fileSystem, new RuntimeTypes(typesDb), valuesDb, new MessagesDb(valuesDb, typesDb));
   }
 
   public Container(FileSystem fileSystem, Types types, ValuesDb valuesDb,

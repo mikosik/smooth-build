@@ -15,8 +15,8 @@ public class TypesDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public Types provideTypes(TypesDb typesDb) {
-    return typesDb;
+  public Types provideTypes(RuntimeTypes runtimeTypes) {
+    return runtimeTypes;
   }
 
   @Provides
