@@ -6,8 +6,6 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.lang.function.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.error;
-import static org.smoothbuild.util.Maybe.invoke;
-import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 
 import java.util.List;
@@ -15,11 +13,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ModuleLoader;
+import org.smoothbuild.parse.RuntimeLoader;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.Maybe;
@@ -27,18 +24,16 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
-  private final SmoothPaths paths;
   private final Console console;
-  private final ModuleLoader moduleLoader;
+  private final RuntimeLoader runtimeLoader;
   private final SmoothExecutor smoothExecutor;
   private final FileSystem fileSystem;
 
   @Inject
-  public Build(SmoothPaths paths, Console console, ModuleLoader moduleLoader,
-      SmoothExecutor smoothExecutor, FileSystem fileSystem) {
-    this.paths = paths;
+  public Build(Console console, RuntimeLoader runtimeLoader, SmoothExecutor smoothExecutor,
+      FileSystem fileSystem) {
     this.console = console;
-    this.moduleLoader = moduleLoader;
+    this.runtimeLoader = runtimeLoader;
     this.smoothExecutor = smoothExecutor;
     this.fileSystem = fileSystem;
   }
@@ -53,7 +48,7 @@ public class Build implements Command {
     }
     fileSystem.delete(ARTIFACTS_PATH);
     fileSystem.delete(TEMPORARY_PATH);
-    Maybe<Functions> functions = loadFunctions();
+    Maybe<Functions> functions = runtimeLoader.loadFunctions();
     if (functions.hasValue()) {
       smoothExecutor.execute(functions.value(), functionNames.value());
     } else {
@@ -61,13 +56,6 @@ public class Build implements Command {
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
-  }
-
-  private Maybe<Functions> loadFunctions() {
-    Maybe<Functions> builtin = moduleLoader.loadModule(new Functions(), paths.funcsModule());
-    Maybe<Functions> userFunctions = invoke(
-        builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
-    return invokeWrap(userFunctions, builtin, (u, b) -> b.addAll(u));
   }
 
   public Maybe<Set<Name>> parseArguments(List<String> args) {

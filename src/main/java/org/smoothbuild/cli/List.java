@@ -2,30 +2,29 @@ package org.smoothbuild.cli;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.util.Maybe.invoke;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.parse.ModuleLoader;
+import org.smoothbuild.parse.RuntimeLoader;
 import org.smoothbuild.util.Maybe;
 
 public class List implements Command {
   private final SmoothPaths paths;
   private final Console console;
-  private final ModuleLoader moduleLoader;
+  private final RuntimeLoader runtimeLoader;
 
   @Inject
-  public List(SmoothPaths paths, Console console, ModuleLoader moduleLoader) {
+  public List(SmoothPaths paths, Console console, RuntimeLoader runtimeLoader) {
     this.paths = paths;
     this.console = console;
-    this.moduleLoader = moduleLoader;
+    this.runtimeLoader = runtimeLoader;
   }
 
   @Override
   public int run(String... names) {
-    Maybe<Functions> functions = userDefinedFunctions();
+    Maybe<Functions> functions = runtimeLoader.loadFunctions();
     if (functions.hasValue()) {
       functions
           .value()
@@ -42,10 +41,5 @@ public class List implements Command {
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
-  }
-
-  private Maybe<Functions> userDefinedFunctions() {
-    Maybe<Functions> builtin = moduleLoader.loadModule(new Functions(), paths.funcsModule());
-    return invoke(builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
   }
 }
