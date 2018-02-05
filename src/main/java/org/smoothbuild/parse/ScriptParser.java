@@ -47,7 +47,7 @@ public class ScriptParser {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
 
-    return maybe(parser.module(), errorListener.errors);
+    return maybe(parser.module(), errorListener.foundErrors());
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
@@ -56,6 +56,10 @@ public class ScriptParser {
 
     public ErrorListener(Path file) {
       this.file = file;
+    }
+
+    public List<ParseError> foundErrors() {
+      return errors;
     }
 
     @Override
