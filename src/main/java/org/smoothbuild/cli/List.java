@@ -32,6 +32,7 @@ public class List implements Command {
           .nameToFunctionMap()
           .values()
           .stream()
+          .filter(f -> f.location().file().equals(paths.defaultScript()))
           .filter(f -> f.parameters().size() == 0)
           .map(t -> t.name().toString())
           .sorted()
