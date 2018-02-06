@@ -58,8 +58,8 @@ public class AssignArgsToParams {
         if (functions.contains(name)) {
           return new HashSet<>(functions.get(name).signature().parameters());
         }
-        if (ast.nameToFunctionMap().containsKey(name)) {
-          FuncNode function = ast.nameToFunctionMap().get(name);
+        if (ast.containsFunction(name)) {
+          FuncNode function = ast.function(name);
           if (function.has(List.class)) {
             return new HashSet<>(function.get(List.class));
           }
