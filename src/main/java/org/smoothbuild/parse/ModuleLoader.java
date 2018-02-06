@@ -5,7 +5,6 @@ import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.parse.deps.SortByDependencies.functionsSortedByDependencies;
 import static org.smoothbuild.util.Maybe.invoke;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
@@ -42,7 +41,7 @@ public class ModuleLoader {
     Maybe<ModuleContext> module = parseScript(script);
     Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
     ast = invoke(ast, a -> findSemanticErrors(functions, a));
-    ast = invoke(ast, a -> functionsSortedByDependencies(functions, a));
+    ast = invoke(ast, a -> a.sortFunctionsByDependencies(functions));
     ast = invoke(ast, a -> assignTypes.assignTypes(functions, a));
     ast = invoke(ast, a -> assignArgsToParams(functions, a));
     Maybe<Map<Name, Native>> natives = findNatives(changeExtension(script, "jar"));
