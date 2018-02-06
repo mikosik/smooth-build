@@ -2,12 +2,11 @@ package org.smoothbuild.parse;
 
 import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Sets.filter;
-import static java.util.function.Function.identity;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
+import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Maybe.maybe;
 
@@ -71,9 +70,7 @@ public class AssignArgsToParams {
           Set<ParameterInfo> parameters) {
         boolean failed = false;
         List<ArgNode> namedArgs = filter(call.args(), ArgNode::hasName);
-        Map<Name, ParameterInfo> map = parameters
-            .stream()
-            .collect(toImmutableMap(p -> p.name(), identity()));
+        Map<Name, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
