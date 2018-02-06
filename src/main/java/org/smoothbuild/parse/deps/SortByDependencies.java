@@ -1,7 +1,6 @@
 package org.smoothbuild.parse.deps;
 
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
@@ -48,9 +47,7 @@ public class SortByDependencies {
 
   private static <T extends Named> Maybe<List<Name>> sortByDependencies(String stackName,
       List<T> nodes, Function<T, StackElem> newStackElem, Set<Name> globalNames) {
-    Map<Name, T> notSorted = nodes
-        .stream()
-        .collect(toMap(Named::name, identity()));
+    Map<Name, T> notSorted = toMap(nodes, Named::name);
     List<Name> sorted = new ArrayList<>(nodes.size());
     DependencyStack stack = new DependencyStack(stackName);
     while (!notSorted.isEmpty() || !stack.isEmpty()) {
