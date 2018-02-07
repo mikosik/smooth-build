@@ -5,12 +5,13 @@ import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.util.Maybe.invoke;
+import static org.smoothbuild.util.Maybe.errors;
 import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Maybe.value;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -39,14 +40,37 @@ public class ModuleLoader {
 
   public Maybe<Functions> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
-    Maybe<Ast> ast = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
-    ast = invoke(ast, a -> findSemanticErrors(functions, a));
-    ast = invoke(ast, a -> a.sortFunctionsByDependencies(functions));
-    ast = invoke(ast, a -> assignTypes.assignTypes(functions, a));
-    ast = invoke(ast, a -> assignArgsToParams(functions, a));
-    Maybe<Map<Name, Native>> natives = findNatives(changeExtension(script, "jar"));
-    ast = invoke(ast, natives, (a, n) -> assignNatives(a, n));
-    return invoke(ast, a -> loadFunctions(functions, a));
+    Maybe<Ast> maybeAst = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
+    if (!maybeAst.hasValue()) {
+      return errors(maybeAst.errors());
+    }
+    Ast ast = maybeAst.value();
+    List<? extends Object> errors = findSemanticErrors(functions, ast);
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    errors = ast.sortFunctionsByDependencies(functions);
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    errors = assignTypes.assignTypes(functions, ast);
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    errors = assignArgsToParams(functions, ast);
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    Maybe<Map<Name, Native>> maybeNatives = findNatives(changeExtension(script, "jar"));
+    if (!maybeNatives.hasValue()) {
+      return errors(maybeNatives.errors());
+    }
+    Map<Name, Native> natives = maybeNatives.value();
+    errors = assignNatives(ast, natives);
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    return loadFunctions(functions, ast);
   }
 
   private Maybe<Functions> loadFunctions(Functions functions, Ast ast) {

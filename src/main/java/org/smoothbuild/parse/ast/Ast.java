@@ -4,6 +4,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortByDependencies;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class Ast {
     return nameToFunctionMap.get(name);
   }
 
-  public Maybe<Ast> sortFunctionsByDependencies(Functions globalFunctions) {
+  public List<Object> sortFunctionsByDependencies(Functions globalFunctions) {
     Maybe<List<Name>> sortedNames = sortByDependencies(globalFunctions, this);
     if (sortedNames.hasValue()) {
       this.functions = sortedNames
@@ -46,9 +47,9 @@ public class Ast {
           .stream()
           .map(n -> nameToFunctionMap.get(n))
           .collect(Collectors.toList());
-      return Maybe.value(this);
+      return new ArrayList<>();
     } else {
-      return Maybe.errors(sortedNames.errors());
+      return sortedNames.errors();
     }
   }
 }

@@ -8,7 +8,6 @@ import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Lists.filter;
-import static org.smoothbuild.util.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,12 +27,11 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  public static Maybe<Ast> assignArgsToParams(Functions functions, Ast ast) {
+  public static List<ParseError> assignArgsToParams(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
@@ -160,6 +158,6 @@ public class AssignArgsToParams {
       }
 
     }.visitAst(ast);
-    return maybe(ast, errors);
+    return errors;
   }
 }
