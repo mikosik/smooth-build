@@ -18,8 +18,8 @@ public class AssignNatives {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
-      public void visitFunction(FuncNode func) {
-        super.visitFunction(func);
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
         if (natives.containsKey(func.name())) {
           Native nativ = natives.get(func.name());
           if (func.isNative()) {

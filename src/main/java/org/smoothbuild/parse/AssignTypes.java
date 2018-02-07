@@ -51,7 +51,7 @@ public class AssignTypes {
       Scope<Type> scope;
 
       @Override
-      public void visitFunction(FuncNode func) {
+      public void visitFunc(FuncNode func) {
         visitName(func.name());
         visitParams(func.params());
 

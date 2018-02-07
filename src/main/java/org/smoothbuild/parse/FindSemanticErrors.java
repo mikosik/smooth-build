@@ -70,7 +70,7 @@ public class FindSemanticErrors {
   private static void undefinedElements(List<ParseError> errors, Functions functions, Ast ast) {
     Set<Name> all = ImmutableSet.<Name> builder()
         .addAll(functions.names())
-        .addAll(map(ast.functions(), f -> f.name()))
+        .addAll(map(ast.funcs(), f -> f.name()))
         .build();
     new AstVisitor() {
       @Override
@@ -91,8 +91,8 @@ public class FindSemanticErrors {
         .collect(toMap(e -> e.getKey(), e -> e.getValue().location()));
     new AstVisitor() {
       @Override
-      public void visitFunction(FuncNode func) {
-        super.visitFunction(func);
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
         Name name = func.name();
         if (defined.containsKey(name)) {
           errors.add(new ParseError(func, "Function '" + name
@@ -162,8 +162,8 @@ public class FindSemanticErrors {
       }
 
       private Set<Name> getParameters(Name functionName, Functions functions, Ast ast) {
-        if (ast.containsFunction(functionName)) {
-          FuncNode funcNode = ast.function(functionName);
+        if (ast.containsFuncs(functionName)) {
+          FuncNode funcNode = ast.func(functionName);
           return funcNode.params().stream()
               .map(p -> p.name())
               .collect(toSet());

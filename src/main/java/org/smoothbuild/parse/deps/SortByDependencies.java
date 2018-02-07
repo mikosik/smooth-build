@@ -22,15 +22,15 @@ import org.smoothbuild.util.Maybe;
 
 public class SortByDependencies {
   public static Maybe<List<Name>> sortByDependencies(Functions functions, Ast ast) {
-    List<FuncNode> funcNodes = ast.functions();
+    List<FuncNode> funcs = ast.funcs();
     Set<Name> globalNames = new HashSet<>(functions.names());
     Maybe<List<Name>> sorted = sortByDependencies(
-        "Function call graph", funcNodes, funcNodeToStackElem(), globalNames);
+        "Function call graph", funcs, funcToStackElem(), globalNames);
     return sorted;
   }
 
-  private static Function<FuncNode, StackElem> funcNodeToStackElem() {
-    return funcNode -> {
+  private static Function<FuncNode, StackElem> funcToStackElem() {
+    return func -> {
       Set<Named> dependencies = new HashSet<>();
       new AstVisitor() {
         @Override
@@ -38,8 +38,8 @@ public class SortByDependencies {
           super.visitCall(call);
           dependencies.add(call);
         }
-      }.visitFunction(funcNode);
-      return new StackElem(funcNode.name(), dependencies);
+      }.visitFunc(func);
+      return new StackElem(func.name(), dependencies);
     };
   }
 
