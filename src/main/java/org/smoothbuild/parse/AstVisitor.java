@@ -17,14 +17,14 @@ import org.smoothbuild.parse.ast.TypeNode;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
-    visitFunctions(ast.functions());
+    visitFuncs(ast.funcs());
   }
 
-  public void visitFunctions(List<FuncNode> funcs) {
-    visitElements(funcs, this::visitFunction);
+  public void visitFuncs(List<FuncNode> funcs) {
+    visitElements(funcs, this::visitFunc);
   }
 
-  public void visitFunction(FuncNode func) {
+  public void visitFunc(FuncNode func) {
     visitType(func.type());
     visitName(func.name());
     visitParams(func.params());

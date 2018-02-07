@@ -14,38 +14,38 @@ import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.util.Maybe;
 
 public class Ast {
-  private List<FuncNode> functions;
-  private final Map<Name, FuncNode> nameToFunctionMap;
+  private List<FuncNode> funcs;
+  private final Map<Name, FuncNode> nameToFunsMap;
 
-  public Ast(List<FuncNode> functions) {
-    this.functions = functions;
-    this.nameToFunctionMap = functions
+  public Ast(List<FuncNode> funcs) {
+    this.funcs = funcs;
+    this.nameToFunsMap = funcs
         .stream()
         .collect(toMap(FuncNode::name, identity(), (a, b) -> a));
   }
 
-  public List<FuncNode> functions() {
-    return functions;
+  public List<FuncNode> funcs() {
+    return funcs;
   }
 
-  public boolean containsFunction(Name name) {
-    return nameToFunctionMap.containsKey(name);
+  public boolean containsFuncs(Name name) {
+    return nameToFunsMap.containsKey(name);
   }
 
-  public FuncNode function(Name name) {
-    if (!nameToFunctionMap.containsKey(name)) {
+  public FuncNode func(Name name) {
+    if (!nameToFunsMap.containsKey(name)) {
       throw new IllegalStateException("Ast does not contain function '" + name + "'");
     }
-    return nameToFunctionMap.get(name);
+    return nameToFunsMap.get(name);
   }
 
-  public List<Object> sortFunctionsByDependencies(Functions globalFunctions) {
-    Maybe<List<Name>> sortedNames = sortByDependencies(globalFunctions, this);
+  public List<Object> sortFuncsByDependencies(Functions functions) {
+    Maybe<List<Name>> sortedNames = sortByDependencies(functions, this);
     if (sortedNames.hasValue()) {
-      this.functions = sortedNames
+      this.funcs = sortedNames
           .value()
           .stream()
-          .map(n -> nameToFunctionMap.get(n))
+          .map(n -> nameToFunsMap.get(n))
           .collect(Collectors.toList());
       return new ArrayList<>();
     } else {

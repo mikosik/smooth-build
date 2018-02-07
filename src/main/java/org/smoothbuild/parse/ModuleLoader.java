@@ -49,7 +49,7 @@ public class ModuleLoader {
     if (!errors.isEmpty()) {
       return errors(errors);
     }
-    errors = ast.sortFunctionsByDependencies(functions);
+    errors = ast.sortFuncsByDependencies(functions);
     if (!errors.isEmpty()) {
       return errors(errors);
     }
@@ -75,9 +75,9 @@ public class ModuleLoader {
 
   private Maybe<Functions> loadFunctions(Functions functions, Ast ast) {
     Maybe<Functions> justLoaded = value(new Functions());
-    for (FuncNode node : ast.functions()) {
+    for (FuncNode func : ast.funcs()) {
       Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<Function> function = invokeWrap(all, a -> functionLoader.loadFunction(a, node));
+      Maybe<Function> function = invokeWrap(all, a -> functionLoader.loadFunction(a, func));
       justLoaded = invokeWrap(justLoaded, function, Functions::add);
     }
     return justLoaded;
