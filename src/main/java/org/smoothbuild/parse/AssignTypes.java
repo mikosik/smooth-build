@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.base.Scope.scope;
-import static org.smoothbuild.util.Maybe.maybe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.TypeNode;
-import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -41,7 +39,7 @@ public class AssignTypes {
     this.typesDb = typesDb;
   }
 
-  public Maybe<Ast> assignTypes(Functions functions, Ast ast) {
+  public List<ParseError> assignTypes(Functions functions, Ast ast) {
     final Type nonInferable = typesDb.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
@@ -213,6 +211,6 @@ public class AssignTypes {
         string.set(Type.class, typesDb.string());
       }
     }.visitAst(ast);
-    return maybe(ast, errors);
+    return errors;
   }
 }

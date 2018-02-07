@@ -1,7 +1,5 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.util.Maybe.maybe;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -14,10 +12,9 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.util.Maybe;
 
 public class AssignNatives {
-  public static Maybe<Ast> assignNatives(Ast ast, Map<Name, Native> natives) {
+  public static List<ParseError> assignNatives(Ast ast, Map<Name, Native> natives) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
@@ -83,6 +80,6 @@ public class AssignNatives {
         func.set(Native.class, nativ);
       }
     }.visitAst(ast);
-    return maybe(ast, errors);
+    return errors;
   }
 }

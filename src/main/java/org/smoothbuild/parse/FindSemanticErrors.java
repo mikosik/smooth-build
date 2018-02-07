@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
@@ -24,13 +23,12 @@ import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.util.Maybe;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
-  public static Maybe<Ast> findSemanticErrors(Functions functions, Ast ast) {
+  public static List<ParseError> findSemanticErrors(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     unescapeStrings(errors, ast);
     parametersReferenceWithParentheses(errors, ast);
@@ -39,7 +37,7 @@ public class FindSemanticErrors {
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
-    return maybe(ast, errors);
+    return errors;
   }
 
   private static void unescapeStrings(List<ParseError> errors, Ast ast) {
