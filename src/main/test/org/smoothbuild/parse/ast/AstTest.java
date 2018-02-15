@@ -20,14 +20,14 @@ public class AstTest {
   public void contains_function_passed_to_constructor() throws Exception {
     given(func = function("name"));
     given(ast = new Ast(list(func)));
-    when(() -> ast.containsFuncs(new Name("name")));
+    when(() -> ast.containsFunc(new Name("name")));
     thenReturned(true);
   }
 
   @Test
   public void does_not_contain_function_not_passed_to_constructor() throws Exception {
     given(ast = new Ast(list()));
-    when(() -> ast.containsFuncs(new Name("name")));
+    when(() -> ast.containsFunc(new Name("name")));
     thenReturned(false);
   }
 

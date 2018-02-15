@@ -162,7 +162,7 @@ public class FindSemanticErrors {
       }
 
       private Set<Name> getParameters(Name functionName, Functions functions, Ast ast) {
-        if (ast.containsFuncs(functionName)) {
+        if (ast.containsFunc(functionName)) {
           FuncNode funcNode = ast.func(functionName);
           return funcNode.params().stream()
               .map(p -> p.name())
