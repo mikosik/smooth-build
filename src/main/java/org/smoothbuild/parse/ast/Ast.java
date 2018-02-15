@@ -28,7 +28,7 @@ public class Ast {
     return funcs;
   }
 
-  public boolean containsFuncs(Name name) {
+  public boolean containsFunc(Name name) {
     return nameToFunsMap.containsKey(name);
   }
 
