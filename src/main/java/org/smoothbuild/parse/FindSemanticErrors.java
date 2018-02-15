@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -85,10 +86,9 @@ public class FindSemanticErrors {
 
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
     Map<Name, Location> defined = functions
-        .nameToFunctionMap()
-        .entrySet()
+        .functions()
         .stream()
-        .collect(toMap(e -> e.getKey(), e -> e.getValue().location()));
+        .collect(toMap(Function::name, Function::location));
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {

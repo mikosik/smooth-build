@@ -28,7 +28,7 @@ public class FunctionsTest {
   public void contains() throws Exception {
     given(willReturn(name), function).name();
     given(functions = new Functions());
-    given(functions = functions.add(function));
+    given(functions).add(function);
     when(functions.contains(name));
     thenReturned(true);
   }
@@ -37,7 +37,7 @@ public class FunctionsTest {
   public void get() throws Exception {
     given(willReturn(name), function).name();
     given(functions = new Functions());
-    given(functions = functions.add(function));
+    given(functions).add(function);
     when(functions.get(name));
     thenReturned(function);
   }
@@ -45,7 +45,8 @@ public class FunctionsTest {
   @Test
   public void getting_unknown_function_fails() throws Exception {
     given(willReturn(new Name("functionName")), function).name();
-    given(functions = new Functions().add(function));
+    given(functions = new Functions());
+    given(functions).add(function);
     when(() -> functions.get(new Name("missingFunction")));
     thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
         + "Available functions: [functionName]")));
@@ -56,17 +57,9 @@ public class FunctionsTest {
     given(willReturn(name), function).name();
     given(willReturn(name), function2).name();
     given(functions = new Functions());
-    given(functions = functions.add(function));
+    given(functions).add(function);
     when(() -> functions.add(function2));
     thenThrown(IllegalArgumentException.class);
-
-  }
-
-  @Test
-  public void names_returns_collection_that_forbids_removing_elements() {
-    given(functions = new Functions());
-    when(functions.names()).remove(null);
-    thenThrown(UnsupportedOperationException.class);
   }
 
   @Test

@@ -5,9 +5,8 @@ import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.util.Maybe.errors;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Maybe.invokeWrap;
-import static org.smoothbuild.util.Maybe.value;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
@@ -18,7 +17,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.parse.ast.Ast;
@@ -38,48 +36,45 @@ public class ModuleLoader {
     this.functionLoader = functionLoader;
   }
 
-  public Maybe<Functions> loadModule(Functions functions, Path script) {
+  public List<? extends Object> loadModule(Functions functions, Path script) {
     Maybe<ModuleContext> module = parseScript(script);
     Maybe<Ast> maybeAst = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
     if (!maybeAst.hasValue()) {
-      return errors(maybeAst.errors());
+      return maybeAst.errors();
     }
     Ast ast = maybeAst.value();
     List<? extends Object> errors = findSemanticErrors(functions, ast);
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
     errors = ast.sortFuncsByDependencies(functions);
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
     errors = assignTypes.assignTypes(functions, ast);
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
     errors = assignArgsToParams(functions, ast);
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
     Maybe<Map<Name, Native>> maybeNatives = findNatives(changeExtension(script, "jar"));
     if (!maybeNatives.hasValue()) {
-      return errors(maybeNatives.errors());
+      return maybeNatives.errors();
     }
     Map<Name, Native> natives = maybeNatives.value();
     errors = assignNatives(ast, natives);
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
-    return loadFunctions(functions, ast);
+    loadFunctions(functions, ast);
+    return list();
   }
 
-  private Maybe<Functions> loadFunctions(Functions functions, Ast ast) {
-    Maybe<Functions> justLoaded = value(new Functions());
+  private void loadFunctions(Functions functions, Ast ast) {
     for (FuncNode func : ast.funcs()) {
-      Maybe<Functions> all = invokeWrap(justLoaded, (j) -> j.addAll(functions));
-      Maybe<Function> function = invokeWrap(all, a -> functionLoader.loadFunction(a, func));
-      justLoaded = invokeWrap(justLoaded, function, Functions::add);
+      functions.add(functionLoader.loadFunction(functions, func));
     }
-    return justLoaded;
   }
 }
