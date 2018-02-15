@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
@@ -43,10 +44,9 @@ public class AssignTypes {
     final Type nonInferable = typesDb.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
     Map<Name, Type> functionTypes = functions
-        .nameToFunctionMap()
-        .entrySet()
+        .functions()
         .stream()
-        .collect(toMap(e -> e.getKey(), e -> e.getValue().type()));
+        .collect(toMap(Function::name, Function::type));
     new AstVisitor() {
       Scope<Type> scope;
 

@@ -28,8 +28,7 @@ public class List implements Command {
     if (functions.hasValue()) {
       functions
           .value()
-          .nameToFunctionMap()
-          .values()
+          .functions()
           .stream()
           .filter(f -> f.location().file().equals(paths.defaultScript()))
           .filter(f -> f.parameters().size() == 0)

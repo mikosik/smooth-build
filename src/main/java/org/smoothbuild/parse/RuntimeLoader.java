@@ -1,7 +1,8 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.util.Maybe.invoke;
-import static org.smoothbuild.util.Maybe.invokeWrap;
+import static org.smoothbuild.util.Maybe.errors;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,8 +21,15 @@ public class RuntimeLoader {
   }
 
   public Maybe<Functions> loadFunctions() {
-    Maybe<Functions> builtin = moduleLoader.loadModule(new Functions(), paths.funcsModule());
-    Maybe<Functions> user = invoke(builtin, b -> moduleLoader.loadModule(b, paths.defaultScript()));
-    return invokeWrap(user, builtin, (u, b) -> b.addAll(u));
+    Functions functions = new Functions();
+    List<? extends Object> errors = moduleLoader.loadModule(functions, paths.funcsModule());
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    errors = moduleLoader.loadModule(functions, paths.defaultScript());
+    if (!errors.isEmpty()) {
+      return errors(errors);
+    }
+    return Maybe.value(functions);
   }
 }
