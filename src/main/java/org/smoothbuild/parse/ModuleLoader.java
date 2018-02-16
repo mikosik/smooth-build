@@ -16,46 +16,46 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
+import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
+  private final SRuntime runtime;
   private final AssignTypes assignTypes;
   private final FunctionLoader functionLoader;
 
   @Inject
-  public ModuleLoader(
-      AssignTypes assignTypes,
-      FunctionLoader functionLoader) {
+  public ModuleLoader(SRuntime runtime, AssignTypes assignTypes, FunctionLoader functionLoader) {
+    this.runtime = runtime;
     this.assignTypes = assignTypes;
     this.functionLoader = functionLoader;
   }
 
-  public List<? extends Object> loadModule(Functions functions, Path script) {
+  public List<? extends Object> loadModule(Path script) {
     Maybe<ModuleContext> module = parseScript(script);
     Maybe<Ast> maybeAst = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
     if (!maybeAst.hasValue()) {
       return maybeAst.errors();
     }
     Ast ast = maybeAst.value();
-    List<? extends Object> errors = findSemanticErrors(functions, ast);
+    List<? extends Object> errors = findSemanticErrors(runtime.functions(), ast);
     if (!errors.isEmpty()) {
       return errors;
     }
-    errors = ast.sortFuncsByDependencies(functions);
+    errors = ast.sortFuncsByDependencies(runtime.functions());
     if (!errors.isEmpty()) {
       return errors;
     }
-    errors = assignTypes.assignTypes(functions, ast);
+    errors = assignTypes.assignTypes(runtime.functions(), ast);
     if (!errors.isEmpty()) {
       return errors;
     }
-    errors = assignArgsToParams(functions, ast);
+    errors = assignArgsToParams(runtime.functions(), ast);
     if (!errors.isEmpty()) {
       return errors;
     }
@@ -68,13 +68,13 @@ public class ModuleLoader {
     if (!errors.isEmpty()) {
       return errors;
     }
-    loadFunctions(functions, ast);
+    loadFunctions(ast);
     return list();
   }
 
-  private void loadFunctions(Functions functions, Ast ast) {
+  private void loadFunctions(Ast ast) {
     for (FuncNode func : ast.funcs()) {
-      functions.add(functionLoader.loadFunction(functions, func));
+      runtime.functions().add(functionLoader.loadFunction(runtime.functions(), func));
     }
   }
 }
