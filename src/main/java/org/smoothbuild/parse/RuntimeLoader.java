@@ -1,14 +1,11 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.util.Maybe.errors;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
-import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.util.Maybe;
 
 public class RuntimeLoader {
   private final ModuleLoader moduleLoader;
@@ -20,16 +17,15 @@ public class RuntimeLoader {
     this.paths = paths;
   }
 
-  public Maybe<Functions> loadFunctions() {
-    Functions functions = new Functions();
-    List<? extends Object> errors = moduleLoader.loadModule(functions, paths.funcsModule());
+  public List<? extends Object> load() {
+    List<? extends Object> errors = moduleLoader.loadModule(paths.funcsModule());
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
-    errors = moduleLoader.loadModule(functions, paths.defaultScript());
+    errors = moduleLoader.loadModule(paths.defaultScript());
     if (!errors.isEmpty()) {
-      return errors(errors);
+      return errors;
     }
-    return Maybe.value(functions);
+    return new ArrayList<>();
   }
 }

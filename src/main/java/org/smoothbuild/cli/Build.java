@@ -14,7 +14,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.RuntimeLoader;
 import org.smoothbuild.task.exec.SmoothExecutor;
@@ -48,11 +47,11 @@ public class Build implements Command {
     }
     fileSystem.delete(ARTIFACTS_PATH);
     fileSystem.delete(TEMPORARY_PATH);
-    Maybe<Functions> functions = runtimeLoader.loadFunctions();
-    if (functions.hasValue()) {
-      smoothExecutor.execute(functions.value(), functionNames.value());
+    List<? extends Object> errors = runtimeLoader.load();
+    if (errors.isEmpty()) {
+      smoothExecutor.execute(functionNames.value());
     } else {
-      console.rawErrors(functions.errors());
+      console.rawErrors(errors);
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;

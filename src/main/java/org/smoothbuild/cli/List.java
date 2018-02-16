@@ -6,17 +6,18 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
-import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.RuntimeLoader;
-import org.smoothbuild.util.Maybe;
 
 public class List implements Command {
+  private final SRuntime runtime;
   private final SmoothPaths paths;
   private final Console console;
   private final RuntimeLoader runtimeLoader;
 
   @Inject
-  public List(SmoothPaths paths, Console console, RuntimeLoader runtimeLoader) {
+  public List(SRuntime runtime, SmoothPaths paths, Console console, RuntimeLoader runtimeLoader) {
+    this.runtime = runtime;
     this.paths = paths;
     this.console = console;
     this.runtimeLoader = runtimeLoader;
@@ -24,10 +25,10 @@ public class List implements Command {
 
   @Override
   public int run(String... names) {
-    Maybe<Functions> functions = runtimeLoader.loadFunctions();
-    if (functions.hasValue()) {
-      functions
-          .value()
+    java.util.List<? extends Object> errors = runtimeLoader.load();
+    if (errors.isEmpty()) {
+      runtime
+          .functions()
           .functions()
           .stream()
           .filter(f -> f.location().file().equals(paths.defaultScript()))
@@ -36,7 +37,7 @@ public class List implements Command {
           .sorted()
           .forEach(n -> System.out.println(n));
     } else {
-      console.rawErrors(functions.errors());
+      console.rawErrors(errors);
     }
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;

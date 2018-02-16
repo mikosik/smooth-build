@@ -7,18 +7,22 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Name;
+import org.smoothbuild.lang.runtime.SRuntime;
 
 public class SmoothExecutor {
+  private final SRuntime runtime;
   private final ArtifactBuilder artifactBuilder;
   private final Console console;
 
   @Inject
-  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
+  public SmoothExecutor(SRuntime runtime, ArtifactBuilder artifactBuilder, Console console) {
+    this.runtime = runtime;
     this.artifactBuilder = artifactBuilder;
     this.console = console;
   }
 
-  public void execute(Functions functions, Set<Name> names) {
+  public void execute(Set<Name> names) {
+    Functions functions = runtime.functions();
     for (Name name : names) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.\n"
