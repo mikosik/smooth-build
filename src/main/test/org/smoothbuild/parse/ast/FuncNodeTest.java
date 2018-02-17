@@ -10,7 +10,6 @@ import static org.testory.Testory.when;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 
 import com.google.common.testing.EqualsTester;
@@ -21,16 +20,15 @@ public class FuncNodeTest {
 
   @Test
   public void func_with_expression_is_not_native() throws Exception {
-    given(func = new FuncNode(mock(TypeNode.class), new Name("name"), asList(),
-        mock(ExprNode.class), location));
+    given(func = new FuncNode(mock(TypeNode.class), "name", asList(), mock(ExprNode.class),
+        location));
     when(() -> func.isNative());
     thenReturned(false);
   }
 
   @Test
   public void func_without_expression_is_native() throws Exception {
-    given(func = new FuncNode(new TypeNode("type", location), new Name("name"), asList(), null,
-        location));
+    given(func = new FuncNode(new TypeNode("type", location), "name", asList(), null, location));
     when(() -> func.isNative());
     thenReturned(true);
   }
@@ -50,7 +48,6 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(null, new Name(name), asList(), null,
-        location(Paths.get("script.smooth"), line));
+    return new FuncNode(null, name, asList(), null, location(Paths.get("script.smooth"), line));
   }
 }

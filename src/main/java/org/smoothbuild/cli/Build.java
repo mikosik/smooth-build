@@ -14,7 +14,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.RuntimeLoader;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -40,7 +39,7 @@ public class Build implements Command {
   @Override
   public int run(String... names) {
     List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
-    Maybe<Set<Name>> functionNames = parseArguments(argsWithoutFirst);
+    Maybe<Set<String>> functionNames = parseArguments(argsWithoutFirst);
     if (!functionNames.hasValue()) {
       console.rawErrors(functionNames.errors());
       return EXIT_CODE_ERROR;
@@ -57,21 +56,21 @@ public class Build implements Command {
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  public Maybe<Set<Name>> parseArguments(List<String> args) {
-    DuplicatesDetector<Name> duplicatesDetector = new DuplicatesDetector<>();
+  public Maybe<Set<String>> parseArguments(List<String> args) {
+    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     for (String argument : args) {
       if (isLegalName(argument)) {
-        duplicatesDetector.addValue(new Name(argument));
+        duplicatesDetector.addValue(argument);
       } else {
         return error("error: Illegal function name '" + argument
             + "' passed in command line.");
       }
     }
 
-    for (Name name : duplicatesDetector.getDuplicateValues()) {
+    for (String name : duplicatesDetector.getDuplicateValues()) {
       return error("error: Function '" + name + "' has been specified more than once.");
     }
-    Set<Name> result = duplicatesDetector.getUniqueValues();
+    Set<String> result = duplicatesDetector.getUniqueValues();
     if (result.isEmpty()) {
       return error("error: Specify at least one function to be executed.\n"
           + "Use 'smooth list' to see all available functions.");

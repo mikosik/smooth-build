@@ -5,8 +5,6 @@ import static org.smoothbuild.lang.message.Location.location;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
-import org.smoothbuild.parse.ast.NamedNode;
 
 import com.google.common.testing.EqualsTester;
 
@@ -23,6 +21,6 @@ public class NamedNodeTest {
   }
 
   private static NamedNode namedNode(int line, String name) {
-    return new NamedNode(new Name(name), location(Paths.get("script.smooth"), line));
+    return new NamedNode(name, location(Paths.get("script.smooth"), line));
   }
 }

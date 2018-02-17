@@ -21,7 +21,6 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Signature;
@@ -78,7 +77,7 @@ public class FunctionLoader {
 
       private Parameter createParameter(ParamNode p) {
         Type type = p.type().get(Type.class);
-        Name name = p.name();
+        String name = p.name();
         Dag<Expression> defaultValue = p.hasDefaultValue()
             ? createExpression(p.defaultValue())
             : null;

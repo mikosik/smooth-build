@@ -14,7 +14,7 @@ import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
   private final Type string = new TypesDb().string();
-  private final Name name = new Name("name");
+  private final String name = "name";
   private Parameter parameter;
 
   @Test

@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -69,7 +68,7 @@ public class FindSemanticErrors {
   }
 
   private static void undefinedElements(List<ParseError> errors, Functions functions, Ast ast) {
-    Set<Name> all = ImmutableSet.<Name> builder()
+    Set<String> all = ImmutableSet.<String> builder()
         .addAll(functions.names())
         .addAll(map(ast.funcs(), f -> f.name()))
         .build();
@@ -85,7 +84,7 @@ public class FindSemanticErrors {
   }
 
   private static void duplicateFunctions(List<ParseError> errors, Functions functions, Ast ast) {
-    Map<Name, Location> defined = functions
+    Map<String, Location> defined = functions
         .functions()
         .stream()
         .collect(toMap(Function::name, Function::location));
@@ -93,7 +92,7 @@ public class FindSemanticErrors {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        Name name = func.name();
+        String name = func.name();
         if (defined.containsKey(name)) {
           errors.add(new ParseError(func, "Function '" + name
               + "' is already defined at " + defined.get(name) + "."));
@@ -115,9 +114,9 @@ public class FindSemanticErrors {
   }
 
   private static void findDuplicateNames(List<ParseError> errors, List<? extends NamedNode> nodes) {
-    Map<Name, Location> alreadyDefined = new HashMap<>();
+    Map<String, Location> alreadyDefined = new HashMap<>();
     for (NamedNode named : nodes) {
-      Name name = named.name();
+      String name = named.name();
       if (alreadyDefined.containsKey(name)) {
         errors.add(new ParseError(named, "'" + name + "' is already defined at "
             + alreadyDefined.get(name) + "."));
@@ -131,10 +130,10 @@ public class FindSemanticErrors {
       @Override
       public void visitArgs(List<ArgNode> args) {
         super.visitArgs(args);
-        Set<Name> names = new HashSet<>();
+        Set<String> names = new HashSet<>();
         for (ArgNode arg : args) {
           if (arg.hasName()) {
-            Name name = arg.name();
+            String name = arg.name();
             if (names.contains(name)) {
               errors.add(new ParseError(arg, "Argument '" + name + "' assigned twice."));
             }
@@ -150,7 +149,7 @@ public class FindSemanticErrors {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        Set<Name> names = getParameters(call.name(), functions, ast);
+        Set<String> names = getParameters(call.name(), functions, ast);
         if (names != null) {
           for (ArgNode arg : call.args()) {
             if (arg.hasName() && !names.contains(arg.name())) {
@@ -161,7 +160,7 @@ public class FindSemanticErrors {
         }
       }
 
-      private Set<Name> getParameters(Name functionName, Functions functions, Ast ast) {
+      private Set<String> getParameters(String functionName, Functions functions, Ast ast) {
         if (ast.containsFunc(functionName)) {
           FuncNode funcNode = ast.func(functionName);
           return funcNode.params().stream()

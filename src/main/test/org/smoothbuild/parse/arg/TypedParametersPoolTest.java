@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
@@ -27,10 +26,10 @@ public class TypedParametersPoolTest {
   private final Type string = typesDb.string();
   private final Type blobT = typesDb.blob();
 
-  private final ParameterInfo string1 = new ParameterInfo(string, new Name("string1"), true);
-  private final ParameterInfo string2 = new ParameterInfo(string, new Name("string2"), true);
-  private final ParameterInfo string3 = new ParameterInfo(string, new Name("string3"), true);
-  private final ParameterInfo blob = new ParameterInfo(blobT, new Name("blob"), true);
+  private final ParameterInfo string1 = new ParameterInfo(string, "string1", true);
+  private final ParameterInfo string2 = new ParameterInfo(string, "string2", true);
+  private final ParameterInfo string3 = new ParameterInfo(string, "string3", true);
+  private final ParameterInfo blob = new ParameterInfo(blobT, "blob", true);
 
   private Set<ParameterInfo> optional;
   private Set<ParameterInfo> required;

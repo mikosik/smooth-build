@@ -15,7 +15,7 @@ import org.smoothbuild.lang.type.TypesDb;
 
 public class FunctionTest {
   private static final Type STRING = new TypesDb().string();
-  private Name name;
+  private String name;
   private List<Parameter> parameters;
   private Signature signature;
   private Function function;
@@ -27,7 +27,7 @@ public class FunctionTest {
 
   @Test
   public void type_returns_signature_type() {
-    given(signature = new Signature(STRING, new Name("name"), asList()));
+    given(signature = new Signature(STRING, "name", asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
     thenReturned(STRING);
@@ -35,7 +35,7 @@ public class FunctionTest {
 
   @Test
   public void name_returns_signature_name() {
-    given(name = new Name("name"));
+    given(name = "name");
     given(signature = new Signature(STRING, name, asList()));
     given(function = new MyAbstractFunction(signature));
     when(function).type();
@@ -44,8 +44,8 @@ public class FunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(parameters = asList(new Parameter(STRING, new Name("name"), null)));
-    given(signature = new Signature(STRING, new Name("name"), parameters));
+    given(parameters = asList(new Parameter(STRING, "name", null)));
+    given(signature = new Signature(STRING, "name", parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();
     thenReturned(parameters);

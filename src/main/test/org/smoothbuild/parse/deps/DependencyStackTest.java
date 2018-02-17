@@ -12,17 +12,16 @@ import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.NamedNode;
 
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
-  private final Name name1 = new Name("function1");
-  private final Name name2 = new Name("function2");
-  private final Name name3 = new Name("function3");
-  private final Name name4 = new Name("function4");
+  private final String name1 = "function1";
+  private final String name2 = "function2";
+  private final String name3 = "function3";
+  private final String name4 = "function4";
   private final String stackName = "My Stack";
 
   private DependencyStack dependencyStack;
@@ -157,13 +156,13 @@ public class DependencyStackTest {
             + name2 + location(Paths.get("script.smooth"), 2) + " -> " + name2 + "\n").toString());
   }
 
-  private StackElem elem(Name from, Name to, int location) {
+  private StackElem elem(String from, String to, int location) {
     StackElem elem = new StackElem(from, ImmutableSet.of());
     elem.setMissing(new NamedNode(to, location(Paths.get("script.smooth"), location)));
     return elem;
   }
 
   private static StackElem elem() {
-    return new StackElem(new Name("name"), ImmutableSet.of());
+    return new StackElem("name", ImmutableSet.of());
   }
 }

@@ -1,18 +1,17 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 
 public class NamedNode extends Node implements Named {
-  private final Name name;
+  private final String name;
 
-  public NamedNode(Name name, Location location) {
+  public NamedNode(String name, Location location) {
     super(location);
     this.name = name;
   }
 
   @Override
-  public Name name() {
+  public String name() {
     return name;
   }
 

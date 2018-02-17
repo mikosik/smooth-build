@@ -13,29 +13,29 @@ public abstract class Scope<E> {
     return new InnerScope<>(outerScope);
   }
 
-  public abstract boolean contains(Name name);
+  public abstract boolean contains(String name);
 
-  public abstract E get(Name name);
+  public abstract E get(String name);
 
-  public abstract void add(Name name, E element);
+  public abstract void add(String name, E element);
 
   public abstract Scope<E> outerScope();
 
   private static class InnerScope<E> extends Scope<E> {
     private final Scope<E> outerScope;
-    private final Map<Name, E> bindings = new HashMap<>();
+    private final Map<String, E> bindings = new HashMap<>();
 
     public InnerScope(Scope<E> outerScope) {
       this.outerScope = outerScope;
     }
 
     @Override
-    public boolean contains(Name name) {
+    public boolean contains(String name) {
       return bindings.containsKey(name) || outerScope.contains(name);
     }
 
     @Override
-    public E get(Name name) {
+    public E get(String name) {
       if (bindings.containsKey(name)) {
         return bindings.get(name);
       }
@@ -43,7 +43,7 @@ public abstract class Scope<E> {
     }
 
     @Override
-    public void add(Name name, E element) {
+    public void add(String name, E element) {
       if (bindings.containsKey(name)) {
         throw new IllegalStateException("Name " + name + " is already bound in current scope.");
       }
@@ -61,17 +61,17 @@ public abstract class Scope<E> {
 
   private static class EmptyScope<E> extends Scope<E> {
     @Override
-    public boolean contains(Name name) {
+    public boolean contains(String name) {
       return false;
     }
 
     @Override
-    public E get(Name name) {
+    public E get(String name) {
       throw new NoSuchElementException(name.toString());
     }
 
     @Override
-    public void add(Name name, E element) {
+    public void add(String name, E element) {
       throw new UnsupportedOperationException();
     }
 

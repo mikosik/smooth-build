@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -35,7 +34,7 @@ public class ArtifactSaver {
     this.console = console;
   }
 
-  public void save(Name name, Value value) {
+  public void save(String name, Value value) {
     Path path = path(toFileName(name));
     if (value instanceof Array) {
       saveArray(path, (Array) value);

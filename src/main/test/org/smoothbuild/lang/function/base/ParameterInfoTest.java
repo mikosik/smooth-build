@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 
 public class ParameterInfoTest {
-  private final Name name = new Name("name");
+  private final String name = "name";
   private ParameterInfo parameterInfo;
   private final TypesDb typesDb = new TypesDb();
   private final Type string = typesDb.string();
@@ -56,33 +56,33 @@ public class ParameterInfoTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new ParameterInfo(string, new Name("equal"), true),
-        new ParameterInfo(string, new Name("equal"), true));
+        new ParameterInfo(string, "equal", true),
+        new ParameterInfo(string, "equal", true));
     for (Type type : ImmutableList.of(string, typesDb.array(string), blob, nothing,
         personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
-      tester.addEqualityGroup(new ParameterInfo(type, new Name("name2"), true));
+      tester.addEqualityGroup(new ParameterInfo(type, "name2", true));
     }
     tester.testEquals();
   }
 
   @Test
   public void to_padded_string() {
-    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, "myName", true));
     when(parameterInfo.toPaddedString(10, 13));
     thenReturned("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, "myName", true));
     when(parameterInfo.toPaddedString(1, 1));
     thenReturned("String: myName");
   }
 
   @Test
   public void to_string() throws Exception {
-    given(parameterInfo = new ParameterInfo(string, new Name("myName"), true));
+    given(parameterInfo = new ParameterInfo(string, "myName", true));
     when(() -> parameterInfo.toString());
     thenReturned("String myName");
   }
@@ -90,9 +90,9 @@ public class ParameterInfoTest {
   @Test
   public void params_to_string() {
     List<ParameterInfo> names = new ArrayList<>();
-    names.add(new ParameterInfo(string, new Name("param1"), true));
-    names.add(new ParameterInfo(string, new Name("param2-with-very-long"), true));
-    names.add(new ParameterInfo(typesDb.array(blob), new Name("param3"), true));
+    names.add(new ParameterInfo(string, "param1", true));
+    names.add(new ParameterInfo(string, "param2-with-very-long", true));
+    names.add(new ParameterInfo(typesDb.array(blob), "param3", true));
 
     when(ParameterInfo.iterableToString(names));
     thenReturned(""

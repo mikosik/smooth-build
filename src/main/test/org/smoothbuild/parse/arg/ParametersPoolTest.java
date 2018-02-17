@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.Parameter;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
@@ -25,7 +24,7 @@ public class ParametersPoolTest {
   private final Type file = typeSystem.file();
   private final Type nothing = typeSystem.nothing();
 
-  private final Name name = new Name("NAME");
+  private final String name = "NAME";
   private ParameterInfo parameter;
   private ParametersPool parametersPool;
 
@@ -42,8 +41,7 @@ public class ParametersPoolTest {
   @Test
   public void taking_unknown_param_throws_exception() {
     given(parametersPool = new ParametersPool(set(), set()));
-    when(parametersPool).take(
-        new Parameter(string, new Name("unknownName"), mock(Dag.class)));
+    when(parametersPool).take(new Parameter(string, "unknownName", mock(Dag.class)));
     thenThrown(IllegalArgumentException.class);
   }
 

@@ -17,7 +17,7 @@ public class SignatureTest {
   private final TypesDb typesDb = new TypesDb();
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
-  private final Name name = new Name("name");
+  private final String name = "name";
   private final List<Parameter> parameters = asList();
   private Parameter parameter;
   private Parameter parameter2;
@@ -39,8 +39,8 @@ public class SignatureTest {
 
   @Test
   public void to_string() throws Exception {
-    given(parameter = new Parameter(blob, new Name("blob"), mock(Dag.class)));
-    given(parameter2 = new Parameter(string, new Name("string"), mock(Dag.class)));
+    given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
+    given(parameter2 = new Parameter(string, "string", mock(Dag.class)));
     when(new Signature(string, name, asList(parameter, parameter2))).toString();
     thenReturned(string.name() + " " + name + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

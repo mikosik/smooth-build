@@ -24,7 +24,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -32,7 +31,7 @@ import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.util.Maybe;
 
 public class FindNatives {
-  public static Maybe<Map<Name, Native>> findNatives(Path jarPath) {
+  public static Maybe<Map<String, Native>> findNatives(Path jarPath) {
     if (!jarPath.toFile().exists()) {
       return value(new HashMap<>());
     }
@@ -45,9 +44,9 @@ public class FindNatives {
     }
   }
 
-  private static Maybe<Map<Name, Native>> find(JarFile jarFile) throws IOException {
+  private static Maybe<Map<String, Native>> find(JarFile jarFile) throws IOException {
     List<String> errors = new ArrayList<>();
-    Map<Name, Native> result = new HashMap<>();
+    Map<String, Native> result = new HashMap<>();
     JarInputStream jarInputStream = newJarInputStream(jarFile.path());
     JarEntry entry;
     while ((entry = jarInputStream.getNextJarEntry()) != null) {
@@ -62,7 +61,7 @@ public class FindNatives {
           for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(SmoothFunction.class)) {
               if (isLegalName(method.getName())) {
-                Name name = new Name(method.getName());
+                String name = method.getName();
                 if (result.containsKey(name)) {
                   errors.add(error(jarFile, method,
                       "Function with the same name is also provided by "

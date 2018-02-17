@@ -3,7 +3,6 @@ package org.smoothbuild.parse.deps;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.Named;
@@ -33,7 +32,7 @@ public class DependencyStack {
   }
 
   public ParseError createCycleError() {
-    Name lastMissing = peek().missing().name();
+    String lastMissing = peek().missing().name();
     int first = -1;
     StackElem[] array = stack.toArray(new StackElem[stack.size()]);
     for (int i = array.length - 1; 0 <= i; i--) {

@@ -11,13 +11,12 @@ import static org.testory.Testory.willReturn;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
 
 public class FunctionsTest {
   private Functions functions;
   private Function function;
   private Function function2;
-  private Name name;
+  private String name;
 
   @Before
   public void before() {
@@ -44,10 +43,10 @@ public class FunctionsTest {
 
   @Test
   public void getting_unknown_function_fails() throws Exception {
-    given(willReturn(new Name("functionName")), function).name();
+    given(willReturn("functionName"), function).name();
     given(functions = new Functions());
     given(functions).add(function);
-    when(() -> functions.get(new Name("missingFunction")));
+    when(() -> functions.get("missingFunction"));
     thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
         + "Available functions: [functionName]")));
   }
@@ -65,7 +64,7 @@ public class FunctionsTest {
   @Test
   public void names_returns_collection_that_forbids_adding_elements() {
     given(functions = new Functions());
-    when(functions.names()).add(new Name("name"));
+    when(functions.names()).add("name");
     thenThrown(UnsupportedOperationException.class);
   }
 }

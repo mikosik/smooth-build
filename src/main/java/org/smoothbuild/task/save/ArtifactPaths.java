@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.value.Value;
 
 public class ArtifactPaths {
@@ -14,7 +13,7 @@ public class ArtifactPaths {
     return VALUES_DB_PATH.append(Hash.toPath(value.dataHash()));
   }
 
-  public static Path artifactPath(Name name) {
+  public static Path artifactPath(String name) {
     return artifactPath(path(toFileName(name)));
   }
 
@@ -22,13 +21,12 @@ public class ArtifactPaths {
     return ARTIFACTS_PATH.append(path);
   }
 
-  public static String toFileName(Name name) {
-    String string = name.toString();
-    int index = string.lastIndexOf('_');
+  public static String toFileName(String name) {
+    int index = name.lastIndexOf('_');
     if (index == -1) {
-      return string;
+      return name;
     } else {
-      return new StringBuilder(string).replace(index, index + 1, ".").toString();
+      return new StringBuilder(name).replace(index, index + 1, ".").toString();
     }
   }
 }

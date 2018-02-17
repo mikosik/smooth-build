@@ -11,7 +11,6 @@ import static org.testory.Testory.willReturn;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -19,7 +18,7 @@ import org.smoothbuild.lang.type.TypesDb;
 public class ArgNodeTest {
   private final Type string = new TypesDb().string();
   private final Location location = location(Paths.get("path"), 1);
-  private final Name name = new Name("arg-name");
+  private final String name = "arg-name";
   private ArgNode arg;
 
   @Test
@@ -75,7 +74,7 @@ public class ArgNodeTest {
 
   @Test
   public void to_padded_string() throws Exception {
-    given(arg = new ArgNode(1, new Name("myName"), expr(string), location));
+    given(arg = new ArgNode(1, "myName", expr(string), location));
     given(arg).set(Type.class, string);
     when(arg).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       [" + location.toString() + "]");
@@ -83,7 +82,7 @@ public class ArgNodeTest {
 
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
-    given(arg = new ArgNode(1, new Name("myName"), expr(string), location));
+    given(arg = new ArgNode(1, "myName", expr(string), location));
     given(arg).set(Type.class, string);
     when(arg).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 [" + location.toString() + "]");
