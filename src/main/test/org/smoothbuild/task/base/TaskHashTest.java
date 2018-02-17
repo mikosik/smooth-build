@@ -19,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
@@ -90,7 +89,7 @@ public class TaskHashTest {
   public void hash_of_task_with_native_call_evaluator_and_empty_input_is_stable() throws Exception {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
-    given(willReturn(new Name("name")), nativeFunction).name();
+    given(willReturn("name"), nativeFunction).name();
     given(task = new Task(nativeCallEvaluator(nativeFunction, false, location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
@@ -102,7 +101,7 @@ public class TaskHashTest {
       throws Exception {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
-    given(willReturn(new Name("name")), nativeFunction).name();
+    given(willReturn("name"), nativeFunction).name();
     given(task = new Task(nativeCallEvaluator(nativeFunction, false, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
@@ -113,7 +112,7 @@ public class TaskHashTest {
   public void hash_of_task_with_call_evaluator_and_one_element_input_is_stable() throws Exception {
     given(definedFunction = mock(DefinedFunction.class));
     given(willReturn(typesDb.string()), definedFunction).type();
-    given(willReturn(new Name("name")), definedFunction).name();
+    given(willReturn("name"), definedFunction).name();
     given(task = new Task(callEvaluator(definedFunction, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"))));
     when(() -> taskHash(task, input));

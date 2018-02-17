@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
@@ -51,7 +50,7 @@ public class AssignArgsToParams {
       }
 
       private Set<ParameterInfo> functionParameters(CallNode call) {
-        Name name = call.name();
+        String name = call.name();
         if (functions.contains(name)) {
           return new HashSet<>(functions.get(name).signature().parameters());
         }
@@ -68,7 +67,7 @@ public class AssignArgsToParams {
           Set<ParameterInfo> parameters) {
         boolean failed = false;
         List<ArgNode> namedArgs = filter(call.args(), ArgNode::hasName);
-        Map<Name, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
+        Map<String, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();

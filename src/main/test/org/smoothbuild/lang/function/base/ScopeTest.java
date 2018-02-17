@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 
 public class ScopeTest {
-  private final Name name = new Name("name");
+  private final String name = "name";
   private Scope<String> scope;
   private Scope<String> outerScope;
 

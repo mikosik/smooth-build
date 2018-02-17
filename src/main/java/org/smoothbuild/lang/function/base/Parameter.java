@@ -9,7 +9,7 @@ import org.smoothbuild.util.Dag;
 public class Parameter extends ParameterInfo {
   private final Dag<Expression> defaultValue;
 
-  public Parameter(Type type, Name name, Dag<Expression> defaultValue) {
+  public Parameter(Type type, String name, Dag<Expression> defaultValue) {
     super(type, name, defaultValue == null);
     this.defaultValue = defaultValue;
   }

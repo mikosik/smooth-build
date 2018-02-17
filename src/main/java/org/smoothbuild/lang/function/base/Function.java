@@ -29,7 +29,7 @@ public abstract class Function {
     return signature.type();
   }
 
-  public Name name() {
+  public String name() {
     return signature.name();
   }
 

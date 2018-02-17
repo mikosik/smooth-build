@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class SmoothExecutor {
@@ -21,9 +20,9 @@ public class SmoothExecutor {
     this.console = console;
   }
 
-  public void execute(Set<Name> names) {
+  public void execute(Set<String> names) {
     Functions functions = runtime.functions();
-    for (Name name : names) {
+    for (String name : names) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.\n"
             + "Use 'smooth list' to see all available functions.\n");

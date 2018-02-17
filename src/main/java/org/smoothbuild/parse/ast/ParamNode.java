@@ -1,13 +1,12 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.message.Location;
 
 public class ParamNode extends NamedNode {
   private final TypeNode type;
   private final ExprNode defaultValue;
 
-  public ParamNode(TypeNode type, Name name, ExprNode defaultValue, Location location) {
+  public ParamNode(TypeNode type, String name, ExprNode defaultValue, Location location) {
     super(name, location);
     this.type = type;
     this.defaultValue = defaultValue;

@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -26,14 +25,11 @@ public class AstVisitor {
 
   public void visitFunc(FuncNode func) {
     visitType(func.type());
-    visitName(func.name());
     visitParams(func.params());
     if (!func.isNative()) {
       visitExpr(func.expr());
     }
   }
-
-  public void visitName(Name name) {}
 
   public void visitParams(List<ParamNode> params) {
     visitElements(params, this::visitParam);

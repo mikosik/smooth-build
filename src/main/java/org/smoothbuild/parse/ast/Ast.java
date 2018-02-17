@@ -10,12 +10,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.util.Maybe;
 
 public class Ast {
   private List<FuncNode> funcs;
-  private final Map<Name, FuncNode> nameToFunsMap;
+  private final Map<String, FuncNode> nameToFunsMap;
 
   public Ast(List<FuncNode> funcs) {
     this.funcs = funcs;
@@ -28,11 +27,11 @@ public class Ast {
     return funcs;
   }
 
-  public boolean containsFunc(Name name) {
+  public boolean containsFunc(String name) {
     return nameToFunsMap.containsKey(name);
   }
 
-  public FuncNode func(Name name) {
+  public FuncNode func(String name) {
     if (!nameToFunsMap.containsKey(name)) {
       throw new IllegalStateException("Ast does not contain function '" + name + "'");
     }
@@ -40,7 +39,7 @@ public class Ast {
   }
 
   public List<Object> sortFuncsByDependencies(Functions functions) {
-    Maybe<List<Name>> sortedNames = sortByDependencies(functions, this);
+    Maybe<List<String>> sortedNames = sortByDependencies(functions, this);
     if (sortedNames.hasValue()) {
       this.funcs = sortedNames
           .value()

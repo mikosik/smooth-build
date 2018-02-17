@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
@@ -59,11 +58,11 @@ public class ModuleLoader {
     if (!errors.isEmpty()) {
       return errors;
     }
-    Maybe<Map<Name, Native>> maybeNatives = findNatives(changeExtension(script, "jar"));
+    Maybe<Map<String, Native>> maybeNatives = findNatives(changeExtension(script, "jar"));
     if (!maybeNatives.hasValue()) {
       return maybeNatives.errors();
     }
-    Map<Name, Native> natives = maybeNatives.value();
+    Map<String, Native> natives = maybeNatives.value();
     errors = assignNatives(ast, natives);
     if (!errors.isEmpty()) {
       return errors;

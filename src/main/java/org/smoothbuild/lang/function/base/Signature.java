@@ -13,10 +13,10 @@ import com.google.common.collect.ImmutableList;
  */
 public class Signature {
   private final Type type;
-  private final Name name;
+  private final String name;
   private final ImmutableList<Parameter> parameters;
 
-  public Signature(Type type, Name name, Iterable<Parameter> params) {
+  public Signature(Type type, String name, Iterable<Parameter> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.parameters = ImmutableList.copyOf(params);
@@ -26,7 +26,7 @@ public class Signature {
     return type;
   }
 
-  public Name name() {
+  public String name() {
     return name;
   }
 

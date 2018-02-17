@@ -11,10 +11,10 @@ import org.smoothbuild.lang.type.Type;
 
 public class ParameterInfo {
   private final Type type;
-  private final Name name;
+  private final String name;
   private final boolean isRequired;
 
-  public ParameterInfo(Type type, Name name, boolean isRequired) {
+  public ParameterInfo(Type type, String name, boolean isRequired) {
     this.isRequired = isRequired;
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
@@ -24,7 +24,7 @@ public class ParameterInfo {
     return type;
   }
 
-  public Name name() {
+  public String name() {
     return name;
   }
 

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
 import org.smoothbuild.lang.type.Type;
@@ -43,7 +42,7 @@ public class AssignTypes {
   public List<ParseError> assignTypes(Functions functions, Ast ast) {
     final Type nonInferable = typesDb.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
-    Map<Name, Type> functionTypes = functions
+    Map<String, Type> functionTypes = functions
         .functions()
         .stream()
         .collect(toMap(Function::name, Function::type));
@@ -52,7 +51,6 @@ public class AssignTypes {
 
       @Override
       public void visitFunc(FuncNode func) {
-        visitName(func.name());
         visitParams(func.params());
 
         scope = scope();

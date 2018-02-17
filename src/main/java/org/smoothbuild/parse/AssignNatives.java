@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.base.Name;
 import org.smoothbuild.lang.function.nativ.Native;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
@@ -14,7 +13,7 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 
 public class AssignNatives {
-  public static List<ParseError> assignNatives(Ast ast, Map<Name, Native> natives) {
+  public static List<ParseError> assignNatives(Ast ast, Map<String, Native> natives) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
