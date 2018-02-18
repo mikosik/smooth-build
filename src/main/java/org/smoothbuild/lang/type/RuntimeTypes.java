@@ -63,7 +63,7 @@ public class RuntimeTypes implements Types {
     return cache.containsKey(name);
   }
 
-  public Type withName(String name) {
+  public Type getType(String name) {
     Type type = cache.get(name);
     if (type == null) {
       throw new IllegalStateException("Unknown runtime type '" + name + "'.");
