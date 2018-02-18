@@ -62,32 +62,32 @@ public class RuntimeTypesTest {
 
   @Test
   public void string_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.withName("String"));
+    when(() -> runtimeTypes.getType("String"));
     thenReturned(typesDb.string());
   }
 
   @Test
   public void blob_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.withName("Blob"));
+    when(() -> runtimeTypes.getType("Blob"));
     thenReturned(typesDb.blob());
   }
 
   @Test
   public void nothing_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.withName("Nothing"));
+    when(() -> runtimeTypes.getType("Nothing"));
     thenReturned(typesDb.nothing());
   }
 
   @Test
   public void file_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.withName("File"));
+    when(() -> runtimeTypes.getType("File"));
     thenReturned(typesDb.file());
   }
 
   @Test
   public void custom_struct_type_can_be_retrieved_by_name() throws Exception {
     given(type = runtimeTypes.struct("MyStruct", ImmutableMap.of("field", typesDb.string())));
-    when(() -> runtimeTypes.withName("MyStruct"));
+    when(() -> runtimeTypes.getType("MyStruct"));
     thenReturned(type);
   }
 
@@ -106,7 +106,7 @@ public class RuntimeTypesTest {
 
   @Test
   public void type_type_can_not_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.withName("Type"));
+    when(() -> runtimeTypes.getType("Type"));
     thenThrown(IllegalStateException.class);
   }
 }
