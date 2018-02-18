@@ -1,7 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -28,7 +26,7 @@ public class Node {
   }
 
   public <T> void set(Class<T> clazz, T value) {
-    map().put(clazz, checkNotNull(value));
+    map().put(clazz, value);
   }
 
   public boolean has(Class<?> clazz) {

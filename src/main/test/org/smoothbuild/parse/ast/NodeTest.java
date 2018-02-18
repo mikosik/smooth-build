@@ -23,10 +23,11 @@ public class NodeTest {
   }
 
   @Test
-  public void setting_null_value_throws_exception() throws Exception {
+  public void setting_null_is_allowed() throws Exception {
     given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    when(() -> node.set(String.class, null));
-    thenThrown(NullPointerException.class);
+    given(node).set(String.class, null);
+    when(() -> node.get(String.class));
+    thenReturned(null);
   }
 
   @Test
