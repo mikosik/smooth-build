@@ -14,11 +14,11 @@ import org.smoothbuild.util.Maybe;
 
 public class Ast {
   private List<FuncNode> funcs;
-  private final Map<String, FuncNode> nameToFunsMap;
+  private final Map<String, FuncNode> nameToFuncMap;
 
   public Ast(List<FuncNode> funcs) {
     this.funcs = funcs;
-    this.nameToFunsMap = funcs
+    this.nameToFuncMap = funcs
         .stream()
         .collect(toMap(FuncNode::name, identity(), (a, b) -> a));
   }
@@ -28,14 +28,14 @@ public class Ast {
   }
 
   public boolean containsFunc(String name) {
-    return nameToFunsMap.containsKey(name);
+    return nameToFuncMap.containsKey(name);
   }
 
   public FuncNode func(String name) {
-    if (!nameToFunsMap.containsKey(name)) {
+    if (!nameToFuncMap.containsKey(name)) {
       throw new IllegalStateException("Ast does not contain function '" + name + "'");
     }
-    return nameToFunsMap.get(name);
+    return nameToFuncMap.get(name);
   }
 
   public List<Object> sortFuncsByDependencies(Functions functions) {
@@ -44,7 +44,7 @@ public class Ast {
       this.funcs = sortedNames
           .value()
           .stream()
-          .map(n -> nameToFunsMap.get(n))
+          .map(n -> nameToFuncMap.get(n))
           .collect(Collectors.toList());
       return new ArrayList<>();
     } else {
