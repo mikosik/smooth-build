@@ -29,7 +29,6 @@ import org.smoothbuild.parse.ast.TypeNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 
 public class AssignTypes {
   private final TypesDb typesDb;
@@ -40,7 +39,6 @@ public class AssignTypes {
   }
 
   public List<ParseError> assignTypes(Functions functions, Ast ast) {
-    final Type nonInferable = typesDb.struct("<NonInferable>", ImmutableMap.of());
     List<ParseError> errors = new ArrayList<>();
     Map<String, Type> functionTypes = functions
         .functions()
@@ -78,14 +76,13 @@ public class AssignTypes {
           } else {
             errors.add(new ParseError(func, "Function '" + func.name()
                 + "' is native so should have declared result type."));
-            return nonInferable;
+            return null;
           }
         } else {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
             Type type = createType(func.type());
-            if (type != nonInferable && exprType != nonInferable && !type.isAssignableFrom(
-                exprType)) {
+            if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
                   + "' expression is " + exprType.name()
                   + " which is not convertable to function's declared result type " + type.name()
@@ -115,11 +112,11 @@ public class AssignTypes {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
-        if (type != nonInferable) {
+        if (type != null) {
           ParameterInfo info = new ParameterInfo(
               param.get(Type.class), param.name(), !param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
-          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != nonInferable) {
+          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != null) {
             Type valueType = param.defaultValue().get((Type.class));
             if (!type.isAssignableFrom(valueType)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
@@ -133,8 +130,7 @@ public class AssignTypes {
       @Override
       public void visitType(TypeNode type) {
         super.visitType(type);
-        Type inferredType = createType(type);
-        type.set(Type.class, inferredType == null ? nonInferable : inferredType);
+        type.set(Type.class, createType(type));
       }
 
       private Type createType(TypeNode type) {
@@ -146,7 +142,6 @@ public class AssignTypes {
         Type result = typesDb.nonArrayTypeFromString(type.name());
         if (result == null) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
-          return nonInferable;
         }
         return result;
       }
@@ -163,14 +158,14 @@ public class AssignTypes {
           return typesDb.array(typesDb.nothing());
         }
         Type firstType = expressions.get(0).get(Type.class);
-        if (nonInferable.equals(firstType)) {
-          return nonInferable;
+        if (firstType == null) {
+          return null;
         }
         Type elemType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
           Type type = expressions.get(i).get(Type.class);
-          if (nonInferable.equals(type)) {
-            return nonInferable;
+          if (type == null) {
+            return null;
           }
           elemType = elemType.commonSuperType(type);
 
@@ -179,7 +174,7 @@ public class AssignTypes {
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type '" + firstType.name()
                     + "' while element at index " + i + " has type '" + type.name() + "'."));
-            return nonInferable;
+            return null;
           }
         }
         return typesDb.array(elemType);
