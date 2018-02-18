@@ -25,6 +25,42 @@ public class RuntimeTypesTest {
   }
 
   @Test
+  public void has_string_type() throws Exception {
+    when(() -> runtimeTypes.hasType("String"));
+    thenReturned(true);
+  }
+
+  @Test
+  public void has_blob_type() throws Exception {
+    when(() -> runtimeTypes.hasType("Blob"));
+    thenReturned(true);
+  }
+
+  @Test
+  public void has_nothing_type() throws Exception {
+    when(() -> runtimeTypes.hasType("Nothing"));
+    thenReturned(true);
+  }
+
+  @Test
+  public void has_file_type() throws Exception {
+    when(() -> runtimeTypes.hasType("File"));
+    thenReturned(true);
+  }
+
+  @Test
+  public void does_not_have_unknown_type() throws Exception {
+    when(() -> runtimeTypes.hasType("Unknown"));
+    thenReturned(false);
+  }
+
+  @Test
+  public void does_not_have_array_of_string_type() throws Exception {
+    when(() -> runtimeTypes.hasType("[String]"));
+    thenReturned(false);
+  }
+
+  @Test
   public void string_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.withName("String"));
     thenReturned(typesDb.string());

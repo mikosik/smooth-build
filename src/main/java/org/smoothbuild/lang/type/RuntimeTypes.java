@@ -59,6 +59,10 @@ public class RuntimeTypes implements Types {
     return typesDb.array(elementType);
   }
 
+  public boolean hasType(String name) {
+    return cache.containsKey(name);
+  }
+
   public Type withName(String name) {
     Type type = cache.get(name);
     if (type == null) {
