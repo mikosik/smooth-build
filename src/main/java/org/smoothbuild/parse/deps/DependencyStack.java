@@ -48,8 +48,7 @@ public class DependencyStack {
     for (int i = first; i < array.length; i++) {
       StackElem current = array[i];
       Named missing = current.missing();
-      builder.append(current.name().toString() + missing.location()
-          + " -> " + missing.name() + "\n");
+      builder.append(missing.location() + ": " + current.name() + " -> " + missing.name() + "\n");
     }
     Location location = array[first].missing().location();
     return new ParseError(location, name + " contains cycle:\n" + builder.toString());

@@ -18,12 +18,7 @@ import org.smoothbuild.parse.ast.NamedNode;
 import com.google.common.collect.ImmutableSet;
 
 public class DependencyStackTest {
-  private final String name1 = "function1";
-  private final String name2 = "function2";
-  private final String name3 = "function3";
-  private final String name4 = "function4";
   private final String stackName = "My Stack";
-
   private DependencyStack dependencyStack;
   private StackElem elem1;
   private StackElem elem2;
@@ -133,27 +128,27 @@ public class DependencyStackTest {
   @Test
   public void create_cycle_error() throws Exception {
     given(dependencyStack = new DependencyStack(stackName));
-    given(dependencyStack).push(elem(name1, name2, 1));
-    given(dependencyStack).push(elem(name2, name3, 2));
-    given(dependencyStack).push(elem(name3, name4, 3));
-    given(dependencyStack).push(elem(name4, name2, 4));
+    given(dependencyStack).push(elem("name1", "name2", 1));
+    given(dependencyStack).push(elem("name2", "name3", 2));
+    given(dependencyStack).push(elem("name3", "name4", 3));
+    given(dependencyStack).push(elem("name4", "name2", 4));
     when(() -> dependencyStack.createCycleError().toString());
     thenReturned(new ParseError(location(Paths.get("script.smooth"), 2),
         "My Stack contains cycle:\n"
-            + name2 + location(Paths.get("script.smooth"), 2) + " -> " + name3 + "\n"
-            + name3 + location(Paths.get("script.smooth"), 3) + " -> " + name4 + "\n"
-            + name4 + location(Paths.get("script.smooth"), 4) + " -> " + name2 + "\n").toString());
+            + "script.smooth:2: name2 -> name3\n"
+            + "script.smooth:3: name3 -> name4\n"
+            + "script.smooth:4: name4 -> name2\n").toString());
   }
 
   @Test
   public void create_cycle_error_for_recursive_call() throws Exception {
     given(dependencyStack = new DependencyStack(stackName));
-    given(dependencyStack).push(elem(name1, name2, 1));
-    given(dependencyStack).push(elem(name2, name2, 2));
+    given(dependencyStack).push(elem("name1", "name2", 1));
+    given(dependencyStack).push(elem("name2", "name2", 2));
     when(() -> dependencyStack.createCycleError().toString());
     thenReturned(new ParseError(location(Paths.get("script.smooth"), 2),
         "My Stack contains cycle:\n"
-            + name2 + location(Paths.get("script.smooth"), 2) + " -> " + name2 + "\n").toString());
+            + "script.smooth:2: name2 -> name2\n").toString());
   }
 
   private StackElem elem(String from, String to, int location) {
