@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +33,10 @@ public class RuntimeTypes implements Types {
 
   private static void putType(HashMap<String, Type> map, Type type) {
     map.put(type.name(), type);
+  }
+
+  public Set<String> names() {
+    return cache.keySet();
   }
 
   @Override
