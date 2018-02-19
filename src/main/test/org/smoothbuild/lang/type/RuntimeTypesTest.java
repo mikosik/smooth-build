@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.type;
 
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -16,12 +19,37 @@ public class RuntimeTypesTest {
   private TypesDb typesDb;
   private RuntimeTypes runtimeTypes;
   private StructType type;
+  private ArrayType arrayType;
 
   @Before
   public void before() {
     given(hashedDb = new HashedDb());
     given(typesDb = new TypesDb(hashedDb));
     given(runtimeTypes = new RuntimeTypes(typesDb));
+  }
+
+  @Test
+  public void names_returns_all_basic_types_and_file_initially() throws Exception {
+    when(() -> runtimeTypes.names());
+    thenReturned(set(
+        typesDb.string().name(),
+        typesDb.blob().name(),
+        typesDb.file().name(),
+        typesDb.nothing().name()));
+  }
+
+  @Test
+  public void names_does_not_contain_name_of_array_type_that_was_queried_before() throws Exception {
+    given(arrayType = runtimeTypes.array(runtimeTypes.string()));
+    when(() -> runtimeTypes.names());
+    thenReturned(not(hasItem(arrayType.name())));
+  }
+
+  @Test
+  public void names_contain_name_of_struct_that_was_added_before() throws Exception {
+    given(runtimeTypes).struct("MyStruct", ImmutableMap.of());
+    when(() -> runtimeTypes.names());
+    thenReturned(hasItem("MyStruct"));
   }
 
   @Test
