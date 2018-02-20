@@ -15,7 +15,6 @@ import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
-import org.smoothbuild.antlr.SmoothParser.BasicTypeContext;
 import org.smoothbuild.antlr.SmoothParser.CallContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.FieldContext;
@@ -23,6 +22,7 @@ import org.smoothbuild.antlr.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
+import org.smoothbuild.antlr.SmoothParser.NonArrayTypeContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
@@ -165,8 +165,8 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeContext type) {
-        if (type.basicType() != null) {
-          return createBasicType(type.basicType());
+        if (type.nonArrayType() != null) {
+          return createNonArrayType(type.nonArrayType());
         }
         if (type.arrayType() != null) {
           return createArrayType(type.arrayType());
@@ -175,8 +175,8 @@ public class AstCreator {
             + " without children.");
       }
 
-      private TypeNode createBasicType(BasicTypeContext basicType) {
-        return new TypeNode(basicType.getText(), locationOf(file, basicType));
+      private TypeNode createNonArrayType(NonArrayTypeContext nonArrayType) {
+        return new TypeNode(nonArrayType.getText(), locationOf(file, nonArrayType));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
