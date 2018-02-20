@@ -8,9 +8,9 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
-public class FileFunction {
+public class AFileFunction {
   @SmoothFunction
-  public static Struct File(NativeApi nativeApi, SString path, Blob content) {
+  public static Struct aFile(NativeApi nativeApi, SString path, Blob content) {
     try {
       Path.path(path.data());
     } catch (IllegalPathException e) {

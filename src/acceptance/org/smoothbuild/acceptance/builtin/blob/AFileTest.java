@@ -9,11 +9,11 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class FileTest extends AcceptanceTestCase {
+public class AFileTest extends AcceptanceTestCase {
   @Test
   public void file_function() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result = [File(path='newFile.txt', content=file('//file.txt'))];");
+    givenScript("result = [aFile(path='newFile.txt', content=file('//file.txt'))];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("newFile.txt", "abc"));
@@ -21,7 +21,7 @@ public class FileTest extends AcceptanceTestCase {
 
   @Test
   public void illegal_path_causes_error() throws Exception {
-    givenScript("result = File('/filename', toBlob('abc'));");
+    givenScript("result = aFile('/filename', toBlob('abc'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
