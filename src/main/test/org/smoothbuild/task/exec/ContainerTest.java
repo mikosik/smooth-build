@@ -19,7 +19,7 @@ import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.RuntimeTypes;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class ContainerTest {

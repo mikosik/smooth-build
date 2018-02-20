@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.RuntimeTypes;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;

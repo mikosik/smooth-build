@@ -3,9 +3,6 @@ package org.smoothbuild.lang.runtime;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.function.Functions;
-import org.smoothbuild.lang.type.RuntimeTypes;
-
 @Singleton
 public class SRuntime {
   private final RuntimeTypes types;

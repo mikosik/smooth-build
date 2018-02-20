@@ -9,11 +9,11 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.function.Functions;
 import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.function.base.ParameterInfo;
 import org.smoothbuild.lang.function.base.Scope;
-import org.smoothbuild.lang.type.RuntimeTypes;
+import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
