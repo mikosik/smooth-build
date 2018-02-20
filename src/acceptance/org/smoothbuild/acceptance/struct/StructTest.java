@@ -82,7 +82,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: 'File' is already defined at"));
+    then(output(), containsString("build.smooth:1: error: 'File' is already defined"));
   }
 
   @Test
