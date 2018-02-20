@@ -16,7 +16,7 @@ import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.RuntimeTypes;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
 

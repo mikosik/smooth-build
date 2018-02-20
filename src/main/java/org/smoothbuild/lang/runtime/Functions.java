@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.runtime;
 
 import java.util.Collection;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.runtime;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
@@ -11,6 +11,9 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableMap;
 

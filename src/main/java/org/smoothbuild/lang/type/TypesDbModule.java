@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.Values;
 import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;

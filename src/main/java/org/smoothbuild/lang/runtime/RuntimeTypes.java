@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.runtime;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableMap;
 

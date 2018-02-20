@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.runtime;
 
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
@@ -11,6 +11,7 @@ import static org.testory.Testory.willReturn;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
+import org.smoothbuild.lang.runtime.Functions;
 
 public class FunctionsTest {
   private Functions functions;

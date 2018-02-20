@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.function.Functions;
+import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class SmoothExecutor {
