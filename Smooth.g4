@@ -13,8 +13,8 @@ call: name ( p='(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
 arg: ( name '=' )? expr ;
 array: '[' ( expr (',' expr)* (',')? )?  ']' ;
-type: basicType | arrayType ;
-basicType: IDENTIFIER ;
+type: nonArrayType | arrayType ;
+nonArrayType: IDENTIFIER ;
 arrayType: '[' type ']' ;
 name: IDENTIFIER ;
 
