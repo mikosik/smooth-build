@@ -102,16 +102,16 @@ public class FindSemanticErrors {
         .build();
     new AstVisitor() {
       @Override
-      public void visitField(FieldNode field) {
-        super.visitField(field);
-        assertTypeIsDefined(field.type());
+      public void visitType(TypeNode type) {
+        super.visitType(type);
+        assertTypeIsDefined(type);
       }
 
       private void assertTypeIsDefined(TypeNode type) {
         if (type instanceof ArrayTypeNode) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
         } else if (!all.contains(type.name())) {
-          errors.add(new ParseError(type.location(), "'" + type.name() + "' is undefined."));
+          errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
       }
     }.visitAst(ast);

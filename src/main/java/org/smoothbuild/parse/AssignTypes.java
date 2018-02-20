@@ -168,12 +168,7 @@ public class AssignTypes {
           Type inferredElemType = createType(elementType);
           return inferredElemType == null ? null : types.array(inferredElemType);
         }
-        if (types.hasType(type.name())) {
-          return types.getType(type.name());
-        } else {
-          errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
-          return null;
-        }
+        return types.getType(type.name());
       }
 
       @Override
