@@ -94,7 +94,7 @@ public class StructTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString("build.smooth:2: error: "
-        + "'Unknown' is undefined.\n"));
+        + "Unknown type 'Unknown'.\n"));
   }
 
   @Test
