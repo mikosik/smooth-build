@@ -67,4 +67,14 @@ public class StructTypeTest extends AbstractTypeTestCase {
     when(() -> new TypesDb(hashedDb).read(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
+
+  @Test
+  public void creating_two_different_structs_with_same_name_is_possible() throws Exception {
+    given(fields = ImmutableMap.of("field1", typesDb.string()));
+    given(type = typesDb.struct("MyStruct", fields));
+    given(fields = ImmutableMap.of("field1", typesDb.string(), "field2", typesDb.string()));
+    given(type2 = typesDb.struct("MyStruct", fields));
+    when(() -> type.hash());
+    thenReturned(not(type2.hash()));
+  }
 }
