@@ -22,12 +22,14 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.util.Streams;
 
@@ -38,6 +40,7 @@ public class OutputsDbTest {
   private HashedDb hashedDbOutputs;
   private TypesDb typesDb;
   private ValuesDb valuesDb;
+  private ValueFactory valueFactory;
   private MessagesDb messagesDb;
   private OutputsDb outputsDb;
   private final HashCode hash = Hash.string("abc");
@@ -58,6 +61,8 @@ public class OutputsDbTest {
     hashedDbOutputs = new HashedDb();
     typesDb = new TypesDb(hashedDbValues);
     valuesDb = new ValuesDb(hashedDbValues, typesDb);
+    RuntimeTypes runtimeTypes = new RuntimeTypes(typesDb);
+    valueFactory = new ValueFactory(runtimeTypes, valuesDb);
     messagesDb = new MessagesDb(valuesDb, typesDb);
     outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
   }
@@ -92,7 +97,7 @@ public class OutputsDbTest {
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
-    given(file = file(valuesDb, path, bytes));
+    given(file = file(valueFactory, path, bytes));
     given(array = valuesDb.arrayBuilder(typesDb.file()).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
     when(((Array) outputsDb.read(hash, typesDb.array(typesDb.file())).result())
@@ -122,7 +127,7 @@ public class OutputsDbTest {
 
   @Test
   public void written_file_can_be_read_back() throws Exception {
-    given(file = file(valuesDb, path, bytes));
+    given(file = file(valueFactory, path, bytes));
     given(outputsDb).write(hash, new Output(file, asList()));
     when(outputsDb.read(hash, typesDb.file()).result());
     thenReturned(file);

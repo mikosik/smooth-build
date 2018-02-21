@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.ValueFactory;
 
 public class JarTester {
 
@@ -23,7 +23,7 @@ public class JarTester {
       }
     }
 
-    return blob(new ValuesDb(), outputStream.toByteArray());
+    return blob(new ValueFactory(), outputStream.toByteArray());
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {

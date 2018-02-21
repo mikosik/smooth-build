@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.testing.common.JarTester;
 
@@ -29,8 +29,8 @@ public class BinaryNameToClassFileTest {
 
   @Test
   public void binary_names_are_mapped_to_proper_class_files() throws IOException {
-    given(file1 = file(new ValuesDb(), path("a/Klass.class")));
-    given(file2 = file(new ValuesDb(), path("b/Klass.class")));
+    given(file1 = file(new ValueFactory(), path("a/Klass.class")));
+    given(file2 = file(new ValueFactory(), path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi, asList(blob)));
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
@@ -45,8 +45,8 @@ public class BinaryNameToClassFileTest {
 
   @Test
   public void non_class_files_are_not_mapped() throws IOException {
-    given(file1 = file(new ValuesDb(), path("a/Klass.txt")));
-    given(file2 = file(new ValuesDb(), path("b/Klass.java")));
+    given(file1 = file(new ValueFactory(), path("a/Klass.txt")));
+    given(file2 = file(new ValueFactory(), path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi, asList(blob)).entrySet());
     thenReturned(empty());

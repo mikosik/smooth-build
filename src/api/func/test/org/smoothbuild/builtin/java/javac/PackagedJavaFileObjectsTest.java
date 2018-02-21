@@ -12,7 +12,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
@@ -27,8 +26,8 @@ public class PackagedJavaFileObjectsTest {
 
   @Test
   public void files_from_library_jars_are_accessible_as_java_objects() throws Exception {
-    given(file1 = file(new ValuesDb(), path("my/package/MyKlass.class")));
-    given(file2 = file(new ValuesDb(), path("my/package/MyKlass2.class")));
+    given(file1 = file(path("my/package/MyKlass.class")));
+    given(file2 = file(path("my/package/MyKlass2.class")));
     given(jar = jar(file1, file2));
     when(classesFromJars(nativeApi, asList(jar)));
     thenReturned(containsInAnyOrder(new InputClassFile(file1), new InputClassFile(file2)));
@@ -36,7 +35,7 @@ public class PackagedJavaFileObjectsTest {
 
   @Test
   public void duplicateClassFileException() throws Exception {
-    given(file1 = file(new ValuesDb(), path("my/package/MyKlass.class")));
+    given(file1 = file(path("my/package/MyKlass.class")));
     given(jar = jar(file1));
     when(() -> classesFromJars(nativeApi, asList(jar, jar)));
     thenThrown(AbortException.class);

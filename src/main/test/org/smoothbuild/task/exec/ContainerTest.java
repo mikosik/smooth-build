@@ -21,6 +21,7 @@ import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
+import org.smoothbuild.lang.value.ValueFactory;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
@@ -35,7 +36,8 @@ public class ContainerTest {
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
     MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
     Types types = new RuntimeTypes(typesDb);
-    container = new Container(fileSystem, valuesDb, types, messagesDb, tempDirProvider);
+    ValueFactory valueFactory = new ValueFactory(types, valuesDb);
+    container = new Container(fileSystem, valueFactory, types, messagesDb, tempDirProvider);
   }
 
   @Test

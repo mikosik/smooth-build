@@ -22,17 +22,17 @@ import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final ValuesDb valuesDb;
+  private final ValueFactory valueFactory;
   private final Types types;
   private final TempManager tempManager;
   private final List<TempDir> tempDirs;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(FileSystem fileSystem, ValuesDb valuesDb, Types types, MessagesDb messagesDb,
-      TempManager tempManager) {
+  public Container(FileSystem fileSystem, ValueFactory valueFactory, Types types,
+      MessagesDb messagesDb, TempManager tempManager) {
     this.fileSystem = fileSystem;
-    this.valuesDb = valuesDb;
+    this.valueFactory = valueFactory;
     this.types = types;
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
@@ -57,12 +57,13 @@ public class Container implements NativeApi {
 
   public Container(FileSystem fileSystem, Types types, ValuesDb valuesDb,
       MessagesDb messagesDb) {
-    this(fileSystem, valuesDb, types, messagesDb, new TempManager(fileSystem));
+    this(fileSystem, new ValueFactory(types, valuesDb), types, messagesDb,
+        new TempManager(fileSystem));
   }
 
   @Override
   public ValueFactory create() {
-    return valuesDb;
+    return valueFactory;
   }
 
   @Override

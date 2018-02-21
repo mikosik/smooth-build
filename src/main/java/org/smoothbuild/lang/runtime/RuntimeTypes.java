@@ -66,7 +66,7 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public Type file() {
+  public StructType file() {
     return typesDb.file();
   }
 

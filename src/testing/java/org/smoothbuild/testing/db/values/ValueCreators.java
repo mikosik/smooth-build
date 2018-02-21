@@ -16,6 +16,7 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
@@ -30,21 +31,36 @@ public class ValueCreators {
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {
-    return file(new ValuesDb(hashedDb), path);
+    return file(new ValueFactory(hashedDb), path);
   }
 
-  public static Struct file(ValuesDb valuesDb, Path path) {
-    return file(valuesDb, path, path.value().getBytes(SmoothConstants.CHARSET));
+  public static Struct file(Path path) {
+    return file(new ValueFactory(), path);
   }
 
-  public static Struct file(ValuesDb valuesDb, Path path, byte[] content) {
-    SString string = valuesDb.string(path.value());
-    Blob blob = blob(valuesDb, content);
-    return valuesDb.file(string, blob);
+  public static Struct file(ValueFactory valueFactory, Path path) {
+    return file(valueFactory, path, path.value().getBytes(SmoothConstants.CHARSET));
   }
 
-  public static Blob blob(ValuesDb valuesDb, byte[] bytes) {
-    BlobBuilder builder = valuesDb.blobBuilder();
+  public static Struct file(Path path, byte[] content) {
+    ValueFactory valueFactory = new ValueFactory();
+    SString string = valueFactory.string(path.value());
+    Blob blob = blob(valueFactory, content);
+    return valueFactory.file(string, blob);
+  }
+
+  public static Struct file(ValueFactory valueFactory, Path path, byte[] content) {
+    SString string = valueFactory.string(path.value());
+    Blob blob = blob(valueFactory, content);
+    return valueFactory.file(string, blob);
+  }
+
+  public static Blob blob(byte[] bytes) {
+    return blob(new ValueFactory(), bytes);
+  }
+
+  public static Blob blob(ValueFactory valueFactory, byte[] bytes) {
+    BlobBuilder builder = valueFactory.blobBuilder();
     try {
       Streams.copy(new ByteArrayInputStream(bytes), builder);
     } catch (IOException e) {
