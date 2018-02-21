@@ -13,9 +13,9 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
@@ -24,13 +24,13 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final TypesDb typesDb;
+  private final RuntimeTypes types;
   private final Console console;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, TypesDb typesDb, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, RuntimeTypes types, Console console) {
     this.fileSystem = fileSystem;
-    this.typesDb = typesDb;
+    this.types = types;
     this.console = console;
   }
 
@@ -38,7 +38,7 @@ public class ArtifactSaver {
     Path path = path(toFileName(name));
     if (value instanceof Array) {
       saveArray(path, (Array) value);
-    } else if (value.type().equals(typesDb.file())) {
+    } else if (value.type().equals(types.getType("File"))) {
       saveBasicValue(path, ((Struct) value).get("content"));
     } else {
       saveBasicValue(path, value);
@@ -54,7 +54,7 @@ public class ArtifactSaver {
         saveArray(path.append(path(Integer.toString(i))), element);
         i++;
       }
-    } else if (elemType.equals(typesDb.file())) {
+    } else if (elemType.equals(types.getType("File"))) {
       saveFileArray(path, array);
     } else {
       saveValueArray(path, array);
