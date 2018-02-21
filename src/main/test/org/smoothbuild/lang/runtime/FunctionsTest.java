@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.runtime;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
@@ -74,6 +75,14 @@ public class FunctionsTest {
     given(functions = new Functions());
     when(functions.functions()).remove(function);
     thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void functions_contains_added_function() {
+    given(functions = new Functions());
+    given(functions).add(function);
+    when(functions.functions());
+    thenReturned(hasItem(function));
   }
 
   @Test
