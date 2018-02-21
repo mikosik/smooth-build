@@ -40,6 +40,15 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void function_with_same_name_as_basic_type_causes_error() throws Exception {
+    givenScript("String = 'def';\n");
+    whenSmoothList();
+    thenFinishedWithError();
+    then(output(), containsString("build.smooth:1: error: "
+        + "'String' is already defined.\n"));
+  }
+
+  @Test
   public void overriding_core_function_causes_error() throws Exception {
     givenScript("file = 'abc';");
     whenSmoothBuild("file");

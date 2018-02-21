@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static java.util.Collections.sort;
-import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.Function;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
@@ -43,7 +41,7 @@ public class FindSemanticErrors {
     parametersReferenceWithParentheses(errors, ast);
     undefinedReferences(errors, functions, ast);
     undefinedTypes(errors, runtime.types(), ast);
-    duplicateNames(errors, functions, ast);
+    duplicateGlobalNames(errors, runtime, ast);
     duplicateFieldNames(errors, ast);
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
@@ -117,15 +115,15 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void duplicateNames(List<ParseError> errors, Functions functions, Ast ast) {
-    Map<String, Location> defined = functions
-        .functions()
-        .stream()
-        .collect(toMap(Function::name, Function::location));
-    List<Named> nodes = new ArrayList<>();
-    nodes.addAll(ast.structs());
-    nodes.addAll(ast.funcs());
-    sort(nodes, (node1, node2) -> {
+  private static void duplicateGlobalNames(List<ParseError> errors, SRuntime runtime, Ast ast) {
+    Map<String, Object> defined = new HashMap<>();
+    defined.putAll(runtime.functions().nameToFunctionMap());
+    defined.putAll(runtime.types().nameToTypeMap());
+
+    List<Named> nameds = new ArrayList<>();
+    nameds.addAll(ast.structs());
+    nameds.addAll(ast.funcs());
+    sort(nameds, (node1, node2) -> {
       int l1 = node1.location().line();
       int l2 = node2.location().line();
       if (l1 < l2) {
@@ -136,13 +134,17 @@ public class FindSemanticErrors {
         return 1;
       }
     });
-    for (Named node : nodes) {
-      String name = node.name();
+    for (Named named : nameds) {
+      String name = named.name();
       if (defined.containsKey(name)) {
-        errors.add(new ParseError(node.location(),
-            "'" + name + "' is already defined at " + defined.get(name) + "."));
+        Object otherDefinition = defined.get(name);
+        String atLocation = (otherDefinition instanceof Named)
+            ? " at " + ((Named) otherDefinition).location()
+            : "";
+        errors.add(new ParseError(named.location(),
+            "'" + name + "' is already defined" + atLocation + "."));
       } else {
-        defined.put(name, node.location());
+        defined.put(name, named);
       }
     }
   }
