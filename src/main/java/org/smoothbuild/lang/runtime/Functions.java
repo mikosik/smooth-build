@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.runtime;
 
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class Functions {
   }
 
   public Collection<String> names() {
-    return functions.keySet();
+    return unmodifiableSet(functions.keySet());
   }
 
   public Collection<Function> functions() {

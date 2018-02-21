@@ -65,7 +65,7 @@ public class FunctionsTest {
   @Test
   public void names_returns_collection_that_forbids_adding_elements() {
     given(functions = new Functions());
-    when(functions.names()).add("name");
+    when(functions.names()).remove("name");
     thenThrown(UnsupportedOperationException.class);
   }
 
