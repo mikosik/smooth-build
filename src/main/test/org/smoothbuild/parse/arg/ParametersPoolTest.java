@@ -15,13 +15,15 @@ import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class ParametersPoolTest {
   private final TypesDb typeSystem = new TypesDb();
   private final Type string = typeSystem.string();
   private final Type blob = typeSystem.blob();
-  private final Type file = typeSystem.file();
+  private final Type file = typeSystem.struct(
+      "File", ImmutableMap.of("content", typeSystem.blob(), "path", typeSystem.string()));
   private final Type nothing = typeSystem.nothing();
 
   private final String name = "NAME";

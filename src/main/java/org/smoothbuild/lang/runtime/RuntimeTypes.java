@@ -34,7 +34,6 @@ public class RuntimeTypes implements Types {
     putType(map, typesDb.string());
     putType(map, typesDb.blob());
     putType(map, typesDb.nothing());
-    putType(map, typesDb.file());
     return map;
   }
 
@@ -67,7 +66,7 @@ public class RuntimeTypes implements Types {
 
   @Override
   public StructType file() {
-    return typesDb.file();
+    return (StructType) getType("File");
   }
 
   @Override

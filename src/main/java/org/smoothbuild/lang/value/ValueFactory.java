@@ -10,6 +10,8 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
+import com.google.common.collect.ImmutableMap;
+
 public class ValueFactory {
   private final Types types;
   private final ValuesDb valuesDb;
@@ -30,6 +32,11 @@ public class ValueFactory {
 
   public ValueFactory(HashedDb hashedDb, TypesDb typesDb) {
     this(new RuntimeTypes(typesDb), new ValuesDb(hashedDb, typesDb));
+  }
+
+  public ValueFactory(RuntimeTypes types, ValuesDb valuesDb) {
+    this((Types) types, valuesDb);
+    types.struct("File", ImmutableMap.of("content", types.blob(), "path", types.string()));
   }
 
   public ArrayBuilder arrayBuilder(Type elementType) {

@@ -38,6 +38,7 @@ public class TempDirTest {
 
   private TypesDb typesDb;
   private ValuesDb valuesDb;
+  private RuntimeTypes types;
   private ValueFactory valueFactory;
   private FileSystem fileSystem;
   private TempDir tempDir;
@@ -48,7 +49,7 @@ public class TempDirTest {
     HashedDb hashedDb = new HashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
-    RuntimeTypes types = new RuntimeTypes(typesDb);
+    types = new RuntimeTypes(typesDb);
     valueFactory = new ValueFactory(types, valuesDb);
     fileSystem = new MemoryFileSystem();
     Container container = new Container(fileSystem, typesDb, valuesDb);
@@ -83,14 +84,14 @@ public class TempDirTest {
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    given(array = array(valuesDb, typesDb.file(), file(valueFactory, path, bytes)));
+    given(array = array(valuesDb, types.file(), file(valueFactory, path, bytes)));
     when(tempDir).writeFiles(array);
     thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
   }
 
   @Test
   public void writing_files_after_destroy_throws_exception() throws Exception {
-    given(array = array(valuesDb, typesDb.file(), file(valueFactory, path, bytes)));
+    given(array = array(valuesDb, types.file(), file(valueFactory, path, bytes)));
     given(tempDir).destroy();
     when(tempDir).writeFiles(array);
     thenThrown(IllegalStateException.class);

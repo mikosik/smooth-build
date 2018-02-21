@@ -40,6 +40,7 @@ public class OutputsDbTest {
   private HashedDb hashedDbOutputs;
   private TypesDb typesDb;
   private ValuesDb valuesDb;
+  private RuntimeTypes types;
   private ValueFactory valueFactory;
   private MessagesDb messagesDb;
   private OutputsDb outputsDb;
@@ -61,8 +62,8 @@ public class OutputsDbTest {
     hashedDbOutputs = new HashedDb();
     typesDb = new TypesDb(hashedDbValues);
     valuesDb = new ValuesDb(hashedDbValues, typesDb);
-    RuntimeTypes runtimeTypes = new RuntimeTypes(typesDb);
-    valueFactory = new ValueFactory(runtimeTypes, valuesDb);
+    types = new RuntimeTypes(typesDb);
+    valueFactory = new ValueFactory(types, valuesDb);
     messagesDb = new MessagesDb(valuesDb, typesDb);
     outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
   }
@@ -98,9 +99,9 @@ public class OutputsDbTest {
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = file(valueFactory, path, bytes));
-    given(array = valuesDb.arrayBuilder(typesDb.file()).add(file).build());
+    given(array = valuesDb.arrayBuilder(types.file()).add(file).build());
     given(outputsDb).write(hash, new Output(array, asList()));
-    when(((Array) outputsDb.read(hash, typesDb.array(typesDb.file())).result())
+    when(((Array) outputsDb.read(hash, typesDb.array(types.file())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -129,7 +130,7 @@ public class OutputsDbTest {
   public void written_file_can_be_read_back() throws Exception {
     given(file = file(valueFactory, path, bytes));
     given(outputsDb).write(hash, new Output(file, asList()));
-    when(outputsDb.read(hash, typesDb.file()).result());
+    when(outputsDb.read(hash, types.file()).result());
     thenReturned(file);
   }
 
