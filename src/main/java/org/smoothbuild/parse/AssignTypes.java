@@ -44,7 +44,7 @@ public class AssignTypes {
   public List<ParseError> assignTypes(Functions functions, Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     Map<String, Type> functionTypes = functions
-        .functions()
+        .all()
         .stream()
         .collect(toMap(Function::name, Function::type));
     new AstVisitor() {

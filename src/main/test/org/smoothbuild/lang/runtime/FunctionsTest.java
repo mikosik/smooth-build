@@ -71,17 +71,17 @@ public class FunctionsTest {
   }
 
   @Test
-  public void functions_returns_unmodifiable_collection() {
+  public void all_returns_unmodifiable_collection() {
     given(functions = new Functions());
-    when(functions.functions()).remove(function);
+    when(functions.all()).remove(function);
     thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
-  public void functions_contains_added_function() {
+  public void all_contains_added_function() {
     given(functions = new Functions());
     given(functions).add(function);
-    when(functions.functions());
+    when(functions.all());
     thenReturned(hasItem(function));
   }
 
