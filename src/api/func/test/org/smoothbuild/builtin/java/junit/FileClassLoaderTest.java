@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.reflect.Classes;
 
 public class FileClassLoaderTest {
-  private final ValuesDb valuesDb = new ValuesDb();
+  private final ValueFactory valueFactory = new ValueFactory();
   private FileClassLoader fileClassLoader;
   private Struct file;
   private Class<MyClass> klass;
@@ -39,7 +39,7 @@ public class FileClassLoaderTest {
   }
 
   private Struct createByteCodeFile(Class<?> klass) throws IOException {
-    return file(valuesDb, path(binaryPath(klass)), Classes.bytecode(klass));
+    return file(valueFactory, path(binaryPath(klass)), Classes.bytecode(klass));
   }
 
   public static class MyClass {

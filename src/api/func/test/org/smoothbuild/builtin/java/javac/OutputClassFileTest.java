@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -31,7 +30,7 @@ public class OutputClassFileTest {
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
     Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
     when(() -> fileArrayBuilder.build().asIterable(Struct.class));
-    thenReturned(contains(file(new ValuesDb(), path, bytes)));
+    thenReturned(contains(file(path, bytes)));
   }
 
   @Test
