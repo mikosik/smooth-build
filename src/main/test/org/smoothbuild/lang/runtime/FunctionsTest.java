@@ -70,6 +70,13 @@ public class FunctionsTest {
   }
 
   @Test
+  public void functions_returns_unmodifiable_collection() {
+    given(functions = new Functions());
+    when(functions.functions()).remove(function);
+    thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
   public void name_to_function_map_is_unmodifiable() throws Exception {
     given(functions = new Functions());
     when(() -> functions.nameToFunctionMap().remove("abc"));
