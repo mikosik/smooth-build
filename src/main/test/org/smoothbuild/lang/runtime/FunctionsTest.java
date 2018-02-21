@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.runtime;
 
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
+import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -11,7 +12,6 @@ import static org.testory.Testory.willReturn;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.runtime.Functions;
 
 public class FunctionsTest {
   private Functions functions;
@@ -67,5 +67,28 @@ public class FunctionsTest {
     given(functions = new Functions());
     when(functions.names()).add("name");
     thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void name_to_function_map_is_unmodifiable() throws Exception {
+    given(functions = new Functions());
+    when(() -> functions.nameToFunctionMap().remove("abc"));
+    thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void name_to_function_map_is_empty_initially() throws Exception {
+    given(functions = new Functions());
+    when(() -> functions.nameToFunctionMap().keySet());
+    thenReturned(set());
+  }
+
+  @Test
+  public void names_to_function_map_contains_name_of_function_that_was_added()
+      throws Exception {
+    given(functions = new Functions());
+    given(functions).add(function);
+    when(() -> functions.nameToFunctionMap().get(function.name()));
+    thenReturned(function);
   }
 }
