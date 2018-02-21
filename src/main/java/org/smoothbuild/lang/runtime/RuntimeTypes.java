@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.runtime;
 
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class RuntimeTypes implements Types {
   }
 
   public Set<String> names() {
-    return cache.keySet();
+    return unmodifiableSet(cache.keySet());
   }
 
   public Map<String, Type> nameToTypeMap() {
