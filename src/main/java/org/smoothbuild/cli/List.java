@@ -29,7 +29,7 @@ public class List implements Command {
     if (errors.isEmpty()) {
       runtime
           .functions()
-          .functions()
+          .all()
           .stream()
           .filter(f -> f.location().file().equals(paths.defaultScript()))
           .filter(f -> f.parameters().size() == 0)

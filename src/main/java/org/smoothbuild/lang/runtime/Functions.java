@@ -42,7 +42,7 @@ public class Functions {
     return unmodifiableSet(functions.keySet());
   }
 
-  public Collection<Function> functions() {
+  public Collection<Function> all() {
     return unmodifiableCollection(functions.values());
   }
 
