@@ -1,4 +1,9 @@
 
+File {
+  Blob content,
+  String path,
+};
+
 File aidl(
   String apiLevel,
   String buildToolsVersion,

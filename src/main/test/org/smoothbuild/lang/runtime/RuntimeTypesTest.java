@@ -43,7 +43,6 @@ public class RuntimeTypesTest {
     thenReturned(set(
         typesDb.string().name(),
         typesDb.blob().name(),
-        typesDb.file().name(),
         typesDb.nothing().name()));
   }
 
@@ -73,7 +72,6 @@ public class RuntimeTypesTest {
     thenReturned(set(
         typesDb.string().name(),
         typesDb.blob().name(),
-        typesDb.file().name(),
         typesDb.nothing().name()));
   }
 
@@ -99,12 +97,6 @@ public class RuntimeTypesTest {
   @Test
   public void has_nothing_type() throws Exception {
     when(() -> runtimeTypes.hasType("Nothing"));
-    thenReturned(true);
-  }
-
-  @Test
-  public void has_file_type() throws Exception {
-    when(() -> runtimeTypes.hasType("File"));
     thenReturned(true);
   }
 
@@ -136,12 +128,6 @@ public class RuntimeTypesTest {
   public void nothing_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("Nothing"));
     thenReturned(typesDb.nothing());
-  }
-
-  @Test
-  public void file_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.getType("File"));
-    thenReturned(typesDb.file());
   }
 
   @Test

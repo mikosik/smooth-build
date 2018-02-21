@@ -30,7 +30,7 @@ public class OutputClassFileTest {
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
     Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
     when(() -> fileArrayBuilder.build().asIterable(Struct.class));
-    thenReturned(contains(file(path, bytes)));
+    thenReturned(contains(file(nativeApi.create(), path, bytes)));
   }
 
   @Test

@@ -34,7 +34,7 @@ public class TypesDb {
   }
 
   public Type nonArrayTypeFromString(String string) {
-    for (Type type : list(string(), blob(), nothing(), file())) {
+    for (Type type : list(string(), blob(), nothing())) {
       if (type.name().equals(string)) {
         return type;
       }
@@ -86,10 +86,6 @@ public class TypesDb {
 
   private ArrayType possiblyNullArrayType(Type elementType) {
     return elementType == null ? null : array(elementType);
-  }
-
-  public StructType file() {
-    return struct("File", ImmutableMap.of("content", blob(), "path", string()));
   }
 
   public StructType struct(String name, ImmutableMap<String, Type> fields) {

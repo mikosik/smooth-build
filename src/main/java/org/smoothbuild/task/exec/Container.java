@@ -55,7 +55,7 @@ public class Container implements NativeApi {
     this(fileSystem, new RuntimeTypes(typesDb), valuesDb, new MessagesDb(valuesDb, typesDb));
   }
 
-  public Container(FileSystem fileSystem, Types types, ValuesDb valuesDb,
+  public Container(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb,
       MessagesDb messagesDb) {
     this(fileSystem, new ValueFactory(types, valuesDb), types, messagesDb,
         new TempManager(fileSystem));
