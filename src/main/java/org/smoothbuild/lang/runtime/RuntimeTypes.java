@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.runtime;
 
+import static java.util.Collections.unmodifiableMap;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +43,10 @@ public class RuntimeTypes implements Types {
 
   public Set<String> names() {
     return cache.keySet();
+  }
+
+  public Map<String, Type> nameToTypeMap() {
+    return unmodifiableMap(cache);
   }
 
   @Override

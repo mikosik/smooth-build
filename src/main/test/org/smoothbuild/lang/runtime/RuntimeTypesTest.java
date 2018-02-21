@@ -56,6 +56,29 @@ public class RuntimeTypesTest {
   }
 
   @Test
+  public void name_to_type_map_is_unmodifiable() throws Exception {
+    when(() -> runtimeTypes.nameToTypeMap().remove("abc"));
+    thenThrown(UnsupportedOperationException.class);
+  }
+
+  @Test
+  public void name_to_type_map_contains_basic_types_initially() throws Exception {
+    when(() -> runtimeTypes.nameToTypeMap().keySet());
+    thenReturned(set(
+        typesDb.string().name(),
+        typesDb.blob().name(),
+        typesDb.file().name(),
+        typesDb.nothing().name()));
+  }
+
+  @Test
+  public void names_to_type_mape_contains_name_of_struct_that_was_added_before() throws Exception {
+    given(runtimeTypes).struct("MyStruct", ImmutableMap.of());
+    when(() -> runtimeTypes.nameToTypeMap().keySet());
+    thenReturned(hasItem("MyStruct"));
+  }
+
+  @Test
   public void has_string_type() throws Exception {
     when(() -> runtimeTypes.hasType("String"));
     thenReturned(true);
