@@ -62,12 +62,7 @@ public class AssignTypes {
             builder.put(field.name(), type);
           }
         }
-        String name = struct.name();
-        if (types.hasType(name)) {
-          errors.add(new ParseError(struct, "'" + name + "' is already defined."));
-        } else {
-          types.struct(name, builder.build());
-        }
+        types.struct(struct.name(), builder.build());
       }
 
       @Override
