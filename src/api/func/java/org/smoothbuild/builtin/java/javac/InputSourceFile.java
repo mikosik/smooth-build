@@ -7,8 +7,8 @@ import java.util.Scanner;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final Struct file;
