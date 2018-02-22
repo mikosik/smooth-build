@@ -78,6 +78,7 @@ public class RuntimeTypes implements Types {
     return cache.containsKey(name);
   }
 
+  @Override
   public Type getType(String name) {
     Type type = cache.get(name);
     if (type == null) {
