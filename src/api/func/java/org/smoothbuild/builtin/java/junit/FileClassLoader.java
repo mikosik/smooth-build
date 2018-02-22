@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
 
 public class FileClassLoader extends ClassLoader {
   private final Map<String, Struct> binaryNameToFile;
