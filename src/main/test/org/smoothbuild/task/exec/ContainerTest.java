@@ -18,7 +18,6 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
@@ -34,8 +33,8 @@ public class ContainerTest {
     HashedDb hashedDb = new HashedDb();
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    MessagesDb messagesDb = new MessagesDb(valuesDb, typesDb);
-    Types types = new RuntimeTypes(typesDb);
+    RuntimeTypes types = new RuntimeTypes(typesDb);
+    MessagesDb messagesDb = new MessagesDb(valuesDb, types);
     ValueFactory valueFactory = new ValueFactory(types, valuesDb);
     container = new Container(fileSystem, valueFactory, types, messagesDb, tempDirProvider);
   }
