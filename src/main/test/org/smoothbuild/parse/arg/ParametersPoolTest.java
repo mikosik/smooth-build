@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.base.Parameter;
-import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.function.Parameter;
+import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;

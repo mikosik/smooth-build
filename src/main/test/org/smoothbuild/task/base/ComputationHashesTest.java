@@ -16,7 +16,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
 

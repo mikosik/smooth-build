@@ -16,7 +16,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.lang.function.nativ.Native;
+import org.smoothbuild.lang.function.Native;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;

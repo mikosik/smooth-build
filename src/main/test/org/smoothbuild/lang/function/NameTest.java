@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.function;
 
-import static org.smoothbuild.lang.function.base.Name.isLegalName;
+import static org.smoothbuild.lang.function.Name.isLegalName;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 

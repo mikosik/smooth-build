@@ -19,8 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.DefinedFunction;
+import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.TypesDb;
 

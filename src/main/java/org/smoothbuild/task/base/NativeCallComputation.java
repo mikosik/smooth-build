@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
 
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.exec.Container;
 
