@@ -19,12 +19,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class ParametersPoolTest {
-  private final TypesDb typeSystem = new TypesDb();
-  private final Type string = typeSystem.string();
-  private final Type blob = typeSystem.blob();
-  private final Type file = typeSystem.struct(
-      "File", ImmutableMap.of("content", typeSystem.blob(), "path", typeSystem.string()));
-  private final Type nothing = typeSystem.nothing();
+  private final TypesDb typesDb = new TypesDb();
+  private final Type string = typesDb.string();
+  private final Type blob = typesDb.blob();
+  private final Type file = typesDb.struct(
+      "File", ImmutableMap.of("content", typesDb.blob(), "path", typesDb.string()));
+  private final Type nothing = typesDb.nothing();
 
   private final String name = "NAME";
   private ParameterInfo parameter;
@@ -125,126 +125,126 @@ public class ParametersPoolTest {
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_string_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(string), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(string))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(string))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_string_array_param_is_available_in_required_set_of_string_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, null));
+    given(parameter = new Parameter(typesDb.array(string), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(string))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(string))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_blob_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(blob), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(blob))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(blob))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_blob_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, null));
+    given(parameter = new Parameter(typesDb.array(blob), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(blob))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(blob))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(blob), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(file))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(file))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, null));
+    given(parameter = new Parameter(typesDb.array(blob), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(file))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(file))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(file), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(file), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(file))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(file))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_file_array_param_is_available_in_required_set_of_file_array_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(file), name, null));
+    given(parameter = new Parameter(typesDb.array(file), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(file))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(file))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_string_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(string), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_string_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, null));
+    given(parameter = new Parameter(typesDb.array(string), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_blob_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(blob), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_blob_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(blob), name, null));
+    given(parameter = new Parameter(typesDb.array(blob), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void optional_file_array_param_is_available_in_optional_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(file), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(file), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
   @Test
   public void required_file_array_param_is_available_in_required_set_of_nil_pool()
       throws Exception {
-    given(parameter = new Parameter(typeSystem.array(file), name, null));
+    given(parameter = new Parameter(typesDb.array(file), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typeSystem.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -276,7 +276,7 @@ public class ParametersPoolTest {
 
   @Test
   public void available_required_params_contains_required_string_array_param() throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, null));
+    given(parameter = new Parameter(typesDb.array(string), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
     when(parametersPool.allRequired());
     thenReturned(ImmutableSet.of(parameter));
@@ -319,7 +319,7 @@ public class ParametersPoolTest {
 
   @Test
   public void all_optional_params_contains_required_string_array_param() throws Exception {
-    given(parameter = new Parameter(typeSystem.array(string), name, mock(Dag.class)));
+    given(parameter = new Parameter(typesDb.array(string), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
     when(parametersPool.allOptional());
     thenReturned(ImmutableSet.of(parameter));
