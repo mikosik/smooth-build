@@ -14,11 +14,9 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.reflect.Classes;
 
 public class FileClassLoaderTest {
-  private final ValueFactory valueFactory = new ValueFactory();
   private FileClassLoader fileClassLoader;
   private Struct file;
   private Class<MyClass> klass;
@@ -39,7 +37,7 @@ public class FileClassLoaderTest {
   }
 
   private Struct createByteCodeFile(Class<?> klass) throws IOException {
-    return file(valueFactory, path(binaryPath(klass)), Classes.bytecode(klass));
+    return file(path(binaryPath(klass)), Classes.bytecode(klass));
   }
 
   public static class MyClass {
