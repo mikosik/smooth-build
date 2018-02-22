@@ -52,7 +52,11 @@ public class Container implements NativeApi {
   }
 
   public Container(FileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
-    this(fileSystem, new RuntimeTypes(typesDb), valuesDb, new MessagesDb(valuesDb, typesDb));
+    this(fileSystem, new RuntimeTypes(typesDb), valuesDb);
+  }
+
+  public Container(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb) {
+    this(fileSystem, types, valuesDb, new MessagesDb(valuesDb, types));
   }
 
   public Container(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb,

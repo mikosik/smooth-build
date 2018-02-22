@@ -4,6 +4,11 @@ File {
   String path,
 };
 
+Message {
+  String text,
+  String severity,
+};
+
 File aidl(
   String apiLevel,
   String buildToolsVersion,
