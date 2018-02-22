@@ -13,5 +13,7 @@ public interface Types {
 
   public StructType file();
 
+  public Type getType(String name);
+
   public ArrayType array(Type elementType);
 }
