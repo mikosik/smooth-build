@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.function.base.Scope.scope;
+import static org.smoothbuild.lang.function.Scope.scope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.ParameterInfo;
-import org.smoothbuild.lang.function.base.Scope;
+import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.function.Scope;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.Type;

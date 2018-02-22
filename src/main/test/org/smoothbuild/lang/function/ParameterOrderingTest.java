@@ -1,8 +1,8 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.function;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.function.base.ParameterOrdering.PARAMETER_ORDERING;
+import static org.smoothbuild.lang.function.ParameterOrdering.PARAMETER_ORDERING;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.function.base.ParameterInfo;
+import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.arg.ArgsStringHelper;

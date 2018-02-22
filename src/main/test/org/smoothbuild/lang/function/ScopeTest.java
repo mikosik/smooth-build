@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.function;
 
-import static org.smoothbuild.lang.function.base.Scope.scope;
+import static org.smoothbuild.lang.function.Scope.scope;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.lang.function.def.DefinedFunction;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
+import org.smoothbuild.lang.function.DefinedFunction;
+import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;

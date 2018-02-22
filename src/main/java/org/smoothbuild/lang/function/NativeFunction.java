@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ;
+package org.smoothbuild.lang.function;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
@@ -9,9 +9,6 @@ import java.util.List;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.def.DefinedFunction;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;

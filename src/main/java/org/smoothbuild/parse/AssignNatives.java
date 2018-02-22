@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.nativ.Native;
+import org.smoothbuild.lang.function.Native;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;

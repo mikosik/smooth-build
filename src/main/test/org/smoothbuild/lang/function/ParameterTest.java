@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.function;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;

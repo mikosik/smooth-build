@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.nativ;
+package org.smoothbuild.lang.function;
 
 import java.lang.reflect.Method;
 

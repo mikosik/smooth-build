@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function.base;
+package org.smoothbuild.lang.function;
 
 import java.util.regex.Pattern;
 

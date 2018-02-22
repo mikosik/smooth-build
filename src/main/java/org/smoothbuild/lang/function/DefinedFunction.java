@@ -1,13 +1,10 @@
-package org.smoothbuild.lang.function.def;
+package org.smoothbuild.lang.function;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.base.Function;
-import org.smoothbuild.lang.function.base.Signature;
-import org.smoothbuild.lang.function.nativ.NativeFunction;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.util.Dag;
 
