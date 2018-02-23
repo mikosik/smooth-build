@@ -27,7 +27,7 @@ import com.google.common.testing.EqualsTester;
 
 @RunWith(QuackeryRunner.class)
 public class TypesTest {
-  private static final TypesDb typesDb = new TypesDb();
+  private static final TypesDb typesDb = new TestingTypesDb();
   private static final Type type = typesDb.type();
   private static final Type string = typesDb.string();
   private static final Type blob = typesDb.blob();

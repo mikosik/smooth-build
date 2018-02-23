@@ -16,10 +16,10 @@ import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 
 public class PackagedJavaFileObjectsTest {
-  private final NativeApi nativeApi = new Container();
+  private final NativeApi nativeApi = new TestingContainer();
   private Struct file1;
   private Struct file2;
   private Blob jar;

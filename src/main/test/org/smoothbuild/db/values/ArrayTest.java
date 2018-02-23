@@ -13,6 +13,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -32,7 +33,7 @@ public class ArrayTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb();
+    hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }
@@ -146,7 +147,7 @@ public class ArrayTest {
     given(arrayBuilder).add(valuesDb.string("abc"));
     given(arrayBuilder).add(valuesDb.string("def"));
     given(array = arrayBuilder.build());
-    when(() -> new ValuesDb(hashedDb).get(array.hash()));
+    when(() -> new TestingValuesDb(hashedDb).get(array.hash()));
     thenReturned(array);
   }
 
@@ -158,7 +159,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> ((Array) new ValuesDb(hashedDb).get(array.hash())).asIterable(SString.class));
+    when(() -> ((Array) new TestingValuesDb(hashedDb).get(array.hash())).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 
@@ -170,7 +171,7 @@ public class ArrayTest {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> new ValuesDb(hashedDb).get(array.hash()).hash());
+    when(() -> new TestingValuesDb(hashedDb).get(array.hash()).hash());
     thenReturned(array.hash());
   }
 

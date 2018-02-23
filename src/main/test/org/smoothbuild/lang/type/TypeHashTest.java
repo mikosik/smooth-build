@@ -11,7 +11,7 @@ import com.google.common.hash.HashCode;
 public class TypeHashTest {
   @Test
   public void hashes_of_types_are_stable() throws Exception {
-    TypesDb typesDb = new TypesDb();
+    TypesDb typesDb = new TestingTypesDb();
     assertHash(typesDb.type(), "7b5ffbdc620f77f806320ba5562ccfcafae2214b");
     assertHash(typesDb.string(), "7561a6b22d5fe8e18dec31904e0e9cdf6644ca96");
     assertHash(typesDb.blob(), "6cb65ce7804fbcabff468d1d7aca46d4b5279f00");

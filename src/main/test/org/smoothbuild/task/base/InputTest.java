@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.util.Dag;
@@ -19,7 +20,7 @@ public class InputTest {
   private Task depTask2;
   private Input input;
   private Input input2;
-  private final ValuesDb valuesDb = new ValuesDb();
+  private final ValuesDb valuesDb = new TestingValuesDb();
   private SString sstring1;
   private SString sstring2;
 

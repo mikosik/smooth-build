@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 
@@ -27,7 +28,7 @@ public class SStringTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb();
+    hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }
@@ -97,7 +98,7 @@ public class SStringTest {
   public void sstring_can_be_read_back_by_hash() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(() -> new ValuesDb(hashedDb).get(hash));
+    when(() -> new TestingValuesDb(hashedDb).get(hash));
     thenReturned(sstring);
   }
 
@@ -105,7 +106,7 @@ public class SStringTest {
   public void sstring_read_back_by_hash_has_same_data() throws Exception {
     given(sstring = valuesDb.string(string));
     given(hash = sstring.hash());
-    when(() -> ((SString) new ValuesDb(hashedDb).get(hash)).data());
+    when(() -> ((SString) new TestingValuesDb(hashedDb).get(hash)).data());
     thenReturned(string);
   }
 

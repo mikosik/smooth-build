@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 
 public class MessagesTest {
-  private final MessagesDb messagesDb = new MessagesDb();
+  private final MessagesDb messagesDb = new TestingMessagesDb();
   private Iterable<Message> messages;
 
   @Test

@@ -8,12 +8,12 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
-  private final Type string = new TypesDb().string();
+  private final Type string = new TestingTypesDb().string();
   private final String name = "name";
   private Parameter parameter;
 

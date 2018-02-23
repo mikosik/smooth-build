@@ -11,6 +11,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypesDb;
@@ -26,7 +27,7 @@ public class RuntimeTypesTest {
 
   @Before
   public void before() {
-    given(hashedDb = new HashedDb());
+    given(hashedDb = new TestingHashedDb());
     given(typesDb = new TypesDb(hashedDb));
     given(runtimeTypes = new RuntimeTypes(typesDb));
   }

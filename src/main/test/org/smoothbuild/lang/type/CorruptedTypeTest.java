@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
 
 import com.google.common.hash.HashCode;
@@ -24,7 +25,7 @@ public class CorruptedTypeTest {
 
   @Before
   public void before() {
-    given(hashedDb = new HashedDb());
+    given(hashedDb = new TestingHashedDb());
     given(typesDb = new TypesDb(hashedDb));
   }
 

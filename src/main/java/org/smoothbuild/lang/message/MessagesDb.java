@@ -5,34 +5,16 @@ import static org.smoothbuild.lang.message.Message.WARNING;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
-
-import com.google.common.collect.ImmutableMap;
 
 public class MessagesDb {
   public static final String SEVERITY = "severity";
   public static final String TEXT = "text";
   private final ValuesDb valuesDb;
   private final Types types;
-
-  public MessagesDb() {
-    this(new HashedDb());
-  }
-
-  public MessagesDb(HashedDb hashedDb) {
-    this(new ValuesDb(hashedDb), new RuntimeTypes(new TypesDb(hashedDb)));
-  }
-
-  public MessagesDb(ValuesDb valuesDb, RuntimeTypes types) {
-    this(valuesDb, (Types) types);
-    types.struct("Message", ImmutableMap.of(TEXT, types.string(), SEVERITY, types.string()));
-  }
 
   @Inject
   public MessagesDb(ValuesDb valuesDb, Types types) {

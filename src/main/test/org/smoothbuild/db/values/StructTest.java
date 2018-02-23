@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -38,7 +39,7 @@ public class StructTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb();
+    hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }
@@ -202,7 +203,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(() -> new ValuesDb(hashedDb).get(person.hash()));
+    when(() -> new TestingValuesDb(hashedDb).get(person.hash()));
     thenReturned(person);
   }
 
@@ -212,7 +213,7 @@ public class StructTest {
     given(lastName = valuesDb.string("Doe"));
     given(person = valuesDb.structBuilder(personType())
         .set("firstName", firstName).set("lastName", lastName).build());
-    when(person2 = (Struct) new ValuesDb(hashedDb).get(person.hash()));
+    when(person2 = (Struct) new TestingValuesDb(hashedDb).get(person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }

@@ -18,17 +18,20 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.message.TestingMessagesDb;
+import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.TestingValueFactory;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.util.Streams;
@@ -40,7 +43,7 @@ public class OutputsDbTest {
   private HashedDb hashedDbOutputs;
   private TypesDb typesDb;
   private ValuesDb valuesDb;
-  private RuntimeTypes types;
+  private TestingRuntimeTypes types;
   private ValueFactory valueFactory;
   private MessagesDb messagesDb;
   private OutputsDb outputsDb;
@@ -58,13 +61,13 @@ public class OutputsDbTest {
 
   @Before
   public void before() {
-    hashedDbValues = new HashedDb();
-    hashedDbOutputs = new HashedDb();
+    hashedDbValues = new TestingHashedDb();
+    hashedDbOutputs = new TestingHashedDb();
     typesDb = new TypesDb(hashedDbValues);
     valuesDb = new ValuesDb(hashedDbValues, typesDb);
-    types = new RuntimeTypes(typesDb);
-    valueFactory = new ValueFactory(types, valuesDb);
-    messagesDb = new MessagesDb(valuesDb, types);
+    types = new TestingRuntimeTypes(typesDb);
+    valueFactory = new TestingValueFactory(types, valuesDb);
+    messagesDb = new TestingMessagesDb(valuesDb, types);
     outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
   }
 

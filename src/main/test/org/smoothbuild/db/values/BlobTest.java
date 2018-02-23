@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -32,7 +33,7 @@ public class BlobTest {
 
   @Before
   public void before() {
-    hashedDb = new HashedDb();
+    hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }
@@ -147,7 +148,7 @@ public class BlobTest {
   public void blob_can_be_read_by_hash() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(() -> new ValuesDb(hashedDb).get(hash));
+    when(() -> new TestingValuesDb(hashedDb).get(hash));
     thenReturned(blob);
   }
 
@@ -155,7 +156,8 @@ public class BlobTest {
   public void blob_read_by_hash_has_same_content() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     given(hash = blob.hash());
-    when(inputStreamToByteArray(((Blob) new ValuesDb(hashedDb).get(hash)).openInputStream()));
+    when(inputStreamToByteArray(((Blob) new TestingValuesDb(hashedDb).get(hash))
+        .openInputStream()));
     thenReturned(inputStreamToByteArray(blob.openInputStream()));
   }
 

@@ -14,11 +14,11 @@ import javax.tools.StandardJavaFileManager;
 
 import org.junit.Test;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 
 public class SandboxedJavaFileManagerTest {
   private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final NativeApi nativeApi = new Container();
+  private final NativeApi nativeApi = new TestingContainer();
   private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
   private SandboxedJavaFileManager manager;
 

@@ -13,11 +13,11 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 import org.smoothbuild.util.Streams;
 
 public class OutputClassFileTest {
-  private final NativeApi nativeApi = new Container();
+  private final NativeApi nativeApi = new TestingContainer();
   private final Path path = Path.path("my/path");
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 

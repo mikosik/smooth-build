@@ -18,17 +18,20 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.TestingValueFactory;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 import org.testory.common.Matcher;
 
 public class TempDirTest {
@@ -38,7 +41,7 @@ public class TempDirTest {
 
   private TypesDb typesDb;
   private ValuesDb valuesDb;
-  private RuntimeTypes types;
+  private TestingRuntimeTypes types;
   private ValueFactory valueFactory;
   private FileSystem fileSystem;
   private TempDir tempDir;
@@ -46,13 +49,13 @@ public class TempDirTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    HashedDb hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
-    types = new RuntimeTypes(typesDb);
-    valueFactory = new ValueFactory(types, valuesDb);
+    types = new TestingRuntimeTypes(typesDb);
+    valueFactory = new TestingValueFactory(types, valuesDb);
     fileSystem = new MemoryFileSystem();
-    Container container = new Container(fileSystem, typesDb, valuesDb);
+    Container container = new TestingContainer(fileSystem, typesDb, valuesDb);
     tempDir = new TempDir(container, fileSystem, rootPath);
   }
 
