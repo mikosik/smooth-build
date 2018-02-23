@@ -4,7 +4,6 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.smoothbuild.lang.expr.Expression;
@@ -34,10 +33,6 @@ public class NativeFunction extends Function {
     this.nativ = nativ;
     this.hash = hash;
     this.isCacheable = isCacheable;
-  }
-
-  public Method method() {
-    return nativ.method();
   }
 
   public HashCode hash() {
