@@ -26,6 +26,7 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.StructNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
@@ -60,7 +61,13 @@ public class AssignArgsToParams {
             return new HashSet<>(func.get(List.class));
           }
         }
-        return null;
+        if (ast.containsStruct(name)) {
+          StructNode struct = ast.struct(name);
+          if (struct.has(List.class)) {
+            return new HashSet<>(struct.get(List.class));
+          }
+        }
+        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
 
       private boolean assignNamedArguments(CallNode call,

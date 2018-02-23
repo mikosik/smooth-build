@@ -23,6 +23,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
@@ -62,13 +63,21 @@ public class AssignTypes {
             builder.put(field.name(), type);
           }
         }
-        types.struct(struct.name(), builder.build());
+        Type type = types.struct(struct.name(), builder.build());
+        struct.set(Type.class, type);
+        functionTypes.put(struct.name(), type);
+        List<ParameterInfo> parameters = createParameters(struct.fields());
+        if (parameters != null) {
+          struct.set(List.class, parameters);
+        }
       }
 
       @Override
       public void visitField(FieldNode field) {
         super.visitField(field);
         field.set(Type.class, field.type().get(Type.class));
+        ParameterInfo info = new ParameterInfo(field.get(Type.class), field.name(), true);
+        field.set(ParameterInfo.class, info);
       }
 
       @Override
@@ -119,9 +128,9 @@ public class AssignTypes {
         }
       }
 
-      private List<ParameterInfo> createParameters(List<ParamNode> params) {
+      private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
         Builder<ParameterInfo> builder = ImmutableList.builder();
-        for (ParamNode param : params) {
+        for (NamedNode param : params) {
           if (param.has(ParameterInfo.class)) {
             builder.add(param.get(ParameterInfo.class));
           } else {

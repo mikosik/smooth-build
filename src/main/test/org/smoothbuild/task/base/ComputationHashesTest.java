@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
+import static org.smoothbuild.task.base.ComputationHashes.constructorCallComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
@@ -16,16 +17,20 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Value;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ComputationHashesTest {
   private HashSet<HashCode> hashes;
   private NativeFunction function;
   private NativeFunction function2;
+  private Constructor constructor;
+  private Constructor constructor2;
   private Value value;
   private Value value2;
 
@@ -34,6 +39,8 @@ public class ComputationHashesTest {
     given(hashes = new HashSet<>());
     given(function = mock(NativeFunction.class));
     given(willReturn(Hash.integer(0)), function).hash();
+    given(constructor = mock(Constructor.class));
+    given(willReturn(new TypesDb().struct("MyStruct2", ImmutableMap.of())), constructor).type();
     given(value = mock(Value.class));
     given(willReturn(Hash.integer(0)), value).hash();
     given(hashes.add(valueComputationHash(value)));
@@ -41,8 +48,10 @@ public class ComputationHashesTest {
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
     given(hashes.add(convertComputationHash(new TypesDb().string())));
+    given(hashes.add(constructorCallComputationHash(constructor)));
+
     when(hashes).size();
-    thenReturned(5);
+    thenReturned(6);
   }
 
   @Test
@@ -70,5 +79,16 @@ public class ComputationHashesTest {
   public void convert_computation_has_different_hash_for_different_types() throws Exception {
     when(convertComputationHash(new TypesDb().string()));
     thenReturned(not(convertComputationHash(new TypesDb().blob())));
+  }
+
+  @Test
+  public void constructor_call_computation_has_different_hash_for_different_types()
+      throws Exception {
+    given(constructor = mock(Constructor.class));
+    given(willReturn(new TypesDb().struct("MyStruct1", ImmutableMap.of())), constructor).type();
+    given(constructor2 = mock(Constructor.class));
+    given(willReturn(new TypesDb().struct("MyStruct2", ImmutableMap.of())), constructor2).type();
+    when(constructorCallComputationHash(constructor));
+    thenReturned(not(constructorCallComputationHash(constructor2)));
   }
 }

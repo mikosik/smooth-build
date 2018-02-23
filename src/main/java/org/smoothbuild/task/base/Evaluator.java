@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.DefinedFunction;
 import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.message.Location;
@@ -35,6 +36,11 @@ public class Evaluator {
 
   public static Evaluator callEvaluator(DefinedFunction function, Location location) {
     return new Evaluator(new IdentityComputation(function.type()), function.name().toString(),
+        false, true, location);
+  }
+
+  public static Evaluator constructorCallEvaluator(Constructor constructor, Location location) {
+    return new Evaluator(new ConstructorCallComputation(constructor), constructor.name(),
         false, true, location);
   }
 
