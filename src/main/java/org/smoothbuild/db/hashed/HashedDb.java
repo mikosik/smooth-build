@@ -10,7 +10,6 @@ import java.util.List;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 
 import com.google.common.hash.HashCode;
@@ -19,14 +18,6 @@ public class HashedDb {
   private final FileSystem fileSystem;
   private final Path rootPath;
   private final TempManager tempManager;
-
-  public HashedDb() {
-    this(new MemoryFileSystem());
-  }
-
-  private HashedDb(FileSystem fileSystem) {
-    this(fileSystem, Path.root(), new TempManager(fileSystem));
-  }
 
   public HashedDb(FileSystem fileSystem, Path rootPath, TempManager tempManager) {
     this.fileSystem = fileSystem;

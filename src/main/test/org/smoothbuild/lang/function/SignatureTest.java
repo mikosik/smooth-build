@@ -9,12 +9,13 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
 
 public class SignatureTest {
-  private final TypesDb typesDb = new TypesDb();
+  private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final String name = "name";

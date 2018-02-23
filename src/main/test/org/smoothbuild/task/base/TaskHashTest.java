@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.DefinedFunction;
 import org.smoothbuild.lang.function.NativeFunction;
@@ -39,7 +40,7 @@ public class TaskHashTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    HashedDb hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }

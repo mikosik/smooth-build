@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 
 public class MessagesDbTest {
   private MessagesDb messagesDb;
@@ -17,7 +17,7 @@ public class MessagesDbTest {
 
   @Before
   public void before() {
-    messagesDb = new MessagesDb(new HashedDb());
+    messagesDb = new TestingMessagesDb(new TestingHashedDb());
   }
 
   @Test

@@ -17,6 +17,7 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
+import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
@@ -25,7 +26,7 @@ import org.smoothbuild.task.base.Task;
 public class TaskReporterTest {
   private final Console console = mock(Console.class);
   private final TaskReporter taskReporter = new TaskReporter(console);
-  private final MessagesDb messagesDb = new MessagesDb();
+  private final MessagesDb messagesDb = new TestingMessagesDb();
   private List<Message> messages;
   private Task task;
 

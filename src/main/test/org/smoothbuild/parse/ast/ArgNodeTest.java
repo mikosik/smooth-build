@@ -12,11 +12,11 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 
 public class ArgNodeTest {
-  private final Type string = new TypesDb().string();
+  private final Type string = new TestingTypesDb().string();
   private final Location location = location(Paths.get("path"), 1);
   private final String name = "arg-name";
   private ArgNode arg;

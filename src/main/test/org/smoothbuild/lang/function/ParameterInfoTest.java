@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
@@ -20,7 +21,7 @@ import com.google.common.testing.EqualsTester;
 public class ParameterInfoTest {
   private final String name = "name";
   private ParameterInfo parameterInfo;
-  private final TypesDb typesDb = new TypesDb();
+  private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final Type type = string;

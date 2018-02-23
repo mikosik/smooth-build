@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.ValueFactory;
+import org.smoothbuild.lang.value.TestingValueFactory;
 
 public class ValueCreatorsTest {
   private Blob blob;
@@ -16,7 +16,7 @@ public class ValueCreatorsTest {
 
   @Test
   public void creates_blob_with_bytes_as_content() throws Exception {
-    given(blob = blob(new ValueFactory(), bytes));
+    given(blob = blob(new TestingValueFactory(), bytes));
     when(inputStreamToByteArray(blob.openInputStream()));
     thenReturned(bytes);
   }

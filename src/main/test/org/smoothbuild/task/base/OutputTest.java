@@ -12,14 +12,16 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
+import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.value.SString;
 
 public class OutputTest {
-  private final ValuesDb valuesDb = new ValuesDb();
-  private final MessagesDb messagesDb = new MessagesDb();
+  private final ValuesDb valuesDb = new TestingValuesDb();
+  private final MessagesDb messagesDb = new TestingMessagesDb();
   private Output output;
   private final List<Message> messages = asList(messagesDb.error(""));
   private SString sstring;

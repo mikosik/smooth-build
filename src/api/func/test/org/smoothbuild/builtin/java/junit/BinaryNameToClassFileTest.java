@@ -17,11 +17,11 @@ import org.junit.Test;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest {
-  private final NativeApi nativeApi = new Container();
+  private final NativeApi nativeApi = new TestingContainer();
   private Blob blob;
   private Struct file1;
   private Struct file2;

@@ -29,10 +29,6 @@ public class TypesDb {
     this.instantiator = new Instantiator(hashedDb, this);
   }
 
-  public TypesDb() {
-    this(new HashedDb());
-  }
-
   public Type nonArrayTypeFromString(String string) {
     for (Type type : list(string(), blob(), nothing())) {
       if (type.name().equals(string)) {

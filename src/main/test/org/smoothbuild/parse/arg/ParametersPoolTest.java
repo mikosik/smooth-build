@@ -11,6 +11,7 @@ import static org.testory.common.Matchers.same;
 import org.junit.Test;
 import org.smoothbuild.lang.function.Parameter;
 import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
@@ -19,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class ParametersPoolTest {
-  private final TypesDb typesDb = new TypesDb();
+  private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final Type file = typesDb.struct(

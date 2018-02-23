@@ -12,13 +12,15 @@ import static org.testory.common.Matchers.same;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.message.TestingMessagesDb;
+import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
 
@@ -30,11 +32,11 @@ public class ContainerTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    HashedDb hashedDb = new TestingHashedDb();
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    RuntimeTypes types = new RuntimeTypes(typesDb);
-    MessagesDb messagesDb = new MessagesDb(valuesDb, types);
+    TestingRuntimeTypes types = new TestingRuntimeTypes(typesDb);
+    MessagesDb messagesDb = new TestingMessagesDb(valuesDb, types);
     ValueFactory valueFactory = new ValueFactory(types, valuesDb);
     container = new Container(fileSystem, valueFactory, types, messagesDb, tempDirProvider);
   }

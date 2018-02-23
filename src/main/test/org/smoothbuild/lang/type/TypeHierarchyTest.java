@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableMap;
 
 public class TypeHierarchyTest {
-  private final TypesDb typesDb = new TypesDb();
+  private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type nothing = typesDb.nothing();
 

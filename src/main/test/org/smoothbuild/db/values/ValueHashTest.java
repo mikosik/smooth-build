@@ -8,6 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -30,7 +31,7 @@ public class ValueHashTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    HashedDb hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }

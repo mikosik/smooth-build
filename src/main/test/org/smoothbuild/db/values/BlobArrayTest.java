@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -24,7 +25,7 @@ public class BlobArrayTest {
 
   @Before
   public void before() {
-    HashedDb hashedDb = new HashedDb();
+    HashedDb hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
   }

@@ -13,13 +13,13 @@ import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.function.Scope;
 import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
-  private final Type type = new TypesDb().string();
+  private final Type type = new TestingTypesDb().string();
   private Location location;
   private MyExpression expression;
 

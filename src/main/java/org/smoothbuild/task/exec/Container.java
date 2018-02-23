@@ -5,10 +5,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.Message;
@@ -16,8 +13,6 @@ import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
@@ -37,32 +32,6 @@ public class Container implements NativeApi {
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
     this.messageLogger = new MessageLoggerImpl(messagesDb);
-  }
-
-  public Container() {
-    this(new MemoryFileSystem(), new HashedDb());
-  }
-
-  public Container(FileSystem fileSystem, HashedDb hashedDb) {
-    this(fileSystem, hashedDb, new TypesDb(hashedDb));
-  }
-
-  public Container(FileSystem fileSystem, HashedDb hashedDb, TypesDb typesDb) {
-    this(fileSystem, typesDb, new ValuesDb(hashedDb, typesDb));
-  }
-
-  public Container(FileSystem fileSystem, TypesDb typesDb, ValuesDb valuesDb) {
-    this(fileSystem, new RuntimeTypes(typesDb), valuesDb);
-  }
-
-  public Container(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb) {
-    this(fileSystem, types, valuesDb, new MessagesDb(valuesDb, types));
-  }
-
-  public Container(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb,
-      MessagesDb messagesDb) {
-    this(fileSystem, new ValueFactory(types, valuesDb), types, messagesDb,
-        new TempManager(fileSystem));
   }
 
   @Override

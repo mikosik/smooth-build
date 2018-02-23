@@ -6,16 +6,18 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.task.exec.TestingContainer;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class PathArgValidatorTest {
-  private final ValuesDb valuesDb = new ValuesDb();
-  private final Container container = new Container();
+  private final ValuesDb valuesDb = new TestingValuesDb();
+  private final Container container = new TestingContainer();
 
   @Test
   public void illegal_project_paths_are_reported() {

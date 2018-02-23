@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.NativeFunction;
-import org.smoothbuild.lang.type.TypesDb;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableMap;
@@ -40,14 +40,15 @@ public class ComputationHashesTest {
     given(function = mock(NativeFunction.class));
     given(willReturn(Hash.integer(0)), function).hash();
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TypesDb().struct("MyStruct2", ImmutableMap.of())), constructor).type();
+    given(willReturn(new TestingTypesDb()
+        .struct("MyStruct2", ImmutableMap.of())), constructor).type();
     given(value = mock(Value.class));
     given(willReturn(Hash.integer(0)), value).hash();
     given(hashes.add(valueComputationHash(value)));
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
-    given(hashes.add(convertComputationHash(new TypesDb().string())));
+    given(hashes.add(convertComputationHash(new TestingTypesDb().string())));
     given(hashes.add(constructorCallComputationHash(constructor)));
 
     when(hashes).size();
@@ -77,17 +78,19 @@ public class ComputationHashesTest {
 
   @Test
   public void convert_computation_has_different_hash_for_different_types() throws Exception {
-    when(convertComputationHash(new TypesDb().string()));
-    thenReturned(not(convertComputationHash(new TypesDb().blob())));
+    when(convertComputationHash(new TestingTypesDb().string()));
+    thenReturned(not(convertComputationHash(new TestingTypesDb().blob())));
   }
 
   @Test
   public void constructor_call_computation_has_different_hash_for_different_types()
       throws Exception {
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TypesDb().struct("MyStruct1", ImmutableMap.of())), constructor).type();
+    given(willReturn(new TestingTypesDb()
+        .struct("MyStruct1", ImmutableMap.of())), constructor).type();
     given(constructor2 = mock(Constructor.class));
-    given(willReturn(new TypesDb().struct("MyStruct2", ImmutableMap.of())), constructor2).type();
+    given(willReturn(new TestingTypesDb()
+        .struct("MyStruct2", ImmutableMap.of())), constructor2).type();
     when(constructorCallComputationHash(constructor));
     thenReturned(not(constructorCallComputationHash(constructor2)));
   }

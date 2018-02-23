@@ -28,14 +28,6 @@ public class ValuesDb {
     this.instantiator = new Instantiator(hashedDb, typesDb);
   }
 
-  public ValuesDb() {
-    this(new HashedDb());
-  }
-
-  public ValuesDb(HashedDb hashedDb) {
-    this(hashedDb, new TypesDb(hashedDb));
-  }
-
   public ArrayBuilder arrayBuilder(Type elementType) {
     ArrayType arrayType = typesDb.array(elementType);
     if (arrayType == null) {

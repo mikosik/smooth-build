@@ -9,6 +9,7 @@ import static org.testory.common.Matchers.same;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 
 import com.google.common.hash.HashCode;
 
@@ -20,7 +21,7 @@ public abstract class AbstractTypeTestCase {
 
   @Before
   public void before() {
-    given(hashedDb = new HashedDb());
+    given(hashedDb = new TestingHashedDb());
     given(typesDb = new TypesDb(hashedDb));
   }
 

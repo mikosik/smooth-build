@@ -13,13 +13,14 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
+import org.smoothbuild.lang.message.TestingMessagesDb;
 
 public class ConsoleTest {
   private final String name = "GROUP NAME";
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final PrintStream printStream = new PrintStream(outputStream);
   private final Console console = new Console(printStream);
-  private final MessagesDb messagesDb = new MessagesDb();
+  private final MessagesDb messagesDb = new TestingMessagesDb();
 
   @Test
   public void printing_messages_containing_error_message() throws Exception {

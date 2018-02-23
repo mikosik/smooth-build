@@ -18,11 +18,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.function.Parameter;
 import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class TypedParametersPoolTest {
-  private final TypesDb typesDb = new TypesDb();
+  private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type blobT = typesDb.blob();
 

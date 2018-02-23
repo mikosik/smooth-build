@@ -8,11 +8,11 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 
 public class ParameterOrderingTest {
-  private final Type string = new TypesDb().string();
+  private final Type string = new TestingTypesDb().string();
   private Parameter parameter1;
   private Parameter parameter2;
   private Parameter parameter3;
