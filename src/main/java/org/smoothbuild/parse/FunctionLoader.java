@@ -108,7 +108,7 @@ public class FunctionLoader {
       private Dag<Expression> createCall(CallNode call) {
         Function function = loadedFunctions.get(call.name());
         List<Dag<Expression>> expressions = createSortedArgumentExpressions(call, function);
-        return new Dag<>(function.createCallExpression(false, call.location()), expressions);
+        return new Dag<>(function.createCallExpression(call.location()), expressions);
       }
 
       private List<Dag<Expression>> createSortedArgumentExpressions(CallNode call,

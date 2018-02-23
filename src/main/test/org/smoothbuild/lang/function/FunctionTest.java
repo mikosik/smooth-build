@@ -57,7 +57,7 @@ public class FunctionTest {
     }
 
     @Override
-    public Expression createCallExpression(boolean isGenerated, Location location) {
+    public Expression createCallExpression(Location location) {
       return null;
     }
   }
