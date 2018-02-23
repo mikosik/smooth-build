@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
+import static org.smoothbuild.parse.ConstructorLoader.loadConstructor;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
@@ -21,6 +22,7 @@ import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.util.Maybe;
 
 public class ModuleLoader {
@@ -76,6 +78,9 @@ public class ModuleLoader {
   }
 
   private void loadFunctions(Ast ast) {
+    for (StructNode struct : ast.structs()) {
+      runtime.functions().add(loadConstructor(struct));
+    }
     for (FuncNode func : ast.funcs()) {
       runtime.functions().add(functionLoader.loadFunction(runtime.functions(), func));
     }

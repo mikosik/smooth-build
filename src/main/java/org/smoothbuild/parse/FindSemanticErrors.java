@@ -81,6 +81,7 @@ public class FindSemanticErrors {
     Set<String> all = ImmutableSet.<String> builder()
         .addAll(functions.names())
         .addAll(map(ast.funcs(), f -> f.name()))
+        .addAll(map(ast.structs(), s -> s.name()))
         .build();
     new AstVisitor() {
       @Override

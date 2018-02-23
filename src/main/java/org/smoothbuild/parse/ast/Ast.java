@@ -49,6 +49,17 @@ public class Ast {
     return structs;
   }
 
+  public boolean containsStruct(String name) {
+    return nameToStructMap.containsKey(name);
+  }
+
+  public StructNode struct(String name) {
+    if (!nameToStructMap.containsKey(name)) {
+      throw new IllegalStateException("Ast does not contain struct '" + name + "'");
+    }
+    return nameToStructMap.get(name);
+  }
+
   public List<Object> sortFuncsByDependencies(Functions functions) {
     Maybe<List<String>> sortedNames = sortByDependencies(functions, this);
     if (sortedNames.hasValue()) {

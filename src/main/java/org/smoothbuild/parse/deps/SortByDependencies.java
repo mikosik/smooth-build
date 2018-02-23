@@ -1,6 +1,7 @@
 package org.smoothbuild.parse.deps;
 
 import static org.smoothbuild.util.Collections.toMap;
+import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.value;
 
@@ -28,6 +29,7 @@ public class SortByDependencies {
   public static Maybe<List<String>> sortByDependencies(Functions functions, Ast ast) {
     List<FuncNode> funcs = ast.funcs();
     Set<String> globalNames = new HashSet<>(functions.names());
+    globalNames.addAll(map(ast.structs(), s -> s.name()));
     Maybe<List<String>> sorted = sortByDependencies(
         "Function call graph", funcs, funcToStackElem(), globalNames);
     return sorted;
