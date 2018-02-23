@@ -90,7 +90,7 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(nativeFunction, false, location)));
+    given(task = new Task(nativeCallEvaluator(nativeFunction, location)));
     given(input = Input.fromValues(asList()));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("d356fa190ba44e1805f5a67ce86352f3fa2834e1"));
@@ -102,7 +102,7 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(nativeFunction, false, location)));
+    given(task = new Task(nativeCallEvaluator(nativeFunction, location)));
     given(input = Input.fromValues(asList(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("004f47baf3927badbe890ac4683267bb7efcda9a"));

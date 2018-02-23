@@ -16,7 +16,7 @@ public class Constructor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(boolean isGenerated, Location location) {
+  public Expression createCallExpression(Location location) {
     return new ConstructorCallExpression(this, location);
   }
 }

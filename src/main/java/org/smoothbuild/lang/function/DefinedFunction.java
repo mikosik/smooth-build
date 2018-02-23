@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.function;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
@@ -26,8 +25,7 @@ public class DefinedFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(boolean isGenerated, Location location) {
-    checkArgument(!isGenerated);
+  public Expression createCallExpression(Location location) {
     return new CallExpression(this, location);
   }
 }

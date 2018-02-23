@@ -44,8 +44,8 @@ public class NativeFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(boolean isGenerated, Location location) {
-    return new NativeCallExpression(this, isGenerated, location);
+  public Expression createCallExpression(Location location) {
+    return new NativeCallExpression(this, location);
   }
 
   public Output invoke(Container container, List<Value> arguments) {

@@ -28,10 +28,9 @@ public class Evaluator {
     return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, location);
   }
 
-  public static Evaluator nativeCallEvaluator(NativeFunction function, boolean isInternal,
-      Location location) {
+  public static Evaluator nativeCallEvaluator(NativeFunction function, Location location) {
     return new Evaluator(new NativeCallComputation(function), function.name().toString(),
-        isInternal, function.isCacheable(), location);
+        false, function.isCacheable(), location);
   }
 
   public static Evaluator callEvaluator(DefinedFunction function, Location location) {

@@ -40,5 +40,5 @@ public abstract class Function implements Named {
     return signature.parameters();
   }
 
-  public abstract Expression createCallExpression(boolean isGenerated, Location location);
+  public abstract Expression createCallExpression(Location location);
 }
