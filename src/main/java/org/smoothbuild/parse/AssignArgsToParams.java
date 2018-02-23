@@ -37,10 +37,11 @@ public class AssignArgsToParams {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        Set<ParameterInfo> parameters = functionParameters(call);
-        if (parameters == null) {
+        List<? extends ParameterInfo> parametersList = functionParameters(call);
+        if (parametersList == null) {
           return;
         }
+        Set<ParameterInfo> parameters = new HashSet<>(parametersList);
         if (assignNamedArguments(call, parameters)) {
           return;
         }
@@ -50,21 +51,21 @@ public class AssignArgsToParams {
         failWhenUnassignedRequiredParameterIsLeft(errors, call, parameters);
       }
 
-      private Set<ParameterInfo> functionParameters(CallNode call) {
+      private List<? extends ParameterInfo> functionParameters(CallNode call) {
         String name = call.name();
         if (functions.contains(name)) {
-          return new HashSet<>(functions.get(name).signature().parameters());
+          return functions.get(name).signature().parameters();
         }
         if (ast.containsFunc(name)) {
           FuncNode func = ast.func(name);
           if (func.has(List.class)) {
-            return new HashSet<>(func.get(List.class));
+            return func.get(List.class);
           }
         }
         if (ast.containsStruct(name)) {
           StructNode struct = ast.struct(name);
           if (struct.has(List.class)) {
-            return new HashSet<>(struct.get(List.class));
+            return struct.get(List.class);
           }
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
