@@ -6,7 +6,6 @@ import static org.smoothbuild.parse.ConstructorLoader.loadConstructor;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
@@ -15,7 +14,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.function.Native;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
@@ -37,42 +35,17 @@ public class ModuleLoader {
   }
 
   public List<? extends Object> loadModule(Path script) {
-    Maybe<ModuleContext> maybeModule = parseScript(script);
-    if (!maybeModule.hasValue()) {
-      return maybeModule.errors();
-    }
-    Ast ast = AstCreator.fromParseTree(script, maybeModule.value());
-    List<? extends Object> errors = findSemanticErrors(runtime, ast);
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    errors = ast.sortFuncsByDependencies(runtime.functions());
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    errors = ast.sortTypesByDependencies(runtime.types());
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    errors = assignTypes.assignTypes(runtime.functions(), ast);
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    errors = assignArgsToParams(runtime.functions(), ast);
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    Maybe<Map<String, Native>> maybeNatives = findNatives(changeExtension(script, "jar"));
-    if (!maybeNatives.hasValue()) {
-      return maybeNatives.errors();
-    }
-    Map<String, Native> natives = maybeNatives.value();
-    errors = assignNatives(ast, natives);
-    if (!errors.isEmpty()) {
-      return errors;
-    }
-    loadFunctions(ast);
-    return list();
+    Maybe<Map<String, Native>> natives = findNatives(changeExtension(script, "jar"));
+    return parseScript(script)
+        .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
+        .invoke(ast -> findSemanticErrors(runtime, ast))
+        .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
+        .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
+        .invoke(ast -> assignTypes.assignTypes(runtime.functions(), ast))
+        .invoke(ast -> assignArgsToParams(runtime.functions(), ast))
+        .invoke(natives, (ast, n) -> assignNatives(ast, n))
+        .invokeConsumer(ast -> loadFunctions(ast))
+        .errors();
   }
 
   private void loadFunctions(Ast ast) {
