@@ -7,7 +7,6 @@ import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Maybe.invokeWrap;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
@@ -38,12 +37,11 @@ public class ModuleLoader {
   }
 
   public List<? extends Object> loadModule(Path script) {
-    Maybe<ModuleContext> module = parseScript(script);
-    Maybe<Ast> maybeAst = invokeWrap(module, m -> AstCreator.fromParseTree(script, m));
-    if (!maybeAst.hasValue()) {
-      return maybeAst.errors();
+    Maybe<ModuleContext> maybeModule = parseScript(script);
+    if (!maybeModule.hasValue()) {
+      return maybeModule.errors();
     }
-    Ast ast = maybeAst.value();
+    Ast ast = AstCreator.fromParseTree(script, maybeModule.value());
     List<? extends Object> errors = findSemanticErrors(runtime, ast);
     if (!errors.isEmpty()) {
       return errors;
