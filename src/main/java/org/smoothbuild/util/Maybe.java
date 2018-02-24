@@ -1,156 +1,276 @@
 package org.smoothbuild.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class Maybe<E> {
-  private final E value;
-  private final ImmutableList<Object> errors;
+public abstract class Maybe<E> {
 
   public static <E> Maybe<E> value(E value) {
-    return new Maybe<>(requireNonNull(value), ImmutableList.of());
+    return new ValueMaybe<E>(value);
   }
 
   public static <E> Maybe<E> error(Object error) {
-    return new Maybe<>(null, ImmutableList.of(error));
+    return new ErrorMaybe<>(ImmutableList.of(error));
   }
 
   public static <E> Maybe<E> errors(List<? extends Object> errors) {
-    checkArgument(!errors.isEmpty(), "'errors' argument shouldn't be empty");
-    return new Maybe<>(null, ImmutableList.copyOf(errors));
+    return new ErrorMaybe<>(errors);
   }
 
   public static <E> Maybe<E> maybe(E value, List<? extends Object> errors) {
     checkArgument(!(value == null && errors.isEmpty()));
-    return new Maybe<>(errors.isEmpty() ? value : null, ImmutableList.copyOf(errors));
-  }
-
-  private Maybe(E value, ImmutableList<Object> errors) {
-    this.value = value;
-    this.errors = errors;
-  }
-
-  public Maybe<E> addError(Object error) {
-    return new Maybe<>(null, concatErrors(errors, ImmutableList.of(error)));
-  }
-
-  public Maybe<E> addErrors(List<? extends Object> errors) {
-    return new Maybe<>(errors.isEmpty() ? value : null, concatErrors(this.errors, errors));
-  }
-
-  public Maybe<E> addErrors(Function<E, List<? extends Object>> errorsSupplier) {
-    if (hasValue()) {
-      return addErrors(errorsSupplier.apply(value));
+    if (errors.isEmpty()) {
+      return new ValueMaybe<>(value);
     } else {
-      return this;
-    }
-  }
-
-  public boolean hasValue() {
-    return value != null;
-  }
-
-  public E value() {
-    checkState(hasValue());
-    return value;
-  }
-
-  public ImmutableList<Object> errors() {
-    return errors;
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    return object instanceof Maybe && equals((Maybe<?>) object);
-  }
-
-  public boolean equals(Maybe<?> that) {
-    return Objects.equal(value, value) && errors.equals(that.errors);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(value, errors);
-  }
-
-  @Override
-  public String toString() {
-    if (hasValue()) {
-      return "Maybe.value(" + value + ")";
-    } else {
-      return "Maybe.error(" + join(", ", map(errors, Object::toString)) + ")";
+      return new ErrorMaybe<>(errors);
     }
   }
 
   public static <E> Maybe<List<E>> pullUp(List<Maybe<E>> list) {
     Maybe<List<E>> result = value(new ArrayList<>());
     for (Maybe<E> element : list) {
-      result = invokeWrap(result, element, Lists::concat);
+      result = result.mapValue(element, Lists::concat);
     }
     return result;
   }
 
-  public static <S, R> Maybe<R> invoke(Maybe<S> s, Function<S, Maybe<R>> function) {
-    if (s.hasValue()) {
-      return function.apply(s.value);
-    } else {
-      return errors(s.errors);
+  public abstract Maybe<E> addError(Object error);
+
+  public abstract Maybe<E> addErrors(List<? extends Object> errors);
+
+  public abstract boolean hasValue();
+
+  public abstract E value();
+
+  public abstract ImmutableList<Object> errors();
+
+  public abstract Maybe<E> invokeConsumer(Consumer<E> consumer);
+
+  public abstract Maybe<E> invoke(Function<E, List<? extends Object>> consumer);
+
+  public abstract <F> Maybe<E> invoke(Maybe<F> param,
+      BiFunction<E, F, List<? extends Object>> consumer);
+
+  public abstract <R> Maybe<R> map(Function<E, Maybe<R>> function);
+
+  public abstract <R> Maybe<R> mapValue(Function<E, R> function);
+
+  public abstract <F, R> Maybe<R> map(Maybe<F> param, BiFunction<E, F, Maybe<R>> function);
+
+  public abstract <F, R> Maybe<R> mapValue(Maybe<F> param, BiFunction<E, F, R> function);
+
+  public static class ValueMaybe<E> extends Maybe<E> {
+    private final E value;
+
+    public ValueMaybe(E value) {
+      this.value = requireNonNull(value);
+    }
+
+    @Override
+    public Maybe<E> addError(Object error) {
+      return error(error);
+    }
+
+    @Override
+    public Maybe<E> addErrors(List<? extends Object> errors) {
+      if (errors.isEmpty()) {
+        return this;
+      } else {
+        return Maybe.errors(errors);
+      }
+    }
+
+    @Override
+    public boolean hasValue() {
+      return true;
+    }
+
+    @Override
+    public E value() {
+      return value;
+    }
+
+    @Override
+    public ImmutableList<Object> errors() {
+      return ImmutableList.of();
+    }
+
+    @Override
+    public Maybe<E> invokeConsumer(Consumer<E> consumer) {
+      consumer.accept(value);
+      return this;
+    }
+
+    @Override
+    public Maybe<E> invoke(Function<E, List<? extends Object>> consumer) {
+      List<? extends Object> newErrors = consumer.apply(value);
+      if (newErrors.isEmpty()) {
+        return this;
+      } else {
+        return Maybe.errors(newErrors);
+      }
+    }
+
+    @Override
+    public <F> Maybe<E> invoke(Maybe<F> param,
+        BiFunction<E, F, List<? extends Object>> consumer) {
+      if (param.hasValue()) {
+        List<? extends Object> newErrors = consumer.apply(value, param.value());
+        if (newErrors.isEmpty()) {
+          return this;
+        } else {
+          return Maybe.errors(newErrors);
+        }
+      } else {
+        return (Maybe<E>) param;
+      }
+    }
+
+    @Override
+    public <R> Maybe<R> map(Function<E, Maybe<R>> function) {
+      return function.apply(value);
+    }
+
+    @Override
+    public <R> Maybe<R> mapValue(Function<E, R> function) {
+      return value(function.apply(value));
+    }
+
+    @Override
+    public <F, R> Maybe<R> map(Maybe<F> param, BiFunction<E, F, Maybe<R>> function) {
+      if (param.hasValue()) {
+        return function.apply(value, param.value());
+      } else {
+        return (Maybe<R>) param;
+      }
+    }
+
+    @Override
+    public <F, R> Maybe<R> mapValue(Maybe<F> param, BiFunction<E, F, R> function) {
+      if (param.hasValue()) {
+        return value(function.apply(value, param.value()));
+      } else {
+        return (Maybe<R>) param;
+      }
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      return object instanceof ValueMaybe && equals((ValueMaybe<E>) object);
+    }
+
+    public boolean equals(ValueMaybe<E> that) {
+      return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(value);
+    }
+
+    @Override
+    public String toString() {
+      return "Maybe.value(" + value + ")";
     }
   }
 
-  public static <S, R> Maybe<R> invokeWrap(Maybe<S> s, Function<S, R> function) {
-    if (s.hasValue()) {
-      return value(function.apply(s.value));
-    } else {
-      return errors(s.errors);
-    }
-  }
+  public static class ErrorMaybe<E> extends Maybe<E> {
+    private final ImmutableList<Object> errors;
 
-  public static <S, T, R> Maybe<R> invoke(Maybe<S> s, Maybe<T> t,
-      BiFunction<S, T, Maybe<R>> function) {
-    if (s.hasValue() && t.hasValue()) {
-      return function.apply(s.value, t.value);
-    } else {
-      return errors(concatErrors(s.errors, t.errors));
+    public ErrorMaybe(List<? extends Object> errors) {
+      checkArgument(!errors.isEmpty(), "'errors' argument shouldn't be empty");
+      this.errors = ImmutableList.copyOf(errors);
     }
-  }
 
-  public static <S, T, R> Maybe<R> invokeWrap(Maybe<S> s, Maybe<T> t,
-      BiFunction<S, T, R> function) {
-    if (s.hasValue() && t.hasValue()) {
-      return value(function.apply(s.value, t.value));
-    } else {
-      return errors(concatErrors(s.errors, t.errors));
+    @Override
+    public Maybe<E> addError(Object error) {
+      return new ErrorMaybe<>(concatErrors(errors, ImmutableList.of(error)));
     }
-  }
 
-  public static <S, T, U, R> Maybe<R> invoke(Maybe<S> s,
-      Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, Maybe<R>> function) {
-    if (s.hasValue() && t.hasValue() && u.hasValue()) {
-      return function.apply(s.value, t.value, u.value);
-    } else {
-      return errors(concatErrors(s.errors, t.errors, u.errors));
+    @Override
+    public Maybe<E> addErrors(List<? extends Object> errors) {
+      return new ErrorMaybe<>(concatErrors(this.errors, errors));
     }
-  }
 
-  public static <S, T, U, R> Maybe<R> invokeWrap(Maybe<S> s,
-      Maybe<T> t, Maybe<U> u, TriFunction<S, T, U, R> function) {
-    if (s.hasValue() && t.hasValue() && u.hasValue()) {
-      return value(function.apply(s.value, t.value, u.value));
-    } else {
-      return errors(concatErrors(s.errors, t.errors, u.errors));
+    @Override
+    public boolean hasValue() {
+      return false;
+    }
+
+    @Override
+    public E value() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ImmutableList<Object> errors() {
+      return errors;
+    }
+
+    @Override
+    public Maybe<E> invokeConsumer(Consumer<E> consumer) {
+      return this;
+    }
+
+    @Override
+    public Maybe<E> invoke(Function<E, List<? extends Object>> consumer) {
+      return this;
+    }
+
+    @Override
+    public <F> Maybe<E> invoke(Maybe<F> param,
+        BiFunction<E, F, List<? extends Object>> consumer) {
+      return errors(concatErrors(errors, param.errors()));
+    }
+
+    @Override
+    public <R> Maybe<R> map(Function<E, Maybe<R>> function) {
+      return (Maybe<R>) this;
+    }
+
+    @Override
+    public <R> Maybe<R> mapValue(Function<E, R> function) {
+      return (Maybe<R>) this;
+    }
+
+    @Override
+    public <F, R> Maybe<R> map(Maybe<F> param, BiFunction<E, F, Maybe<R>> function) {
+      return errors(concatErrors(errors, param.errors()));
+    }
+
+    @Override
+    public <F, R> Maybe<R> mapValue(Maybe<F> param, BiFunction<E, F, R> function) {
+      return errors(concatErrors(this.errors, param.errors()));
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      return object instanceof ErrorMaybe && equals((ErrorMaybe<?>) object);
+    }
+
+    public boolean equals(ErrorMaybe<?> that) {
+      return errors.equals(that.errors);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hashCode(errors);
+    }
+
+    @Override
+    public String toString() {
+      return "Maybe.error(" + join(", ", Lists.map(errors, Object::toString)) + ")";
     }
   }
 
