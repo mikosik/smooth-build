@@ -1,10 +1,10 @@
 package org.smoothbuild.db.outputs;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -79,7 +79,7 @@ public class OutputsDbTest {
 
   @Test
   public void result_cache_contains_written_result() {
-    given(outputsDb).write(hash, new Output(valuesDb.string("result"), asList()));
+    given(outputsDb).write(hash, new Output(valuesDb.string("result"), list()));
     when(outputsDb.contains(hash));
     thenReturned(true);
   }
@@ -94,7 +94,7 @@ public class OutputsDbTest {
   public void written_messages_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string("abc"));
     given(message = messagesDb.error("message string"));
-    given(outputsDb).write(hash, new Output(stringValue, asList(message)));
+    given(outputsDb).write(hash, new Output(stringValue, list(message)));
     when(outputsDb.read(hash, typesDb.string()).messages());
     thenReturned(contains(message));
   }
@@ -103,7 +103,7 @@ public class OutputsDbTest {
   public void written_file_array_can_be_read_back() throws Exception {
     given(file = file(valueFactory, path, bytes));
     given(array = valuesDb.arrayBuilder(types.file()).add(file).build());
-    given(outputsDb).write(hash, new Output(array, asList()));
+    given(outputsDb).write(hash, new Output(array, list()));
     when(((Array) outputsDb.read(hash, typesDb.array(types.file())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
@@ -113,7 +113,7 @@ public class OutputsDbTest {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
     given(array = valuesDb.arrayBuilder(typesDb.blob()).add(blob).build());
-    given(outputsDb).write(hash, new Output(array, asList()));
+    given(outputsDb).write(hash, new Output(array, list()));
     when(((Array) outputsDb.read(hash, typesDb.array(typesDb.blob())).result())
         .asIterable(Blob.class).iterator().next());
     thenReturned(blob);
@@ -123,7 +123,7 @@ public class OutputsDbTest {
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(typesDb.string()).add(stringValue).build());
-    given(outputsDb).write(hash, new Output(array, asList()));
+    given(outputsDb).write(hash, new Output(array, list()));
     when(((Array) outputsDb.read(hash, typesDb.array(typesDb.string())).result())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
@@ -132,7 +132,7 @@ public class OutputsDbTest {
   @Test
   public void written_file_can_be_read_back() throws Exception {
     given(file = file(valueFactory, path, bytes));
-    given(outputsDb).write(hash, new Output(file, asList()));
+    given(outputsDb).write(hash, new Output(file, list()));
     when(outputsDb.read(hash, types.file()).result());
     thenReturned(file);
   }
@@ -140,7 +140,7 @@ public class OutputsDbTest {
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
-    given(outputsDb).write(hash, new Output(blob, asList()));
+    given(outputsDb).write(hash, new Output(blob, list()));
     when(outputsDb.read(hash, typesDb.blob()).result());
     thenReturned(blob);
   }
@@ -148,7 +148,7 @@ public class OutputsDbTest {
   @Test
   public void writtend_string_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
-    given(outputsDb).write(hash, new Output(stringValue, asList()));
+    given(outputsDb).write(hash, new Output(stringValue, list()));
     when(((SString) outputsDb.read(hash, typesDb.string()).result()).data());
     thenReturned(string);
   }

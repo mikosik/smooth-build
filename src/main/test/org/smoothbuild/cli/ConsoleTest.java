@@ -1,9 +1,9 @@
 package org.smoothbuild.cli;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -24,7 +24,7 @@ public class ConsoleTest {
 
   @Test
   public void printing_messages_containing_error_message() throws Exception {
-    console.print(name, asList(messagesDb.error("message string")));
+    console.print(name, list(messagesDb.error("message string")));
     String expected = " + GROUP NAME\n"
         + "   + ERROR: message string\n";
     assertEquals(expected, outputStream.toString());
@@ -32,7 +32,7 @@ public class ConsoleTest {
 
   @Test
   public void printing_messages_without_error_message() throws Exception {
-    console.print(name, asList(messagesDb.warning("message string\nsecond line")));
+    console.print(name, list(messagesDb.warning("message string\nsecond line")));
 
     String expected = " + GROUP NAME\n"
         + "   + WARNING: message string\n"
@@ -44,19 +44,19 @@ public class ConsoleTest {
 
   @Test
   public void isErrorReported_returns_false_when_only_info_was_logged() throws Exception {
-    console.print(name, asList(messagesDb.info("message string")));
+    console.print(name, list(messagesDb.info("message string")));
     assertFalse(console.isErrorReported());
   }
 
   @Test
   public void isErrormReported_returns_false_when_only_warning_was_logged() throws Exception {
-    console.print(name, asList(messagesDb.warning("message string")));
+    console.print(name, list(messagesDb.warning("message string")));
     assertFalse(console.isErrorReported());
   }
 
   @Test
   public void isErrorReported_returns_true_when_error_was_logged() throws Exception {
-    console.print(name, asList(messagesDb.error("message string")));
+    console.print(name, list(messagesDb.error("message string")));
     assertTrue(console.isErrorReported());
   }
 
@@ -64,7 +64,7 @@ public class ConsoleTest {
 
   @Test
   public void final_summary_is_failed_when_error_was_logged() throws Exception {
-    console.print(name, asList(messagesDb.error("message string")));
+    console.print(name, list(messagesDb.error("message string")));
     console.printFinalSummary();
 
     String expected = " + GROUP NAME\n"

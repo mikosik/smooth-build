@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -180,7 +179,7 @@ public class TypesTest {
 
   @Test
   public void is_assignable_from() throws Exception {
-    List<Type> types = asList(
+    List<Type> types = list(
         type,
         array(type),
         array(array(type)),

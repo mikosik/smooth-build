@@ -1,6 +1,6 @@
 package org.smoothbuild.builtin.file.match;
 
-import static java.util.Arrays.asList;
+import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.io.fs.base.Path;
 
@@ -24,7 +24,7 @@ public class PathPattern {
   }
 
   public Iterable<String> parts() {
-    return asList(value.split(Path.SEPARATOR));
+    return list(value.split(Path.SEPARATOR));
   }
 
   private static void checkIsValid(String value) {

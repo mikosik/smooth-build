@@ -3,9 +3,9 @@ package org.smoothbuild.builtin.file.match;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR_CHAR;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,8 +13,8 @@ import java.util.List;
  *
  * <ul>
  * <li>Each star '*' in pattern matches zero or more characters.</li>
- * <li>Double stars "**" are forbidden unless whole pattern equals to "**". Such
- * pattern matches one or more whole dir/file names</li>
+ * <li>Double stars "**" are forbidden unless whole pattern equals to "**". Such pattern matches one
+ * or more whole dir/file names</li>
  * </ul>
  */
 public class NamePattern {
@@ -55,7 +55,7 @@ public class NamePattern {
 
   public List<String> parts() {
     if (isDoubleStar()) {
-      return Arrays.asList(DOUBLE_STAR);
+      return list(DOUBLE_STAR);
     }
 
     List<String> result = new ArrayList<>();

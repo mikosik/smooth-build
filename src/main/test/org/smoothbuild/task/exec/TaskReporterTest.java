@@ -1,7 +1,7 @@
 package org.smoothbuild.task.exec;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.task.exec.TaskReporter.header;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.onInstance;
@@ -33,7 +33,7 @@ public class TaskReporterTest {
   @Test
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
-    given(messages = asList(messagesDb.warning("message")));
+    given(messages = list(messagesDb.warning("message")));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(console).print(header(task, false), messages);
@@ -48,7 +48,7 @@ public class TaskReporterTest {
 
   @Test
   public void non_internal_task_with_message_is_printed() {
-    given(messages = asList(messagesDb.warning("message")));
+    given(messages = list(messagesDb.warning("message")));
     given(task = createTask(false));
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
@@ -58,7 +58,7 @@ public class TaskReporterTest {
   @Test
   public void non_internal_task_without_message_is_printed() {
     given(task = createTask(false));
-    given(messages = asList());
+    given(messages = list());
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
     thenCalled(console).print(header(task, false), messages);

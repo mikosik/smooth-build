@@ -1,14 +1,13 @@
 package org.smoothbuild.task.base;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -18,12 +17,13 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.util.Lists;
 
 public class OutputTest {
   private final ValuesDb valuesDb = new TestingValuesDb();
   private final MessagesDb messagesDb = new TestingMessagesDb();
   private Output output;
-  private final List<Message> messages = asList(messagesDb.error(""));
+  private final List<Message> messages = list(messagesDb.error(""));
   private SString sstring;
   private SString otherSstring;
 
@@ -132,7 +132,7 @@ public class OutputTest {
       throws Exception {
     given(sstring = valuesDb.string("abc"));
     given(output = new Output(sstring, messages));
-    when(output).equals(new Output(sstring, Arrays.<Message> asList()));
+    when(output).equals(new Output(sstring, Lists.<Message> list()));
     thenReturned(false);
   }
 

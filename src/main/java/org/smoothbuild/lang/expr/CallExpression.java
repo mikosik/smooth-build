@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.expr;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.function.Scope.scope;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -32,6 +32,6 @@ public class CallExpression extends Expression {
       functionScope.add(function.parameters().get(i).name(), evaluator);
     }
     return new Dag<>(callEvaluator(function, location()),
-        createChildrenEvaluators(asList(function.definition()), valuesDb, functionScope));
+        createChildrenEvaluators(list(function.definition()), valuesDb, functionScope));
   }
 }

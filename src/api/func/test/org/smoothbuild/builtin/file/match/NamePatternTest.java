@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.file.match;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -138,20 +138,20 @@ public class NamePatternTest {
   public void parts_returns_pattern_parts() throws Exception {
     given(pattern = namePattern("abc*def*ghi"));
     when(pattern.parts());
-    thenReturned(asList("abc", "*", "def", "*", "ghi"));
+    thenReturned(list("abc", "*", "def", "*", "ghi"));
   }
 
   @Test
   public void single_star_pattern_has_one_part() throws Exception {
     given(pattern = namePattern("*"));
     when(pattern.parts());
-    thenReturned(asList("*"));
+    thenReturned(list("*"));
   }
 
   @Test
   public void double_star_pattern_has_one_part() throws Exception {
     given(pattern = namePattern("**"));
     when(pattern.parts());
-    thenReturned(asList("**"));
+    thenReturned(list("**"));
   }
 }

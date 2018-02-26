@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.ast;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -20,7 +20,7 @@ public class FuncNodeTest {
 
   @Test
   public void func_with_expression_is_not_native() throws Exception {
-    given(func = new FuncNode(mock(TypeNode.class), "name", asList(), mock(ExprNode.class),
+    given(func = new FuncNode(mock(TypeNode.class), "name", list(), mock(ExprNode.class),
         location));
     when(() -> func.isNative());
     thenReturned(false);
@@ -28,7 +28,7 @@ public class FuncNodeTest {
 
   @Test
   public void func_without_expression_is_native() throws Exception {
-    given(func = new FuncNode(new TypeNode("type", location), "name", asList(), null, location));
+    given(func = new FuncNode(new TypeNode("type", location), "name", list(), null, location));
     when(() -> func.isNative());
     thenReturned(true);
   }
@@ -48,6 +48,6 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(null, name, asList(), null, location(Paths.get("script.smooth"), line));
+    return new FuncNode(null, name, list(), null, location(Paths.get("script.smooth"), line));
   }
 }

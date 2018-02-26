@@ -1,6 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.lang.message.Location.location;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
@@ -46,7 +45,7 @@ public class AstTest {
   }
 
   private static FuncNode function(String name) {
-    return new FuncNode(mock(TypeNode.class), name, asList(),
+    return new FuncNode(mock(TypeNode.class), name, list(),
         mock(ExprNode.class), location(null, 1));
   }
 }

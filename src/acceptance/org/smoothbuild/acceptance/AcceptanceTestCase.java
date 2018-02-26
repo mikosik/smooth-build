@@ -3,12 +3,12 @@ package org.smoothbuild.acceptance;
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.Files.createTempDir;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
@@ -122,7 +122,7 @@ public class AcceptanceTestCase {
   private static String[] join(String command, String[] args) {
     ArrayList<String> result = new ArrayList<>();
     result.add(command);
-    result.addAll(asList(args));
+    result.addAll(list(args));
     return result.toArray(new String[] {});
   }
 
@@ -152,7 +152,7 @@ public class AcceptanceTestCase {
   public static ImmutableList<String> processArgs(String... params) {
     Builder<String> builder = ImmutableList.builder();
     builder.add(smoothBinaryPath());
-    builder.addAll(asList(params));
+    builder.addAll(list(params));
     return builder.build();
   }
 

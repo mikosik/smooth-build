@@ -1,8 +1,8 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -150,7 +150,7 @@ public class FunctionLoader {
         if (sourceType.equals(destinationType)) {
           return source;
         }
-        return new Dag<>(new ConvertExpression(destinationType, elem.location()), asList(source));
+        return new Dag<>(new ConvertExpression(destinationType, elem.location()), list(source));
       }
     }.get();
   }
