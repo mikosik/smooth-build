@@ -1,17 +1,17 @@
 package org.smoothbuild.builtin.file.match.testing;
 
 import static java.lang.Character.isLetter;
-import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HelpTester {
 
-  public static final List<String> ALL = unmodifiableList(asList("a", "b", "c", "aa", "ab", "ac",
+  public static final List<String> ALL = unmodifiableList(list("a", "b", "c", "aa", "ab", "ac",
       "ba", "bb", "bc", "ca", "cb", "cc"));
-  public static final List<String> ALL_WITH_EMPTY = unmodifiableList(asList("", "a", "b", "c",
+  public static final List<String> ALL_WITH_EMPTY = unmodifiableList(list("", "a", "b", "c",
       "aa", "ab", "ac", "ba", "bb", "bc", "ca", "cb", "cc"));
   public static final List<String> ALL_DOUBLE_STARS = unmodifiableList(allDoubleStars());
 

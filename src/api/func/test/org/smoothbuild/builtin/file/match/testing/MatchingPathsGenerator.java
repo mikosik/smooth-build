@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.file.match.testing;
 
-import static java.util.Arrays.asList;
 import static org.smoothbuild.builtin.file.match.Constants.DOUBLE_STAR;
 import static org.smoothbuild.builtin.file.match.Constants.SINGLE_STAR;
 import static org.smoothbuild.builtin.file.match.NamePattern.namePattern;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL_DOUBLE_STARS;
 import static org.smoothbuild.builtin.file.match.testing.HelpTester.ALL_WITH_EMPTY;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class MatchingPathsGenerator {
     String[] parts = pattern.split("/");
     for (int i = 0; i < parts.length; i++) {
       if (i != 0) {
-        result.add(asList("/"));
+        result.add(list("/"));
       }
 
       addNameGenerators(result, parts[i]);
@@ -62,7 +62,7 @@ public class MatchingPathsGenerator {
         if (part.equals(SINGLE_STAR)) {
           result.add(ALL_WITH_EMPTY);
         } else {
-          result.add(asList(part));
+          result.add(list(part));
         }
       }
     }

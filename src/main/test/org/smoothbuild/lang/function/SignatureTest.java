@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.function;
 
-import static java.util.Arrays.asList;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -19,7 +19,7 @@ public class SignatureTest {
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final String name = "name";
-  private final List<Parameter> parameters = asList();
+  private final List<Parameter> parameters = list();
   private Parameter parameter;
   private Parameter parameter2;
 
@@ -42,7 +42,7 @@ public class SignatureTest {
   public void to_string() throws Exception {
     given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
     given(parameter2 = new Parameter(string, "string", mock(Dag.class)));
-    when(new Signature(string, name, asList(parameter, parameter2))).toString();
+    when(new Signature(string, name, list(parameter, parameter2))).toString();
     thenReturned(string.name() + " " + name + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }

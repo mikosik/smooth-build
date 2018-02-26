@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.function;
 
-import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.lang.function.ParameterOrdering.PARAMETER_ORDERING;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -22,7 +22,7 @@ public class ParameterOrderingTest {
     given(parameter1 = new Parameter(string, "aaa", null));
     given(parameter2 = new Parameter(string, "bbb", null));
     given(parameter3 = new Parameter(string, "ccc", null));
-    when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
+    when(PARAMETER_ORDERING.sortedCopy(list(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }
 
@@ -31,7 +31,7 @@ public class ParameterOrderingTest {
     given(parameter1 = new Parameter(string, "a", null));
     given(parameter2 = new Parameter(string, "aa", null));
     given(parameter3 = new Parameter(string, "aaa", null));
-    when(PARAMETER_ORDERING.sortedCopy(asList(parameter3, parameter2, parameter1)));
+    when(PARAMETER_ORDERING.sortedCopy(list(parameter3, parameter2, parameter1)));
     thenReturned(contains(parameter1, parameter2, parameter3));
   }
 }

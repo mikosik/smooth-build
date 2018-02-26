@@ -1,13 +1,13 @@
 package org.smoothbuild.io.fs.base;
 
 import static java.text.MessageFormat.format;
-import static java.util.Arrays.asList;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.report.AssertException.assertEquals;
 import static org.quackery.report.AssertException.assertTrue;
 import static org.quackery.report.AssertException.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -147,13 +147,13 @@ public class PathTest {
   @Quackery
   public static Suite implements_parts() {
     return suite("implements parts")
-        .add(testParts("", asList()))
-        .add(testParts("abc", asList("abc")))
-        .add(testParts("abc/def", asList("abc", "def")))
-        .add(testParts("abc/def/ghi", asList("abc", "def", "ghi")))
-        .add(testParts(" ", asList(" ")))
-        .add(testParts(" / ", asList(" ", " ")))
-        .add(testParts(" / / ", asList(" ", " ", " ")));
+        .add(testParts("", list()))
+        .add(testParts("abc", list("abc")))
+        .add(testParts("abc/def", list("abc", "def")))
+        .add(testParts("abc/def/ghi", list("abc", "def", "ghi")))
+        .add(testParts(" ", list(" ")))
+        .add(testParts(" / ", list(" ", " ")))
+        .add(testParts(" / / ", list(" ", " ", " ")));
   }
 
   private static Case testParts(String path, List<String> parts) {
