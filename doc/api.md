@@ -15,7 +15,7 @@ class source code from android aidl file.
  * [junit](api/junit.md) Runs junit tests.
  * [path](api/path.md) Returns File's path.
  * [toBlob](api/toBlob.md) Converts String to Blob.
- * [aFile](api/aFile.md) Creates File from path and content.
+ * [File](api/File.md) Creates File from path and content.
  * [toString](api/toString.md) Converts Blob to String using UTF-8 coding.
  * [unjar](api/unjar.md) Unjars (uncompresses) files from given jar file.
  * [unzip](api/unzip.md) Unzips files from zip file.

@@ -49,7 +49,7 @@ File file(
 
 Blob jar(
   [File] files,
-  Blob manifest = aFile("META-INF/MANIFEST.MF", toBlob("")),
+  Blob manifest = File("META-INF/MANIFEST.MF", toBlob("")),
 );
 
 [File] javac(
@@ -84,11 +84,6 @@ String path(
 
 Blob toBlob(
   String string,
-);
-
-File aFile(
-  String path,
-  Blob content,
 );
 
 String toString(
