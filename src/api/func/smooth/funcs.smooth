@@ -67,10 +67,10 @@ Blob jar(
   [File] srcs,
   [Blob] libs = [],
   [String] options = [],
-  String javaVersion = javaVersion_(),
+  String javaVersion = javaVersion(),
 );
 
-String javaVersion_();
+String javaVersion();
 
 String junit(
   Blob tests,

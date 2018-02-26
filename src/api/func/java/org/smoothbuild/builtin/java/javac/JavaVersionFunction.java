@@ -8,7 +8,7 @@ import org.smoothbuild.lang.value.SString;
 public class JavaVersionFunction {
   @SmoothFunction()
   @NotCacheable
-  public static SString javaVersion_(NativeApi nativeApi) {
+  public static SString javaVersion(NativeApi nativeApi) {
     String version = System.getProperty("java.version");
     if (version == null) {
       nativeApi.log().error("Cannot detect java version.");
