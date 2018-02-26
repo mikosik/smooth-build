@@ -20,7 +20,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
   @SmoothFunction
-  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, SString javaVersion) {
+  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
