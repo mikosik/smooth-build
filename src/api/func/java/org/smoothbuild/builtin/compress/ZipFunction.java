@@ -18,7 +18,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
   @SmoothFunction
-  public static Blob zip(NativeApi nativeApi, Array files, SString javaVersion) {
+  public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();

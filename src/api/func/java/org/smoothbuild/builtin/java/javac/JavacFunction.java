@@ -29,7 +29,7 @@ import org.smoothbuild.lang.value.Struct;
 public class JavacFunction {
   @SmoothFunction
   public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options,
-      SString javaVersion) {
+      Array javaHash) {
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
 

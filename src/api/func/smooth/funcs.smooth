@@ -50,7 +50,7 @@ File file(
 Blob jar(
   [File] files,
   Blob manifest = File("META-INF/MANIFEST.MF", toBlob("")),
-  String javaVersion = javaVersion(),
+  [String] javaHash = javaHash(),
 );
 
 [File] javac(
@@ -68,8 +68,17 @@ Blob jar(
   [File] srcs,
   [Blob] libs = [],
   [String] options = [],
-  String javaVersion = javaVersion(),
+  [String] javaHash = javaHash(),
 );
+
+[String] javaHash = [
+  javaProperty("java.vendor"),
+  javaProperty("java.version"),
+  javaProperty("java.runtime.name"),
+  javaProperty("java.runtime.version"),
+  javaProperty("java.vm.name"),
+  javaProperty("java.vm.version"),
+];
 
 String javaVersion();
 
@@ -95,15 +104,15 @@ String toString(
 
 [File] unjar(
   Blob jar,
-  String javaVersion = javaVersion(),
+  [String] javaHash = javaHash(),
 );
 
 [File] unzip(
   Blob blob,
-  String javaVersion = javaVersion(),
+  [String] javaHash = javaHash(),
 );
 
 Blob zip(
   [File] files,
-  String javaVersion = javaVersion(),
+  [String] javaHash = javaHash(),
 );
