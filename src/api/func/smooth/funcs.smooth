@@ -73,6 +73,8 @@ Blob jar(
 
 String javaVersion();
 
+String javaProperty(String name);
+
 String junit(
   Blob tests,
   [Blob] deps = [],
