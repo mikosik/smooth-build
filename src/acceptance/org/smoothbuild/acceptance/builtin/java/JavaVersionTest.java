@@ -9,7 +9,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class JavaVersionTest extends AcceptanceTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
-    givenScript("result = javaVersion_();");
+    givenScript("result = javaVersion();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(matches("[0-9]+\\.[0-9]+\\.[0-9]+_[0-9]+", artifactContent("result")));
