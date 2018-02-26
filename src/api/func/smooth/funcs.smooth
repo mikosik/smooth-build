@@ -80,8 +80,6 @@ Blob jar(
   javaProperty("java.vm.version"),
 ];
 
-String javaVersion();
-
 String javaProperty(String name);
 
 String junit(
