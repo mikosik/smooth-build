@@ -50,6 +50,7 @@ File file(
 Blob jar(
   [File] files,
   Blob manifest = File("META-INF/MANIFEST.MF", toBlob("")),
+  String javaVersion = javaVersion(),
 );
 
 [File] javac(
@@ -92,12 +93,15 @@ String toString(
 
 [File] unjar(
   Blob jar,
+  String javaVersion = javaVersion(),
 );
 
 [File] unzip(
   Blob blob,
+  String javaVersion = javaVersion(),
 );
 
 Blob zip(
   [File] files,
+  String javaVersion = javaVersion(),
 );

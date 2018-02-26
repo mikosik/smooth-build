@@ -32,7 +32,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
   @SmoothFunction
-  public static Array unzip(NativeApi nativeApi, Blob blob) {
+  public static Array unzip(NativeApi nativeApi, Blob blob, SString javaVersion) {
     return unzip(nativeApi, blob, x -> true);
   }
 
