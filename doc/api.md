@@ -13,7 +13,6 @@ class source code from android aidl file.
  * [jar](api/jar.md) Jars (compresses) set of files.
  * [javac](api/javac.md) Compiles set of java files.
  * [javaProperty](api/javaProperty.md) Returns Java platform property.
- * [javaVersion](api/javaVersion.md) Returns version of Java Runtime Environment.
  * [junit](api/junit.md) Runs junit tests.
  * [path](api/path.md) Returns File's path.
  * [toBlob](api/toBlob.md) Converts String to Blob.
