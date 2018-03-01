@@ -97,8 +97,7 @@ public class FunctionLoader {
         if (expr instanceof ArrayNode) {
           return createArray((ArrayNode) expr);
         }
-        throw new RuntimeException("Illegal parse tree: " + expr.getClass().getSimpleName()
-            + " without children.");
+        throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       }
 
       private Dag<Expression> createReference(RefNode ref) {
