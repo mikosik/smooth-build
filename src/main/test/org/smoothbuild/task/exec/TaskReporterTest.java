@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
@@ -22,6 +23,8 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
+
+import com.google.common.hash.HashCode;
 
 public class TaskReporterTest {
   private final Console console = mock(Console.class);
@@ -65,7 +68,7 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyEvaluator(isInternal));
+    return new Task(new MyEvaluator(isInternal), Hash.integer(13));
   }
 
   private static final class MyEvaluator extends Evaluator {
@@ -76,6 +79,11 @@ public class TaskReporterTest {
     @Override
     public Output evaluate(Input input, Container container) {
       return null;
+    }
+
+    @Override
+    public HashCode hash() {
+      return Hash.integer(17);
     }
   }
 }

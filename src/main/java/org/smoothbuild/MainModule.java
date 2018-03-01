@@ -4,6 +4,7 @@ import org.smoothbuild.db.outputs.OutputsDbModule;
 import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.lang.type.TypesDbModule;
+import org.smoothbuild.task.TaskModule;
 
 import com.google.inject.AbstractModule;
 
@@ -17,6 +18,7 @@ public class MainModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(SmoothPaths.class).toInstance(smoothPaths);
+    install(new TaskModule());
     install(new TypesDbModule());
     install(new OutputsDbModule());
     install(new ValuesDbModule());
