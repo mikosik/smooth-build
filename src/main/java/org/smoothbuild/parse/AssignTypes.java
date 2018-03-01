@@ -14,7 +14,9 @@ import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.function.Scope;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -173,6 +175,24 @@ public class AssignTypes {
           return inferredElemType == null ? null : types.array(inferredElemType);
         }
         return types.getType(type.name());
+      }
+
+      @Override
+      public void visitAccessor(AccessorNode expr) {
+        super.visitAccessor(expr);
+        Type exprType = expr.expr().get(Type.class);
+        if (exprType == null) {
+          expr.set(Type.class, null);
+        } else {
+          if (exprType instanceof StructType
+              && ((StructType) exprType).fields().containsKey(expr.fieldName())) {
+            expr.set(Type.class, ((StructType) exprType).fields().get(expr.fieldName()));
+          } else {
+            expr.set(Type.class, null);
+            errors.add(new ParseError(expr.location(), "Type '" + exprType.name()
+                + "' doesn't have field '" + expr.fieldName() + "'."));
+          }
+        }
       }
 
       @Override

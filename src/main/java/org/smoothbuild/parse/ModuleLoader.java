@@ -6,6 +6,7 @@ import static org.smoothbuild.parse.ConstructorLoader.loadConstructor;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
@@ -14,10 +15,15 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Native;
+import org.smoothbuild.lang.function.Parameter;
+import org.smoothbuild.lang.function.Signature;
 import org.smoothbuild.lang.runtime.SRuntime;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
+import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.util.Maybe;
@@ -51,6 +57,12 @@ public class ModuleLoader {
   private void loadFunctions(Ast ast) {
     for (StructNode struct : ast.structs()) {
       runtime.functions().add(loadConstructor(struct));
+      for (FieldNode field : struct.fields()) {
+        String name = struct.name() + "." + field.name();
+        Parameter parameter = new Parameter(struct.get(Type.class), "struct", null);
+        Signature signature = new Signature(field.get(Type.class), name, list(parameter));
+        runtime.functions().add(new Accessor(signature, field.name(), field.location()));
+      }
     }
     for (FuncNode func : ast.funcs()) {
       runtime.functions().add(functionLoader.loadFunction(runtime.functions(), func));

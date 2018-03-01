@@ -2,6 +2,7 @@ package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.DefinedFunction;
 import org.smoothbuild.lang.function.NativeFunction;
@@ -40,6 +41,11 @@ public class Evaluator {
 
   public static Evaluator constructorCallEvaluator(Constructor constructor, Location location) {
     return new Evaluator(new ConstructorCallComputation(constructor), constructor.name(),
+        false, true, location);
+  }
+
+  public static Evaluator accessorCallEvaluator(Accessor accessor, Location location) {
+    return new Evaluator(new AccessorCallComputation(accessor), accessor.name(),
         false, true, location);
   }
 

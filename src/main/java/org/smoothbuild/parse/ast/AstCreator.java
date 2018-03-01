@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.antlr.SmoothBaseVisitor;
+import org.smoothbuild.antlr.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.SmoothParser.ArrayTypeContext;
@@ -123,6 +124,12 @@ public class AstCreator {
       }
 
       private ExprNode createExpr(ExprContext expr) {
+        if (expr.expr() != null) {
+          ExprNode structExpr = createExpr(expr.expr());
+          AccessorContext accessor = expr.accessor();
+          String name = accessor.name().getText();
+          return new AccessorNode(structExpr, name, locationOf(file, accessor));
+        }
         if (expr.array() != null) {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
           return new ArrayNode(elements, locationOf(file, expr));
