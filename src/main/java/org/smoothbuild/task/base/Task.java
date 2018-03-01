@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.db.hashed.Hash.newHasher;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import org.smoothbuild.lang.message.Location;
@@ -12,10 +13,15 @@ import com.google.common.hash.HashCode;
 public class Task {
   private final Evaluator evaluator;
   private Output output;
+  private final HashCode hash;
 
-  public Task(Evaluator evaluator) {
+  public Task(Evaluator evaluator, HashCode runtimeHash) {
     this.evaluator = evaluator;
     this.output = null;
+    this.hash = newHasher()
+        .putBytes(evaluator.hash().asBytes())
+        .putBytes(runtimeHash.asBytes())
+        .hash();
   }
 
   public Evaluator evaluator() {
@@ -64,6 +70,6 @@ public class Task {
   }
 
   public HashCode hash() {
-    return evaluator.hash();
+    return hash;
   }
 }
