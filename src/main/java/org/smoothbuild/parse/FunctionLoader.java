@@ -31,6 +31,7 @@ import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
@@ -85,6 +86,9 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createExpression(ExprNode expr) {
+        if (expr instanceof AccessorNode) {
+          return createAccessor((AccessorNode) expr);
+        }
         if (expr instanceof CallNode) {
           return createCall((CallNode) expr);
         }
@@ -98,6 +102,13 @@ public class FunctionLoader {
           return createArray((ArrayNode) expr);
         }
         throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
+      }
+
+      private Dag<Expression> createAccessor(AccessorNode accessor) {
+        String functionName = accessor.expr().get(Type.class).name() + "." + accessor.fieldName();
+        Function function = loadedFunctions.get(functionName);
+        return new Dag<>(function.createCallExpression(accessor.location()),
+            list(createExpression(accessor.expr())));
       }
 
       private Dag<Expression> createReference(RefNode ref) {

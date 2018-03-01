@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.task.base.ComputationHashes.accessorCallComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.constructorCallComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.TestingTypesDb;
@@ -31,6 +33,8 @@ public class ComputationHashesTest {
   private NativeFunction function2;
   private Constructor constructor;
   private Constructor constructor2;
+  private Accessor accessor;
+  private Accessor accessor2;
   private Value value;
   private Value value2;
 
@@ -42,6 +46,8 @@ public class ComputationHashesTest {
     given(constructor = mock(Constructor.class));
     given(willReturn(new TestingTypesDb()
         .struct("MyStruct2", ImmutableMap.of())), constructor).type();
+    given(accessor = mock(Accessor.class));
+    given(willReturn("myField"), accessor).fieldName();
     given(value = mock(Value.class));
     given(willReturn(Hash.integer(0)), value).hash();
     given(hashes.add(valueComputationHash(value)));
@@ -50,9 +56,10 @@ public class ComputationHashesTest {
     given(hashes.add(nativeCallComputationHash(function)));
     given(hashes.add(convertComputationHash(new TestingTypesDb().string())));
     given(hashes.add(constructorCallComputationHash(constructor)));
+    given(hashes.add(accessorCallComputationHash(accessor)));
 
     when(hashes).size();
-    thenReturned(6);
+    thenReturned(7);
   }
 
   @Test
@@ -93,5 +100,16 @@ public class ComputationHashesTest {
         .struct("MyStruct2", ImmutableMap.of())), constructor2).type();
     when(constructorCallComputationHash(constructor));
     thenReturned(not(constructorCallComputationHash(constructor2)));
+  }
+
+  @Test
+  public void accessor_call_computation_has_different_hash_for_different_types()
+      throws Exception {
+    given(accessor = mock(Accessor.class));
+    given(willReturn("myField"), accessor).fieldName();
+    given(accessor2 = mock(Accessor.class));
+    given(willReturn("myField2"), accessor2).fieldName();
+    when(accessorCallComputationHash(accessor));
+    thenReturned(not(accessorCallComputationHash(accessor2)));
   }
 }

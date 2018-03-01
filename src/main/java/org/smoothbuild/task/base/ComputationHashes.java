@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.StructType;
@@ -33,6 +34,10 @@ public class ComputationHashes {
   public static HashCode constructorCallComputationHash(Constructor constructor) {
     StructType type = constructor.type();
     return hash(5, type.hash());
+  }
+
+  public static HashCode accessorCallComputationHash(Accessor accessor) {
+    return hash(6, Hash.string(accessor.fieldName()));
   }
 
   private static HashCode hash(int id, HashCode hash) {

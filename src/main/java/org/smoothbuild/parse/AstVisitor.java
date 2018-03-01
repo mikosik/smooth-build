@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -66,7 +67,9 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof ArrayNode) {
+    if (expr instanceof AccessorNode) {
+      visitAccessor((AccessorNode) expr);
+    } else if (expr instanceof ArrayNode) {
       visitArray((ArrayNode) expr);
     } else if (expr instanceof CallNode) {
       visitCall((CallNode) expr);
@@ -77,6 +80,10 @@ public class AstVisitor {
     } else {
       throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
     }
+  }
+
+  public void visitAccessor(AccessorNode expr) {
+    visitExpr(expr.expr());
   }
 
   public void visitArray(ArrayNode array) {
