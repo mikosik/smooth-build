@@ -55,7 +55,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_of_blobs() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [content(file('//file1.txt')), content(file('//file2.txt'))];");
+    givenScript("result = [file('//file1.txt').content, file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
@@ -201,7 +201,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_elements_of_compatible_types() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [file('//file1.txt'), content(file('//file2.txt'))];");
+    givenScript("result = [file('//file1.txt'), file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith("abc", "def"));
@@ -210,7 +210,7 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void array_with_elements_of_incompatible_types() throws Exception {
     givenFile("file1.txt", "abc");
-    givenScript("result = ['abc', content(file('//file2.txt'))];");
+    givenScript("result = ['abc', file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(output(), containsString(
