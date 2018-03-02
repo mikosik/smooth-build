@@ -73,8 +73,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   public void assigns_most_specific_type_first() throws Exception {
     givenFile("file1.txt", "aaa");
     givenFile("file2.txt", "bbb");
-    givenScript("fileAndBlob(File file, Blob blob) = content(file);"
-        + "      result = fileAndBlob(file('//file1.txt'), content(file('//file2.txt')));");
+    givenScript("fileAndBlob(File file, Blob blob) = file.content;"
+        + "      result = fileAndBlob(file('//file1.txt'), file('//file2.txt').content);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("aaa"));

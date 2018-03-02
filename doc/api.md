@@ -6,7 +6,6 @@ class source code from android aidl file.
  * [concatenateBlobArrays](api/concatenateBlobArrays.md) Concatenates two [Blob].
  * [concatenateFileArrays](api/concatenateFileArrays.md) Concatenates two [File].
  * [concatenateStringArrays](api/concatenateStringArrays.md) Concatenates two [String].
- * [content](api/content.md) Returns File's content.
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.
  * [filter](api/filter.md) Filters files according to glob pattern.
@@ -14,7 +13,6 @@ class source code from android aidl file.
  * [javac](api/javac.md) Compiles set of java files.
  * [javaProperty](api/javaProperty.md) Returns Java platform property.
  * [junit](api/junit.md) Runs junit tests.
- * [path](api/path.md) Returns File's path.
  * [toBlob](api/toBlob.md) Converts String to Blob.
  * [File](api/File.md) Creates File from path and content.
  * [toString](api/toString.md) Converts Blob to String using UTF-8 coding.
