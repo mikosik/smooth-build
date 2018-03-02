@@ -1,8 +1,8 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
-import static org.smoothbuild.parse.ConstructorLoader.loadConstructor;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.Accessor;
+import org.smoothbuild.lang.function.Constructor;
 import org.smoothbuild.lang.function.Native;
 import org.smoothbuild.lang.function.Parameter;
 import org.smoothbuild.lang.function.Signature;
@@ -27,6 +28,8 @@ import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.util.Maybe;
+
+import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
   private final SRuntime runtime;
@@ -67,5 +70,15 @@ public class ModuleLoader {
     for (FuncNode func : ast.funcs()) {
       runtime.functions().add(functionLoader.loadFunction(runtime.functions(), func));
     }
+  }
+
+  private static Constructor loadConstructor(StructNode struct) {
+    ImmutableList<Parameter> parameters = struct
+        .fields()
+        .stream()
+        .map(f -> new Parameter(f.get(Type.class), f.name(), null))
+        .collect(toImmutableList());
+    Signature signature = new Signature(struct.get(Type.class), struct.name(), parameters);
+    return new Constructor(signature, struct.location());
   }
 }
