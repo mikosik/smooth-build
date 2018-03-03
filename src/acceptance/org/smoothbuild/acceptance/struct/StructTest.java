@@ -8,6 +8,15 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class StructTest extends AcceptanceTestCase {
   @Test
+  public void struct_name_starting_with_lowercase_causes_error() throws Exception {
+    givenScript("myStruct {};");
+    whenSmoothList();
+    thenFinishedWithError();
+    then(output(), containsString(
+        "build.smooth:1: error: Struct name 'myStruct' should start with capital letter.\n"));
+  }
+
+  @Test
   public void empty_struct_is_allowed() throws Exception {
     givenScript("MyStruct {};"
         + "      result = 'abc';");
