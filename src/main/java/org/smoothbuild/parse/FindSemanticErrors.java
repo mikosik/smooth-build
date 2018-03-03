@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.parse.ast.TypeNode.isGenericName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -46,6 +47,7 @@ public class FindSemanticErrors {
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
     unknownArgNames(errors, functions, ast);
+    structNameStartingWithLowercaseLetter(errors, ast);
     firstFieldWithForbiddenType(errors, ast);
     return errors;
   }
@@ -231,6 +233,19 @@ public class FindSemanticErrors {
               .collect(toSet());
         }
         return null;
+      }
+    }.visitAst(ast);
+  }
+
+  private static void structNameStartingWithLowercaseLetter(List<ParseError> errors, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitStruct(StructNode struct) {
+        String name = struct.name();
+        if (isGenericName(name)) {
+          errors.add(new ParseError(struct.location(),
+              "Struct name '" + name + "' should start with capital letter."));
+        }
       }
     }.visitAst(ast);
   }
