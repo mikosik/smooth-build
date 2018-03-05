@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.argument;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
@@ -15,8 +14,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't find parameter(s) of proper type in 'func'"
-        + " function for some nameless argument(s)"));
+    thenOutputContains("Can't find parameter(s) of proper type in 'func'"
+        + " function for some nameless argument(s)");
   }
 
   @Test
@@ -44,9 +43,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Can't decide unambiguously to which parameters in 'func'"
-            + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -55,8 +53,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -65,8 +63,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -87,8 +85,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = twoBlobs(file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'twoBlobs'"
-        + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'twoBlobs'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -98,8 +96,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -110,8 +108,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "result = fileAndBlob(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Can't decide unambiguously to which parameters in 'fileAndBlob'"
-        + " function some nameless arguments should be assigned"));
+    thenOutputContains("Can't decide unambiguously to which parameters in 'fileAndBlob'"
+        + " function some nameless arguments should be assigned");
   }
 
   @Test
@@ -130,17 +128,16 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = file('//file.txt') | func('abc', ['abc'], []);");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Can't decide unambiguously to which parameters in "
-            + "'func' function some nameless arguments should be assigned:\n"
-            + "List of assignments that were successfully detected is following:\n"
-            + "  File    : p3 <- File    : <nameless> #| [build.smooth:1]\n"
-            + "  String  : p1 <- String  : <nameless> #1 [build.smooth:1]\n"
-            + "  [String]: p2 <- [String]: <nameless> #2 [build.smooth:1]\n"
-            + "List of nameless arguments that caused problems:\n"
-            + "  [Nothing]: <nameless> #3 [build.smooth:1]\n"
-            + "List of unassigned parameters of desired type is following:\n"
-            + "  [Blob]: p5\n"
-            + "  [File]: p4\n\n"));
+    thenOutputContainsError(1, "Can't decide unambiguously to which parameters in "
+        + "'func' function some nameless arguments should be assigned:\n"
+        + "List of assignments that were successfully detected is following:\n"
+        + "  File    : p3 <- File    : <nameless> #| [build.smooth:1]\n"
+        + "  String  : p1 <- String  : <nameless> #1 [build.smooth:1]\n"
+        + "  [String]: p2 <- [String]: <nameless> #2 [build.smooth:1]\n"
+        + "List of nameless arguments that caused problems:\n"
+        + "  [Nothing]: <nameless> #3 [build.smooth:1]\n"
+        + "List of unassigned parameters of desired type is following:\n"
+        + "  [Blob]: p5\n"
+        + "  [File]: p4\n\n");
   }
 }

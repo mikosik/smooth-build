@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import java.io.IOException;
 
 import org.junit.Test;
@@ -16,6 +13,6 @@ public class PipeTest extends AcceptanceTestCase {
         + "      result = 'abc' | twoStrings(stringA=function1(unknown='')) ;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Function 'function1' has no parameter 'unknown'."));
+    thenOutputContains("Function 'function1' has no parameter 'unknown'.");
   }
 }

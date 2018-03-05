@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.struct;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -36,7 +33,6 @@ public class ConstructorTest extends AcceptanceTestCase {
         + "      result = takeStruct(MyStruct());            \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(this.output(), containsString(
-        "Not all parameters required by 'MyStruct' function has been specified."));
+    thenOutputContains("Not all parameters required by 'MyStruct' function has been specified.");
   }
 }

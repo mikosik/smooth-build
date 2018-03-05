@@ -234,6 +234,19 @@ public class AcceptanceTestCase {
     }
   }
 
+  protected void thenOutputContainsError(int lineNumber, String text) {
+    thenOutputContains("build.smooth:" + lineNumber + ": error: " + text);
+  }
+
+  protected void thenOutputContains(String text) {
+    if (!outputData.contains(text)) {
+      fail("Expected output to contain:\n"
+          + text + "\n"
+          + "but output was:\n"
+          + outputData);
+    }
+  }
+
   protected String output() {
     return outputData;
   }

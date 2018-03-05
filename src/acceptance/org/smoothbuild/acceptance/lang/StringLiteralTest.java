@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 
@@ -141,7 +140,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
     givenScript("result = '\\A';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.\n"));
+    thenOutputContainsError(1,
+        "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.\n");
   }
 }

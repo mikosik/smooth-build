@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 
@@ -14,7 +13,7 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('//.smooth/file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Reading file from '.smooth' dir is not allowed."));
+    thenOutputContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -23,7 +22,7 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('//.smooth/subdir/file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Reading file from '.smooth' dir is not allowed."));
+    thenOutputContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -31,8 +30,7 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('//..');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Param 'path' has illegal value. Path cannot contain '..' element."));
+    thenOutputContains("Param 'path' has illegal value. Path cannot contain '..' element.");
   }
 
   @Test
@@ -40,7 +38,7 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('//nonexistent/file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("File 'nonexistent/file.txt' doesn't exist."));
+    thenOutputContains("File 'nonexistent/file.txt' doesn't exist.");
   }
 
   @Test
@@ -49,7 +47,7 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('//some/dir');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("File 'some/dir' doesn't exist. It is a dir."));
+    thenOutputContains("File 'some/dir' doesn't exist. It is a dir.");
   }
 
   @Test
@@ -58,8 +56,8 @@ public class FileTest extends AcceptanceTestCase {
     givenScript("result = file('file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Param 'path' has illegal value. "
-        + "It should start with \"//\" which represents project's root dir."));
+    thenOutputContains("Param 'path' has illegal value. "
+        + "It should start with \"//\" which represents project's root dir.");
   }
 
   @Test

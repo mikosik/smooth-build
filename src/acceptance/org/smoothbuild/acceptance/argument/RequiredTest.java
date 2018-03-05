@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.argument;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -13,8 +10,7 @@ public class RequiredTest extends AcceptanceTestCase {
         + "      result = func();");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Not all parameters required by 'func' function has been specified."));
+    thenOutputContains("Not all parameters required by 'func' function has been specified.");
   }
 
   @Test
@@ -23,7 +19,6 @@ public class RequiredTest extends AcceptanceTestCase {
         + "      result = func(stringA='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Not all parameters required by 'func' function has been specified."));
+    thenOutputContains("Not all parameters required by 'func' function has been specified.");
   }
 }

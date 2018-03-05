@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
 
@@ -15,8 +14,8 @@ public class FilterTest extends AcceptanceTestCase {
     givenScript("result = [] | filter('/');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Parameter 'include' has illegal value. Pattern can't start with slash character '/'."));
+    thenOutputContains(
+        "Parameter 'include' has illegal value. Pattern can't start with slash character '/'.");
   }
 
   @Test

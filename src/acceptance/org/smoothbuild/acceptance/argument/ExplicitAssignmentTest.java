@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.argument;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
@@ -15,8 +14,7 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func(wrongName='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Function 'func' has no parameter 'wrongName'.\n"));
+    thenOutputContainsError(1, "Function 'func' has no parameter 'wrongName'.\n");
   }
 
   @Test
@@ -25,8 +23,8 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func(blob='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "Type mismatch, cannot convert argument 'blob' of type 'String' to 'Blob'.\n"));
+    thenOutputContainsError(1,
+        "Type mismatch, cannot convert argument 'blob' of type 'String' to 'Blob'.\n");
   }
 
   @Test
@@ -63,7 +61,6 @@ public class ExplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func(string='abc', string='def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Argument 'string' assigned twice.\n"));
+    thenOutputContainsError(1, "Argument 'string' assigned twice.\n");
   }
 }

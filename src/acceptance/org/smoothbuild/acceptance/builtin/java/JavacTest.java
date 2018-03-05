@@ -1,8 +1,6 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 
 import java.io.File;
@@ -20,7 +18,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("modifier private not allowed here"));
+    thenOutputContains("modifier private not allowed here");
   }
 
   @Test
@@ -28,7 +26,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(output(), containsString("Param 'srcs' is empty list."));
+    thenOutputContains("Param 'srcs' is empty list.");
   }
 
   @Test
@@ -80,7 +78,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java'), file('//MyClass.java')] | javac;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("duplicate class: MyClass"));
+    thenOutputContains("duplicate class: MyClass");
   }
 
   @Test
@@ -89,7 +87,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(source='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("invalid source release: 0.9"));
+    thenOutputContains("invalid source release: 0.9");
   }
 
   @Test
@@ -98,7 +96,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(target='0.9');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("invalid target release: 0.9"));
+    thenOutputContains("invalid target release: 0.9");
   }
 
   @Test
@@ -108,7 +106,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(source='1.4', target='1.4');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("enums are not supported in -source 1.4"));
+    thenOutputContains("enums are not supported in -source 1.4");
   }
 
   private Object invoke(File appClassFile, String method) throws IOException,
