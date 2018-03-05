@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -19,8 +16,7 @@ public class JunitTest extends AcceptanceTestCase {
         + "      result = junit(tests=srcJar, deps=[]);");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?"));
+    thenOutputContains("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
   }
 
   @Test
@@ -43,7 +39,7 @@ public class JunitTest extends AcceptanceTestCase {
         + "      result = junit(tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("test failed"));
+    thenOutputContains("test failed");
   }
 
   @Test
@@ -55,7 +51,7 @@ public class JunitTest extends AcceptanceTestCase {
         + "      result = junit(tests=srcJar, deps=junitJars);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(output(), containsString("No junit tests found."));
+    thenOutputContains("No junit tests found.");
   }
 
   @Test

@@ -1,7 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
@@ -55,8 +53,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Unknown type 'Value'.\n"));
+    thenOutputContainsError(1, "Unknown type 'Value'.\n");
   }
 
   @Test
@@ -65,8 +62,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Unknown type 'Unknown'.\n"));
+    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
@@ -107,8 +103,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Unknown type 'Unknown'.\n"));
+    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
@@ -136,8 +131,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:3: error: 'name1' is already defined at build.smooth:2.\n"));
+    thenOutputContainsError(3, "'name1' is already defined at build.smooth:2.\n");
   }
 
   @Test
@@ -146,8 +140,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Unknown type 'Unknown'.\n"));
+    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
@@ -185,8 +178,7 @@ public class ParameterTest extends AcceptanceTestCase {
         + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Parameter 'param' cannot be called as it is not a function.\n"));
+    thenOutputContainsError(1, "Parameter 'param' cannot be called as it is not a function.\n");
   }
 
   @Test

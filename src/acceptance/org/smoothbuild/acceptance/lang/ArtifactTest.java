@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
@@ -112,9 +111,8 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = [file('//file.txt'), file('//file.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Can't store array of Files as it contains files with duplicated paths:\n"
-            + "  file.txt\n"));
+    thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
+        + "  file.txt\n");
   }
 
   @Test
@@ -124,9 +122,9 @@ public class ArtifactTest extends AcceptanceTestCase {
         + "      result3 = 'abc';");
     whenSmoothBuild("result2 result3 result1");
     thenFinishedWithSuccess();
-    then(output(), containsString("built artifact(s):\n"
+    thenOutputContains("built artifact(s):\n"
         + "result1 -> '.smooth/artifacts/result1'\n"
         + "result2 -> '.smooth/artifacts/result2'\n"
-        + "result3 -> '.smooth/artifacts/result3'\n"));
+        + "result3 -> '.smooth/artifacts/result3'\n");
   }
 }

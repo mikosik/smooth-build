@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.then;
@@ -154,9 +153,8 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result = [file('//file.txt'), file('//file.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "Can't store array of Files as it contains files with duplicated paths:\n"
-            + "  file.txt\n"));
+    thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
+        + "  file.txt\n");
   }
 
   @Test
@@ -213,9 +211,8 @@ public class ArrayTest extends AcceptanceTestCase {
     givenScript("result = ['abc', file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Array cannot contain elements of incompatible types.\n"
-            + "First element has type 'String' while element at index 1 has type 'Blob'.\n"));
+    thenOutputContainsError(1, "Array cannot contain elements of incompatible types.\n"
+        + "First element has type 'String' while element at index 1 has type 'Blob'.\n");
   }
 
   @Test
@@ -225,7 +222,7 @@ public class ArrayTest extends AcceptanceTestCase {
         + "      result = [ function1(unknown1=''), function1(unknown2='') ];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Function 'function1' has no parameter 'unknown1'."));
-    then(output(), containsString("Function 'function1' has no parameter 'unknown2'."));
+    thenOutputContains("Function 'function1' has no parameter 'unknown1'.");
+    thenOutputContains("Function 'function1' has no parameter 'unknown2'.");
   }
 }

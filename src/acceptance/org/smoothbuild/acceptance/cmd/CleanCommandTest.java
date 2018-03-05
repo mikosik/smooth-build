@@ -24,6 +24,6 @@ public class CleanCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
-    thenEqual(output(), "error: Unknown arguments: [some, arguments]\n");
+    thenOutputContains("error: Unknown arguments: [some, arguments]\n");
   }
 }

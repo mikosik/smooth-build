@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -11,7 +8,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_command_prints_general_help() throws Exception {
     whenSmoothHelp();
     thenFinishedWithSuccess();
-    then(output(), containsString(generalHelp()));
+    thenOutputContains(generalHelp());
   }
 
   private static String generalHelp() {
@@ -27,7 +24,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_build_command_prints_help_for_build() throws Exception {
     whenSmoothHelp("build");
     thenFinishedWithSuccess();
-    then(output(), containsString(buildHelp()));
+    thenOutputContains(buildHelp());
   }
 
   private static String buildHelp() {
@@ -42,7 +39,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_clean_command_prints_help_for_clean() throws Exception {
     whenSmoothHelp("clean");
     thenFinishedWithSuccess();
-    then(output(), containsString(buildClean()));
+    thenOutputContains(buildClean());
   }
 
   private static String buildClean() {

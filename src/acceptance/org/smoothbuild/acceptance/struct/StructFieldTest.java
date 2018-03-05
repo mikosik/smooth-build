@@ -1,7 +1,5 @@
 package org.smoothbuild.acceptance.struct;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
@@ -42,8 +40,7 @@ public class StructFieldTest extends AcceptanceTestCase {
         + "      result = value.accessedField;        \n");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:2: error: Type 'String' doesn't have field 'accessedField'."));
+    thenOutputContainsError(2, "Type 'String' doesn't have field 'accessedField'.");
   }
 
   @Test
@@ -54,7 +51,6 @@ public class StructFieldTest extends AcceptanceTestCase {
         + "      result = MyStruct('abc').otherField;     \n");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:4: error: Type 'MyStruct' doesn't have field 'otherField'."));
+    thenOutputContainsError(4, "Type 'MyStruct' doesn't have field 'otherField'.");
   }
 }

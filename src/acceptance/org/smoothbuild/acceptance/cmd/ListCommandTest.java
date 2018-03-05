@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -15,9 +12,9 @@ public class ListCommandTest extends AcceptanceTestCase {
         + "      cFunction = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
-    then(output(), containsString("aFunction\n"
+    thenOutputContains("aFunction\n"
         + "bFunction\n"
         + "cFunction\n"
-        + "dFunction\n"));
+        + "dFunction\n");
   }
 }

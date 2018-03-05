@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.testory.Testory.given;
@@ -20,7 +19,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_fails_when_script_file_is_missing() throws Exception {
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("error: Cannot read build script file 'build.smooth'.\n"));
+    thenOutputContains("error: Cannot read build script file 'build.smooth'.\n");
   }
 
   @Test
@@ -28,7 +27,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenEqual(output(), "error: Specify at least one function to be executed.\n"
+    thenOutputContains("error: Specify at least one function to be executed.\n"
         + "Use 'smooth list' to see all available functions.\n");
   }
 
@@ -37,8 +36,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
-    then(output(), containsString("error: Unknown function 'nonexistentFunction'.\n"
-        + "Use 'smooth list' to see all available functions.\n"));
+    thenOutputContains("error: Unknown function 'nonexistentFunction'.\n"
+        + "Use 'smooth list' to see all available functions.\n");
   }
 
   @Test
@@ -56,7 +55,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("illegal^name");
     thenFinishedWithError();
-    thenEqual(output(), "error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
   }
 
   @Test
@@ -64,7 +63,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     givenScript("result = 'abc';");
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
-    thenEqual(output(), "error: Function 'result' has been specified more than once.\n");
+    thenOutputContains("error: Function 'result' has been specified more than once.\n");
   }
 
   @Test

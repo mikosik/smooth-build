@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
@@ -17,9 +16,8 @@ public class DefaultValueTest extends AcceptanceTestCase {
         + "      result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Parameter 'withDefault' is of type [String] so"
-            + " it cannot have default value of type String."));
+    thenOutputContains("build.smooth:1: error: Parameter 'withDefault' is of type [String] so"
+        + " it cannot have default value of type String.");
   }
 
   @Test
@@ -79,7 +77,6 @@ public class DefaultValueTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: "));
+    thenOutputContains("build.smooth:1: error: ");
   }
 }

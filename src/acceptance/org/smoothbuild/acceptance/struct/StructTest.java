@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.struct;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -12,8 +9,7 @@ public class StructTest extends AcceptanceTestCase {
     givenScript("myStruct {};");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Struct name 'myStruct' should start with capital letter.\n"));
+    thenOutputContainsError(1, "Struct name 'myStruct' should start with capital letter.\n");
   }
 
   @Test
@@ -49,8 +45,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:3: error: "
-        + "'field1' is already defined at build.smooth:2.\n"));
+    thenOutputContainsError(3, "'field1' is already defined at build.smooth:2.\n");
   }
 
   @Test
@@ -60,8 +55,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "'MyStruct' is already defined at build.smooth:1.\n"));
+    thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -71,8 +65,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "'myFunction' is already defined at build.smooth:1.\n"));
+    thenOutputContainsError(2, "'myFunction' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -81,7 +74,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: 'String' is already defined.\n"));
+    thenOutputContainsError(1, "'String' is already defined.\n");
   }
 
   @Test
@@ -91,7 +84,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: 'File' is already defined"));
+    thenOutputContainsError(1, "'File' is already defined");
   }
 
   @Test
@@ -102,8 +95,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "Unknown type 'Unknown'.\n"));
+    thenOutputContainsError(2, "Unknown type 'Unknown'.\n");
   }
 
   @Test
@@ -113,8 +105,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      };\n");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "First field of struct cannot have array type.\n"));
+    thenOutputContainsError(2, "First field of struct cannot have array type.\n");
   }
 
   @Test
@@ -124,8 +115,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      };\n");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "First field of struct cannot have 'Nothing' type.\n"));
+    thenOutputContainsError(2, "First field of struct cannot have 'Nothing' type.\n");
   }
 
   @Test
@@ -185,9 +175,9 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
+    thenOutputContains("build.smooth:2: error: "
         + "Type hierarchy contains cycle:\n"
-        + "build.smooth:2: MyStruct -> MyStruct\n"));
+        + "build.smooth:2: MyStruct -> MyStruct\n");
   }
 
   @Test
@@ -199,8 +189,7 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "First field of struct cannot have array type."));
+    thenOutputContainsError(2, "First field of struct cannot have array type.");
   }
 
   @Test
@@ -215,9 +204,9 @@ public class StructTest extends AcceptanceTestCase {
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Type hierarchy contains cycle:\n"
+    thenOutputContains("Type hierarchy contains cycle:\n"
         + "build.smooth:2: MyStruct -> OtherStruct\n"
-        + "build.smooth:5: OtherStruct -> MyStruct\n"));
+        + "build.smooth:5: OtherStruct -> MyStruct\n");
   }
 
   @Test

@@ -1,7 +1,5 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
@@ -21,6 +19,6 @@ public class JavaPropertyTest extends AcceptanceTestCase {
     givenScript("result = javaProperty('uknown.property');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("Unknown property 'uknown.property'."));
+    thenOutputContains("Unknown property 'uknown.property'.");
   }
 }

@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.testory.Testory.then;
-
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -13,6 +10,6 @@ public class ReferenceTest extends AcceptanceTestCase {
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: 'unknown' is undefined.\n"));
+    thenOutputContainsError(1, "'unknown' is undefined.\n");
   }
 }

@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
@@ -25,8 +24,7 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      function1 = 'def';\n");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "'function1' is already defined at build.smooth:1.\n"));
+    thenOutputContainsError(2, "'function1' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -35,8 +33,7 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      MyStruct = 'def';\n");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:2: error: "
-        + "'MyStruct' is already defined at build.smooth:1.\n"));
+    thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -44,8 +41,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("String = 'def';\n");
     whenSmoothList();
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "'String' is already defined.\n"));
+    thenOutputContainsError(1, "'String' is already defined.\n");
   }
 
   @Test
@@ -53,8 +49,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("file = 'abc';");
     whenSmoothBuild("file");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "'file' is already defined at"));
+    thenOutputContainsError(1, "'file' is already defined at");
   }
 
   @Test
@@ -62,7 +57,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("Function call graph contains cycle"));
+    thenOutputContains("Function call graph contains cycle");
   }
 
   @Test
@@ -70,7 +65,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = function2; function2 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("Function call graph contains cycle"));
+    thenOutputContains("Function call graph contains cycle");
   }
 
   @Test
@@ -79,7 +74,7 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      String myIdentity(String s) = s;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("Function call graph contains cycle"));
+    thenOutputContains("Function call graph contains cycle");
   }
 
   @Test
@@ -87,7 +82,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = function2; function2 = function3; function3 = function1;");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString("Function call graph contains cycle"));
+    thenOutputContains("Function call graph contains cycle");
   }
 
   @Test
@@ -95,8 +90,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = unknownFunction();");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: 'unknownFunction' is undefined.\n"));
+    thenOutputContains("build.smooth:1: error: 'unknownFunction' is undefined.\n");
   }
 
   @Test
@@ -104,8 +98,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("function1 = unknownFunction(abc='a');");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: 'unknownFunction' is undefined.\n"));
+    thenOutputContains("build.smooth:1: error: 'unknownFunction' is undefined.\n");
   }
 
   @Test
@@ -132,8 +125,8 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      result = function1('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Parameter 'zip' cannot be called as it is not a function.\n"));
+    thenOutputContains(
+        "build.smooth:1: error: Parameter 'zip' cannot be called as it is not a function.\n");
   }
 
   @Test
@@ -143,8 +136,8 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      result = function2('def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString(
-        "build.smooth:1: error: Parameter 'function1' cannot be called as it is not a function.\n"));
+    thenOutputContains(
+        "build.smooth:1: error: Parameter 'function1' cannot be called as it is not a function.\n");
   }
 
   @Test
@@ -153,8 +146,8 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("String result = [];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: Type of function's 'result' expression"
-        + " is [Nothing] which is not convertable to function's declared result type String.\n"));
+    thenOutputContainsError(1, "Type of function's 'result' expression"
+        + " is [Nothing] which is not convertable to function's declared result type String.\n");
   }
 
   @Test
@@ -170,8 +163,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("Unknown result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: "
-        + "Unknown type 'Unknown'.\n"));
+    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
@@ -200,7 +192,7 @@ public class FunctionTest extends AcceptanceTestCase {
         + "      File result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(output(), containsString("build.smooth:1: error: Type of function's 'result' expression "
-        + "is Blob which is not convertable to function's declared result type File.\n"));
+    thenOutputContainsError(1, "Type of function's 'result' expression "
+        + "is Blob which is not convertable to function's declared result type File.\n");
   }
 }
