@@ -16,12 +16,14 @@ and performs following tasks:
  from `src` directory located at project's root. Double slashes `//` denote
  root directory of your project (directory in which given build.smooth file
  is located).
- * Passes them to `javac` function (Java compiler) that compiles those files.
+ * Passes them to `javac` function that compiles those files.
  * Passes compiled files to `jar` function that packs them into jar file.
 
 Note that there's no need to explicitly create temporary directory for *.class
-files as they are passed as parameter to `jar` function straight from `javac`
-output.
+files as they are passed as argument to `jar` function straight from `javac`
+output. This is different from how most other build tools work where you need
+explicitly specify (or even create) directory for files being processed.
+
 
 You can invoke execution of `release_jar` function from command line by running:
 
@@ -37,85 +39,222 @@ If you want to try examples yourself then
 [download and install smooth](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
 first.
 You can consult
-[functions list](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
-for a list of all builtin functions.
+[platform API documentation](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
+for a list of all platform functions.
 
 
 ### Type system
 
-Each value in smooth language (that is returned by a function or
-passed as an argument to it) has one of the following types:
- * **String** - Sequence of characters
- * **Blob** - Sequence of bytes
- * **File** - Single file - compound value that has a content (Blob) and path associated with it (String).
- * **Nothing** - type that is convertible to any other type but it is not possible to create value of such type.
- * Array ( **[String]**, **[Blob]**, **[File]**, **[Nothing]** )
+Smooth language is statically typed which means all types are known at compile time.
+It is also strongly typed so it is not possible to assign value of one type
+to value of different type unless the former is convertible to the latter.
+We will come back to topic of conversion later.
+First let's discuss all types available in smooth language.
 
-Smooth language is strongly typed and statically checked.
-Value can be assigned to given function parameter if value's type
-is equal to or convertible to that parameter's type.
-File is convertible to Blob.
-Array of some type A ([A]) is convertible to array of type B ([B])
-when A is convertible to B.
-Nothing is convertible to any type.
+#### Basic types
+Basic types are predefined by the language (cannot be defined by user).
+Currently we have three basic types: String, Blob, Nothing.
+Others (like Int, Bool) will be added before smooth reaches version 1.0.
+
+##### _String_
+String is a sequence of characters.
+String value can be defined in-line using String literal,
+which is a sequence of characters enclosed in double quotes.
+
+```
+String welcomeString = "Hello World";
+```
+
+##### _Blob_
+Blob is a sequence of bytes.
+There's no literal for creating Blobs.
+
+##### Nothing
+Nothing is a type that is convertible to any type.
+It is not possible to create value of such type.
+This sounds strange but reasons for such type are explain below when discussing array types.
+
+#### Struct types
+Struct is a compound of named values known as its fields (like in most programming languages).
+Each field may be of different type.
+It is possible to define struct type in following way:
+
+```
+Person {
+  String firstName,
+  String lastName,
+}
+```
+
+and obviously it is possible to use struct type as a field type in other struct.
+
+```
+Dog {
+  String name,
+  Person owner,
+}
+```
+
+Definition of each struct automatically generates constructor for that struct.
+Constructor of given struct is a function that
+ - returns value of given struct type
+ - has the same name as given struct
+ - has parameter for each struct's field with the same name and type as that field
+
+Let's create some value of type Person which we defined above as struct.
+
+```
+Person person = Person(firstName = "John", secondName="Doe");
+```
+
+Apart from being automatically generated, constructor is an ordinary function and
+behaves exactly like any other function including arguments auto-assignment,
+which we will discuss below in paragraph about functions.
+
+Accessing specific field of struct value is done using dot `.`.
+
+```
+String name = person.lastName;
+```
+
+Each struct value can be automatically converted to value of its first field.
+This comes handy when we use arguments auto-assignment discussed
+below in paragraph about functions.
+
+Most common struct is predefined `File` struct. It is defined as:
+
+```
+File {
+  Blob content,
+  String path,
+}
+```
+
+First field of `File` is `content` with type `Blob` which means `File` value can
+be converted to `Blob`.
+
+#### Array types
+Array is an ordered sequence of elements. Each element has the same type.
+Array value can be defined in-line using array literal,
+which is comma separated sequence of values enclosed in square brackets.
+Name of array type is name of its element type enclosed in square brackets.
+Let's create array of `String`s:
+
+```
+[String] friends = [ "John", "Kate", "Alice" ];
+```
+
+It's possible to nest arrays without any limit.
+Below example of two level deep array (array of arrays of `String`).
+
+```
+[[String]] groups = [ [ "circle" ], [ "triangle" ], [ "square", "rectangle" ] ];
+```
+
+Arrays are [covariant](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)) which means that if value of type `A` can be assigned to value of type `B`, then array of type `[A]` (array of elements of type A) can be assigned to array of type `[B]`.
+
+One corner case of array types is empty array.
+As empty array does not hold any elements, it raises question what is the type of such empty array.
+Solution is pretty simple - empty array has type `[Nothing]`.
+
+```
+[Nothing] emptyArray = [];
+```
+
+Based on the fact that arrays are covariant and Nothing type is convertible to any other type,
+then empty array is assignable to any other array.
+
+```
+[Nothing] emptyArray = [];
+[String] strings = emptyArray;
+```
+
+#### Type inference
+
+Smooth is capable of inferring type of any expression so we don't have to declare it explicitly.
+All our examples so far had type declared explicitly for educational reasons.
+In everyday code we can simply skip type and replace definitions like:
+
+```
+[String] strings = [ "dog", "cat", "donkey" ];
+```
+
+with equal version
+
+```
+strings = [ "dog", "cat", "donkey" ];
+```
 
 
 ### Functions
 
-Function chaining (that is represented by pipe symbol `|`) shown in
-initial example is just syntactic sugar for more standard function calls.
-Initial example can be refactored into:
+Let's look once again at `release_jar` function we defined at the beginning of this tutorial.
+
+```
+release_jar = files("//src") | javac | jar;
+```
+
+It uses function chaining (represented by pipe symbol `|`) to pass function call result as
+argument to other function call.
+In fact function chaining is just syntactic sugar for more standard function calls.
+We can refactor above function definition to:
 
 ```
 release_jar = jar(javac(files("//src")));
 ```
 
-This version is less readable though it is more familiar to people
+This version is less readable despite being more familiar to people
 coming from imperative languages.
 
 Functions declared in `build.smooth` (for example `release_jar`)
-can be used the same way as builtin functions (like `javac`).
-We can refactor our initial example by splitting it into two functions:
+can be used the same way as platform functions (like `javac`).
+We can refactor our initial example by splitting it into two functions and adding result types:
 
 ```
-classes(String sourcePath) = files(sourcePath) | javac;
-release_jar = jar(classes("//src"));
+[File] classes(String sourcePath) = files(sourcePath) | javac;
+File release_jar = jar(classes("//src"));
 ```
 
+#### Function parameter default value
 
-### Literals
+When we define function parameter we can provide default value for some of them.
+This way call to such function does not have to provide value for such parameter.
 
-As you noticed Smooth contains String literals which are specified
-by enclosing its charcters inside double quotes as in most languages.
-Another literal that you find useful is an array literal that lets you
-create vaue of `[String]`, `[Blob]` `[File]` and `[Nothing]` types.
-Array literal is comma separated list of expressions enclosed inside brackets `[` `]`.
-Empty array literal `[]` has type `[Nothing]` and is convertible to any other array type.
+Let's create function that creates text file:
 
 ```
-stringValue = "README.md";
-stringArrayValue = ["one", "two", "three"];
-fileArrayValue = [file(stringValue1), file(stringValue2)];
+File textFile(String name = "file.txt", String text) =
+  File(content = toBlob(text), path = "name");
 ```
 
+We can call it without specifying `name` parameter as it has default value:
 
-### Function parameters
+```
+File myFile = textFile(text = "I love text files.");
+```
+
+but we can also override default value by specifying value for `name` parameter:
+
+```
+File myFile = textFile(name = "secret.txt", text = "I love text files.");
+```
+
+#### Function arguments auto-assignment
 
 Most functions can accept more than one argument.
 One example is
 [javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md).
 Despite that we kept passing only one argument in all above examples,
-it didn't cause any error as smooth was capable to infer, to which parameter
-this argument should be assigned, by comparing argument's type with function
-parameter types.
+it didn't cause any error as smooth was capable to auto-assign arguments
+to proper parameters by comparing argument's type with parameter types.
 Parameters left without match are assigned parameter's default value.
 
 However if there's ambiguity (smooth is not able to deduce which arguments
 should be assigned to which parameters) then it fails with error.
-In such cases disambiguity can be solved by specifying assignment between argument
+In such cases ambiguity can be solved by specifying assignment between argument
 and parameter explicitly.
 In the following example we need to explicitly name `source` parameter, as
-without it, smooth wouldnt' be able to guess whether `1.8` String value should
+without it, smooth would not be able to guess whether `1.8` String value should
 be assigned to `source` or `target` parameter, both of which are of type String.
 ```
 release_jar = files("//src") | javac(source="1.8") | jar;
@@ -139,7 +278,7 @@ smooth code when you understand this algorithm from brute force perspective):
 
 Note that currently explicit assignment of argument to parameter
 cannot be done for value that is passed through a pipe.
-This may be a nuisanance as you have to use nested function calls in such cases.
+This may be a nuisance as you have to use nested function calls in such cases.
 
 
 ### Caching
@@ -156,11 +295,11 @@ of each function call it has ever executed.
 If it ever has to execute given call (function plus its arguments) again
 it just takes result from cache.
 
-You can see how it works by runing build for our initial example,
+You can see how it works by running build for our initial example,
 then changing one of java files in `src` directory by adding empty
-spaces to the end of some line and then runing build again.
+spaces to the end of some line and then running build again.
 When you run build second time, you will notice that javac task
-is reexecuted (as content of *.java files has changed)
+is re-executed (as content of *.java files has changed)
 but because only formatting of the file changed,
 compilation will produced exactly the same *.class files as before.
 smooth won't execute `jar` function at all as it will realize
@@ -177,3 +316,31 @@ Such solution gives you access to any build result you have ever executed.
 You just need to checkout relevant code version from your repository
 and run build command that will provide results instantly.
 
+### trailing commas
+
+In every case where comma is used to separate list of language elements,
+it may (or may not) be used also after last element.
+For example following struct definition uses comma after last field
+
+```
+Person {
+  String firstName,
+  String lastName,
+}
+```
+
+but it is acceptable to skip it without changing semantics
+
+```
+Person {
+  String firstName,
+  String lastName
+}
+```
+
+This works the same when defining function parameters, arguments in function call,
+elements in array literal.
+If you format your code so each such element is on separate line
+and use trailing comma
+then it's much easier to reorder such elements.
+Such a change is also more readable in version control.
