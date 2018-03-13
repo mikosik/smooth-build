@@ -13,9 +13,9 @@ class source code from android aidl file.
  * [javac](api/javac.md) Compiles set of java files.
  * [javaProperty](api/javaProperty.md) Returns Java platform property.
  * [junit](api/junit.md) Runs junit tests.
- * [toBlob](api/toBlob.md) Converts String to Blob.
+ * [toBlob](api/toBlob.md) Converts String to Blob using UTF-8 encoding.
  * [File](api/File.md) Creates File from path and content.
- * [toString](api/toString.md) Converts Blob to String using UTF-8 coding.
+ * [toString](api/toString.md) Converts Blob to String using UTF-8 encoding.
  * [unjar](api/unjar.md) Unjars (uncompresses) files from given jar file.
  * [unzip](api/unzip.md) Unzips files from zip file.
  * [zip](api/zip.md) Zips (compresses) set of files.
