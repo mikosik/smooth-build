@@ -1,4 +1,4 @@
-## path
+## javaProperty
 
 Returns Java platform property.
 
