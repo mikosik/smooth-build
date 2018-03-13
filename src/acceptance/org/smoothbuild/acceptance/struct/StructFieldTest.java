@@ -10,7 +10,7 @@ public class StructFieldTest extends AcceptanceTestCase {
   public void struct_field_can_be_accessed_via_accessor() throws Exception {
     givenScript("MyStruct {                              \n"
         + "        String field,                         \n"
-        + "      };                                      \n"
+        + "      }                                       \n"
         + "      String result = MyStruct('abc').field;  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -21,13 +21,13 @@ public class StructFieldTest extends AcceptanceTestCase {
   public void accessors_can_be_chained() throws Exception {
     givenScript("S1 {                                         \n"
         + "        S2 f1,                                     \n"
-        + "      };                                           \n"
+        + "      }                                            \n"
         + "      S2 {                                         \n"
         + "        S3 f2,                                     \n"
-        + "      };                                           \n"
+        + "      }                                            \n"
         + "      S3 {                                         \n"
         + "        String f3,                                 \n"
-        + "      };                                           \n"
+        + "      }                                            \n"
         + "      String result = S1(S2(S3('abc'))).f1.f2.f3;  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -47,7 +47,7 @@ public class StructFieldTest extends AcceptanceTestCase {
   public void applying_accessor_to_struct_without_given_field_causes_error() throws Exception {
     givenScript("MyStruct {                               \n"
         + "        String field,                          \n"
-        + "      };                                       \n"
+        + "      }                                        \n"
         + "      result = MyStruct('abc').otherField;     \n");
     whenSmoothList();
     thenFinishedWithError();

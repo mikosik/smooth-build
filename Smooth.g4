@@ -1,7 +1,7 @@
 grammar Smooth;
 
 module: ( struct | func )* EOF ;
-struct: name '{' fieldList? '}' ';' ;
+struct: name '{' fieldList? '}' ;
 fieldList: field ( ',' field )* ','? ;
 field: type name ;
 func: type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
