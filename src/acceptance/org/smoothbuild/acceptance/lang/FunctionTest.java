@@ -29,8 +29,8 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void function_with_same_name_as_struct_causes_error() throws Exception {
-    givenScript("MyStruct {};\n"
-        + "      MyStruct = 'def';\n");
+    givenScript("MyStruct {}         \n"
+        + "      MyStruct = 'def';   \n");
     whenSmoothBuild("function1");
     thenFinishedWithError();
     thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");

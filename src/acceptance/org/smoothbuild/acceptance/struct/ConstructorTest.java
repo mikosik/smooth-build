@@ -6,7 +6,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ConstructorTest extends AcceptanceTestCase {
   @Test
   public void creating_empty_struct_is_possible() throws Exception {
-    givenScript("MyStruct {};                                \n"
+    givenScript("MyStruct {}                                 \n"
         + "      String takeStruct(MyStruct struct) = 'abc'; \n"
         + "      result = takeStruct(MyStruct());            \n");
     whenSmoothBuild("result");
@@ -17,7 +17,7 @@ public class ConstructorTest extends AcceptanceTestCase {
   public void creating_non_empty_struct_is_possible() throws Exception {
     givenScript("MyStruct {                                  \n"
         + "        String field,                             \n"
-        + "      };                                          \n"
+        + "      }                                           \n"
         + "      String takeStruct(MyStruct struct) = 'abc'; \n"
         + "      result = takeStruct(MyStruct('def'));       \n");
     whenSmoothBuild("result");
@@ -28,7 +28,7 @@ public class ConstructorTest extends AcceptanceTestCase {
   public void calling_constructor_without_all_parameters_causes_error() throws Exception {
     givenScript("MyStruct {                                  \n"
         + "        String field,                             \n"
-        + "      };                                          \n"
+        + "      }                                           \n"
         + "      String takeStruct(MyStruct struct) = 'abc'; \n"
         + "      result = takeStruct(MyStruct());            \n");
     whenSmoothBuild("result");
