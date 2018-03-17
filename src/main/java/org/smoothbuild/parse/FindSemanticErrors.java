@@ -259,11 +259,13 @@ public class FindSemanticErrors {
         if (!fields.isEmpty()) {
           FieldNode field = fields.get(0);
           TypeNode type = field.type();
-          if (type.name().equals("a")) {
-            errors.add(new ParseError(field, "First field of struct cannot have 'a' type."));
-          }
           if (type instanceof ArrayTypeNode) {
             errors.add(new ParseError(field, "First field of struct cannot have array type."));
+          }
+        }
+        for (FieldNode field : fields) {
+          if (field.type().name().equals("a")) {
+            errors.add(new ParseError(field, "Struct field cannot have a generic type.\n"));
           }
         }
       }
