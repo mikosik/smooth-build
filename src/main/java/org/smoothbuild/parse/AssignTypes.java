@@ -107,7 +107,7 @@ public class AssignTypes {
       private Type funcType(FuncNode func) {
         if (func.isNative()) {
           if (func.hasType()) {
-            return createType(func.type());
+            return createFunctionType(func.type());
           } else {
             errors.add(new ParseError(func, "Function '" + func.name()
                 + "' is native so should have declared result type."));
@@ -116,7 +116,7 @@ public class AssignTypes {
         } else {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
-            Type type = createType(func.type());
+            Type type = createFunctionType(func.type());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
                   + "' expression is " + exprType.name()
@@ -128,6 +128,16 @@ public class AssignTypes {
             return exprType;
           }
         }
+      }
+
+      private Type createFunctionType(TypeNode typeNode) {
+        Type type = createType(typeNode);
+        if (type.isNothing()) {
+          errors.add(new ParseError(typeNode,
+              "Nothing type cannot be used as function result type."));
+          return null;
+        }
+        return type;
       }
 
       private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
