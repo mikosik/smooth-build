@@ -120,7 +120,7 @@ public class AssignTypes {
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
                   + "' expression is " + exprType.name()
-                  + " which is not convertable to function's declared result type " + type.name()
+                  + " which is not convertible to function's declared result type " + type.name()
                   + "."));
             }
             return type;
