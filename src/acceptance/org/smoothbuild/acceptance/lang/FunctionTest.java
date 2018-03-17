@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.lang.nativ.ReturnValue;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Test
@@ -164,6 +165,16 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
+  }
+
+  @Test
+  public void function_with_nothing_as_result_type_causes_error() throws IOException {
+    givenNativeJar(ReturnValue.class);
+    givenScript("Nothing returnValue();           \n"
+        + "      result = returnValue();          \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(1, "Nothing type cannot be used as function result type.");
   }
 
   @Test
