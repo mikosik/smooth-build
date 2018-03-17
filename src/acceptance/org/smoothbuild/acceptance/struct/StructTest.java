@@ -115,7 +115,18 @@ public class StructTest extends AcceptanceTestCase {
         + "      }                        \n");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "First field of struct cannot have 'a' type.\n");
+    thenOutputContainsError(2, "Struct field cannot have a generic type.\n");
+  }
+
+  @Test
+  public void non_first_field_with_generic_type_causes_error() throws Exception {
+    givenScript("MyStruct {               \n"
+        + "        String myField,        \n"
+        + "        a genericField,        \n"
+        + "      }                        \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(3, "Struct field cannot have a generic type.\n");
   }
 
   @Test
