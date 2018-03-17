@@ -33,7 +33,7 @@ public class RuntimeTypes implements Types {
     HashMap<String, Type> map = new HashMap<>();
     putType(map, typesDb.string());
     putType(map, typesDb.blob());
-    putType(map, typesDb.nothing());
+    putType(map, typesDb.generic());
     return map;
   }
 
@@ -60,8 +60,8 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public Type nothing() {
-    return typesDb.nothing();
+  public Type generic() {
+    return typesDb.generic();
   }
 
   @Override

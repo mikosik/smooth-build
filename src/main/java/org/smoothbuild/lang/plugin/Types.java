@@ -9,7 +9,7 @@ public interface Types {
 
   public Type blob();
 
-  public Type nothing();
+  public Type generic();
 
   public StructType file();
 

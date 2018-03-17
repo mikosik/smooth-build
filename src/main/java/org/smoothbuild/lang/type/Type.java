@@ -2,6 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.reverse;
+import static java.lang.Character.isLowerCase;
 
 import java.util.List;
 
@@ -74,12 +75,12 @@ public abstract class Type extends Value {
     return superType;
   }
 
-  public boolean isNothing() {
-    return name.equals("Nothing");
+  public boolean isGeneric() {
+    return isLowerCase(name.charAt(0));
   }
 
   public boolean isAssignableFrom(Type type) {
-    if (type.isNothing()) {
+    if (type.isGeneric()) {
       return true;
     }
     if (this.equals(type)) {
@@ -109,13 +110,13 @@ public abstract class Type extends Value {
     if (type == null) {
       Type last1 = hierarchy1.get(0);
       Type last2 = hierarchy2.get(0);
-      boolean isNothing1 = last1.coreType().isNothing();
-      boolean isNothing2 = last2.coreType().isNothing();
-      if (isNothing1 && isNothing2) {
+      boolean isGeneric1 = last1.coreType().isGeneric();
+      boolean isGeneric2 = last2.coreType().isGeneric();
+      if (isGeneric1 && isGeneric2) {
         type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
-      } else if (isNothing1) {
+      } else if (isGeneric1) {
         type = firstWithDepthNotLowerThan(hierarchy2, last1.coreDepth());
-      } else if (isNothing2) {
+      } else if (isGeneric2) {
         type = firstWithDepthNotLowerThan(hierarchy1, last2.coreDepth());
       }
     }

@@ -44,7 +44,7 @@ public class RuntimeTypesTest {
     thenReturned(set(
         typesDb.string().name(),
         typesDb.blob().name(),
-        typesDb.nothing().name()));
+        typesDb.generic().name()));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class RuntimeTypesTest {
     thenReturned(set(
         typesDb.string().name(),
         typesDb.blob().name(),
-        typesDb.nothing().name()));
+        typesDb.generic().name()));
   }
 
   @Test
@@ -96,8 +96,8 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void has_nothing_type() throws Exception {
-    when(() -> runtimeTypes.hasType("Nothing"));
+  public void has_generic_type() throws Exception {
+    when(() -> runtimeTypes.hasType("a"));
     thenReturned(true);
   }
 
@@ -126,9 +126,9 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void nothing_type_can_be_retrieved_by_name() throws Exception {
-    when(() -> runtimeTypes.getType("Nothing"));
-    thenReturned(typesDb.nothing());
+  public void generic_type_can_be_retrieved_by_name() throws Exception {
+    when(() -> runtimeTypes.getType("a"));
+    thenReturned(typesDb.generic());
   }
 
   @Test

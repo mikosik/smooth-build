@@ -147,7 +147,7 @@ public class TaskHashTest {
   }
 
   @Test
-  public void hash_of_task_with_convert_from_nothing_evaluator_and_empty_input_is_stable()
+  public void hash_of_task_with_convert_from_generic_evaluator_and_empty_input_is_stable()
       throws Exception {
     given(task = new Task(convertEvaluator(typesDb.string(), location), Hash.integer(13)));
     given(input = Input.fromValues(list()));
@@ -156,7 +156,7 @@ public class TaskHashTest {
   }
 
   @Test
-  public void hash_of_task_with_convert_from_nothing_evaluator_and_one_element_input_is_stable()
+  public void hash_of_task_with_convert_from_generic_evaluator_and_one_element_input_is_stable()
       throws Exception {
     given(task = new Task(Evaluator.convertEvaluator(typesDb.string(), location),
         Hash.integer(13)));

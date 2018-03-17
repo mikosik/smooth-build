@@ -29,15 +29,15 @@ public class StructTypeTest extends AbstractTypeTestCase {
   }
 
   @Test
-  public void first_field_type_cannot_be_nothing() throws Exception {
-    when(() -> typesDb.struct("Struct", ImmutableMap.of("field", typesDb.nothing())));
+  public void first_field_type_cannot_be_generic() throws Exception {
+    when(() -> typesDb.struct("Struct", ImmutableMap.of("field", typesDb.generic())));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
-  public void first_field_type_cannot_be_nothing_array() throws Exception {
+  public void first_field_type_cannot_be_generic_array() throws Exception {
     when(() -> typesDb.struct(
-        "Struct", ImmutableMap.of("field", typesDb.array(typesDb.nothing()))));
+        "Struct", ImmutableMap.of("field", typesDb.array(typesDb.generic()))));
     thenThrown(IllegalArgumentException.class);
   }
 

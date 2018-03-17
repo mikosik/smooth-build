@@ -148,7 +148,7 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Type of function's 'result' expression"
-        + " is [Nothing] which is not convertable to function's declared result type String.\n");
+        + " is [a] which is not convertable to function's declared result type String.\n");
   }
 
   @Test
@@ -168,18 +168,17 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_with_nothing_as_result_type_causes_error() throws IOException {
+  public void function_with_generic_type_as_result_causes_error() throws IOException {
     givenNativeJar(ReturnValue.class);
-    givenScript("Nothing returnValue();           \n"
+    givenScript("a returnValue();                 \n"
         + "      result = returnValue();          \n");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Nothing type cannot be used as function result type.");
+    thenOutputContainsError(1, "Generic type 'a' cannot be used as function result type.");
   }
 
-  @Test
-  public void function_with_array_of_nothing_as_result_type() throws IOException {
-    givenScript("[Nothing] result = [];");
+  public void function_with_generic_array_as_result_type() throws IOException {
+    givenScript("[a] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());

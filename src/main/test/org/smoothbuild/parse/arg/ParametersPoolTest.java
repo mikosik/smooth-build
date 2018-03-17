@@ -25,7 +25,7 @@ public class ParametersPoolTest {
   private final Type blob = typesDb.blob();
   private final Type file = typesDb.struct(
       "File", ImmutableMap.of("content", typesDb.blob(), "path", typesDb.string()));
-  private final Type nothing = typesDb.nothing();
+  private final Type generic = typesDb.generic();
 
   private final String name = "NAME";
   private ParameterInfo parameter;
@@ -200,7 +200,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(string), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -209,7 +209,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(string), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -218,7 +218,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(blob), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -227,7 +227,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(blob), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -236,7 +236,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(file), name, mock(Dag.class)));
     given(parametersPool = new ParametersPool(set(parameter), set()));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).optionalParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).optionalParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 
@@ -245,7 +245,7 @@ public class ParametersPoolTest {
       throws Exception {
     given(parameter = new Parameter(typesDb.array(file), name, null));
     given(parametersPool = new ParametersPool(set(), set(parameter)));
-    when(parametersPool.assignableFrom(typesDb.array(nothing))).requiredParameters();
+    when(parametersPool.assignableFrom(typesDb.array(generic))).requiredParameters();
     thenReturned(ImmutableSet.of(parameter));
   }
 

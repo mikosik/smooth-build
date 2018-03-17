@@ -24,7 +24,7 @@ public class StructType extends Type {
       return null;
     } else {
       Type superType = fields.values().iterator().next();
-      if (superType instanceof ArrayType || superType.isNothing()) {
+      if (superType instanceof ArrayType || superType.isGeneric()) {
         throw new IllegalArgumentException();
       }
       return superType;

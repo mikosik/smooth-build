@@ -135,7 +135,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "  String  : p1 <- String  : <nameless> #1 [build.smooth:1]\n"
         + "  [String]: p2 <- [String]: <nameless> #2 [build.smooth:1]\n"
         + "List of nameless arguments that caused problems:\n"
-        + "  [Nothing]: <nameless> #3 [build.smooth:1]\n"
+        + "  [a]: <nameless> #3 [build.smooth:1]\n"
         + "List of unassigned parameters of desired type is following:\n"
         + "  [Blob]: p5\n"
         + "  [File]: p4\n\n");
