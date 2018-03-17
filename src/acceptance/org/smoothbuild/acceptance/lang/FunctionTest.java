@@ -142,13 +142,13 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_expression_type_not_convertable_to_function_type_causes_error()
+  public void function_expression_type_not_convertible_to_function_type_causes_error()
       throws IOException {
     givenScript("String result = [];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Type of function's 'result' expression"
-        + " is [a] which is not convertable to function's declared result type String.\n");
+        + " is [a] which is not convertible to function's declared result type String.\n");
   }
 
   @Test
@@ -195,7 +195,7 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_result_cannot_be_assigned_to_non_convertable_type_even_when_function_expression_is_convertible()
+  public void function_result_cannot_be_assigned_to_non_convertible_type_even_when_function_expression_is_convertible()
       throws IOException {
     givenFile("file.txt", "abc");
     givenScript("Blob func = file('//file.txt');"
@@ -203,6 +203,6 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Type of function's 'result' expression "
-        + "is Blob which is not convertable to function's declared result type File.\n");
+        + "is Blob which is not convertible to function's declared result type File.\n");
   }
 }
