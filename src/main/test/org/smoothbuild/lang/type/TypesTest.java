@@ -16,8 +16,8 @@ import org.junit.runner.RunWith;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
@@ -83,7 +83,7 @@ public class TypesTest {
     assertEquals(Type.class, type.jType());
     assertEquals(SString.class, string.jType());
     assertEquals(Blob.class, blob.jType());
-    assertEquals(Nothing.class, nothing.jType());
+    assertEquals(Value.class, nothing.jType());
     assertEquals(Array.class, array(type).jType());
     assertEquals(Array.class, array(string).jType());
     assertEquals(Array.class, array(blob).jType());
