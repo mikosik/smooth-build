@@ -1,5 +1,9 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.type.TypeNames.BLOB;
+import static org.smoothbuild.lang.type.TypeNames.GENERIC;
+import static org.smoothbuild.lang.type.TypeNames.STRING;
+import static org.smoothbuild.lang.type.TypeNames.TYPE;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashMap;
@@ -40,7 +44,7 @@ public class TypesDb {
 
   public TypeType type() {
     if (type == null) {
-      type = new TypeType(writeBasicTypeData("Type"), this, hashedDb);
+      type = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
       cache.put(type.hash(), type);
     }
     return type;
@@ -48,7 +52,7 @@ public class TypesDb {
 
   public StringType string() {
     if (string == null) {
-      string = new StringType(writeBasicTypeData("String"), type(), hashedDb);
+      string = new StringType(writeBasicTypeData(STRING), type(), hashedDb);
       cache.put(string.hash(), string);
     }
     return string;
@@ -56,7 +60,7 @@ public class TypesDb {
 
   public BlobType blob() {
     if (blob == null) {
-      blob = new BlobType(writeBasicTypeData("Blob"), type(), hashedDb);
+      blob = new BlobType(writeBasicTypeData(BLOB), type(), hashedDb);
       cache.put(blob.hash(), blob);
     }
     return blob;
@@ -64,7 +68,7 @@ public class TypesDb {
 
   public GenericType generic() {
     if (generic == null) {
-      generic = new GenericType(writeBasicTypeData("a"), type(), hashedDb);
+      generic = new GenericType(writeBasicTypeData(GENERIC), type(), hashedDb);
       cache.put(generic.hash(), generic);
     }
     return generic;
@@ -132,11 +136,11 @@ public class TypesDb {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
       String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
-        case "String":
+        case STRING:
           return string();
-        case "Blob":
+        case BLOB:
           return blob();
-        case "a":
+        case GENERIC:
           return generic();
         case "":
           Type elementType = read(unmarshaller.readHash());

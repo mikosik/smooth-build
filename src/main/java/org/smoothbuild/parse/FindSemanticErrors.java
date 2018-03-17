@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.lang.type.TypeNames.GENERIC;
 import static org.smoothbuild.parse.ast.TypeNode.isGenericName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
@@ -264,7 +265,7 @@ public class FindSemanticErrors {
           }
         }
         for (FieldNode field : fields) {
-          if (field.type().name().equals("a")) {
+          if (field.type().name().equals(GENERIC)) {
             errors.add(new ParseError(field, "Struct field cannot have a generic type.\n"));
           }
         }
