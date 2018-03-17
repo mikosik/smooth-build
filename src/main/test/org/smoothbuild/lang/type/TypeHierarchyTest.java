@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 public class TypeHierarchyTest {
   private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
-  private final Type nothing = typesDb.nothing();
+  private final Type generic = typesDb.generic();
 
   @Test
   public void sorted_types_for_empty_hierarchy() throws Exception {
@@ -44,24 +44,24 @@ public class TypeHierarchyTest {
   }
 
   @Test
-  public void sorted_nothings() throws Exception {
-    assertSortedOrder(list(typesDb.array(typesDb.array(nothing)), typesDb.array(
-        nothing), nothing));
+  public void sorted_generics() throws Exception {
+    assertSortedOrder(list(typesDb.array(typesDb.array(generic)), typesDb.array(
+        generic), generic));
   }
 
   @Test
-  public void sorted_nothings_without_middle_one() throws Exception {
-    assertSortedOrder(list(typesDb.array(typesDb.array(nothing)), nothing));
+  public void sorted_generics_without_middle_one() throws Exception {
+    assertSortedOrder(list(typesDb.array(typesDb.array(generic)), generic));
   }
 
   @Test
-  public void sorted_types_comes_before_nothing() throws Exception {
-    assertSortedOrder(list(string, nothing));
+  public void sorted_types_comes_before_generics() throws Exception {
+    assertSortedOrder(list(string, generic));
   }
 
   @Test
-  public void sorted_array_types_comes_before_array_of_nothing() throws Exception {
-    assertSortedOrder(list(typesDb.array(string), typesDb.array(nothing)));
+  public void sorted_array_types_comes_before_array_of_generics() throws Exception {
+    assertSortedOrder(list(typesDb.array(string), typesDb.array(generic)));
   }
 
   @Test

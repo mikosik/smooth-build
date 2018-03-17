@@ -21,7 +21,7 @@ public class TypesDb {
   private TypeType type;
   private StringType string;
   private BlobType blob;
-  private NothingType nothing;
+  private GenericType generic;
 
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -30,7 +30,7 @@ public class TypesDb {
   }
 
   public Type nonArrayTypeFromString(String string) {
-    for (Type type : list(string(), blob(), nothing())) {
+    for (Type type : list(string(), blob())) {
       if (type.name().equals(string)) {
         return type;
       }
@@ -62,12 +62,12 @@ public class TypesDb {
     return blob;
   }
 
-  public NothingType nothing() {
-    if (nothing == null) {
-      nothing = new NothingType(writeBasicTypeData("Nothing"), type(), hashedDb);
-      cache.put(nothing.hash(), nothing);
+  public GenericType generic() {
+    if (generic == null) {
+      generic = new GenericType(writeBasicTypeData("a"), type(), hashedDb);
+      cache.put(generic.hash(), generic);
     }
-    return nothing;
+    return generic;
   }
 
   private HashCode writeBasicTypeData(String name) {
@@ -136,8 +136,8 @@ public class TypesDb {
           return string();
         case "Blob":
           return blob();
-        case "Nothing":
-          return nothing();
+        case "a":
+          return generic();
         case "":
           Type elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.superType());

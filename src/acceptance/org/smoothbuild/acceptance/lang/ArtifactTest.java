@@ -62,7 +62,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void store_array_of_nothings_artifact() throws Exception {
+  public void store_empty_generic_array_artifact() throws Exception {
     givenScript("result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

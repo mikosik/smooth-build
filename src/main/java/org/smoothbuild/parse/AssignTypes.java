@@ -132,9 +132,9 @@ public class AssignTypes {
 
       private Type createFunctionType(TypeNode typeNode) {
         Type type = createType(typeNode);
-        if (type.isNothing()) {
+        if (type.isGeneric()) {
           errors.add(new ParseError(typeNode,
-              "Nothing type cannot be used as function result type."));
+              "Generic type '" + type.name() + "' cannot be used as function result type."));
           return null;
         }
         return type;
@@ -214,7 +214,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return types.array(types.nothing());
+          return types.array(types.generic());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {

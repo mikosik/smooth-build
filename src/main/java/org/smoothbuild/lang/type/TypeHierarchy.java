@@ -18,11 +18,11 @@ public class TypeHierarchy {
     Set<Type> uniqueTypes = newHashSet(types);
     List<Type> sorted = new ArrayList<>();
     Set<Type> alreadySorted = new HashSet<>();
-    Type nothingArray = null;
+    Type genericArray = null;
     for (Type type : uniqueTypes) {
-      if (type.coreType().isNothing()) {
-        if (nothingArray == null || nothingArray.coreDepth() < type.coreDepth()) {
-          nothingArray = type;
+      if (type.coreType().isGeneric()) {
+        if (genericArray == null || genericArray.coreDepth() < type.coreDepth()) {
+          genericArray = type;
         }
       } else {
         for (Type t : type.hierarchy()) {
@@ -33,12 +33,12 @@ public class TypeHierarchy {
         }
       }
     }
-    if (nothingArray != null) {
-      while (nothingArray instanceof ArrayType) {
-        sorted.add(nothingArray);
-        nothingArray = ((ArrayType) nothingArray).elemType();
+    if (genericArray != null) {
+      while (genericArray instanceof ArrayType) {
+        sorted.add(genericArray);
+        genericArray = ((ArrayType) genericArray).elemType();
       }
-      sorted.add(nothingArray);
+      sorted.add(genericArray);
     }
     return sorted
         .stream()

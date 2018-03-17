@@ -259,8 +259,8 @@ public class FindSemanticErrors {
         if (!fields.isEmpty()) {
           FieldNode field = fields.get(0);
           TypeNode type = field.type();
-          if (type.name().equals("Nothing")) {
-            errors.add(new ParseError(field, "First field of struct cannot have 'Nothing' type."));
+          if (type.name().equals("a")) {
+            errors.add(new ParseError(field, "First field of struct cannot have 'a' type."));
           }
           if (type instanceof ArrayTypeNode) {
             errors.add(new ParseError(field, "First field of struct cannot have array type."));

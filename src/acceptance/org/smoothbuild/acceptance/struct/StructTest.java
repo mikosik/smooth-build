@@ -99,7 +99,7 @@ public class StructTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void field_with_array_type_causes_error() throws Exception {
+  public void first_field_with_array_type_causes_error() throws Exception {
     givenScript("MyStruct {            \n"
         + "        [String] myField    \n"
         + "      }                     \n");
@@ -109,13 +109,13 @@ public class StructTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void field_with_nothing_type_causes_error() throws Exception {
+  public void first_field_with_generic_type_causes_error() throws Exception {
     givenScript("MyStruct {               \n"
-        + "        Nothing myField        \n"
+        + "        a myField              \n"
         + "      }                        \n");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "First field of struct cannot have 'Nothing' type.\n");
+    thenOutputContainsError(2, "First field of struct cannot have 'a' type.\n");
   }
 
   @Test

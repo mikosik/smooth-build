@@ -25,7 +25,7 @@ public class ParameterInfoTest {
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final Type type = string;
-  private final Type nothing = typesDb.nothing();
+  private final Type generic = typesDb.generic();
 
   @Test
   public void null_type_is_forbidden() {
@@ -59,7 +59,7 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(string, "equal", true),
         new ParameterInfo(string, "equal", true));
-    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, nothing,
+    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, generic,
         personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, "name2", true));

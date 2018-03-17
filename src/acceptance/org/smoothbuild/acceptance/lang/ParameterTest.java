@@ -40,8 +40,8 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void nothing_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(Nothing nothing) = 'abc';"
+  public void generic_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter(a generic) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -90,8 +90,8 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void nothing_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([Nothing] array) = 'abc';"
+  public void generic_array_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter([a] array) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
