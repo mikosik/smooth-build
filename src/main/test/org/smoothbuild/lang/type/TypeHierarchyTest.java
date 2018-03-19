@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 public class TypeHierarchyTest {
   private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
-  private final Type generic = typesDb.generic();
+  private final Type generic = typesDb.generic("b");
 
   @Test
   public void sorted_types_for_empty_hierarchy() throws Exception {

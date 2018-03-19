@@ -30,7 +30,7 @@ public class TypesTest {
   private static final Type type = typesDb.type();
   private static final Type string = typesDb.string();
   private static final Type blob = typesDb.blob();
-  private static final Type generic = typesDb.generic();
+  private static final Type generic = typesDb.generic("a");
 
   @Test
   public void name() {
@@ -359,7 +359,7 @@ public class TypesTest {
     tester.addEqualityGroup(typesDb.string(), typesDb.string());
     tester.addEqualityGroup(typesDb.blob(), typesDb.blob());
     tester.addEqualityGroup(personType(), personType());
-    tester.addEqualityGroup(typesDb.generic(), typesDb.generic());
+    tester.addEqualityGroup(typesDb.generic("a"), typesDb.generic("a"));
 
     tester.addEqualityGroup(array(type), array(type));
     tester.addEqualityGroup(array(string), array(string));

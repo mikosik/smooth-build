@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.Scope.scope;
+import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,6 +185,9 @@ public class AssignTypes {
           Type inferredElemType = createType(elementType);
           return inferredElemType == null ? null : types.array(inferredElemType);
         }
+        if (isGenericTypeName(type.name())) {
+          return types.generic(type.name());
+        }
         return types.getType(type.name());
       }
 
@@ -214,7 +218,7 @@ public class AssignTypes {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return types.array(types.generic());
+          return types.array(types.generic("a"));
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {

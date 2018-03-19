@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
-import static org.smoothbuild.lang.type.TypeNames.GENERIC;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
+import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashMap;
@@ -25,7 +25,6 @@ public class TypesDb {
   private TypeType type;
   private StringType string;
   private BlobType blob;
-  private GenericType generic;
 
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -66,11 +65,9 @@ public class TypesDb {
     return blob;
   }
 
-  public GenericType generic() {
-    if (generic == null) {
-      generic = new GenericType(writeBasicTypeData(GENERIC), type(), hashedDb);
-      cache.put(generic.hash(), generic);
-    }
+  public GenericType generic(String name) {
+    GenericType generic = new GenericType(writeBasicTypeData(name), type(), name, hashedDb);
+    cache.put(generic.hash(), generic);
     return generic;
   }
 
@@ -140,16 +137,18 @@ public class TypesDb {
           return string();
         case BLOB:
           return blob();
-        case GENERIC:
-          return generic();
         case "":
           Type elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.superType());
           return cache(new ArrayType(typeDataHash, type(), superType, elementType, instantiator,
               hashedDb));
         default:
-          ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
-          return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
+      }
+      if (isGenericTypeName(name)) {
+        return generic(name);
+      } else {
+        ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
+        return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
       }
     }
   }
