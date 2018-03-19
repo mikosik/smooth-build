@@ -43,8 +43,7 @@ public class RuntimeTypesTest {
     when(() -> runtimeTypes.names());
     thenReturned(set(
         typesDb.string().name(),
-        typesDb.blob().name(),
-        typesDb.generic().name()));
+        typesDb.blob().name()));
   }
 
   @Test
@@ -72,8 +71,7 @@ public class RuntimeTypesTest {
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(set(
         typesDb.string().name(),
-        typesDb.blob().name(),
-        typesDb.generic().name()));
+        typesDb.blob().name()));
   }
 
   @Test
@@ -96,9 +94,9 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void has_generic_type() throws Exception {
+  public void has_not_generic_type() throws Exception {
     when(() -> runtimeTypes.hasType("a"));
-    thenReturned(true);
+    thenReturned(false);
   }
 
   @Test
@@ -128,7 +126,7 @@ public class RuntimeTypesTest {
   @Test
   public void generic_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("a"));
-    thenReturned(typesDb.generic());
+    thenThrown(IllegalStateException.class);
   }
 
   @Test

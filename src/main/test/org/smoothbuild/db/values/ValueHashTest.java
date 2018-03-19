@@ -125,7 +125,7 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_empty_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic()).build());
+    given(array = valuesDb.arrayBuilder(typesDb.generic("a")).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("9a118fc56250e13d3b1730dd6358e0e59ab46bb4"));
   }

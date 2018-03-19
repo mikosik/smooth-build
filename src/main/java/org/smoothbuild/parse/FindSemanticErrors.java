@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toSet;
-import static org.smoothbuild.lang.type.TypeNames.GENERIC;
+import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.parse.ast.TypeNode.isGenericName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.runtime.Functions;
@@ -104,15 +105,35 @@ public class FindSemanticErrors {
         .build();
     new AstVisitor() {
       @Override
-      public void visitType(TypeNode type) {
-        super.visitType(type);
-        assertTypeIsDefined(type);
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
+        if (func.hasType()) {
+          assertTypeIsDefined(func.type());
+        }
+      }
+
+      @Override
+      public void visitParam(ParamNode param) {
+        assertTypeIsDefined(param.type());
+      }
+
+      @Override
+      public void visitField(FieldNode field) {
+        assertFieldTypeIsDefined(field.type());
       }
 
       private void assertTypeIsDefined(TypeNode type) {
+        assertTypeIsKnown(type, (String name) -> isGenericTypeName(name) || all.contains(name));
+      }
+
+      private void assertFieldTypeIsDefined(TypeNode type) {
+        assertTypeIsKnown(type, (String name) -> isGenericTypeName(name) || all.contains(name));
+      }
+
+      private void assertTypeIsKnown(TypeNode type, Predicate<String> isKnown) {
         if (type instanceof ArrayTypeNode) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
-        } else if (!all.contains(type.name())) {
+        } else if (!isKnown.test(type.name())) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
       }
@@ -265,7 +286,7 @@ public class FindSemanticErrors {
           }
         }
         for (FieldNode field : fields) {
-          if (field.type().name().equals(GENERIC)) {
+          if (isGenericTypeName(field.type().name())) {
             errors.add(new ParseError(field, "Struct field cannot have a generic type.\n"));
           }
         }

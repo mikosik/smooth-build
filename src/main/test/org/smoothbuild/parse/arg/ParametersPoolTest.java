@@ -25,7 +25,7 @@ public class ParametersPoolTest {
   private final Type blob = typesDb.blob();
   private final Type file = typesDb.struct(
       "File", ImmutableMap.of("content", typesDb.blob(), "path", typesDb.string()));
-  private final Type generic = typesDb.generic();
+  private final Type generic = typesDb.generic("b");
 
   private final String name = "NAME";
   private ParameterInfo parameter;

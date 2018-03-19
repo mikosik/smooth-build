@@ -25,7 +25,7 @@ public class ParameterInfoTest {
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
   private final Type type = string;
-  private final Type generic = typesDb.generic();
+  private final Type generic = typesDb.generic("b");
 
   @Test
   public void null_type_is_forbidden() {
