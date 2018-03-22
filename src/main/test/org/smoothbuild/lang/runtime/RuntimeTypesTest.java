@@ -39,7 +39,7 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void names_returns_all_basic_types_and_file_initially() throws Exception {
+  public void names_returns_all_basic_types_initially() throws Exception {
     when(() -> runtimeTypes.names());
     thenReturned(set(
         typesDb.string().name(),
