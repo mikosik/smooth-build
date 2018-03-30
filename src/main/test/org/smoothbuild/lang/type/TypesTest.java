@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.quackery.Case.newCase;
+import static org.quackery.Suite.suite;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,6 +15,10 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quackery.Case;
+import org.quackery.Case.Body;
+import org.quackery.Quackery;
+import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
@@ -177,8 +183,8 @@ public class TypesTest {
     assertFalse(array(personType()).isGeneric());
   }
 
-  @Test
-  public void is_assignable_from() throws Exception {
+  @Quackery
+  public static Suite is_assignable_from() throws Exception {
     List<Type> types = list(
         type,
         array(type),
@@ -243,14 +249,22 @@ public class TypesTest {
         new Conversion(array(array(generic)), array(array(generic))),
         new Conversion(array(array(generic)), array(generic)),
         new Conversion(array(array(generic)), generic));
+
+    Suite suite = suite("isAssignableFrom");
     for (Type destination : types) {
       for (Type source : types) {
         boolean expected = conversions.contains(new Conversion(destination, source));
-        assertEquals(destination.toString() + ".isAssignableFrom(" + source + ")",
-            expected,
-            destination.isAssignableFrom(source));
+        suite = suite.add(testIsAssignableFrom(destination, source, expected));
       }
     }
+    return suite;
+  }
+
+  private static Case testIsAssignableFrom(Type destination, Type source, boolean expected) {
+    String testName = destination.name() + " is " + (expected ? "" : "NOT")
+        + "assignable from " + source.name();
+    Body testBody = () -> assertEquals(expected, destination.isAssignableFrom(source));
+    return newCase(testName, testBody);
   }
 
   private static class Conversion {
@@ -375,12 +389,12 @@ public class TypesTest {
     tester.testEquals();
   }
 
-  private StructType personType() {
+  private static StructType personType() {
     return typesDb.struct(
         "Person", ImmutableMap.of("firstName", string, "lastName", string));
   }
 
-  private ArrayType array(Type elementType) {
+  private static ArrayType array(Type elementType) {
     return typesDb.array(elementType);
   }
 
