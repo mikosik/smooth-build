@@ -80,21 +80,27 @@ public abstract class Type extends Value {
   }
 
   public boolean isGeneric() {
-    return isLowerCase(name.charAt(0));
+    return isLowerCase(coreType().name().charAt(0));
   }
 
   public boolean isAssignableFrom(Type type) {
-    if (type.isGeneric()) {
+    if (this.equals(type)) {
       return true;
     }
-    if (this.equals(type)) {
+    if (this instanceof ArrayType && type instanceof ArrayType) {
+      return ((ArrayType) this).elemType().isAssignableFrom(((ArrayType) type).elemType());
+    }
+    if (type instanceof ArrayType) {
+      return this.isGeneric() && !this.equals(type.coreType());
+    }
+    if (this instanceof ArrayType) {
+      return type.isGeneric() && !type.equals(this.coreType());
+    }
+    if (this.isGeneric() || type.isGeneric()) {
       return true;
     }
     if (type instanceof StructType) {
       return isAssignableFrom(((StructType) type).superType());
-    }
-    if (this instanceof ArrayType && type instanceof ArrayType) {
-      return ((ArrayType) this).elemType().isAssignableFrom(((ArrayType) type).elemType());
     }
     return false;
   }
