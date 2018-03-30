@@ -128,6 +128,34 @@ public class TypesTest {
     assertEquals(2, array(array(a)).coreDepth());
   }
 
+  @Quackery
+  public static Suite is_array() throws Exception {
+    return suite("isArray")
+        .add(testIsNotArray(type))
+        .add(testIsNotArray(string))
+        .add(testIsNotArray(blob))
+        .add(testIsNotArray(personType()))
+        .add(testIsNotArray(a))
+        .add(testIsArray(array(type)))
+        .add(testIsArray(array(string)))
+        .add(testIsArray(array(blob)))
+        .add(testIsArray(array(personType())))
+        .add(testIsArray(array(a)))
+        .add(testIsArray(array(array(type))))
+        .add(testIsArray(array(array(string))))
+        .add(testIsArray(array(array(blob))))
+        .add(testIsArray(array(array(personType()))))
+        .add(testIsArray(array(array(a))));
+  }
+
+  private static Case testIsArray(Type type) {
+    return newCase(type.name() + " is array type", () -> assertTrue(type.isArray()));
+  }
+
+  private static Case testIsNotArray(Type type) {
+    return newCase(type.name() + " is NOT array type", () -> assertFalse(type.isArray()));
+  }
+
   @Test
   public void super_type() throws Exception {
     assertEquals(null, type.superType());
