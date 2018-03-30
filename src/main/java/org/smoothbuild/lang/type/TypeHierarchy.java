@@ -34,7 +34,7 @@ public class TypeHierarchy {
       }
     }
     if (genericArray != null) {
-      while (genericArray instanceof ArrayType) {
+      while (genericArray.isArray()) {
         sorted.add(genericArray);
         genericArray = ((ArrayType) genericArray).elemType();
       }
