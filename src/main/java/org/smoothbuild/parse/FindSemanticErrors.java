@@ -3,7 +3,6 @@ package org.smoothbuild.parse;
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
-import static org.smoothbuild.parse.ast.TypeNode.isGenericName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
@@ -264,7 +263,7 @@ public class FindSemanticErrors {
       @Override
       public void visitStruct(StructNode struct) {
         String name = struct.name();
-        if (isGenericName(name)) {
+        if (isGenericTypeName(name)) {
           errors.add(new ParseError(struct.location(),
               "Struct name '" + name + "' should start with capital letter."));
         }
