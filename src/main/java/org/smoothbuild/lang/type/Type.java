@@ -55,6 +55,10 @@ public abstract class Type extends Value {
     return 0;
   }
 
+  public boolean isArray() {
+    return this instanceof ArrayType;
+  }
+
   public List<Type> hierarchy() {
     ImmutableList<Type> h = hierarchy;
     if (h == null) {
