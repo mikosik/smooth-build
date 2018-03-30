@@ -118,9 +118,10 @@ public class AssignTypes {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
             Type type = createFunctionType(func.type());
-            if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
+            Type fixedExprType = types.fixNameClashIfExists(type, exprType);
+            if (type != null && exprType != null && !type.isAssignableFrom(fixedExprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
-                  + "' expression is " + exprType.name()
+                  + "' expression is " + fixedExprType.name()
                   + " which is not convertible to function's declared result type " + type.name()
                   + "."));
             }
@@ -132,13 +133,7 @@ public class AssignTypes {
       }
 
       private Type createFunctionType(TypeNode typeNode) {
-        Type type = createType(typeNode);
-        if (type.isGeneric()) {
-          errors.add(new ParseError(typeNode,
-              "Generic type '" + type.name() + "' cannot be used as function result type."));
-          return null;
-        }
-        return type;
+        return createType(typeNode);
       }
 
       private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {

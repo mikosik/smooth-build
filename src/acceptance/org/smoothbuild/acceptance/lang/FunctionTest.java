@@ -168,13 +168,12 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_with_generic_type_as_result_causes_error() throws IOException {
+  public void function_with_generic_type_as_result_is_allowed() throws IOException {
     givenNativeJar(ReturnValue.class);
     givenScript("a returnValue();                 \n"
         + "      result = returnValue();          \n");
     whenSmoothList();
-    thenFinishedWithError();
-    thenOutputContainsError(1, "Generic type 'a' cannot be used as function result type.");
+    thenFinishedWithSuccess();
   }
 
   public void function_with_generic_array_as_result_type() throws IOException {

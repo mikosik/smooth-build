@@ -37,6 +37,7 @@ public class TypesTest {
   private static final Type string = typesDb.string();
   private static final Type blob = typesDb.blob();
   private static final Type a = typesDb.generic("a");
+  private static final Type b = typesDb.generic("b");
 
   @Test
   public void name() {
@@ -204,7 +205,7 @@ public class TypesTest {
     assertFalse(string.isGeneric());
     assertFalse(blob.isGeneric());
     assertFalse(personType().isGeneric());
-    assertFalse(array(a).isGeneric());
+    assertTrue(array(a).isGeneric());
     assertFalse(array(type).isGeneric());
     assertFalse(array(string).isGeneric());
     assertFalse(array(blob).isGeneric());
@@ -213,22 +214,6 @@ public class TypesTest {
 
   @Quackery
   public static Suite is_assignable_from() throws Exception {
-    List<Type> types = list(
-        type,
-        array(type),
-        array(array(type)),
-        string,
-        array(string),
-        array(array(string)),
-        blob,
-        array(blob),
-        array(array(blob)),
-        personType(),
-        array(personType()),
-        array(array(personType())),
-        a,
-        array(a),
-        array(array(a)));
     Set<Conversion> conversions = ImmutableSet.of(
         new Conversion(type, type),
         new Conversion(type, a),
@@ -239,7 +224,19 @@ public class TypesTest {
         new Conversion(blob, a),
         new Conversion(personType(), personType()),
         new Conversion(personType(), a),
+        new Conversion(a, type),
+        new Conversion(a, string),
+        new Conversion(a, blob),
+        new Conversion(a, personType()),
         new Conversion(a, a),
+        new Conversion(a, array(type)),
+        new Conversion(a, array(string)),
+        new Conversion(a, array(blob)),
+        new Conversion(a, array(personType())),
+        new Conversion(a, array(array(type))),
+        new Conversion(a, array(array(string))),
+        new Conversion(a, array(array(blob))),
+        new Conversion(a, array(array(personType()))),
 
         new Conversion(array(type), array(type)),
         new Conversion(array(type), array(a)),
@@ -254,8 +251,15 @@ public class TypesTest {
         new Conversion(array(personType()), array(personType())),
         new Conversion(array(personType()), array(a)),
         new Conversion(array(personType()), a),
+        new Conversion(array(a), array(type)),
+        new Conversion(array(a), array(string)),
+        new Conversion(array(a), array(blob)),
+        new Conversion(array(a), array(personType())),
         new Conversion(array(a), array(a)),
-        new Conversion(array(a), a),
+        new Conversion(array(a), array(array(type))),
+        new Conversion(array(a), array(array(string))),
+        new Conversion(array(a), array(array(blob))),
+        new Conversion(array(a), array(array(personType()))),
 
         new Conversion(array(array(type)), array(array(type))),
         new Conversion(array(array(type)), array(array(a))),
@@ -274,13 +278,69 @@ public class TypesTest {
         new Conversion(array(array(personType())), array(array(a))),
         new Conversion(array(array(personType())), array(a)),
         new Conversion(array(array(personType())), a),
+        new Conversion(array(array(a)), array(array(type))),
+        new Conversion(array(array(a)), array(array(string))),
+        new Conversion(array(array(a)), array(array(blob))),
+        new Conversion(array(array(a)), array(array(personType()))),
         new Conversion(array(array(a)), array(array(a))),
-        new Conversion(array(array(a)), array(a)),
-        new Conversion(array(array(a)), a));
 
+        new Conversion(a, b),
+        new Conversion(a, array(b)),
+        new Conversion(a, array(array(b))),
+        new Conversion(array(a), b),
+        new Conversion(array(a), array(b)),
+        new Conversion(array(a), array(array(b))),
+        new Conversion(array(array(a)), b),
+        new Conversion(array(array(a)), array(b)),
+        new Conversion(array(array(a)), array(array(b))),
+
+        new Conversion(b, a),
+        new Conversion(b, array(a)),
+        new Conversion(b, array(array(a))),
+        new Conversion(array(b), a),
+        new Conversion(array(b), array(a)),
+        new Conversion(array(b), array(array(a))),
+        new Conversion(array(array(b)), a),
+        new Conversion(array(array(b)), array(a)),
+        new Conversion(array(array(b)), array(array(a))),
+
+        new Conversion(b, b),
+        new Conversion(array(b), array(b)),
+        new Conversion(array(array(b)), array(array(b))));
+
+    List<Type> types = list(
+        type,
+        array(type),
+        array(array(type)),
+        string,
+        array(string),
+        array(array(string)),
+        blob,
+        array(blob),
+        array(array(blob)),
+        personType(),
+        array(personType()),
+        array(array(personType())),
+        a,
+        array(a),
+        array(array(a)));
     Suite suite = suite("isAssignableFrom");
     for (Type destination : types) {
       for (Type source : types) {
+        boolean expected = conversions.contains(new Conversion(destination, source));
+        suite = suite.add(testIsAssignableFrom(destination, source, expected));
+      }
+    }
+
+    List<Type> genericTypes = list(
+        a,
+        array(a),
+        array(array(a)),
+        b,
+        array(b),
+        array(array(b)));
+    for (Type destination : genericTypes) {
+      for (Type source : genericTypes) {
         boolean expected = conversions.contains(new Conversion(destination, source));
         suite = suite.add(testIsAssignableFrom(destination, source, expected));
       }
