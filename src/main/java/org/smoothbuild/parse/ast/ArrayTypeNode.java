@@ -10,6 +10,11 @@ public class ArrayTypeNode extends TypeNode {
     this.elementType = elementType;
   }
 
+  @Override
+  public boolean isGeneric() {
+    return elementType.isGeneric();
+  }
+
   public TypeNode elementType() {
     return elementType;
   }
