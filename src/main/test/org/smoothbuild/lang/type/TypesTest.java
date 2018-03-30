@@ -36,7 +36,7 @@ public class TypesTest {
   private static final Type type = typesDb.type();
   private static final Type string = typesDb.string();
   private static final Type blob = typesDb.blob();
-  private static final Type generic = typesDb.generic("a");
+  private static final Type a = typesDb.generic("a");
 
   @Test
   public void name() {
@@ -44,19 +44,19 @@ public class TypesTest {
     assertEquals("String", string.name());
     assertEquals("Blob", blob.name());
     assertEquals("Person", personType().name());
-    assertEquals("a", generic.name());
+    assertEquals("a", a.name());
 
     assertEquals("[Type]", array(type).name());
     assertEquals("[String]", array(string).name());
     assertEquals("[Blob]", array(blob).name());
     assertEquals("[Person]", array(personType()).name());
-    assertEquals("[a]", array(generic).name());
+    assertEquals("[a]", array(a).name());
 
     assertEquals("[[Type]]", array(array(type)).name());
     assertEquals("[[String]]", array(array(string)).name());
     assertEquals("[[Blob]]", array(array(blob)).name());
     assertEquals("[[Person]]", array(array(personType())).name());
-    assertEquals("[[a]]", array(array(generic)).name());
+    assertEquals("[[a]]", array(array(a)).name());
   }
 
   @Test
@@ -65,14 +65,14 @@ public class TypesTest {
     assertEquals("Type(\"String\"):" + string.hash(), string.toString());
     assertEquals("Type(\"Blob\"):" + blob.hash(), blob.toString());
     assertEquals("Type(\"Person\"):" + personType().hash(), personType().toString());
-    assertEquals("Type(\"a\"):" + generic.hash(), generic.toString());
+    assertEquals("Type(\"a\"):" + a.hash(), a.toString());
 
     assertEquals("Type(\"[Type]\"):" + array(type).hash(), array(type).toString());
     assertEquals("Type(\"[String]\"):" + array(string).hash(), array(string).toString());
     assertEquals("Type(\"[Blob]\"):" + array(blob).hash(), array(blob).toString());
     assertEquals("Type(\"[Person]\"):" + array(personType()).hash(),
         array(personType()).toString());
-    assertEquals("Type(\"[a]\"):" + array(generic).hash(), array(generic).toString());
+    assertEquals("Type(\"[a]\"):" + array(a).hash(), array(a).toString());
 
     assertEquals("Type(\"[[Type]]\"):" + array(array(type)).hash(), array(array(type)).toString());
     assertEquals("Type(\"[[String]]\"):" + array(array(string)).hash(),
@@ -80,8 +80,8 @@ public class TypesTest {
     assertEquals("Type(\"[[Blob]]\"):" + array(array(blob)).hash(), array(array(blob)).toString());
     assertEquals("Type(\"[[Person]]\"):" + array(array(personType())).hash(),
         array(array(personType())).toString());
-    assertEquals("Type(\"[[a]]\"):" + array(array(generic)).hash(),
-        array(array(generic)).toString());
+    assertEquals("Type(\"[[a]]\"):" + array(array(a)).hash(),
+        array(array(a)).toString());
   }
 
   @Test
@@ -89,11 +89,11 @@ public class TypesTest {
     assertEquals(Type.class, type.jType());
     assertEquals(SString.class, string.jType());
     assertEquals(Blob.class, blob.jType());
-    assertEquals(Value.class, generic.jType());
+    assertEquals(Value.class, a.jType());
     assertEquals(Array.class, array(type).jType());
     assertEquals(Array.class, array(string).jType());
     assertEquals(Array.class, array(blob).jType());
-    assertEquals(Array.class, array(generic).jType());
+    assertEquals(Array.class, array(a).jType());
   }
 
   @Test
@@ -101,15 +101,15 @@ public class TypesTest {
     assertEquals(type, type.coreType());
     assertEquals(string, string.coreType());
     assertEquals(personType(), personType().coreType());
-    assertEquals(generic, generic.coreType());
+    assertEquals(a, a.coreType());
 
     assertEquals(string, array(string).coreType());
     assertEquals(personType(), array(personType()).coreType());
-    assertEquals(generic, array(generic).coreType());
+    assertEquals(a, array(a).coreType());
 
     assertEquals(string, array(array(string)).coreType());
     assertEquals(personType(), array(array(personType())).coreType());
-    assertEquals(generic, array(array(generic)).coreType());
+    assertEquals(a, array(array(a)).coreType());
   }
 
   @Test
@@ -117,15 +117,15 @@ public class TypesTest {
     assertEquals(0, type.coreDepth());
     assertEquals(0, string.coreDepth());
     assertEquals(0, personType().coreDepth());
-    assertEquals(0, generic.coreDepth());
+    assertEquals(0, a.coreDepth());
 
     assertEquals(1, array(string).coreDepth());
     assertEquals(1, array(personType()).coreDepth());
-    assertEquals(1, array(generic).coreDepth());
+    assertEquals(1, array(a).coreDepth());
 
     assertEquals(2, array(array(string)).coreDepth());
     assertEquals(2, array(array(personType())).coreDepth());
-    assertEquals(2, array(array(generic)).coreDepth());
+    assertEquals(2, array(array(a)).coreDepth());
   }
 
   @Test
@@ -134,32 +134,32 @@ public class TypesTest {
     assertEquals(null, string.superType());
     assertEquals(null, blob.superType());
     assertEquals(string, personType().superType());
-    assertEquals(null, generic.superType());
+    assertEquals(null, a.superType());
 
     assertEquals(null, array(type).superType());
     assertEquals(null, array(string).superType());
     assertEquals(null, array(blob).superType());
     assertEquals(array(string), array(personType()).superType());
-    assertEquals(null, array(generic).superType());
+    assertEquals(null, array(a).superType());
 
     assertEquals(null, array(array(type)).superType());
     assertEquals(null, array(array(string)).superType());
     assertEquals(null, array(array(blob)).superType());
     assertEquals(array(array(string)), array(array(personType())).superType());
-    assertEquals(null, array(array(generic)).superType());
+    assertEquals(null, array(array(a)).superType());
   }
 
   @Test
   public void hierarchy() throws Exception {
     assertHierarchy(list(string));
     assertHierarchy(list(string, personType()));
-    assertHierarchy(list(generic));
+    assertHierarchy(list(a));
     assertHierarchy(list(array(string)));
     assertHierarchy(list(array(string), array(personType())));
-    assertHierarchy(list(array(generic)));
+    assertHierarchy(list(array(a)));
     assertHierarchy(list(array(array(string))));
     assertHierarchy(list(array(array(string)), array(array(personType()))));
-    assertHierarchy(list(array(array(generic))));
+    assertHierarchy(list(array(array(a))));
   }
 
   private static void assertHierarchy(List<Type> hierarchy) {
@@ -171,12 +171,12 @@ public class TypesTest {
 
   @Test
   public void is_generic() throws Exception {
-    assertTrue(generic.isGeneric());
+    assertTrue(a.isGeneric());
     assertFalse(type.isGeneric());
     assertFalse(string.isGeneric());
     assertFalse(blob.isGeneric());
     assertFalse(personType().isGeneric());
-    assertFalse(array(generic).isGeneric());
+    assertFalse(array(a).isGeneric());
     assertFalse(array(type).isGeneric());
     assertFalse(array(string).isGeneric());
     assertFalse(array(blob).isGeneric());
@@ -198,57 +198,57 @@ public class TypesTest {
         personType(),
         array(personType()),
         array(array(personType())),
-        generic,
-        array(generic),
-        array(array(generic)));
+        a,
+        array(a),
+        array(array(a)));
     Set<Conversion> conversions = ImmutableSet.of(
         new Conversion(type, type),
-        new Conversion(type, generic),
+        new Conversion(type, a),
         new Conversion(string, string),
         new Conversion(string, personType()),
-        new Conversion(string, generic),
+        new Conversion(string, a),
         new Conversion(blob, blob),
-        new Conversion(blob, generic),
+        new Conversion(blob, a),
         new Conversion(personType(), personType()),
-        new Conversion(personType(), generic),
-        new Conversion(generic, generic),
+        new Conversion(personType(), a),
+        new Conversion(a, a),
 
         new Conversion(array(type), array(type)),
-        new Conversion(array(type), array(generic)),
-        new Conversion(array(type), generic),
+        new Conversion(array(type), array(a)),
+        new Conversion(array(type), a),
         new Conversion(array(string), array(string)),
         new Conversion(array(string), array(personType())),
-        new Conversion(array(string), array(generic)),
-        new Conversion(array(string), generic),
+        new Conversion(array(string), array(a)),
+        new Conversion(array(string), a),
         new Conversion(array(blob), array(blob)),
-        new Conversion(array(blob), array(generic)),
-        new Conversion(array(blob), generic),
+        new Conversion(array(blob), array(a)),
+        new Conversion(array(blob), a),
         new Conversion(array(personType()), array(personType())),
-        new Conversion(array(personType()), array(generic)),
-        new Conversion(array(personType()), generic),
-        new Conversion(array(generic), array(generic)),
-        new Conversion(array(generic), generic),
+        new Conversion(array(personType()), array(a)),
+        new Conversion(array(personType()), a),
+        new Conversion(array(a), array(a)),
+        new Conversion(array(a), a),
 
         new Conversion(array(array(type)), array(array(type))),
-        new Conversion(array(array(type)), array(array(generic))),
-        new Conversion(array(array(type)), array(generic)),
-        new Conversion(array(array(type)), generic),
+        new Conversion(array(array(type)), array(array(a))),
+        new Conversion(array(array(type)), array(a)),
+        new Conversion(array(array(type)), a),
         new Conversion(array(array(string)), array(array(string))),
         new Conversion(array(array(string)), array(array(personType()))),
-        new Conversion(array(array(string)), array(array(generic))),
-        new Conversion(array(array(string)), array(generic)),
-        new Conversion(array(array(string)), generic),
+        new Conversion(array(array(string)), array(array(a))),
+        new Conversion(array(array(string)), array(a)),
+        new Conversion(array(array(string)), a),
         new Conversion(array(array(blob)), array(array(blob))),
-        new Conversion(array(array(blob)), array(array(generic))),
-        new Conversion(array(array(blob)), array(generic)),
-        new Conversion(array(array(blob)), generic),
+        new Conversion(array(array(blob)), array(array(a))),
+        new Conversion(array(array(blob)), array(a)),
+        new Conversion(array(array(blob)), a),
         new Conversion(array(array(personType())), array(array(personType()))),
-        new Conversion(array(array(personType())), array(array(generic))),
-        new Conversion(array(array(personType())), array(generic)),
-        new Conversion(array(array(personType())), generic),
-        new Conversion(array(array(generic)), array(array(generic))),
-        new Conversion(array(array(generic)), array(generic)),
-        new Conversion(array(array(generic)), generic));
+        new Conversion(array(array(personType())), array(array(a))),
+        new Conversion(array(array(personType())), array(a)),
+        new Conversion(array(array(personType())), a),
+        new Conversion(array(array(a)), array(array(a))),
+        new Conversion(array(array(a)), array(a)),
+        new Conversion(array(array(a)), a));
 
     Suite suite = suite("isAssignableFrom");
     for (Type destination : types) {
@@ -297,48 +297,48 @@ public class TypesTest {
     assertCommon(type, type, type);
     assertCommon(type, string, null);
     assertCommon(type, blob, null);
-    assertCommon(type, generic, type);
+    assertCommon(type, a, type);
     assertCommon(type, array(type), null);
     assertCommon(type, array(string), null);
     assertCommon(type, array(blob), null);
-    assertCommon(type, array(generic), null);
+    assertCommon(type, array(a), null);
 
     assertCommon(string, string, string);
     assertCommon(string, blob, null);
-    assertCommon(string, generic, string);
+    assertCommon(string, a, string);
     assertCommon(string, array(string), null);
     assertCommon(string, array(type), null);
     assertCommon(string, array(blob), null);
-    assertCommon(string, array(generic), null);
+    assertCommon(string, array(a), null);
 
     assertCommon(blob, blob, blob);
-    assertCommon(blob, generic, blob);
+    assertCommon(blob, a, blob);
     assertCommon(blob, array(type), null);
     assertCommon(blob, array(string), null);
     assertCommon(blob, array(blob), null);
-    assertCommon(blob, array(generic), null);
+    assertCommon(blob, array(a), null);
 
-    assertCommon(generic, generic, generic);
-    assertCommon(generic, array(type), array(type));
-    assertCommon(generic, array(string), array(string));
-    assertCommon(generic, array(blob), array(blob));
-    assertCommon(generic, array(generic), array(generic));
+    assertCommon(a, a, a);
+    assertCommon(a, array(type), array(type));
+    assertCommon(a, array(string), array(string));
+    assertCommon(a, array(blob), array(blob));
+    assertCommon(a, array(a), array(a));
 
     assertCommon(array(type), array(type), array(type));
     assertCommon(array(type), array(string), null);
     assertCommon(array(type), array(blob), null);
-    assertCommon(array(type), array(generic), array(type));
+    assertCommon(array(type), array(a), array(type));
     assertCommon(array(string), array(string), array(string));
     assertCommon(array(string), array(blob), null);
-    assertCommon(array(string), array(generic), array(string));
-    assertCommon(array(string), generic, array(string));
+    assertCommon(array(string), array(a), array(string));
+    assertCommon(array(string), a, array(string));
 
     assertCommon(array(blob), array(blob), array(blob));
-    assertCommon(array(blob), array(generic), array(blob));
-    assertCommon(array(blob), generic, array(blob));
+    assertCommon(array(blob), array(a), array(blob));
+    assertCommon(array(blob), a, array(blob));
 
-    assertCommon(array(generic), array(generic), array(generic));
-    assertCommon(array(generic), generic, array(generic));
+    assertCommon(array(a), array(a), array(a));
+    assertCommon(array(a), a, array(a));
   }
 
   private static void assertCommon(Type type1, Type type2, Type expected) {
@@ -357,13 +357,13 @@ public class TypesTest {
     assertEquals(string, array(string).elemType());
     assertEquals(blob, array(blob).elemType());
     assertEquals(personType(), array(personType()).elemType());
-    assertEquals(generic, array(generic).elemType());
+    assertEquals(a, array(a).elemType());
 
     assertEquals(array(type), array(array(type)).elemType());
     assertEquals(array(string), array(array(string)).elemType());
     assertEquals(array(blob), array(array(blob)).elemType());
     assertEquals(array(personType()), array(array(personType())).elemType());
-    assertEquals(array(generic), array(array(generic)).elemType());
+    assertEquals(array(a), array(array(a)).elemType());
   }
 
   @Test
@@ -379,13 +379,13 @@ public class TypesTest {
     tester.addEqualityGroup(array(string), array(string));
     tester.addEqualityGroup(array(blob), array(blob));
     tester.addEqualityGroup(array(personType()), array(personType()));
-    tester.addEqualityGroup(array(generic), array(generic));
+    tester.addEqualityGroup(array(a), array(a));
 
     tester.addEqualityGroup(array(array(type)), array(array(type)));
     tester.addEqualityGroup(array(array(string)), array(array(string)));
     tester.addEqualityGroup(array(array(blob)), array(array(blob)));
     tester.addEqualityGroup(array(array(personType())), array(array(personType())));
-    tester.addEqualityGroup(array(array(generic)), array(array(generic)));
+    tester.addEqualityGroup(array(array(a)), array(array(a)));
     tester.testEquals();
   }
 
