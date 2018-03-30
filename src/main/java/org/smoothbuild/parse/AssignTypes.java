@@ -180,7 +180,7 @@ public class AssignTypes {
       }
 
       private Type createType(TypeNode type) {
-        if (type instanceof ArrayTypeNode) {
+        if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           Type inferredElemType = createType(elementType);
           return inferredElemType == null ? null : types.array(inferredElemType);

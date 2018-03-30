@@ -130,7 +130,7 @@ public class FindSemanticErrors {
       }
 
       private void assertTypeIsKnown(TypeNode type, Predicate<String> isKnown) {
-        if (type instanceof ArrayTypeNode) {
+        if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
         } else if (!isKnown.test(type.name())) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
@@ -280,7 +280,7 @@ public class FindSemanticErrors {
         if (!fields.isEmpty()) {
           FieldNode field = fields.get(0);
           TypeNode type = field.type();
-          if (type instanceof ArrayTypeNode) {
+          if (type.isArray()) {
             errors.add(new ParseError(field, "First field of struct cannot have array type."));
           }
         }
