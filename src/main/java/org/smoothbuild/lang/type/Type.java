@@ -97,12 +97,10 @@ public abstract class Type extends Value {
 
   public Type commonSuperType(Type that) {
     /*
-     * Algorithm below works correctly for all smooth types currently existing in smooth but doesn't
-     * work when it is possible to define user struct types. It will fail when conversion chain
+     * Algorithm below works correctly for all smooth types currently existing in smooth because it
+     * is not possible to define recursive struct types. It will fail when conversion chain
      * (hierarchy) contains cycle (for example struct type is convertible to itself) or conversion
-     * chain has infinite length (for example structure X is convertible to its array [X]). This
-     * comment will become obsolete once we get rid of conversion chains (and direct-convertible-to)
-     * and instead create normal object oriented type hierarchy with one root (Value type).
+     * chain has infinite length (for example structure X is convertible to its array [X]).
      */
     List<Type> hierarchy1 = this.hierarchy();
     List<Type> hierarchy2 = that.hierarchy();
