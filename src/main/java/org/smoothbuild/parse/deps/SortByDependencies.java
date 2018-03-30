@@ -69,7 +69,7 @@ public class SortByDependencies {
         }
 
         private void addToDependencies(TypeNode type) {
-          if (type instanceof ArrayTypeNode) {
+          if (type.isArray()) {
             addToDependencies(((ArrayTypeNode) type).elementType());
           } else {
             dependencies.add(type);
