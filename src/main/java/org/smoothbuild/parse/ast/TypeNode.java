@@ -9,6 +9,10 @@ public class TypeNode extends NamedNode {
     super(name, location);
   }
 
+  public boolean isArray() {
+    return this instanceof ArrayTypeNode;
+  }
+
   public boolean isGeneric() {
     return isGenericTypeName(name());
   }
