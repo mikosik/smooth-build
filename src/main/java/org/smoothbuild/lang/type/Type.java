@@ -106,7 +106,7 @@ public abstract class Type extends Value {
      */
     List<Type> hierarchy1 = this.hierarchy();
     List<Type> hierarchy2 = that.hierarchy();
-    Type type = closesCommonSuperType(hierarchy1, hierarchy2);
+    Type type = closestCommonSuperType(hierarchy1, hierarchy2);
     if (type == null) {
       Type last1 = hierarchy1.get(0);
       Type last2 = hierarchy2.get(0);
@@ -123,7 +123,7 @@ public abstract class Type extends Value {
     return type;
   }
 
-  private static Type closesCommonSuperType(List<Type> hierarchy1, List<Type> hierarchy2) {
+  private static Type closestCommonSuperType(List<Type> hierarchy1, List<Type> hierarchy2) {
     int index = 0;
     Type type = null;
     while (index < hierarchy1.size() && index < hierarchy2.size()
