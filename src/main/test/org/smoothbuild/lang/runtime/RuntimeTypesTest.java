@@ -14,6 +14,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableMap;
@@ -24,6 +25,12 @@ public class RuntimeTypesTest {
   private RuntimeTypes runtimeTypes;
   private StructType type;
   private ArrayType arrayType;
+  private Type a;
+  private Type string;
+  private Type array;
+  private Type blob;
+  private Type b;
+  private Type array2;
 
   @Before
   public void before() {
@@ -153,5 +160,164 @@ public class RuntimeTypesTest {
   public void type_type_can_not_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("Type"));
     thenThrown(IllegalStateException.class);
+  }
+
+  @Test
+  public void no_name_clash_between_concrete_type_and_that_concrete_type() throws Exception {
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(string, string));
+    thenReturned(string);
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_concrete_type_and_that_concrete_type()
+      throws Exception {
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(array(string), string));
+    thenReturned(string);
+  }
+
+  @Test
+  public void no_name_clash_between_concrete_type_and_array_of_that_concrete_type()
+      throws Exception {
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(string, array(string)));
+    thenReturned(array(string));
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_concrete_type_and_array_of_that_concrete_type()
+      throws Exception {
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(array(string), array(string)));
+    thenReturned(array(string));
+  }
+
+  @Test
+  public void no_name_clash_between_different_concrete_types() throws Exception {
+    given(blob = runtimeTypes.blob());
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(blob, string));
+    thenReturned(string);
+  }
+
+  @Test
+  public void no_name_clash_between_generic_type_and_concrete_type() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(a, string));
+    thenReturned(string);
+  }
+
+  @Test
+  public void no_name_clash_between_concrete_type_and_generic_type() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(string, a));
+    thenReturned(a);
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_generic_type_and_concrete_type() throws Exception {
+    given(array = array(runtimeTypes.generic("a")));
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(array, string));
+    thenReturned(string);
+  }
+
+  @Test
+  public void no_name_clash_between_concrete_type_and_array_of_generic_type() throws Exception {
+    given(array = array(runtimeTypes.generic("a")));
+    given(string = runtimeTypes.string());
+    when(() -> runtimeTypes.fixNameClashIfExists(string, array));
+    thenReturned(array);
+  }
+
+  @Test
+  public void no_name_clash_between_generic_type_and_array_of_concrete_type() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(array = array(runtimeTypes.string()));
+    when(() -> runtimeTypes.fixNameClashIfExists(a, array));
+    thenReturned(array);
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_concrete_type_and_generic_type() throws Exception {
+    given(array = array(runtimeTypes.string()));
+    given(a = runtimeTypes.generic("a"));
+    when(() -> runtimeTypes.fixNameClashIfExists(array, a));
+    thenReturned(a);
+  }
+
+  @Test
+  public void no_name_clash_between_generic_type_and_different_generic_type() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(b = runtimeTypes.generic("b"));
+    when(() -> runtimeTypes.fixNameClashIfExists(a, b));
+    thenReturned(b);
+  }
+
+  @Test
+  public void no_name_clash_between_generic_type_and_array_of_different_generic_type()
+      throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(array = array(runtimeTypes.generic("b")));
+    when(() -> runtimeTypes.fixNameClashIfExists(a, array));
+    thenReturned(array);
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_generic_type_and_different_generic_type()
+      throws Exception {
+    given(array = array(runtimeTypes.generic("a")));
+    given(b = runtimeTypes.generic("b"));
+    when(() -> runtimeTypes.fixNameClashIfExists(array, b));
+    thenReturned(b);
+  }
+
+  @Test
+  public void no_name_clash_between_array_of_generic_type_and_array_of_different_generic_type()
+      throws Exception {
+    given(array = array(runtimeTypes.generic("a")));
+    given(array2 = array(runtimeTypes.generic("b")));
+    when(() -> runtimeTypes.fixNameClashIfExists(array, array2));
+    thenReturned(array2);
+  }
+
+  @Test
+  public void name_clash_between_generic_type_and_that_generic_type_is_fixed() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    when(() -> runtimeTypes.fixNameClashIfExists(a, a));
+    thenReturned(runtimeTypes.generic("a'"));
+  }
+
+  @Test
+  public void name_clash_between_generic_type_and_array_of_that_type_is_fixed() throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(array = array(a));
+    when(() -> runtimeTypes.fixNameClashIfExists(a, array));
+    thenReturned(runtimeTypes.array(runtimeTypes.generic("a'")));
+  }
+
+  @Test
+  public void name_clash_between_array_of_generic_type_and_that_generic_type_is_fixed()
+      throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(array = array(a));
+    when(() -> runtimeTypes.fixNameClashIfExists(array, a));
+    thenReturned(runtimeTypes.generic("a'"));
+  }
+
+  @Test
+  public void name_clash_between_array_of_generic_type_and_array_of_that_generic_type_is_fixed()
+      throws Exception {
+    given(a = runtimeTypes.generic("a"));
+    given(array = array(a));
+    when(() -> runtimeTypes.fixNameClashIfExists(array, array));
+    thenReturned(array(runtimeTypes.generic("a'")));
+  }
+
+  private Type array(Type type) {
+    return runtimeTypes.array(type);
   }
 }

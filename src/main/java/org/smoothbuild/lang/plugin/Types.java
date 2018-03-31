@@ -16,4 +16,6 @@ public interface Types {
   public Type getType(String name);
 
   public ArrayType array(Type elementType);
+
+  public Type fixNameClashIfExists(Type type, Type typeToFix);
 }
