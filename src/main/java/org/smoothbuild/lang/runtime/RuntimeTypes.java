@@ -94,4 +94,20 @@ public class RuntimeTypes implements Types {
     cache.put(name, type);
     return type;
   }
+
+  @Override
+  public Type fixNameClashIfExists(Type type, Type typeToFix) {
+    if (typeToFix.coreType().isGeneric() && typeToFix.coreType().equals(type.coreType())) {
+      return renameGeneric(typeToFix);
+    }
+    return typeToFix;
+  }
+
+  private Type renameGeneric(Type type) {
+    if (type.isArray()) {
+      return array(renameGeneric(((ArrayType) type).elemType()));
+    } else {
+      return generic(type.name() + "'");
+    }
+  }
 }
