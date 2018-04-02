@@ -54,4 +54,11 @@ public class TypeNodeTest {
     when(() -> typeNode.isGeneric());
     thenReturned(false);
   }
+
+  @Test
+  public void type_node_core_type_is_that_node() throws Exception {
+    given(typeNode = new TypeNode("MyType", LOCATION));
+    when(() -> typeNode.coreType());
+    thenReturned(typeNode);
+  }
 }

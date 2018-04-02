@@ -16,4 +16,8 @@ public class TypeNode extends NamedNode {
   public boolean isGeneric() {
     return isGenericTypeName(name());
   }
+
+  public TypeNode coreType() {
+    return this;
+  }
 }

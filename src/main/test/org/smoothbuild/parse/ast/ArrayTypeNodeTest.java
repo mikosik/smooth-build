@@ -13,6 +13,7 @@ import org.smoothbuild.lang.message.Location;
 public class ArrayTypeNodeTest {
   private static final Location LOCATION = location(Paths.get("file.txt"), 3);
   private TypeNode typeNode;
+  private TypeNode elementTypeNode;
 
   @Test
   public void array_node_with_generic_element_name_is_generic() throws Exception {
@@ -49,5 +50,21 @@ public class ArrayTypeNodeTest {
         LOCATION));
     when(() -> typeNode.isGeneric());
     thenReturned(false);
+  }
+
+  @Test
+  public void array_type_node_core_type_is_element_node() throws Exception {
+    given(elementTypeNode = new TypeNode("MyType", LOCATION));
+    given(typeNode = new ArrayTypeNode(elementTypeNode, LOCATION));
+    when(() -> typeNode.coreType());
+    thenReturned(elementTypeNode);
+  }
+
+  @Test
+  public void array_of_array_type_node_core_type_is_element_node() throws Exception {
+    given(elementTypeNode = new TypeNode("MyType", LOCATION));
+    given(typeNode = new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, LOCATION), LOCATION));
+    when(() -> typeNode.coreType());
+    thenReturned(elementTypeNode);
   }
 }
