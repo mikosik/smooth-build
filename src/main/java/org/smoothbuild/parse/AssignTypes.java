@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.lang.function.Function;
 import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.function.Scope;
-import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.AccessorNode;
@@ -38,16 +36,10 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class AssignTypes {
-  private final RuntimeTypes types;
-
-  @Inject
-  public AssignTypes(RuntimeTypes types) {
-    this.types = types;
-  }
-
-  public List<ParseError> assignTypes(Functions functions, Ast ast) {
+  public static List<ParseError> assignTypes(SRuntime runtime, Ast ast) {
+    RuntimeTypes types = runtime.types();
     List<ParseError> errors = new ArrayList<>();
-    Map<String, Type> functionTypes = functions
+    Map<String, Type> functionTypes = runtime.functions()
         .all()
         .stream()
         .collect(toMap(Function::name, Function::type));
