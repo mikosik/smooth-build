@@ -15,6 +15,11 @@ public class ArrayTypeNode extends TypeNode {
     return elementType.isGeneric();
   }
 
+  @Override
+  public TypeNode coreType() {
+    return elementType.coreType();
+  }
+
   public TypeNode elementType() {
     return elementType;
   }
