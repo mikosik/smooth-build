@@ -234,7 +234,7 @@ public class AssignTypesAndArgsToParams {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        assignArgsToParams(runtime.functions(), ast, call, errors);
+        assignArgsToParams(runtime, ast, call, errors);
         call.set(Type.class, functionTypes.get(call.name()));
       }
 

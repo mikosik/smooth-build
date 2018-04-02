@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
@@ -30,21 +31,21 @@ import org.smoothbuild.parse.ast.StructNode;
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  private final Functions functions;
+  private final SRuntime runtime;
   private final Ast ast;
   private final CallNode call;
   private final List<ParseError> errors;
 
-  public AssignArgsToParams(Functions functions, Ast ast, CallNode call, List<ParseError> errors) {
-    this.functions = functions;
+  public AssignArgsToParams(SRuntime runtime, Ast ast, CallNode call, List<ParseError> errors) {
+    this.runtime = runtime;
     this.ast = ast;
     this.call = call;
     this.errors = errors;
   }
 
-  public static void assignArgsToParams(Functions functions, Ast ast, CallNode call,
+  public static void assignArgsToParams(SRuntime runtime, Ast ast, CallNode call,
       List<ParseError> errors) {
-    new AssignArgsToParams(functions, ast, call, errors).run();
+    new AssignArgsToParams(runtime, ast, call, errors).run();
   }
 
   public void run() {
@@ -64,6 +65,7 @@ public class AssignArgsToParams {
 
   private List<? extends ParameterInfo> functionParameters(CallNode call) {
     String name = call.name();
+    Functions functions = runtime.functions();
     if (functions.contains(name)) {
       return functions.get(name).signature().parameters();
     }
@@ -90,14 +92,15 @@ public class AssignArgsToParams {
     for (ArgNode arg : namedArgs) {
       ParameterInfo parameter = map.get(arg.name());
       Type paramType = parameter.type();
-      if (paramType.isAssignableFrom(arg.get(Type.class))) {
+      Type fixedArgType = runtime.types().fixNameClashIfExists(paramType, arg.get(Type.class));
+      if (paramType.isAssignableFrom(fixedArgType)) {
         arg.set(ParameterInfo.class, parameter);
         parameters.remove(parameter);
       } else {
         failed = true;
         errors.add(new ParseError(arg,
             "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
-                + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
+                + fixedArgType.name() + "' to '" + paramType.name() + "'."));
       }
     }
     return failed;
