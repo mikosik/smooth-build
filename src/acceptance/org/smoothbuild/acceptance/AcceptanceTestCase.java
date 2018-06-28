@@ -48,24 +48,24 @@ public class AcceptanceTestCase {
   private String errorData;
 
   @Before
-  public void before() {
+  public void init() {
     projectDir = createTempDir();
   }
 
   @After
-  public void after() throws IOException {
+  public void destroy() throws IOException {
     deleteRecursively(projectDir().toPath());
   }
 
-  protected void givenScript(String buildScript) throws IOException {
+  public void givenScript(String buildScript) throws IOException {
     givenRawScript(buildScript.replace('\'', '"'));
   }
 
-  protected void givenRawScript(String buildScript) throws IOException {
+  public void givenRawScript(String buildScript) throws IOException {
     givenFile(DEFAULT_BUILD_SCRIPT_FILE, buildScript);
   }
 
-  protected void givenFile(String path, String content) throws IOException {
+  public void givenFile(String path, String content) throws IOException {
     File fullPath = file(path);
     fullPath.getParentFile().mkdirs();
     try (FileWriter writer = new FileWriter(fullPath.toString())) {
@@ -74,15 +74,15 @@ public class AcceptanceTestCase {
     }
   }
 
-  protected void givenNativeJar(Class<?>... classes) throws IOException {
+  public void givenNativeJar(Class<?>... classes) throws IOException {
     saveBytecodeInJar(file(DEFAULT_NATIVE_JAR_FILE), classes);
   }
 
-  protected void givenDir(String path) throws IOException {
+  public void givenDir(String path) throws IOException {
     file(path).mkdirs();
   }
 
-  protected void givenJunitCopied() {
+  public void givenJunitCopied() {
     copyLib("junit-4.12.jar", "junit/");
     copyLib("hamcrest-core-1.3.jar", "junit/");
   }
@@ -99,23 +99,23 @@ public class AcceptanceTestCase {
     }
   }
 
-  protected void whenSmoothBuild(String... args) {
+  public void whenSmoothBuild(String... args) {
     whenSmooth(join("build", args));
   }
 
-  protected void whenSmoothClean(String... args) {
+  public void whenSmoothClean(String... args) {
     whenSmooth(join("clean", args));
   }
 
-  protected void whenSmoothHelp(String... args) {
+  public void whenSmoothHelp(String... args) {
     whenSmooth(join("help", args));
   }
 
-  protected void whenSmoothList(String... args) {
+  public void whenSmoothList(String... args) {
     whenSmooth(join("list", args));
   }
 
-  protected void whenSmoothVersion(String... args) {
+  public void whenSmoothVersion(String... args) {
     whenSmooth(join("version", args));
   }
 
@@ -214,15 +214,15 @@ public class AcceptanceTestCase {
     };
   }
 
-  protected void thenFinishedWithSuccess() {
+  public void thenFinishedWithSuccess() {
     thenReturnedCode(EXIT_CODE_SUCCESS);
   }
 
-  protected void thenFinishedWithException() {
+  public void thenFinishedWithException() {
     thenReturnedCode(EXIT_CODE_JAVA_EXCEPTION);
   }
 
-  protected void thenFinishedWithError() {
+  public void thenFinishedWithError() {
     thenReturnedCode(EXIT_CODE_ERROR);
   }
 
@@ -234,11 +234,11 @@ public class AcceptanceTestCase {
     }
   }
 
-  protected void thenOutputContainsError(int lineNumber, String text) {
+  public void thenOutputContainsError(int lineNumber, String text) {
     thenOutputContains("build.smooth:" + lineNumber + ": error: " + text);
   }
 
-  protected void thenOutputContains(String text) {
+  public void thenOutputContains(String text) {
     if (!outputData.contains(text)) {
       fail("Expected output to contain:\n"
           + text + "\n"
@@ -247,27 +247,27 @@ public class AcceptanceTestCase {
     }
   }
 
-  protected String output() {
+  public String output() {
     return outputData;
   }
 
-  protected String error() {
+  public String error() {
     return errorData;
   }
 
-  protected File artifact(String name) {
+  public File artifact(String name) {
     return file(ARTIFACTS_DIR_PATH + name);
   }
 
-  protected File file(String path) {
+  public File file(String path) {
     return new File(projectDir(), path);
   }
 
-  protected File projectDir() {
+  public File projectDir() {
     return projectDir;
   }
 
-  protected String artifactContent(String artifact) throws IOException {
+  public String artifactContent(String artifact) throws IOException {
     return inputStreamToString(new FileInputStream(artifact(artifact)));
   }
 }
