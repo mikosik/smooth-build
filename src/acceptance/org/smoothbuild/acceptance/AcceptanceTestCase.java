@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance;
 
 import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.copy;
 import static com.google.common.io.Files.createTempDir;
 import static org.junit.Assert.fail;
@@ -22,7 +23,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -100,30 +100,23 @@ public class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(join("build", args));
+    whenSmooth(concat("build", args));
   }
 
   public void whenSmoothClean(String... args) {
-    whenSmooth(join("clean", args));
+    whenSmooth(concat("clean", args));
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(join("help", args));
+    whenSmooth(concat("help", args));
   }
 
   public void whenSmoothList(String... args) {
-    whenSmooth(join("list", args));
+    whenSmooth(concat("list", args));
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(join("version", args));
-  }
-
-  private static String[] join(String command, String[] args) {
-    ArrayList<String> result = new ArrayList<>();
-    result.add(command);
-    result.addAll(list(args));
-    return result.toArray(new String[] {});
+    whenSmooth(concat("version", args));
   }
 
   public void whenSmooth(String... smoothCommandArgs) {
