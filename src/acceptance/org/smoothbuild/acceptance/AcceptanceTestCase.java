@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -35,8 +36,8 @@ public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
-  private static String SMOOTH_BINARY_PATH;
   private static final Path REPOSITORY_DIR = GitRepo.gitRepoRoot();
+  private static final Path SMOOTH_BINARY = smoothBinary(REPOSITORY_DIR);
 
   private File projectDir;
   private Integer exitCode;
@@ -138,49 +139,9 @@ public class AcceptanceTestCase {
 
   public static ImmutableList<String> processArgs(String... params) {
     Builder<String> builder = ImmutableList.builder();
-    builder.add(smoothBinaryPath());
+    builder.add(SMOOTH_BINARY.toString());
     builder.addAll(list(params));
     return builder.build();
-  }
-
-  private synchronized static String smoothBinaryPath() {
-    initializePaths();
-    return SMOOTH_BINARY_PATH;
-  }
-
-  private static void initializePaths() {
-    if (SMOOTH_BINARY_PATH == null) {
-      String smoothHome = System.getenv("smooth_home_dir");
-
-      if (smoothHome == null) {
-        try {
-          ProcessBuilder processBuilder = new ProcessBuilder("ant", "install-smooth");
-          processBuilder.directory(REPOSITORY_DIR.toFile());
-          Process process = processBuilder.start();
-          ExecutorService executor = Executors.newFixedThreadPool(2);
-          Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
-          Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
-          int exitCode = process.waitFor();
-          String outputData = new String(inputStream.get());
-          String errorData = new String(errorStream.get());
-          if (exitCode != 0) {
-            throw new RuntimeException(
-                "Running 'ant install-smooth' failed with following output\n"
-                    + "STANDARD OUTPUT\n" + outputData + "\n"
-                    + "STANDARD ERROR\n" + errorData + "\n");
-          }
-          smoothHome = REPOSITORY_DIR + "/build/acceptance/smooth";
-        } catch (InterruptedException e) {
-          Thread.currentThread().interrupt();
-          throw new RuntimeException(e);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-          throw new RuntimeException(e);
-        }
-      }
-      SMOOTH_BINARY_PATH = smoothHome + "/smooth";
-    }
   }
 
   public void thenFinishedWithSuccess() {
