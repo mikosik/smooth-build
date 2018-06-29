@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -40,7 +39,7 @@ public class AcceptanceTestCase {
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
   private static String SMOOTH_BINARY_PATH;
-  private static String REPOSITORY_DIR;
+  private static final Path REPOSITORY_DIR = GitRepo.gitRepoRoot();
 
   private File projectDir;
   private Integer exitCode;
@@ -92,7 +91,7 @@ public class AcceptanceTestCase {
       Path destinationDir = projectDir.toPath().resolve(dirInsideProject);
       destinationDir.toFile().mkdirs();
       return Files.copy(
-          Paths.get(repositoryDir(), "lib/ivy/" + jar),
+          REPOSITORY_DIR.resolve("lib/ivy").resolve(jar),
           destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -154,21 +153,14 @@ public class AcceptanceTestCase {
     return SMOOTH_BINARY_PATH;
   }
 
-  private synchronized static String repositoryDir() {
-    initializePaths();
-    return REPOSITORY_DIR;
-  }
-
   private static void initializePaths() {
     if (SMOOTH_BINARY_PATH == null) {
       String smoothHome = System.getenv("smooth_home_dir");
-      String repositoryDir = System.getenv("repository_dir");
+
       if (smoothHome == null) {
         try {
-          File repoDir = new File(".").getCanonicalFile();
-          repositoryDir = repoDir.toString();
           ProcessBuilder processBuilder = new ProcessBuilder("ant", "install-smooth");
-          processBuilder.directory(repoDir);
+          processBuilder.directory(REPOSITORY_DIR.toFile());
           Process process = processBuilder.start();
           ExecutorService executor = Executors.newFixedThreadPool(2);
           Future<ByteArrayOutputStream> inputStream =
@@ -184,7 +176,7 @@ public class AcceptanceTestCase {
                     + "STANDARD OUTPUT\n" + outputData + "\n"
                     + "STANDARD ERROR\n" + errorData + "\n");
           }
-          smoothHome = repoDir.getAbsolutePath() + "/build/acceptance/smooth";
+          smoothHome = REPOSITORY_DIR + "/build/acceptance/smooth";
         } catch (InterruptedException e) {
           Thread.currentThread().interrupt();
           throw new RuntimeException(e);
@@ -195,7 +187,6 @@ public class AcceptanceTestCase {
         }
       }
       SMOOTH_BINARY_PATH = smoothHome + "/smooth";
-      REPOSITORY_DIR = repositoryDir;
     }
   }
 
