@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
@@ -36,8 +37,8 @@ public class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
-  private static final Path REPOSITORY_DIR = GitRepo.gitRepoRoot();
-  private static final Path SMOOTH_BINARY = smoothBinary(REPOSITORY_DIR);
+  private static final Path GIT_REPO_ROOT = gitRepoRoot();
+  private static final Path SMOOTH_BINARY = smoothBinary(GIT_REPO_ROOT);
 
   private File projectDir;
   private Integer exitCode;
@@ -89,7 +90,7 @@ public class AcceptanceTestCase {
       Path destinationDir = projectDir.toPath().resolve(dirInsideProject);
       destinationDir.toFile().mkdirs();
       return Files.copy(
-          REPOSITORY_DIR.resolve("lib/ivy").resolve(jar),
+          GIT_REPO_ROOT.resolve("lib/ivy").resolve(jar),
           destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
