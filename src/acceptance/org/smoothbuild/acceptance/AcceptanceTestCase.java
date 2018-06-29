@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.ObjectArrays.concat;
-import static com.google.common.io.ByteStreams.copy;
+import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
@@ -13,16 +13,13 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -124,13 +121,11 @@ public class AcceptanceTestCase {
       processBuilder.directory(projectDir());
       Process process = processBuilder.start();
       ExecutorService executor = Executors.newFixedThreadPool(2);
-      Future<ByteArrayOutputStream> inputStream =
-          executor.submit(streamReadingCallable(process.getInputStream()));
-      Future<ByteArrayOutputStream> errorStream =
-          executor.submit(streamReadingCallable(process.getErrorStream()));
+      Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
+      Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
       exitCode = process.waitFor();
-      outputData = new String(inputStream.get().toByteArray());
-      errorData = new String(errorStream.get().toByteArray());
+      outputData = new String(inputStream.get());
+      errorData = new String(errorStream.get());
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
@@ -163,13 +158,11 @@ public class AcceptanceTestCase {
           processBuilder.directory(REPOSITORY_DIR.toFile());
           Process process = processBuilder.start();
           ExecutorService executor = Executors.newFixedThreadPool(2);
-          Future<ByteArrayOutputStream> inputStream =
-              executor.submit(streamReadingCallable(process.getInputStream()));
-          Future<ByteArrayOutputStream> errorStream =
-              executor.submit(streamReadingCallable(process.getErrorStream()));
+          Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
+          Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
           int exitCode = process.waitFor();
-          String outputData = new String(inputStream.get().toByteArray());
-          String errorData = new String(errorStream.get().toByteArray());
+          String outputData = new String(inputStream.get());
+          String errorData = new String(errorStream.get());
           if (exitCode != 0) {
             throw new RuntimeException(
                 "Running 'ant install-smooth' failed with following output\n"
@@ -188,14 +181,6 @@ public class AcceptanceTestCase {
       }
       SMOOTH_BINARY_PATH = smoothHome + "/smooth";
     }
-  }
-
-  private static Callable<ByteArrayOutputStream> streamReadingCallable(InputStream inputStream) {
-    return () -> {
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      copy(inputStream, outputStream);
-      return outputStream;
-    };
   }
 
   public void thenFinishedWithSuccess() {
