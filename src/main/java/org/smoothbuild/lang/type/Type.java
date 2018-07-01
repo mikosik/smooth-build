@@ -62,17 +62,21 @@ public abstract class Type extends Value {
   public List<Type> hierarchy() {
     ImmutableList<Type> h = hierarchy;
     if (h == null) {
-      if (superType() == null) {
-        h = ImmutableList.of(this);
-      } else {
-        h = ImmutableList.<Type> builder()
-            .addAll(superType().hierarchy())
-            .add(this)
-            .build();
-      }
+      h = calculateHierarchy();
       hierarchy = h;
     }
     return h;
+  }
+
+  private ImmutableList<Type> calculateHierarchy() {
+    if (superType() == null) {
+      return ImmutableList.of(this);
+    } else {
+      return ImmutableList.<Type> builder()
+          .addAll(superType().hierarchy())
+          .add(this)
+          .build();
+    }
   }
 
   public Type superType() {
