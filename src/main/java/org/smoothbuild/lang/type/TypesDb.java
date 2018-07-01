@@ -4,7 +4,6 @@ import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
-import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,15 +29,6 @@ public class TypesDb {
     this.hashedDb = hashedDb;
     this.cache = new HashMap<>();
     this.instantiator = new Instantiator(hashedDb, this);
-  }
-
-  public Type nonArrayTypeFromString(String string) {
-    for (Type type : list(string(), blob())) {
-      if (type.name().equals(string)) {
-        return type;
-      }
-    }
-    return null;
   }
 
   public TypeType type() {

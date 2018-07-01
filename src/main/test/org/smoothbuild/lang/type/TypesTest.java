@@ -643,28 +643,4 @@ public class TypesTest {
   private static ArrayType array(Type elemType) {
     return typesDb.array(elemType);
   }
-
-  @Quackery
-  public static Suite nonArrayTypeFromString() throws Exception {
-    return suite("Type.commonSuperType()").addAll(asList(
-        nonArrayTypeFromString("Type", null),
-        nonArrayTypeFromString("String", string),
-        nonArrayTypeFromString("Blob", blob),
-        nonArrayTypeFromString("File", null),
-        nonArrayTypeFromString("a", null),
-        nonArrayTypeFromString("notAType", null),
-        nonArrayTypeFromString("[Type]", null),
-        nonArrayTypeFromString("[String]", null),
-        nonArrayTypeFromString("[Blob]", null),
-        nonArrayTypeFromString("[File]", null),
-        nonArrayTypeFromString("[a]", null),
-        nonArrayTypeFromString("[notAType]", null)));
-  }
-
-  private static Case nonArrayTypeFromString(String string, Type type) {
-    String typeName = type == null ? "null" : type.name();
-    return newCase(
-        "nonArrayTypeFromString(" + string + ") == " + typeName,
-        () -> assertEquals(type, typesDb.nonArrayTypeFromString(string)));
-  }
 }
