@@ -42,6 +42,7 @@
     <property name="lib.hamcrest-library" value="${dir.lib}/ivy/hamcrest-library-1.3.jar"/>
     <property name="lib.javax.inject" value="${dir.lib}/ivy/javax.inject-1.jar"/>
     <property name="lib.junit" value="${dir.lib}/ivy/junit-4.12.jar"/>
+    <property name="lib.junittoolbox" value="${dir.lib}/ivy/junit-toolbox-2.4.jar"/>
     <property name="lib.quackery" value="${dir.lib}/quackery-0.13.2.jar"/>
     <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.0.8.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.3.0.jar"/>
@@ -138,6 +139,7 @@
         <path refid="classpath.with.main.java"/>
         <pathelement location="${lib.hamcrest}"/>
         <pathelement location="${lib.junit}"/>
+        <pathelement location="${lib.junittoolbox}"/>
         <pathelement location="${lib.quackery}"/>
     </path>
 
