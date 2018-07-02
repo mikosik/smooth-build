@@ -35,8 +35,8 @@
     <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.5.jar"/>
     <property name="lib.antlr3-runtime" value="${dir.lib}/ivy/antlr-runtime-3.5.2.jar"/>
     <property name="lib.aopalliance" value="${dir.lib}/ivy/aopalliance-1.0.jar"/>
-    <property name="lib.guava" value="${dir.lib}/ivy/guava-21.0.jar"/>
-    <property name="lib.guava-testlib" value="${dir.lib}/ivy/guava-testlib-21.0.jar"/>
+    <property name="lib.guava" value="${dir.lib}/ivy/guava-24.0-jre.jar"/>
+    <property name="lib.guava-testlib" value="${dir.lib}/ivy/guava-testlib-24.0-jre.jar"/>
     <property name="lib.guice" value="${dir.lib}/ivy/guice-4.0.jar"/>
     <property name="lib.hamcrest" value="${dir.lib}/ivy/hamcrest-core-1.3.jar"/>
     <property name="lib.hamcrest-library" value="${dir.lib}/ivy/hamcrest-library-1.3.jar"/>
