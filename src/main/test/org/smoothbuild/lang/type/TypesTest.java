@@ -35,7 +35,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite name() {
-    return suite("Type.name()").addAll(asList(
+    return suite("Type.name").addAll(asList(
         typeNameIs(type, "Type"),
         typeNameIs(string, "String"),
         typeNameIs(blob, "Blob"),
@@ -63,7 +63,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite to_string() {
-    return suite("Type.toString()").addAll(asList(
+    return suite("Type.toString").addAll(asList(
         typeToStringIs(type, "Type(\"Type\")"),
         typeToStringIs(string, "Type(\"String\")"),
         typeToStringIs(blob, "Type(\"Blob\")"),
@@ -91,7 +91,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite jType() {
-    return suite("Type.jType()").addAll(asList(
+    return suite("Type.jType").addAll(asList(
         jTypeIs(type, Type.class),
         jTypeIs(string, SString.class),
         jTypeIs(blob, Blob.class),
@@ -110,7 +110,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite core_type() throws Exception {
-    return suite("Type.jType()").addAll(asList(
+    return suite("Type.jType").addAll(asList(
         coreTypeIs(type, type),
         coreTypeIs(string, string),
         coreTypeIs(personType(), personType()),
@@ -133,7 +133,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite core_depth() throws Exception {
-    return suite("Type.coreDepth()").addAll(asList(
+    return suite("Type.coreDepth").addAll(asList(
         coreDepthIs(type, 0),
         coreDepthIs(string, 0),
         coreDepthIs(personType(), 0),
@@ -156,7 +156,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite is_array() throws Exception {
-    return suite("Type.isArray()").addAll(asList(
+    return suite("Type.isArray").addAll(asList(
         isNotArrayType(type),
         isNotArrayType(string),
         isNotArrayType(blob),
@@ -184,7 +184,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite super_type() throws Exception {
-    return suite("Type.superType()").addAll(asList(
+    return suite("Type.superType").addAll(asList(
         superTypeIs(null, type),
         superTypeIs(null, string),
         superTypeIs(null, blob),
@@ -212,7 +212,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite hierarchy() throws Exception {
-    return suite("Type.hierarchy()").addAll(asList(
+    return suite("Type.hierarchy").addAll(asList(
         hierarchyTest(list(string)),
         hierarchyTest(list(string, personType())),
         hierarchyTest(list(a)),
@@ -233,7 +233,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite is_generic() throws Exception {
-    return suite("Type.hierarchy()").addAll(asList(
+    return suite("Type.isGeneric").addAll(asList(
         typeIsGeneric(a),
         typeIsNotGeneric(type),
         typeIsNotGeneric(string),
@@ -260,7 +260,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite is_assignable_from() throws Exception {
-    return suite("Type.isConvertible()").addAll(asList(
+    return suite("Type.isAssignableFrom").addAll(asList(
         allowedAssignment(type, type),
         allowedAssignment(type, a),
         illegalAssignment(type, array(type)),
@@ -525,7 +525,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite common_super_type() throws Exception {
-    return suite("Type.commonSuperType()").addAll(asList(
+    return suite("Type.commonSuperType").addAll(asList(
         assertCommon(type, type, type),
         assertCommon(type, string, null),
         assertCommon(type, blob, null),
@@ -588,7 +588,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite array_element_types() {
-    return suite("Type.elemType())").addAll(asList(
+    return suite("Type.elemType").addAll(asList(
         elementTypeOf(array(type), type),
         elementTypeOf(array(string), string),
         elementTypeOf(array(blob), blob),
