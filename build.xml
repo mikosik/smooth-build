@@ -48,6 +48,7 @@
 
     <target name="init">
         <delete dir="${dir.build}"/>
+        <delete dir="lib/ivy"/>
 
         <mkdir dir="${dir.build.java.parser}"/>
         <mkdir dir="${dir.build.class.main.java}"/>
