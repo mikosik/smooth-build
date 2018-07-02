@@ -29,11 +29,14 @@ import java.util.concurrent.Future;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.googlecode.junittoolbox.ParallelRunner;
 
-public class AcceptanceTestCase {
+@RunWith(ParallelRunner.class)
+public abstract class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
   private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
