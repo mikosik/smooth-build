@@ -347,7 +347,7 @@
     </target>
 
     <!-- run src/acceptance -->
-    <target name="install-smooth" depends="compile-acceptance-tests, release">
+    <target name="install-smooth" depends="release">
         <unzip src="${dir.build.release.file}" dest="${dir.build.acceptance}"/>
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
     </target>
