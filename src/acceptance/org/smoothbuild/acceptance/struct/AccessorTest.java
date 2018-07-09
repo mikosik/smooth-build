@@ -18,6 +18,17 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void accessor_cannot_be_called_as_normal_function() throws Exception {
+    givenScript("MyStruct {                                        \n"
+        + "        String field,                                   \n"
+        + "      }                                                 \n"
+        + "      String result = MyStruct.field(MyStruct('abc'));  \n");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContainsError(4, "extraneous input '(' ");
+  }
+
+  @Test
   public void accessor_with_parentheses_causes_error() throws Exception {
     givenScript("MyStruct {                                \n"
         + "        String field,                           \n"
