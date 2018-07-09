@@ -3,9 +3,13 @@ package org.smoothbuild.lang.type;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.function.Parameter;
+import org.smoothbuild.lang.function.Signature;
 import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.collect.ImmutableMap;
@@ -50,5 +54,16 @@ public class StructType extends Type {
 
   public ImmutableMap<String, Field> fields() {
     return fields;
+  }
+
+  public Accessor accessor(String fieldName) {
+    Field field = fields.get(fieldName);
+    if (field == null) {
+      throw new IllegalArgumentException("Struct " + name() + " doesn't have field " + fieldName);
+    }
+    return new Accessor(
+        new Signature(field.type(), field.name(), list(new Parameter(this, "value", null))),
+        field.name(),
+        field.location());
   }
 }
