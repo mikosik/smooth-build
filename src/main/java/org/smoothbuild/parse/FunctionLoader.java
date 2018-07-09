@@ -19,6 +19,7 @@ import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
+import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.DefinedFunction;
 import org.smoothbuild.lang.function.Function;
 import org.smoothbuild.lang.function.Native;
@@ -29,6 +30,7 @@ import org.smoothbuild.lang.function.Signature;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
@@ -105,9 +107,9 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createAccessor(AccessorNode accessor) {
-        String functionName = accessor.expr().get(Type.class).name() + "." + accessor.fieldName();
-        Function function = loadedFunctions.get(functionName);
-        return new Dag<>(function.createCallExpression(accessor.location()),
+        StructType type = (StructType) accessor.expr().get(Type.class);
+        Accessor accessorFunction = type.accessor(accessor.fieldName());
+        return new Dag<>(accessorFunction.createCallExpression(accessor.location()),
             list(createExpression(accessor.expr())));
       }
 
