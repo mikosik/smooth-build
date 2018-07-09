@@ -12,7 +12,6 @@ import static org.smoothbuild.util.reflect.Methods.canonicalName;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
@@ -37,8 +36,6 @@ public class FindNatives {
     }
     try {
       return find(jarFile(jarPath));
-    } catch (FileNotFoundException e) {
-      return empty();
     } catch (IOException e) {
       return Maybe.error("Cannot read native implementation file '" + jarPath + "'.");
     }
