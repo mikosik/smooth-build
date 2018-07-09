@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.parse.AssignNatives.assignNatives;
 import static org.smoothbuild.parse.AssignTypesAndArgsToParams.assignTypesAndArgsToParams;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
@@ -11,13 +10,11 @@ import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.function.Accessor;
 import org.smoothbuild.lang.function.Constructor;
-import org.smoothbuild.lang.function.Native;
 import org.smoothbuild.lang.function.Parameter;
 import org.smoothbuild.lang.function.Signature;
 import org.smoothbuild.lang.runtime.SRuntime;
@@ -42,14 +39,14 @@ public class ModuleLoader {
   }
 
   public List<? extends Object> loadModule(Path script) {
-    Maybe<Map<String, Native>> natives = findNatives(changeExtension(script, "jar"));
+    Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
     return parseScript(script)
         .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
         .invoke(ast -> findSemanticErrors(runtime, ast))
         .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
         .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
         .invoke(ast -> assignTypesAndArgsToParams(runtime, ast))
-        .invoke(natives, (ast, n) -> assignNatives(ast, n))
+        .invoke(natives, (ast, n) -> n.assignNatives(ast))
         .invokeConsumer(ast -> loadFunctions(ast))
         .errors();
   }

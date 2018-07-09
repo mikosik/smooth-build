@@ -12,15 +12,21 @@ import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 
-public class AssignNatives {
-  public static List<ParseError> assignNatives(Ast ast, Map<String, Native> natives) {
+public class Natives {
+  private final Map<String, Native> map;
+
+  public Natives(Map<String, Native> map) {
+    this.map = map;
+  }
+
+  public List<ParseError> assignNatives(Ast ast) {
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        if (natives.containsKey(func.name())) {
-          Native nativ = natives.get(func.name());
+        if (map.containsKey(func.name())) {
+          Native nativ = map.get(func.name());
           if (func.isNative()) {
             assign(func, nativ);
           } else {
