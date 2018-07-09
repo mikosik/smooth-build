@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.Scope.scope;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
+import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +36,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class AssignTypes {
-  public static List<ParseError> assignTypes(SRuntime runtime, Ast ast) {
+public class AssignTypesAndArgsToParams {
+  public static List<ParseError> assignTypesAndArgsToParams(SRuntime runtime, Ast ast) {
     RuntimeTypes types = runtime.types();
     List<ParseError> errors = new ArrayList<>();
     Map<String, Type> functionTypes = runtime.functions()
@@ -233,6 +234,7 @@ public class AssignTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
+        assignArgsToParams(runtime.functions(), ast, call, errors);
         call.set(Type.class, functionTypes.get(call.name()));
       }
 

@@ -9,7 +9,6 @@ import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Lists.filter;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -31,140 +30,148 @@ import org.smoothbuild.parse.ast.StructNode;
 import com.google.common.collect.ImmutableMultimap;
 
 public class AssignArgsToParams {
-  public static List<ParseError> assignArgsToParams(Functions functions, Ast ast) {
-    List<ParseError> errors = new ArrayList<>();
-    new AstVisitor() {
-      @Override
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        List<? extends ParameterInfo> parametersList = functionParameters(call);
-        if (parametersList == null) {
-          return;
-        }
-        Set<ParameterInfo> parameters = new HashSet<>(parametersList);
-        if (assignNamedArguments(call, parameters)) {
-          return;
-        }
-        if (assignNamelessArguments(call, parameters)) {
-          return;
-        }
-        failWhenUnassignedRequiredParameterIsLeft(errors, call, parameters);
-      }
+  private final Functions functions;
+  private final Ast ast;
+  private final CallNode call;
+  private final List<ParseError> errors;
 
-      private List<? extends ParameterInfo> functionParameters(CallNode call) {
-        String name = call.name();
-        if (functions.contains(name)) {
-          return functions.get(name).signature().parameters();
-        }
-        if (ast.containsFunc(name)) {
-          FuncNode func = ast.func(name);
-          if (func.has(List.class)) {
-            return func.get(List.class);
-          }
-        }
-        if (ast.containsStruct(name)) {
-          StructNode struct = ast.struct(name);
-          if (struct.has(List.class)) {
-            return struct.get(List.class);
-          }
-        }
-        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
-      }
+  public AssignArgsToParams(Functions functions, Ast ast, CallNode call, List<ParseError> errors) {
+    this.functions = functions;
+    this.ast = ast;
+    this.call = call;
+    this.errors = errors;
+  }
 
-      private boolean assignNamedArguments(CallNode call,
-          Set<ParameterInfo> parameters) {
-        boolean failed = false;
-        List<ArgNode> namedArgs = filter(call.args(), ArgNode::hasName);
-        Map<String, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
-        for (ArgNode arg : namedArgs) {
-          ParameterInfo parameter = map.get(arg.name());
-          Type paramType = parameter.type();
-          if (paramType.isAssignableFrom(arg.get(Type.class))) {
-            arg.set(ParameterInfo.class, parameter);
-            parameters.remove(parameter);
-          } else {
-            failed = true;
-            errors.add(new ParseError(arg,
-                "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
-                    + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
-          }
-        }
-        return failed;
-      }
+  public static void assignArgsToParams(Functions functions, Ast ast, CallNode call,
+      List<ParseError> errors) {
+    new AssignArgsToParams(functions, ast, call, errors).run();
+  }
 
-      private boolean assignNamelessArguments(CallNode call, Set<ParameterInfo> parameters) {
-        ParametersPool parametersPool = new ParametersPool(
-            filter(parameters, not(ParameterInfo::isRequired)),
-            filter(parameters, ParameterInfo::isRequired));
-        ImmutableMultimap<Type, ArgNode> namelessArgs = call
-            .args()
-            .stream()
-            .filter(a -> !a.hasName())
-            .collect(toImmutableListMultimap(a -> a.get(Type.class), a -> a));
-        for (Type type : sortedTypes(namelessArgs.keySet())) {
-          Collection<ArgNode> availableArguments = namelessArgs.get(type);
-          int argsSize = availableArguments.size();
-          TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
-          if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-            ArgNode onlyArgument = availableArguments.iterator().next();
-            ParameterInfo candidateParameter = availableTypedParams.candidate();
-            onlyArgument.set(ParameterInfo.class, candidateParameter);
-            parametersPool.take(candidateParameter);
-            parameters.remove(candidateParameter);
-          } else {
-            String message = ambiguousAssignmentErrorMessage(
-                call, availableArguments, availableTypedParams);
-            errors.add(new ParseError(call, message));
-            return true;
-          }
-        }
-        return false;
-      }
+  public void run() {
+    List<? extends ParameterInfo> parametersList = functionParameters(call);
+    if (parametersList == null) {
+      return;
+    }
+    Set<ParameterInfo> parameters = new HashSet<>(parametersList);
+    if (assignNamedArguments(call, parameters)) {
+      return;
+    }
+    if (assignNamelessArguments(call, parameters)) {
+      return;
+    }
+    failWhenUnassignedRequiredParameterIsLeft(errors, call, parameters);
+  }
 
-      private void failWhenUnassignedRequiredParameterIsLeft(List<ParseError> errors, CallNode call,
-          Set<ParameterInfo> parameters) {
-        Set<ParameterInfo> unassignedRequiredParameters = filter(parameters, p -> p.isRequired());
-        if (!unassignedRequiredParameters.isEmpty()) {
-          errors.add(new ParseError(call,
-              missingRequiredArgsMessage(call, unassignedRequiredParameters)));
-          return;
-        }
+  private List<? extends ParameterInfo> functionParameters(CallNode call) {
+    String name = call.name();
+    if (functions.contains(name)) {
+      return functions.get(name).signature().parameters();
+    }
+    if (ast.containsFunc(name)) {
+      FuncNode func = ast.func(name);
+      if (func.has(List.class)) {
+        return func.get(List.class);
       }
-
-      private String missingRequiredArgsMessage(CallNode call,
-          Set<ParameterInfo> missingRequiredParameters) {
-        return "Not all parameters required by '" + call.name()
-            + "' function has been specified.\n"
-            + "Missing required parameters:\n"
-            + ParameterInfo.iterableToString(missingRequiredParameters)
-            + "All correct 'parameters <- arguments' assignments:\n"
-            + ArgsStringHelper.assignedArgsToString(call);
+    }
+    if (ast.containsStruct(name)) {
+      StructNode struct = ast.struct(name);
+      if (struct.has(List.class)) {
+        return struct.get(List.class);
       }
+    }
+    throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
+  }
 
-      private String ambiguousAssignmentErrorMessage(CallNode call,
-          Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
-        String assignmentList = assignedArgsToString(call);
-        if (availableTypedParams.isEmpty()) {
-          return "Can't find parameter(s) of proper type in '"
-              + call.name()
-              + "' function for some nameless argument(s):\n"
-              + "List of assignments that were successfully detected so far is following:\n"
-              + assignmentList
-              + "List of arguments for which no parameter could be found is following:\n"
-              + argsToString(availableArgs);
-        } else {
-          return "Can't decide unambiguously to which parameters in '" + call.name()
-              + "' function some nameless arguments should be assigned:\n"
-              + "List of assignments that were successfully detected is following:\n"
-              + assignmentList
-              + "List of nameless arguments that caused problems:\n"
-              + argsToString(availableArgs)
-              + "List of unassigned parameters of desired type is following:\n"
-              + availableTypedParams.toFormattedString();
-        }
+  private boolean assignNamedArguments(CallNode call,
+      Set<ParameterInfo> parameters) {
+    boolean failed = false;
+    List<ArgNode> namedArgs = filter(call.args(), ArgNode::hasName);
+    Map<String, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
+    for (ArgNode arg : namedArgs) {
+      ParameterInfo parameter = map.get(arg.name());
+      Type paramType = parameter.type();
+      if (paramType.isAssignableFrom(arg.get(Type.class))) {
+        arg.set(ParameterInfo.class, parameter);
+        parameters.remove(parameter);
+      } else {
+        failed = true;
+        errors.add(new ParseError(arg,
+            "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
+                + arg.get(Type.class).name() + "' to '" + paramType.name() + "'."));
       }
+    }
+    return failed;
+  }
 
-    }.visitAst(ast);
-    return errors;
+  private boolean assignNamelessArguments(CallNode call, Set<ParameterInfo> parameters) {
+    ParametersPool parametersPool = new ParametersPool(
+        filter(parameters, not(ParameterInfo::isRequired)),
+        filter(parameters, ParameterInfo::isRequired));
+    ImmutableMultimap<Type, ArgNode> namelessArgs = call
+        .args()
+        .stream()
+        .filter(a -> !a.hasName())
+        .collect(toImmutableListMultimap(a -> a.get(Type.class), a -> a));
+    for (Type type : sortedTypes(namelessArgs.keySet())) {
+      Collection<ArgNode> availableArguments = namelessArgs.get(type);
+      int argsSize = availableArguments.size();
+      TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
+      if (argsSize == 1 && availableTypedParams.hasCandidate()) {
+        ArgNode onlyArgument = availableArguments.iterator().next();
+        ParameterInfo candidateParameter = availableTypedParams.candidate();
+        onlyArgument.set(ParameterInfo.class, candidateParameter);
+        parametersPool.take(candidateParameter);
+        parameters.remove(candidateParameter);
+      } else {
+        String message = ambiguousAssignmentErrorMessage(
+            call, availableArguments, availableTypedParams);
+        errors.add(new ParseError(call, message));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void failWhenUnassignedRequiredParameterIsLeft(List<ParseError> errors, CallNode call,
+      Set<ParameterInfo> parameters) {
+    Set<ParameterInfo> unassignedRequiredParameters = filter(parameters, p -> p.isRequired());
+    if (!unassignedRequiredParameters.isEmpty()) {
+      errors.add(new ParseError(call,
+          missingRequiredArgsMessage(call, unassignedRequiredParameters)));
+      return;
+    }
+  }
+
+  private String missingRequiredArgsMessage(CallNode call,
+      Set<ParameterInfo> missingRequiredParameters) {
+    return "Not all parameters required by '" + call.name()
+        + "' function has been specified.\n"
+        + "Missing required parameters:\n"
+        + ParameterInfo.iterableToString(missingRequiredParameters)
+        + "All correct 'parameters <- arguments' assignments:\n"
+        + ArgsStringHelper.assignedArgsToString(call);
+  }
+
+  private String ambiguousAssignmentErrorMessage(CallNode call,
+      Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
+    String assignmentList = assignedArgsToString(call);
+    if (availableTypedParams.isEmpty()) {
+      return "Can't find parameter(s) of proper type in '"
+          + call.name()
+          + "' function for some nameless argument(s):\n"
+          + "List of assignments that were successfully detected so far is following:\n"
+          + assignmentList
+          + "List of arguments for which no parameter could be found is following:\n"
+          + argsToString(availableArgs);
+    } else {
+      return "Can't decide unambiguously to which parameters in '" + call.name()
+          + "' function some nameless arguments should be assigned:\n"
+          + "List of assignments that were successfully detected is following:\n"
+          + assignmentList
+          + "List of nameless arguments that caused problems:\n"
+          + argsToString(availableArgs)
+          + "List of unassigned parameters of desired type is following:\n"
+          + availableTypedParams.toFormattedString();
+    }
   }
 }
