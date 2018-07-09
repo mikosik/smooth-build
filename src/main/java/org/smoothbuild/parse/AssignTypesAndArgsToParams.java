@@ -72,8 +72,8 @@ public class AssignTypesAndArgsToParams {
       public void visitField(FieldNode field) {
         super.visitField(field);
         field.set(Type.class, field.type().get(Type.class));
-        ParameterInfo info = new ParameterInfo(field.get(Type.class), field.name(), true);
-        field.set(ParameterInfo.class, info);
+        field.set(ParameterInfo.class,
+            new ParameterInfo(field.get(Type.class), field.name(), true));
       }
 
       @Override
