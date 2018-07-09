@@ -18,6 +18,17 @@ public class StructFieldTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void accessor_with_parentheses_causes_error() throws Exception {
+    givenScript("MyStruct {                                \n"
+        + "        String field,                           \n"
+        + "      }                                         \n"
+        + "      String result = MyStruct('abc').field();  \n");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContainsError(4, "extraneous input '(' expecting ");
+  }
+
+  @Test
   public void accessors_can_be_chained() throws Exception {
     givenScript("S1 {                                         \n"
         + "        S2 f1,                                     \n"
