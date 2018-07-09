@@ -1,9 +1,8 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.parse.AssignNatives.assignNatives;
-import static org.smoothbuild.parse.AssignTypes.assignTypes;
+import static org.smoothbuild.parse.AssignTypesAndArgsToParams.assignTypesAndArgsToParams;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
@@ -49,8 +48,7 @@ public class ModuleLoader {
         .invoke(ast -> findSemanticErrors(runtime, ast))
         .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
         .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
-        .invoke(ast -> assignTypes(runtime, ast))
-        .invoke(ast -> assignArgsToParams(runtime.functions(), ast))
+        .invoke(ast -> assignTypesAndArgsToParams(runtime, ast))
         .invoke(natives, (ast, n) -> assignNatives(ast, n))
         .invokeConsumer(ast -> loadFunctions(ast))
         .errors();
