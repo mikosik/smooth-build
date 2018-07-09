@@ -31,20 +31,24 @@ import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.util.Maybe;
 
 public class FindNatives {
-  public static Maybe<Map<String, Native>> findNatives(Path jarPath) {
+  public static Maybe<Natives> findNatives(Path jarPath) {
     if (!jarPath.toFile().exists()) {
-      return value(new HashMap<>());
+      return empty();
     }
     try {
       return find(jarFile(jarPath));
     } catch (FileNotFoundException e) {
-      return value(new HashMap<>());
+      return empty();
     } catch (IOException e) {
       return Maybe.error("Cannot read native implementation file '" + jarPath + "'.");
     }
   }
 
-  private static Maybe<Map<String, Native>> find(JarFile jarFile) throws IOException {
+  private static Maybe<Natives> empty() {
+    return value(new Natives(new HashMap<>()));
+  }
+
+  private static Maybe<Natives> find(JarFile jarFile) throws IOException {
     List<String> errors = new ArrayList<>();
     Map<String, Native> result = new HashMap<>();
     JarInputStream jarInputStream = newJarInputStream(jarFile.path());
@@ -85,7 +89,7 @@ public class FindNatives {
         }
       }
     }
-    return maybe(result, errors);
+    return maybe(new Natives(result), errors);
   }
 
   private static boolean hasContainerParameter(Method method) {
