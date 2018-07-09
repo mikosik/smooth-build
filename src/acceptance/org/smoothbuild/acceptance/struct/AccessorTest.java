@@ -5,7 +5,7 @@ import static org.testory.Testory.thenEqual;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class StructFieldTest extends AcceptanceTestCase {
+public class AccessorTest extends AcceptanceTestCase {
   @Test
   public void struct_field_can_be_accessed_via_accessor() throws Exception {
     givenScript("MyStruct {                              \n"
