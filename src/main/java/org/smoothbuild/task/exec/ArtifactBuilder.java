@@ -32,7 +32,7 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function function) {
-    Expression expression = function.createCallExpression(Location.commandLine());
+    Expression expression = function.createCallExpression(Location.unknownLocation());
     Dag<Task> task = taskBatch.createTasks(new Dag<>(expression));
     artifacts.put(function.name(), task);
   }

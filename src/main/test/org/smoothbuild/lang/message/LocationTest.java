@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.lang.message.Location.commandLine;
 import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -42,7 +42,7 @@ public class LocationTest {
   public void equals_and_hash_code() throws Exception {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(commandLine(), commandLine());
+    tester.addEqualityGroup(unknownLocation(), unknownLocation());
     tester.addEqualityGroup(location(Paths.get("abc"), 7), location(Paths.get("abc"), 7));
     tester.addEqualityGroup(location(Paths.get("abc"), 11), location(Paths.get("abc"), 11));
     tester.addEqualityGroup(location(Paths.get("def"), 11), location(Paths.get("def"), 11));
@@ -59,8 +59,8 @@ public class LocationTest {
 
   @Test
   public void command_line_code_location_to_string() throws Exception {
-    given(location = commandLine());
+    given(location = unknownLocation());
     when(location.toString());
-    thenReturned("cmd line");
+    thenReturned("unknown location");
   }
 }

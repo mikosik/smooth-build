@@ -9,7 +9,7 @@ public class Location {
   private final Path file;
   private final int line;
 
-  public static Location commandLine() {
+  public static Location unknownLocation() {
     return new Location(null, 1);
   }
 
@@ -51,7 +51,7 @@ public class Location {
   @Override
   public String toString() {
     if (file == null) {
-      return "cmd line";
+      return "unknown location";
     } else {
       return file + ":" + line;
     }
