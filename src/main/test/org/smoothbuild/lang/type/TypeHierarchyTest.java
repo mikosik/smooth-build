@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Collections2.permutations;
-import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
@@ -10,7 +9,7 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.value.TestingStructType;
 
 public class TypeHierarchyTest {
   private final TypesDb typesDb = new TestingTypesDb();
@@ -78,8 +77,6 @@ public class TypeHierarchyTest {
   }
 
   private StructType personType() {
-    return typesDb.struct("Person", list(
-        new Field(string, "firstName", unknownLocation()),
-        new Field(string, "lastName", unknownLocation())));
+    return TestingStructType.personType(typesDb);
   }
 }

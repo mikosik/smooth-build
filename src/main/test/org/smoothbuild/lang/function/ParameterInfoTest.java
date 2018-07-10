@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.function;
 
-import static org.smoothbuild.lang.message.Location.unknownLocation;
-import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -15,6 +13,7 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
+import org.smoothbuild.lang.value.TestingStructType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
@@ -104,8 +103,6 @@ public class ParameterInfoTest {
   }
 
   private StructType personType() {
-    return typesDb.struct("Person", list(
-        new Field(string, "firstName", unknownLocation()),
-        new Field(string, "lastName", unknownLocation())));
+    return TestingStructType.personType(typesDb);
   }
 }

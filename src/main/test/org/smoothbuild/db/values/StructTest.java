@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
@@ -15,14 +14,13 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
+import org.smoothbuild.lang.value.TestingStructType;
 
 import com.google.common.hash.HashCode;
 
@@ -238,9 +236,6 @@ public class StructTest {
   }
 
   private StructType personType() {
-    Type string = typesDb.string();
-    return typesDb.struct("Person", list(
-        new Field(string, "firstName", unknownLocation()),
-        new Field(string, "lastName", unknownLocation())));
+    return TestingStructType.personType(typesDb);
   }
 }
