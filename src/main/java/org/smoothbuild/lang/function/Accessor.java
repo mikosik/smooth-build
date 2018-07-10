@@ -18,6 +18,6 @@ public class Accessor extends Function {
 
   @Override
   public Expression createCallExpression(Location location) {
-    return new AccessorCallExpression(this, location());
+    return new AccessorCallExpression(this, location);
   }
 }
