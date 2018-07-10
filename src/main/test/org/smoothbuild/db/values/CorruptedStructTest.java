@@ -1,5 +1,7 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -9,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -16,7 +19,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class CorruptedStructTest {
@@ -91,6 +93,8 @@ public class CorruptedStructTest {
 
   private StructType personType() {
     Type string = typesDb.string();
-    return typesDb.struct("Person", ImmutableMap.of("firstName", string, "lastName", string));
+    return typesDb.struct("Person", list(
+        new Field(string, "firstName", unknownLocation()),
+        new Field(string, "lastName", unknownLocation())));
   }
 }

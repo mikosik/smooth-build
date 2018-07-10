@@ -1,13 +1,15 @@
 package org.smoothbuild.lang.message;
 
+import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
+
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
-
-import com.google.common.collect.ImmutableMap;
 
 public class TestingMessagesDb extends MessagesDb {
   public TestingMessagesDb() {
@@ -20,6 +22,8 @@ public class TestingMessagesDb extends MessagesDb {
 
   public TestingMessagesDb(ValuesDb valuesDb, RuntimeTypes types) {
     super(valuesDb, types);
-    types.struct("Message", ImmutableMap.of(TEXT, types.string(), SEVERITY, types.string()));
+    types.struct("Message", list(
+        new Field(types.string(), TEXT, unknownLocation()),
+        new Field(types.string(), SEVERITY, unknownLocation())));
   }
 }

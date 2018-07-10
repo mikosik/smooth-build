@@ -1,7 +1,9 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
@@ -21,7 +24,6 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.StructBuilder;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class StructTest {
@@ -113,7 +115,7 @@ public class StructTest {
 
   @Test
   public void super_value_is_null_when_struct_type_has_no_fields() throws Exception {
-    given(struct = valuesDb.structBuilder(typesDb.struct("MyStruct", ImmutableMap.of())).build());
+    given(struct = valuesDb.structBuilder(typesDb.struct("MyStruct", list())).build());
     when(() -> struct.superValue());
     thenReturned(null);
   }
@@ -237,6 +239,8 @@ public class StructTest {
 
   private StructType personType() {
     Type string = typesDb.string();
-    return typesDb.struct("Person", ImmutableMap.of("firstName", string, "lastName", string));
+    return typesDb.struct("Person", list(
+        new Field(string, "firstName", unknownLocation()),
+        new Field(string, "lastName", unknownLocation())));
   }
 }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -16,12 +17,12 @@ import org.quackery.Case;
 import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 
 @RunWith(QuackeryRunner.class)
@@ -632,8 +633,9 @@ public class TypesTest {
   }
 
   private static StructType personType() {
-    return typesDb.struct(
-        "Person", ImmutableMap.of("firstName", string, "lastName", string));
+    return typesDb.struct("Person", list(
+        new Field(string, "firstName", unknownLocation()),
+        new Field(string, "lastName", unknownLocation())));
   }
 
   private static ArrayType array2(Type elemType) {

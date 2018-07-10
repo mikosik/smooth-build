@@ -1,12 +1,16 @@
 package org.smoothbuild.lang.runtime;
 
-import org.smoothbuild.lang.type.TypesDb;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
 
-import com.google.common.collect.ImmutableMap;
+import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.type.TypesDb;
 
 public class TestingRuntimeTypes extends RuntimeTypes {
   public TestingRuntimeTypes(TypesDb typesDb) {
     super(typesDb);
-    struct("File", ImmutableMap.of("content", blob(), "path", string()));
+    struct("File", list(
+        new Field(blob(), "content", unknownLocation()),
+        new Field(string(), "path", unknownLocation())));
   }
 }

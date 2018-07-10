@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -43,7 +43,7 @@ public class Struct extends Value {
   private ImmutableMap<String, Value> fields() {
     if (fields == null) {
       List<HashCode> hashes = hashedDb.readHashes(dataHash());
-      ImmutableMap<String, Type> fieldTypes = type().fields();
+      ImmutableMap<String, Field> fieldTypes = type().fields();
       if (hashes.size() != fieldTypes.size()) {
         throw new CorruptedValueException(hash(), "Its type is " + type() + " with "
             + fieldTypes.size() + " fields but its data hash Merkle tree contains "
@@ -51,9 +51,9 @@ public class Struct extends Value {
       }
       int i = 0;
       Builder<String, Value> builder = ImmutableMap.builder();
-      for (Map.Entry<String, Type> entry : fieldTypes.entrySet()) {
+      for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
         Value value = instantiator.instantiate(hashes.get(i));
-        if (!entry.getValue().equals(value.type())) {
+        if (!entry.getValue().type().equals(value.type())) {
           throw new CorruptedValueException(hash(),
               "Its type specifies field '" + entry.getKey() + "' with type " + entry.getValue()
                   + " but its data has value of type " + value.type() + " assigned to that field.");

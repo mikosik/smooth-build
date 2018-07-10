@@ -8,6 +8,7 @@ import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
@@ -24,7 +25,6 @@ import org.smoothbuild.lang.function.NativeFunction;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class ComputationHashesTest {
@@ -44,8 +44,7 @@ public class ComputationHashesTest {
     given(function = mock(NativeFunction.class));
     given(willReturn(Hash.integer(0)), function).hash();
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TestingTypesDb()
-        .struct("MyStruct2", ImmutableMap.of())), constructor).type();
+    given(willReturn(new TestingTypesDb().struct("MyStruct2", list())), constructor).type();
     given(accessor = mock(Accessor.class));
     given(willReturn("myField"), accessor).fieldName();
     given(value = mock(Value.class));
@@ -93,11 +92,9 @@ public class ComputationHashesTest {
   public void constructor_call_computation_has_different_hash_for_different_types()
       throws Exception {
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TestingTypesDb()
-        .struct("MyStruct1", ImmutableMap.of())), constructor).type();
+    given(willReturn(new TestingTypesDb().struct("MyStruct1", list())), constructor).type();
     given(constructor2 = mock(Constructor.class));
-    given(willReturn(new TestingTypesDb()
-        .struct("MyStruct2", ImmutableMap.of())), constructor2).type();
+    given(willReturn(new TestingTypesDb().struct("MyStruct2", list())), constructor2).type();
     when(constructorCallComputationHash(constructor));
     thenReturned(not(constructorCallComputationHash(constructor2)));
   }
