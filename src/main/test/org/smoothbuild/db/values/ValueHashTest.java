@@ -1,7 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.lang.message.Location.unknownLocation;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -11,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
@@ -19,6 +16,7 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.TestingStructType;
 
 import com.google.common.hash.HashCode;
 
@@ -146,8 +144,6 @@ public class ValueHashTest {
   }
 
   private StructType personType() {
-    return typesDb.struct("Person", list(
-        new Field(typesDb.string(), "firstName", unknownLocation()),
-        new Field(typesDb.string(), "lastName", unknownLocation())));
+    return TestingStructType.personType(typesDb);
   }
 }
