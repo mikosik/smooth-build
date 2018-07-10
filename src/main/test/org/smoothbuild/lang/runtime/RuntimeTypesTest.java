@@ -2,6 +2,8 @@ package org.smoothbuild.lang.runtime;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -12,12 +14,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
-
-import com.google.common.collect.ImmutableMap;
 
 public class RuntimeTypesTest {
   private HashedDb hashedDb;
@@ -62,7 +63,7 @@ public class RuntimeTypesTest {
 
   @Test
   public void names_contain_name_of_struct_that_was_added_before() throws Exception {
-    given(runtimeTypes).struct("MyStruct", ImmutableMap.of());
+    given(runtimeTypes).struct("MyStruct", list());
     when(() -> runtimeTypes.names());
     thenReturned(hasItem("MyStruct"));
   }
@@ -83,7 +84,7 @@ public class RuntimeTypesTest {
 
   @Test
   public void names_to_type_mape_contains_name_of_struct_that_was_added_before() throws Exception {
-    given(runtimeTypes).struct("MyStruct", ImmutableMap.of());
+    given(runtimeTypes).struct("MyStruct", list());
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(hasItem("MyStruct"));
   }
@@ -138,21 +139,23 @@ public class RuntimeTypesTest {
 
   @Test
   public void custom_struct_type_can_be_retrieved_by_name() throws Exception {
-    given(type = runtimeTypes.struct("MyStruct", ImmutableMap.of("field", typesDb.string())));
+    given(type = runtimeTypes.struct(
+        "MyStruct", list(new Field(typesDb.string(), "field", unknownLocation()))));
     when(() -> runtimeTypes.getType("MyStruct"));
     thenReturned(type);
   }
 
   @Test
   public void reusing_struct_name_causes_exception() throws Exception {
-    given(type = runtimeTypes.struct("MyStruct", ImmutableMap.of("field", typesDb.string())));
-    when(() -> runtimeTypes.struct("MyStruct", ImmutableMap.of()));
+    given(type = runtimeTypes.struct(
+        "MyStruct", list(new Field(typesDb.string(), "field", unknownLocation()))));
+    when(() -> runtimeTypes.struct("MyStruct", list()));
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void reusing_basic_type_name_as_struct_name_causes_exception() throws Exception {
-    when(() -> runtimeTypes.struct("String", ImmutableMap.of()));
+    when(() -> runtimeTypes.struct("String", list()));
     thenThrown(IllegalStateException.class);
   }
 

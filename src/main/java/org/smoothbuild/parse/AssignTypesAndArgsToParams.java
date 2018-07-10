@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.function.Function;
 import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.function.Scope;
@@ -34,7 +35,6 @@ import org.smoothbuild.parse.ast.TypeNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableMap;
 
 public class AssignTypesAndArgsToParams {
   public static List<ParseError> assignTypesAndArgsToParams(SRuntime runtime, Ast ast) {
@@ -50,16 +50,16 @@ public class AssignTypesAndArgsToParams {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
-        ImmutableMap.Builder<String, Type> builder = ImmutableMap.builder();
+        List<Field> fields = new ArrayList<>();
         for (FieldNode field : struct.fields()) {
           Type type = field.get(Type.class);
           if (type == null) {
             return;
           } else {
-            builder.put(field.name(), type);
+            fields.add(new Field(type, field.name(), field.location()));
           }
         }
-        Type type = types.struct(struct.name(), builder.build());
+        Type type = types.struct(struct.name(), fields);
         struct.set(Type.class, type);
         functionTypes.put(struct.name(), type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
@@ -188,7 +188,7 @@ public class AssignTypesAndArgsToParams {
         } else {
           if (exprType instanceof StructType
               && ((StructType) exprType).fields().containsKey(expr.fieldName())) {
-            expr.set(Type.class, ((StructType) exprType).fields().get(expr.fieldName()));
+            expr.set(Type.class, ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
             expr.set(Type.class, null);
             errors.add(new ParseError(expr.location(), "Type '" + exprType.name()

@@ -1,11 +1,13 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.function.Field;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class TypeHashTest {
@@ -24,8 +26,9 @@ public class TypeHashTest {
   }
 
   private StructType structType(TypesDb typesDb) {
-    return typesDb.struct("NewType",
-        ImmutableMap.of("name", typesDb.string(), "data", typesDb.blob()));
+    return typesDb.struct("NewType", list(
+        new Field(typesDb.string(), "name", unknownLocation()),
+        new Field(typesDb.blob(), "data", unknownLocation())));
   }
 
   private void assertHash(Type type, String hash) {

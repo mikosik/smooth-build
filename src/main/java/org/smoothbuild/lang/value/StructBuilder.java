@@ -25,7 +25,7 @@ public class StructBuilder {
 
   public StructBuilder set(String name, Value value) {
     checkArgument(type.fields().containsKey(name), name);
-    checkArgument(type.fields().get(name).equals(value.type()));
+    checkArgument(type.fields().get(name).type().equals(value.type()));
     fields.put(name, value);
     return this;
   }

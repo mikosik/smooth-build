@@ -10,13 +10,12 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.lang.function.Field;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
-
-import com.google.common.collect.ImmutableMap;
 
 @Singleton
 public class RuntimeTypes implements Types {
@@ -86,7 +85,7 @@ public class RuntimeTypes implements Types {
     return type;
   }
 
-  public StructType struct(String name, ImmutableMap<String, Type> fields) {
+  public StructType struct(String name, Iterable<Field> fields) {
     if (cache.containsKey(name)) {
       throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
     }

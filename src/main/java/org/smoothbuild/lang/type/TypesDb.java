@@ -1,10 +1,13 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +16,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
+import org.smoothbuild.lang.function.Field;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
 public class TypesDb {
@@ -75,17 +78,15 @@ public class TypesDb {
     return elementType == null ? null : array(elementType);
   }
 
-  public StructType struct(String name, ImmutableMap<String, Type> fields) {
+  public StructType struct(String name, Iterable<Field> fields) {
     HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
     return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb));
   }
 
-  private HashCode writeFields(ImmutableMap<String, Type> fields) {
+  private HashCode writeFields(Iterable<Field> fields) {
     return hashedDb.writeHashes(
-        fields
-            .entrySet()
-            .stream()
-            .map(f -> writeField(f.getKey(), f.getValue()))
+        stream(fields)
+            .map(f -> writeField(f.name(), f.type()))
             .toArray(HashCode[]::new));
   }
 
@@ -137,24 +138,24 @@ public class TypesDb {
       if (isGenericTypeName(name)) {
         return generic(name);
       } else {
-        ImmutableMap<String, Type> fields = readFields(unmarshaller.readHash());
+        Iterable<Field> fields = readFields(unmarshaller.readHash());
         return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
       }
     }
   }
 
-  private ImmutableMap<String, Type> readFields(HashCode hash) {
-    ImmutableMap.Builder<String, Type> builder = ImmutableMap.builder();
+  private Iterable<Field> readFields(HashCode hash) {
+    List<Field> result = new ArrayList<>();
     for (HashCode fieldHash : hashedDb.readHashes(hash)) {
       List<HashCode> hashes = hashedDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
         throw newCorruptedMerkleRootException(hash, hashes.size());
       }
-      String fieldName = hashedDb.readString(hashes.get(0));
-      Type fieldType = read(hashes.get(1));
-      builder.put(fieldName, fieldType);
+      String name = hashedDb.readString(hashes.get(0));
+      Type type = read(hashes.get(1));
+      result.add(new Field(type, name, unknownLocation()));
     }
-    return builder.build();
+    return result;
   }
 
   private <T extends Type> T cache(T type) {
