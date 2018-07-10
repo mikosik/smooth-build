@@ -11,16 +11,16 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArgumentTest extends AcceptanceTestCase {
   @Test
   public void trailing_comma_in_argument_list() throws IOException {
-    givenScript("func(String string) = string;"
-        + "      result = func(string='abc',) ;");
+    givenScript("func(String string) = string;     \n"
+        + "      result = func(string='abc',);     \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
 
   @Test
   public void arguments_can_be_passed_in_the_same_order_as_parameters() throws Exception {
-    givenScript("returnFirst(String a, String b) = a;"
-        + "      result = returnFirst(a='abc', b='def') ;");
+    givenScript("returnFirst(String a, String b) = a;     \n"
+        + "      result = returnFirst(a='abc', b='def');  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -28,8 +28,8 @@ public class ArgumentTest extends AcceptanceTestCase {
 
   @Test
   public void arguments_can_be_passed_in_reversed_order_of_parameters() throws Exception {
-    givenScript("returnFirst(String a, String b) = a;"
-        + "result = returnFirst(b='def', a='abc') ;");
+    givenScript("returnFirst(String a, String b) = a;      \n"
+        + "      result = returnFirst(b='def', a='abc');   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
