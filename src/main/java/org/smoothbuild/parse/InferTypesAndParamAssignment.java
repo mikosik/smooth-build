@@ -33,8 +33,8 @@ import org.smoothbuild.parse.ast.TypeNode;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class AssignTypesAndArgsToParams {
-  public static List<ParseError> assignTypesAndArgsToParams(SRuntime runtime, Ast ast) {
+public class InferTypesAndParamAssignment {
+  public static List<ParseError> inferTypesAndParamAssignment(SRuntime runtime, Ast ast) {
     RuntimeTypes types = runtime.types();
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
