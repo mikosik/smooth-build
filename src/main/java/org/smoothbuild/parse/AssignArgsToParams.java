@@ -47,6 +47,7 @@ public class AssignArgsToParams {
   }
 
   public void run() {
+    call.set(Type.class, callType(call));
     List<? extends ParameterInfo> parametersList = functionParameters(call);
     if (parametersList == null) {
       return;
@@ -72,6 +73,21 @@ public class AssignArgsToParams {
     }
     if (ast.containsStruct(name)) {
       return ast.struct(name).get(List.class);
+    }
+    throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
+  }
+
+  private Type callType(CallNode call) {
+    String name = call.name();
+    Functions functions = runtime.functions();
+    if (functions.contains(name)) {
+      return functions.get(name).signature().type();
+    }
+    if (ast.containsFunc(name)) {
+      return ast.func(name).get(Type.class);
+    }
+    if (ast.containsStruct(name)) {
+      return ast.struct(name).get(Type.class);
     }
     throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
   }

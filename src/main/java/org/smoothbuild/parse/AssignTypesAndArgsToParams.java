@@ -1,16 +1,13 @@
 package org.smoothbuild.parse;
 
-import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.function.Scope.scope;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.smoothbuild.lang.function.Field;
-import org.smoothbuild.lang.function.Function;
 import org.smoothbuild.lang.function.ParameterInfo;
 import org.smoothbuild.lang.function.Scope;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
@@ -40,10 +37,6 @@ public class AssignTypesAndArgsToParams {
   public static List<ParseError> assignTypesAndArgsToParams(SRuntime runtime, Ast ast) {
     RuntimeTypes types = runtime.types();
     List<ParseError> errors = new ArrayList<>();
-    Map<String, Type> functionTypes = runtime.functions()
-        .all()
-        .stream()
-        .collect(toMap(Function::name, Function::type));
     new AstVisitor() {
       Scope<Type> scope;
 
@@ -61,7 +54,6 @@ public class AssignTypesAndArgsToParams {
         }
         Type type = types.struct(struct.name(), fields);
         struct.set(Type.class, type);
-        functionTypes.put(struct.name(), type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
           struct.set(List.class, parameters);
@@ -91,7 +83,6 @@ public class AssignTypesAndArgsToParams {
 
         Type type = funcType(func);
         func.set(Type.class, type);
-        functionTypes.put(func.name(), type);
         List<ParameterInfo> parameters = createParameters(func.params());
         if (parameters != null) {
           func.set(List.class, parameters);
@@ -236,7 +227,6 @@ public class AssignTypesAndArgsToParams {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         assignArgsToParams(runtime, ast, call, errors);
-        call.set(Type.class, functionTypes.get(call.name()));
       }
 
       @Override
