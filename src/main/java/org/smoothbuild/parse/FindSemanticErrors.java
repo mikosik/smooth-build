@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.runtime.Functions;
@@ -118,21 +117,13 @@ public class FindSemanticErrors {
 
       @Override
       public void visitField(FieldNode field) {
-        assertFieldTypeIsDefined(field.type());
+        assertTypeIsDefined(field.type());
       }
 
       private void assertTypeIsDefined(TypeNode type) {
-        assertTypeIsKnown(type, (String name) -> isGenericTypeName(name) || all.contains(name));
-      }
-
-      private void assertFieldTypeIsDefined(TypeNode type) {
-        assertTypeIsKnown(type, (String name) -> isGenericTypeName(name) || all.contains(name));
-      }
-
-      private void assertTypeIsKnown(TypeNode type, Predicate<String> isKnown) {
         if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
-        } else if (!isKnown.test(type.name())) {
+        } else if (!(isGenericTypeName(type.name()) || all.contains(type.name()))) {
           errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
         }
       }
