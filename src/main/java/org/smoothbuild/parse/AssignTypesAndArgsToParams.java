@@ -132,10 +132,10 @@ public class AssignTypesAndArgsToParams {
       private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
         Builder<ParameterInfo> builder = ImmutableList.builder();
         for (NamedNode param : params) {
-          if (param.has(ParameterInfo.class)) {
-            builder.add(param.get(ParameterInfo.class));
-          } else {
+          if (param.get(ParameterInfo.class) == null) {
             return null;
+          } else {
+            builder.add(param.get(ParameterInfo.class));
           }
         }
         return builder.build();
@@ -146,7 +146,9 @@ public class AssignTypesAndArgsToParams {
         super.visitParam(param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
-        if (type != null) {
+        if (type == null) {
+          param.set(ParameterInfo.class, null);
+        } else {
           ParameterInfo info = new ParameterInfo(
               param.get(Type.class), param.name(), !param.hasDefaultValue());
           param.set(ParameterInfo.class, info);

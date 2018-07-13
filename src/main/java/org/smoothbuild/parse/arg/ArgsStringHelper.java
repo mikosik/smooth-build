@@ -37,7 +37,7 @@ public class ArgsStringHelper {
     return call
         .args()
         .stream()
-        .filter(a -> a.has(ParameterInfo.class))
+        .filter(a -> a.get(ParameterInfo.class) != null)
         .collect(toMap(a -> a.get(ParameterInfo.class), Function.identity()));
   }
 
