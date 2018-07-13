@@ -25,8 +25,6 @@ import org.smoothbuild.parse.arg.TypedParametersPool;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.StructNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
@@ -70,16 +68,10 @@ public class AssignArgsToParams {
       return functions.get(name).signature().parameters();
     }
     if (ast.containsFunc(name)) {
-      FuncNode func = ast.func(name);
-      if (func.has(List.class)) {
-        return func.get(List.class);
-      }
+      return ast.func(name).get(List.class);
     }
     if (ast.containsStruct(name)) {
-      StructNode struct = ast.struct(name);
-      if (struct.has(List.class)) {
-        return struct.get(List.class);
-      }
+      return ast.struct(name).get(List.class);
     }
     throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
   }
