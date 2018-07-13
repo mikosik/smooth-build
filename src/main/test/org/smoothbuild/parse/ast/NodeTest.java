@@ -36,19 +36,4 @@ public class NodeTest {
     when(() -> node.get(String.class));
     thenThrown(NoSuchElementException.class);
   }
-
-  @Test
-  public void has_return_false_for_nonexistent_attribute() throws Exception {
-    given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    when(() -> node.has(String.class));
-    thenReturned(false);
-  }
-
-  @Test
-  public void has_returns_true_for_existing_attribute() throws Exception {
-    given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    given(node).set(String.class, "abc");
-    when(() -> node.has(String.class));
-    thenReturned(true);
-  }
 }

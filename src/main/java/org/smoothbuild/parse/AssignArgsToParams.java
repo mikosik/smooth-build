@@ -118,6 +118,7 @@ public class AssignArgsToParams {
         parametersPool.take(candidateParameter);
         parameters.remove(candidateParameter);
       } else {
+        availableArguments.stream().forEach(a -> a.set(ParameterInfo.class, null));
         String message = ambiguousAssignmentErrorMessage(
             call, availableArguments, availableTypedParams);
         errors.add(new ParseError(call, message));

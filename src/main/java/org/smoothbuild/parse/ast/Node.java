@@ -29,10 +29,6 @@ public class Node {
     map().put(clazz, value);
   }
 
-  public boolean has(Class<?> clazz) {
-    return map().containsKey(clazz);
-  }
-
   private Map<Class<?>, Object> map() {
     if (map == null) {
       map = new HashMap<>();
