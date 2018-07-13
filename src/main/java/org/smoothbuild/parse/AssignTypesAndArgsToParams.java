@@ -170,8 +170,7 @@ public class AssignTypesAndArgsToParams {
       private Type createType(TypeNode type) {
         if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
-          Type inferredElemType = createType(elementType);
-          return inferredElemType == null ? null : types.array(inferredElemType);
+          return types.array(createType(elementType));
         }
         if (isGenericTypeName(type.name())) {
           return types.generic(type.name());
