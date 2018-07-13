@@ -28,8 +28,8 @@ import org.smoothbuild.parse.ast.CallNode;
 
 import com.google.common.collect.ImmutableMultimap;
 
-public class AssignArgsToParams {
-  public static void assignArgsToParams(SRuntime runtime, Ast ast, CallNode call,
+public class InferCallTypeAndParamAssignment {
+  public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime, Ast ast,
       List<ParseError> errors) {
     new Runnable() {
       @Override

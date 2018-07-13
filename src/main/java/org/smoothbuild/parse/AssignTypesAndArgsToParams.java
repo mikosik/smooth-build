@@ -2,7 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.function.Scope.scope;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
-import static org.smoothbuild.parse.AssignArgsToParams.assignArgsToParams;
+import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,7 +226,7 @@ public class AssignTypesAndArgsToParams {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        assignArgsToParams(runtime, ast, call, errors);
+        inferCallTypeAndParamAssignment(call, runtime, ast, errors);
       }
 
       @Override
