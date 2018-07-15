@@ -7,7 +7,7 @@ import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationH
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.smoothbuild.lang.function.NativeFunction;
+import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.Type;

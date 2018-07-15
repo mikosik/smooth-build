@@ -16,7 +16,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
 

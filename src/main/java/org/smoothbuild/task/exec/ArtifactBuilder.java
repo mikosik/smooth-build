@@ -9,8 +9,8 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.function.Function;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;

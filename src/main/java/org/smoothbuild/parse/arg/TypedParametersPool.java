@@ -2,7 +2,7 @@ package org.smoothbuild.parse.arg;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.base.ParameterInfo;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;

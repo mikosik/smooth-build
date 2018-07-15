@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.Expression;

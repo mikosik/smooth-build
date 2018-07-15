@@ -11,9 +11,9 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Field;
-import org.smoothbuild.lang.function.Parameter;
-import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;

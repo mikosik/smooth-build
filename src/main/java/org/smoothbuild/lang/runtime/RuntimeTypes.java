@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;

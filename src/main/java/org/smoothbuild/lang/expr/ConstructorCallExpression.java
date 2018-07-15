@@ -5,8 +5,8 @@ import static org.smoothbuild.task.base.Evaluator.constructorCallEvaluator;
 import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.Constructor;
-import org.smoothbuild.lang.function.Scope;
+import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;

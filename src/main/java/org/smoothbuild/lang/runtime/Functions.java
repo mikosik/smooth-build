@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.base.Function;
 
 public class Functions {
   private final Map<String, Function> functions;

@@ -7,7 +7,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
 

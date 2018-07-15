@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.base;
 
 import static org.hamcrest.Matchers.contains;
-import static org.smoothbuild.lang.function.ParameterOrdering.PARAMETER_ORDERING;
+import static org.smoothbuild.lang.base.ParameterOrdering.PARAMETER_ORDERING;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;

@@ -2,8 +2,8 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.constructorCallComputationHash;
 
-import org.smoothbuild.lang.function.Constructor;
-import org.smoothbuild.lang.function.Parameter;
+import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.StructBuilder;
 import org.smoothbuild.task.exec.Container;

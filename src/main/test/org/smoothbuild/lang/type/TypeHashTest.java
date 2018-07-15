@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
 

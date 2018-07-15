@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.task.base.ComputationHashes.accessorCallComputationHash;
 
-import org.smoothbuild.lang.function.Accessor;
+import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;

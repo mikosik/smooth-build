@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.Scope;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
