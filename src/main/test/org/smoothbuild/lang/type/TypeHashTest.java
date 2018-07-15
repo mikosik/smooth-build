@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;

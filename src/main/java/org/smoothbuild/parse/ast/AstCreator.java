@@ -29,7 +29,7 @@ import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.StructContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 public class AstCreator {
   public static Ast fromParseTree(Path file, ModuleContext module) {

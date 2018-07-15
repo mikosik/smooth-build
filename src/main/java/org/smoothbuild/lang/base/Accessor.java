@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.Location;
 
 public class Accessor extends Function {
   private final String fieldName;

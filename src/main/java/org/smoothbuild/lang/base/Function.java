@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Named;
 

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -17,7 +17,7 @@ import org.quackery.Case;
 import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 @RunWith(QuackeryRunner.class)
 public class TypeNodeTest {

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.ThoroughTypeMatcher.typeMatchingThoroughly;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;

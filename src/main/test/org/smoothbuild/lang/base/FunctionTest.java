@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 

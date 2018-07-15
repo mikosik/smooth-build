@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 import com.google.common.testing.EqualsTester;
 

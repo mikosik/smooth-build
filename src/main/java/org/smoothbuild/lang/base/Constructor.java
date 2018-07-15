@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.StructType;
 
 public class Constructor extends Function {

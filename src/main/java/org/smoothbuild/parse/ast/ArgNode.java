@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.padEnd;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.Ordering;

@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.db.hashed.Hash.newHasher;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.exec.Container;
 
