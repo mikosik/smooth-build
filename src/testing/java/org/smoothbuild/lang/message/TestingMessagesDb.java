@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.HashedDb;

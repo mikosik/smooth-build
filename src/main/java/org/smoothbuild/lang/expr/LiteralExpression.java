@@ -6,8 +6,8 @@ import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;

@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.message.TestingMessagesDb;

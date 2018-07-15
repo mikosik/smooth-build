@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Named;
 

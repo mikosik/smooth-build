@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;

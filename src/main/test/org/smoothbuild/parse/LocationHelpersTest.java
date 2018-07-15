@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 public class LocationHelpersTest {
   private int line;

@@ -1,6 +1,6 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
@@ -26,7 +26,7 @@ import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.util.Maybe;
 
 public class ScriptParser {

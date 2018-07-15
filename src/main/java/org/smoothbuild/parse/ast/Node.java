@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 public class Node {
   private final Location location;

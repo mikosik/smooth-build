@@ -3,7 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.parse.ast.Node;
 
 public class ParseError {

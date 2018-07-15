@@ -3,7 +3,7 @@ package org.smoothbuild.parse.deps;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.Named;
 

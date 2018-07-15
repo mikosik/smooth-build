@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-import org.smoothbuild.lang.message.Location;
 
 import com.google.common.hash.HashCode;
 

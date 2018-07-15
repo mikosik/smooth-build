@@ -23,8 +23,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.DefinedFunction;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.hash.HashCode;

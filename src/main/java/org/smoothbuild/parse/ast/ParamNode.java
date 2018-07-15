@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 
 public class ParamNode extends NamedNode {
   private final TypeNode type;

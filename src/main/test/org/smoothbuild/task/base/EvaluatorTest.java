@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.Location;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.task.exec.Container;
 
 public class EvaluatorTest {

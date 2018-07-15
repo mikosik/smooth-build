@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.arg;
 
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;

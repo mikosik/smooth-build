@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.deps;
 
 import static org.hamcrest.core.IsSame.sameInstance;
-import static org.smoothbuild.lang.message.Location.location;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;

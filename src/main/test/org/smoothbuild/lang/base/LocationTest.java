@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.message;
+package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.message.Location.location;
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;

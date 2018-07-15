@@ -2,7 +2,7 @@ package org.smoothbuild.lang.runtime;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.lang.message.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
