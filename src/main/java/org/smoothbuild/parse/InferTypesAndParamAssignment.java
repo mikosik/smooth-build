@@ -1,15 +1,15 @@
 package org.smoothbuild.parse;
 
-import static org.smoothbuild.lang.function.Scope.scope;
+import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.lang.function.Field;
-import org.smoothbuild.lang.function.ParameterInfo;
-import org.smoothbuild.lang.function.Scope;
+import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.ParameterInfo;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.StructType;

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.function;
+package org.smoothbuild.lang.base;
 
 import com.google.common.collect.Ordering;
 

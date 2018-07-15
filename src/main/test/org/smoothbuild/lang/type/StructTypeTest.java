@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.Lists;

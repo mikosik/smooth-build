@@ -12,9 +12,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.lang.function.Constructor;
-import org.smoothbuild.lang.function.Parameter;
-import org.smoothbuild.lang.function.Signature;
+import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;

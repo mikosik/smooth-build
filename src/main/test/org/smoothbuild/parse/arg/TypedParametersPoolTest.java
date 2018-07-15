@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Parameter;
-import org.smoothbuild.lang.function.ParameterInfo;
+import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;

@@ -1,9 +1,9 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.function.Accessor;
-import org.smoothbuild.lang.function.Constructor;
-import org.smoothbuild.lang.function.NativeFunction;
+import org.smoothbuild.lang.base.Accessor;
+import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;

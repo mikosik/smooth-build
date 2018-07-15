@@ -6,10 +6,10 @@ import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.function.Accessor;
-import org.smoothbuild.lang.function.Field;
-import org.smoothbuild.lang.function.Parameter;
-import org.smoothbuild.lang.function.Signature;
+import org.smoothbuild.lang.base.Accessor;
+import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.collect.ImmutableMap;

@@ -12,7 +12,7 @@ import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.lang.function.Function;
+import org.smoothbuild.lang.base.Function;
 
 public class FunctionsTest {
   private Functions functions;

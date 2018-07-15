@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.function.Scope.scope;
+import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.task.base.Evaluator.callEvaluator;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.DefinedFunction;
-import org.smoothbuild.lang.function.Scope;
+import org.smoothbuild.lang.base.DefinedFunction;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;

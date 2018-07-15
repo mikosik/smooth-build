@@ -5,7 +5,7 @@ import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.Scope;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.task.base.Evaluator;

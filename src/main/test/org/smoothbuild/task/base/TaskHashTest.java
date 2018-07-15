@@ -22,8 +22,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.function.DefinedFunction;
-import org.smoothbuild.lang.function.NativeFunction;
+import org.smoothbuild.lang.base.DefinedFunction;
+import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.message.Location;
 import org.smoothbuild.lang.type.TypesDb;
 

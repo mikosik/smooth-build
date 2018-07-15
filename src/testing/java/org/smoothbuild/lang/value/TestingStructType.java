@@ -3,7 +3,7 @@ package org.smoothbuild.lang.value;
 import static org.smoothbuild.lang.message.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
-import org.smoothbuild.lang.function.Field;
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;

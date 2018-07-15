@@ -4,7 +4,7 @@ import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.lang.function.Name.isLegalName;
+import static org.smoothbuild.lang.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.value;
 

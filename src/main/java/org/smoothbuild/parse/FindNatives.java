@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.lang.function.Name.isLegalName;
+import static org.smoothbuild.lang.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Maybe.value;
 import static org.smoothbuild.util.Paths.openBufferedInputStream;
@@ -23,7 +23,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.smoothbuild.io.util.JarFile;
-import org.smoothbuild.lang.function.Native;
+import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.task.exec.Container;
