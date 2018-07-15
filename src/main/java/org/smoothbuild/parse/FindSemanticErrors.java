@@ -49,6 +49,7 @@ public class FindSemanticErrors {
     unknownArgNames(errors, functions, ast);
     structNameStartingWithLowercaseLetter(errors, ast);
     firstFieldWithForbiddenType(errors, ast);
+    functionResultTypeIsNotCoreTypeOfAnyParameter(errors, ast);
     return errors;
   }
 
@@ -281,6 +282,34 @@ public class FindSemanticErrors {
           }
         }
       }
+    }.visitAst(ast);
+  }
+
+  private static void functionResultTypeIsNotCoreTypeOfAnyParameter(List<ParseError> errors,
+      Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
+        if (func.hasType()
+            && func.type().isGeneric()
+            && !func.type().isArray()
+            && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
+          errors.add(new ParseError(func.type(), "Unknown generic type '" + func.type().name()
+              + "'. Only generic types used in declaration of function parameters "
+              + "can be used here."));
+        }
+      }
+
+      private boolean hasParamWithCoreTypeEqualToResultCoreType(FuncNode func) {
+        String name = func.type().coreType().name();
+        return func.params()
+            .stream()
+            .filter(p -> p.type().coreType().name().equals(name))
+            .findAny()
+            .isPresent();
+      }
+
     }.visitAst(ast);
   }
 }
