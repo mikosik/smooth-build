@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.ReturnValue;
+import org.smoothbuild.acceptance.lang.nativ.GenericResult;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Test
@@ -168,15 +168,26 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_with_generic_type_as_result_is_allowed() throws IOException {
-    givenNativeJar(ReturnValue.class);
-    givenScript("a returnValue();                 \n"
-        + "      result = returnValue();          \n");
+  public void function_with_generic_result_type_when_some_param_has_such_core_type_is_allowed()
+      throws IOException {
+    givenNativeJar(GenericResult.class);
+    givenScript("a genericResult([a] array);");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
-  public void function_with_generic_array_as_result_type() throws IOException {
+  @Test
+  public void function_with_generic_result_type_when_no_param_has_such_core_type_causes_error()
+      throws Exception {
+    givenNativeJar(GenericResult.class);
+    givenScript("a genericResult([b] array);");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(1, "Unknown generic type 'a'. "
+        + "Only generic types used in declaration of function parameters can be used here.");
+  }
+
+  public void function_with_generic_array_result_type_is_allowed() throws IOException {
     givenScript("[a] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
