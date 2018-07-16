@@ -24,7 +24,7 @@ public class List implements Command {
   }
 
   @Override
-  public int run(String... names) {
+  public int run(String... args) {
     java.util.List<? extends Object> errors = runtimeLoader.load();
     if (errors.isEmpty()) {
       runtime
