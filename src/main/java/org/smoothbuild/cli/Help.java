@@ -8,30 +8,39 @@ import static org.smoothbuild.cli.Commands.CLEAN;
 import static org.smoothbuild.cli.Commands.HELP;
 import static org.smoothbuild.cli.Commands.LIST;
 
+import javax.inject.Inject;
+
 public class Help implements Command {
+  private final Console console;
+
+  @Inject
+  public Help(Console console) {
+    this.console = console;
+  }
+
   @Override
   public int run(String... args) {
     if (args.length == 1) {
-      System.out.print(generalHelp());
+      console.print(generalHelp());
     } else {
       switch (args[1]) {
         case BUILD:
-          System.out.println(buildDescription());
+          console.println(buildDescription());
           break;
         case CLEAN:
-          System.out.println(cleanDescription());
+          console.println(cleanDescription());
           break;
         case HELP:
-          System.out.println(helpDescription());
+          console.println(helpDescription());
           break;
         case LIST:
-          System.out.println(listDescription());
+          console.println(listDescription());
           break;
         case Commands.VERSION:
-          System.out.print(versionDescription());
+          console.print(versionDescription());
           break;
         default:
-          System.out.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
+          console.println("smooth: unknown '" + args[1] + "' command. See 'smooth help'.");
           return EXIT_CODE_ERROR;
       }
     }
