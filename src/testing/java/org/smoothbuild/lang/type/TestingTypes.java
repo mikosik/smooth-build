@@ -14,6 +14,14 @@ public class TestingTypes {
   public static final Type b = typesDb.generic("b");
   public static final StructType personType = personType(typesDb);
 
+  public static ArrayType array4(Type elemType) {
+    return array(array(array(array(elemType))));
+  }
+
+  public static ArrayType array3(Type elemType) {
+    return array(array(array(elemType)));
+  }
+
   public static ArrayType array2(Type elemType) {
     return array(array(elemType));
   }
