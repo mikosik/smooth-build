@@ -9,7 +9,6 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.TestingStructType;
 
 public class TypeHierarchyTest {
   private final TypesDb typesDb = new TestingTypesDb();
@@ -77,6 +76,6 @@ public class TypeHierarchyTest {
   }
 
   private StructType personType() {
-    return TestingStructType.personType(typesDb);
+    return TestingTypes.personType(typesDb);
   }
 }

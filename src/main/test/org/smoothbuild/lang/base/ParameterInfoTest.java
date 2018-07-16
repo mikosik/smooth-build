@@ -10,10 +10,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
-import org.smoothbuild.lang.value.TestingStructType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
@@ -103,6 +103,6 @@ public class ParameterInfoTest {
   }
 
   private StructType personType() {
-    return TestingStructType.personType(typesDb);
+    return TestingTypes.personType(typesDb);
   }
 }
