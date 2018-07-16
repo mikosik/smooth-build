@@ -1,13 +1,9 @@
 package org.smoothbuild.cli;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.lang.base.Name.isLegalName;
-import static org.smoothbuild.util.Maybe.error;
-import static org.smoothbuild.util.Maybe.maybe;
-import static org.smoothbuild.util.Maybe.value;
+import static org.smoothbuild.cli.ArgumentValidator.validateFunctionNames;
 
 import java.util.List;
 import java.util.Set;
@@ -17,7 +13,6 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.exec.SmoothExecutor;
-import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
@@ -40,7 +35,7 @@ public class Build implements Command {
   @Override
   public int run(String... args) {
     List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
-    Maybe<Set<String>> functionNames = parseArguments(argsWithoutFirst);
+    Maybe<Set<String>> functionNames = validateFunctionNames(argsWithoutFirst);
     if (!functionNames.hasValue()) {
       console.rawErrors(functionNames.errors());
       return EXIT_CODE_ERROR;
@@ -50,38 +45,5 @@ public class Build implements Command {
     return runtimeController.setUpRuntimeAndRun((runtime) -> {
       smoothExecutor.execute(runtime, functionNames.value());
     });
-
-  }
-
-  public Maybe<Set<String>> parseArguments(List<String> args) {
-    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    args.stream()
-        .forEach(a -> duplicatesDetector.addValue(a));
-    Set<String> uniques = duplicatesDetector.getUniqueValues();
-
-    if (uniques.isEmpty()) {
-      return error("error: Specify at least one function to be executed.\n"
-          + "Use 'smooth list' to see all available functions.");
-    }
-
-    return value(uniques)
-        .map(as -> maybe(as, illegalFunctionNameErrors(args)))
-        .map(as -> maybe(as, duplicateFunctionNameErrors(duplicatesDetector)));
-  }
-
-  private static ImmutableList<String> illegalFunctionNameErrors(List<String> args) {
-    return args
-        .stream()
-        .filter(a -> !isLegalName(a))
-        .map(a -> "error: Illegal function name '" + a
-            + "' passed in command line.")
-        .collect(toImmutableList());
-  }
-
-  private static ImmutableList<String> duplicateFunctionNameErrors(
-      DuplicatesDetector<String> duplicatesDetector) {
-    return duplicatesDetector.getDuplicateValues().stream().map(
-        name -> "error: Function '" + name + "' has been specified more than once.")
-        .collect(toImmutableList());
   }
 }
