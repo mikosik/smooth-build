@@ -1,10 +1,12 @@
 package org.smoothbuild.cli;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.lang.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.error;
+import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Maybe.value;
 
 import java.util.List;
@@ -53,24 +55,33 @@ public class Build implements Command {
 
   public Maybe<Set<String>> parseArguments(List<String> args) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    for (String argument : args) {
-      if (isLegalName(argument)) {
-        duplicatesDetector.addValue(argument);
-      } else {
-        return error("error: Illegal function name '" + argument
-            + "' passed in command line.");
-      }
-    }
+    args.stream()
+        .forEach(a -> duplicatesDetector.addValue(a));
+    Set<String> uniques = duplicatesDetector.getUniqueValues();
 
-    for (String name : duplicatesDetector.getDuplicateValues()) {
-      return error("error: Function '" + name + "' has been specified more than once.");
-    }
-    Set<String> result = duplicatesDetector.getUniqueValues();
-    if (result.isEmpty()) {
+    if (uniques.isEmpty()) {
       return error("error: Specify at least one function to be executed.\n"
           + "Use 'smooth list' to see all available functions.");
-
     }
-    return value(result);
+
+    return value(uniques)
+        .map(as -> maybe(as, illegalFunctionNameErrors(args)))
+        .map(as -> maybe(as, duplicateFunctionNameErrors(duplicatesDetector)));
+  }
+
+  private static ImmutableList<String> illegalFunctionNameErrors(List<String> args) {
+    return args
+        .stream()
+        .filter(a -> !isLegalName(a))
+        .map(a -> "error: Illegal function name '" + a
+            + "' passed in command line.")
+        .collect(toImmutableList());
+  }
+
+  private static ImmutableList<String> duplicateFunctionNameErrors(
+      DuplicatesDetector<String> duplicatesDetector) {
+    return duplicatesDetector.getDuplicateValues().stream().map(
+        name -> "error: Function '" + name + "' has been specified more than once.")
+        .collect(toImmutableList());
   }
 }
