@@ -114,7 +114,7 @@ public class Console {
     printStream.println(line);
   }
 
-  private void print(String line) {
+  public void print(String line) {
     printStream.print(line);
   }
 }
