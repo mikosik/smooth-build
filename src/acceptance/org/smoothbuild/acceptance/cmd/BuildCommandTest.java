@@ -59,11 +59,31 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void build_command_with_illegal_function_names_prints_error_for_each_one()
+      throws Exception {
+    givenScript("result = 'abc';");
+    whenSmoothBuild("illegal^name other^name");
+    thenFinishedWithError();
+    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenOutputContains("error: Illegal function name 'other^name' passed in command line.\n");
+  }
+
+  @Test
   public void build_command_with_function_specified_twice_prints_error() throws Exception {
     givenScript("result = 'abc';");
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
     thenOutputContains("error: Function 'result' has been specified more than once.\n");
+  }
+
+  @Test
+  public void build_command_with_many_functions_specified_twice_prints_error_for_each_one()
+      throws Exception {
+    givenScript("result = 'abc';");
+    whenSmoothBuild("result", "result", "other", "other");
+    thenFinishedWithError();
+    thenOutputContains("error: Function 'result' has been specified more than once.\n");
+    thenOutputContains("error: Function 'other' has been specified more than once.\n");
   }
 
   @Test
