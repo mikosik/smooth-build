@@ -37,8 +37,8 @@ public class Build implements Command {
   }
 
   @Override
-  public int run(String... names) {
-    List<String> argsWithoutFirst = ImmutableList.copyOf(names).subList(1, names.length);
+  public int run(String... args) {
+    List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
     Maybe<Set<String>> functionNames = parseArguments(argsWithoutFirst);
     if (!functionNames.hasValue()) {
       console.rawErrors(functionNames.errors());
