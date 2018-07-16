@@ -5,6 +5,7 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.cli.Commands.BUILD;
 import static org.smoothbuild.cli.Commands.CLEAN;
+import static org.smoothbuild.cli.Commands.DAG;
 import static org.smoothbuild.cli.Commands.HELP;
 import static org.smoothbuild.cli.Commands.LIST;
 
@@ -29,6 +30,9 @@ public class Help implements Command {
           break;
         case CLEAN:
           console.println(cleanDescription());
+          break;
+        case DAG:
+          console.println(dagDescription());
           break;
         case HELP:
           console.println(helpDescription());
@@ -82,6 +86,12 @@ public class Help implements Command {
         + cleanShortDescription();
   }
 
+  private static String dagDescription() {
+    return "usage: smooth dag <function>...\n"
+        + "\n"
+        + dagShortDescription();
+  }
+
   private static String helpDescription() {
     return "usage: smooth help <command>\n"
         + "\n"
@@ -111,6 +121,10 @@ public class Help implements Command {
 
   private static String cleanShortDescription() {
     return "Remove all cached values and artifacts calculated during previous builds";
+  }
+
+  private static String dagShortDescription() {
+    return "Prints execution DAG (directed acyclic graph) of for given function(s)";
   }
 
   private static String helpShortDescription() {

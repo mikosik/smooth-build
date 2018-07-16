@@ -14,6 +14,7 @@ import com.google.inject.Injector;
 public class Commands {
   public static final String BUILD = "build";
   public static final String CLEAN = "clean";
+  public static final String DAG = "dag";
   public static final String HELP = "help";
   public static final String LIST = "list";
   public static final String VERSION = "version";
@@ -27,6 +28,8 @@ public class Commands {
         return runCommand(Build.class, args);
       case CLEAN:
         return runCommand(Clean.class, args);
+      case DAG:
+        return runCommand(Dag.class, args);
       case HELP:
         return runCommand(Help.class, args);
       case LIST:

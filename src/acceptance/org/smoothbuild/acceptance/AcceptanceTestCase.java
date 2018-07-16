@@ -108,6 +108,10 @@ public abstract class AcceptanceTestCase {
     whenSmooth(concat("clean", args));
   }
 
+  public void whenSmoothDag(String... args) {
+    whenSmooth(concat("dag", args));
+  }
+
   public void whenSmoothHelp(String... args) {
     whenSmooth(concat("help", args));
   }
