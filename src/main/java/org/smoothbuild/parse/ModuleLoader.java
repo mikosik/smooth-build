@@ -26,16 +26,14 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
-  private final SRuntime runtime;
   private final FunctionLoader functionLoader;
 
   @Inject
-  public ModuleLoader(SRuntime runtime, FunctionLoader functionLoader) {
-    this.runtime = runtime;
+  public ModuleLoader(FunctionLoader functionLoader) {
     this.functionLoader = functionLoader;
   }
 
-  public List<? extends Object> loadModule(Path script) {
+  public List<? extends Object> loadModule(SRuntime runtime, Path script) {
     Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
     return parseScript(script)
         .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
@@ -44,11 +42,11 @@ public class ModuleLoader {
         .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
         .invoke(ast -> inferTypesAndParamAssignment(runtime, ast))
         .invoke(natives, (ast, n) -> n.assignNatives(ast))
-        .invokeConsumer(ast -> loadFunctions(ast))
+        .invokeConsumer(ast -> loadFunctions(runtime, ast))
         .errors();
   }
 
-  private void loadFunctions(Ast ast) {
+  private void loadFunctions(SRuntime runtime, Ast ast) {
     for (StructNode struct : ast.structs()) {
       runtime.functions().add(loadConstructor(struct));
     }
