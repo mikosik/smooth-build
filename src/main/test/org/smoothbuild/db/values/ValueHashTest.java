@@ -10,13 +10,13 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.TestingStructType;
 
 import com.google.common.hash.HashCode;
 
@@ -144,6 +144,6 @@ public class ValueHashTest {
   }
 
   private StructType personType() {
-    return TestingStructType.personType(typesDb);
+    return TestingTypes.personType(typesDb);
   }
 }
