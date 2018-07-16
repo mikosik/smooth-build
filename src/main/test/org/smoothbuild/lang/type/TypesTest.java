@@ -6,6 +6,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
+import static org.smoothbuild.lang.type.TestingTypes.a;
+import static org.smoothbuild.lang.type.TestingTypes.array;
+import static org.smoothbuild.lang.type.TestingTypes.array2;
+import static org.smoothbuild.lang.type.TestingTypes.b;
+import static org.smoothbuild.lang.type.TestingTypes.blob;
+import static org.smoothbuild.lang.type.TestingTypes.string;
+import static org.smoothbuild.lang.type.TestingTypes.type;
+import static org.smoothbuild.lang.type.TestingTypes.typesDb;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -26,13 +34,6 @@ import com.google.common.testing.EqualsTester;
 
 @RunWith(QuackeryRunner.class)
 public class TypesTest {
-  private static final TypesDb typesDb = new TestingTypesDb();
-  private static final Type type = typesDb.type();
-  private static final Type string = typesDb.string();
-  private static final Type blob = typesDb.blob();
-  private static final Type a = typesDb.generic("a");
-  private static final Type b = typesDb.generic("b");
-
   @Quackery
   public static Suite name() {
     return suite("Type.name").addAll(asList(
@@ -633,13 +634,5 @@ public class TypesTest {
 
   private static StructType personType() {
     return TestingStructType.personType(typesDb);
-  }
-
-  private static ArrayType array2(Type elemType) {
-    return array(array(elemType));
-  }
-
-  private static ArrayType array(Type elemType) {
-    return typesDb.array(elemType);
   }
 }
