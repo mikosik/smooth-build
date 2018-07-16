@@ -94,6 +94,13 @@ public class RuntimeTypes implements Types {
     return type;
   }
 
+  public Type replaceCoreType(Type type, Type newCoreType) {
+    if (type.isArray()) {
+      return array(replaceCoreType(((ArrayType) type).elemType(), newCoreType));
+    }
+    return newCoreType;
+  }
+
   @Override
   public Type fixNameClashIfExists(Type type, Type typeToFix) {
     if (typeToFix.coreType().isGeneric() && typeToFix.coreType().equals(type.coreType())) {
