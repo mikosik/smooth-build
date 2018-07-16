@@ -9,18 +9,16 @@ import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class SmoothExecutor {
-  private final SRuntime runtime;
   private final ArtifactBuilder artifactBuilder;
   private final Console console;
 
   @Inject
-  public SmoothExecutor(SRuntime runtime, ArtifactBuilder artifactBuilder, Console console) {
-    this.runtime = runtime;
+  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
     this.artifactBuilder = artifactBuilder;
     this.console = console;
   }
 
-  public void execute(Set<String> names) {
+  public void execute(SRuntime runtime, Set<String> names) {
     Functions functions = runtime.functions();
     for (String name : names) {
       if (!functions.contains(name)) {

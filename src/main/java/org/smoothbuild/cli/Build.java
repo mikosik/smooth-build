@@ -2,7 +2,6 @@ package org.smoothbuild.cli;
 
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.lang.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.error;
@@ -14,7 +13,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.parse.RuntimeLoader;
+import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.DuplicatesDetector;
 import org.smoothbuild.util.Maybe;
@@ -23,15 +22,15 @@ import com.google.common.collect.ImmutableList;
 
 public class Build implements Command {
   private final Console console;
-  private final RuntimeLoader runtimeLoader;
+  private final RuntimeController runtimeController;
   private final SmoothExecutor smoothExecutor;
   private final FileSystem fileSystem;
 
   @Inject
-  public Build(Console console, RuntimeLoader runtimeLoader, SmoothExecutor smoothExecutor,
+  public Build(Console console, RuntimeController runtimeController, SmoothExecutor smoothExecutor,
       FileSystem fileSystem) {
     this.console = console;
-    this.runtimeLoader = runtimeLoader;
+    this.runtimeController = runtimeController;
     this.smoothExecutor = smoothExecutor;
     this.fileSystem = fileSystem;
   }
@@ -46,14 +45,10 @@ public class Build implements Command {
     }
     fileSystem.delete(ARTIFACTS_PATH);
     fileSystem.delete(TEMPORARY_PATH);
-    List<? extends Object> errors = runtimeLoader.load();
-    if (errors.isEmpty()) {
-      smoothExecutor.execute(functionNames.value());
-    } else {
-      console.rawErrors(errors);
-    }
-    console.printFinalSummary();
-    return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    return runtimeController.setUpRuntimeAndRun((runtime) -> {
+      smoothExecutor.execute(runtime, functionNames.value());
+    });
+
   }
 
   public Maybe<Set<String>> parseArguments(List<String> args) {
