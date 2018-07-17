@@ -51,7 +51,7 @@ public class Evaluator {
 
   public static Evaluator convertEvaluator(Type type, Location location) {
     return new Evaluator(
-        new ConvertComputation(type), "conversion_from_generic", true, true, location);
+        new ConvertComputation(type), "~conversion", true, true, location);
   }
 
   public Evaluator(Computation computation, String name, boolean isInternal, boolean isCacheable,
