@@ -17,9 +17,11 @@ import org.smoothbuild.task.exec.Container;
 import com.google.common.hash.HashCode;
 
 public class NativeCallComputation implements Computation {
+  private final Type type;
   private final NativeFunction function;
 
-  public NativeCallComputation(NativeFunction function) {
+  public NativeCallComputation(Type type, NativeFunction function) {
+    this.type = type;
     this.function = function;
   }
 
@@ -30,7 +32,7 @@ public class NativeCallComputation implements Computation {
 
   @Override
   public Type resultType() {
-    return function.type();
+    return type;
   }
 
   @Override

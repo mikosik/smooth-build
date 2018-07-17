@@ -1,8 +1,11 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
 
 public class Constructor extends Function {
   public Constructor(Signature signature, Location location) {
@@ -15,7 +18,8 @@ public class Constructor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
+  public Expression createCallExpression(Type type, Location location) {
+    checkArgument(type().equals(type));
     return new ConstructorCallExpression(this, location);
   }
 }
