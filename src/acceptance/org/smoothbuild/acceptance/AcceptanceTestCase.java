@@ -10,6 +10,12 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
+import static org.smoothbuild.cli.Commands.BUILD;
+import static org.smoothbuild.cli.Commands.CLEAN;
+import static org.smoothbuild.cli.Commands.DAG;
+import static org.smoothbuild.cli.Commands.HELP;
+import static org.smoothbuild.cli.Commands.LIST;
+import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Streams.inputStreamToString;
@@ -101,27 +107,27 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(concat("build", args));
+    whenSmooth(concat(BUILD, args));
   }
 
   public void whenSmoothClean(String... args) {
-    whenSmooth(concat("clean", args));
+    whenSmooth(concat(CLEAN, args));
   }
 
   public void whenSmoothDag(String... args) {
-    whenSmooth(concat("dag", args));
+    whenSmooth(concat(DAG, args));
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(concat("help", args));
+    whenSmooth(concat(HELP, args));
   }
 
   public void whenSmoothList(String... args) {
-    whenSmooth(concat("list", args));
+    whenSmooth(concat(LIST, args));
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(concat("version", args));
+    whenSmooth(concat(VERSION, args));
   }
 
   public void whenSmooth(String... smoothCommandArgs) {
