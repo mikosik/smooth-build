@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.Dag;
 
 /**
@@ -24,7 +25,7 @@ public class DefinedFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
-    return new CallExpression(this, location);
+  public Expression createCallExpression(Type type, Location location) {
+    return new CallExpression(type, this, location);
   }
 }

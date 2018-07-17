@@ -117,7 +117,8 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(nativeFunction, location), Hash.integer(13)));
+    given(task = new Task(nativeCallEvaluator(nativeFunction.type(), nativeFunction, location),
+        Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("985856d168365ecd5bd5b78d213503c386049cb2"));
@@ -129,7 +130,8 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(nativeFunction, location), Hash.integer(13)));
+    given(task = new Task(nativeCallEvaluator(nativeFunction.type(), nativeFunction, location),
+        Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("0b2528d145bb5e642439dbe13076ca9a8f4ffc58"));
@@ -140,7 +142,8 @@ public class TaskHashTest {
     given(definedFunction = mock(DefinedFunction.class));
     given(willReturn(typesDb.string()), definedFunction).type();
     given(willReturn("name"), definedFunction).name();
-    given(task = new Task(callEvaluator(definedFunction, location), Hash.integer(13)));
+    given(task = new Task(callEvaluator(definedFunction.type(), definedFunction, location),
+        Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("e7900f15ecd28f0a8088dfabd5de196d197d7939"));

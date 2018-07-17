@@ -1,7 +1,10 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.type.Type;
 
 public class Accessor extends Function {
   private final String fieldName;
@@ -16,7 +19,8 @@ public class Accessor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
+  public Expression createCallExpression(Type type, Location location) {
+    checkArgument(type().equals(type));
     return new AccessorCallExpression(this, location);
   }
 }

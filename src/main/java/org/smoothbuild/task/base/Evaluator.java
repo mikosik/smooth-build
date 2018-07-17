@@ -29,13 +29,15 @@ public class Evaluator {
     return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, location);
   }
 
-  public static Evaluator nativeCallEvaluator(NativeFunction function, Location location) {
-    return new Evaluator(new NativeCallComputation(function), function.name().toString(),
+  public static Evaluator nativeCallEvaluator(Type type, NativeFunction function,
+      Location location) {
+    return new Evaluator(new NativeCallComputation(type, function), function.name().toString(),
         false, function.isCacheable(), location);
   }
 
-  public static Evaluator callEvaluator(DefinedFunction function, Location location) {
-    return new Evaluator(new IdentityComputation(function.type()), function.name().toString(),
+  public static Evaluator callEvaluator(Type type, DefinedFunction function,
+      Location location) {
+    return new Evaluator(new IdentityComputation(type), function.name().toString(),
         false, true, location);
   }
 
