@@ -14,6 +14,7 @@ public class TestingTypes {
   public static final Type a = typesDb.generic("a");
   public static final Type b = typesDb.generic("b");
   public static final StructType personType = personType(typesDb);
+  public static final StructType file = file();
 
   public static ArrayType array4(Type elemType) {
     return array(array(array(array(elemType))));
@@ -36,5 +37,11 @@ public class TestingTypes {
     return typesDb.struct("Person", list(
         new Field(string, "firstName", unknownLocation()),
         new Field(string, "lastName", unknownLocation())));
+  }
+
+  public static StructType file() {
+    return typesDb.struct("File", list(
+        new Field(blob, "content", unknownLocation()),
+        new Field(string, "path", unknownLocation())));
   }
 }
