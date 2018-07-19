@@ -9,132 +9,116 @@ import org.smoothbuild.acceptance.lang.nativ.ThrowException;
 public class ParameterTest extends AcceptanceTestCase {
   @Test
   public void no_parameters() throws Exception {
-    givenScript("noParameters() = 'abc';"
-        + "result() = 'def';");
-    whenSmoothBuild("result");
+    givenScript("noParameters() = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void string_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(String string) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(String string) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void blob_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(Blob blob) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(Blob blob) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void file_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(File file) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(File file) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void nothing_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(Nothing nothing) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(Nothing nothing) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void value_type_parameter_cannot_be_declared() throws Exception {
-    givenScript("oneParameter(Value value) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(Value value) = 'abc';");
+    whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Value'.\n");
   }
 
   @Test
   public void generic_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(a param) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(a param) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void unknown_type_parameter_cannot_be_declared() throws Exception {
-    givenScript("oneParameter(Unknown unknown) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter(Unknown unknown) = 'abc';");
+    whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
   public void string_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([String] array) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([String] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void blob_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([Blob] array) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([Blob] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void file_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([File] array) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([File] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void nothing_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([Nothing] array) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([Nothing] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void generic_array_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter([a] array) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([a] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void unknown_array_type_parameter_cannot_be_declared() throws Exception {
-    givenScript("oneParameter([Unknown] unknown) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([Unknown] unknown) = 'abc';");
+    whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
   public void nested_array_parameter_type_can_be_declared() throws Exception {
-    givenScript("oneParameter([[String]] array) = 'abc';"
-        + "result = oneParameter([['def']]);");
-    whenSmoothBuild("result");
+    givenScript("oneParameter([[String]] array) = 'abc';");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
   public void parameters_with_trailing_comma_can_be_declared() throws Exception {
-    givenScript("func(String string, ) = string;"
-        + "result = func('abc');");
-    whenSmoothBuild("result");
+    givenScript("myFunction(String string, ) = string;");
+    whenSmoothList();
     thenFinishedWithSuccess();
   }
 
@@ -143,18 +127,16 @@ public class ParameterTest extends AcceptanceTestCase {
     givenScript("twoParameters(    \n"
         + "          String name1, \n"
         + "          String name1  \n"
-        + "      ) = 'abc';        \n"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+        + "      ) = 'abc';        \n");
+    whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(3, "'name1' is already defined at build.smooth:2.\n");
   }
 
   @Test
   public void parameter_with_unknown_type_causes_error() throws Exception {
-    givenScript("func(Unknown string) = 'abc';"
-        + "result = 'def';");
-    whenSmoothBuild("result");
+    givenScript("func(Unknown string) = 'abc';");
+    whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
