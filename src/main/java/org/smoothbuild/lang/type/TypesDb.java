@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
-import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,12 +65,6 @@ public class TypesDb {
       cache.put(nothing.hash(), nothing);
     }
     return nothing;
-  }
-
-  public GenericType generic(String name) {
-    GenericType generic = new GenericType(writeBasicTypeData(name), type(), name, hashedDb);
-    cache.put(generic.hash(), generic);
-    return generic;
   }
 
   private HashCode writeBasicTypeData(String name) {
@@ -147,12 +140,8 @@ public class TypesDb {
               hashedDb));
         default:
       }
-      if (isGenericTypeName(name)) {
-        return generic(name);
-      } else {
-        Iterable<Field> fields = readFields(unmarshaller.readHash());
-        return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
-      }
+      Iterable<Field> fields = readFields(unmarshaller.readHash());
+      return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
     }
   }
 

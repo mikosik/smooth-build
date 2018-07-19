@@ -6,10 +6,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.type.TestingTypes.a;
 import static org.smoothbuild.lang.type.TestingTypes.array;
 import static org.smoothbuild.lang.type.TestingTypes.array2;
-import static org.smoothbuild.lang.type.TestingTypes.b;
 import static org.smoothbuild.lang.type.TestingTypes.blob;
 import static org.smoothbuild.lang.type.TestingTypes.nothing;
 import static org.smoothbuild.lang.type.TestingTypes.personType;
@@ -28,7 +26,6 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Value;
 
 import com.google.common.testing.EqualsTester;
 
@@ -42,21 +39,18 @@ public class TypesTest {
         typeNameIs(blob, "Blob"),
         typeNameIs(nothing, "Nothing"),
         typeNameIs(personType, "Person"),
-        typeNameIs(a, "a"),
 
         typeNameIs(array(type), "[Type]"),
         typeNameIs(array(string), "[String]"),
         typeNameIs(array(blob), "[Blob]"),
         typeNameIs(array(nothing), "[Nothing]"),
         typeNameIs(array(personType), "[Person]"),
-        typeNameIs(array(a), "[a]"),
 
         typeNameIs(array2(type), "[[Type]]"),
         typeNameIs(array2(string), "[[String]]"),
         typeNameIs(array2(blob), "[[Blob]]"),
         typeNameIs(array2(nothing), "[[Nothing]]"),
-        typeNameIs(array2(personType), "[[Person]]"),
-        typeNameIs(array2(a), "[[a]]")));
+        typeNameIs(array2(personType), "[[Person]]")));
   }
 
   private static Case typeNameIs(Type type, String expected) {
@@ -73,21 +67,18 @@ public class TypesTest {
         typeToStringIs(blob, "Type(\"Blob\")"),
         typeToStringIs(nothing, "Type(\"Nothing\")"),
         typeToStringIs(personType, "Type(\"Person\")"),
-        typeToStringIs(a, "Type(\"a\")"),
 
         typeToStringIs(array(type), "Type(\"[Type]\")"),
         typeToStringIs(array(string), "Type(\"[String]\")"),
         typeToStringIs(array(blob), "Type(\"[Blob]\")"),
         typeToStringIs(array(nothing), "Type(\"[Nothing]\")"),
         typeToStringIs(array(personType), "Type(\"[Person]\")"),
-        typeToStringIs(array(a), "Type(\"[a]\")"),
 
         typeToStringIs(array2(type), "Type(\"[[Type]]\")"),
         typeToStringIs(array2(string), "Type(\"[[String]]\")"),
         typeToStringIs(array2(blob), "Type(\"[[Blob]]\")"),
         typeToStringIs(array2(nothing), "Type(\"[[Nothing]]\")"),
-        typeToStringIs(array2(personType), "Type(\"[[Person]]\")"),
-        typeToStringIs(array2(a), "Type(\"[[a]]\")")));
+        typeToStringIs(array2(personType), "Type(\"[[Person]]\")")));
   }
 
   private static Case typeToStringIs(Type type, String expectedPrefix) {
@@ -103,12 +94,10 @@ public class TypesTest {
         jTypeIs(string, SString.class),
         jTypeIs(blob, Blob.class),
         jTypeIs(nothing, Nothing.class),
-        jTypeIs(a, Value.class),
         jTypeIs(array(type), Array.class),
         jTypeIs(array(string), Array.class),
         jTypeIs(array(blob), Array.class),
-        jTypeIs(array(nothing), Array.class),
-        jTypeIs(array(a), Array.class)));
+        jTypeIs(array(nothing), Array.class)));
   }
 
   private static Case jTypeIs(Type type, Class<?> expected) {
@@ -125,19 +114,16 @@ public class TypesTest {
         coreTypeIs(blob, blob),
         coreTypeIs(nothing, nothing),
         coreTypeIs(personType, personType),
-        coreTypeIs(a, a),
 
         coreTypeIs(array(string), string),
         coreTypeIs(array(blob), blob),
         coreTypeIs(array(nothing), nothing),
         coreTypeIs(array(personType), personType),
-        coreTypeIs(array(a), a),
 
         coreTypeIs(array2(string), string),
         coreTypeIs(array2(blob), blob),
         coreTypeIs(array2(nothing), nothing),
-        coreTypeIs(array2(personType), personType),
-        coreTypeIs(array2(a), a)));
+        coreTypeIs(array2(personType), personType)));
   }
 
   private static Case coreTypeIs(Type type, Type expected) {
@@ -154,19 +140,16 @@ public class TypesTest {
         coreDepthIs(blob, 0),
         coreDepthIs(nothing, 0),
         coreDepthIs(personType, 0),
-        coreDepthIs(a, 0),
 
         coreDepthIs(array(string), 1),
         coreDepthIs(array(blob), 1),
         coreDepthIs(array(nothing), 1),
         coreDepthIs(array(personType), 1),
-        coreDepthIs(array(a), 1),
 
         coreDepthIs(array2(string), 2),
         coreDepthIs(array2(blob), 2),
         coreDepthIs(array2(nothing), 2),
-        coreDepthIs(array2(personType), 2),
-        coreDepthIs(array2(a), 2)));
+        coreDepthIs(array2(personType), 2)));
   }
 
   private static Case coreDepthIs(Type type, int depth) {
@@ -183,19 +166,16 @@ public class TypesTest {
         isNotArrayType(blob),
         isNotArrayType(nothing),
         isNotArrayType(personType),
-        isNotArrayType(a),
         isArrayType(array(type)),
         isArrayType(array(string)),
         isArrayType(array(blob)),
         isArrayType(array(nothing)),
         isArrayType(array(personType)),
-        isArrayType(array(a)),
         isArrayType(array2(type)),
         isArrayType(array2(string)),
         isArrayType(array2(blob)),
         isArrayType(array2(nothing)),
-        isArrayType(array2(personType)),
-        isArrayType(array2(a))));
+        isArrayType(array2(personType))));
   }
 
   private static Case isArrayType(Type type) {
@@ -214,21 +194,18 @@ public class TypesTest {
         superTypeIs(null, blob),
         superTypeIs(null, nothing),
         superTypeIs(string, personType),
-        superTypeIs(null, a),
 
         superTypeIs(null, array(type)),
         superTypeIs(null, array(string)),
         superTypeIs(null, array(blob)),
         superTypeIs(null, array(nothing)),
         superTypeIs(array(string), array(personType)),
-        superTypeIs(null, array(a)),
 
         superTypeIs(null, array2(type)),
         superTypeIs(null, array2(string)),
         superTypeIs(null, array2(blob)),
         superTypeIs(null, array2(nothing)),
-        superTypeIs(array2(string), array2(personType)),
-        superTypeIs(null, array2(a))));
+        superTypeIs(array2(string), array2(personType))));
   }
 
   private static Case superTypeIs(Object expected, Type type) {
@@ -243,15 +220,12 @@ public class TypesTest {
         hierarchyTest(list(string)),
         hierarchyTest(list(string, personType)),
         hierarchyTest(list(nothing)),
-        hierarchyTest(list(a)),
         hierarchyTest(list(array(string))),
         hierarchyTest(list(array(string), array(personType))),
         hierarchyTest(list(array(nothing))),
-        hierarchyTest(list(array(a))),
         hierarchyTest(list(array2(string))),
         hierarchyTest(list(array2(string), array2(personType))),
-        hierarchyTest(list(array2(nothing))),
-        hierarchyTest(list(array2(a)))));
+        hierarchyTest(list(array2(nothing)))));
   }
 
   private static Case hierarchyTest(List<Type> hierarchy) {
@@ -262,40 +236,10 @@ public class TypesTest {
   }
 
   @Quackery
-  public static Suite is_generic() throws Exception {
-    return suite("Type.isGeneric").addAll(asList(
-        typeIsGeneric(a),
-        typeIsNotGeneric(type),
-        typeIsNotGeneric(string),
-        typeIsNotGeneric(blob),
-        typeIsNotGeneric(nothing),
-        typeIsNotGeneric(personType),
-        typeIsGeneric(array(a)),
-        typeIsNotGeneric(array(type)),
-        typeIsNotGeneric(array(string)),
-        typeIsNotGeneric(array(blob)),
-        typeIsNotGeneric(array(nothing)),
-        typeIsNotGeneric(array(personType))));
-  }
-
-  private static Case typeIsGeneric(Type type) {
-    return newCase(
-        type.name() + " is generic",
-        () -> assertTrue(type.isGeneric()));
-  }
-
-  private static Case typeIsNotGeneric(Type type) {
-    return newCase(
-        type.name() + " is NOT generic",
-        () -> assertFalse(type.isGeneric()));
-  }
-
-  @Quackery
   public static Suite is_assignable_from() throws Exception {
     return suite("Type.isAssignableFrom").addAll(asList(
         allowedAssignment(type, type),
         allowedAssignment(type, nothing),
-        allowedAssignment(type, a),
         illegalAssignment(type, array(type)),
         illegalAssignment(type, array2(type)),
         illegalAssignment(type, array(nothing)),
@@ -309,14 +253,10 @@ public class TypesTest {
         illegalAssignment(type, personType),
         illegalAssignment(type, array(personType)),
         illegalAssignment(type, array2(personType)),
-        illegalAssignment(type, array(a)),
-        illegalAssignment(type, array2(a)),
 
-        allowedAssignment(array(type), a),
         allowedAssignment(array(type), array(type)),
         allowedAssignment(array(type), nothing),
         allowedAssignment(array(type), array(nothing)),
-        allowedAssignment(array(type), array(a)),
         illegalAssignment(array(type), type),
         illegalAssignment(array(type), array2(nothing)),
         illegalAssignment(array(type), array2(type)),
@@ -329,15 +269,11 @@ public class TypesTest {
         illegalAssignment(array(type), personType),
         illegalAssignment(array(type), array(personType)),
         illegalAssignment(array(type), array2(personType)),
-        illegalAssignment(array(type), array2(a)),
 
         allowedAssignment(array2(type), array2(type)),
-        allowedAssignment(array2(type), a),
-        allowedAssignment(array2(type), array(a)),
         allowedAssignment(array2(type), nothing),
         allowedAssignment(array2(type), array(nothing)),
         allowedAssignment(array2(type), array2(nothing)),
-        allowedAssignment(array2(type), array2(a)),
         illegalAssignment(array2(type), type),
         illegalAssignment(array2(type), array(type)),
         illegalAssignment(array2(type), string),
@@ -353,7 +289,6 @@ public class TypesTest {
         allowedAssignment(string, string),
         allowedAssignment(string, personType),
         allowedAssignment(string, nothing),
-        allowedAssignment(string, a),
         illegalAssignment(string, type),
         illegalAssignment(string, array(type)),
         illegalAssignment(string, array2(type)),
@@ -366,15 +301,11 @@ public class TypesTest {
         illegalAssignment(string, array2(personType)),
         illegalAssignment(string, array(nothing)),
         illegalAssignment(string, array2(nothing)),
-        illegalAssignment(string, array(a)),
-        illegalAssignment(string, array2(a)),
 
         allowedAssignment(array(string), array(string)),
         allowedAssignment(array(string), array(personType)),
         allowedAssignment(array(string), nothing),
         allowedAssignment(array(string), array(nothing)),
-        allowedAssignment(array(string), a),
-        allowedAssignment(array(string), array(a)),
         illegalAssignment(array(string), type),
         illegalAssignment(array(string), array(type)),
         illegalAssignment(array(string), array2(type)),
@@ -385,7 +316,6 @@ public class TypesTest {
         illegalAssignment(array(string), array2(blob)),
         illegalAssignment(array(string), personType),
         illegalAssignment(array(string), array2(personType)),
-        illegalAssignment(array(string), array2(a)),
         illegalAssignment(array(string), array2(nothing)),
 
         allowedAssignment(array2(string), array2(string)),
@@ -393,9 +323,6 @@ public class TypesTest {
         allowedAssignment(array2(string), nothing),
         allowedAssignment(array2(string), array(nothing)),
         allowedAssignment(array2(string), array2(nothing)),
-        allowedAssignment(array2(string), a),
-        allowedAssignment(array2(string), array(a)),
-        allowedAssignment(array2(string), array2(a)),
         illegalAssignment(array2(string), type),
         illegalAssignment(array2(string), array(type)),
         illegalAssignment(array2(string), array2(type)),
@@ -409,7 +336,6 @@ public class TypesTest {
 
         allowedAssignment(blob, blob),
         allowedAssignment(blob, nothing),
-        allowedAssignment(blob, a),
         illegalAssignment(blob, type),
         illegalAssignment(blob, array(type)),
         illegalAssignment(blob, array2(type)),
@@ -423,14 +349,10 @@ public class TypesTest {
         illegalAssignment(blob, array2(personType)),
         illegalAssignment(blob, array(nothing)),
         illegalAssignment(blob, array2(nothing)),
-        illegalAssignment(blob, array(a)),
-        illegalAssignment(blob, array2(a)),
 
         allowedAssignment(array(blob), array(blob)),
         allowedAssignment(array(blob), nothing),
         allowedAssignment(array(blob), array(nothing)),
-        allowedAssignment(array(blob), a),
-        allowedAssignment(array(blob), array(a)),
         illegalAssignment(array(blob), type),
         illegalAssignment(array(blob), array(type)),
         illegalAssignment(array(blob), array2(type)),
@@ -443,15 +365,11 @@ public class TypesTest {
         illegalAssignment(array(blob), array(personType)),
         illegalAssignment(array(blob), array2(personType)),
         illegalAssignment(array(blob), array2(nothing)),
-        illegalAssignment(array(blob), array2(a)),
 
         allowedAssignment(array2(blob), array2(blob)),
         allowedAssignment(array2(blob), nothing),
         allowedAssignment(array2(blob), array(nothing)),
         allowedAssignment(array2(blob), array2(nothing)),
-        allowedAssignment(array2(blob), a),
-        allowedAssignment(array2(blob), array(a)),
-        allowedAssignment(array2(blob), array2(a)),
         illegalAssignment(array2(blob), type),
         illegalAssignment(array2(blob), array(type)),
         illegalAssignment(array2(blob), array2(type)),
@@ -466,7 +384,6 @@ public class TypesTest {
 
         allowedAssignment(personType, personType),
         allowedAssignment(personType, nothing),
-        allowedAssignment(personType, a),
         illegalAssignment(personType, type),
         illegalAssignment(personType, array(type)),
         illegalAssignment(personType, array2(type)),
@@ -480,14 +397,10 @@ public class TypesTest {
         illegalAssignment(personType, array2(personType)),
         illegalAssignment(personType, array(nothing)),
         illegalAssignment(personType, array2(nothing)),
-        illegalAssignment(personType, array(a)),
-        illegalAssignment(personType, array2(a)),
 
         allowedAssignment(array(personType), array(personType)),
         allowedAssignment(array(personType), nothing),
         allowedAssignment(array(personType), array(nothing)),
-        allowedAssignment(array(personType), a),
-        allowedAssignment(array(personType), array(a)),
         illegalAssignment(array(personType), type),
         illegalAssignment(array(personType), array(type)),
         illegalAssignment(array(personType), array2(type)),
@@ -500,15 +413,11 @@ public class TypesTest {
         illegalAssignment(array(personType), personType),
         illegalAssignment(array(personType), array2(personType)),
         illegalAssignment(array(personType), array2(nothing)),
-        illegalAssignment(array(personType), array2(a)),
 
         allowedAssignment(array2(personType), array2(personType)),
         allowedAssignment(array2(personType), nothing),
         allowedAssignment(array2(personType), array(nothing)),
         allowedAssignment(array2(personType), array2(nothing)),
-        allowedAssignment(array2(personType), a),
-        allowedAssignment(array2(personType), array(a)),
-        allowedAssignment(array2(personType), array2(a)),
         illegalAssignment(array2(personType), type),
         illegalAssignment(array2(personType), array(type)),
         illegalAssignment(array2(personType), array2(type)),
@@ -519,73 +428,7 @@ public class TypesTest {
         illegalAssignment(array2(personType), array(blob)),
         illegalAssignment(array2(personType), array2(blob)),
         illegalAssignment(array2(personType), personType),
-        illegalAssignment(array2(personType), array(personType)),
-
-        allowedAssignment(a, type),
-        allowedAssignment(a, array(type)),
-        allowedAssignment(a, array2(type)),
-        allowedAssignment(a, string),
-        allowedAssignment(a, array(string)),
-        allowedAssignment(a, array2(string)),
-        allowedAssignment(a, blob),
-        allowedAssignment(a, array(blob)),
-        allowedAssignment(a, array2(blob)),
-        allowedAssignment(a, nothing),
-        allowedAssignment(a, array(nothing)),
-        allowedAssignment(a, array2(nothing)),
-        allowedAssignment(a, personType),
-        allowedAssignment(a, array(personType)),
-        allowedAssignment(a, array2(personType)),
-        allowedAssignment(a, a),
-        allowedAssignment(a, b),
-        allowedAssignment(a, array(b)),
-        allowedAssignment(a, array2(b)),
-        illegalAssignment(a, array(a)),
-        illegalAssignment(a, array2(a)),
-
-        allowedAssignment(array(a), array(type)),
-        allowedAssignment(array(a), array2(type)),
-        allowedAssignment(array(a), array(string)),
-        allowedAssignment(array(a), array2(string)),
-        allowedAssignment(array(a), array(blob)),
-        allowedAssignment(array(a), array2(blob)),
-        allowedAssignment(array(a), nothing),
-        allowedAssignment(array(a), array(nothing)),
-        allowedAssignment(array(a), array2(nothing)),
-        allowedAssignment(array(a), array(personType)),
-        allowedAssignment(array(a), array2(personType)),
-        allowedAssignment(array(a), array(a)),
-        allowedAssignment(array(a), b),
-        allowedAssignment(array(a), array(b)),
-        allowedAssignment(array(a), array2(b)),
-        illegalAssignment(array(a), type),
-        illegalAssignment(array(a), string),
-        illegalAssignment(array(a), blob),
-        illegalAssignment(array(a), personType),
-        illegalAssignment(array(a), a),
-        illegalAssignment(array(a), array2(a)),
-
-        allowedAssignment(array2(a), array2(type)),
-        allowedAssignment(array2(a), array2(string)),
-        allowedAssignment(array2(a), array2(blob)),
-        allowedAssignment(array2(a), nothing),
-        allowedAssignment(array2(a), array(nothing)),
-        allowedAssignment(array2(a), array2(nothing)),
-        allowedAssignment(array2(a), array2(personType)),
-        allowedAssignment(array2(a), array2(a)),
-        allowedAssignment(array2(a), b),
-        allowedAssignment(array2(a), array(b)),
-        allowedAssignment(array2(a), array2(b)),
-        illegalAssignment(array2(a), type),
-        illegalAssignment(array2(a), array(type)),
-        illegalAssignment(array2(a), string),
-        illegalAssignment(array2(a), array(string)),
-        illegalAssignment(array2(a), blob),
-        illegalAssignment(array2(a), array(blob)),
-        illegalAssignment(array2(a), personType),
-        illegalAssignment(array2(a), array(personType)),
-        illegalAssignment(array2(a), a),
-        illegalAssignment(array2(a), array(a))));
+        illegalAssignment(array2(personType), array(personType))));
   }
 
   private static Case allowedAssignment(Type destination, Type source) {
@@ -693,19 +536,16 @@ public class TypesTest {
     tester.addEqualityGroup(blob, blob);
     tester.addEqualityGroup(nothing, nothing);
     tester.addEqualityGroup(personType, personType);
-    tester.addEqualityGroup(a, a);
 
     tester.addEqualityGroup(array(type), array(type));
     tester.addEqualityGroup(array(string), array(string));
     tester.addEqualityGroup(array(blob), array(blob));
     tester.addEqualityGroup(array(personType), array(personType));
-    tester.addEqualityGroup(array(a), array(a));
 
     tester.addEqualityGroup(array2(type), array2(type));
     tester.addEqualityGroup(array2(string), array2(string));
     tester.addEqualityGroup(array2(blob), array2(blob));
     tester.addEqualityGroup(array2(personType), array2(personType));
-    tester.addEqualityGroup(array2(a), array2(a));
     tester.testEquals();
   }
 }

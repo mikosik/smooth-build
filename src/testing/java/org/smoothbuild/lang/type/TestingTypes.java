@@ -11,8 +11,6 @@ public class TestingTypes {
   public static final Type string = typesDb.string();
   public static final Type blob = typesDb.blob();
   public static final Type nothing = typesDb.nothing();
-  public static final Type a = typesDb.generic("a");
-  public static final Type b = typesDb.generic("b");
   public static final StructType personType = personType(typesDb);
   public static final StructType file = file();
 

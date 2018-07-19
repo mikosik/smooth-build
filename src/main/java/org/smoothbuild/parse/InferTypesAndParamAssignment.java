@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.base.Scope.scope;
-import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 
 import java.util.ArrayList;
@@ -102,10 +101,9 @@ public class InferTypesAndParamAssignment {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
             Type type = createType(func.type());
-            Type fixedExprType = types.fixNameClashIfExists(type, exprType);
-            if (type != null && exprType != null && !type.isAssignableFrom(fixedExprType)) {
+            if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
-                  + "' expression is " + fixedExprType.name()
+                  + "' expression is " + exprType.name()
                   + " which is not convertible to function's declared result type " + type.name()
                   + "."));
             }
@@ -160,9 +158,6 @@ public class InferTypesAndParamAssignment {
         if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return types.array(createType(elementType));
-        }
-        if (isGenericTypeName(type.name())) {
-          return types.generic(type.name());
         }
         return types.getType(type.name());
       }

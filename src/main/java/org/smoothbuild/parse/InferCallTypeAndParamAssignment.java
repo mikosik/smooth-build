@@ -86,15 +86,15 @@ public class InferCallTypeAndParamAssignment {
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
-          Type fixedArgType = runtime.types().fixNameClashIfExists(paramType, arg.get(Type.class));
-          if (paramType.isAssignableFrom(fixedArgType)) {
+          Type argType = arg.get(Type.class);
+          if (paramType.isAssignableFrom(argType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {
             failed = true;
             errors.add(new ParseError(arg,
                 "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
-                    + fixedArgType.name() + "' to '" + paramType.name() + "'."));
+                    + argType.name() + "' to '" + paramType.name() + "'."));
           }
         }
         return failed;
