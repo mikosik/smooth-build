@@ -24,6 +24,7 @@ public class ParameterInfoTest {
   private final TypesDb typesDb = new TestingTypesDb();
   private final Type string = typesDb.string();
   private final Type blob = typesDb.blob();
+  private final Type nothing = typesDb.nothing();
   private final Type type = string;
   private final Type generic = typesDb.generic("b");
 
@@ -59,7 +60,7 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(string, "equal", true),
         new ParameterInfo(string, "equal", true));
-    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, generic,
+    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, nothing, generic,
         personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, "name2", true));

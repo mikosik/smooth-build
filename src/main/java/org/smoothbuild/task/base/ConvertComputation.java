@@ -38,6 +38,7 @@ public class ConvertComputation implements Computation {
       return new Output(convertArray(container, (Array) value, type));
     }
     assertThat(!value.type().isGeneric());
+    assertThat(!value.type().isNothing());
     return new Output(convertStruct(container, (Struct) value, type));
   }
 

@@ -280,6 +280,9 @@ public class FindSemanticErrors {
           if (isGenericTypeName(field.type().name())) {
             errors.add(new ParseError(field, "Struct field cannot have a generic type.\n"));
           }
+          if (field.type().isNothing()) {
+            errors.add(new ParseError(field, "Struct field cannot have 'Nothing' type."));
+          }
         }
       }
     }.visitAst(ast);

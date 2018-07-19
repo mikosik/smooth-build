@@ -62,7 +62,8 @@ public class RuntimeTypesTest {
     when(() -> runtimeTypes.names());
     thenReturned(set(
         typesDb.string().name(),
-        typesDb.blob().name()));
+        typesDb.blob().name(),
+        typesDb.nothing().name()));
   }
 
   @Test
@@ -90,7 +91,8 @@ public class RuntimeTypesTest {
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(set(
         typesDb.string().name(),
-        typesDb.blob().name()));
+        typesDb.blob().name(),
+        typesDb.nothing().name()));
   }
 
   @Test
@@ -109,6 +111,12 @@ public class RuntimeTypesTest {
   @Test
   public void has_blob_type() throws Exception {
     when(() -> runtimeTypes.hasType("Blob"));
+    thenReturned(true);
+  }
+
+  @Test
+  public void has_nothing_type() throws Exception {
+    when(() -> runtimeTypes.hasType("Nothing"));
     thenReturned(true);
   }
 
@@ -143,7 +151,13 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void generic_type_can_be_retrieved_by_name() throws Exception {
+  public void nothing_type_can_be_retrieved_by_name() throws Exception {
+    when(() -> runtimeTypes.getType("Nothing"));
+    thenReturned(typesDb.nothing());
+  }
+
+  @Test
+  public void generic_type_cannot_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("a"));
     thenThrown(IllegalStateException.class);
   }

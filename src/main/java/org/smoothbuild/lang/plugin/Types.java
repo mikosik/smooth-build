@@ -9,6 +9,8 @@ public interface Types {
 
   public Type blob();
 
+  public Type nothing();
+
   public Type generic(String name);
 
   public StructType file();

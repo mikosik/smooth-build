@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 
@@ -9,6 +8,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.lang.nativ.GenericResult;
+import org.smoothbuild.acceptance.lang.nativ.ReportError;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Test
@@ -148,7 +148,7 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Type of function's 'result' expression"
-        + " is [a] which is not convertible to function's declared result type String.\n");
+        + " is [Nothing] which is not convertible to function's declared result type String.\n");
   }
 
   @Test
@@ -187,11 +187,28 @@ public class FunctionTest extends AcceptanceTestCase {
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
-  public void function_with_generic_array_result_type_is_allowed() throws IOException {
+  public void function_with_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
+      throws IOException {
     givenScript("[a] result = [];");
-    whenSmoothBuild("result");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(1, "Unknown generic type 'a'. "
+        + "Only generic types used in declaration of function parameters can be used here.");
+  }
+
+  @Test
+  public void function_with_nothing_result_type_is_allowed()
+      throws Exception {
+    givenNativeJar(ReportError.class);
+    givenScript("Nothing reportError(String message);");
+    whenSmoothList();
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+  }
+
+  public void function_with_nothing_array_result_type_is_allowed() throws IOException {
+    givenScript("[Nothing] result = [];");
+    whenSmoothList();
+    thenFinishedWithSuccess();
   }
 
   @Test
