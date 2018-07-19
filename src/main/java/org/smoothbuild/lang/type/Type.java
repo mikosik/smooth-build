@@ -2,7 +2,6 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.reverse;
-import static java.lang.Character.isLowerCase;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 
 import java.util.List;
@@ -88,10 +87,6 @@ public abstract class Type extends Value {
     return name.equals(NOTHING);
   }
 
-  public boolean isGeneric() {
-    return isLowerCase(coreType().name().charAt(0));
-  }
-
   public boolean isAssignableFrom(Type type) {
     if (this.equals(type)) {
       return true;
@@ -101,15 +96,6 @@ public abstract class Type extends Value {
     }
     if (this instanceof ArrayType && type instanceof ArrayType) {
       return ((ArrayType) this).elemType().isAssignableFrom(((ArrayType) type).elemType());
-    }
-    if (type instanceof ArrayType) {
-      return this.isGeneric() && !this.equals(type.coreType());
-    }
-    if (this instanceof ArrayType) {
-      return type.isGeneric() && !type.equals(this.coreType());
-    }
-    if (this.isGeneric() || type.isGeneric()) {
-      return true;
     }
     if (type instanceof StructType) {
       return isAssignableFrom(((StructType) type).superType());
@@ -132,13 +118,13 @@ public abstract class Type extends Value {
       Type last2 = hierarchy2.get(0);
       Type last1Core = last1.coreType();
       Type last2Core = last2.coreType();
-      boolean isGenericOrNothing1 = last1Core.isGeneric() || last1Core.isNothing();
-      boolean isGenericOrNothing2 = last2Core.isGeneric() || last2Core.isNothing();
-      if (isGenericOrNothing1 && isGenericOrNothing2) {
+      boolean isNothing1 = last1Core.isNothing();
+      boolean isNothing2 = last2Core.isNothing();
+      if (isNothing1 && isNothing2) {
         type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
-      } else if (isGenericOrNothing1) {
+      } else if (isNothing1) {
         type = firstWithDepthNotLowerThan(hierarchy2, last1.coreDepth());
-      } else if (isGenericOrNothing2) {
+      } else if (isNothing2) {
         type = firstWithDepthNotLowerThan(hierarchy1, last2.coreDepth());
       }
     }

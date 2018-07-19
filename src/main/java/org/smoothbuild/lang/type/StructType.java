@@ -40,7 +40,7 @@ public class StructType extends Type {
       return null;
     } else {
       Type superType = fields.values().iterator().next().type();
-      if (superType.isArray() || superType.isNothing() || superType.isGeneric()) {
+      if (superType.isArray() || superType.isNothing()) {
         throw new IllegalArgumentException();
       }
       return superType;

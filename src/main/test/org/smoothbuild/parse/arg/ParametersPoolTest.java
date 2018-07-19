@@ -16,7 +16,6 @@ import static org.testory.common.Matchers.same;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.ParameterInfo;
-import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableSet;

@@ -11,13 +11,9 @@ public interface Types {
 
   public Type nothing();
 
-  public Type generic(String name);
-
   public StructType file();
 
   public Type getType(String name);
 
   public ArrayType array(Type elementType);
-
-  public Type fixNameClashIfExists(Type type, Type typeToFix);
 }

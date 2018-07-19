@@ -41,20 +41,8 @@ public class StructTypeTest extends AbstractTypeTestCase {
   }
 
   @Test
-  public void first_field_type_cannot_be_generic() throws Exception {
-    when(() -> typesDb.struct("Struct", fields(typesDb.generic("b"))));
-    thenThrown(IllegalArgumentException.class);
-  }
-
-  @Test
   public void first_field_type_cannot_be_nothing_array() throws Exception {
     when(() -> typesDb.struct("Struct", fields(typesDb.array(typesDb.nothing()))));
-    thenThrown(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void first_field_type_cannot_be_generic_array() throws Exception {
-    when(() -> typesDb.struct("Struct", fields(typesDb.array(typesDb.generic("b")))));
     thenThrown(IllegalArgumentException.class);
   }
 
