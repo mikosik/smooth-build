@@ -92,7 +92,7 @@ public class InferTypesAndParamAssignment {
       private Type funcType(FuncNode func) {
         if (func.isNative()) {
           if (func.hasType()) {
-            return createFunctionType(func.type());
+            return createType(func.type());
           } else {
             errors.add(new ParseError(func, "Function '" + func.name()
                 + "' is native so should have declared result type."));
@@ -101,7 +101,7 @@ public class InferTypesAndParamAssignment {
         } else {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
-            Type type = createFunctionType(func.type());
+            Type type = createType(func.type());
             Type fixedExprType = types.fixNameClashIfExists(type, exprType);
             if (type != null && exprType != null && !type.isAssignableFrom(fixedExprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
@@ -114,10 +114,6 @@ public class InferTypesAndParamAssignment {
             return exprType;
           }
         }
-      }
-
-      private Type createFunctionType(TypeNode typeNode) {
-        return createType(typeNode);
       }
 
       private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
