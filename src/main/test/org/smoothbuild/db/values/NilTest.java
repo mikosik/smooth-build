@@ -28,35 +28,35 @@ public class NilTest {
 
   @Test
   public void type_of_nil_is_nil() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic("b")).build());
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
     when(array.type());
-    thenReturned(typesDb.array(typesDb.generic("b")));
+    thenReturned(typesDb.array(typesDb.nothing()));
   }
 
   @Test
   public void nil_array_is_empty() throws Exception {
-    when(() -> valuesDb.arrayBuilder(typesDb.generic("b")).build().asIterable(Value.class));
+    when(() -> valuesDb.arrayBuilder(typesDb.nothing()).build().asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 
   @Test
   public void nil_can_be_read_by_hash() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic("b")).build());
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
     when(() -> new TestingValuesDb(hashedDb).get(array.hash()));
     thenReturned(array);
   }
 
   @Test
   public void nil_read_by_hash_has_no_elements() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic("b")).build());
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
     when(() -> ((Array) new TestingValuesDb(hashedDb).get(array.hash())).asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 
   @Test
   public void nil_to_string() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic("b")).build());
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
     when(() -> array.toString());
-    thenReturned("[b](...):" + array.hash());
+    thenReturned("[Nothing](...):" + array.hash());
   }
 }

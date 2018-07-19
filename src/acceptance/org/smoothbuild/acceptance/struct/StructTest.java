@@ -109,6 +109,27 @@ public class StructTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void first_field_with_nothing_type_causes_error() throws Exception {
+    givenScript("MyStruct {               \n"
+        + "        Nothing myField        \n"
+        + "      }                        \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(2, "Struct field cannot have 'Nothing' type.\n");
+  }
+
+  @Test
+  public void non_first_field_with_nothing_type_causes_error() throws Exception {
+    givenScript("MyStruct {               \n"
+        + "        String myField,        \n"
+        + "        Nothing genericField,  \n"
+        + "      }                        \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(3, "Struct field cannot have 'Nothing' type.\n");
+  }
+
+  @Test
   public void first_field_with_generic_type_causes_error() throws Exception {
     givenScript("MyStruct {               \n"
         + "        a myField              \n"

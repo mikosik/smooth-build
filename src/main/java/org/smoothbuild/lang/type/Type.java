@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Lists.reverse;
 import static java.lang.Character.isLowerCase;
+import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 
 import java.util.List;
 
@@ -83,12 +84,19 @@ public abstract class Type extends Value {
     return superType;
   }
 
+  public boolean isNothing() {
+    return name.equals(NOTHING);
+  }
+
   public boolean isGeneric() {
     return isLowerCase(coreType().name().charAt(0));
   }
 
   public boolean isAssignableFrom(Type type) {
     if (this.equals(type)) {
+      return true;
+    }
+    if (type.isNothing()) {
       return true;
     }
     if (this instanceof ArrayType && type instanceof ArrayType) {
@@ -122,13 +130,15 @@ public abstract class Type extends Value {
     if (type == null) {
       Type last1 = hierarchy1.get(0);
       Type last2 = hierarchy2.get(0);
-      boolean isGeneric1 = last1.coreType().isGeneric();
-      boolean isGeneric2 = last2.coreType().isGeneric();
-      if (isGeneric1 && isGeneric2) {
+      Type last1Core = last1.coreType();
+      Type last2Core = last2.coreType();
+      boolean isGenericOrNothing1 = last1Core.isGeneric() || last1Core.isNothing();
+      boolean isGenericOrNothing2 = last2Core.isGeneric() || last2Core.isNothing();
+      if (isGenericOrNothing1 && isGenericOrNothing2) {
         type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
-      } else if (isGeneric1) {
+      } else if (isGenericOrNothing1) {
         type = firstWithDepthNotLowerThan(hierarchy2, last1.coreDepth());
-      } else if (isGeneric2) {
+      } else if (isGenericOrNothing2) {
         type = firstWithDepthNotLowerThan(hierarchy1, last2.coreDepth());
       }
     }

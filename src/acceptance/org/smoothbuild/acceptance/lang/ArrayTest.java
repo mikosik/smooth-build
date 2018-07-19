@@ -11,7 +11,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ArrayTest extends AcceptanceTestCase {
   @Test
-  public void empty_array() throws Exception {
+  public void empty_array_of_nothings() throws Exception {
     givenScript("result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -71,24 +71,24 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void empty_array_of_arrays_of_generic() throws Exception {
-    givenScript("[[a]] result = [];");
+  public void empty_array_of_arrays_of_nothings() throws Exception {
+    givenScript("[[Nothing]] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());
   }
 
   @Test
-  public void array_of_arrays_of_generic_with_one_element() throws Exception {
-    givenScript("[[a]] result = [[]];");
+  public void array_of_arrays_of_nothings_with_one_element() throws Exception {
+    givenScript("[[Nothing]] result = [[]];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith(new Object[] { new Object[] {} }));
   }
 
   @Test
-  public void array_of_arrays_of_generic_with_two_elements() throws Exception {
-    givenScript("[[a]] result = [[], []];");
+  public void array_of_arrays_of_nothings_with_two_elements() throws Exception {
+    givenScript("[[Nothing]] result = [[], []];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith(new Object[] { new Object[] {}, new Object[] {} }));
@@ -130,8 +130,8 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void empty_array_of_arrays_of_arrays_of_generic() throws Exception {
-    givenScript("[[[a]]] result = [];");
+  public void empty_array_of_arrays_of_arrays_of_nothings() throws Exception {
+    givenScript("[[[Nothing]]] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isArrayWith());

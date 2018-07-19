@@ -123,10 +123,10 @@ public class ValueHashTest {
   }
 
   @Test
-  public void hash_of_empty_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.generic("a")).build());
+  public void hash_of_empty_nothing_array_is_stable() throws Exception {
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
     when(() -> array.hash());
-    thenReturned(HashCode.fromString("9a118fc56250e13d3b1730dd6358e0e59ab46bb4"));
+    thenReturned(HashCode.fromString("034da224a1b3f7e2d2702ce8c5dd986f11b9b08a"));
   }
 
   private Struct createStruct(ValuesDb valuesDb, String firstName, String lastName)

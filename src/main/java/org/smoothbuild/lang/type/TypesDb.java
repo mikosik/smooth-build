@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
+import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
@@ -27,6 +28,7 @@ public class TypesDb {
   private TypeType type;
   private StringType string;
   private BlobType blob;
+  private NothingType nothing;
 
   public TypesDb(@Values HashedDb hashedDb) {
     this.hashedDb = hashedDb;
@@ -56,6 +58,14 @@ public class TypesDb {
       cache.put(blob.hash(), blob);
     }
     return blob;
+  }
+
+  public NothingType nothing() {
+    if (nothing == null) {
+      nothing = new NothingType(writeBasicTypeData(NOTHING), type(), hashedDb);
+      cache.put(nothing.hash(), nothing);
+    }
+    return nothing;
   }
 
   public GenericType generic(String name) {
@@ -128,6 +138,8 @@ public class TypesDb {
           return string();
         case BLOB:
           return blob();
+        case NOTHING:
+          return nothing();
         case "":
           Type elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.superType());

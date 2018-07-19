@@ -40,8 +40,8 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void generic_parameter_can_be_declared() throws Exception {
-    givenScript("oneParameter(a generic) = 'abc';"
+  public void nothing_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter(Nothing nothing) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -54,6 +54,14 @@ public class ParameterTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Unknown type 'Value'.\n");
+  }
+
+  @Test
+  public void generic_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter(a param) = 'abc';"
+        + "result = 'def';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
   }
 
   @Test
@@ -84,6 +92,14 @@ public class ParameterTest extends AcceptanceTestCase {
   @Test
   public void file_array_parameter_can_be_declared() throws Exception {
     givenScript("oneParameter([File] array) = 'abc';"
+        + "result = 'def';");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void nothing_array_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter([Nothing] array) = 'abc';"
         + "result = 'def';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
