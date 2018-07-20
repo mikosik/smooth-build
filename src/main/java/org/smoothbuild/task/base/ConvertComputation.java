@@ -42,7 +42,7 @@ public class ConvertComputation implements Computation {
     return new Output(convertStruct(container, (Struct) value, type));
   }
 
-  private Value convertArray(Container container, Array array, Type destinationType) {
+  private static Value convertArray(Container container, Array array, Type destinationType) {
     Type elemType = ((ArrayType) destinationType).elemType();
     ArrayBuilder builder = container.create().arrayBuilder(elemType);
     for (Value element : array.asIterable(Value.class)) {
@@ -55,7 +55,7 @@ public class ConvertComputation implements Computation {
     return builder.build();
   }
 
-  private Value convertStruct(Container container, Struct struct, Type destinationType) {
+  private static Value convertStruct(Container container, Struct struct, Type destinationType) {
     Value superValue = struct.superValue();
     if (superValue.type().equals(destinationType)) {
       return superValue;
