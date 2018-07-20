@@ -9,11 +9,11 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
-  private final Type string = new TestingTypesDb().string();
+  private final ConcreteType string = new TestingTypesDb().string();
   private final String name = "name";
   private Parameter parameter;
 

@@ -5,7 +5,7 @@ import static org.smoothbuild.db.hashed.Hash.newHasher;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
@@ -32,7 +32,7 @@ public class Task {
     return evaluator.name();
   }
 
-  public Type resultType() {
+  public ConcreteType resultType() {
     return evaluator.resultType();
   }
 

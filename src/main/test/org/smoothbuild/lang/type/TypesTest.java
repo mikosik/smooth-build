@@ -53,7 +53,7 @@ public class TypesTest {
         typeNameIs(array2(personType), "[[Person]]")));
   }
 
-  private static Case typeNameIs(Type type, String expected) {
+  private static Case typeNameIs(ConcreteType type, String expected) {
     return newCase(
         "Type " + type.name(),
         () -> assertEquals(expected, type.name()));
@@ -81,7 +81,7 @@ public class TypesTest {
         typeToStringIs(array2(personType), "Type(\"[[Person]]\")")));
   }
 
-  private static Case typeToStringIs(Type type, String expectedPrefix) {
+  private static Case typeToStringIs(ConcreteType type, String expectedPrefix) {
     return newCase(
         type.name() + ".toString()",
         () -> assertEquals(expectedPrefix + ":" + type.hash(), type.toString()));
@@ -90,7 +90,7 @@ public class TypesTest {
   @Quackery
   public static Suite jType() {
     return suite("Type.jType").addAll(asList(
-        jTypeIs(type, Type.class),
+        jTypeIs(type, ConcreteType.class),
         jTypeIs(string, SString.class),
         jTypeIs(blob, Blob.class),
         jTypeIs(nothing, Nothing.class),
@@ -100,7 +100,7 @@ public class TypesTest {
         jTypeIs(array(nothing), Array.class)));
   }
 
-  private static Case jTypeIs(Type type, Class<?> expected) {
+  private static Case jTypeIs(ConcreteType type, Class<?> expected) {
     return newCase(
         type.name() + ".jType",
         () -> assertEquals(expected, type.jType()));
@@ -126,7 +126,7 @@ public class TypesTest {
         coreTypeIs(array2(personType), personType)));
   }
 
-  private static Case coreTypeIs(Type type, Type expected) {
+  private static Case coreTypeIs(ConcreteType type, ConcreteType expected) {
     return newCase(
         type.name() + ".coreType()",
         () -> assertEquals(expected, type.coreType()));
@@ -152,7 +152,7 @@ public class TypesTest {
         coreDepthIs(array2(personType), 2)));
   }
 
-  private static Case coreDepthIs(Type type, int depth) {
+  private static Case coreDepthIs(ConcreteType type, int depth) {
     return newCase(
         type.name() + ".coreDepth()",
         () -> assertEquals(depth, type.coreDepth()));
@@ -178,11 +178,11 @@ public class TypesTest {
         isArrayType(array2(personType))));
   }
 
-  private static Case isArrayType(Type type) {
+  private static Case isArrayType(ConcreteType type) {
     return newCase(type.name() + " is array type", () -> assertTrue(type.isArray()));
   }
 
-  private static Case isNotArrayType(Type type) {
+  private static Case isNotArrayType(ConcreteType type) {
     return newCase(type.name() + " is NOT array type", () -> assertFalse(type.isArray()));
   }
 
@@ -208,7 +208,7 @@ public class TypesTest {
         superTypeIs(array2(string), array2(personType))));
   }
 
-  private static Case superTypeIs(Object expected, Type type) {
+  private static Case superTypeIs(Object expected, ConcreteType type) {
     return newCase(
         type.name() + " superType()",
         () -> assertEquals(expected, type.superType()));
@@ -228,8 +228,8 @@ public class TypesTest {
         hierarchyTest(list(array2(nothing)))));
   }
 
-  private static Case hierarchyTest(List<Type> hierarchy) {
-    Type root = hierarchy.get(hierarchy.size() - 1);
+  private static Case hierarchyTest(List<ConcreteType> hierarchy) {
+    ConcreteType root = hierarchy.get(hierarchy.size() - 1);
     return newCase(
         "Hierarchy of " + root.name() + " is " + hierarchy.toString(),
         () -> assertEquals(hierarchy, root.hierarchy()));
@@ -431,13 +431,13 @@ public class TypesTest {
         illegalAssignment(array2(personType), array(personType))));
   }
 
-  private static Case allowedAssignment(Type destination, Type source) {
+  private static Case allowedAssignment(ConcreteType destination, ConcreteType source) {
     return newCase(
         destination.name() + " is assignable from " + source.name(),
         () -> assertTrue(destination.isAssignableFrom(source)));
   }
 
-  private static Case illegalAssignment(Type destination, Type source) {
+  private static Case illegalAssignment(ConcreteType destination, ConcreteType source) {
     return newCase(
         destination.name() + " is NOT assignable from " + source.name(),
         () -> assertFalse(destination.isAssignableFrom(source)));
@@ -496,7 +496,7 @@ public class TypesTest {
         assertCommon(array(nothing), array(blob), array(blob))));
   }
 
-  private static Case assertCommon(Type type1, Type type2, Type expected) {
+  private static Case assertCommon(ConcreteType type1, ConcreteType type2, ConcreteType expected) {
     String expectedName = expected == null ? "null" : expected.name();
     return newCase(
         "commonSuperType of " + type1.name() + " and " + type2.name() + " is " + expectedName,
@@ -522,7 +522,7 @@ public class TypesTest {
         elementTypeOf(array2(nothing), array(nothing))));
   }
 
-  private static Case elementTypeOf(ArrayType arrayType, Type expected) {
+  private static Case elementTypeOf(ArrayType arrayType, ConcreteType expected) {
     return newCase(
         arrayType.name() + ".elemType() == " + expected,
         () -> assertEquals(expected, arrayType.elemType()));

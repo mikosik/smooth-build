@@ -14,12 +14,12 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
-  private final Type type = new TestingTypesDb().string();
+  private final ConcreteType type = new TestingTypesDb().string();
   private Location location;
   private MyExpression expression;
 
@@ -55,7 +55,7 @@ public class ExpressionTest {
   }
 
   public static class MyExpression extends Expression {
-    public MyExpression(Type type, Location location) {
+    public MyExpression(ConcreteType type, Location location) {
       super(type, location);
     }
 

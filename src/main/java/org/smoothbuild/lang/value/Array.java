@@ -6,7 +6,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Instantiator;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -27,7 +27,7 @@ public class Array extends Value {
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
-    Type elemType = type().elemType();
+    ConcreteType elemType = type().elemType();
     Preconditions.checkArgument(clazz.isAssignableFrom(elemType.jType()));
     ImmutableList<Value> values = hashedDb
         .readHashes(dataHash())

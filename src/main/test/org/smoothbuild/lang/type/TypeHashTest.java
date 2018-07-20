@@ -31,7 +31,7 @@ public class TypeHashTest {
         new Field(typesDb.blob(), "data", unknownLocation())));
   }
 
-  private void assertHash(Type type, String hash) {
+  private void assertHash(ConcreteType type, String hash) {
     when(() -> type.hash());
     thenReturned(HashCode.fromString(hash));
   }

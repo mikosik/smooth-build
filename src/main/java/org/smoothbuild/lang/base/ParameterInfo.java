@@ -7,20 +7,20 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 public class ParameterInfo {
-  private final Type type;
+  private final ConcreteType type;
   private final String name;
   private final boolean isRequired;
 
-  public ParameterInfo(Type type, String name, boolean isRequired) {
+  public ParameterInfo(ConcreteType type, String name, boolean isRequired) {
     this.isRequired = isRequired;
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
   }
 
-  public Type type() {
+  public ConcreteType type() {
     return type;
   }
 

@@ -16,7 +16,7 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FuncNode;
@@ -59,9 +59,9 @@ public class ModuleLoader {
     ImmutableList<Parameter> parameters = struct
         .fields()
         .stream()
-        .map(f -> new Parameter(f.get(Type.class), f.name(), null))
+        .map(f -> new Parameter(f.get(ConcreteType.class), f.name(), null))
         .collect(toImmutableList());
-    Signature signature = new Signature(struct.get(Type.class), struct.name(), parameters);
+    Signature signature = new Signature(struct.get(ConcreteType.class), struct.name(), parameters);
     return new Constructor(signature, struct.location());
   }
 }

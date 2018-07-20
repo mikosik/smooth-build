@@ -15,7 +15,7 @@ import org.smoothbuild.lang.value.Struct;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.HashCode;
 
-public class StructType extends Type {
+public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
   private final Instantiator instantiator;
 
@@ -35,11 +35,11 @@ public class StructType extends Type {
     this.instantiator = checkNotNull(instantiator);
   }
 
-  private static Type calculateSuperType(ImmutableMap<String, Field> fields) {
+  private static ConcreteType calculateSuperType(ImmutableMap<String, Field> fields) {
     if (fields.size() == 0) {
       return null;
     } else {
-      Type superType = fields.values().iterator().next().type();
+      ConcreteType superType = fields.values().iterator().next().type();
       if (superType.isArray() || superType.isNothing()) {
         throw new IllegalArgumentException();
       }

@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
@@ -8,7 +8,7 @@ import com.google.common.hash.HashCode;
 public interface Computation {
   public HashCode hash();
 
-  public Type resultType();
+  public ConcreteType resultType();
 
   public Output execute(Input input, Container container);
 }

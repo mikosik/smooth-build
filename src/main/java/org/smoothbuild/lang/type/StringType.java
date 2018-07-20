@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
-public class StringType extends Type {
+public class StringType extends ConcreteType {
   protected StringType(HashCode dataHash, TypeType type, HashedDb hashedDb) {
     super(dataHash, type, null, STRING, SString.class, hashedDb);
   }

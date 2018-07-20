@@ -10,7 +10,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -22,12 +22,12 @@ import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
-  public static <T extends Value> Array array(HashedDb hashedDb, Type elementType,
+  public static <T extends Value> Array array(HashedDb hashedDb, ConcreteType elementType,
       Value... elements) {
     return array(new TestingValuesDb(hashedDb), elementType, elements);
   }
 
-  public static <T extends Value> Array array(ValuesDb valuesDb, Type elementType,
+  public static <T extends Value> Array array(ValuesDb valuesDb, ConcreteType elementType,
       Value... elements) {
     return valuesDb.arrayBuilder(elementType).addAll(list(elements)).build();
   }

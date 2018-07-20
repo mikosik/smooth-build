@@ -5,28 +5,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.hash.HashCode;
 
 public class Value {
   private final HashCode hash;
   private final HashCode dataHash;
-  private final Type type;
+  private final ConcreteType type;
   protected final HashedDb hashedDb;
 
-  public Value(HashCode dataHash, Type type, HashedDb hashedDb) {
+  public Value(HashCode dataHash, ConcreteType type, HashedDb hashedDb) {
     this(calculateHash(type, dataHash, hashedDb), dataHash, type, hashedDb);
   }
 
-  public Value(HashCode hash, HashCode dataHash, Type type, HashedDb hashedDb) {
+  public Value(HashCode hash, HashCode dataHash, ConcreteType type, HashedDb hashedDb) {
     this.hash = checkNotNull(hash);
     this.dataHash = checkNotNull(dataHash);
     this.type = type;
     this.hashedDb = checkNotNull(hashedDb);
   }
 
-  private static HashCode calculateHash(Type type, HashCode dataHash, HashedDb hashedDb) {
+  private static HashCode calculateHash(ConcreteType type, HashCode dataHash, HashedDb hashedDb) {
     return hashedDb.writeHashes(type.hash(), dataHash);
   }
 
@@ -38,9 +38,9 @@ public class Value {
     return dataHash;
   }
 
-  public Type type() {
+  public ConcreteType type() {
     if (type == null) {
-      return (Type) this;
+      return (ConcreteType) this;
     } else {
       return type;
     }

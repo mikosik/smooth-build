@@ -22,7 +22,7 @@ import com.google.common.hash.HashCode;
 
 public class TypesDb {
   private final HashedDb hashedDb;
-  private final Map<HashCode, Type> cache;
+  private final Map<HashCode, ConcreteType> cache;
   private final Instantiator instantiator;
   private TypeType type;
   private StringType string;
@@ -71,13 +71,13 @@ public class TypesDb {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  public ArrayType array(Type elementType) {
+  public ArrayType array(ConcreteType elementType) {
     HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     ArrayType superType = possiblyNullArrayType(elementType.superType());
     return cache(new ArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
   }
 
-  private ArrayType possiblyNullArrayType(Type elementType) {
+  private ArrayType possiblyNullArrayType(ConcreteType elementType) {
     return elementType == null ? null : array(elementType);
   }
 
@@ -93,11 +93,11 @@ public class TypesDb {
             .toArray(HashCode[]::new));
   }
 
-  private HashCode writeField(String name, Type type) {
+  private HashCode writeField(String name, ConcreteType type) {
     return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
   }
 
-  public Type read(HashCode hash) {
+  public ConcreteType read(HashCode hash) {
     if (cache.containsKey(hash)) {
       return cache.get(hash);
     } else {
@@ -123,7 +123,7 @@ public class TypesDb {
     }
   }
 
-  protected Type readFromDataHash(HashCode typeDataHash) {
+  protected ConcreteType readFromDataHash(HashCode typeDataHash) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
       String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
@@ -134,7 +134,7 @@ public class TypesDb {
         case NOTHING:
           return nothing();
         case "":
-          Type elementType = read(unmarshaller.readHash());
+          ConcreteType elementType = read(unmarshaller.readHash());
           ArrayType superType = possiblyNullArrayType(elementType.superType());
           return cache(new ArrayType(typeDataHash, type(), superType, elementType, instantiator,
               hashedDb));
@@ -153,13 +153,13 @@ public class TypesDb {
         throw newCorruptedMerkleRootException(hash, hashes.size());
       }
       String name = hashedDb.readString(hashes.get(0));
-      Type type = read(hashes.get(1));
+      ConcreteType type = read(hashes.get(1));
       result.add(new Field(type, name, unknownLocation()));
     }
     return result;
   }
 
-  private <T extends Type> T cache(T type) {
+  private <T extends ConcreteType> T cache(T type) {
     HashCode hash = type.hash();
     if (cache.containsKey(hash)) {
       return (T) cache.get(hash);

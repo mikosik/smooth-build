@@ -10,17 +10,17 @@ import java.util.List;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
 public class NativeCallComputation implements Computation {
-  private final Type type;
+  private final ConcreteType type;
   private final NativeFunction function;
 
-  public NativeCallComputation(Type type, NativeFunction function) {
+  public NativeCallComputation(ConcreteType type, NativeFunction function) {
     this.type = type;
     this.function = function;
   }
@@ -31,7 +31,7 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return type;
   }
 

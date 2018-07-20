@@ -7,14 +7,14 @@ import java.util.List;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class BoundValueExpression extends Expression {
   private final String name;
 
-  public BoundValueExpression(Type type, String name, Location location) {
+  public BoundValueExpression(ConcreteType type, String name, Location location) {
     super(type, location);
     this.name = name;
   }

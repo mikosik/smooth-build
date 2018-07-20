@@ -13,15 +13,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 /**
- * Type in smooth language.
+ * Concrete type in smooth language.
  */
-public abstract class Type extends Value {
-  private final Type superType;
+public abstract class ConcreteType extends Value {
+  private final ConcreteType superType;
   private final String name;
   private final Class<? extends Value> jType;
-  private ImmutableList<Type> hierarchy;
+  private ImmutableList<ConcreteType> hierarchy;
 
-  protected Type(HashCode dataHash, TypeType type, Type superType, String name,
+  protected ConcreteType(HashCode dataHash, TypeType type, ConcreteType superType, String name,
       Class<? extends Value> jType, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     this.superType = superType;
@@ -29,8 +29,8 @@ public abstract class Type extends Value {
     this.jType = checkNotNull(jType);
   }
 
-  protected Type(HashCode hash, HashCode dataHash, TypeType type, Type superType, String name,
-      Class<? extends Value> jType, HashedDb hashedDb) {
+  protected ConcreteType(HashCode hash, HashCode dataHash, TypeType type, ConcreteType superType,
+      String name, Class<? extends Value> jType, HashedDb hashedDb) {
     super(hash, dataHash, type, hashedDb);
     this.superType = superType;
     this.name = name;
@@ -47,7 +47,7 @@ public abstract class Type extends Value {
 
   public abstract Value newValue(HashCode dataHash);
 
-  public Type coreType() {
+  public ConcreteType coreType() {
     return this;
   }
 
@@ -59,8 +59,8 @@ public abstract class Type extends Value {
     return this instanceof ArrayType;
   }
 
-  public List<Type> hierarchy() {
-    ImmutableList<Type> h = hierarchy;
+  public List<ConcreteType> hierarchy() {
+    ImmutableList<ConcreteType> h = hierarchy;
     if (h == null) {
       h = calculateHierarchy();
       hierarchy = h;
@@ -68,18 +68,18 @@ public abstract class Type extends Value {
     return h;
   }
 
-  private ImmutableList<Type> calculateHierarchy() {
+  private ImmutableList<ConcreteType> calculateHierarchy() {
     if (superType() == null) {
       return ImmutableList.of(this);
     } else {
-      return ImmutableList.<Type> builder()
+      return ImmutableList.<ConcreteType> builder()
           .addAll(superType().hierarchy())
           .add(this)
           .build();
     }
   }
 
-  public Type superType() {
+  public ConcreteType superType() {
     return superType;
   }
 
@@ -87,7 +87,7 @@ public abstract class Type extends Value {
     return name.equals(NOTHING);
   }
 
-  public boolean isAssignableFrom(Type type) {
+  public boolean isAssignableFrom(ConcreteType type) {
     if (this.equals(type)) {
       return true;
     }
@@ -103,21 +103,21 @@ public abstract class Type extends Value {
     return false;
   }
 
-  public Type commonSuperType(Type that) {
+  public ConcreteType commonSuperType(ConcreteType that) {
     /*
      * Algorithm below works correctly for all smooth types currently existing in smooth because it
      * is not possible to define recursive struct types. It will fail when conversion chain
      * (hierarchy) contains cycle (for example struct type is convertible to itself) or conversion
      * chain has infinite length (for example structure X is convertible to its array [X]).
      */
-    List<Type> hierarchy1 = this.hierarchy();
-    List<Type> hierarchy2 = that.hierarchy();
-    Type type = closestCommonSuperType(hierarchy1, hierarchy2);
+    List<ConcreteType> hierarchy1 = this.hierarchy();
+    List<ConcreteType> hierarchy2 = that.hierarchy();
+    ConcreteType type = closestCommonSuperType(hierarchy1, hierarchy2);
     if (type == null) {
-      Type last1 = hierarchy1.get(0);
-      Type last2 = hierarchy2.get(0);
-      Type last1Core = last1.coreType();
-      Type last2Core = last2.coreType();
+      ConcreteType last1 = hierarchy1.get(0);
+      ConcreteType last2 = hierarchy2.get(0);
+      ConcreteType last1Core = last1.coreType();
+      ConcreteType last2Core = last2.coreType();
       boolean isNothing1 = last1Core.isNothing();
       boolean isNothing2 = last2Core.isNothing();
       if (isNothing1 && isNothing2) {
@@ -131,9 +131,10 @@ public abstract class Type extends Value {
     return type;
   }
 
-  private static Type closestCommonSuperType(List<Type> hierarchy1, List<Type> hierarchy2) {
+  private static ConcreteType closestCommonSuperType(List<ConcreteType> hierarchy1,
+      List<ConcreteType> hierarchy2) {
     int index = 0;
-    Type type = null;
+    ConcreteType type = null;
     while (index < hierarchy1.size() && index < hierarchy2.size()
         && hierarchy1.get(index).equals(hierarchy2.get(index))) {
       type = hierarchy1.get(index);
@@ -142,7 +143,7 @@ public abstract class Type extends Value {
     return type;
   }
 
-  private static Type firstWithDepthNotLowerThan(List<Type> hierarchy, int depth) {
+  private static ConcreteType firstWithDepthNotLowerThan(List<ConcreteType> hierarchy, int depth) {
     return reverse(hierarchy)
         .stream()
         .filter(t -> depth <= t.coreDepth())

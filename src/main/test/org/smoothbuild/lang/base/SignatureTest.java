@@ -10,14 +10,14 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.util.Dag;
 
 public class SignatureTest {
   private final TypesDb typesDb = new TestingTypesDb();
-  private final Type string = typesDb.string();
-  private final Type blob = typesDb.blob();
+  private final ConcreteType string = typesDb.string();
+  private final ConcreteType blob = typesDb.blob();
   private final String name = "name";
   private final List<Parameter> parameters = list();
   private Parameter parameter;

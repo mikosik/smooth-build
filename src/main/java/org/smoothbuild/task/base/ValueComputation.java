@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
 
@@ -21,7 +21,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return value.type();
   }
 

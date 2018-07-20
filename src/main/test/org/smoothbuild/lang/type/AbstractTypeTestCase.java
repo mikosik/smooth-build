@@ -16,7 +16,7 @@ import com.google.common.hash.HashCode;
 public abstract class AbstractTypeTestCase {
   protected HashedDb hashedDb;
   protected TypesDb typesDb;
-  protected Type type;
+  protected ConcreteType type;
   protected HashCode hash;
 
   @Before
@@ -25,7 +25,7 @@ public abstract class AbstractTypeTestCase {
     given(typesDb = new TypesDb(hashedDb));
   }
 
-  protected abstract Type getType(TypesDb typesDb);
+  protected abstract ConcreteType getType(TypesDb typesDb);
 
   @Test
   public void type_can_be_read_back() throws Exception {

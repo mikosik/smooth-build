@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 public class FunctionTest {
-  private static final Type STRING = new TestingTypesDb().string();
+  private static final ConcreteType STRING = new TestingTypesDb().string();
   private String name;
   private List<Parameter> parameters;
   private Signature signature;
@@ -56,7 +56,7 @@ public class FunctionTest {
     }
 
     @Override
-    public Expression createCallExpression(Type type, Location location) {
+    public Expression createCallExpression(ConcreteType type, Location location) {
       return null;
     }
   }

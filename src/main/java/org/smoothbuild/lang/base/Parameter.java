@@ -3,13 +3,13 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.util.Dag;
 
 public class Parameter extends ParameterInfo {
   private final Dag<Expression> defaultValue;
 
-  public Parameter(Type type, String name, Dag<Expression> defaultValue) {
+  public Parameter(ConcreteType type, String name, Dag<Expression> defaultValue) {
     super(type, name, defaultValue == null);
     this.defaultValue = defaultValue;
   }

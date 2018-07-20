@@ -12,7 +12,7 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -37,22 +37,22 @@ public class InferTypesAndParamAssignment {
     RuntimeTypes types = runtime.types();
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
-      Scope<Type> scope;
+      Scope<ConcreteType> scope;
 
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         List<Field> fields = new ArrayList<>();
         for (FieldNode field : struct.fields()) {
-          Type type = field.get(Type.class);
+          ConcreteType type = field.get(ConcreteType.class);
           if (type == null) {
             return;
           } else {
             fields.add(new Field(type, field.name(), field.location()));
           }
         }
-        Type type = types.struct(struct.name(), fields);
-        struct.set(Type.class, type);
+        ConcreteType type = types.struct(struct.name(), fields);
+        struct.set(ConcreteType.class, type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
           struct.set(List.class, parameters);
@@ -62,9 +62,9 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitField(FieldNode field) {
         super.visitField(field);
-        field.set(Type.class, field.type().get(Type.class));
+        field.set(ConcreteType.class, field.type().get(ConcreteType.class));
         field.set(ParameterInfo.class,
-            new ParameterInfo(field.get(Type.class), field.name(), true));
+            new ParameterInfo(field.get(ConcreteType.class), field.name(), true));
       }
 
       @Override
@@ -74,21 +74,21 @@ public class InferTypesAndParamAssignment {
         scope = scope();
         func.params()
             .stream()
-            .forEach(p -> scope.add(p.name(), p.get(Type.class)));
+            .forEach(p -> scope.add(p.name(), p.get(ConcreteType.class)));
         if (!func.isNative()) {
           visitExpr(func.expr());
         }
         scope = null;
 
-        Type type = funcType(func);
-        func.set(Type.class, type);
+        ConcreteType type = funcType(func);
+        func.set(ConcreteType.class, type);
         List<ParameterInfo> parameters = createParameters(func.params());
         if (parameters != null) {
           func.set(List.class, parameters);
         }
       }
 
-      private Type funcType(FuncNode func) {
+      private ConcreteType funcType(FuncNode func) {
         if (func.isNative()) {
           if (func.hasType()) {
             return createType(func.type());
@@ -98,9 +98,9 @@ public class InferTypesAndParamAssignment {
             return null;
           }
         } else {
-          Type exprType = func.expr().get(Type.class);
+          ConcreteType exprType = func.expr().get(ConcreteType.class);
           if (func.hasType()) {
-            Type type = createType(func.type());
+            ConcreteType type = createType(func.type());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
                   + "' expression is " + exprType.name()
@@ -129,16 +129,16 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitParam(ParamNode param) {
         super.visitParam(param);
-        Type type = param.type().get(Type.class);
-        param.set(Type.class, type);
+        ConcreteType type = param.type().get(ConcreteType.class);
+        param.set(ConcreteType.class, type);
         if (type == null) {
           param.set(ParameterInfo.class, null);
         } else {
           ParameterInfo info = new ParameterInfo(
-              param.get(Type.class), param.name(), !param.hasDefaultValue());
+              param.get(ConcreteType.class), param.name(), !param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
-          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != null) {
-            Type valueType = param.defaultValue().get((Type.class));
+          if (param.hasDefaultValue() && param.defaultValue().get(ConcreteType.class) != null) {
+            ConcreteType valueType = param.defaultValue().get((ConcreteType.class));
             if (!type.isAssignableFrom(valueType)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
                   + "' is of type " + type.name() + " so it cannot have default value of type "
@@ -151,10 +151,10 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitType(TypeNode type) {
         super.visitType(type);
-        type.set(Type.class, createType(type));
+        type.set(ConcreteType.class, createType(type));
       }
 
-      private Type createType(TypeNode type) {
+      private ConcreteType createType(TypeNode type) {
         if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return types.array(createType(elementType));
@@ -165,15 +165,15 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitAccessor(AccessorNode expr) {
         super.visitAccessor(expr);
-        Type exprType = expr.expr().get(Type.class);
+        ConcreteType exprType = expr.expr().get(ConcreteType.class);
         if (exprType == null) {
-          expr.set(Type.class, null);
+          expr.set(ConcreteType.class, null);
         } else {
           if (exprType instanceof StructType
               && ((StructType) exprType).fields().containsKey(expr.fieldName())) {
-            expr.set(Type.class, ((StructType) exprType).fields().get(expr.fieldName()).type());
+            expr.set(ConcreteType.class, ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
-            expr.set(Type.class, null);
+            expr.set(ConcreteType.class, null);
             errors.add(new ParseError(expr.location(), "Type '" + exprType.name()
                 + "' doesn't have field '" + expr.fieldName() + "'."));
           }
@@ -183,21 +183,21 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
-        array.set(Type.class, findArrayType(array));
+        array.set(ConcreteType.class, findArrayType(array));
       }
 
-      private Type findArrayType(ArrayNode array) {
+      private ConcreteType findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
           return types.array(types.nothing());
         }
-        Type firstType = expressions.get(0).get(Type.class);
+        ConcreteType firstType = expressions.get(0).get(ConcreteType.class);
         if (firstType == null) {
           return null;
         }
-        Type elemType = firstType;
+        ConcreteType elemType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
-          Type type = expressions.get(i).get(Type.class);
+          ConcreteType type = expressions.get(i).get(ConcreteType.class);
           if (type == null) {
             return null;
           }
@@ -223,19 +223,19 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        ref.set(Type.class, scope.get(ref.name()));
+        ref.set(ConcreteType.class, scope.get(ref.name()));
       }
 
       @Override
       public void visitArg(ArgNode arg) {
         super.visitArg(arg);
-        arg.set(Type.class, arg.expr().get(Type.class));
+        arg.set(ConcreteType.class, arg.expr().get(ConcreteType.class));
       }
 
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, types.string());
+        string.set(ConcreteType.class, types.string());
       }
     }.visitAst(ast);
     return errors;

@@ -4,14 +4,14 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class ThoroughTypeMatcher extends TypeSafeMatcher<Type> {
-  private final Type type;
+public class ThoroughTypeMatcher extends TypeSafeMatcher<ConcreteType> {
+  private final ConcreteType type;
 
-  public static Matcher<Type> typeMatchingThoroughly(Type type) {
+  public static Matcher<ConcreteType> typeMatchingThoroughly(ConcreteType type) {
     return new ThoroughTypeMatcher(type);
   }
 
-  private ThoroughTypeMatcher(Type type) {
+  private ThoroughTypeMatcher(ConcreteType type) {
     this.type = type;
   }
 
@@ -21,7 +21,7 @@ public class ThoroughTypeMatcher extends TypeSafeMatcher<Type> {
   }
 
   @Override
-  protected boolean matchesSafely(Type item) {
+  protected boolean matchesSafely(ConcreteType item) {
     return type.name().equals(item.name())
         && type.hash().equals(item.hash())
         && type.dataHash().equals(item.dataHash())

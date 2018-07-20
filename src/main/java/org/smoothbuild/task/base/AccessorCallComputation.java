@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.task.base.ComputationHashes.accessorCallComputationHash;
 
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
@@ -25,7 +25,7 @@ public class AccessorCallComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return accessor.type();
   }
 

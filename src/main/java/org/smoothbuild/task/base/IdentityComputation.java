@@ -2,15 +2,15 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
 public class IdentityComputation implements Computation {
-  private final Type type;
+  private final ConcreteType type;
 
-  public IdentityComputation(Type type) {
+  public IdentityComputation(ConcreteType type) {
     this.type = type;
   }
 
@@ -20,7 +20,7 @@ public class IdentityComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return type;
   }
 
