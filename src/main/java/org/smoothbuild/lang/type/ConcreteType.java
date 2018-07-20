@@ -5,8 +5,10 @@ import static com.google.common.collect.Lists.reverse;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.value.AbstractValue;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
@@ -15,26 +17,30 @@ import com.google.common.hash.HashCode;
 /**
  * Concrete type in smooth language.
  */
-public abstract class ConcreteType extends Value {
+public abstract class ConcreteType implements Value {
+  private final AbstractValue value;
   private final ConcreteType superType;
   private final String name;
   private final Class<? extends Value> jType;
   private ImmutableList<ConcreteType> hierarchy;
+  protected final HashedDb hashedDb;
 
   protected ConcreteType(HashCode dataHash, TypeType type, ConcreteType superType, String name,
       Class<? extends Value> jType, HashedDb hashedDb) {
-    super(dataHash, type, hashedDb);
+    this.value = new AbstractValue(dataHash, type, hashedDb) {};
     this.superType = superType;
     this.name = checkNotNull(name);
     this.jType = checkNotNull(jType);
+    this.hashedDb = hashedDb;
   }
 
   protected ConcreteType(HashCode hash, HashCode dataHash, TypeType type, ConcreteType superType,
       String name, Class<? extends Value> jType, HashedDb hashedDb) {
-    super(hash, dataHash, type, hashedDb);
+    this.value = new AbstractValue(hash, dataHash, type, hashedDb) {};
     this.superType = superType;
     this.name = name;
     this.jType = jType;
+    this.hashedDb = hashedDb;
   }
 
   public String name() {
@@ -149,6 +155,35 @@ public abstract class ConcreteType extends Value {
         .filter(t -> depth <= t.coreDepth())
         .findFirst()
         .orElse(null);
+  }
+
+  @Override
+  public HashCode hash() {
+    return value.hash();
+  }
+
+  @Override
+  public HashCode dataHash() {
+    return value.dataHash();
+  }
+
+  @Override
+  public ConcreteType type() {
+    return value.type();
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    return object instanceof ConcreteType && equals((ConcreteType) object);
+  }
+
+  private boolean equals(ConcreteType value) {
+    return Objects.equals(hash(), value.hash());
+  }
+
+  @Override
+  public int hashCode() {
+    return hash().hashCode();
   }
 
   @Override

@@ -5,14 +5,14 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Instantiator;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
-public class Array extends Value {
+public class Array extends AbstractValue {
   private final Instantiator instantiator;
 
   public Array(HashCode dataHash, ArrayType arrayType, Instantiator instantiator,

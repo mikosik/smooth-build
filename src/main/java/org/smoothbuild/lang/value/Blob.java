@@ -9,7 +9,7 @@ import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.hash.HashCode;
 
-public class Blob extends Value {
+public class Blob extends AbstractValue {
   public Blob(HashCode dataHash, ConcreteType type, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     checkArgument(type.name().equals("Blob"));
