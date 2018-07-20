@@ -13,6 +13,8 @@ public class TestingTypes {
   public static final ConcreteType nothing = typesDb.nothing();
   public static final StructType personType = personType(typesDb);
   public static final StructType file = file();
+  public static final GenericType a = new GenericType("a");
+  public static final GenericType b = new GenericType("b");
 
   public static ConcreteArrayType array4(ConcreteType elemType) {
     return array(array(array(array(elemType))));
@@ -28,6 +30,22 @@ public class TestingTypes {
 
   public static ConcreteArrayType array(ConcreteType elemType) {
     return typesDb.array(elemType);
+  }
+
+  public static GenericArrayType array4(GenericType elemType) {
+    return array(array(array(array(elemType))));
+  }
+
+  public static GenericArrayType array3(GenericType elemType) {
+    return array(array(array(elemType)));
+  }
+
+  public static GenericArrayType array2(GenericType elemType) {
+    return array(array(elemType));
+  }
+
+  public static GenericArrayType array(GenericType elemType) {
+    return new GenericArrayType(elemType);
   }
 
   public static StructType personType(TypesDb typesDb) {
