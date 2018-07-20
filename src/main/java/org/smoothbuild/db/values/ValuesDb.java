@@ -3,10 +3,10 @@ package org.smoothbuild.db.values;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -29,14 +29,14 @@ public class ValuesDb {
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    ArrayType arrayType = typesDb.array(elementType);
+    ConcreteArrayType arrayType = typesDb.array(elementType);
     if (arrayType == null) {
       throw new IllegalArgumentException("Cannot create array with element of type " + elementType);
     }
     return createArrayBuilder(arrayType);
   }
 
-  private ArrayBuilder createArrayBuilder(ArrayType type) {
+  private ArrayBuilder createArrayBuilder(ConcreteArrayType type) {
     return new ArrayBuilder(type, hashedDb);
   }
 

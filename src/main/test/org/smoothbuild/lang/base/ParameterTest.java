@@ -8,8 +8,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.util.Dag;
 
 public class ParameterTest {

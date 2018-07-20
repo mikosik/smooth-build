@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
@@ -25,7 +25,7 @@ public class Evaluator {
     return new Evaluator(new ValueComputation(value), value.type().name(), true, true, location);
   }
 
-  public static Evaluator arrayEvaluator(ArrayType arrayType, Location location) {
+  public static Evaluator arrayEvaluator(ConcreteArrayType arrayType, Location location) {
     return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, location);
   }
 

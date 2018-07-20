@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Instantiator;
 
@@ -15,15 +15,15 @@ import com.google.common.hash.HashCode;
 public class Array extends AbstractValue {
   private final Instantiator instantiator;
 
-  public Array(HashCode dataHash, ArrayType arrayType, Instantiator instantiator,
+  public Array(HashCode dataHash, ConcreteArrayType arrayType, Instantiator instantiator,
       HashedDb hashedDb) {
     super(dataHash, arrayType, hashedDb);
     this.instantiator = instantiator;
   }
 
   @Override
-  public ArrayType type() {
-    return (ArrayType) super.type();
+  public ConcreteArrayType type() {
+    return (ConcreteArrayType) super.type();
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {

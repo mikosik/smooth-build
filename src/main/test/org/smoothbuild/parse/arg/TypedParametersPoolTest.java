@@ -18,8 +18,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.ParameterInfo;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class TypedParametersPoolTest {

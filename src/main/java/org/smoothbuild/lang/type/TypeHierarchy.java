@@ -34,9 +34,9 @@ public class TypeHierarchy {
       }
     }
     if (nothingArray != null) {
-      while (nothingArray instanceof ArrayType) {
+      while (nothingArray instanceof ConcreteArrayType) {
         sorted.add(nothingArray);
-        nothingArray = ((ArrayType) nothingArray).elemType();
+        nothingArray = ((ConcreteArrayType) nothingArray).elemType();
       }
       sorted.add(nothingArray);
     }

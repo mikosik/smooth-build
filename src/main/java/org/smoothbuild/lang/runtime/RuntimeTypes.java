@@ -12,9 +12,9 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypesDb;
 
 @Singleton
@@ -69,7 +69,7 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public ArrayType array(ConcreteType elementType) {
+  public ConcreteArrayType array(ConcreteType elementType) {
     return typesDb.array(elementType);
   }
 

@@ -14,19 +14,19 @@ public class TestingTypes {
   public static final StructType personType = personType(typesDb);
   public static final StructType file = file();
 
-  public static ArrayType array4(ConcreteType elemType) {
+  public static ConcreteArrayType array4(ConcreteType elemType) {
     return array(array(array(array(elemType))));
   }
 
-  public static ArrayType array3(ConcreteType elemType) {
+  public static ConcreteArrayType array3(ConcreteType elemType) {
     return array(array(array(elemType)));
   }
 
-  public static ArrayType array2(ConcreteType elemType) {
+  public static ConcreteArrayType array2(ConcreteType elemType) {
     return array(array(elemType));
   }
 
-  public static ArrayType array(ConcreteType elemType) {
+  public static ConcreteArrayType array(ConcreteType elemType) {
     return typesDb.array(elemType);
   }
 

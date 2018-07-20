@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 
 import com.google.common.hash.HashCode;
 
 public class ArrayBuilder {
-  private final ArrayType type;
+  private final ConcreteArrayType type;
   private final HashedDb hashedDb;
   private final List<Value> elements;
 
-  public ArrayBuilder(ArrayType type, HashedDb hashedDb) {
+  public ArrayBuilder(ConcreteArrayType type, HashedDb hashedDb) {
     this.type = type;
     this.hashedDb = hashedDb;
     this.elements = new ArrayList<>();

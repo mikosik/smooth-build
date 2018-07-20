@@ -17,7 +17,7 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypesDb;
 
@@ -27,7 +27,7 @@ public class RuntimeTypesTest {
   private TypesDb typesDb;
   private RuntimeTypes runtimeTypes;
   private StructType type;
-  private ArrayType arrayType;
+  private ConcreteArrayType arrayType;
 
   @Before
   public void before() {

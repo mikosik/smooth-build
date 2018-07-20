@@ -2,7 +2,7 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -42,7 +42,7 @@ public class ConvertComputation implements Computation {
   }
 
   private static Value convertArray(Container container, Array array, ConcreteType destinationType) {
-    ConcreteType elemType = ((ArrayType) destinationType).elemType();
+    ConcreteType elemType = ((ConcreteArrayType) destinationType).elemType();
     ArrayBuilder builder = container.create().arrayBuilder(elemType);
     for (Value element : array.asIterable(Value.class)) {
       if (element instanceof Array) {

@@ -4,8 +4,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 
 public class ValueFactory {
   private final Types types;

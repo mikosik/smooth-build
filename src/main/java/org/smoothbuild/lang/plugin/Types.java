@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.plugin;
 
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 
 public interface Types {
   public ConcreteType string();
@@ -15,5 +15,5 @@ public interface Types {
 
   public ConcreteType getType(String name);
 
-  public ArrayType array(ConcreteType elementType);
+  public ConcreteArrayType array(ConcreteType elementType);
 }
