@@ -24,7 +24,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
   private List<Field> fields;
 
   @Override
-  protected Type getType(TypesDb typesDb) {
+  protected ConcreteType getType(TypesDb typesDb) {
     return typesDb.struct("Struct", fields(typesDb.string(), typesDb.string()));
   }
 
@@ -81,7 +81,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
     thenReturned(not(type2.hash()));
   }
 
-  private List<Field> fields(Type... types) {
+  private List<Field> fields(ConcreteType... types) {
     ArrayList<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
       result.add(new Field(types[i], "name" + i, unknownLocation()));

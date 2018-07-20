@@ -4,7 +4,7 @@ import static org.smoothbuild.task.base.ComputationHashes.constructorCallComputa
 
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.StructBuilder;
 import org.smoothbuild.task.exec.Container;
 
@@ -24,7 +24,7 @@ public class ConstructorCallComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return constructor.type();
   }
 

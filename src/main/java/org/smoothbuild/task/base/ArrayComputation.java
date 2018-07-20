@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
@@ -21,7 +21,7 @@ public class ArrayComputation implements Computation {
   }
 
   @Override
-  public Type resultType() {
+  public ConcreteType resultType() {
     return arrayType;
   }
 

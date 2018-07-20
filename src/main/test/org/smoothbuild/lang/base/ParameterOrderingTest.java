@@ -9,10 +9,10 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 public class ParameterOrderingTest {
-  private final Type string = new TestingTypesDb().string();
+  private final ConcreteType string = new TestingTypesDb().string();
   private Parameter parameter1;
   private Parameter parameter2;
   private Parameter parameter3;

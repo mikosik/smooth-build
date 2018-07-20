@@ -17,7 +17,7 @@ import com.google.common.hash.HashCode;
 public class CorruptedTypeTest {
   protected HashedDb hashedDb;
   protected TypesDb typesDb;
-  protected Type type;
+  protected ConcreteType type;
   protected HashCode hash;
   private TypeType typeType;
   private HashCode dataHash;

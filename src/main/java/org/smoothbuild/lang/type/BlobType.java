@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.Blob;
 
 import com.google.common.hash.HashCode;
 
-public class BlobType extends Type {
+public class BlobType extends ConcreteType {
   protected BlobType(HashCode dataHash, TypeType type, HashedDb hashedDb) {
     super(dataHash, type, null, BLOB, Blob.class, hashedDb);
   }

@@ -6,7 +6,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -28,7 +28,7 @@ public class ValuesDb {
     this.instantiator = new Instantiator(hashedDb, typesDb);
   }
 
-  public ArrayBuilder arrayBuilder(Type elementType) {
+  public ArrayBuilder arrayBuilder(ConcreteType elementType) {
     ArrayType arrayType = typesDb.array(elementType);
     if (arrayType == null) {
       throw new IllegalArgumentException("Cannot create array with element of type " + elementType);

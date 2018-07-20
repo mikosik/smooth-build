@@ -14,13 +14,13 @@ import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 
 @Singleton
 public class RuntimeTypes implements Types {
   private final TypesDb typesDb;
-  private final Map<String, Type> cache;
+  private final Map<String, ConcreteType> cache;
 
   @Inject
   public RuntimeTypes(TypesDb typesDb) {
@@ -28,15 +28,15 @@ public class RuntimeTypes implements Types {
     this.cache = createInitializedCache(typesDb);
   }
 
-  private static HashMap<String, Type> createInitializedCache(TypesDb typesDb) {
-    HashMap<String, Type> map = new HashMap<>();
+  private static HashMap<String, ConcreteType> createInitializedCache(TypesDb typesDb) {
+    HashMap<String, ConcreteType> map = new HashMap<>();
     putType(map, typesDb.string());
     putType(map, typesDb.blob());
     putType(map, typesDb.nothing());
     return map;
   }
 
-  private static void putType(HashMap<String, Type> map, Type type) {
+  private static void putType(HashMap<String, ConcreteType> map, ConcreteType type) {
     map.put(type.name(), type);
   }
 
@@ -44,22 +44,22 @@ public class RuntimeTypes implements Types {
     return unmodifiableSet(cache.keySet());
   }
 
-  public Map<String, Type> nameToTypeMap() {
+  public Map<String, ConcreteType> nameToTypeMap() {
     return unmodifiableMap(cache);
   }
 
   @Override
-  public Type string() {
+  public ConcreteType string() {
     return typesDb.string();
   }
 
   @Override
-  public Type blob() {
+  public ConcreteType blob() {
     return typesDb.blob();
   }
 
   @Override
-  public Type nothing() {
+  public ConcreteType nothing() {
     return typesDb.nothing();
   }
 
@@ -69,7 +69,7 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public ArrayType array(Type elementType) {
+  public ArrayType array(ConcreteType elementType) {
     return typesDb.array(elementType);
   }
 
@@ -78,8 +78,8 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public Type getType(String name) {
-    Type type = cache.get(name);
+  public ConcreteType getType(String name) {
+    ConcreteType type = cache.get(name);
     if (type == null) {
       throw new IllegalStateException("Unknown runtime type '" + name + "'.");
     }

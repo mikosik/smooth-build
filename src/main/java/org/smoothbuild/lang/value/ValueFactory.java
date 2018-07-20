@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 public class ValueFactory {
   private final Types types;
@@ -17,7 +17,7 @@ public class ValueFactory {
     this.valuesDb = valuesDb;
   }
 
-  public ArrayBuilder arrayBuilder(Type elementType) {
+  public ArrayBuilder arrayBuilder(ConcreteType elementType) {
     return valuesDb.arrayBuilder(elementType);
   }
 

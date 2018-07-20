@@ -16,7 +16,7 @@ import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -64,7 +64,7 @@ public class OutputsDb {
     return hashedDb.contains(taskHash);
   }
 
-  public Output read(HashCode taskHash, Type type) {
+  public Output read(HashCode taskHash, ConcreteType type) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
       Value messagesValue = valuesDb.get(unmarshaller.readHash());
       ArrayType messageArrayType = typesDb.array(messagesDb.messageType());

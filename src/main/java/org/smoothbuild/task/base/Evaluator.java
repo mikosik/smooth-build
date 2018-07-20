@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
 
@@ -29,13 +29,13 @@ public class Evaluator {
     return new Evaluator(new ArrayComputation(arrayType), arrayType.name(), true, true, location);
   }
 
-  public static Evaluator nativeCallEvaluator(Type type, NativeFunction function,
+  public static Evaluator nativeCallEvaluator(ConcreteType type, NativeFunction function,
       Location location) {
     return new Evaluator(new NativeCallComputation(type, function), function.name().toString(),
         false, function.isCacheable(), location);
   }
 
-  public static Evaluator callEvaluator(Type type, DefinedFunction function,
+  public static Evaluator callEvaluator(ConcreteType type, DefinedFunction function,
       Location location) {
     return new Evaluator(new IdentityComputation(type), function.name().toString(),
         false, true, location);
@@ -51,7 +51,7 @@ public class Evaluator {
         false, true, location);
   }
 
-  public static Evaluator convertEvaluator(Type type, Location location) {
+  public static Evaluator convertEvaluator(ConcreteType type, Location location) {
     return new Evaluator(
         new ConvertComputation(type), "~conversion", true, true, location);
   }
@@ -69,7 +69,7 @@ public class Evaluator {
     return computation.hash();
   }
 
-  public Type resultType() {
+  public ConcreteType resultType() {
     return computation.resultType();
   }
 

@@ -19,13 +19,13 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 
 public class TypedParametersPoolTest {
   private final TypesDb typesDb = new TestingTypesDb();
-  private final Type string = typesDb.string();
-  private final Type blobT = typesDb.blob();
+  private final ConcreteType string = typesDb.string();
+  private final ConcreteType blobT = typesDb.blob();
 
   private final ParameterInfo string1 = new ParameterInfo(string, "string1", true);
   private final ParameterInfo string2 = new ParameterInfo(string, "string2", true);

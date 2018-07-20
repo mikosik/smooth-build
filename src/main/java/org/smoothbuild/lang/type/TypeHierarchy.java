@@ -14,18 +14,18 @@ public class TypeHierarchy {
    * @return types sorted using type - subtype relationship. Each type comes before all of its
    *         subtypes.
    */
-  public static List<Type> sortedTypes(Iterable<? extends Type> types) {
-    Set<Type> uniqueTypes = newHashSet(types);
-    List<Type> sorted = new ArrayList<>();
-    Set<Type> alreadySorted = new HashSet<>();
-    Type nothingArray = null;
-    for (Type type : uniqueTypes) {
+  public static List<ConcreteType> sortedTypes(Iterable<? extends ConcreteType> types) {
+    Set<ConcreteType> uniqueTypes = newHashSet(types);
+    List<ConcreteType> sorted = new ArrayList<>();
+    Set<ConcreteType> alreadySorted = new HashSet<>();
+    ConcreteType nothingArray = null;
+    for (ConcreteType type : uniqueTypes) {
       if (type.coreType().isNothing()) {
         if (nothingArray == null || nothingArray.coreDepth() < type.coreDepth()) {
           nothingArray = type;
         }
       } else {
-        for (Type t : type.hierarchy()) {
+        for (ConcreteType t : type.hierarchy()) {
           if (!alreadySorted.contains(t)) {
             sorted.add(t);
             alreadySorted.add(t);

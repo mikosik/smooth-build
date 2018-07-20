@@ -25,7 +25,7 @@ public class Instantiator {
         // be Type("Type") smooth value. Let TypesDb handle and verify it.
         return typesDb.read(hash);
       case 2:
-        Type type = typesDb.read(hashes.get(0));
+        ConcreteType type = typesDb.read(hashes.get(0));
         return type.newValue(hashes.get(1));
       default:
         throw new CorruptedValueException(

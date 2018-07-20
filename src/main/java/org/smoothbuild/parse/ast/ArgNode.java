@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.collect.Ordering;
 
@@ -37,7 +37,7 @@ public class ArgNode extends NamedNode {
   }
 
   public String typeAndName() {
-    return get(Type.class).name() + ":" + nameSanitized();
+    return get(ConcreteType.class).name() + ":" + nameSanitized();
   }
 
   public ExprNode expr() {
@@ -45,7 +45,7 @@ public class ArgNode extends NamedNode {
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength, int minPositionLength) {
-    String type = padEnd(get(Type.class).name(), minTypeLength, ' ') + ": ";
+    String type = padEnd(get(ConcreteType.class).name(), minTypeLength, ' ') + ": ";
     String name = padEnd(nameSanitized(), minNameLength, ' ');
     String position = padEnd(positionString(), minPositionLength, ' ');
     String location = location().toString();

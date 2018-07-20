@@ -18,7 +18,7 @@ import java.util.Set;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
 import org.smoothbuild.parse.arg.TypedParametersPool;
@@ -34,7 +34,7 @@ public class InferCallTypeAndParamAssignment {
     new Runnable() {
       @Override
       public void run() {
-        call.set(Type.class, callType());
+        call.set(ConcreteType.class, callType());
         List<? extends ParameterInfo> parametersList = functionParameters();
         if (parametersList == null) {
           return;
@@ -64,17 +64,17 @@ public class InferCallTypeAndParamAssignment {
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
 
-      private Type callType() {
+      private ConcreteType callType() {
         String name = call.name();
         Functions functions = runtime.functions();
         if (functions.contains(name)) {
           return functions.get(name).signature().type();
         }
         if (ast.containsFunc(name)) {
-          return ast.func(name).get(Type.class);
+          return ast.func(name).get(ConcreteType.class);
         }
         if (ast.containsStruct(name)) {
-          return ast.struct(name).get(Type.class);
+          return ast.struct(name).get(ConcreteType.class);
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
@@ -85,8 +85,8 @@ public class InferCallTypeAndParamAssignment {
         Map<String, ParameterInfo> map = toMap(parameters, ParameterInfo::name);
         for (ArgNode arg : namedArgs) {
           ParameterInfo parameter = map.get(arg.name());
-          Type paramType = parameter.type();
-          Type argType = arg.get(Type.class);
+          ConcreteType paramType = parameter.type();
+          ConcreteType argType = arg.get(ConcreteType.class);
           if (paramType.isAssignableFrom(argType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
@@ -104,12 +104,12 @@ public class InferCallTypeAndParamAssignment {
         ParametersPool parametersPool = new ParametersPool(
             filter(parameters, not(ParameterInfo::isRequired)),
             filter(parameters, ParameterInfo::isRequired));
-        ImmutableMultimap<Type, ArgNode> namelessArgs = call
+        ImmutableMultimap<ConcreteType, ArgNode> namelessArgs = call
             .args()
             .stream()
             .filter(a -> !a.hasName())
-            .collect(toImmutableListMultimap(a -> a.get(Type.class), a -> a));
-        for (Type type : sortedTypes(namelessArgs.keySet())) {
+            .collect(toImmutableListMultimap(a -> a.get(ConcreteType.class), a -> a));
+        for (ConcreteType type : sortedTypes(namelessArgs.keySet())) {
           Collection<ArgNode> availableArguments = namelessArgs.get(type);
           int argsSize = availableArguments.size();
           TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);

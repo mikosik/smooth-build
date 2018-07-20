@@ -14,7 +14,7 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
@@ -45,7 +45,7 @@ public class ArtifactSaver {
   }
 
   private void saveArray(Path path, Array array) {
-    Type elemType = array.type().elemType();
+    ConcreteType elemType = array.type().elemType();
     fileSystem.createDir(artifactPath(path));
     if (elemType.isArray()) {
       int i = 0;

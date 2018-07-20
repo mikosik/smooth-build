@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableList;
@@ -22,10 +22,10 @@ public class ParameterInfoTest {
   private final String name = "name";
   private ParameterInfo parameterInfo;
   private final TypesDb typesDb = new TestingTypesDb();
-  private final Type string = typesDb.string();
-  private final Type blob = typesDb.blob();
-  private final Type nothing = typesDb.nothing();
-  private final Type type = string;
+  private final ConcreteType string = typesDb.string();
+  private final ConcreteType blob = typesDb.blob();
+  private final ConcreteType nothing = typesDb.nothing();
+  private final ConcreteType type = string;
 
   @Test
   public void null_type_is_forbidden() {
@@ -59,7 +59,7 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(string, "equal", true),
         new ParameterInfo(string, "equal", true));
-    for (Type type : ImmutableList.of(string, typesDb.array(string), blob, nothing, personType())) {
+    for (ConcreteType type : ImmutableList.of(string, typesDb.array(string), blob, nothing, personType())) {
       tester.addEqualityGroup(new ParameterInfo(type, name, true));
       tester.addEqualityGroup(new ParameterInfo(type, "name2", true));
     }

@@ -67,8 +67,8 @@ public class TypeHierarchyTest {
     thenReturned(list(TestingTypes.string));
   }
 
-  private static void assertSortedOrder(List<Type> expected) {
-    for (List<Type> permutation : permutations(expected)) {
+  private static void assertSortedOrder(List<ConcreteType> expected) {
+    for (List<ConcreteType> permutation : permutations(expected)) {
       when(() -> sortedTypes(permutation));
       thenReturned(expected);
     }
