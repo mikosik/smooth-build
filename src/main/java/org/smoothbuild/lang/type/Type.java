@@ -18,6 +18,8 @@ public interface Type {
 
   public int coreDepth();
 
+  public boolean isConcrete();
+
   public boolean isArray();
 
   public boolean isNothing();

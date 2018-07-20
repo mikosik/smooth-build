@@ -25,6 +25,7 @@ public class ThoroughTypeMatcher extends TypeSafeMatcher<ConcreteType> {
     return type.name().equals(item.name())
         && type.hash().equals(item.hash())
         && type.dataHash().equals(item.dataHash())
+        && type.isConcrete() == item.isConcrete()
         && type.isNothing() == item.isNothing()
         && type.coreDepth() == item.coreDepth()
         && type.hierarchy().equals(item.hierarchy())
