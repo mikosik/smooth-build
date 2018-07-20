@@ -8,8 +8,8 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 
 public class ParameterOrderingTest {
   private final ConcreteType string = new TestingTypesDb().string();

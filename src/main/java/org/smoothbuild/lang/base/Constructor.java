@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 
 public class Constructor extends Function {
   public Constructor(Signature signature, Location location) {

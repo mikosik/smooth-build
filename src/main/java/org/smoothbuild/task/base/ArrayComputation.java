@@ -2,16 +2,16 @@ package org.smoothbuild.task.base;
 
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
 
 public class ArrayComputation implements Computation {
-  private final ArrayType arrayType;
+  private final ConcreteArrayType arrayType;
 
-  public ArrayComputation(ArrayType arrayType) {
+  public ArrayComputation(ConcreteArrayType arrayType) {
     this.arrayType = arrayType;
   }
 

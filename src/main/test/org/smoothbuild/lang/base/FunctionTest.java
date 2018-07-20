@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 
 public class FunctionTest {
   private static final ConcreteType STRING = new TestingTypesDb().string();

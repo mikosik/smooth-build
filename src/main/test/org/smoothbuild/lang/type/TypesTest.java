@@ -522,7 +522,7 @@ public class TypesTest {
         elementTypeOf(array2(nothing), array(nothing))));
   }
 
-  private static Case elementTypeOf(ArrayType arrayType, ConcreteType expected) {
+  private static Case elementTypeOf(ConcreteArrayType arrayType, ConcreteType expected) {
     return newCase(
         arrayType.name() + ".elemType() == " + expected,
         () -> assertEquals(expected, arrayType.elemType()));

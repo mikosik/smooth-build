@@ -7,14 +7,14 @@ import java.util.List;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
-  private final ArrayType arrayType;
+  private final ConcreteArrayType arrayType;
 
-  public ArrayExpression(ArrayType arrayType, Location location) {
+  public ArrayExpression(ConcreteArrayType arrayType, Location location) {
     super(arrayType, location);
     this.arrayType = arrayType;
   }

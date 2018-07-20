@@ -71,13 +71,13 @@ public class TypesDb {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  public ArrayType array(ConcreteType elementType) {
+  public ConcreteArrayType array(ConcreteType elementType) {
     HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
-    ArrayType superType = possiblyNullArrayType(elementType.superType());
-    return cache(new ArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
+    ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
+    return cache(new ConcreteArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
   }
 
-  private ArrayType possiblyNullArrayType(ConcreteType elementType) {
+  private ConcreteArrayType possiblyNullArrayType(ConcreteType elementType) {
     return elementType == null ? null : array(elementType);
   }
 
@@ -135,8 +135,8 @@ public class TypesDb {
           return nothing();
         case "":
           ConcreteType elementType = read(unmarshaller.readHash());
-          ArrayType superType = possiblyNullArrayType(elementType.superType());
-          return cache(new ArrayType(typeDataHash, type(), superType, elementType, instantiator,
+          ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
+          return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType, instantiator,
               hashedDb));
         default:
       }

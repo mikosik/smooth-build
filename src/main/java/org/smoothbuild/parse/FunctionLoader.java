@@ -29,9 +29,9 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -151,7 +151,7 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
-        ArrayType type = (ArrayType) array.get(ConcreteType.class);
+        ConcreteArrayType type = (ConcreteArrayType) array.get(ConcreteType.class);
         List<Dag<Expression>> converted = map(elements, e -> implicitConversion(type.elemType(),
             e));
         return new Dag<>(new ArrayExpression(type, array.location()), converted);

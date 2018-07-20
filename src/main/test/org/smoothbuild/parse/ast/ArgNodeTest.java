@@ -12,8 +12,8 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TestingTypesDb;
 
 public class ArgNodeTest {
   private final ConcreteType string = new TestingTypesDb().string();

@@ -15,7 +15,7 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
@@ -67,7 +67,7 @@ public class OutputsDb {
   public Output read(HashCode taskHash, ConcreteType type) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
       Value messagesValue = valuesDb.get(unmarshaller.readHash());
-      ArrayType messageArrayType = typesDb.array(messagesDb.messageType());
+      ConcreteArrayType messageArrayType = typesDb.array(messagesDb.messageType());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw new CorruptedOutputException(taskHash, "Expected " + messageArrayType
             + " as first child of its merkle root, but got " + messagesValue.type());

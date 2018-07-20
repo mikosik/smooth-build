@@ -4,8 +4,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;

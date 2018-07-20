@@ -11,8 +11,8 @@ import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -171,7 +171,8 @@ public class InferTypesAndParamAssignment {
         } else {
           if (exprType instanceof StructType
               && ((StructType) exprType).fields().containsKey(expr.fieldName())) {
-            expr.set(ConcreteType.class, ((StructType) exprType).fields().get(expr.fieldName()).type());
+            expr.set(ConcreteType.class,
+                ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
             expr.set(ConcreteType.class, null);
             errors.add(new ParseError(expr.location(), "Type '" + exprType.name()
@@ -201,7 +202,7 @@ public class InferTypesAndParamAssignment {
           if (type == null) {
             return null;
           }
-          elemType = elemType.commonSuperType(type);
+          elemType = (ConcreteType) elemType.commonSuperType(type);
 
           if (elemType == null) {
             errors.add(new ParseError(array,

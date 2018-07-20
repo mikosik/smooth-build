@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.collect.ImmutableList;
