@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.hash.HashCode;
 
-public class Struct extends Value {
+public class Struct extends AbstractValue {
   private ImmutableMap<String, Value> fields;
   private final Instantiator instantiator;
 

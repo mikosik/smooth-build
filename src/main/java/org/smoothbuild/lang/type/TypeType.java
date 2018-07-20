@@ -8,8 +8,14 @@ public class TypeType extends ConcreteType {
   private final TypesDb typesDb;
 
   protected TypeType(HashCode dataHash, TypesDb typesDb, HashedDb hashedDb) {
-    super(hashedDb.writeHashes(dataHash), dataHash, null, null, "Type", ConcreteType.class, hashedDb);
+    super(hashedDb.writeHashes(dataHash), dataHash, null, null, "Type", ConcreteType.class,
+        hashedDb);
     this.typesDb = typesDb;
+  }
+
+  @Override
+  public ConcreteType type() {
+    return this;
   }
 
   @Override
