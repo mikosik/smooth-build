@@ -16,35 +16,29 @@ public class TestingTypes {
   public static final GenericType a = new GenericType("a");
   public static final GenericType b = new GenericType("b");
 
-  public static ConcreteArrayType array4(ConcreteType elemType) {
-    return array(array(array(array(elemType))));
-  }
+  public static final ConcreteArrayType arrayType = array(type);
+  public static final ConcreteArrayType arrayString = array(string);
+  public static final ConcreteArrayType arrayBlob = array(blob);
+  public static final ConcreteArrayType arrayNothing = array(nothing);
+  public static final ConcreteArrayType arrayPerson = array(personType);
+  public static final ConcreteArrayType arrayFile = array(file);
+  public static final GenericArrayType arrayA = array(a);
+  public static final GenericArrayType arrayB = array(b);
 
-  public static ConcreteArrayType array3(ConcreteType elemType) {
-    return array(array(array(elemType)));
-  }
+  public static final ConcreteArrayType array2Type = array(arrayType);
+  public static final ConcreteArrayType array2String = array(arrayString);
+  public static final ConcreteArrayType array2Blob = array(arrayBlob);
+  public static final ConcreteArrayType array2Nothing = array(arrayNothing);
+  public static final ConcreteArrayType array2Person = array(arrayPerson);
+  public static final ConcreteArrayType array2File = array(arrayFile);
+  public static final GenericArrayType array2A = array(arrayA);
+  public static final GenericArrayType array2B = array(arrayB);
 
-  public static ConcreteArrayType array2(ConcreteType elemType) {
-    return array(array(elemType));
-  }
-
-  public static ConcreteArrayType array(ConcreteType elemType) {
+  private static ConcreteArrayType array(ConcreteType elemType) {
     return typesDb.array(elemType);
   }
 
-  public static GenericArrayType array4(GenericType elemType) {
-    return array(array(array(array(elemType))));
-  }
-
-  public static GenericArrayType array3(GenericType elemType) {
-    return array(array(array(elemType)));
-  }
-
-  public static GenericArrayType array2(GenericType elemType) {
-    return array(array(elemType));
-  }
-
-  public static GenericArrayType array(GenericType elemType) {
+  private static GenericArrayType array(GenericType elemType) {
     return new GenericArrayType(elemType);
   }
 
@@ -55,7 +49,7 @@ public class TestingTypes {
         new Field(string, "lastName", unknownLocation())));
   }
 
-  public static StructType file() {
+  private static StructType file() {
     return typesDb.struct("File", list(
         new Field(blob, "content", unknownLocation()),
         new Field(string, "path", unknownLocation())));
