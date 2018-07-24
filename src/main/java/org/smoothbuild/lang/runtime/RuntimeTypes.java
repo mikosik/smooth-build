@@ -73,10 +73,6 @@ public class RuntimeTypes implements Types {
     return typesDb.array(elementType);
   }
 
-  public boolean hasType(String name) {
-    return cache.containsKey(name);
-  }
-
   @Override
   public ConcreteType getType(String name) {
     ConcreteType type = cache.get(name);
