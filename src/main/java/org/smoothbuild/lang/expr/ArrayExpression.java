@@ -24,7 +24,7 @@ public class ArrayExpression extends Expression {
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    List<Dag<Evaluator>> childrenEvaluators = createChildrenEvaluators(children, valuesDb, scope);
+    List<Dag<Evaluator>> childrenEvaluators = evaluators(children, valuesDb, scope);
     return new Dag<>(arrayEvaluator(
         (ConcreteArrayType) evaluatorTypeChooser.choose(childrenEvaluators), location()),
         childrenEvaluators);

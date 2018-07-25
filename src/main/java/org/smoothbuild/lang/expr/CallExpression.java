@@ -36,7 +36,7 @@ public class CallExpression extends Expression {
       functionScope.add(function.parameters().get(i).name(), evaluator);
     }
     List<Dag<Evaluator>> childrenEvaluators =
-        createChildrenEvaluators(list(function.definition()), valuesDb, functionScope);
+        evaluators(list(function.definition()), valuesDb, functionScope);
     return new Dag<>(
         callEvaluator(evaluatorTypeChooser.choose(childrenEvaluators), function, location()),
         childrenEvaluators);

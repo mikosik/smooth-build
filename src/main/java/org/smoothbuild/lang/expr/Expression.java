@@ -32,8 +32,8 @@ public abstract class Expression {
     return location;
   }
 
-  public static List<Dag<Evaluator>> createChildrenEvaluators(List<Dag<Expression>> children,
-      ValuesDb valuesDb, Scope<Dag<Evaluator>> scope) {
+  public static List<Dag<Evaluator>> evaluators(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Dag<Evaluator>> scope) {
     return children
         .stream()
         .map(c -> c.elem().createEvaluator(c.children(), valuesDb, scope))

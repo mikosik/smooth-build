@@ -20,6 +20,6 @@ public class ConvertExpression extends Expression {
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
     return new Dag<Evaluator>(convertEvaluator((ConcreteType) type(), location()),
-        createChildrenEvaluators(children, valuesDb, scope));
+        evaluators(children, valuesDb, scope));
   }
 }
