@@ -296,9 +296,9 @@ public class FindSemanticErrors {
         super.visitFunc(func);
         if (func.hasType()
             && func.type().isGeneric()
-            && !func.type().isArray()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          errors.add(new ParseError(func.type(), "Unknown generic type '" + func.type().name()
+          errors.add(new ParseError(func.type(), "Unknown generic type '"
+              + func.type().coreType().name()
               + "'. Only generic types used in declaration of function parameters "
               + "can be used here."));
         }
