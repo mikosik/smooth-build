@@ -172,7 +172,7 @@ public class FunctionLoader {
           Dag<Expression> source) {
         Expression elem = source.elem();
         Type sourceType = elem.type();
-        if (sourceType.equals(destinationType)) {
+        if (sourceType.equals(destinationType) || destinationType.isGeneric()) {
           return source;
         }
         return new Dag<>(new ConvertExpression((ConcreteType) destinationType, elem.location()),
