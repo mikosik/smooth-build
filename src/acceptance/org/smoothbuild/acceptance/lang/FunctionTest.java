@@ -168,6 +168,39 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void function_with_generic_result_type_when_some_param_has_such_type_is_allowed()
+      throws Exception {
+    givenScript("a testIdentity(a value) = value;");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void function_with_generic_result_type_when_some_param_has_such_core_type_is_allowed()
+      throws Exception {
+    givenNativeJar(GenericResult.class);
+    givenScript("a genericResult([a] array);");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void function_with_generic_array_result_type_when_some_param_has_such_type_is_allowed()
+      throws Exception {
+    givenScript("[a] testArrayIdentity(a value) = [value];");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void function_with_generic_array_result_type_when_some_param_has_such_core_type_is_allowed()
+      throws Exception {
+    givenScript("[a] testArrayIdentity([a] value) = value;");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
   public void function_with_generic_result_type_when_no_param_has_such_core_type_causes_error()
       throws Exception {
     givenNativeJar(GenericResult.class);

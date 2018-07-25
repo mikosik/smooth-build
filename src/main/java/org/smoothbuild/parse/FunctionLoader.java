@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.arrayOfFirstChildType;
 import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.fixedTypeChooser;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -26,10 +27,11 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
+import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.plugin.NotCacheable;
-import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
@@ -57,7 +59,7 @@ public class FunctionLoader {
     this.valuesDb = valuesDb;
   }
 
-  public Function loadFunction(Functions loadedFunctions, FuncNode func) {
+  public Function loadFunction(SRuntime runtime, FuncNode func) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
@@ -122,7 +124,7 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createCall(CallNode call) {
-        Function function = loadedFunctions.get(call.name());
+        Function function = runtime.functions().get(call.name());
         List<Dag<Expression>> argExpressions = createSortedArgumentExpressions(call, function);
         Type expressionType = call.get(Type.class);
         Expression callExpression = function.createCallExpression(expressionType,
@@ -157,16 +159,19 @@ public class FunctionLoader {
 
       private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
         ArrayType type = (ArrayType) array.get(Type.class);
-        List<Dag<Expression>> converted = map(elements, e -> implicitConversion(type.elemType(),
-            e));
-        return new Dag<>(new ArrayExpression((ConcreteArrayType) type, array.location()),
+        List<Dag<Expression>> converted = map(
+            elements, e -> implicitConversion(type.elemType(), e));
+        EvaluatorTypeChooser evaluatorTypeChooser = converted.isEmpty()
+            ? fixedTypeChooser((ConcreteArrayType) type)
+            : arrayOfFirstChildType(runtime.types());
+        return new Dag<>(new ArrayExpression(type, evaluatorTypeChooser, array.location()),
             converted);
       }
 
       public <T extends Value> Dag<Expression> implicitConversion(Type destinationType,
           Dag<Expression> source) {
         Expression elem = source.elem();
-        ConcreteType sourceType = (ConcreteType) elem.type();
+        Type sourceType = elem.type();
         if (sourceType.equals(destinationType)) {
           return source;
         }

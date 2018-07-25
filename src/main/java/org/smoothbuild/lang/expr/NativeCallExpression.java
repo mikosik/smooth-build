@@ -26,7 +26,8 @@ public class NativeCallExpression extends Expression {
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    return new Dag<>(nativeCallEvaluator(evaluatorTypeChooser.choose(), nativeFunction, location()),
-        createChildrenEvaluators(children, valuesDb, scope));
+    List<Dag<Evaluator>> childrenEvaluators = createChildrenEvaluators(children, valuesDb, scope);
+    return new Dag<>(nativeCallEvaluator(evaluatorTypeChooser.choose(childrenEvaluators),
+        nativeFunction, location()), childrenEvaluators);
   }
 }
