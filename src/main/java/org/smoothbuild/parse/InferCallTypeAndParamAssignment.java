@@ -88,7 +88,7 @@ public class InferCallTypeAndParamAssignment {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
           Type argType = arg.get(Type.class);
-          if (paramType.isAssignableFrom(argType)) {
+          if (paramType.isArgAssignableFrom(argType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {
