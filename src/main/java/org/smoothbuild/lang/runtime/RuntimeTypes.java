@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.GenericArrayType;
 import org.smoothbuild.lang.type.GenericType;
@@ -75,10 +76,18 @@ public class RuntimeTypes implements Types {
   @Override
   public ArrayType array(Type elementType) {
     if (elementType.isConcrete()) {
-      return typesDb.array((ConcreteType) elementType);
+      return array((ConcreteType) elementType);
     } else {
-      return new GenericArrayType((GenericType) elementType);
+      return array((GenericType) elementType);
     }
+  }
+
+  public ConcreteArrayType array(ConcreteType elementType) {
+    return typesDb.array(elementType);
+  }
+
+  public GenericArrayType array(GenericType elementType) {
+    return new GenericArrayType(elementType);
   }
 
   @Override
