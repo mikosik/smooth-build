@@ -26,7 +26,9 @@ public interface Type {
 
   public List<? extends Type> hierarchy();
 
-  public boolean isAssignableFrom(Type argType);
+  public boolean isAssignableFrom(Type type);
+
+  public boolean isArgAssignableFrom(Type type);
 
   public Type commonSuperType(Type type);
 }

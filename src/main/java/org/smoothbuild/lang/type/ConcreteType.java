@@ -77,6 +77,11 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
+  public boolean isArgAssignableFrom(Type type) {
+    return isAssignableFrom(type);
+  }
+
+  @Override
   public Type commonSuperType(Type that) {
     /*
      * Algorithm below works correctly for all smooth types currently existing in smooth because it

@@ -31,6 +31,11 @@ public class GenericType extends AbstractType {
   }
 
   @Override
+  public boolean isArgAssignableFrom(Type type) {
+    return actualCoreTypeWhenAssignedFrom(type) != null;
+  }
+
+  @Override
   public Type commonSuperType(Type that) {
     if (this.equals(that)) {
       return this;
