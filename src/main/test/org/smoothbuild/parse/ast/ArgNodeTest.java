@@ -12,11 +12,11 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TestingTypesDb;
+import org.smoothbuild.lang.type.Type;
 
 public class ArgNodeTest {
-  private final ConcreteType string = new TestingTypesDb().string();
+  private final Type string = new TestingTypesDb().string();
   private final Location location = location(Paths.get("path"), 1);
   private final String name = "arg-name";
   private ArgNode arg;
@@ -59,7 +59,7 @@ public class ArgNodeTest {
   @Test
   public void type_and_name_of_named_argument() throws Exception {
     given(arg = new ArgNode(1, name, expr(string), location));
-    given(arg).set(ConcreteType.class, string);
+    given(arg).set(Type.class, string);
     when(arg).typeAndName();
     thenReturned("String:" + name);
   }
@@ -67,7 +67,7 @@ public class ArgNodeTest {
   @Test
   public void nameless_argument_to_string() throws Exception {
     given(arg = new ArgNode(1, null, expr(string), location));
-    given(arg).set(ConcreteType.class, string);
+    given(arg).set(Type.class, string);
     when(arg).typeAndName();
     thenReturned("String:<nameless>");
   }
@@ -75,7 +75,7 @@ public class ArgNodeTest {
   @Test
   public void to_padded_string() throws Exception {
     given(arg = new ArgNode(1, "myName", expr(string), location));
-    given(arg).set(ConcreteType.class, string);
+    given(arg).set(Type.class, string);
     when(arg).toPaddedString(10, 13, 7);
     thenReturned("String    : myName        #1       [" + location.toString() + "]");
   }
@@ -83,14 +83,14 @@ public class ArgNodeTest {
   @Test
   public void to_padded_string_with_short_limits() throws Exception {
     given(arg = new ArgNode(1, "myName", expr(string), location));
-    given(arg).set(ConcreteType.class, string);
+    given(arg).set(Type.class, string);
     when(arg).toPaddedString(1, 1, 1);
     thenReturned("String: myName #1 [" + location.toString() + "]");
   }
 
-  private static ExprNode expr(ConcreteType type) {
+  private static ExprNode expr(Type type) {
     ExprNode expr = mock(ExprNode.class);
-    given(willReturn(type), expr).get(ConcreteType.class);
+    given(willReturn(type), expr).get(Type.class);
     return expr;
   }
 }

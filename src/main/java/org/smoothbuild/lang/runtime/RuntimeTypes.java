@@ -2,6 +2,7 @@ package org.smoothbuild.lang.runtime;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
+import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +13,12 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.ConcreteArrayType;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.GenericArrayType;
+import org.smoothbuild.lang.type.GenericType;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
 @Singleton
@@ -69,17 +73,25 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
-  public ConcreteArrayType array(ConcreteType elementType) {
-    return typesDb.array(elementType);
+  public ArrayType array(Type elementType) {
+    if (elementType.isConcrete()) {
+      return typesDb.array((ConcreteType) elementType);
+    } else {
+      return new GenericArrayType((GenericType) elementType);
+    }
   }
 
   @Override
-  public ConcreteType getType(String name) {
-    ConcreteType type = cache.get(name);
-    if (type == null) {
-      throw new IllegalStateException("Unknown runtime type '" + name + "'.");
+  public Type getType(String name) {
+    if (isGenericTypeName(name)) {
+      return new GenericType(name);
+    } else {
+      ConcreteType type = cache.get(name);
+      if (type == null) {
+        throw new IllegalStateException("Unknown runtime type '" + name + "'.");
+      }
+      return type;
     }
-    return type;
   }
 
   public StructType struct(String name, Iterable<Field> fields) {

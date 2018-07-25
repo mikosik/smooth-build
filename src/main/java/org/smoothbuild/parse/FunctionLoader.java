@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.fixedTypeChooser;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -29,9 +30,11 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -59,7 +62,7 @@ public class FunctionLoader {
       @Override
       public Function get() {
         List<Parameter> parameters = map(func.params(), this::createParameter);
-        Signature signature = new Signature(func.get(ConcreteType.class), func.name(), parameters);
+        Signature signature = new Signature(func.get(Type.class), func.name(), parameters);
         if (func.isNative()) {
           Native nativ = func.get(Native.class);
           HashCode hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
@@ -79,7 +82,7 @@ public class FunctionLoader {
       }
 
       private Parameter createParameter(ParamNode p) {
-        ConcreteType type = p.type().get(ConcreteType.class);
+        Type type = p.type().get(Type.class);
         String name = p.name();
         Dag<Expression> defaultValue = p.hasDefaultValue()
             ? createExpression(p.defaultValue())
@@ -107,21 +110,23 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createAccessor(AccessorNode accessor) {
-        StructType type = (StructType) accessor.expr().get(ConcreteType.class);
+        StructType type = (StructType) accessor.expr().get(Type.class);
         Accessor accessorFunction = type.accessor(accessor.fieldName());
         return new Dag<>(accessorFunction.createCallExpression(accessor.location()),
             list(createExpression(accessor.expr())));
       }
 
       private Dag<Expression> createReference(RefNode ref) {
-        return new Dag<>(new BoundValueExpression(ref.get(ConcreteType.class), ref.name(), ref.location()));
+        return new Dag<>(new BoundValueExpression(ref.get(Type.class), ref.name(), ref
+            .location()));
       }
 
       private Dag<Expression> createCall(CallNode call) {
         Function function = loadedFunctions.get(call.name());
         List<Dag<Expression>> argExpressions = createSortedArgumentExpressions(call, function);
-        Expression callExpression =
-            function.createCallExpression(call.get(ConcreteType.class), call.location());
+        Type expressionType = call.get(Type.class);
+        Expression callExpression = function.createCallExpression(expressionType,
+            fixedTypeChooser((ConcreteType) expressionType), call.location());
         return new Dag<>(callExpression, argExpressions);
       }
 
@@ -151,20 +156,22 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
-        ConcreteArrayType type = (ConcreteArrayType) array.get(ConcreteType.class);
+        ArrayType type = (ArrayType) array.get(Type.class);
         List<Dag<Expression>> converted = map(elements, e -> implicitConversion(type.elemType(),
             e));
-        return new Dag<>(new ArrayExpression(type, array.location()), converted);
+        return new Dag<>(new ArrayExpression((ConcreteArrayType) type, array.location()),
+            converted);
       }
 
-      public <T extends Value> Dag<Expression> implicitConversion(ConcreteType destinationType,
+      public <T extends Value> Dag<Expression> implicitConversion(Type destinationType,
           Dag<Expression> source) {
         Expression elem = source.elem();
-        ConcreteType sourceType = elem.type();
+        ConcreteType sourceType = (ConcreteType) elem.type();
         if (sourceType.equals(destinationType)) {
           return source;
         }
-        return new Dag<>(new ConvertExpression(destinationType, elem.location()), list(source));
+        return new Dag<>(new ConvertExpression((ConcreteType) destinationType, elem.location()),
+            list(source));
       }
     }.get();
   }

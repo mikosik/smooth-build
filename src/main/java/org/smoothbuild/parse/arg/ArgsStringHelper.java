@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.smoothbuild.lang.base.ParameterInfo;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 
@@ -57,7 +57,7 @@ public class ArgsStringHelper {
   private static int longestArgType(Collection<ArgNode> args) {
     int result = 0;
     for (ArgNode arg : args) {
-      result = Math.max(result, arg.get(ConcreteType.class).name().length());
+      result = Math.max(result, arg.get(Type.class).name().length());
     }
     return result;
   }

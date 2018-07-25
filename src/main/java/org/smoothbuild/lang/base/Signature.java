@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -12,17 +12,17 @@ import com.google.common.collect.ImmutableList;
  * Function's signature.
  */
 public class Signature {
-  private final ConcreteType type;
+  private final Type type;
   private final String name;
   private final ImmutableList<Parameter> parameters;
 
-  public Signature(ConcreteType type, String name, Iterable<Parameter> params) {
+  public Signature(Type type, String name, Iterable<Parameter> params) {
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
     this.parameters = ImmutableList.copyOf(params);
   }
 
-  public ConcreteType type() {
+  public Type type() {
     return type;
   }
 

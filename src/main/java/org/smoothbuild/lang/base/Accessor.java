@@ -3,8 +3,10 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.lang.expr.AccessorCallExpression;
+import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 
 public class Accessor extends Function {
   private final String fieldName;
@@ -14,12 +16,18 @@ public class Accessor extends Function {
     this.fieldName = fieldName;
   }
 
+  @Override
+  public ConcreteType type() {
+    return (ConcreteType) signature().type();
+  }
+
   public String fieldName() {
     return fieldName;
   }
 
   @Override
-  public Expression createCallExpression(ConcreteType type, Location location) {
+  public Expression createCallExpression(Type type, EvaluatorTypeChooser evaluatorTypeChooser,
+      Location location) {
     checkArgument(type().equals(type));
     return new AccessorCallExpression(this, location);
   }
