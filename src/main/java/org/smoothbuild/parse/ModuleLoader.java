@@ -51,7 +51,7 @@ public class ModuleLoader {
       runtime.functions().add(loadConstructor(struct));
     }
     for (FuncNode func : ast.funcs()) {
-      runtime.functions().add(functionLoader.loadFunction(runtime.functions(), func));
+      runtime.functions().add(functionLoader.loadFunction(runtime, func));
     }
   }
 
