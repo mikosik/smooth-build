@@ -23,6 +23,6 @@ public class ConstructorCallExpression extends Expression {
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
     return new Dag<>(constructorCallEvaluator(constructor, location()),
-        createChildrenEvaluators(children, valuesDb, scope));
+        evaluators(children, valuesDb, scope));
   }
 }

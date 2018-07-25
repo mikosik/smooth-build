@@ -25,6 +25,6 @@ public class AccessorCallExpression extends Expression {
       Scope<Dag<Evaluator>> scope) {
     checkArgument(children.size() == 1);
     return new Dag<>(accessorCallEvaluator(accessor, location()),
-        createChildrenEvaluators(children, valuesDb, scope));
+        evaluators(children, valuesDb, scope));
   }
 }
