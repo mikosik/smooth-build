@@ -43,7 +43,7 @@ public abstract class Function implements Named {
   }
 
   public Expression createCallExpression(Location location) {
-    if (!type().isConcrete()) {
+    if (type().isGeneric()) {
       throw new UnsupportedOperationException(
           "Cannot create call expression for generic function `" + name()
               + "` without providing actual type for generic result type.");
