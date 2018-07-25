@@ -765,6 +765,90 @@ public class TypesTest {
   }
 
   @Quackery
+  public static Suite actualCoreTypeWhenAssignedFrom() {
+    return suite("GenericType.inferActualCoreTypeWhenAssignedFrom").addAll(asList(
+        actualCoreType(a, type, type),
+        actualCoreType(a, string, string),
+        actualCoreType(a, blob, blob),
+        actualCoreType(a, personType, personType),
+        actualCoreType(a, nothing, nothing),
+        actualCoreType(a, a, a),
+        actualCoreType(a, b, b),
+
+        actualCoreType(a, arrayType, arrayType),
+        actualCoreType(a, arrayString, arrayString),
+        actualCoreType(a, arrayBlob, arrayBlob),
+        actualCoreType(a, arrayPerson, arrayPerson),
+        actualCoreType(a, arrayNothing, arrayNothing),
+        actualCoreType(a, arrayA, arrayA),
+        actualCoreType(a, arrayB, arrayB),
+
+        actualCoreType(a, array2Type, array2Type),
+        actualCoreType(a, array2String, array2String),
+        actualCoreType(a, array2Blob, array2Blob),
+        actualCoreType(a, array2Person, array2Person),
+        actualCoreType(a, array2Nothing, array2Nothing),
+        actualCoreType(a, array2A, array2A),
+        actualCoreType(a, array2B, array2B),
+
+        actualCoreType(arrayA, type, null),
+        actualCoreType(arrayA, string, null),
+        actualCoreType(arrayA, blob, null),
+        actualCoreType(arrayA, personType, null),
+        actualCoreType(arrayA, nothing, null),
+        actualCoreType(arrayA, a, null),
+        actualCoreType(arrayA, b, null),
+
+        actualCoreType(arrayA, arrayType, type),
+        actualCoreType(arrayA, arrayString, string),
+        actualCoreType(arrayA, arrayBlob, blob),
+        actualCoreType(arrayA, arrayPerson, personType),
+        actualCoreType(arrayA, arrayNothing, nothing),
+        actualCoreType(arrayA, arrayA, a),
+        actualCoreType(arrayA, arrayB, b),
+
+        actualCoreType(arrayA, array2Type, arrayType),
+        actualCoreType(arrayA, array2String, arrayString),
+        actualCoreType(arrayA, array2Blob, arrayBlob),
+        actualCoreType(arrayA, array2Person, arrayPerson),
+        actualCoreType(arrayA, array2Nothing, arrayNothing),
+        actualCoreType(arrayA, array2A, arrayA),
+        actualCoreType(arrayA, array2B, arrayB),
+
+        actualCoreType(array2A, type, null),
+        actualCoreType(array2A, string, null),
+        actualCoreType(array2A, blob, null),
+        actualCoreType(array2A, personType, null),
+        actualCoreType(array2A, nothing, null),
+        actualCoreType(array2A, a, null),
+        actualCoreType(array2A, b, null),
+
+        actualCoreType(array2A, arrayType, null),
+        actualCoreType(array2A, arrayString, null),
+        actualCoreType(array2A, arrayBlob, null),
+        actualCoreType(array2A, arrayPerson, null),
+        actualCoreType(array2A, arrayNothing, null),
+        actualCoreType(array2A, arrayA, null),
+        actualCoreType(array2A, arrayB, null),
+
+        actualCoreType(array2A, array2Type, type),
+        actualCoreType(array2A, array2String, string),
+        actualCoreType(array2A, array2Blob, blob),
+        actualCoreType(array2A, array2Person, personType),
+        actualCoreType(array2A, array2Nothing, nothing),
+        actualCoreType(array2A, array2A, a),
+        actualCoreType(array2A, array2B, b)));
+  }
+
+  private static Case actualCoreType(GenericType type, Type assigned, Type expected) {
+    String expectedName = expected == null ? "null" : expected.name();
+    return newCase(
+        "Type " + type.name() + " when assigned from " + assigned.name()
+            + " gets actual core type == " + expectedName,
+        () -> assertEquals(expected, type.actualCoreTypeWhenAssignedFrom(assigned)));
+  }
+
+  @Quackery
   public static Suite array_element_types() {
     return suite("Type.elemType").addAll(asList(
         elementTypeOf(arrayType, type),

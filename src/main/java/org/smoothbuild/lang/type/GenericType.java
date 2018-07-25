@@ -11,6 +11,10 @@ public class GenericType extends AbstractType {
     super(null, name, jType);
   }
 
+  public Type actualCoreTypeWhenAssignedFrom(Type type) {
+    return type;
+  }
+
   @Override
   public GenericType coreType() {
     return this;
