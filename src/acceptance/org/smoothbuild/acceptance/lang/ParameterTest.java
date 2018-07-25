@@ -51,6 +51,13 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void generic_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter(a param) = 'abc';");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
   public void unknown_type_parameter_cannot_be_declared() throws Exception {
     givenScript("oneParameter(Unknown unknown) = 'abc';");
     whenSmoothList();
@@ -82,6 +89,13 @@ public class ParameterTest extends AcceptanceTestCase {
   @Test
   public void nothing_array_parameter_can_be_declared() throws Exception {
     givenScript("oneParameter([Nothing] array) = 'abc';");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
+  public void generic_array_parameter_can_be_declared() throws Exception {
+    givenScript("oneParameter([a] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }

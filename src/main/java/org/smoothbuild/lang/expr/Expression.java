@@ -8,7 +8,7 @@ import java.util.List;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
@@ -16,15 +16,15 @@ import org.smoothbuild.util.Dag;
  * Expression in smooth language.
  */
 public abstract class Expression {
-  private final ConcreteType type;
+  private final Type type;
   private final Location location;
 
-  public Expression(ConcreteType type, Location location) {
+  public Expression(Type type, Location location) {
     this.type = checkNotNull(type);
     this.location = checkNotNull(location);
   }
 
-  public ConcreteType type() {
+  public Type type() {
     return type;
   }
 

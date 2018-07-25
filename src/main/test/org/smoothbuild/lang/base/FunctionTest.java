@@ -8,9 +8,11 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TestingTypesDb;
+import org.smoothbuild.lang.type.Type;
 
 public class FunctionTest {
   private static final ConcreteType STRING = new TestingTypesDb().string();
@@ -56,7 +58,8 @@ public class FunctionTest {
     }
 
     @Override
-    public Expression createCallExpression(ConcreteType type, Location location) {
+    public Expression createCallExpression(Type type,
+        EvaluatorTypeChooser evaluatorTypeChooser, Location location) {
       return null;
     }
   }

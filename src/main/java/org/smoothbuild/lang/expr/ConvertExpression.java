@@ -19,7 +19,7 @@ public class ConvertExpression extends Expression {
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    return new Dag<Evaluator>(convertEvaluator(type(), location()),
+    return new Dag<Evaluator>(convertEvaluator((ConcreteType) type(), location()),
         createChildrenEvaluators(children, valuesDb, scope));
   }
 }

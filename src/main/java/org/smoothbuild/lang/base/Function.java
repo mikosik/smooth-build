@@ -1,9 +1,12 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.fixedTypeChooser;
 
+import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -26,7 +29,7 @@ public abstract class Function implements Named {
     return location;
   }
 
-  public ConcreteType type() {
+  public Type type() {
     return signature.type();
   }
 
@@ -40,8 +43,14 @@ public abstract class Function implements Named {
   }
 
   public Expression createCallExpression(Location location) {
-    return createCallExpression(type(), location);
+    if (!type().isConcrete()) {
+      throw new UnsupportedOperationException(
+          "Cannot create call expression for generic function `" + name()
+              + "` without providing actual type for generic result type.");
+    }
+    return createCallExpression(type(), fixedTypeChooser((ConcreteType) type()), location);
   }
 
-  public abstract Expression createCallExpression(ConcreteType type, Location location);
+  public abstract Expression createCallExpression(Type type,
+      EvaluatorTypeChooser evaluatorTypeChooser, Location location);
 }

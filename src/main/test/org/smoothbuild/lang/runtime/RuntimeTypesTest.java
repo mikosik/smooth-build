@@ -17,8 +17,11 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.type.ConcreteArrayType;
+import org.smoothbuild.lang.type.ArrayType;
+import org.smoothbuild.lang.type.GenericArrayType;
+import org.smoothbuild.lang.type.GenericType;
 import org.smoothbuild.lang.type.StructType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypesDb;
 
 @RunWith(QuackeryRunner.class)
@@ -27,7 +30,8 @@ public class RuntimeTypesTest {
   private TypesDb typesDb;
   private RuntimeTypes runtimeTypes;
   private StructType type;
-  private ConcreteArrayType arrayType;
+  private ArrayType arrayType;
+  private Type a;
 
   @Before
   public void before() {
@@ -106,9 +110,9 @@ public class RuntimeTypesTest {
   }
 
   @Test
-  public void generic_type_cannot_be_retrieved_by_name() throws Exception {
+  public void generic_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("a"));
-    thenThrown(IllegalStateException.class);
+    thenReturned(new GenericType("a"));
   }
 
   @Test
@@ -117,6 +121,13 @@ public class RuntimeTypesTest {
         "MyStruct", list(new Field(typesDb.string(), "field", unknownLocation()))));
     when(() -> runtimeTypes.getType("MyStruct"));
     thenReturned(type);
+  }
+
+  @Test
+  public void generic_array_type_can_be_created() throws Exception {
+    given(a = runtimeTypes.getType("a"));
+    when(() -> runtimeTypes.array(a));
+    thenReturned(new GenericArrayType(new GenericType("a")));
   }
 
   @Test

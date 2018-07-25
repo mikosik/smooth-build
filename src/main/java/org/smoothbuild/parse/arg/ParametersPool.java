@@ -33,7 +33,7 @@ public class ParametersPool {
   }
 
   private boolean remove(ParameterInfo parameter) {
-    ConcreteType type = parameter.type();
+    ConcreteType type = (ConcreteType) parameter.type();
     if (!types.contains(type)) {
       throw new IllegalArgumentException("unknown parameter '" + parameter.toString() + "'");
     }
@@ -69,8 +69,8 @@ public class ParametersPool {
   private static Set<ConcreteType> createAllTypes(Set<? extends ParameterInfo> optional,
       Set<? extends ParameterInfo> required) {
     return ImmutableSet.<ConcreteType> builder()
-        .addAll(map(optional, ParameterInfo::type))
-        .addAll(map(required, ParameterInfo::type))
+        .addAll(map(optional, p -> (ConcreteType) p.type()))
+        .addAll(map(required, p -> (ConcreteType) p.type()))
         .build();
   }
 

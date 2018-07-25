@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.lang.base.Native;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
@@ -43,7 +43,7 @@ public class Natives {
 
       private void assign(FuncNode func, Native nativ) {
         Method method = nativ.method();
-        ConcreteType resultType = func.get(ConcreteType.class);
+        Type resultType = func.get(Type.class);
         Class<?> resultJType = method.getReturnType();
         if (!resultType.jType().equals(resultJType)) {
           errors.add(new ParseError(func, "Function '" + func.name() + "' has result type "
@@ -71,7 +71,7 @@ public class Natives {
                 + "' at this position."));
             return;
           }
-          ConcreteType paramType = params.get(i).type().get(ConcreteType.class);
+          Type paramType = params.get(i).type().get(Type.class);
           Class<?> paramJType = nativeParam.getType();
           if (!paramType.jType().equals(paramJType)) {
             errors.add(new ParseError(func, "Function '" + func.name()
