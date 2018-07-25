@@ -75,10 +75,10 @@ public class RuntimeTypes implements Types {
 
   @Override
   public ArrayType array(Type elementType) {
-    if (elementType.isConcrete()) {
-      return array((ConcreteType) elementType);
-    } else {
+    if (elementType.isGeneric()) {
       return array((GenericType) elementType);
+    } else {
+      return array((ConcreteType) elementType);
     }
   }
 

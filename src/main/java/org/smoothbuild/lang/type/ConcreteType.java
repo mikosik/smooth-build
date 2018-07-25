@@ -45,8 +45,8 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
-  public boolean isConcrete() {
-    return true;
+  public boolean isGeneric() {
+    return false;
   }
 
   @Override
@@ -56,7 +56,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
 
   @Override
   public boolean isAssignableFrom(Type type) {
-    if (!type.isConcrete()) {
+    if (type.isGeneric()) {
       return false;
     }
     if (this.equals(type)) {
@@ -85,7 +85,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
      * chain has infinite length (for example structure X is convertible to its array [X]).
      */
 
-    if (!that.isConcrete()) {
+    if (that.isGeneric()) {
       return null;
     }
     List<? extends Type> hierarchy1 = this.hierarchy();

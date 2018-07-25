@@ -103,7 +103,7 @@ public class TypesTest {
   }
 
   private static Case typeToStringIs(Type type, String expectedPrefix) {
-    String suffix = type.isConcrete() ? ":" + ((ConcreteType) type).hash() : "";
+    String suffix = type.isGeneric() ? "" : ":" + ((ConcreteType) type).hash();
     return newCase(
         type.name() + ".toString()",
         () -> assertEquals(expectedPrefix + suffix, type.toString()));
@@ -191,37 +191,36 @@ public class TypesTest {
   @Quackery
   public static Suite is_concrete() throws Exception {
     return suite("Type.isArray").addAll(asList(
-        isConcrete(type),
-        isConcrete(string),
-        isConcrete(blob),
-        isConcrete(nothing),
-        isConcrete(personType),
-        isConcrete(arrayType),
-        isConcrete(arrayString),
-        isConcrete(arrayBlob),
-        isConcrete(arrayNothing),
-        isConcrete(arrayPerson),
-        isConcrete(array2Type),
-        isConcrete(array2String),
-        isConcrete(array2Blob),
-        isConcrete(array2Nothing),
-        isConcrete(array2Person),
+        isNotGeneric(type),
+        isNotGeneric(string),
+        isNotGeneric(blob),
+        isNotGeneric(nothing),
+        isNotGeneric(personType),
+        isNotGeneric(arrayType),
+        isNotGeneric(arrayString),
+        isNotGeneric(arrayBlob),
+        isNotGeneric(arrayNothing),
+        isNotGeneric(arrayPerson),
+        isNotGeneric(array2Type),
+        isNotGeneric(array2String),
+        isNotGeneric(array2Blob),
+        isNotGeneric(array2Nothing),
+        isNotGeneric(array2Person),
 
-        isNotConcrete(a),
-        isNotConcrete(arrayA),
-        isNotConcrete(array2A),
-        isNotConcrete(b),
-        isNotConcrete(arrayB),
-        isNotConcrete(array2B)));
+        isGeneric(a),
+        isGeneric(arrayA),
+        isGeneric(array2A),
+        isGeneric(b),
+        isGeneric(arrayB),
+        isGeneric(array2B)));
   }
 
-  private static Case isConcrete(Type type) {
-    return newCase(type.isConcrete() + " is concrete type", () -> assertTrue(type.isConcrete()));
+  private static Case isNotGeneric(Type type) {
+    return newCase(type.isGeneric() + " is NOT Generic type", () -> assertFalse(type.isGeneric()));
   }
 
-  private static Case isNotConcrete(Type type) {
-    return newCase(type.isConcrete() + " is NOT concrete type", () -> assertFalse(type
-        .isConcrete()));
+  private static Case isGeneric(Type type) {
+    return newCase(type.isGeneric() + " is generic type", () -> assertTrue(type.isGeneric()));
   }
 
   @Quackery

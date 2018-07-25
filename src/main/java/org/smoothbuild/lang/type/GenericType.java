@@ -17,13 +17,13 @@ public class GenericType extends AbstractType {
   }
 
   @Override
-  public boolean isConcrete() {
-    return false;
+  public boolean isGeneric() {
+    return true;
   }
 
   @Override
   public boolean isAssignableFrom(Type type) {
-    return !type.isConcrete() && name().equals(type.name());
+    return type.isGeneric() && name().equals(type.name());
   }
 
   @Override
