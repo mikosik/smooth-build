@@ -178,6 +178,7 @@ public class FunctionTest extends AcceptanceTestCase {
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
+  @Test
   public void function_with_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
       throws IOException {
     givenScript("[a] result = [];");
@@ -196,6 +197,7 @@ public class FunctionTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
   }
 
+  @Test
   public void function_with_nothing_array_result_type_is_allowed() throws IOException {
     givenScript("[Nothing] result = [];");
     whenSmoothList();
