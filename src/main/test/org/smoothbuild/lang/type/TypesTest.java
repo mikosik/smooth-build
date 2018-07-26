@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.smoothbuild.lang.type.TestingTypes.a;
@@ -186,6 +187,83 @@ public class TypesTest {
     return newCase(
         type.name() + ".coreDepth()",
         () -> assertEquals(depth, type.coreDepth()));
+  }
+
+  @Quackery
+  public static Suite decrease_core_depth_by() throws Exception {
+    return suite("Type.decreaseCoreDepthBy").addAll(asList(
+        decreaseCoreDepthBy(type, 0, type),
+        decreaseCoreDepthBy(string, 0, string),
+        decreaseCoreDepthBy(nothing, 0, nothing),
+        decreaseCoreDepthBy(personType, 0, personType),
+        decreaseCoreDepthBy(a, 0, a),
+
+        decreaseCoreDepthFailsFor(type, 1),
+        decreaseCoreDepthFailsFor(string, 1),
+        decreaseCoreDepthFailsFor(nothing, 1),
+        decreaseCoreDepthFailsFor(personType, 1),
+        decreaseCoreDepthFailsFor(a, 1),
+
+        decreaseCoreDepthFailsFor(type, 2),
+        decreaseCoreDepthFailsFor(string, 2),
+        decreaseCoreDepthFailsFor(nothing, 2),
+        decreaseCoreDepthFailsFor(personType, 2),
+        decreaseCoreDepthFailsFor(a, 2),
+
+        decreaseCoreDepthBy(arrayString, 0, arrayString),
+        decreaseCoreDepthBy(arrayBlob, 0, arrayBlob),
+        decreaseCoreDepthBy(arrayNothing, 0, arrayNothing),
+        decreaseCoreDepthBy(arrayPerson, 0, arrayPerson),
+        decreaseCoreDepthBy(arrayA, 0, arrayA),
+
+        decreaseCoreDepthBy(arrayString, 1, string),
+        decreaseCoreDepthBy(arrayBlob, 1, blob),
+        decreaseCoreDepthBy(arrayNothing, 1, nothing),
+        decreaseCoreDepthBy(arrayPerson, 1, personType),
+        decreaseCoreDepthBy(arrayA, 1, a),
+
+        decreaseCoreDepthFailsFor(arrayType, 2),
+        decreaseCoreDepthFailsFor(arrayString, 2),
+        decreaseCoreDepthFailsFor(arrayNothing, 2),
+        decreaseCoreDepthFailsFor(arrayPerson, 2),
+        decreaseCoreDepthFailsFor(arrayA, 2),
+
+        decreaseCoreDepthBy(array2String, 0, array2String),
+        decreaseCoreDepthBy(array2Blob, 0, array2Blob),
+        decreaseCoreDepthBy(array2Nothing, 0, array2Nothing),
+        decreaseCoreDepthBy(array2Person, 0, array2Person),
+        decreaseCoreDepthBy(array2A, 0, array2A),
+
+        decreaseCoreDepthBy(array2String, 1, arrayString),
+        decreaseCoreDepthBy(array2Blob, 1, arrayBlob),
+        decreaseCoreDepthBy(array2Nothing, 1, arrayNothing),
+        decreaseCoreDepthBy(array2Person, 1, arrayPerson),
+        decreaseCoreDepthBy(array2A, 1, arrayA),
+
+        decreaseCoreDepthBy(array2String, 2, string),
+        decreaseCoreDepthBy(array2Blob, 2, blob),
+        decreaseCoreDepthBy(array2Nothing, 2, nothing),
+        decreaseCoreDepthBy(array2Person, 2, personType),
+        decreaseCoreDepthBy(array2A, 2, a)));
+  }
+
+  private static Case decreaseCoreDepthBy(Type type, int delta, Type expected) {
+    return newCase(
+        type.name() + ".reduceCoreDepthBy(" + delta + ") == " + expected.name(),
+        () -> assertEquals(type.decreaseCoreDepthBy(delta), expected));
+  }
+
+  private static Case decreaseCoreDepthFailsFor(Type type, int delta) {
+    return newCase(
+        type.name() + ".decreaseCoreDepthBy(" + delta + ") throws IllegalArgumentException",
+        () -> {
+          try {
+            type.decreaseCoreDepthBy(delta);
+            fail();
+          } catch (IllegalArgumentException e) {
+            // expected
+          }
+        });
   }
 
   @Quackery
