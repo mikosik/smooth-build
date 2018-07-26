@@ -45,7 +45,7 @@ public class TypesDb {
 
   public StringType string() {
     if (string == null) {
-      string = new StringType(writeBasicTypeData(STRING), type(), hashedDb);
+      string = new StringType(writeBasicTypeData(STRING), type(), hashedDb, this);
       cache.put(string.hash(), string);
     }
     return string;
@@ -53,7 +53,7 @@ public class TypesDb {
 
   public BlobType blob() {
     if (blob == null) {
-      blob = new BlobType(writeBasicTypeData(BLOB), type(), hashedDb);
+      blob = new BlobType(writeBasicTypeData(BLOB), type(), hashedDb, this);
       cache.put(blob.hash(), blob);
     }
     return blob;
@@ -61,7 +61,7 @@ public class TypesDb {
 
   public NothingType nothing() {
     if (nothing == null) {
-      nothing = new NothingType(writeBasicTypeData(NOTHING), type(), hashedDb);
+      nothing = new NothingType(writeBasicTypeData(NOTHING), type(), hashedDb, this);
       cache.put(nothing.hash(), nothing);
     }
     return nothing;
@@ -74,7 +74,8 @@ public class TypesDb {
   public ConcreteArrayType array(ConcreteType elementType) {
     HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
-    return cache(new ConcreteArrayType(dataHash, type(), superType, elementType, instantiator, hashedDb));
+    return cache(new ConcreteArrayType(dataHash, type(), superType, elementType, instantiator,
+        hashedDb, this));
   }
 
   private ConcreteArrayType possiblyNullArrayType(ConcreteType elementType) {
@@ -83,7 +84,7 @@ public class TypesDb {
 
   public StructType struct(String name, Iterable<Field> fields) {
     HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
-    return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb));
+    return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb, this));
   }
 
   private HashCode writeFields(Iterable<Field> fields) {
@@ -136,12 +137,13 @@ public class TypesDb {
         case "":
           ConcreteType elementType = read(unmarshaller.readHash());
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
-          return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType, instantiator,
-              hashedDb));
+          return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType,
+              instantiator, hashedDb, this));
         default:
       }
       Iterable<Field> fields = readFields(unmarshaller.readHash());
-      return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb));
+      return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
+          this));
     }
   }
 

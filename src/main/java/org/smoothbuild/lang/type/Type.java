@@ -18,6 +18,8 @@ public interface Type {
 
   public int coreDepth();
 
+  public Type increaseCoreDepthBy(int delta);
+
   public Type decreaseCoreDepthBy(int delta);
 
   public boolean isGeneric();

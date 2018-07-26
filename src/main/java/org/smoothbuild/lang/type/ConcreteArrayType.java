@@ -12,8 +12,8 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final Instantiator instantiator;
 
   protected ConcreteArrayType(HashCode dataHash, TypeType type, ConcreteArrayType superType,
-      ConcreteType elemType, Instantiator instantiator, HashedDb hashedDb) {
-    super(dataHash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb);
+      ConcreteType elemType, Instantiator instantiator, HashedDb hashedDb, TypesDb typesDb) {
+    super(dataHash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb, typesDb);
     this.elemType = checkNotNull(elemType);
     this.instantiator = checkNotNull(instantiator);
   }

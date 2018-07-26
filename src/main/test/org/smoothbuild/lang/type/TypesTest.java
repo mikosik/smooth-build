@@ -190,6 +190,65 @@ public class TypesTest {
   }
 
   @Quackery
+  public static Suite increase_core_depth_by() throws Exception {
+    return suite("Type.increaseCoreDepthBy").addAll(asList(
+        increaseCoreDepthFailsFor(type, -1),
+        increaseCoreDepthFailsFor(string, -1),
+        increaseCoreDepthFailsFor(nothing, -1),
+        increaseCoreDepthFailsFor(personType, -1),
+        increaseCoreDepthFailsFor(a, -1),
+
+        increaseCoreDepthBy(type, 0, type),
+        increaseCoreDepthBy(string, 0, string),
+        increaseCoreDepthBy(nothing, 0, nothing),
+        increaseCoreDepthBy(personType, 0, personType),
+        increaseCoreDepthBy(a, 0, a),
+
+        increaseCoreDepthBy(type, 1, arrayType),
+        increaseCoreDepthBy(string, 1, arrayString),
+        increaseCoreDepthBy(nothing, 1, arrayNothing),
+        increaseCoreDepthBy(personType, 1, arrayPerson),
+        increaseCoreDepthBy(a, 1, arrayA),
+
+        increaseCoreDepthBy(type, 2, array2Type),
+        increaseCoreDepthBy(string, 2, array2String),
+        increaseCoreDepthBy(nothing, 2, array2Nothing),
+        increaseCoreDepthBy(personType, 2, array2Person),
+        increaseCoreDepthBy(a, 2, array2A),
+
+        increaseCoreDepthBy(arrayString, 0, arrayString),
+        increaseCoreDepthBy(arrayBlob, 0, arrayBlob),
+        increaseCoreDepthBy(arrayNothing, 0, arrayNothing),
+        increaseCoreDepthBy(arrayPerson, 0, arrayPerson),
+        increaseCoreDepthBy(arrayA, 0, arrayA),
+
+        increaseCoreDepthBy(arrayString, 1, array2String),
+        increaseCoreDepthBy(arrayBlob, 1, array2Blob),
+        increaseCoreDepthBy(arrayNothing, 1, array2Nothing),
+        increaseCoreDepthBy(arrayPerson, 1, array2Person),
+        increaseCoreDepthBy(arrayA, 1, array2A)));
+  }
+
+  private static Case increaseCoreDepthBy(Type type, int delta, Type expected) {
+    return newCase(
+        type.name() + ".reduceCoreDepthBy(" + delta + ") == " + expected.name(),
+        () -> assertEquals(type.increaseCoreDepthBy(delta), expected));
+  }
+
+  private static Case increaseCoreDepthFailsFor(Type type, int delta) {
+    return newCase(
+        type.name() + ".increaseCoreDepthBy(" + delta + ") throws IllegalArgumentException",
+        () -> {
+          try {
+            type.increaseCoreDepthBy(delta);
+            fail();
+          } catch (IllegalArgumentException e) {
+            // expected
+          }
+        });
+  }
+
+  @Quackery
   public static Suite decrease_core_depth_by() throws Exception {
     return suite("Type.decreaseCoreDepthBy").addAll(asList(
         decreaseCoreDepthBy(type, 0, type),
