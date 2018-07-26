@@ -9,7 +9,7 @@ public class TypeType extends ConcreteType {
 
   protected TypeType(HashCode dataHash, TypesDb typesDb, HashedDb hashedDb) {
     super(hashedDb.writeHashes(dataHash), dataHash, null, null, "Type", ConcreteType.class,
-        hashedDb);
+        hashedDb, typesDb);
     this.typesDb = typesDb;
   }
 

@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.smoothbuild.lang.value.Value;
 
 public class GenericType extends AbstractType {
@@ -18,6 +20,16 @@ public class GenericType extends AbstractType {
   @Override
   public GenericType coreType() {
     return this;
+  }
+
+  @Override
+  public Type increaseCoreDepthBy(int delta) {
+    checkArgument(0 <= delta, "delta must be non negative value");
+    GenericType result = this;
+    for (int i = 0; i < delta; i++) {
+      result = new GenericArrayType(result);
+    }
+    return result;
   }
 
   @Override

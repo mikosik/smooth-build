@@ -20,8 +20,8 @@ public class StructType extends ConcreteType {
   private final Instantiator instantiator;
 
   public StructType(HashCode dataHash, TypeType type, String name, Iterable<Field> fields,
-      Instantiator instantiator, HashedDb hashedDb) {
-    this(dataHash, type, name, fieldsMap(fields), instantiator, hashedDb);
+      Instantiator instantiator, HashedDb hashedDb, TypesDb typesDb) {
+    this(dataHash, type, name, fieldsMap(fields), instantiator, hashedDb, typesDb);
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
@@ -29,8 +29,9 @@ public class StructType extends ConcreteType {
   }
 
   private StructType(HashCode dataHash, TypeType type, String name,
-      ImmutableMap<String, Field> fields, Instantiator instantiator, HashedDb hashedDb) {
-    super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb);
+      ImmutableMap<String, Field> fields, Instantiator instantiator, HashedDb hashedDb,
+      TypesDb typesDb) {
+    super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, typesDb);
     this.fields = checkNotNull(fields);
     this.instantiator = checkNotNull(instantiator);
   }

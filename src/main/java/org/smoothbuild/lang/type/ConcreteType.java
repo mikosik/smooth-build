@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.Lists.reverse;
 
 import java.util.List;
@@ -17,19 +18,22 @@ import com.google.common.hash.HashCode;
 public abstract class ConcreteType extends AbstractType implements Value {
   private final AbstractValue value;
   protected final HashedDb hashedDb;
+  private final TypesDb typesDb;
 
   protected ConcreteType(HashCode dataHash, TypeType type, ConcreteType superType, String name,
-      Class<? extends Value> jType, HashedDb hashedDb) {
+      Class<? extends Value> jType, HashedDb hashedDb, TypesDb typesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(dataHash, type, hashedDb) {};
     this.hashedDb = hashedDb;
+    this.typesDb = typesDb;
   }
 
   protected ConcreteType(HashCode hash, HashCode dataHash, TypeType type, ConcreteType superType,
-      String name, Class<? extends Value> jType, HashedDb hashedDb) {
+      String name, Class<? extends Value> jType, HashedDb hashedDb, TypesDb typesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(hash, dataHash, type, hashedDb) {};
     this.hashedDb = hashedDb;
+    this.typesDb = typesDb;
   }
 
   public abstract Value newValue(HashCode dataHash);
@@ -42,6 +46,16 @@ public abstract class ConcreteType extends AbstractType implements Value {
   @Override
   public ConcreteType coreType() {
     return this;
+  }
+
+  @Override
+  public Type increaseCoreDepthBy(int delta) {
+    checkArgument(0 <= delta, "delta must be non negative value");
+    ConcreteType result = this;
+    for (int i = 0; i < delta; i++) {
+      result = typesDb.array(result);
+    }
+    return result;
   }
 
   @Override
