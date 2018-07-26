@@ -895,7 +895,7 @@ public class TypesTest {
         illegalArgAssignment(arrayA, string),
         illegalArgAssignment(arrayA, blob),
         illegalArgAssignment(arrayA, personType),
-        illegalArgAssignment(arrayA, nothing),
+        allowedArgAssignment(arrayA, nothing),
         illegalArgAssignment(arrayA, a),
         illegalArgAssignment(arrayA, b),
         allowedArgAssignment(arrayA, arrayType),
@@ -1012,14 +1012,14 @@ public class TypesTest {
         illegalArgAssignment(array2A, string),
         illegalArgAssignment(array2A, blob),
         illegalArgAssignment(array2A, personType),
-        illegalArgAssignment(array2A, nothing),
+        allowedArgAssignment(array2A, nothing),
         illegalArgAssignment(array2A, a),
         illegalArgAssignment(array2A, b),
         illegalArgAssignment(array2A, arrayType),
         illegalArgAssignment(array2A, arrayString),
         illegalArgAssignment(array2A, arrayBlob),
         illegalArgAssignment(array2A, arrayPerson),
-        illegalArgAssignment(array2A, arrayNothing),
+        allowedArgAssignment(array2A, arrayNothing),
         illegalArgAssignment(array2A, arrayA),
         illegalArgAssignment(array2A, arrayB),
         allowedArgAssignment(array2A, array2Type),
@@ -1133,7 +1133,7 @@ public class TypesTest {
 
   @Quackery
   public static Suite actualCoreTypeWhenAssignedFrom() {
-    return suite("GenericType.inferActualCoreTypeWhenAssignedFrom").addAll(asList(
+    return suite("GenericType.actualCoreTypeWhenAssignedFrom").addAll(asList(
         actualCoreType(a, type, type),
         actualCoreType(a, string, string),
         actualCoreType(a, blob, blob),
@@ -1162,7 +1162,7 @@ public class TypesTest {
         actualCoreType(arrayA, string, null),
         actualCoreType(arrayA, blob, null),
         actualCoreType(arrayA, personType, null),
-        actualCoreType(arrayA, nothing, null),
+        actualCoreType(arrayA, nothing, nothing),
         actualCoreType(arrayA, a, null),
         actualCoreType(arrayA, b, null),
 
@@ -1186,7 +1186,7 @@ public class TypesTest {
         actualCoreType(array2A, string, null),
         actualCoreType(array2A, blob, null),
         actualCoreType(array2A, personType, null),
-        actualCoreType(array2A, nothing, null),
+        actualCoreType(array2A, nothing, nothing),
         actualCoreType(array2A, a, null),
         actualCoreType(array2A, b, null),
 
@@ -1194,7 +1194,7 @@ public class TypesTest {
         actualCoreType(array2A, arrayString, null),
         actualCoreType(array2A, arrayBlob, null),
         actualCoreType(array2A, arrayPerson, null),
-        actualCoreType(array2A, arrayNothing, null),
+        actualCoreType(array2A, arrayNothing, nothing),
         actualCoreType(array2A, arrayA, null),
         actualCoreType(array2A, arrayB, null),
 
