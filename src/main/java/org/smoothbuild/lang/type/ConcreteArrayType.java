@@ -37,4 +37,13 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   public int coreDepth() {
     return 1 + elemType.coreDepth();
   }
+
+  @Override
+  public Type decreaseCoreDepthBy(int delta) {
+    if (delta == 0) {
+      return this;
+    } else {
+      return elemType.decreaseCoreDepthBy(delta - 1);
+    }
+  }
 }
