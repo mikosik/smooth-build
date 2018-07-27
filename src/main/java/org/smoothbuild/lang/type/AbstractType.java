@@ -36,6 +36,11 @@ public abstract class AbstractType implements Type {
   }
 
   @Override
+  public Type replaceCoreType(Type coreType) {
+    return coreType;
+  }
+
+  @Override
   public int coreDepth() {
     return 0;
   }

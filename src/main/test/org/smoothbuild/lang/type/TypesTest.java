@@ -161,6 +161,183 @@ public class TypesTest {
   }
 
   @Quackery
+  public static Suite replace_core_type() throws Exception {
+    return suite("Type.replaceCoreType").addAll(asList(
+        replaceCoreType(type, type, type),
+        replaceCoreType(type, string, string),
+        replaceCoreType(type, blob, blob),
+        replaceCoreType(type, nothing, nothing),
+        replaceCoreType(type, personType, personType),
+        replaceCoreType(type, a, a),
+
+        replaceCoreType(string, type, type),
+        replaceCoreType(string, string, string),
+        replaceCoreType(string, blob, blob),
+        replaceCoreType(string, nothing, nothing),
+        replaceCoreType(string, personType, personType),
+        replaceCoreType(string, a, a),
+
+        replaceCoreType(blob, type, type),
+        replaceCoreType(blob, string, string),
+        replaceCoreType(blob, blob, blob),
+        replaceCoreType(blob, nothing, nothing),
+        replaceCoreType(blob, personType, personType),
+        replaceCoreType(blob, a, a),
+
+        replaceCoreType(nothing, type, type),
+        replaceCoreType(nothing, string, string),
+        replaceCoreType(nothing, blob, blob),
+        replaceCoreType(nothing, nothing, nothing),
+        replaceCoreType(nothing, personType, personType),
+        replaceCoreType(nothing, a, a),
+
+        replaceCoreType(personType, type, type),
+        replaceCoreType(personType, string, string),
+        replaceCoreType(personType, blob, blob),
+        replaceCoreType(personType, nothing, nothing),
+        replaceCoreType(personType, personType, personType),
+        replaceCoreType(personType, a, a),
+
+        //
+
+        replaceCoreType(type, arrayType, arrayType),
+        replaceCoreType(type, arrayString, arrayString),
+        replaceCoreType(type, arrayBlob, arrayBlob),
+        replaceCoreType(type, arrayNothing, arrayNothing),
+        replaceCoreType(type, arrayPerson, arrayPerson),
+        replaceCoreType(type, arrayA, arrayA),
+
+        replaceCoreType(string, arrayType, arrayType),
+        replaceCoreType(string, arrayString, arrayString),
+        replaceCoreType(string, arrayBlob, arrayBlob),
+        replaceCoreType(string, arrayNothing, arrayNothing),
+        replaceCoreType(string, arrayPerson, arrayPerson),
+        replaceCoreType(string, arrayA, arrayA),
+
+        replaceCoreType(blob, arrayType, arrayType),
+        replaceCoreType(blob, arrayString, arrayString),
+        replaceCoreType(blob, arrayBlob, arrayBlob),
+        replaceCoreType(blob, arrayNothing, arrayNothing),
+        replaceCoreType(blob, arrayPerson, arrayPerson),
+        replaceCoreType(blob, arrayA, arrayA),
+
+        replaceCoreType(nothing, arrayType, arrayType),
+        replaceCoreType(nothing, arrayString, arrayString),
+        replaceCoreType(nothing, arrayBlob, arrayBlob),
+        replaceCoreType(nothing, arrayNothing, arrayNothing),
+        replaceCoreType(nothing, arrayPerson, arrayPerson),
+        replaceCoreType(nothing, arrayA, arrayA),
+
+        replaceCoreType(personType, arrayType, arrayType),
+        replaceCoreType(personType, arrayString, arrayString),
+        replaceCoreType(personType, arrayBlob, arrayBlob),
+        replaceCoreType(personType, arrayNothing, arrayNothing),
+        replaceCoreType(personType, arrayPerson, arrayPerson),
+        replaceCoreType(personType, arrayA, arrayA),
+
+        replaceCoreType(a, arrayType, arrayType),
+        replaceCoreType(a, arrayString, arrayString),
+        replaceCoreType(a, arrayBlob, arrayBlob),
+        replaceCoreType(a, arrayNothing, arrayNothing),
+        replaceCoreType(a, arrayPerson, arrayPerson),
+        replaceCoreType(a, arrayA, arrayA),
+
+        //
+
+        replaceCoreType(arrayType, type, arrayType),
+        replaceCoreType(arrayType, string, arrayString),
+        replaceCoreType(arrayType, blob, arrayBlob),
+        replaceCoreType(arrayType, nothing, arrayNothing),
+        replaceCoreType(arrayType, personType, arrayPerson),
+        replaceCoreType(arrayType, a, arrayA),
+
+        replaceCoreType(arrayString, type, arrayType),
+        replaceCoreType(arrayString, string, arrayString),
+        replaceCoreType(arrayString, blob, arrayBlob),
+        replaceCoreType(arrayString, nothing, arrayNothing),
+        replaceCoreType(arrayString, personType, arrayPerson),
+        replaceCoreType(arrayString, a, arrayA),
+
+        replaceCoreType(arrayBlob, type, arrayType),
+        replaceCoreType(arrayBlob, string, arrayString),
+        replaceCoreType(arrayBlob, blob, arrayBlob),
+        replaceCoreType(arrayBlob, nothing, arrayNothing),
+        replaceCoreType(arrayBlob, personType, arrayPerson),
+        replaceCoreType(arrayBlob, a, arrayA),
+
+        replaceCoreType(arrayNothing, type, arrayType),
+        replaceCoreType(arrayNothing, string, arrayString),
+        replaceCoreType(arrayNothing, blob, arrayBlob),
+        replaceCoreType(arrayNothing, nothing, arrayNothing),
+        replaceCoreType(arrayNothing, personType, arrayPerson),
+        replaceCoreType(arrayNothing, a, arrayA),
+
+        replaceCoreType(arrayPerson, type, arrayType),
+        replaceCoreType(arrayPerson, string, arrayString),
+        replaceCoreType(arrayPerson, blob, arrayBlob),
+        replaceCoreType(arrayPerson, nothing, arrayNothing),
+        replaceCoreType(arrayPerson, personType, arrayPerson),
+        replaceCoreType(arrayPerson, a, arrayA),
+
+        replaceCoreType(arrayA, type, arrayType),
+        replaceCoreType(arrayA, string, arrayString),
+        replaceCoreType(arrayA, blob, arrayBlob),
+        replaceCoreType(arrayA, nothing, arrayNothing),
+        replaceCoreType(arrayA, personType, arrayPerson),
+        replaceCoreType(arrayA, a, arrayA),
+
+        //
+
+        replaceCoreType(arrayType, arrayType, array2Type),
+        replaceCoreType(arrayType, arrayString, array2String),
+        replaceCoreType(arrayType, arrayBlob, array2Blob),
+        replaceCoreType(arrayType, arrayNothing, array2Nothing),
+        replaceCoreType(arrayType, arrayPerson, array2Person),
+        replaceCoreType(arrayType, arrayA, array2A),
+
+        replaceCoreType(arrayString, arrayType, array2Type),
+        replaceCoreType(arrayString, arrayString, array2String),
+        replaceCoreType(arrayString, arrayBlob, array2Blob),
+        replaceCoreType(arrayString, arrayNothing, array2Nothing),
+        replaceCoreType(arrayString, arrayPerson, array2Person),
+        replaceCoreType(arrayString, arrayA, array2A),
+
+        replaceCoreType(arrayBlob, arrayType, array2Type),
+        replaceCoreType(arrayBlob, arrayString, array2String),
+        replaceCoreType(arrayBlob, arrayBlob, array2Blob),
+        replaceCoreType(arrayBlob, arrayNothing, array2Nothing),
+        replaceCoreType(arrayBlob, arrayPerson, array2Person),
+        replaceCoreType(arrayBlob, arrayA, array2A),
+
+        replaceCoreType(arrayNothing, arrayType, array2Type),
+        replaceCoreType(arrayNothing, arrayString, array2String),
+        replaceCoreType(arrayNothing, arrayBlob, array2Blob),
+        replaceCoreType(arrayNothing, arrayNothing, array2Nothing),
+        replaceCoreType(arrayNothing, arrayPerson, array2Person),
+        replaceCoreType(arrayNothing, arrayA, array2A),
+
+        replaceCoreType(arrayPerson, arrayType, array2Type),
+        replaceCoreType(arrayPerson, arrayString, array2String),
+        replaceCoreType(arrayPerson, arrayBlob, array2Blob),
+        replaceCoreType(arrayPerson, arrayNothing, array2Nothing),
+        replaceCoreType(arrayPerson, arrayPerson, array2Person),
+        replaceCoreType(arrayPerson, arrayA, array2A),
+
+        replaceCoreType(arrayA, arrayType, array2Type),
+        replaceCoreType(arrayA, arrayString, array2String),
+        replaceCoreType(arrayA, arrayBlob, array2Blob),
+        replaceCoreType(arrayA, arrayNothing, array2Nothing),
+        replaceCoreType(arrayA, arrayPerson, array2Person),
+        replaceCoreType(arrayA, arrayA, array2A)));
+  }
+
+  private static Case replaceCoreType(Type type, Type coreType, Type expected) {
+    return newCase(
+        type.name() + ".replaceCoreType(" + coreType.name() + ") == " + expected.name(),
+        () -> assertEquals(expected, type.replaceCoreType(coreType)));
+  }
+
+  @Quackery
   public static Suite core_depth() throws Exception {
     return suite("Type.coreDepth").addAll(asList(
         coreDepthIs(type, 0),
