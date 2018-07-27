@@ -32,6 +32,11 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
+  public Type replaceCoreType(Type coreType) {
+    return coreType.increaseCoreDepthBy(coreDepth());
+  }
+
+  @Override
   public int coreDepth() {
     return 1 + elemType.coreDepth();
   }

@@ -16,6 +16,8 @@ public interface Type {
 
   public Type coreType();
 
+  public Type replaceCoreType(Type coreType);
+
   public int coreDepth();
 
   public Type increaseCoreDepthBy(int delta);
