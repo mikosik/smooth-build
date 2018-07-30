@@ -5,20 +5,22 @@ import static org.smoothbuild.task.base.Evaluator.callEvaluator;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
+import java.util.function.IntFunction;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class CallExpression extends Expression {
   private final DefinedFunction function;
-  private final EvaluatorTypeChooser evaluatorTypeChooser;
+  private final TypeChooser evaluatorTypeChooser;
 
-  public CallExpression(Type type, EvaluatorTypeChooser evaluatorTypeChooser,
+  public CallExpression(Type type, TypeChooser evaluatorTypeChooser,
       DefinedFunction definedFunction, Location location) {
     super(type, location);
     this.function = definedFunction;
@@ -37,8 +39,9 @@ public class CallExpression extends Expression {
     }
     List<Dag<Evaluator>> childrenEvaluators =
         evaluators(list(function.definition()), valuesDb, functionScope);
+    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().resultType();
     return new Dag<>(
-        callEvaluator(evaluatorTypeChooser.choose(childrenEvaluators), function, location()),
+        callEvaluator(evaluatorTypeChooser.choose(childrenType), function, location()),
         childrenEvaluators);
   }
 }
