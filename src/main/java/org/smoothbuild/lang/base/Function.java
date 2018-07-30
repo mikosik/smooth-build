@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.fixedTypeChooser;
+import static org.smoothbuild.lang.expr.TypeChooser.fixedTypeChooser;
 
-import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
+import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
@@ -52,5 +52,5 @@ public abstract class Function implements Named {
   }
 
   public abstract Expression createCallExpression(Type type,
-      EvaluatorTypeChooser evaluatorTypeChooser, Location location);
+      TypeChooser evaluatorTypeChooser, Location location);
 }

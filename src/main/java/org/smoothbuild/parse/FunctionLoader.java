@@ -2,8 +2,8 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.arrayOfFirstChildType;
-import static org.smoothbuild.lang.expr.EvaluatorTypeChooser.fixedTypeChooser;
+import static org.smoothbuild.lang.expr.TypeChooser.arrayOfFirstChildType;
+import static org.smoothbuild.lang.expr.TypeChooser.fixedTypeChooser;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -27,7 +27,7 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
-import org.smoothbuild.lang.expr.EvaluatorTypeChooser;
+import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -161,7 +161,7 @@ public class FunctionLoader {
         ArrayType type = (ArrayType) array.get(Type.class);
         List<Dag<Expression>> converted = map(
             elements, e -> implicitConversion(type.elemType(), e));
-        EvaluatorTypeChooser evaluatorTypeChooser = converted.isEmpty()
+        TypeChooser evaluatorTypeChooser = converted.isEmpty()
             ? fixedTypeChooser((ConcreteArrayType) type)
             : arrayOfFirstChildType(runtime.types());
         return new Dag<>(new ArrayExpression(type, evaluatorTypeChooser, array.location()),
