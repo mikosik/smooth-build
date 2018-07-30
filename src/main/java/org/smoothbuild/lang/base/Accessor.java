@@ -3,8 +3,8 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.lang.expr.AccessorCallExpression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
 
@@ -26,7 +26,7 @@ public class Accessor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
       Location location) {
     checkArgument(type().equals(type));
     return new AccessorCallExpression(this, location);

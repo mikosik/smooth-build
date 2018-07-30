@@ -18,9 +18,9 @@ import org.smoothbuild.util.Dag;
 
 public class CallExpression extends Expression {
   private final DefinedFunction function;
-  private final TypeChooser evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
 
-  public CallExpression(Type type, TypeChooser evaluatorTypeChooser,
+  public CallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
       DefinedFunction definedFunction, Location location) {
     super(type, location);
     this.function = definedFunction;

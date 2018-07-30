@@ -15,9 +15,9 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
-  private final TypeChooser evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
 
-  public ArrayExpression(ArrayType arrayType, TypeChooser evaluatorTypeChooser,
+  public ArrayExpression(ArrayType arrayType, TypeChooser<ConcreteType> evaluatorTypeChooser,
       Location location) {
     super(arrayType, location);
     this.evaluatorTypeChooser = evaluatorTypeChooser;
