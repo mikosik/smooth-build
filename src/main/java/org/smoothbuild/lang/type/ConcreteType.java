@@ -49,7 +49,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
-  public Type increaseCoreDepthBy(int delta) {
+  public ConcreteType increaseCoreDepthBy(int delta) {
     checkArgument(0 <= delta, "delta must be non negative value");
     ConcreteType result = this;
     for (int i = 0; i < delta; i++) {

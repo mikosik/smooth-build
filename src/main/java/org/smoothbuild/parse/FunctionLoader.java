@@ -27,9 +27,9 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
+import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ArrayType;
@@ -163,7 +163,7 @@ public class FunctionLoader {
             elements, e -> implicitConversion(type.elemType(), e));
         TypeChooser evaluatorTypeChooser = converted.isEmpty()
             ? fixedTypeChooser((ConcreteArrayType) type)
-            : arrayOfFirstChildType(runtime.types());
+            : arrayOfFirstChildType();
         return new Dag<>(new ArrayExpression(type, evaluatorTypeChooser, array.location()),
             converted);
       }
