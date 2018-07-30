@@ -3,8 +3,9 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.TypeChooser;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.util.Dag;
 
@@ -26,7 +27,7 @@ public class DefinedFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
       Location location) {
     return new CallExpression(type, evaluatorTypeChooser, this, location);
   }

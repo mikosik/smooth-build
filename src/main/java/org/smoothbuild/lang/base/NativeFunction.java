@@ -1,8 +1,9 @@
 package org.smoothbuild.lang.base;
 
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
+import org.smoothbuild.lang.expr.TypeChooser;
+import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
@@ -38,7 +39,7 @@ public class NativeFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
       Location location) {
     return new NativeCallExpression(type, evaluatorTypeChooser, this, location);
   }

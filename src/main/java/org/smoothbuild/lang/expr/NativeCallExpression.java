@@ -16,9 +16,9 @@ import org.smoothbuild.util.Dag;
 
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;
-  private final TypeChooser evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
 
-  public NativeCallExpression(Type type, TypeChooser evaluatorTypeChooser,
+  public NativeCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
       NativeFunction nativeFunction, Location location) {
     super(type, location);
     this.nativeFunction = nativeFunction;
