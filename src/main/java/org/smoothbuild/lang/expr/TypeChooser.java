@@ -2,7 +2,6 @@ package org.smoothbuild.lang.expr;
 
 import java.util.function.IntFunction;
 
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.type.ConcreteType;
 
 @FunctionalInterface
@@ -14,7 +13,7 @@ public interface TypeChooser {
     return (IntFunction<ConcreteType> childrenType) -> type;
   }
 
-  public static TypeChooser arrayOfFirstChildType(RuntimeTypes types) {
-    return childrenType -> types.array(childrenType.apply(0));
+  public static TypeChooser arrayOfFirstChildType() {
+    return childrenType -> childrenType.apply(0).increaseCoreDepthBy(1);
   }
 }
