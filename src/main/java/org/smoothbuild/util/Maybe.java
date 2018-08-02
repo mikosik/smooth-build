@@ -2,7 +2,6 @@ package org.smoothbuild.util;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.join;
-import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,6 @@ public abstract class Maybe<E> {
   }
 
   public static <E> Maybe<E> maybe(E value, List<? extends Object> errors) {
-    checkArgument(!(value == null && errors.isEmpty()));
     if (errors.isEmpty()) {
       return new ValueMaybe<>(value);
     } else {
@@ -74,7 +72,7 @@ public abstract class Maybe<E> {
     private final E value;
 
     public ValueMaybe(E value) {
-      this.value = requireNonNull(value);
+      this.value = value;
     }
 
     @Override

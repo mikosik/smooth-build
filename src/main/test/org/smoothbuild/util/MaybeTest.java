@@ -122,9 +122,10 @@ public class MaybeTest {
   }
 
   @Test
-  public void created_maybe_with_null_value_and_no_errors_fails() throws Exception {
-    when(() -> Maybe.maybe(null, list()));
-    thenThrown(IllegalArgumentException.class);
+  public void created_maybe_with_null_value_and_no_errors_has_null_value() throws Exception {
+    given(maybe = Maybe.maybe(null, list()));
+    when(() -> maybe.value());
+    thenReturned(null);
   }
 
   @Test
