@@ -2,9 +2,9 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeChooser;
 
 import com.google.common.hash.HashCode;
 
