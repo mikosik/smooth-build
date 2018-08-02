@@ -21,7 +21,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public ConcreteType resultType() {
+  public ConcreteType type() {
     return value.type();
   }
 

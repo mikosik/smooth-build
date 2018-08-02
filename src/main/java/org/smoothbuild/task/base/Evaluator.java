@@ -69,8 +69,8 @@ public class Evaluator {
     return computation.hash();
   }
 
-  public ConcreteType resultType() {
-    return computation.resultType();
+  public ConcreteType type() {
+    return computation.type();
   }
 
   public String name() {

@@ -32,8 +32,8 @@ public class Task {
     return evaluator.name();
   }
 
-  public ConcreteType resultType() {
-    return evaluator.resultType();
+  public ConcreteType type() {
+    return evaluator.type();
   }
 
   public boolean isInternal() {

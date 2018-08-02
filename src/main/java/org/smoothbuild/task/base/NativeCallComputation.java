@@ -31,7 +31,7 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public ConcreteType resultType() {
+  public ConcreteType type() {
     return type;
   }
 

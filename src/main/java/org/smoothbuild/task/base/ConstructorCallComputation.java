@@ -24,7 +24,7 @@ public class ConstructorCallComputation implements Computation {
   }
 
   @Override
-  public ConcreteType resultType() {
+  public ConcreteType type() {
     return constructor.type();
   }
 
