@@ -25,7 +25,7 @@ public class AccessorCallComputation implements Computation {
   }
 
   @Override
-  public ConcreteType resultType() {
+  public ConcreteType type() {
     return accessor.type();
   }
 

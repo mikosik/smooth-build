@@ -30,7 +30,7 @@ public class NativeCallExpression extends Expression {
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
     List<Dag<Evaluator>> childrenEvaluators = evaluators(children, valuesDb, scope);
-    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().resultType();
+    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     return new Dag<>(nativeCallEvaluator(evaluatorTypeChooser.choose(childrenType),
         nativeFunction, location()), childrenEvaluators);
   }

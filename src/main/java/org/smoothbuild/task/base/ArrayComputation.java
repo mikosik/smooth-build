@@ -21,7 +21,7 @@ public class ArrayComputation implements Computation {
   }
 
   @Override
-  public ConcreteType resultType() {
+  public ConcreteType type() {
     return arrayType;
   }
 

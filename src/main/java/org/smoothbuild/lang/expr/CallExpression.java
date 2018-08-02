@@ -40,7 +40,7 @@ public class CallExpression extends Expression {
     }
     List<Dag<Evaluator>> childrenEvaluators =
         evaluators(list(function.definition()), valuesDb, functionScope);
-    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().resultType();
+    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     return new Dag<>(
         callEvaluator(evaluatorTypeChooser.choose(childrenType), function, location()),
         childrenEvaluators);

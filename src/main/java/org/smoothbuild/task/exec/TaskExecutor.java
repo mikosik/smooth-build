@@ -30,7 +30,7 @@ public class TaskExecutor {
     HashCode hash = taskHash(task, input);
     boolean isAlreadyCached = outputsDb.contains(hash);
     if (isAlreadyCached) {
-      Output output = outputsDb.read(hash, task.resultType());
+      Output output = outputsDb.read(hash, task.type());
       task.setOutput(output);
     } else {
       Container container = containerProvider.get();

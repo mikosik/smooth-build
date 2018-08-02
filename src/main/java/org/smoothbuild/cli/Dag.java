@@ -56,7 +56,7 @@ public class Dag implements Command {
 
   private void print(String indent, org.smoothbuild.util.Dag<Evaluator> dag) {
     Evaluator elem = dag.elem();
-    console.println(indent + elem.name() + "(" + elem.resultType().name() + ")");
+    console.println(indent + elem.name() + "(" + elem.type().name() + ")");
     dag
         .children()
         .stream()

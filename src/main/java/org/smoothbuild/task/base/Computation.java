@@ -8,7 +8,7 @@ import com.google.common.hash.HashCode;
 public interface Computation {
   public HashCode hash();
 
-  public ConcreteType resultType();
+  public ConcreteType type();
 
   public Output execute(Input input, Container container);
 }
