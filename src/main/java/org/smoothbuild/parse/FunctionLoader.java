@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
@@ -52,14 +50,7 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
-  private final ValuesDb valuesDb;
-
-  @Inject
-  public FunctionLoader(ValuesDb valuesDb) {
-    this.valuesDb = valuesDb;
-  }
-
-  public Function loadFunction(SRuntime runtime, FuncNode func) {
+  public static Function loadFunction(SRuntime runtime, ValuesDb valuesDb, FuncNode func) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
