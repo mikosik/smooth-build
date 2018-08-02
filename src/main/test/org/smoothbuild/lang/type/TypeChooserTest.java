@@ -1,11 +1,11 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.expr.TypeChooser.inferCallType;
 import static org.smoothbuild.lang.type.TestingTypes.a;
 import static org.smoothbuild.lang.type.TestingTypes.arrayA;
 import static org.smoothbuild.lang.type.TestingTypes.arrayString;
 import static org.smoothbuild.lang.type.TestingTypes.blob;
 import static org.smoothbuild.lang.type.TestingTypes.string;
+import static org.smoothbuild.lang.type.TypeChooser.inferCallType;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -14,7 +14,6 @@ import java.util.function.IntFunction;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.ParameterInfo;
-import org.smoothbuild.lang.type.Type;
 
 public class TypeChooserTest {
   @Test

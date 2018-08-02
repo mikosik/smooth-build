@@ -2,8 +2,8 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.expr.TypeChooser.arrayOfFirstChildType;
-import static org.smoothbuild.lang.expr.TypeChooser.fixedTypeChooser;
+import static org.smoothbuild.lang.type.TypeChooser.arrayOfFirstChildType;
+import static org.smoothbuild.lang.type.TypeChooser.fixedTypeChooser;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -29,7 +29,6 @@ import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ArrayType;
@@ -37,6 +36,7 @@ import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArrayNode;

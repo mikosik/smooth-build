@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.util.Dag;
 
 /**

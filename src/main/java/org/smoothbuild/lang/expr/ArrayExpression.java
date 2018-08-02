@@ -11,6 +11,7 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 

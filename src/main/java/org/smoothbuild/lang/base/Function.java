@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.expr.TypeChooser.fixedTypeChooser;
+import static org.smoothbuild.lang.type.TypeChooser.fixedTypeChooser;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.TypeChooser;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;

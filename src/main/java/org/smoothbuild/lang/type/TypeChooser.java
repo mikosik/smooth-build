@@ -1,12 +1,10 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.lang.type;
 
 import java.util.List;
 import java.util.function.IntFunction;
 
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.Type;
 
 @FunctionalInterface
 public interface TypeChooser<T extends Type> {
