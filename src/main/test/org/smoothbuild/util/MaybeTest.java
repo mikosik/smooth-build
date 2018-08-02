@@ -317,6 +317,42 @@ public class MaybeTest {
   }
 
   @Test
+  public void value_invoke_supplier() throws Exception {
+    given(builder = new StringBuilder("one"));
+    given(maybeBuilder = value(builder));
+    given(maybeBuilder = maybeBuilder.invoke(() -> list()));
+    when(() -> maybeBuilder.value().toString());
+    thenReturned("one");
+  }
+
+  @Test
+  public void value_invoke_error_returning_supplier() throws Exception {
+    given(builder = new StringBuilder("one"));
+    given(maybeBuilder = value(builder));
+    given(maybeBuilder = maybeBuilder.invoke(() -> list(error)));
+    when(() -> maybeBuilder.errors());
+    thenReturned(list(error));
+  }
+
+  @Test
+  public void error_invoke_supplier() throws Exception {
+    given(builder = new StringBuilder("one"));
+    given(maybeBuilder = error(error));
+    given(maybeBuilder = maybeBuilder.invoke(() -> list()));
+    when(() -> maybeBuilder.errors());
+    thenReturned(list(error));
+  }
+
+  @Test
+  public void error_invoke_error_returning_supplier() throws Exception {
+    given(builder = new StringBuilder("one"));
+    given(maybeBuilder = error(error));
+    given(maybeBuilder = maybeBuilder.invoke(() -> list(error2)));
+    when(() -> maybeBuilder.errors());
+    thenReturned(list(error));
+  }
+
+  @Test
   public void value_invoke_modifying_function() throws Exception {
     given(builder = new StringBuilder("one"));
     given(maybeBuilder = value(builder));

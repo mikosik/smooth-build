@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -54,6 +55,8 @@ public abstract class Maybe<E> {
   public abstract ImmutableList<Object> errors();
 
   public abstract Maybe<E> invokeConsumer(Consumer<E> consumer);
+
+  public abstract Maybe<E> invoke(Supplier<List<? extends Object>> consumer);
 
   public abstract Maybe<E> invoke(Function<E, List<? extends Object>> consumer);
 
@@ -108,6 +111,16 @@ public abstract class Maybe<E> {
     public Maybe<E> invokeConsumer(Consumer<E> consumer) {
       consumer.accept(value);
       return this;
+    }
+
+    @Override
+    public Maybe<E> invoke(Supplier<List<? extends Object>> supplier) {
+      List<? extends Object> newErrors = supplier.get();
+      if (newErrors.isEmpty()) {
+        return this;
+      } else {
+        return Maybe.errors(newErrors);
+      }
     }
 
     @Override
@@ -218,6 +231,11 @@ public abstract class Maybe<E> {
 
     @Override
     public Maybe<E> invokeConsumer(Consumer<E> consumer) {
+      return this;
+    }
+
+    @Override
+    public Maybe<E> invoke(Supplier<List<? extends Object>> supplier) {
       return this;
     }
 
