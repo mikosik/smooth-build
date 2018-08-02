@@ -115,36 +115,29 @@ public abstract class Maybe<E> {
 
     @Override
     public Maybe<E> invoke(Supplier<List<? extends Object>> supplier) {
-      List<? extends Object> newErrors = supplier.get();
-      if (newErrors.isEmpty()) {
-        return this;
-      } else {
-        return Maybe.errors(newErrors);
-      }
+      return appendErrorsIfExist(supplier.get());
     }
 
     @Override
     public Maybe<E> invoke(Function<E, List<? extends Object>> consumer) {
-      List<? extends Object> newErrors = consumer.apply(value);
-      if (newErrors.isEmpty()) {
-        return this;
-      } else {
-        return Maybe.errors(newErrors);
-      }
+      return appendErrorsIfExist(consumer.apply(value));
     }
 
     @Override
     public <F> Maybe<E> invoke(Maybe<F> param,
         BiFunction<E, F, List<? extends Object>> consumer) {
       if (param.hasValue()) {
-        List<? extends Object> newErrors = consumer.apply(value, param.value());
-        if (newErrors.isEmpty()) {
-          return this;
-        } else {
-          return Maybe.errors(newErrors);
-        }
+        return appendErrorsIfExist(consumer.apply(value, param.value()));
       } else {
         return (Maybe<E>) param;
+      }
+    }
+
+    private Maybe<E> appendErrorsIfExist(List<? extends Object> newErrors) {
+      if (newErrors.isEmpty()) {
+        return this;
+      } else {
+        return Maybe.errors(newErrors);
       }
     }
 
