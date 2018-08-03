@@ -44,10 +44,23 @@ public class InferCallTypeAndParamAssignment {
         if (assignNamedArguments(parameters)) {
           return;
         }
+        parameters
+            .stream()
+            .filter(p -> p.type().isGeneric())
+            .forEach(p -> errors.add(implicitAssignmentOfGenericParameterError(call, p)));
+        if (!errors.isEmpty()) {
+          return;
+        }
         if (assignNamelessArguments(parameters)) {
           return;
         }
         failWhenUnassignedRequiredParameterIsLeft(errors, parameters);
+      }
+
+      private ParseError implicitAssignmentOfGenericParameterError(CallNode call,
+          ParameterInfo parameter) {
+        return new ParseError(
+            call, "Generic parameter '" + parameter.name() + "' must be assigned explicitly");
       }
 
       private List<? extends ParameterInfo> functionParameters() {

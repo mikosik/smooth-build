@@ -19,6 +19,15 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void generic_parameter_cant_be_assigned_implicitly() throws Exception {
+    givenScript("a testIdentity(a value) = value;     \n"
+        + "      result = testIdentity('abc');        \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(2, "Generic parameter 'value' must be assigned explicitly");
+  }
+
+  @Test
   public void assigns_to_parameter_with_same_type() throws Exception {
     givenScript("func(String string) = string;"
         + "      result = func('abc');");
