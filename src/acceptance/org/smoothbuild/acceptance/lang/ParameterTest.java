@@ -15,35 +15,35 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void string_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_string() throws Exception {
     givenScript("oneParameter(String string) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void blob_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_blob() throws Exception {
     givenScript("oneParameter(Blob blob) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void file_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_file() throws Exception {
     givenScript("oneParameter(File file) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void nothing_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_nothing() throws Exception {
     givenScript("oneParameter(Nothing nothing) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void value_type_parameter_cannot_be_declared() throws Exception {
+  public void it_is_NOT_possible_to_declare_parameter_of_type_value() throws Exception {
     givenScript("oneParameter(Value value) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
@@ -51,14 +51,14 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void generic_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_generic_type() throws Exception {
     givenScript("oneParameter(a param) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void unknown_type_parameter_cannot_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_unknown_type() throws Exception {
     givenScript("oneParameter(Unknown unknown) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
@@ -66,42 +66,42 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void string_array_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_string_array() throws Exception {
     givenScript("oneParameter([String] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void blob_array_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_blob_array() throws Exception {
     givenScript("oneParameter([Blob] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void file_array_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_file_array() throws Exception {
     givenScript("oneParameter([File] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void nothing_array_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_nothing_array() throws Exception {
     givenScript("oneParameter([Nothing] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void generic_array_parameter_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_generic_array() throws Exception {
     givenScript("oneParameter([a] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void unknown_array_type_parameter_cannot_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_array_of_unknown_type() throws Exception {
     givenScript("oneParameter([Unknown] unknown) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
@@ -109,14 +109,14 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void nested_array_parameter_type_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_of_type_string_array2() throws Exception {
     givenScript("oneParameter([[String]] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
 
   @Test
-  public void parameters_with_trailing_comma_can_be_declared() throws Exception {
+  public void it_is_possible_to_declare_parameter_with_trailing_comma() throws Exception {
     givenScript("myFunction(String string, ) = string;");
     whenSmoothList();
     thenFinishedWithSuccess();
