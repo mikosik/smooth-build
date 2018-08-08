@@ -56,7 +56,7 @@ public class InferTypesAndParamAssignment {
         struct.set(Type.class, type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
-          struct.set(List.class, parameters);
+          struct.setParameterInfos(parameters);
         }
       }
 
@@ -85,7 +85,7 @@ public class InferTypesAndParamAssignment {
         func.set(Type.class, type);
         List<ParameterInfo> parameters = createParameters(func.params());
         if (parameters != null) {
-          func.set(List.class, parameters);
+          func.setParameterInfos(parameters);
         }
       }
 

@@ -70,10 +70,10 @@ public class InferCallTypeAndParamAssignment {
           return functions.get(name).signature().parameters();
         }
         if (ast.containsFunc(name)) {
-          return ast.func(name).get(List.class);
+          return ast.func(name).getParameterInfos();
         }
         if (ast.containsStruct(name)) {
-          return ast.struct(name).get(List.class);
+          return ast.struct(name).getParameterInfos();
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
