@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class StructNode extends NamedNode {
+public class StructNode extends ParameterizedNode {
   private final List<FieldNode> fields;
 
   public StructNode(String name, List<FieldNode> fields, Location location) {
