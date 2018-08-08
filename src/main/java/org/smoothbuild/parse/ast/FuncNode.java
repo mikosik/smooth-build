@@ -6,17 +6,15 @@ import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class FuncNode extends Node implements Named {
+public class FuncNode extends NamedNode {
   private final TypeNode type;
-  private final String name;
   private final List<ParamNode> params;
   private final ExprNode expr;
 
   public FuncNode(TypeNode type, String name, List<ParamNode> params, ExprNode expr,
       Location location) {
-    super(location);
+    super(name, location);
     this.type = type;
-    this.name = name;
     this.params = ImmutableList.copyOf(params);
     this.expr = expr;
   }
@@ -27,11 +25,6 @@ public class FuncNode extends Node implements Named {
 
   public TypeNode type() {
     return type;
-  }
-
-  @Override
-  public String name() {
-    return name;
   }
 
   public List<ParamNode> params() {
