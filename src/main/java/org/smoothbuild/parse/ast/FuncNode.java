@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 
-public class FuncNode extends NamedNode {
+public class FuncNode extends ParameterizedNode {
   private final TypeNode type;
   private final List<ParamNode> params;
   private final ExprNode expr;
