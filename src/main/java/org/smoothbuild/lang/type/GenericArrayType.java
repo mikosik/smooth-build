@@ -17,7 +17,7 @@ public class GenericArrayType extends GenericType implements ArrayType {
     } else if (type.isNothing()) {
       return type;
     } else {
-      return null;
+      throw new IllegalArgumentException("Cannot assign " + name() + " from " + type.name());
     }
   }
 

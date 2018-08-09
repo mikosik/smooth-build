@@ -44,7 +44,10 @@ public class GenericType extends AbstractType {
 
   @Override
   public boolean isArgAssignableFrom(Type type) {
-    return actualCoreTypeWhenAssignedFrom(type) != null;
+    if (type.coreType().isNothing()) {
+      return true;
+    }
+    return coreDepth() <= type.coreDepth();
   }
 
   @Override

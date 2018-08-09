@@ -29,6 +29,8 @@ import static org.smoothbuild.lang.type.TestingTypes.personType;
 import static org.smoothbuild.lang.type.TestingTypes.string;
 import static org.smoothbuild.lang.type.TestingTypes.type;
 import static org.smoothbuild.util.Lists.list;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
 
 import java.util.List;
 
@@ -1448,85 +1450,95 @@ public class TypesTest {
   @Quackery
   public static Suite actualCoreTypeWhenAssignedFrom() {
     return suite("GenericType.actualCoreTypeWhenAssignedFrom").addAll(asList(
-        actualCoreType(a, type, type),
-        actualCoreType(a, string, string),
-        actualCoreType(a, blob, blob),
-        actualCoreType(a, personType, personType),
-        actualCoreType(a, nothing, nothing),
-        actualCoreType(a, a, a),
-        actualCoreType(a, b, b),
+        assertActualCoreType(a, type, type),
+        assertActualCoreType(a, string, string),
+        assertActualCoreType(a, blob, blob),
+        assertActualCoreType(a, personType, personType),
+        assertActualCoreType(a, nothing, nothing),
+        assertActualCoreType(a, a, a),
+        assertActualCoreType(a, b, b),
 
-        actualCoreType(a, arrayType, arrayType),
-        actualCoreType(a, arrayString, arrayString),
-        actualCoreType(a, arrayBlob, arrayBlob),
-        actualCoreType(a, arrayPerson, arrayPerson),
-        actualCoreType(a, arrayNothing, arrayNothing),
-        actualCoreType(a, arrayA, arrayA),
-        actualCoreType(a, arrayB, arrayB),
+        assertActualCoreType(a, arrayType, arrayType),
+        assertActualCoreType(a, arrayString, arrayString),
+        assertActualCoreType(a, arrayBlob, arrayBlob),
+        assertActualCoreType(a, arrayPerson, arrayPerson),
+        assertActualCoreType(a, arrayNothing, arrayNothing),
+        assertActualCoreType(a, arrayA, arrayA),
+        assertActualCoreType(a, arrayB, arrayB),
 
-        actualCoreType(a, array2Type, array2Type),
-        actualCoreType(a, array2String, array2String),
-        actualCoreType(a, array2Blob, array2Blob),
-        actualCoreType(a, array2Person, array2Person),
-        actualCoreType(a, array2Nothing, array2Nothing),
-        actualCoreType(a, array2A, array2A),
-        actualCoreType(a, array2B, array2B),
+        assertActualCoreType(a, array2Type, array2Type),
+        assertActualCoreType(a, array2String, array2String),
+        assertActualCoreType(a, array2Blob, array2Blob),
+        assertActualCoreType(a, array2Person, array2Person),
+        assertActualCoreType(a, array2Nothing, array2Nothing),
+        assertActualCoreType(a, array2A, array2A),
+        assertActualCoreType(a, array2B, array2B),
 
-        actualCoreType(arrayA, type, null),
-        actualCoreType(arrayA, string, null),
-        actualCoreType(arrayA, blob, null),
-        actualCoreType(arrayA, personType, null),
-        actualCoreType(arrayA, nothing, nothing),
-        actualCoreType(arrayA, a, null),
-        actualCoreType(arrayA, b, null),
+        failedActualCoreType(arrayA, type),
+        failedActualCoreType(arrayA, string),
+        failedActualCoreType(arrayA, blob),
+        failedActualCoreType(arrayA, personType),
+        assertActualCoreType(arrayA, nothing, nothing),
+        failedActualCoreType(arrayA, a),
+        failedActualCoreType(arrayA, b),
 
-        actualCoreType(arrayA, arrayType, type),
-        actualCoreType(arrayA, arrayString, string),
-        actualCoreType(arrayA, arrayBlob, blob),
-        actualCoreType(arrayA, arrayPerson, personType),
-        actualCoreType(arrayA, arrayNothing, nothing),
-        actualCoreType(arrayA, arrayA, a),
-        actualCoreType(arrayA, arrayB, b),
+        assertActualCoreType(arrayA, arrayType, type),
+        assertActualCoreType(arrayA, arrayString, string),
+        assertActualCoreType(arrayA, arrayBlob, blob),
+        assertActualCoreType(arrayA, arrayPerson, personType),
+        assertActualCoreType(arrayA, arrayNothing, nothing),
+        assertActualCoreType(arrayA, arrayA, a),
+        assertActualCoreType(arrayA, arrayB, b),
 
-        actualCoreType(arrayA, array2Type, arrayType),
-        actualCoreType(arrayA, array2String, arrayString),
-        actualCoreType(arrayA, array2Blob, arrayBlob),
-        actualCoreType(arrayA, array2Person, arrayPerson),
-        actualCoreType(arrayA, array2Nothing, arrayNothing),
-        actualCoreType(arrayA, array2A, arrayA),
-        actualCoreType(arrayA, array2B, arrayB),
+        assertActualCoreType(arrayA, array2Type, arrayType),
+        assertActualCoreType(arrayA, array2String, arrayString),
+        assertActualCoreType(arrayA, array2Blob, arrayBlob),
+        assertActualCoreType(arrayA, array2Person, arrayPerson),
+        assertActualCoreType(arrayA, array2Nothing, arrayNothing),
+        assertActualCoreType(arrayA, array2A, arrayA),
+        assertActualCoreType(arrayA, array2B, arrayB),
 
-        actualCoreType(array2A, type, null),
-        actualCoreType(array2A, string, null),
-        actualCoreType(array2A, blob, null),
-        actualCoreType(array2A, personType, null),
-        actualCoreType(array2A, nothing, nothing),
-        actualCoreType(array2A, a, null),
-        actualCoreType(array2A, b, null),
+        failedActualCoreType(array2A, type),
+        failedActualCoreType(array2A, string),
+        failedActualCoreType(array2A, blob),
+        failedActualCoreType(array2A, personType),
+        assertActualCoreType(array2A, nothing, nothing),
+        failedActualCoreType(array2A, a),
+        failedActualCoreType(array2A, b),
 
-        actualCoreType(array2A, arrayType, null),
-        actualCoreType(array2A, arrayString, null),
-        actualCoreType(array2A, arrayBlob, null),
-        actualCoreType(array2A, arrayPerson, null),
-        actualCoreType(array2A, arrayNothing, nothing),
-        actualCoreType(array2A, arrayA, null),
-        actualCoreType(array2A, arrayB, null),
+        failedActualCoreType(array2A, arrayType),
+        failedActualCoreType(array2A, arrayString),
+        failedActualCoreType(array2A, arrayBlob),
+        failedActualCoreType(array2A, arrayPerson),
+        assertActualCoreType(array2A, arrayNothing, nothing),
+        failedActualCoreType(array2A, arrayA),
+        failedActualCoreType(array2A, arrayB),
 
-        actualCoreType(array2A, array2Type, type),
-        actualCoreType(array2A, array2String, string),
-        actualCoreType(array2A, array2Blob, blob),
-        actualCoreType(array2A, array2Person, personType),
-        actualCoreType(array2A, array2Nothing, nothing),
-        actualCoreType(array2A, array2A, a),
-        actualCoreType(array2A, array2B, b)));
+        assertActualCoreType(array2A, array2Type, type),
+        assertActualCoreType(array2A, array2String, string),
+        assertActualCoreType(array2A, array2Blob, blob),
+        assertActualCoreType(array2A, array2Person, personType),
+        assertActualCoreType(array2A, array2Nothing, nothing),
+        assertActualCoreType(array2A, array2A, a),
+        assertActualCoreType(array2A, array2B, b)));
   }
 
-  private static Case actualCoreType(GenericType type, Type assigned, Type expected) {
+  private static Case assertActualCoreType(GenericType type, Type assigned, Type expected) {
     String expectedName = expected == null ? "null" : expected.name();
     return newCase(
         "Type " + type.name() + " when assigned from " + assigned.name()
             + " gets actual core type == " + expectedName,
         () -> assertEquals(expected, type.actualCoreTypeWhenAssignedFrom(assigned)));
+  }
+
+  private static Case failedActualCoreType(GenericType type, Type assigned) {
+    return newCase(
+        "actualCoreTypeWhenAssignedFrom " + type.name() + ", " + assigned.name()
+            + " fails with IAE",
+        () -> {
+          when(() -> type.actualCoreTypeWhenAssignedFrom(assigned));
+          thenThrown(IllegalArgumentException.class);
+        });
   }
 
   @Quackery
