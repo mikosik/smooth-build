@@ -28,7 +28,8 @@ public class ArrayBuilder {
 
   public ArrayBuilder add(Value elem) {
     if (!type.elemType().equals(elem.type())) {
-      throw new IllegalArgumentException("Element type must be " + type.elemType().name() + ".");
+      throw new IllegalArgumentException("Element type must be " + type.elemType().name()
+          + " but was " + elem.type().name() + ".");
     }
     Class<?> required = type.elemType().jType();
     if (!required.equals(elem.getClass())) {

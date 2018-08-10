@@ -281,7 +281,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenOutputContains(
         "Function addElementOfWrongTypeToArray threw java exception from its native code:");
-    thenOutputContains("Element type must be Blob.");
+    thenOutputContains("Element type must be Blob but was String.");
   }
 
   @Test
