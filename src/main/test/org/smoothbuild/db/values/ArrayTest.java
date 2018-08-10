@@ -9,6 +9,7 @@ import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+import static org.testory.Testory.willReturn;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,7 @@ public class ArrayTest {
   public void adding_element_with_wrong_smooth_type_is_forbidden() throws Exception {
     given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
     given(blob = mock(Blob.class));
+    given(willReturn(typesDb.blob()), blob).type();
     when(arrayBuilder).add(blob);
     thenThrown(IllegalArgumentException.class);
   }
