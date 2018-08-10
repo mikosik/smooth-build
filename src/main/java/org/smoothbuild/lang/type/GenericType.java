@@ -39,7 +39,11 @@ public class GenericType extends AbstractType {
 
   @Override
   public boolean isAssignableFrom(Type type) {
-    return type.isGeneric() && name().equals(type.name());
+    if (type.isGeneric()) {
+      return equals(type);
+    } else {
+      return type.coreType().isNothing() && type.coreDepth() <= coreDepth();
+    }
   }
 
   @Override
@@ -48,14 +52,6 @@ public class GenericType extends AbstractType {
       return true;
     }
     return coreDepth() <= type.coreDepth();
-  }
-
-  @Override
-  public Type commonSuperType(Type that) {
-    if (this.equals(that)) {
-      return this;
-    }
-    return null;
   }
 
   @Override
