@@ -33,6 +33,7 @@ public class ConvertComputation implements Computation {
   public Output execute(Input input, Container container) {
     assertThat(input.values().size() == 1);
     Value value = input.values().get(0);
+    assertThat(!type.equals(value.type()));
     assertThat(type.isAssignableFrom(value.type()));
     if (value instanceof Array) {
       return new Output(convertArray(container, (Array) value, type));
