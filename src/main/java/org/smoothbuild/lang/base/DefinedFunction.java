@@ -27,8 +27,8 @@ public class DefinedFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       Location location) {
-    return new CallExpression(type, evaluatorTypeChooser, this, location);
+    return new CallExpression(type, typeChooser, this, location);
   }
 }

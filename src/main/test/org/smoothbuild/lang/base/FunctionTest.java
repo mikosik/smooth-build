@@ -59,7 +59,7 @@ public class FunctionTest {
 
     @Override
     public Expression createCallExpression(Type type,
-        TypeChooser<ConcreteType> evaluatorTypeChooser, Location location) {
+        TypeChooser<ConcreteType> typeChooser, Location location) {
       return null;
     }
   }
