@@ -26,7 +26,7 @@ public class Accessor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       Location location) {
     checkArgument(type().equals(type));
     return new AccessorCallExpression(this, location);

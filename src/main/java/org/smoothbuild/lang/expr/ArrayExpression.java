@@ -16,12 +16,12 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
-  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> typeChooser;
 
-  public ArrayExpression(ArrayType arrayType, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public ArrayExpression(ArrayType arrayType, TypeChooser<ConcreteType> typeChooser,
       Location location) {
     super(arrayType, location);
-    this.evaluatorTypeChooser = evaluatorTypeChooser;
+    this.typeChooser = typeChooser;
   }
 
   @Override
@@ -30,7 +30,7 @@ public class ArrayExpression extends Expression {
     List<Dag<Evaluator>> childrenEvaluators = evaluators(children, valuesDb, scope);
     IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     return new Dag<>(arrayEvaluator(
-        (ConcreteArrayType) evaluatorTypeChooser.choose(childrenType), location()),
+        (ConcreteArrayType) typeChooser.choose(childrenType), location()),
         childrenEvaluators);
   }
 }

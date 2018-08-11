@@ -19,13 +19,13 @@ import org.smoothbuild.util.Dag;
 
 public class CallExpression extends Expression {
   private final DefinedFunction function;
-  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> typeChooser;
 
-  public CallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public CallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       DefinedFunction definedFunction, Location location) {
     super(type, location);
     this.function = definedFunction;
-    this.evaluatorTypeChooser = evaluatorTypeChooser;
+    this.typeChooser = typeChooser;
   }
 
   @Override
@@ -42,7 +42,7 @@ public class CallExpression extends Expression {
         evaluators(list(function.definition()), valuesDb, functionScope);
     IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     return new Dag<>(
-        callEvaluator(evaluatorTypeChooser.choose(childrenType), function, location()),
+        callEvaluator(typeChooser.choose(childrenType), function, location()),
         childrenEvaluators);
   }
 }

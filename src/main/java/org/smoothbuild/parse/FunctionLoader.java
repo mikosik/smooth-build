@@ -152,10 +152,10 @@ public class FunctionLoader {
         ArrayType type = (ArrayType) array.get(Type.class);
         List<Dag<Expression>> converted = map(
             elements, e -> implicitConversion(type.elemType(), e));
-        TypeChooser<ConcreteType> evaluatorTypeChooser = converted.isEmpty()
+        TypeChooser<ConcreteType> typeChooser = converted.isEmpty()
             ? fixedTypeChooser((ConcreteArrayType) type)
             : arrayOfFirstChildType();
-        return new Dag<>(new ArrayExpression(type, evaluatorTypeChooser, array.location()),
+        return new Dag<>(new ArrayExpression(type, typeChooser, array.location()),
             converted);
       }
 

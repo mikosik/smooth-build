@@ -51,6 +51,6 @@ public abstract class Function implements Named {
     return createCallExpression(type(), fixedTypeChooser((ConcreteType) type()), location);
   }
 
-  public abstract Expression createCallExpression(Type type,
-      TypeChooser<ConcreteType> evaluatorTypeChooser, Location location);
+  public abstract Expression createCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
+      Location location);
 }

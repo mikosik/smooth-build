@@ -39,8 +39,8 @@ public class NativeFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public Expression createCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       Location location) {
-    return new NativeCallExpression(type, evaluatorTypeChooser, this, location);
+    return new NativeCallExpression(type, typeChooser, this, location);
   }
 }

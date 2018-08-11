@@ -17,13 +17,13 @@ import org.smoothbuild.util.Dag;
 
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;
-  private final TypeChooser<ConcreteType> evaluatorTypeChooser;
+  private final TypeChooser<ConcreteType> typeChooser;
 
-  public NativeCallExpression(Type type, TypeChooser<ConcreteType> evaluatorTypeChooser,
+  public NativeCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       NativeFunction nativeFunction, Location location) {
     super(type, location);
     this.nativeFunction = nativeFunction;
-    this.evaluatorTypeChooser = evaluatorTypeChooser;
+    this.typeChooser = typeChooser;
   }
 
   @Override
@@ -31,7 +31,7 @@ public class NativeCallExpression extends Expression {
       Scope<Dag<Evaluator>> scope) {
     List<Dag<Evaluator>> childrenEvaluators = evaluators(children, valuesDb, scope);
     IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
-    return new Dag<>(nativeCallEvaluator(evaluatorTypeChooser.choose(childrenType),
+    return new Dag<>(nativeCallEvaluator(typeChooser.choose(childrenType),
         nativeFunction, location()), childrenEvaluators);
   }
 }
