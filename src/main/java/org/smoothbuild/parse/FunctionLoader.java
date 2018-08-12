@@ -74,11 +74,11 @@ public class FunctionLoader {
         return hasher.hash();
       }
 
-      private Parameter createParameter(ParamNode p) {
-        Type type = p.type().get(Type.class);
-        String name = p.name();
-        Dag<Expression> defaultValue = p.hasDefaultValue()
-            ? createExpression(p.defaultValue())
+      private Parameter createParameter(ParamNode param) {
+        Type type = param.type().get(Type.class);
+        String name = param.name();
+        Dag<Expression> defaultValue = param.hasDefaultValue()
+            ? createExpression(param.defaultValue())
             : null;
         return new Parameter(type, name, defaultValue);
       }
