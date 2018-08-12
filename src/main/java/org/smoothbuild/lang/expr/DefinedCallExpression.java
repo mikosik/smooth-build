@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.Scope.scope;
-import static org.smoothbuild.task.base.Evaluator.callEvaluator;
+import static org.smoothbuild.task.base.Evaluator.definedCallEvaluator;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class DefinedCallExpression extends Expression {
         evaluators(list(function.definition()), valuesDb, functionScope);
     IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     return new Dag<>(
-        callEvaluator(typeChooser.choose(childrenType), function, location()),
+        definedCallEvaluator(typeChooser.choose(childrenType), function, location()),
         childrenEvaluators);
   }
 }
