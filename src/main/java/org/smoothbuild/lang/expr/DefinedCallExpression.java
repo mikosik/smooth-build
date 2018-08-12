@@ -17,11 +17,11 @@ import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
-public class CallExpression extends Expression {
+public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
   private final TypeChooser<ConcreteType> typeChooser;
 
-  public CallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
+  public DefinedCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
       DefinedFunction definedFunction, Location location) {
     super(type, location);
     this.function = definedFunction;
