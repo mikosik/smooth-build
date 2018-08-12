@@ -35,7 +35,7 @@ public class Evaluator {
         false, function.isCacheable(), location);
   }
 
-  public static Evaluator callEvaluator(ConcreteType type, DefinedFunction function,
+  public static Evaluator definedCallEvaluator(ConcreteType type, DefinedFunction function,
       Location location) {
     return new Evaluator(new IdentityComputation(type), function.name().toString(),
         false, true, location);
