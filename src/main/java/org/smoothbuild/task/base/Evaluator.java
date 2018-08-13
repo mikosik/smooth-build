@@ -35,10 +35,9 @@ public class Evaluator {
         false, function.isCacheable(), location);
   }
 
-  public static Evaluator definedCallEvaluator(ConcreteType type, DefinedFunction function,
+  public static Evaluator identityEvaluator(ConcreteType type, String name, boolean isInternal,
       Location location) {
-    return new Evaluator(new IdentityComputation(type), function.name().toString(),
-        false, true, location);
+    return new Evaluator(new IdentityComputation(type), name, isInternal, true, location);
   }
 
   public static Evaluator constructorCallEvaluator(Constructor constructor, Location location) {

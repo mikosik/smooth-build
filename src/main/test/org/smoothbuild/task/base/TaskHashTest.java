@@ -3,7 +3,7 @@ package org.smoothbuild.task.base;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.task.base.Evaluator.convertEvaluator;
-import static org.smoothbuild.task.base.Evaluator.definedCallEvaluator;
+import static org.smoothbuild.task.base.Evaluator.identityEvaluator;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 import static org.smoothbuild.task.exec.TaskExecutor.taskHash;
@@ -142,8 +142,8 @@ public class TaskHashTest {
     given(definedFunction = mock(DefinedFunction.class));
     given(willReturn(typesDb.string()), definedFunction).type();
     given(willReturn("name"), definedFunction).name();
-    given(task = new Task(definedCallEvaluator(typesDb.string(), definedFunction, location),
-        Hash.integer(13)));
+    given(task = new Task(identityEvaluator(typesDb.string(), definedFunction.name(), false,
+        location), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> taskHash(task, input));
     thenReturned(HashCode.fromString("e7900f15ecd28f0a8088dfabd5de196d197d7939"));
