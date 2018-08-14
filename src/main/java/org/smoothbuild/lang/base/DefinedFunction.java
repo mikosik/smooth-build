@@ -15,15 +15,15 @@ import org.smoothbuild.util.Dag;
  * @see NativeFunction
  */
 public class DefinedFunction extends Function {
-  private final Dag<Expression> definition;
+  private final Dag<Expression> body;
 
-  public DefinedFunction(Signature signature, Location location, Dag<Expression> definition) {
+  public DefinedFunction(Signature signature, Location location, Dag<Expression> body) {
     super(signature, location);
-    this.definition = checkNotNull(definition);
+    this.body = checkNotNull(body);
   }
 
-  public Dag<Expression> definition() {
-    return definition;
+  public Dag<Expression> body() {
+    return body;
   }
 
   @Override

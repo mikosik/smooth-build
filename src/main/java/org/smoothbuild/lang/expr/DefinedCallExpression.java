@@ -39,7 +39,7 @@ public class DefinedCallExpression extends Expression {
       functionScope.add(function.parameters().get(i).name(), evaluator);
     }
     List<Dag<Evaluator>> childrenEvaluators =
-        evaluators(list(function.definition()), valuesDb, functionScope);
+        evaluators(list(function.body()), valuesDb, functionScope);
     IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
     Evaluator evaluator = identityEvaluator(typeChooser.choose(childrenType), function.name(),
         false, location());
