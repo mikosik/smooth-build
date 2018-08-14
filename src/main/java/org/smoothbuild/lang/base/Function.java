@@ -1,12 +1,9 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.type.TypeChooser.fixedTypeChooser;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -48,9 +45,8 @@ public abstract class Function implements Named {
           "Cannot create call expression for generic function `" + name()
               + "` without providing actual type for generic result type.");
     }
-    return createCallExpression(type(), fixedTypeChooser((ConcreteType) type()), location);
+    return createCallExpression(type(), location);
   }
 
-  public abstract Expression createCallExpression(Type type, TypeChooser<ConcreteType> typeChooser,
-      Location location);
+  public abstract Expression createCallExpression(Type type, Location location);
 }

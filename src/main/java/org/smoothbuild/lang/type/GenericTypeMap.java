@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.util.Lists.map;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,10 @@ public class GenericTypeMap<T extends Type> {
 
   private GenericTypeMap(Map<GenericType, T> map) {
     this.map = map;
+  }
+
+  public List<T> applyTo(List<Type> types) {
+    return map(types, t -> applyTo(t));
   }
 
   public T applyTo(Type type) {
