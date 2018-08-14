@@ -7,24 +7,27 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 public class InferTypes {
-  public static Map<GenericType, Type> inferActualCoreTypes(List<GenericType> types,
-      List<Type> actualTypes) {
+  public static Map<GenericType, Type> inferActualCoreTypes(List<? extends Type> types,
+      List<? extends Type> actualTypes) {
     Map<GenericType, Type> builder = new HashMap<>();
     for (int i = 0; i < types.size(); i++) {
-      GenericType type = types.get(i);
-      GenericType core = type.coreType();
-      Type actualCore = type.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
-      if (builder.containsKey(core)) {
-        Type previous = builder.get(core);
-        Type commonSuperType = previous.commonSuperType(actualCore);
-        if (commonSuperType == null) {
-          throw new IllegalArgumentException("Types " + previous.name() + ", " + actualCore.name()
-              + " don't have common super type.");
+      Type current = types.get(i);
+      if (current.isGeneric()) {
+        GenericType type = (GenericType) current;
+        GenericType core = type.coreType();
+        Type actualCore = type.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
+        if (builder.containsKey(core)) {
+          Type previous = builder.get(core);
+          Type commonSuperType = previous.commonSuperType(actualCore);
+          if (commonSuperType == null) {
+            throw new IllegalArgumentException("Types " + previous.name() + ", " + actualCore.name()
+                + " don't have common super type.");
+          } else {
+            builder.put(core, commonSuperType);
+          }
         } else {
-          builder.put(core, commonSuperType);
+          builder.put(core, actualCore);
         }
-      } else {
-        builder.put(core, actualCore);
       }
     }
     return ImmutableMap.copyOf(builder);
