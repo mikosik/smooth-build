@@ -18,7 +18,8 @@ public class InferTypes {
         Type previous = builder.get(core);
         Type commonSuperType = previous.commonSuperType(actualCore);
         if (commonSuperType == null) {
-          throw new IllegalArgumentException();
+          throw new IllegalArgumentException("Types " + previous.name() + ", " + actualCore.name()
+              + " don't have common super type.");
         } else {
           builder.put(core, commonSuperType);
         }
