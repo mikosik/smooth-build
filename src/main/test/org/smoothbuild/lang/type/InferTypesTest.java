@@ -41,6 +41,12 @@ public class InferTypesTest {
   @Quackery
   public static Suite infer_actual_core_types() {
     return suite("infer_actual_core_types").addAll(asList(
+        // concrete types
+        assertInferActualCoreTypes(
+            list(string),
+            list(string),
+            ImmutableMap.of()),
+
         // a <- string
         assertInferActualCoreTypes(
             list(a),
@@ -287,7 +293,7 @@ public class InferTypesTest {
             map(a, arrayA))));
   }
 
-  private static Case assertInferActualCoreTypes(List<GenericType> types, List<Type> actualTypes,
+  private static Case assertInferActualCoreTypes(List<Type> types, List<Type> actualTypes,
       Map<GenericType, Type> expected) {
     String typesString = commaSeparatedList(types);
     String actualStrings = commaSeparatedList(actualTypes);
@@ -296,7 +302,7 @@ public class InferTypesTest {
         () -> assertEquals(expected, inferActualCoreTypes(types, actualTypes)));
   }
 
-  private static Case failsInferActualCoreTypes(List<GenericType> types, List<Type> actualTypes) {
+  private static Case failsInferActualCoreTypes(List<Type> types, List<Type> actualTypes) {
     String typesString = commaSeparatedList(types);
     String actualStrings = commaSeparatedList(actualTypes);
     return newCase(
