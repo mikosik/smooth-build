@@ -253,7 +253,38 @@ public class InferTypesTest {
         assertInferActualCoreTypes(
             list(a, a),
             list(arrayPerson, nothing),
-            map(a, arrayPerson))));
+            map(a, arrayPerson)),
+        assertInferActualCoreTypes(
+            list(arrayA, arrayA),
+            list(arrayNothing, array2String),
+            map(a, arrayString)),
+
+        // a <- Nothing, a; with conversions
+
+        assertInferActualCoreTypes(
+            list(a, a),
+            list(nothing, a),
+            map(a, a)),
+        assertInferActualCoreTypes(
+            list(a, arrayA),
+            list(a, arrayNothing),
+            map(a, a)),
+        assertInferActualCoreTypes(
+            list(a, arrayA),
+            list(nothing, arrayA),
+            map(a, a)),
+        assertInferActualCoreTypes(
+            list(arrayA, arrayA),
+            list(arrayA, arrayNothing),
+            map(a, a)),
+        assertInferActualCoreTypes(
+            list(a, a),
+            list(arrayA, nothing),
+            map(a, arrayA)),
+        assertInferActualCoreTypes(
+            list(arrayA, arrayA),
+            list(arrayNothing, array2A),
+            map(a, arrayA))));
   }
 
   private static Case assertInferActualCoreTypes(List<GenericType> types, List<Type> actualTypes,
