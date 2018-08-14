@@ -43,9 +43,9 @@ public class NativeCallComputation implements Computation {
       if (result == null) {
         return nullOutput(container);
       }
-      if (!function.type().isAssignableFrom(result.type())) {
+      if (!type.equals(result.type())) {
         container.log().error("Function " + function.name()
-            + " has faulty native implementation: Its result type is " + function.type().name()
+            + " has faulty native implementation: Its actual result type is " + type.name()
             + " but it returned value of type " + result.type().name() + ".");
         return new Output(null, container.messages());
       }

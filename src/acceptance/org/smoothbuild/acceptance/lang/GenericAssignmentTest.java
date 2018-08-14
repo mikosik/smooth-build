@@ -17,7 +17,7 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 @RunWith(QuackeryRunner.class)
-public class GenericTest extends AcceptanceTestCase {
+public class GenericAssignmentTest extends AcceptanceTestCase {
   @Quackery
   public static Suite generic_param_assignment() throws Exception {
     return suite("generic param assignment").addAll(asList(

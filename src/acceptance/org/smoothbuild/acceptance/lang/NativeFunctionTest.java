@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.lang.nativ.AddElementOfWrongTypeToArray;
+import org.smoothbuild.acceptance.lang.nativ.BrokenIdentity;
 import org.smoothbuild.acceptance.lang.nativ.EmptyStringArray;
 import org.smoothbuild.acceptance.lang.nativ.FileParameter;
 import org.smoothbuild.acceptance.lang.nativ.IllegalName;
@@ -285,13 +286,24 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void native_that_return_array_of_wrong_type_causes_error() throws Exception {
+  public void native_that_returns_array_of_wrong_type_causes_error() throws Exception {
     givenNativeJar(EmptyStringArray.class);
     givenScript("[Blob] emptyStringArray();\n"
         + "      result = emptyStringArray;");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function emptyStringArray has faulty native implementation: "
-        + "Its result type is [Blob] but it returned value of type [String].");
+        + "Its actual result type is [Blob] but it returned value of type [String].");
+  }
+
+  @Test
+  public void native_that_returns_value_of_wrong_type_causes_error() throws Exception {
+    givenNativeJar(BrokenIdentity.class);
+    givenScript("a brokenIdentity(a value);              \n"
+        + "      result = brokenIdentity(value=[]);      \n");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContains("Function brokenIdentity has faulty native implementation: "
+        + "Its actual result type is [Nothing] but it returned value of type String.");
   }
 }

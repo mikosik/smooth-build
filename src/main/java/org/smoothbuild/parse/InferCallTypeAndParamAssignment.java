@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static com.google.common.collect.Sets.filter;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
@@ -8,6 +9,7 @@ import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
 import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Lists.filter;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +21,7 @@ import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.GenericTypeMap;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.arg.ArgsStringHelper;
 import org.smoothbuild.parse.arg.ParametersPool;
@@ -35,13 +38,17 @@ public class InferCallTypeAndParamAssignment {
     new Runnable() {
       @Override
       public void run() {
-        call.set(Type.class, callType());
+        call.set(Type.class, null);
         List<? extends ParameterInfo> parametersList = functionParameters();
         if (parametersList == null) {
           return;
         }
         Set<ParameterInfo> parameters = new HashSet<>(parametersList);
         if (assignNamedArguments(parameters)) {
+          return;
+        }
+        GenericTypeMap<Type> actualTypeMap = inferActualTypesOfGenericParameters();
+        if (actualTypeMap == null) {
           return;
         }
         parameters
@@ -55,6 +62,7 @@ public class InferCallTypeAndParamAssignment {
           return;
         }
         failWhenUnassignedRequiredParameterIsLeft(errors, parameters);
+        call.set(Type.class, callType(parametersList, actualTypeMap));
       }
 
       private ParseError implicitAssignmentOfGenericParameterError(CallNode call,
@@ -78,7 +86,17 @@ public class InferCallTypeAndParamAssignment {
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
 
-      private Type callType() {
+      private Type callType(List<? extends ParameterInfo> parameters,
+          GenericTypeMap<Type> actualTypeMap) {
+        Type functionType = functionType();
+        if (functionType == null) {
+          return null;
+        } else {
+          return actualTypeMap.applyTo(functionType);
+        }
+      }
+
+      private Type functionType() {
         String name = call.name();
         Functions functions = runtime.functions();
         if (functions.contains(name)) {
@@ -112,6 +130,25 @@ public class InferCallTypeAndParamAssignment {
           }
         }
         return failed;
+      }
+
+      private GenericTypeMap<Type> inferActualTypesOfGenericParameters() {
+        List<ArgNode> argAssignedToGenericParam = call
+            .args()
+            .stream()
+            .filter(ArgNode::hasName)
+            .filter(a -> a.get(ParameterInfo.class).type().isGeneric())
+            .collect(toImmutableList());
+        try {
+          return GenericTypeMap.inferFrom(
+              map(argAssignedToGenericParam, a -> a.get(ParameterInfo.class).type()),
+              map(argAssignedToGenericParam, a -> a.get(Type.class)));
+        } catch (IllegalArgumentException e) {
+          errors.add(new ParseError(call,
+              "Cannot infer actual type(s) for generic parameter(s) in call to '" + call.name()
+                  + "'."));
+          return null;
+        }
       }
 
       private boolean assignNamelessArguments(Set<ParameterInfo> parameters) {

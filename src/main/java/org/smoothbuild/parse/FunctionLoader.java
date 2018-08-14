@@ -2,8 +2,6 @@ package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.type.TypeChooser.arrayOfFirstChildType;
-import static org.smoothbuild.lang.type.TypeChooser.fixedTypeChooser;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -24,17 +22,13 @@ import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
-import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeChooser;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -62,8 +56,7 @@ public class FunctionLoader {
           boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
           return new NativeFunction(nativ, signature, func.location(), isCacheable, hash);
         } else {
-          return new DefinedFunction(signature, func.location(),
-              implicitConversion(signature.type(), createExpression(func.expr())));
+          return new DefinedFunction(signature, func.location(), createExpression(func.expr()));
         }
       }
 
@@ -118,8 +111,7 @@ public class FunctionLoader {
         Function function = runtime.functions().get(call.name());
         List<Dag<Expression>> argExpressions = createSortedArgumentExpressions(call, function);
         Type expressionType = call.get(Type.class);
-        Expression callExpression = function.createCallExpression(expressionType,
-            fixedTypeChooser((ConcreteType) expressionType), call.location());
+        Expression callExpression = function.createCallExpression(expressionType, call.location());
         return new Dag<>(callExpression, argExpressions);
       }
 
@@ -132,10 +124,17 @@ public class FunctionLoader {
         return function
             .parameters()
             .stream()
-            .map(p -> implicitConversion(p.type(), assignedExpressions.containsKey(p)
-                ? assignedExpressions.get(p)
-                : p.defaultValueExpression()))
+            .map(p -> assignedExpression(p, assignedExpressions))
             .collect(toImmutableList());
+      }
+
+      private Dag<Expression> assignedExpression(Parameter parameter,
+          Map<ParameterInfo, Dag<Expression>> assignedExpressions) {
+        if (assignedExpressions.containsKey(parameter)) {
+          return assignedExpressions.get(parameter);
+        } else {
+          return parameter.defaultValueExpression();
+        }
       }
 
       private Dag<Expression> createStringLiteral(StringNode string) {
@@ -150,24 +149,7 @@ public class FunctionLoader {
 
       private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
         ArrayType type = (ArrayType) array.get(Type.class);
-        List<Dag<Expression>> converted = map(
-            elements, e -> implicitConversion(type.elemType(), e));
-        TypeChooser<ConcreteType> typeChooser = converted.isEmpty()
-            ? fixedTypeChooser((ConcreteArrayType) type)
-            : arrayOfFirstChildType();
-        return new Dag<>(new ArrayExpression(type, typeChooser, array.location()),
-            converted);
-      }
-
-      public <T extends Value> Dag<Expression> implicitConversion(Type destinationType,
-          Dag<Expression> source) {
-        Expression elem = source.elem();
-        Type sourceType = elem.type();
-        if (sourceType.equals(destinationType) || destinationType.isGeneric()) {
-          return source;
-        }
-        return new Dag<>(new ConvertExpression((ConcreteType) destinationType, elem.location()),
-            list(source));
+        return new Dag<>(new ArrayExpression(type, array.location()), elements);
       }
     }.get();
   }

@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
-import java.util.function.IntFunction;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
@@ -11,26 +11,36 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TypeChooser;
+import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
-  private final TypeChooser<ConcreteType> typeChooser;
-
-  public ArrayExpression(ArrayType arrayType, TypeChooser<ConcreteType> typeChooser,
-      Location location) {
+  public ArrayExpression(ArrayType arrayType, Location location) {
     super(arrayType, location);
-    this.typeChooser = typeChooser;
   }
 
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    List<Dag<Evaluator>> childrenEvaluators = evaluators(children, valuesDb, scope);
-    IntFunction<ConcreteType> childrenType = i -> childrenEvaluators.get(i).elem().type();
-    return new Dag<>(arrayEvaluator(
-        (ConcreteArrayType) typeChooser.choose(childrenType), location()),
-        childrenEvaluators);
+    List<Dag<Evaluator>> elements = evaluators(children, valuesDb, scope);
+    ConcreteArrayType actualType = arrayType(elements);
+    return new Dag<>(
+        arrayEvaluator(actualType, location()),
+        convertedElements(actualType.elemType(), elements));
+  }
+
+  private static List<Dag<Evaluator>> convertedElements(ConcreteType type,
+      List<Dag<Evaluator>> elements) {
+    return map(elements, e -> convertIfNeeded(type, e));
+  }
+
+  private ConcreteArrayType arrayType(List<Dag<Evaluator>> elements) {
+    return (ConcreteArrayType) elements
+        .stream()
+        .map(e -> (Type) e.elem().type())
+        .reduce((a, b) -> a.commonSuperType(b))
+        .map(t -> t.increaseCoreDepthBy(1))
+        .orElse(type());
   }
 }
