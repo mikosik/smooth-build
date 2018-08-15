@@ -11,9 +11,9 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
-  public Type actualCoreTypeWhenAssignedFrom(Type type) {
+  public <T extends Type> T actualCoreTypeWhenAssignedFrom(T type) {
     if (type.isArray()) {
-      return this.elemType.actualCoreTypeWhenAssignedFrom(((ArrayType) type).elemType());
+      return (T) elemType.actualCoreTypeWhenAssignedFrom(((ArrayType) type).elemType());
     } else if (type.isNothing()) {
       return type;
     } else {
