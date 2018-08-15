@@ -16,7 +16,7 @@ public interface Type {
 
   public Type coreType();
 
-  public Type replaceCoreType(Type coreType);
+  public <T extends Type> T replaceCoreType(T coreType);
 
   public int coreDepth();
 

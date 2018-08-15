@@ -34,8 +34,8 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public Type replaceCoreType(Type coreType) {
-    return coreType.increaseCoreDepthBy(coreDepth());
+  public <T extends Type> T replaceCoreType(T coreType) {
+    return (T) coreType.increaseCoreDepthBy(coreDepth());
   }
 
   @Override
