@@ -37,7 +37,7 @@ public abstract class AbstractType implements Type {
   }
 
   @Override
-  public Type replaceCoreType(Type coreType) {
+  public <T extends Type> T replaceCoreType(T coreType) {
     return coreType;
   }
 
