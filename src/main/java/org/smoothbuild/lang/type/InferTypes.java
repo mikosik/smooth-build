@@ -7,18 +7,18 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 public class InferTypes {
-  public static Map<GenericType, Type> inferActualCoreTypes(List<? extends Type> types,
-      List<? extends Type> actualTypes) {
-    Map<GenericType, Type> builder = new HashMap<>();
+  public static <T extends Type> Map<GenericType, T> inferActualCoreTypes(
+      List<? extends Type> types, List<T> actualTypes) {
+    Map<GenericType, T> builder = new HashMap<>();
     for (int i = 0; i < types.size(); i++) {
       Type current = types.get(i);
       if (current.isGeneric()) {
         GenericType type = (GenericType) current;
         GenericType core = type.coreType();
-        Type actualCore = type.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
+        T actualCore = type.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
         if (builder.containsKey(core)) {
-          Type previous = builder.get(core);
-          Type commonSuperType = previous.commonSuperType(actualCore);
+          T previous = builder.get(core);
+          T commonSuperType = (T) previous.commonSuperType(actualCore);
           if (commonSuperType == null) {
             throw new IllegalArgumentException("Types " + previous.name() + ", " + actualCore.name()
                 + " don't have common super type.");
