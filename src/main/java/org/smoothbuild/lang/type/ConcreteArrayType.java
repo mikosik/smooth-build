@@ -44,7 +44,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public Type decreaseCoreDepthBy(int delta) {
+  public ConcreteType decreaseCoreDepthBy(int delta) {
     if (delta == 0) {
       return this;
     } else {

@@ -23,13 +23,22 @@ public class GenericType extends AbstractType {
   }
 
   @Override
-  public Type increaseCoreDepthBy(int delta) {
+  public GenericType increaseCoreDepthBy(int delta) {
     checkArgument(0 <= delta, "delta must be non negative value");
     GenericType result = this;
     for (int i = 0; i < delta; i++) {
       result = new GenericArrayType(result);
     }
     return result;
+  }
+
+  @Override
+  public GenericType decreaseCoreDepthBy(int delta) {
+    if (delta != 0) {
+      throw new IllegalArgumentException(
+          "It's not possible to reduce core depth of non array type.");
+    }
+    return this;
   }
 
   @Override

@@ -47,15 +47,6 @@ public abstract class AbstractType implements Type {
   }
 
   @Override
-  public Type decreaseCoreDepthBy(int delta) {
-    if (delta != 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    return this;
-  }
-
-  @Override
   public boolean isArray() {
     return this instanceof ArrayType;
   }
