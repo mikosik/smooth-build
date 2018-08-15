@@ -42,7 +42,7 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
-  public Type decreaseCoreDepthBy(int delta) {
+  public GenericType decreaseCoreDepthBy(int delta) {
     if (delta == 0) {
       return this;
     } else {

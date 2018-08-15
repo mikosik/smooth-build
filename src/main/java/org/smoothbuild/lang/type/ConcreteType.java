@@ -58,6 +58,15 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
+  public ConcreteType decreaseCoreDepthBy(int delta) {
+    if (delta != 0) {
+      throw new IllegalArgumentException(
+          "It's not possible to reduce core depth of non array type.");
+    }
+    return this;
+  }
+
+  @Override
   public boolean isGeneric() {
     return false;
   }
