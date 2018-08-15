@@ -13,7 +13,7 @@ public class GenericType extends AbstractType {
     super(null, name, jType);
   }
 
-  public Type actualCoreTypeWhenAssignedFrom(Type type) {
+  public <T extends Type> T actualCoreTypeWhenAssignedFrom(T type) {
     return type;
   }
 
