@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.type.ConcreteArrayType;
