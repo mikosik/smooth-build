@@ -39,14 +39,5 @@ public abstract class Function implements Named {
     return signature.parameters();
   }
 
-  public Expression createCallExpression(Location location) {
-    if (type().isGeneric()) {
-      throw new UnsupportedOperationException(
-          "Cannot create call expression for generic function `" + name()
-              + "` without providing actual type for generic result type.");
-    }
-    return createCallExpression(type(), location);
-  }
-
-  public abstract Expression createCallExpression(Type type, Location location);
+  public abstract Expression createCallExpression(Location location);
 }

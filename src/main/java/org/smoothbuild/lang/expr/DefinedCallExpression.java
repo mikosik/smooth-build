@@ -12,15 +12,14 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.GenericTypeMap;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
 
-  public DefinedCallExpression(Type type, DefinedFunction definedFunction, Location location) {
-    super(type, location);
+  public DefinedCallExpression(DefinedFunction definedFunction, Location location) {
+    super(location);
     this.function = definedFunction;
   }
 

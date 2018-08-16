@@ -16,7 +16,7 @@ public class LiteralExpression extends Expression {
   private final Value value;
 
   public LiteralExpression(Value value, Location location) {
-    super(value.type(), location);
+    super(location);
     this.value = value;
   }
 

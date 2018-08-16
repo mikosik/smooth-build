@@ -15,7 +15,7 @@ public class ConstructorCallExpression extends Expression {
   private final Constructor constructor;
 
   public ConstructorCallExpression(Constructor constructor, Location location) {
-    super(constructor.type(), location);
+    super(location);
     this.constructor = constructor;
   }
 

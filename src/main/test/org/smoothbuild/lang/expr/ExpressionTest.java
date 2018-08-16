@@ -13,13 +13,10 @@ import org.junit.Test;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TestingTypesDb;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
-  private final ConcreteType type = new TestingTypesDb().string();
   private Location location;
   private MyExpression expression;
 
@@ -29,34 +26,21 @@ public class ExpressionTest {
   }
 
   @Test
-  public void null_type_is_forbidden() {
-    when(() -> new MyExpression(null, location));
-    thenThrown(NullPointerException.class);
-  }
-
-  @Test
   public void null_code_location_is_forbidden() {
-    when(() -> new MyExpression(type, null));
+    when(() -> new MyExpression(null));
     thenThrown(NullPointerException.class);
-  }
-
-  @Test
-  public void type() throws Exception {
-    given(expression = new MyExpression(type, location));
-    when(expression.type());
-    thenReturned(type);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(expression = new MyExpression(type, location));
+    given(expression = new MyExpression(location));
     when(expression.location());
     thenReturned(location);
   }
 
   public static class MyExpression extends Expression {
-    public MyExpression(ConcreteType type, Location location) {
-      super(type, location);
+    public MyExpression(Location location) {
+      super(location);
     }
 
     @Override

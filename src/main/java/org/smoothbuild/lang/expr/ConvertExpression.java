@@ -12,14 +12,17 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ConvertExpression extends Expression {
+  private final ConcreteType type;
+
   public ConvertExpression(ConcreteType type, Location location) {
-    super(type, location);
+    super(location);
+    this.type = type;
   }
 
   @Override
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
-    return new Dag<Evaluator>(convertEvaluator((ConcreteType) type(), location()),
+    return new Dag<Evaluator>(convertEvaluator(type, location()),
         evaluators(children, valuesDb, scope));
   }
 }

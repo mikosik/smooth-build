@@ -103,15 +103,13 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createReference(RefNode ref) {
-        return new Dag<>(new BoundValueExpression(ref.get(Type.class), ref.name(), ref
-            .location()));
+        return new Dag<>(new BoundValueExpression(ref.name(), ref.location()));
       }
 
       private Dag<Expression> createCall(CallNode call) {
         Function function = runtime.functions().get(call.name());
         List<Dag<Expression>> argExpressions = createSortedArgumentExpressions(call, function);
-        Type expressionType = call.get(Type.class);
-        Expression callExpression = function.createCallExpression(expressionType, call.location());
+        Expression callExpression = function.createCallExpression(call.location());
         return new Dag<>(callExpression, argExpressions);
       }
 

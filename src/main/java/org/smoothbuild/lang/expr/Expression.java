@@ -20,16 +20,10 @@ import org.smoothbuild.util.Dag;
  * Expression in smooth language.
  */
 public abstract class Expression {
-  private final Type type;
   private final Location location;
 
-  public Expression(Type type, Location location) {
-    this.type = checkNotNull(type);
+  public Expression(Location location) {
     this.location = checkNotNull(location);
-  }
-
-  public Type type() {
-    return type;
   }
 
   public Location location() {
