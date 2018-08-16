@@ -6,8 +6,27 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InferTypes {
-  public static <T extends Type> Map<GenericType, T> inferActualCoreTypes(
+public class GenericTypeMap<T extends Type> {
+  private final Map<GenericType, T> map;
+
+  public static <T extends Type> GenericTypeMap<T> inferFrom(List<? extends Type> types,
+      List<T> actualTypes) {
+    return new GenericTypeMap<>(inferMap(types, actualTypes));
+  }
+
+  private GenericTypeMap(Map<GenericType, T> map) {
+    this.map = map;
+  }
+
+  public T applyTo(Type type) {
+    if (type.isGeneric()) {
+      return type.replaceCoreType(map.get(type.coreType()));
+    } else {
+      return (T) type;
+    }
+  }
+
+  private static <T extends Type> Map<GenericType, T> inferMap(
       List<? extends Type> types, List<T> actualTypes) {
     Map<GenericType, T> builder = new HashMap<>();
     for (int i = 0; i < types.size(); i++) {
