@@ -18,8 +18,8 @@ import org.smoothbuild.util.Dag;
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;
 
-  public NativeCallExpression(Type type, NativeFunction nativeFunction, Location location) {
-    super(type, location);
+  public NativeCallExpression(NativeFunction nativeFunction, Location location) {
+    super(location);
     this.nativeFunction = nativeFunction;
   }
 

@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.lang.type.Type;
 
 public class FunctionTest {
   private static final ConcreteType STRING = new TestingTypesDb().string();
@@ -57,7 +56,7 @@ public class FunctionTest {
     }
 
     @Override
-    public Expression createCallExpression(Type type, Location location) {
+    public Expression createCallExpression(Location location) {
       return null;
     }
   }

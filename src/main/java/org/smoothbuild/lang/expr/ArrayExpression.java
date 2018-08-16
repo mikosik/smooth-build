@@ -16,8 +16,11 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
+  private final ArrayType arrayType;
+
   public ArrayExpression(ArrayType arrayType, Location location) {
-    super(arrayType, location);
+    super(location);
+    this.arrayType = arrayType;
   }
 
   @Override
@@ -41,6 +44,6 @@ public class ArrayExpression extends Expression {
         .map(e -> (Type) e.elem().type())
         .reduce((a, b) -> a.commonSuperType(b))
         .map(t -> t.increaseCoreDepthBy(1))
-        .orElse(type());
+        .orElse(arrayType);
   }
 }

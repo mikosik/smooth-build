@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-import org.smoothbuild.lang.type.Type;
 
 import com.google.common.hash.HashCode;
 
@@ -37,7 +36,7 @@ public class NativeFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Type type, Location location) {
-    return new NativeCallExpression(type, this, location);
+  public Expression createCallExpression(Location location) {
+    return new NativeCallExpression(this, location);
   }
 }

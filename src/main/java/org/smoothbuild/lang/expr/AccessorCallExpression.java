@@ -16,7 +16,7 @@ public class AccessorCallExpression extends Expression {
   private final Accessor accessor;
 
   public AccessorCallExpression(Accessor accessor, Location location) {
-    super(accessor.type(), location);
+    super(location);
     this.accessor = accessor;
   }
 
