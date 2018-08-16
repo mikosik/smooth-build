@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -119,11 +118,7 @@ public class FunctionLoader {
             .args()
             .stream()
             .collect(toMap(a -> a.get(ParameterInfo.class), a -> createExpression(a.expr())));
-        return function
-            .parameters()
-            .stream()
-            .map(p -> assignedExpression(p, assignedExpressions))
-            .collect(toImmutableList());
+        return map(function.parameters(), p -> assignedExpression(p, assignedExpressions));
       }
 
       private Dag<Expression> assignedExpression(Parameter parameter,
@@ -141,12 +136,8 @@ public class FunctionLoader {
       }
 
       private Dag<Expression> createArray(ArrayNode array) {
-        List<Dag<Expression>> exprList = map(array.elements(), this::createExpression);
-        return createArray(array, exprList);
-      }
-
-      private Dag<Expression> createArray(ArrayNode array, List<Dag<Expression>> elements) {
         ArrayType type = (ArrayType) array.get(Type.class);
+        List<Dag<Expression>> elements = map(array.elements(), this::createExpression);
         return new Dag<>(new ArrayExpression(type, array.location()), elements);
       }
     }.get();
