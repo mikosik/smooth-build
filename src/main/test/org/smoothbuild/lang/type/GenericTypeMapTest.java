@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.type.InferTypes.inferActualCoreTypes;
 import static org.smoothbuild.lang.type.TestingTypes.a;
 import static org.smoothbuild.lang.type.TestingTypes.array2A;
 import static org.smoothbuild.lang.type.TestingTypes.array2B;
@@ -18,6 +17,7 @@ import static org.smoothbuild.lang.type.TestingTypes.arrayNothing;
 import static org.smoothbuild.lang.type.TestingTypes.arrayPerson;
 import static org.smoothbuild.lang.type.TestingTypes.arrayString;
 import static org.smoothbuild.lang.type.TestingTypes.b;
+import static org.smoothbuild.lang.type.TestingTypes.blob;
 import static org.smoothbuild.lang.type.TestingTypes.nothing;
 import static org.smoothbuild.lang.type.TestingTypes.personType;
 import static org.smoothbuild.lang.type.TestingTypes.string;
@@ -37,278 +37,278 @@ import org.quackery.junit.QuackeryRunner;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(QuackeryRunner.class)
-public class InferTypesTest {
+public class GenericTypeMapTest {
   @Quackery
   public static Suite infer_actual_core_types() {
-    return suite("infer_actual_core_types").addAll(asList(
+    return suite("infer_from").addAll(asList(
         // concrete types
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(string),
             list(string),
-            ImmutableMap.of()),
+            blob, blob),
 
         // a <- string
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a),
             list(string),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a),
             list(arrayString),
-            map(a, arrayString)),
-        assertInferActualCoreTypes(
+            a, arrayString),
+        assertInferFrom(
             list(a),
             list(array2String),
-            map(a, array2String)),
+            a, array2String),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(arrayA),
             list(string)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(arrayA),
             list(arrayString),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(arrayA),
             list(array2String),
-            map(a, arrayString)),
+            a, arrayString),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(string)),
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(arrayString)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(array2A),
             list(array2String),
-            map(a, string)),
+            a, string),
 
         // a <- struct (Person)
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a),
             list(personType),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(a),
             list(arrayPerson),
-            map(a, arrayPerson)),
-        assertInferActualCoreTypes(
+            a, arrayPerson),
+        assertInferFrom(
             list(a),
             list(array2Person),
-            map(a, array2Person)),
+            a, array2Person),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(arrayA),
             list(personType)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(arrayA),
             list(arrayPerson),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(arrayA),
             list(array2Person),
-            map(a, arrayPerson)),
+            a, arrayPerson),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(personType)),
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(arrayPerson)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(array2A),
             list(array2Person),
-            map(a, personType)),
+            a, personType),
 
         // a <- Nothing
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a),
             list(nothing),
-            map(a, nothing)),
-        assertInferActualCoreTypes(
+            a, nothing),
+        assertInferFrom(
             list(a),
             list(arrayNothing),
-            map(a, arrayNothing)),
-        assertInferActualCoreTypes(
+            a, arrayNothing),
+        assertInferFrom(
             list(a),
             list(array2Nothing),
-            map(a, array2Nothing)),
+            a, array2Nothing),
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(arrayA),
             list(nothing),
-            map(a, nothing)),
-        assertInferActualCoreTypes(
+            a, nothing),
+        assertInferFrom(
             list(arrayA),
             list(arrayNothing),
-            map(a, nothing)),
-        assertInferActualCoreTypes(
+            a, nothing),
+        assertInferFrom(
             list(arrayA),
             list(array2Nothing),
-            map(a, arrayNothing)),
+            a, arrayNothing),
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(array2A),
             list(nothing),
-            map(a, nothing)),
-        assertInferActualCoreTypes(
+            a, nothing),
+        assertInferFrom(
             list(array2A),
             list(arrayNothing),
-            map(a, nothing)),
-        assertInferActualCoreTypes(
+            a, nothing),
+        assertInferFrom(
             list(array2A),
             list(array2Nothing),
-            map(a, nothing)),
+            a, nothing),
 
         // a <- b
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a),
             list(b),
-            map(a, b)),
-        assertInferActualCoreTypes(
+            a, b),
+        assertInferFrom(
             list(a),
             list(arrayB),
-            map(a, arrayB)),
-        assertInferActualCoreTypes(
+            a, arrayB),
+        assertInferFrom(
             list(a),
             list(array2B),
-            map(a, array2B)),
+            a, array2B),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(arrayA),
             list(b)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(arrayA),
             list(arrayB),
-            map(a, b)),
-        assertInferActualCoreTypes(
+            a, b),
+        assertInferFrom(
             list(arrayA),
             list(array2B),
-            map(a, arrayB)),
+            a, arrayB),
 
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(b)),
-        failsInferActualCoreTypes(
+        failsInferFrom(
             list(array2A),
             list(arrayB)),
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(array2A),
             list(array2B),
-            map(a, b)),
+            a, b),
 
         // a <- String, struct (Person); with conversions
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a, a),
             list(personType, string),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a, arrayA),
             list(personType, arrayString),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a, arrayA),
             list(string, arrayPerson),
-            map(a, string)),
+            a, string),
 
         // a <- Nothing, String; with conversions
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a, a),
             list(nothing, string),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a, arrayA),
             list(string, arrayNothing),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a, arrayA),
             list(nothing, arrayString),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(arrayA, arrayA),
             list(arrayString, arrayNothing),
-            map(a, string)),
-        assertInferActualCoreTypes(
+            a, string),
+        assertInferFrom(
             list(a, a),
             list(arrayString, nothing),
-            map(a, arrayString)),
+            a, arrayString),
 
         // a <- Nothing, String; with conversions
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a, a),
             list(nothing, personType),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(a, arrayA),
             list(personType, arrayNothing),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(a, arrayA),
             list(nothing, arrayPerson),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(arrayA, arrayA),
             list(arrayPerson, arrayNothing),
-            map(a, personType)),
-        assertInferActualCoreTypes(
+            a, personType),
+        assertInferFrom(
             list(a, a),
             list(arrayPerson, nothing),
-            map(a, arrayPerson)),
-        assertInferActualCoreTypes(
+            a, arrayPerson),
+        assertInferFrom(
             list(arrayA, arrayA),
             list(arrayNothing, array2String),
-            map(a, arrayString)),
+            a, arrayString),
 
         // a <- Nothing, a; with conversions
 
-        assertInferActualCoreTypes(
+        assertInferFrom(
             list(a, a),
             list(nothing, a),
-            map(a, a)),
-        assertInferActualCoreTypes(
+            a, a),
+        assertInferFrom(
             list(a, arrayA),
             list(a, arrayNothing),
-            map(a, a)),
-        assertInferActualCoreTypes(
+            a, a),
+        assertInferFrom(
             list(a, arrayA),
             list(nothing, arrayA),
-            map(a, a)),
-        assertInferActualCoreTypes(
+            a, a),
+        assertInferFrom(
             list(arrayA, arrayA),
             list(arrayA, arrayNothing),
-            map(a, a)),
-        assertInferActualCoreTypes(
+            a, a),
+        assertInferFrom(
             list(a, a),
             list(arrayA, nothing),
-            map(a, arrayA)),
-        assertInferActualCoreTypes(
+            a, arrayA),
+        assertInferFrom(
             list(arrayA, arrayA),
             list(arrayNothing, array2A),
-            map(a, arrayA))));
+            a, arrayA)));
   }
 
-  private static Case assertInferActualCoreTypes(List<Type> types, List<Type> actualTypes,
-      Map<GenericType, Type> expected) {
+  private static Case assertInferFrom(List<Type> types, List<Type> actualTypes,
+      Type type, Type expected) {
     String typesString = commaSeparatedList(types);
     String actualStrings = commaSeparatedList(actualTypes);
     return newCase(
         "types=(" + typesString + "), actual=(" + actualStrings + ") " + expected,
-        () -> assertEquals(expected, inferActualCoreTypes(types, actualTypes)));
+        () -> assertEquals(expected, GenericTypeMap.inferFrom(types, actualTypes).applyTo(type)));
   }
 
-  private static Case failsInferActualCoreTypes(List<Type> types, List<Type> actualTypes) {
+  private static Case failsInferFrom(List<Type> types, List<Type> actualTypes) {
     String typesString = commaSeparatedList(types);
     String actualStrings = commaSeparatedList(actualTypes);
     return newCase(
         "types=(" + typesString + "), actual=(" + actualStrings + ") fails with IAE",
         () -> {
-          when(() -> inferActualCoreTypes(types, actualTypes));
+          when(() -> GenericTypeMap.inferFrom(types, actualTypes));
           thenThrown(IllegalArgumentException.class);
         });
   }
