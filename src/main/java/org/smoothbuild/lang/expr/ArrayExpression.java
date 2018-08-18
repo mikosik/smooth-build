@@ -43,7 +43,7 @@ public class ArrayExpression extends Expression {
         .stream()
         .map(e -> (Type) e.elem().type())
         .reduce((a, b) -> a.commonSuperType(b))
-        .map(t -> t.increaseCoreDepthBy(1))
+        .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);
   }
 }

@@ -371,132 +371,106 @@ public class TypesTest {
   @Quackery
   public static Suite increase_core_depth_by() throws Exception {
     return suite("Type.increaseCoreDepthBy").addAll(asList(
-        increaseCoreDepthFailsFor(type, -1),
-        increaseCoreDepthFailsFor(string, -1),
-        increaseCoreDepthFailsFor(nothing, -1),
-        increaseCoreDepthFailsFor(personType, -1),
-        increaseCoreDepthFailsFor(a, -1),
 
-        increaseCoreDepthBy(type, 0, type),
-        increaseCoreDepthBy(string, 0, string),
-        increaseCoreDepthBy(nothing, 0, nothing),
-        increaseCoreDepthBy(personType, 0, personType),
-        increaseCoreDepthBy(a, 0, a),
+        ///
 
-        increaseCoreDepthBy(type, 1, arrayType),
-        increaseCoreDepthBy(string, 1, arrayString),
-        increaseCoreDepthBy(nothing, 1, arrayNothing),
-        increaseCoreDepthBy(personType, 1, arrayPerson),
-        increaseCoreDepthBy(a, 1, arrayA),
+        changeCoreDepthFailsFor(type, -2),
+        changeCoreDepthFailsFor(string, -2),
+        changeCoreDepthFailsFor(nothing, -2),
+        changeCoreDepthFailsFor(personType, -2),
+        changeCoreDepthFailsFor(a, -2),
 
-        increaseCoreDepthBy(type, 2, array2Type),
-        increaseCoreDepthBy(string, 2, array2String),
-        increaseCoreDepthBy(nothing, 2, array2Nothing),
-        increaseCoreDepthBy(personType, 2, array2Person),
-        increaseCoreDepthBy(a, 2, array2A),
+        changeCoreDepthFailsFor(type, -1),
+        changeCoreDepthFailsFor(string, -1),
+        changeCoreDepthFailsFor(nothing, -1),
+        changeCoreDepthFailsFor(personType, -1),
+        changeCoreDepthFailsFor(a, -1),
 
-        increaseCoreDepthBy(arrayString, 0, arrayString),
-        increaseCoreDepthBy(arrayBlob, 0, arrayBlob),
-        increaseCoreDepthBy(arrayNothing, 0, arrayNothing),
-        increaseCoreDepthBy(arrayPerson, 0, arrayPerson),
-        increaseCoreDepthBy(arrayA, 0, arrayA),
+        changeCoreDepthBy(type, 0, type),
+        changeCoreDepthBy(string, 0, string),
+        changeCoreDepthBy(nothing, 0, nothing),
+        changeCoreDepthBy(personType, 0, personType),
+        changeCoreDepthBy(a, 0, a),
 
-        increaseCoreDepthBy(arrayString, 1, array2String),
-        increaseCoreDepthBy(arrayBlob, 1, array2Blob),
-        increaseCoreDepthBy(arrayNothing, 1, array2Nothing),
-        increaseCoreDepthBy(arrayPerson, 1, array2Person),
-        increaseCoreDepthBy(arrayA, 1, array2A)));
+        changeCoreDepthBy(type, 1, arrayType),
+        changeCoreDepthBy(string, 1, arrayString),
+        changeCoreDepthBy(nothing, 1, arrayNothing),
+        changeCoreDepthBy(personType, 1, arrayPerson),
+        changeCoreDepthBy(a, 1, arrayA),
+
+        changeCoreDepthBy(type, 2, array2Type),
+        changeCoreDepthBy(string, 2, array2String),
+        changeCoreDepthBy(nothing, 2, array2Nothing),
+        changeCoreDepthBy(personType, 2, array2Person),
+        changeCoreDepthBy(a, 2, array2A),
+
+        //
+
+        changeCoreDepthFailsFor(arrayType, -2),
+        changeCoreDepthFailsFor(arrayString, -2),
+        changeCoreDepthFailsFor(arrayNothing, -2),
+        changeCoreDepthFailsFor(arrayPerson, -2),
+        changeCoreDepthFailsFor(arrayA, -2),
+
+        changeCoreDepthBy(arrayString, -1, string),
+        changeCoreDepthBy(arrayBlob, -1, blob),
+        changeCoreDepthBy(arrayNothing, -1, nothing),
+        changeCoreDepthBy(arrayPerson, -1, personType),
+        changeCoreDepthBy(arrayA, -1, a),
+
+        changeCoreDepthBy(arrayString, 0, arrayString),
+        changeCoreDepthBy(arrayBlob, 0, arrayBlob),
+        changeCoreDepthBy(arrayNothing, 0, arrayNothing),
+        changeCoreDepthBy(arrayPerson, 0, arrayPerson),
+        changeCoreDepthBy(arrayA, 0, arrayA),
+
+        changeCoreDepthBy(arrayString, 1, array2String),
+        changeCoreDepthBy(arrayBlob, 1, array2Blob),
+        changeCoreDepthBy(arrayNothing, 1, array2Nothing),
+        changeCoreDepthBy(arrayPerson, 1, array2Person),
+        changeCoreDepthBy(arrayA, 1, array2A),
+
+        //
+
+        changeCoreDepthFailsFor(array2String, -3),
+        changeCoreDepthFailsFor(array2Blob, -3),
+        changeCoreDepthFailsFor(array2Nothing, -3),
+        changeCoreDepthFailsFor(array2Person, -3),
+        changeCoreDepthFailsFor(array2A, -3),
+
+        changeCoreDepthBy(array2String, -2, string),
+        changeCoreDepthBy(array2Blob, -2, blob),
+        changeCoreDepthBy(array2Nothing, -2, nothing),
+        changeCoreDepthBy(array2Person, -2, personType),
+        changeCoreDepthBy(array2A, -2, a),
+
+        changeCoreDepthBy(array2String, -1, arrayString),
+        changeCoreDepthBy(array2Blob, -1, arrayBlob),
+        changeCoreDepthBy(array2Nothing, -1, arrayNothing),
+        changeCoreDepthBy(array2Person, -1, arrayPerson),
+        changeCoreDepthBy(array2A, -1, arrayA),
+
+        changeCoreDepthBy(array2String, 0, array2String),
+        changeCoreDepthBy(array2Blob, 0, array2Blob),
+        changeCoreDepthBy(array2Nothing, 0, array2Nothing),
+        changeCoreDepthBy(array2Person, 0, array2Person),
+        changeCoreDepthBy(array2A, 0, array2A)
+
+    ));
   }
 
-  private static Case increaseCoreDepthBy(Type type, int delta, Type expected) {
+  private static Case changeCoreDepthBy(Type type, int delta, Type expected) {
     return newCase(
-        type.name() + ".reduceCoreDepthBy(" + delta + ") == " + expected.name(),
-        () -> assertEquals(type.increaseCoreDepthBy(delta), expected));
+        type.name() + ".changeCoreDepthBy(" + delta + ") == " + expected.name(),
+        () -> assertEquals(type.changeCoreDepthBy(delta), expected));
   }
 
-  private static Case increaseCoreDepthFailsFor(Type type, int delta) {
+  private static Case changeCoreDepthFailsFor(Type type, int delta) {
     return newCase(
-        type.name() + ".increaseCoreDepthBy(" + delta + ") throws IllegalArgumentException",
+        type.name() + ".changeCoreDepthBy(" + delta + ") throws IllegalArgumentException",
         () -> {
           try {
-            type.increaseCoreDepthBy(delta);
-            fail();
-          } catch (IllegalArgumentException e) {
-            // expected
-          }
-        });
-  }
-
-  @Quackery
-  public static Suite decrease_core_depth_by() throws Exception {
-    return suite("Type.decreaseCoreDepthBy").addAll(asList(
-        decreaseCoreDepthBy(type, 0, type),
-        decreaseCoreDepthBy(string, 0, string),
-        decreaseCoreDepthBy(nothing, 0, nothing),
-        decreaseCoreDepthBy(personType, 0, personType),
-        decreaseCoreDepthBy(a, 0, a),
-
-        decreaseCoreDepthFailsFor(type, 1),
-        decreaseCoreDepthFailsFor(string, 1),
-        decreaseCoreDepthFailsFor(nothing, 1),
-        decreaseCoreDepthFailsFor(personType, 1),
-        decreaseCoreDepthFailsFor(a, 1),
-
-        decreaseCoreDepthFailsFor(type, 2),
-        decreaseCoreDepthFailsFor(string, 2),
-        decreaseCoreDepthFailsFor(nothing, 2),
-        decreaseCoreDepthFailsFor(personType, 2),
-        decreaseCoreDepthFailsFor(a, 2),
-
-        decreaseCoreDepthBy(arrayString, 0, arrayString),
-        decreaseCoreDepthBy(arrayBlob, 0, arrayBlob),
-        decreaseCoreDepthBy(arrayNothing, 0, arrayNothing),
-        decreaseCoreDepthBy(arrayPerson, 0, arrayPerson),
-        decreaseCoreDepthBy(arrayA, 0, arrayA),
-
-        decreaseCoreDepthBy(arrayString, 1, string),
-        decreaseCoreDepthBy(arrayBlob, 1, blob),
-        decreaseCoreDepthBy(arrayNothing, 1, nothing),
-        decreaseCoreDepthBy(arrayPerson, 1, personType),
-        decreaseCoreDepthBy(arrayA, 1, a),
-
-        decreaseCoreDepthFailsFor(arrayType, 2),
-        decreaseCoreDepthFailsFor(arrayString, 2),
-        decreaseCoreDepthFailsFor(arrayNothing, 2),
-        decreaseCoreDepthFailsFor(arrayPerson, 2),
-        decreaseCoreDepthFailsFor(arrayA, 2),
-
-        decreaseCoreDepthBy(array2String, 0, array2String),
-        decreaseCoreDepthBy(array2Blob, 0, array2Blob),
-        decreaseCoreDepthBy(array2Nothing, 0, array2Nothing),
-        decreaseCoreDepthBy(array2Person, 0, array2Person),
-        decreaseCoreDepthBy(array2A, 0, array2A),
-
-        decreaseCoreDepthBy(array2String, 1, arrayString),
-        decreaseCoreDepthBy(array2Blob, 1, arrayBlob),
-        decreaseCoreDepthBy(array2Nothing, 1, arrayNothing),
-        decreaseCoreDepthBy(array2Person, 1, arrayPerson),
-        decreaseCoreDepthBy(array2A, 1, arrayA),
-
-        decreaseCoreDepthBy(array2String, 2, string),
-        decreaseCoreDepthBy(array2Blob, 2, blob),
-        decreaseCoreDepthBy(array2Nothing, 2, nothing),
-        decreaseCoreDepthBy(array2Person, 2, personType),
-        decreaseCoreDepthBy(array2A, 2, a)));
-  }
-
-  private static Case decreaseCoreDepthBy(Type type, int delta, Type expected) {
-    return newCase(
-        type.name() + ".reduceCoreDepthBy(" + delta + ") == " + expected.name(),
-        () -> assertEquals(type.decreaseCoreDepthBy(delta), expected));
-  }
-
-  private static Case decreaseCoreDepthFailsFor(Type type, int delta) {
-    return newCase(
-        type.name() + ".decreaseCoreDepthBy(" + delta + ") throws IllegalArgumentException",
-        () -> {
-          try {
-            type.decreaseCoreDepthBy(delta);
+            type.changeCoreDepthBy(delta);
             fail();
           } catch (IllegalArgumentException e) {
             // expected
