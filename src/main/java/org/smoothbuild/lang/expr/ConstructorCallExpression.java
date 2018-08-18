@@ -20,8 +20,7 @@ public class ConstructorCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    return constructorCallEvaluator(constructor, evaluators(children, valuesDb, scope), location());
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    return constructorCallEvaluator(constructor, childrenEvaluators(valuesDb, scope), location());
   }
 }

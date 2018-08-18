@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Maybe;
@@ -46,8 +45,9 @@ public class Dag implements Command {
   }
 
   private Evaluator dagEvaluator(Function function) {
-    Expression expression = function.createCallExpression(list(), unknownLocation());
-    return expression.createEvaluator(expression.children(), valuesDb, null);
+    return function
+        .createCallExpression(list(), unknownLocation())
+        .createEvaluator(valuesDb, null);
   }
 
   private void print(Evaluator dag) {

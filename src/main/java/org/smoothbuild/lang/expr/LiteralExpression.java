@@ -1,9 +1,6 @@
 package org.smoothbuild.lang.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
-
-import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
@@ -22,9 +19,7 @@ public class LiteralExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    checkArgument(children.size() == 0);
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
     return valueEvaluator(value, location());
   }
 }

@@ -1,9 +1,5 @@
 package org.smoothbuild.lang.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.util.List;
-
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -20,9 +16,7 @@ public class BoundValueExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    checkArgument(children.size() == 0);
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
     return scope.get(name);
   }
 }

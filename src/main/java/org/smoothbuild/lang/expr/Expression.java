@@ -31,6 +31,10 @@ public abstract class Expression {
     return children;
   }
 
+  public List<Evaluator> childrenEvaluators(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    return map(children, ch -> ch.createEvaluator(valuesDb, scope));
+  }
+
   public Location location() {
     return location;
   }
@@ -47,16 +51,5 @@ public abstract class Expression {
     return map(argumentEvaluators, a -> a.type());
   }
 
-  public static List<Evaluator> evaluators(List<Expression> expressions,
-      ValuesDb valuesDb, Scope<Evaluator> scope) {
-    return map(expressions, c -> evaluator(c, valuesDb, scope));
-  }
-
-  public static Evaluator evaluator(Expression expression, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    return expression.createEvaluator(expression.children(), valuesDb, scope);
-  }
-
-  public abstract Evaluator createEvaluator(List<Expression> children,
-      ValuesDb valuesDb, Scope<Evaluator> scope);
+  public abstract Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope);
 }

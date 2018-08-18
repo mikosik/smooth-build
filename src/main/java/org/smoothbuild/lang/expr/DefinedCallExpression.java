@@ -24,14 +24,13 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    List<Evaluator> arguments = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    List<Evaluator> arguments = childrenEvaluators(valuesDb, scope);
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(function.parameterTypes(), evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(function.signature().type());
     Evaluator evaluator = convertIfNeeded(
-        actualResultType, evaluator(function.body(), valuesDb, functionScope(arguments)));
+        actualResultType, function.body().createEvaluator(valuesDb, functionScope(arguments)));
     return namedEvaluator(actualResultType, function.name(), evaluator);
   }
 

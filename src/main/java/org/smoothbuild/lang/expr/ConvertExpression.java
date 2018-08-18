@@ -2,8 +2,6 @@ package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.task.base.Evaluator.convertEvaluator;
 
-import java.util.List;
-
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -21,8 +19,7 @@ public class ConvertExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    return convertEvaluator(type, evaluators(children, valuesDb, scope), location());
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    return convertEvaluator(type, childrenEvaluators(valuesDb, scope), location());
   }
 }
