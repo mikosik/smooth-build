@@ -29,7 +29,9 @@ public class ArrayExpression extends Expression {
     List<Evaluator> elements = evaluators(children, valuesDb, scope);
     ConcreteArrayType actualType = arrayType(elements);
     return arrayEvaluator(
-        actualType, convertedElements(actualType.elemType(), elements), location());
+        actualType,
+        convertedElements(actualType.elemType(), elements),
+        location());
   }
 
   private static List<Evaluator> convertedElements(ConcreteType type,
