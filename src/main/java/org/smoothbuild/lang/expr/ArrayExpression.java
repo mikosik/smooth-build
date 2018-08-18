@@ -24,9 +24,8 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    List<Evaluator> elements = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    List<Evaluator> elements = childrenEvaluators(valuesDb, scope);
     ConcreteArrayType actualType = arrayType(elements);
     return arrayEvaluator(
         actualType,

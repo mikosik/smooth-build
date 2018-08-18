@@ -25,9 +25,8 @@ public class NativeCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    List<Evaluator> arguments = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    List<Evaluator> arguments = childrenEvaluators(valuesDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(parameterTypes, evaluatorTypes(arguments));

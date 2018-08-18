@@ -50,8 +50,7 @@ public class ExpressionTest {
     }
 
     @Override
-    public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-        Scope<Evaluator> scope) {
+    public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
       return null;
     }
   }

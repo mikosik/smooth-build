@@ -21,9 +21,8 @@ public class AccessorCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
-      Scope<Evaluator> scope) {
-    checkArgument(children.size() == 1);
-    return accessorCallEvaluator(accessor, evaluators(children, valuesDb, scope), location());
+  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    checkArgument(children().size() == 1);
+    return accessorCallEvaluator(accessor, childrenEvaluators(valuesDb, scope), location());
   }
 }
