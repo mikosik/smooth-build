@@ -27,7 +27,7 @@ public class NativeCallExpression extends Expression {
   public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
       Scope<Dag<Evaluator>> scope) {
     List<Dag<Evaluator>> arguments = evaluators(children, valuesDb, scope);
-    List<Type> parameterTypes = parameterTypes(nativeFunction);
+    List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping =
         GenericTypeMap.inferFrom(parameterTypes, evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
