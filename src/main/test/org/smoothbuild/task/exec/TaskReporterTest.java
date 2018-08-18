@@ -68,7 +68,7 @@ public class TaskReporterTest {
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyEvaluator(isInternal), Hash.integer(13));
+    return new Task(new MyEvaluator(isInternal), list(), Hash.integer(13));
   }
 
   private static final class MyEvaluator extends Evaluator {

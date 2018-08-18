@@ -4,19 +4,24 @@ import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.db.hashed.Hash.newHasher;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
+import java.util.List;
+
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Task {
   private final Evaluator evaluator;
+  private final ImmutableList<Task> dependencies;
   private Output output;
   private final HashCode hash;
 
-  public Task(Evaluator evaluator, HashCode runtimeHash) {
+  public Task(Evaluator evaluator, List<? extends Task> dependencies, HashCode runtimeHash) {
     this.evaluator = evaluator;
+    this.dependencies = ImmutableList.copyOf(dependencies);
     this.output = null;
     this.hash = newHasher()
         .putBytes(evaluator.hash().asBytes())
@@ -26,6 +31,10 @@ public class Task {
 
   public Evaluator evaluator() {
     return evaluator;
+  }
+
+  public ImmutableList<Task> dependencies() {
+    return dependencies;
   }
 
   public String name() {

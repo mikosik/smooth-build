@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.util.Dag;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
@@ -16,7 +15,7 @@ public class Input {
   private final ImmutableList<Value> values;
   private final HashCode hash;
 
-  public static Input fromResults(List<Dag<Task>> children) {
+  public static Input fromResults(List<Task> children) {
     return fromValues(toResults(children));
   }
 
@@ -37,9 +36,9 @@ public class Input {
     return hash;
   }
 
-  private static ImmutableList<Value> toResults(List<Dag<Task>> deps) {
+  private static ImmutableList<Value> toResults(List<Task> deps) {
     return deps.stream()
-        .map(t -> t.elem().output().result())
+        .map(t -> t.output().result())
         .collect(toImmutableList());
   }
 
