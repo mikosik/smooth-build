@@ -73,7 +73,8 @@ public class TaskReporterTest {
 
   private static final class MyEvaluator extends Evaluator {
     private MyEvaluator(boolean isInternal) {
-      super(null, "name", isInternal, true, Location.location(Paths.get("script.smooth"), 2));
+      super(null, "name", isInternal, true, list(),
+          Location.location(Paths.get("script.smooth"), 2));
     }
 
     @Override

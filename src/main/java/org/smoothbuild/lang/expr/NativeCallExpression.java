@@ -25,21 +25,23 @@ public class NativeCallExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
-    List<Dag<Evaluator>> arguments = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
+    List<Evaluator> arguments = evaluators(children, valuesDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(parameterTypes, evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
-    return new Dag<>(
-        nativeCallEvaluator(actualResultType, nativeFunction, location()),
-        convertedArguments(mapping.applyTo(parameterTypes), arguments));
+    return nativeCallEvaluator(
+        actualResultType,
+        nativeFunction,
+        convertedArguments(mapping.applyTo(parameterTypes), arguments),
+        location());
   }
 
-  private static List<Dag<Evaluator>> convertedArguments(
-      List<ConcreteType> actualParameterTypes, List<Dag<Evaluator>> arguments) {
-    List<Dag<Evaluator>> result = new ArrayList<>();
+  private static List<Evaluator> convertedArguments(
+      List<ConcreteType> actualParameterTypes, List<Evaluator> arguments) {
+    List<Evaluator> result = new ArrayList<>();
     for (int i = 0; i < arguments.size(); i++) {
       result.add(convertIfNeeded(actualParameterTypes.get(i), arguments.get(i)));
     }

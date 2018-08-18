@@ -21,9 +21,9 @@ public class LiteralExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
     checkArgument(children.size() == 0);
-    return new Dag<>(valueEvaluator(value, location()));
+    return valueEvaluator(value, location());
   }
 }

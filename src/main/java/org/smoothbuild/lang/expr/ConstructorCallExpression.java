@@ -20,9 +20,8 @@ public class ConstructorCallExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
-    return new Dag<>(constructorCallEvaluator(constructor, location()),
-        evaluators(children, valuesDb, scope));
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
+    return constructorCallEvaluator(constructor, evaluators(children, valuesDb, scope), location());
   }
 }

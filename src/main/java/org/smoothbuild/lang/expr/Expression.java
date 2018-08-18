@@ -28,28 +28,28 @@ public abstract class Expression {
     return location;
   }
 
-  public static Dag<Evaluator> convertIfNeeded(ConcreteType type, Dag<Evaluator> evaluator) {
-    if (evaluator.elem().type().equals(type)) {
+  public static Evaluator convertIfNeeded(ConcreteType type, Evaluator evaluator) {
+    if (evaluator.type().equals(type)) {
       return evaluator;
     } else {
-      return new Dag<>(convertEvaluator(type, evaluator.elem().location()), list(evaluator));
+      return convertEvaluator(type, list(evaluator), evaluator.location());
     }
   }
 
-  public static List<ConcreteType> evaluatorTypes(List<Dag<Evaluator>> argumentEvaluators) {
-    return map(argumentEvaluators, a -> a.elem().type());
+  public static List<ConcreteType> evaluatorTypes(List<Evaluator> argumentEvaluators) {
+    return map(argumentEvaluators, a -> a.type());
   }
 
-  public static List<Dag<Evaluator>> evaluators(List<Dag<Expression>> expressions,
-      ValuesDb valuesDb, Scope<Dag<Evaluator>> scope) {
+  public static List<Evaluator> evaluators(List<Dag<Expression>> expressions,
+      ValuesDb valuesDb, Scope<Evaluator> scope) {
     return map(expressions, c -> evaluator(c, valuesDb, scope));
   }
 
-  public static Dag<Evaluator> evaluator(Dag<Expression> expression, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
+  public static Evaluator evaluator(Dag<Expression> expression, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
     return expression.elem().createEvaluator(expression.children(), valuesDb, scope);
   }
 
-  public abstract Dag<Evaluator> createEvaluator(List<Dag<Expression>> children,
-      ValuesDb valuesDb, Scope<Dag<Evaluator>> scope);
+  public abstract Evaluator createEvaluator(List<Dag<Expression>> children,
+      ValuesDb valuesDb, Scope<Evaluator> scope);
 }

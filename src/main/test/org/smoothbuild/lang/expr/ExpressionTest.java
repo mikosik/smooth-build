@@ -44,8 +44,8 @@ public class ExpressionTest {
     }
 
     @Override
-    public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-        Scope<Dag<Evaluator>> scope) {
+    public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+        Scope<Evaluator> scope) {
       return null;
     }
   }
