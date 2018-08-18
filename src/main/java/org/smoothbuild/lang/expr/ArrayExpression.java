@@ -33,8 +33,7 @@ public class ArrayExpression extends Expression {
         location());
   }
 
-  private static List<Evaluator> convertedElements(ConcreteType type,
-      List<Evaluator> elements) {
+  private static List<Evaluator> convertedElements(ConcreteType type, List<Evaluator> elements) {
     return map(elements, e -> convertIfNeeded(type, e));
   }
 
