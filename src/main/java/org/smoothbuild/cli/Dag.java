@@ -3,6 +3,7 @@ package org.smoothbuild.cli;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.ArgumentValidator.validateFunctionNames;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.Set;
@@ -45,9 +46,8 @@ public class Dag implements Command {
   }
 
   private Evaluator dagEvaluator(Function function) {
-    org.smoothbuild.util.Dag<Expression> expression =
-        new org.smoothbuild.util.Dag<>(function.createCallExpression(unknownLocation()));
-    return expression.elem().createEvaluator(expression.children(), valuesDb, null);
+    Expression expression = function.createCallExpression(list(), unknownLocation());
+    return expression.createEvaluator(expression.children(), valuesDb, null);
   }
 
   private void print(Evaluator dag) {

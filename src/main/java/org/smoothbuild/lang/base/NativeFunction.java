@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base;
 
+import java.util.List;
+
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 
@@ -36,7 +38,7 @@ public class NativeFunction extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
-    return new NativeCallExpression(this, location);
+  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
+    return new NativeCallExpression(this, arguments, location);
   }
 }

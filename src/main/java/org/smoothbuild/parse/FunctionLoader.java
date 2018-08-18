@@ -37,7 +37,6 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.util.Dag;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
@@ -69,13 +68,13 @@ public class FunctionLoader {
       private Parameter createParameter(ParamNode param) {
         Type type = param.type().get(Type.class);
         String name = param.name();
-        Dag<Expression> defaultValue = param.hasDefaultValue()
+        Expression defaultValue = param.hasDefaultValue()
             ? createExpression(param.defaultValue())
             : null;
         return new Parameter(type, name, defaultValue);
       }
 
-      private Dag<Expression> createExpression(ExprNode expr) {
+      private Expression createExpression(ExprNode expr) {
         if (expr instanceof AccessorNode) {
           return createAccessor((AccessorNode) expr);
         }
@@ -94,35 +93,34 @@ public class FunctionLoader {
         throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       }
 
-      private Dag<Expression> createAccessor(AccessorNode accessor) {
+      private Expression createAccessor(AccessorNode accessor) {
         StructType type = (StructType) accessor.expr().get(Type.class);
         Accessor accessorFunction = type.accessor(accessor.fieldName());
-        return new Dag<>(accessorFunction.createCallExpression(accessor.location()),
-            list(createExpression(accessor.expr())));
+        return accessorFunction.createCallExpression(
+            list(createExpression(accessor.expr())), accessor.location());
       }
 
-      private Dag<Expression> createReference(RefNode ref) {
-        return new Dag<>(new BoundValueExpression(ref.name(), ref.location()));
+      private Expression createReference(RefNode ref) {
+        return new BoundValueExpression(ref.name(), ref.location());
       }
 
-      private Dag<Expression> createCall(CallNode call) {
+      private Expression createCall(CallNode call) {
         Function function = runtime.functions().get(call.name());
-        List<Dag<Expression>> argExpressions = createSortedArgumentExpressions(call, function);
-        Expression callExpression = function.createCallExpression(call.location());
-        return new Dag<>(callExpression, argExpressions);
+        List<Expression> argExpressions = createSortedArgumentExpressions(call, function);
+        return function.createCallExpression(argExpressions, call.location());
       }
 
-      private List<Dag<Expression>> createSortedArgumentExpressions(CallNode call,
+      private List<Expression> createSortedArgumentExpressions(CallNode call,
           Function function) {
-        Map<ParameterInfo, Dag<Expression>> assignedExpressions = call
+        Map<ParameterInfo, Expression> assignedExpressions = call
             .args()
             .stream()
             .collect(toMap(a -> a.get(ParameterInfo.class), a -> createExpression(a.expr())));
         return map(function.parameters(), p -> assignedExpression(p, assignedExpressions));
       }
 
-      private Dag<Expression> assignedExpression(Parameter parameter,
-          Map<ParameterInfo, Dag<Expression>> assignedExpressions) {
+      private Expression assignedExpression(Parameter parameter,
+          Map<ParameterInfo, Expression> assignedExpressions) {
         if (assignedExpressions.containsKey(parameter)) {
           return assignedExpressions.get(parameter);
         } else {
@@ -130,15 +128,15 @@ public class FunctionLoader {
         }
       }
 
-      private Dag<Expression> createStringLiteral(StringNode string) {
+      private Expression createStringLiteral(StringNode string) {
         Value literal = valuesDb.string(string.get(String.class));
-        return new Dag<>(new LiteralExpression(literal, string.location()));
+        return new LiteralExpression(literal, string.location());
       }
 
-      private Dag<Expression> createArray(ArrayNode array) {
+      private Expression createArray(ArrayNode array) {
         ArrayType type = (ArrayType) array.get(Type.class);
-        List<Dag<Expression>> elements = map(array.elements(), this::createExpression);
-        return new Dag<>(new ArrayExpression(type, array.location()), elements);
+        List<Expression> elements = map(array.elements(), this::createExpression);
+        return new ArrayExpression(type, elements, array.location());
       }
     }.get();
   }

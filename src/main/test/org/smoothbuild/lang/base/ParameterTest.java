@@ -8,9 +8,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TestingTypesDb;
-import org.smoothbuild.util.Dag;
 
 public class ParameterTest {
   private final ConcreteType string = new TestingTypesDb().string();
@@ -19,7 +19,7 @@ public class ParameterTest {
 
   @Test
   public void optional_parameter_creates_optional_parameter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Expression.class)));
     when(parameter).isRequired();
     thenReturned(false);
   }
@@ -33,26 +33,26 @@ public class ParameterTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new Parameter(null, name, mock(Dag.class)));
+    when(() -> new Parameter(null, name, mock(Expression.class)));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new Parameter(string, null, mock(Dag.class)));
+    when(() -> new Parameter(string, null, mock(Expression.class)));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void type_getter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Expression.class)));
     when(() -> parameter.type());
     thenReturned(string);
   }
 
   @Test
   public void name_getter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Expression.class)));
     when(() -> parameter.name());
     thenReturned(name);
   }
@@ -73,14 +73,14 @@ public class ParameterTest {
 
   @Test
   public void parameter_with_default_value_is_not_required() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Expression.class)));
     when(() -> parameter.isRequired());
     thenReturned(false);
   }
 
   @Test
   public void to_string() {
-    given(parameter = new Parameter(string, name, mock(Dag.class)));
+    given(parameter = new Parameter(string, name, mock(Expression.class)));
     when(parameter.toString());
     thenReturned("Param(String: name)");
   }

@@ -13,18 +13,18 @@ import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;
 
-  public ArrayExpression(ArrayType arrayType, Location location) {
-    super(location);
+  public ArrayExpression(ArrayType arrayType, List<? extends Expression> elements,
+      Location location) {
+    super(elements, location);
     this.arrayType = arrayType;
   }
 
   @Override
-  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
       Scope<Evaluator> scope) {
     List<Evaluator> elements = evaluators(children, valuesDb, scope);
     ConcreteArrayType actualType = arrayType(elements);

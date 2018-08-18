@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base;
 
+import java.util.List;
+
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
@@ -22,7 +24,7 @@ public class Accessor extends Function {
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
-    return new AccessorCallExpression(this, location);
+  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
+    return new AccessorCallExpression(this, arguments, location);
   }
 }

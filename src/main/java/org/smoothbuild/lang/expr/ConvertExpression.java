@@ -9,18 +9,19 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
+
+import com.google.common.collect.ImmutableList;
 
 public class ConvertExpression extends Expression {
   private final ConcreteType type;
 
-  public ConvertExpression(ConcreteType type, Location location) {
-    super(location);
+  public ConvertExpression(ConcreteType type, Expression expression, Location location) {
+    super(ImmutableList.of(expression), location);
     this.type = type;
   }
 
   @Override
-  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
       Scope<Evaluator> scope) {
     return convertEvaluator(type, evaluators(children, valuesDb, scope), location());
   }

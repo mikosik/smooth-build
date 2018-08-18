@@ -10,7 +10,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.util.Dag;
+import org.smoothbuild.lang.expr.Expression;
 
 public class SignatureTest {
   private Parameter parameter;
@@ -36,16 +36,16 @@ public class SignatureTest {
 
   @Test
   public void parameter_types() throws Exception {
-    given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
-    given(parameter2 = new Parameter(string, "string", mock(Dag.class)));
+    given(parameter = new Parameter(blob, "blob", mock(Expression.class)));
+    given(parameter2 = new Parameter(string, "string", mock(Expression.class)));
     when(() -> new Signature(string, "name", list(parameter, parameter2)).parameterTypes());
     thenReturned(list(blob, string));
   }
 
   @Test
   public void to_string() throws Exception {
-    given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
-    given(parameter2 = new Parameter(string, "string", mock(Dag.class)));
+    given(parameter = new Parameter(blob, "blob", mock(Expression.class)));
+    given(parameter2 = new Parameter(string, "string", mock(Expression.class)));
     when(() -> new Signature(string, "name", list(parameter, parameter2)).toString());
     thenReturned(string.name() + " " + "name" + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

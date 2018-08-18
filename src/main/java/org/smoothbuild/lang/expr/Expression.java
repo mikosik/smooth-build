@@ -12,16 +12,23 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Expression in smooth language.
  */
 public abstract class Expression {
+  private final ImmutableList<Expression> children;
   private final Location location;
 
-  public Expression(Location location) {
+  public Expression(List<? extends Expression> children, Location location) {
+    this.children = ImmutableList.copyOf(children);
     this.location = checkNotNull(location);
+  }
+
+  public ImmutableList<Expression> children() {
+    return children;
   }
 
   public Location location() {
@@ -40,16 +47,16 @@ public abstract class Expression {
     return map(argumentEvaluators, a -> a.type());
   }
 
-  public static List<Evaluator> evaluators(List<Dag<Expression>> expressions,
+  public static List<Evaluator> evaluators(List<Expression> expressions,
       ValuesDb valuesDb, Scope<Evaluator> scope) {
     return map(expressions, c -> evaluator(c, valuesDb, scope));
   }
 
-  public static Evaluator evaluator(Dag<Expression> expression, ValuesDb valuesDb,
+  public static Evaluator evaluator(Expression expression, ValuesDb valuesDb,
       Scope<Evaluator> scope) {
-    return expression.elem().createEvaluator(expression.children(), valuesDb, scope);
+    return expression.createEvaluator(expression.children(), valuesDb, scope);
   }
 
-  public abstract Evaluator createEvaluator(List<Dag<Expression>> children,
+  public abstract Evaluator createEvaluator(List<Expression> children,
       ValuesDb valuesDb, Scope<Evaluator> scope);
 }
