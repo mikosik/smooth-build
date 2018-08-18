@@ -11,7 +11,7 @@ public class TestingTypes {
   public static final ConcreteType string = typesDb.string();
   public static final ConcreteType blob = typesDb.blob();
   public static final ConcreteType nothing = typesDb.nothing();
-  public static final StructType personType = personType(typesDb);
+  public static final StructType person = personType(typesDb);
   public static final StructType file = file();
   public static final GenericType a = new GenericType("a");
   public static final GenericType b = new GenericType("b");
@@ -20,7 +20,7 @@ public class TestingTypes {
   public static final ConcreteArrayType arrayString = array(string);
   public static final ConcreteArrayType arrayBlob = array(blob);
   public static final ConcreteArrayType arrayNothing = array(nothing);
-  public static final ConcreteArrayType arrayPerson = array(personType);
+  public static final ConcreteArrayType arrayPerson = array(person);
   public static final ConcreteArrayType arrayFile = array(file);
   public static final GenericArrayType arrayA = array(a);
   public static final GenericArrayType arrayB = array(b);

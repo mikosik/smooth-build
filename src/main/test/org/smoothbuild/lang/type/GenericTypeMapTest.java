@@ -19,7 +19,7 @@ import static org.smoothbuild.lang.type.TestingTypes.arrayString;
 import static org.smoothbuild.lang.type.TestingTypes.b;
 import static org.smoothbuild.lang.type.TestingTypes.blob;
 import static org.smoothbuild.lang.type.TestingTypes.nothing;
-import static org.smoothbuild.lang.type.TestingTypes.personType;
+import static org.smoothbuild.lang.type.TestingTypes.person;
 import static org.smoothbuild.lang.type.TestingTypes.string;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenThrown;
@@ -87,8 +87,8 @@ public class GenericTypeMapTest {
         // a <- struct (Person)
         assertInferFrom(
             list(a),
-            list(personType),
-            a, personType),
+            list(person),
+            a, person),
         assertInferFrom(
             list(a),
             list(arrayPerson),
@@ -100,11 +100,11 @@ public class GenericTypeMapTest {
 
         failsInferFrom(
             list(arrayA),
-            list(personType)),
+            list(person)),
         assertInferFrom(
             list(arrayA),
             list(arrayPerson),
-            a, personType),
+            a, person),
         assertInferFrom(
             list(arrayA),
             list(array2Person),
@@ -112,14 +112,14 @@ public class GenericTypeMapTest {
 
         failsInferFrom(
             list(array2A),
-            list(personType)),
+            list(person)),
         failsInferFrom(
             list(array2A),
             list(arrayPerson)),
         assertInferFrom(
             list(array2A),
             list(array2Person),
-            a, personType),
+            a, person),
 
         // a <- Nothing
 
@@ -204,11 +204,11 @@ public class GenericTypeMapTest {
 
         assertInferFrom(
             list(a, a),
-            list(personType, string),
+            list(person, string),
             a, string),
         assertInferFrom(
             list(a, arrayA),
-            list(personType, arrayString),
+            list(person, arrayString),
             a, string),
         assertInferFrom(
             list(a, arrayA),
@@ -242,20 +242,20 @@ public class GenericTypeMapTest {
 
         assertInferFrom(
             list(a, a),
-            list(nothing, personType),
-            a, personType),
+            list(nothing, person),
+            a, person),
         assertInferFrom(
             list(a, arrayA),
-            list(personType, arrayNothing),
-            a, personType),
+            list(person, arrayNothing),
+            a, person),
         assertInferFrom(
             list(a, arrayA),
             list(nothing, arrayPerson),
-            a, personType),
+            a, person),
         assertInferFrom(
             list(arrayA, arrayA),
             list(arrayPerson, arrayNothing),
-            a, personType),
+            a, person),
         assertInferFrom(
             list(a, a),
             list(arrayPerson, nothing),
