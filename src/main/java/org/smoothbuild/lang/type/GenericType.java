@@ -48,7 +48,7 @@ public class GenericType extends AbstractType {
   }
 
   @Override
-  public boolean isArgAssignableFrom(Type type) {
+  public boolean isParamAssignableFrom(Type type) {
     if (type.coreType().isNothing()) {
       return true;
     }

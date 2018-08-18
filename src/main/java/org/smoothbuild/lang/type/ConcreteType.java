@@ -91,7 +91,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
-  public boolean isArgAssignableFrom(Type type) {
+  public boolean isParamAssignableFrom(Type type) {
     return isAssignableFrom(type);
   }
 

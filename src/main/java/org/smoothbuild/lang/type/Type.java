@@ -32,7 +32,7 @@ public interface Type {
 
   public boolean isAssignableFrom(Type type);
 
-  public boolean isArgAssignableFrom(Type type);
+  public boolean isParamAssignableFrom(Type type);
 
   public Type commonSuperType(Type type);
 }
