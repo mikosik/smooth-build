@@ -22,6 +22,10 @@ public abstract class Expression {
   private final ImmutableList<Expression> children;
   private final Location location;
 
+  public Expression(Location location) {
+    this(ImmutableList.of(), location);
+  }
+
   public Expression(List<? extends Expression> children, Location location) {
     this.children = ImmutableList.copyOf(children);
     this.location = checkNotNull(location);

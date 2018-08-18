@@ -8,13 +8,11 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Evaluator;
 
-import com.google.common.collect.ImmutableList;
-
 public class LiteralExpression extends Expression {
   private final Value value;
 
   public LiteralExpression(Value value, Location location) {
-    super(ImmutableList.of(), location);
+    super(location);
     this.value = value;
   }
 
