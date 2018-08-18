@@ -2,9 +2,10 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.util.Dag;
 
 /**
  * Smooth function defined in smooth language via smooth expression.
@@ -12,19 +13,19 @@ import org.smoothbuild.util.Dag;
  * @see NativeFunction
  */
 public class DefinedFunction extends Function {
-  private final Dag<Expression> body;
+  private final Expression body;
 
-  public DefinedFunction(Signature signature, Location location, Dag<Expression> body) {
+  public DefinedFunction(Signature signature, Location location, Expression body) {
     super(signature, location);
     this.body = checkNotNull(body);
   }
 
-  public Dag<Expression> body() {
+  public Expression body() {
     return body;
   }
 
   @Override
-  public Expression createCallExpression(Location location) {
-    return new DefinedCallExpression(this, location);
+  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
+    return new DefinedCallExpression(this, arguments, location);
   }
 }

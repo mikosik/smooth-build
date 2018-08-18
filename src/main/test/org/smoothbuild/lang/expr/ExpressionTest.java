@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.expr;
 
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.givenTest;
 import static org.testory.Testory.thenReturned;
@@ -14,7 +15,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
 
 public class ExpressionTest {
   private Location location;
@@ -27,24 +27,30 @@ public class ExpressionTest {
 
   @Test
   public void null_code_location_is_forbidden() {
-    when(() -> new MyExpression(null));
+    when(() -> new MyExpression(list(), null));
+    thenThrown(NullPointerException.class);
+  }
+
+  @Test
+  public void null_children_is_forbidden() {
+    when(() -> new MyExpression(null, location));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void code_location() throws Exception {
-    given(expression = new MyExpression(location));
+    given(expression = new MyExpression(list(), location));
     when(expression.location());
     thenReturned(location);
   }
 
   public static class MyExpression extends Expression {
-    public MyExpression(Location location) {
-      super(location);
+    public MyExpression(List<? extends Expression> children, Location location) {
+      super(children, location);
     }
 
     @Override
-    public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+    public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
         Scope<Evaluator> scope) {
       return null;
     }

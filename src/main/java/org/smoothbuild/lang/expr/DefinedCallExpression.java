@@ -13,18 +13,18 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.GenericTypeMap;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
 
 public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
 
-  public DefinedCallExpression(DefinedFunction definedFunction, Location location) {
-    super(location);
+  public DefinedCallExpression(DefinedFunction definedFunction,
+      List<? extends Expression> arguments, Location location) {
+    super(arguments, location);
     this.function = definedFunction;
   }
 
   @Override
-  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
       Scope<Evaluator> scope) {
     List<Evaluator> arguments = evaluators(children, valuesDb, scope);
     GenericTypeMap<ConcreteType> mapping =

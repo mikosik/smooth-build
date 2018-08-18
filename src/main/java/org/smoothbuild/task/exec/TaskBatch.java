@@ -33,9 +33,9 @@ public class TaskBatch {
     this.rootTasks = new ArrayList<>();
   }
 
-  public <T extends Value> Dag<Task> createTasks(Dag<Expression> expression) {
-    Dag<Task> root = createTasksImpl(expression.elem().createEvaluator(expression.children(),
-        valuesDb, null));
+  public <T extends Value> Dag<Task> createTasks(Expression expression) {
+    Dag<Task> root = createTasksImpl(expression.createEvaluator(expression.children(), valuesDb,
+        null));
     rootTasks.add(root);
     return root;
   }

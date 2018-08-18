@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,8 +33,8 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function function) {
-    Expression expression = function.createCallExpression(Location.unknownLocation());
-    Dag<Task> task = taskBatch.createTasks(new Dag<>(expression));
+    Expression expression = function.createCallExpression(list(), Location.unknownLocation());
+    Dag<Task> task = taskBatch.createTasks(expression);
     artifacts.put(function.name(), task);
   }
 

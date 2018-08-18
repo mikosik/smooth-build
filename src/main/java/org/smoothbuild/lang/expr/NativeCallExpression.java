@@ -14,18 +14,18 @@ import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.GenericTypeMap;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
-import org.smoothbuild.util.Dag;
 
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;
 
-  public NativeCallExpression(NativeFunction nativeFunction, Location location) {
-    super(location);
+  public NativeCallExpression(NativeFunction nativeFunction, List<? extends Expression> arguments,
+      Location location) {
+    super(arguments, location);
     this.nativeFunction = nativeFunction;
   }
 
   @Override
-  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+  public Evaluator createEvaluator(List<Expression> children, ValuesDb valuesDb,
       Scope<Evaluator> scope) {
     List<Evaluator> arguments = evaluators(children, valuesDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
