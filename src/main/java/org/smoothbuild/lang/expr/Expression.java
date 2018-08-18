@@ -8,11 +8,9 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Dag;
 
@@ -40,10 +38,6 @@ public abstract class Expression {
 
   public static List<ConcreteType> evaluatorTypes(List<Dag<Evaluator>> argumentEvaluators) {
     return map(argumentEvaluators, a -> a.elem().type());
-  }
-
-  public static List<Type> parameterTypes(Function function) {
-    return map(function.signature().parameters(), p -> p.type());
   }
 
   public static List<Dag<Evaluator>> evaluators(List<Dag<Expression>> expressions,
