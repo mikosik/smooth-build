@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -48,22 +46,16 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
-  public ConcreteType increaseCoreDepthBy(int delta) {
-    checkArgument(0 <= delta, "delta must be non negative value");
+  public ConcreteType changeCoreDepthBy(int delta) {
+    if (delta < 0) {
+      throw new IllegalArgumentException(
+          "It's not possible to reduce core depth of non array type.");
+    }
     ConcreteType result = this;
     for (int i = 0; i < delta; i++) {
       result = typesDb.array(result);
     }
     return result;
-  }
-
-  @Override
-  public ConcreteType decreaseCoreDepthBy(int delta) {
-    if (delta != 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    return this;
   }
 
   @Override

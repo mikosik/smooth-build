@@ -33,7 +33,7 @@ public class GenericArrayType extends GenericType implements ArrayType {
 
   @Override
   public <T extends Type> T replaceCoreType(T coreType) {
-    return (T) coreType.increaseCoreDepthBy(coreDepth());
+    return (T) coreType.changeCoreDepthBy(coreDepth());
   }
 
   @Override
@@ -42,11 +42,11 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
-  public GenericType decreaseCoreDepthBy(int delta) {
-    if (delta == 0) {
-      return this;
+  public GenericType changeCoreDepthBy(int delta) {
+    if (delta < 0) {
+      return elemType.changeCoreDepthBy(delta + 1);
     } else {
-      return elemType.decreaseCoreDepthBy(delta - 1);
+      return super.changeCoreDepthBy(delta);
     }
   }
 }
