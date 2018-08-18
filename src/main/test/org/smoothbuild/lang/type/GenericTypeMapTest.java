@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 import static org.junit.Assert.assertEquals;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
+import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.type.TestingTypes.a;
 import static org.smoothbuild.lang.type.TestingTypes.array2A;
 import static org.smoothbuild.lang.type.TestingTypes.array2B;
@@ -299,7 +300,7 @@ public class GenericTypeMapTest {
     String actualStrings = commaSeparatedList(actualTypes);
     return newCase(
         "types=(" + typesString + "), actual=(" + actualStrings + ") " + expected,
-        () -> assertEquals(expected, GenericTypeMap.inferFrom(types, actualTypes).applyTo(type)));
+        () -> assertEquals(expected, inferMapping(types, actualTypes).applyTo(type)));
   }
 
   private static Case failsInferFrom(List<Type> types, List<Type> actualTypes) {
@@ -308,7 +309,7 @@ public class GenericTypeMapTest {
     return newCase(
         "types=(" + typesString + "), actual=(" + actualStrings + ") fails with IAE",
         () -> {
-          when(() -> GenericTypeMap.inferFrom(types, actualTypes));
+          when(() -> inferMapping(types, actualTypes));
           thenThrown(IllegalArgumentException.class);
         });
   }

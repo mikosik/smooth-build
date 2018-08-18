@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.Scope.scope;
+import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.task.base.Evaluator.identityEvaluator;
 import static org.smoothbuild.util.Lists.list;
 
@@ -28,7 +29,7 @@ public class DefinedCallExpression extends Expression {
       Scope<Dag<Evaluator>> scope) {
     List<Dag<Evaluator>> arguments = evaluators(children, valuesDb, scope);
     GenericTypeMap<ConcreteType> mapping =
-        GenericTypeMap.inferFrom(function.parameterTypes(), evaluatorTypes(arguments));
+        inferMapping(function.parameterTypes(), evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(function.signature().type());
     Dag<Evaluator> evaluator = convertIfNeeded(
         actualResultType, evaluator(function.body(), valuesDb, functionScope(arguments)));

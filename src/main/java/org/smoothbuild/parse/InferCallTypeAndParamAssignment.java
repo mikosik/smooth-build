@@ -4,6 +4,7 @@ import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
 import static com.google.common.collect.Sets.filter;
+import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
 import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
@@ -109,7 +110,7 @@ public class InferCallTypeAndParamAssignment {
             .filter(a -> a.get(ParameterInfo.class).type().isGeneric())
             .collect(toImmutableList());
         try {
-          return GenericTypeMap.inferFrom(
+          return inferMapping(
               map(argAssignedToGenericParam, a -> a.get(ParameterInfo.class).type()),
               map(argAssignedToGenericParam, a -> a.get(Type.class)));
         } catch (IllegalArgumentException e) {

@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableMap;
 public class GenericTypeMap<T extends Type> {
   private final Map<GenericType, T> map;
 
-  public static <T extends Type> GenericTypeMap<T> inferFrom(List<? extends Type> types,
+  public static <T extends Type> GenericTypeMap<T> inferMapping(List<? extends Type> types,
       List<T> actualTypes) {
     return new GenericTypeMap<>(inferMap(types, actualTypes));
   }

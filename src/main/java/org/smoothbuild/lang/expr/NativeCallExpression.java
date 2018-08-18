@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.expr;
 
+import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class NativeCallExpression extends Expression {
     List<Dag<Evaluator>> arguments = evaluators(children, valuesDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping =
-        GenericTypeMap.inferFrom(parameterTypes, evaluatorTypes(arguments));
+        inferMapping(parameterTypes, evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
     return new Dag<>(
         nativeCallEvaluator(actualResultType, nativeFunction, location()),
