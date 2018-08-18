@@ -44,19 +44,18 @@ public class Dag implements Command {
     });
   }
 
-  private org.smoothbuild.util.Dag<Evaluator> dagEvaluator(Function function) {
+  private Evaluator dagEvaluator(Function function) {
     org.smoothbuild.util.Dag<Expression> expression =
         new org.smoothbuild.util.Dag<>(function.createCallExpression(unknownLocation()));
     return expression.elem().createEvaluator(expression.children(), valuesDb, null);
   }
 
-  private void print(org.smoothbuild.util.Dag<Evaluator> dag) {
+  private void print(Evaluator dag) {
     print("", dag);
   }
 
-  private void print(String indent, org.smoothbuild.util.Dag<Evaluator> dag) {
-    Evaluator elem = dag.elem();
-    console.println(indent + elem.name() + "(" + elem.type().name() + ")");
+  private void print(String indent, Evaluator dag) {
+    console.println(indent + dag.name() + "(" + dag.type().name() + ")");
     dag
         .children()
         .stream()

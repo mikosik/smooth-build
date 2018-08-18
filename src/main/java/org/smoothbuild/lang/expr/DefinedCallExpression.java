@@ -3,7 +3,6 @@ package org.smoothbuild.lang.expr;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.task.base.Evaluator.identityEvaluator;
-import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -25,28 +24,26 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
-    List<Dag<Evaluator>> arguments = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
+    List<Evaluator> arguments = evaluators(children, valuesDb, scope);
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(function.parameterTypes(), evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(function.signature().type());
-    Dag<Evaluator> evaluator = convertIfNeeded(
+    Evaluator evaluator = convertIfNeeded(
         actualResultType, evaluator(function.body(), valuesDb, functionScope(arguments)));
     return namedEvaluator(actualResultType, function.name(), evaluator);
   }
 
-  private Scope<Dag<Evaluator>> functionScope(List<Dag<Evaluator>> arguments) {
-    Scope<Dag<Evaluator>> functionScope = scope();
+  private Scope<Evaluator> functionScope(List<Evaluator> arguments) {
+    Scope<Evaluator> functionScope = scope();
     for (int i = 0; i < arguments.size(); i++) {
       functionScope.add(function.parameters().get(i).name(), arguments.get(i));
     }
     return functionScope;
   }
 
-  private Dag<Evaluator> namedEvaluator(ConcreteType type, String name, Dag<Evaluator> evaluator) {
-    return new Dag<>(
-        identityEvaluator(type, name, false, location()),
-        list(evaluator));
+  private Evaluator namedEvaluator(ConcreteType type, String name, Evaluator evaluator) {
+    return identityEvaluator(type, name, false, evaluator, location());
   }
 }

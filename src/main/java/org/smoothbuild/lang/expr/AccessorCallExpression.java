@@ -21,10 +21,9 @@ public class AccessorCallExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
     checkArgument(children.size() == 1);
-    return new Dag<>(accessorCallEvaluator(accessor, location()),
-        evaluators(children, valuesDb, scope));
+    return accessorCallEvaluator(accessor, evaluators(children, valuesDb, scope), location());
   }
 }

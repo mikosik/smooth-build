@@ -24,24 +24,23 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public Dag<Evaluator> createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
-      Scope<Dag<Evaluator>> scope) {
-    List<Dag<Evaluator>> elements = evaluators(children, valuesDb, scope);
+  public Evaluator createEvaluator(List<Dag<Expression>> children, ValuesDb valuesDb,
+      Scope<Evaluator> scope) {
+    List<Evaluator> elements = evaluators(children, valuesDb, scope);
     ConcreteArrayType actualType = arrayType(elements);
-    return new Dag<>(
-        arrayEvaluator(actualType, location()),
-        convertedElements(actualType.elemType(), elements));
+    return arrayEvaluator(
+        actualType, convertedElements(actualType.elemType(), elements), location());
   }
 
-  private static List<Dag<Evaluator>> convertedElements(ConcreteType type,
-      List<Dag<Evaluator>> elements) {
+  private static List<Evaluator> convertedElements(ConcreteType type,
+      List<Evaluator> elements) {
     return map(elements, e -> convertIfNeeded(type, e));
   }
 
-  private ConcreteArrayType arrayType(List<Dag<Evaluator>> elements) {
+  private ConcreteArrayType arrayType(List<Evaluator> elements) {
     return (ConcreteArrayType) elements
         .stream()
-        .map(e -> (Type) e.elem().type())
+        .map(e -> (Type) e.type())
         .reduce((a, b) -> a.commonSuperType(b))
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);

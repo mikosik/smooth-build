@@ -40,14 +40,14 @@ public class TaskBatch {
     return root;
   }
 
-  private <T extends Value> Dag<Task> createTasksImpl(Dag<Evaluator> evaluator) {
+  private <T extends Value> Dag<Task> createTasksImpl(Evaluator evaluator) {
     List<Dag<Task>> children = createTasksImpl(evaluator.children());
-    return new Dag<Task>(new Task(evaluator.elem(), runtimeHash), children);
+    return new Dag<Task>(new Task(evaluator, runtimeHash), children);
   }
 
-  private List<Dag<Task>> createTasksImpl(List<Dag<Evaluator>> evaluators) {
+  private List<Dag<Task>> createTasksImpl(List<Evaluator> evaluators) {
     Builder<Dag<Task>> builder = ImmutableList.builder();
-    for (Dag<Evaluator> evaluator : evaluators) {
+    for (Evaluator evaluator : evaluators) {
       Dag<Task> executor = createTasksImpl(evaluator);
       builder.add(executor);
     }
