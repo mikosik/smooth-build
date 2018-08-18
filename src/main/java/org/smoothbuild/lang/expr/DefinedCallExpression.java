@@ -29,8 +29,8 @@ public class DefinedCallExpression extends Expression {
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(function.parameterTypes(), evaluatorTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(function.signature().type());
-    Evaluator evaluator = convertIfNeeded(
-        actualResultType, function.body().createEvaluator(valuesDb, functionScope(arguments)));
+    Evaluator evaluator = function.body().createEvaluator(valuesDb, functionScope(arguments))
+        .convertIfNeeded(actualResultType);
     return namedEvaluator(actualResultType, function.name(), evaluator);
   }
 

@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
@@ -105,5 +106,13 @@ public class Evaluator {
 
   public Output evaluate(Input input, Container container) {
     return computation.execute(input, container);
+  }
+
+  public Evaluator convertIfNeeded(ConcreteType type) {
+    if (type().equals(type)) {
+      return this;
+    } else {
+      return convertEvaluator(type, list(this), location());
+    }
   }
 }

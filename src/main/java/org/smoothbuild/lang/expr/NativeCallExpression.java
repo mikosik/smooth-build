@@ -42,7 +42,7 @@ public class NativeCallExpression extends Expression {
       List<ConcreteType> actualParameterTypes, List<Evaluator> arguments) {
     List<Evaluator> result = new ArrayList<>();
     for (int i = 0; i < arguments.size(); i++) {
-      result.add(convertIfNeeded(actualParameterTypes.get(i), arguments.get(i)));
+      result.add(arguments.get(i).convertIfNeeded(actualParameterTypes.get(i)));
     }
     return result;
   }

@@ -34,7 +34,7 @@ public class ArrayExpression extends Expression {
   }
 
   private static List<Evaluator> convertedElements(ConcreteType type, List<Evaluator> elements) {
-    return map(elements, e -> convertIfNeeded(type, e));
+    return map(elements, e -> e.convertIfNeeded(type));
   }
 
   private ConcreteArrayType arrayType(List<Evaluator> elements) {
