@@ -31,10 +31,6 @@ public abstract class Expression {
     this.location = checkNotNull(location);
   }
 
-  public ImmutableList<Expression> children() {
-    return children;
-  }
-
   public List<Evaluator> childrenEvaluators(ValuesDb valuesDb, Scope<Evaluator> scope) {
     return map(children, ch -> ch.createEvaluator(valuesDb, scope));
   }
