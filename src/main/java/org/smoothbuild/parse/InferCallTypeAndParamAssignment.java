@@ -65,12 +65,6 @@ public class InferCallTypeAndParamAssignment {
         call.set(Type.class, callType(parametersList, actualTypeMap));
       }
 
-      private ParseError implicitAssignmentOfGenericParameterError(CallNode call,
-          ParameterInfo parameter) {
-        return new ParseError(
-            call, "Generic parameter '" + parameter.name() + "' must be assigned explicitly");
-      }
-
       private List<? extends ParameterInfo> functionParameters() {
         String name = call.name();
         Functions functions = runtime.functions();
@@ -82,31 +76,6 @@ public class InferCallTypeAndParamAssignment {
         }
         if (ast.containsStruct(name)) {
           return ast.struct(name).getParameterInfos();
-        }
-        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
-      }
-
-      private Type callType(List<? extends ParameterInfo> parameters,
-          GenericTypeMap<Type> actualTypeMap) {
-        Type functionType = functionType();
-        if (functionType == null) {
-          return null;
-        } else {
-          return actualTypeMap.applyTo(functionType);
-        }
-      }
-
-      private Type functionType() {
-        String name = call.name();
-        Functions functions = runtime.functions();
-        if (functions.contains(name)) {
-          return functions.get(name).signature().type();
-        }
-        if (ast.containsFunc(name)) {
-          return ast.func(name).get(Type.class);
-        }
-        if (ast.containsStruct(name)) {
-          return ast.struct(name).get(Type.class);
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
@@ -149,6 +118,12 @@ public class InferCallTypeAndParamAssignment {
                   + "'."));
           return null;
         }
+      }
+
+      private ParseError implicitAssignmentOfGenericParameterError(CallNode call,
+          ParameterInfo parameter) {
+        return new ParseError(
+            call, "Generic parameter '" + parameter.name() + "' must be assigned explicitly");
       }
 
       private boolean assignNamelessArguments(Set<ParameterInfo> parameters) {
@@ -222,6 +197,31 @@ public class InferCallTypeAndParamAssignment {
               + "List of unassigned parameters of desired type is following:\n"
               + availableTypedParams.toFormattedString();
         }
+      }
+
+      private Type callType(List<? extends ParameterInfo> parameters,
+          GenericTypeMap<Type> actualTypeMap) {
+        Type functionType = functionType();
+        if (functionType == null) {
+          return null;
+        } else {
+          return actualTypeMap.applyTo(functionType);
+        }
+      }
+
+      private Type functionType() {
+        String name = call.name();
+        Functions functions = runtime.functions();
+        if (functions.contains(name)) {
+          return functions.get(name).signature().type();
+        }
+        if (ast.containsFunc(name)) {
+          return ast.func(name).get(Type.class);
+        }
+        if (ast.containsStruct(name)) {
+          return ast.struct(name).get(Type.class);
+        }
+        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
     }.run();
   }
