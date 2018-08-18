@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.util.Dag;
 
 public class InputTest {
   private Task depTask1;
@@ -29,7 +28,7 @@ public class InputTest {
     given(depTask1 = mock(Task.class));
     given(sstring1 = valuesDb.string("abc"));
     given(willReturn(new Output(sstring1)), depTask1).output();
-    given(input = Input.fromResults(list(new Dag<>(depTask1))));
+    given(input = Input.fromResults(list(depTask1)));
     when(input).values();
     thenReturned(contains(sstring1));
   }
@@ -42,8 +41,8 @@ public class InputTest {
     given(sstring2 = valuesDb.string("def"));
     given(willReturn(new Output(sstring1)), depTask1).output();
     given(willReturn(new Output(sstring2)), depTask2).output();
-    given(input = Input.fromResults(list(new Dag<>(depTask1))));
-    given(input2 = Input.fromResults(list(new Dag<>(depTask2))));
+    given(input = Input.fromResults(list(depTask1)));
+    given(input2 = Input.fromResults(list(depTask2)));
     when(input).hash();
     thenReturned(not(input2.hash()));
   }
@@ -57,8 +56,8 @@ public class InputTest {
     given(sstring2 = valuesDb.string("def"));
     given(willReturn(new Output(sstring1)), depTask1).output();
     given(willReturn(new Output(sstring2)), depTask2).output();
-    given(input = Input.fromResults(list(new Dag<>(depTask1), new Dag<>(depTask2))));
-    given(input2 = Input.fromResults(list(new Dag<>(depTask2), new Dag<>(depTask1))));
+    given(input = Input.fromResults(list(depTask1, depTask2)));
+    given(input2 = Input.fromResults(list(depTask2, depTask1)));
     when(input).hash();
     thenReturned(not(input2.hash()));
   }
@@ -70,8 +69,8 @@ public class InputTest {
     given(sstring1 = valuesDb.string("abc"));
     given(willReturn(new Output(sstring1)), depTask1).output();
     given(willReturn(new Output(sstring1)), depTask2).output();
-    given(input = Input.fromResults(list(new Dag<>(depTask1))));
-    given(input2 = Input.fromResults(list(new Dag<>(depTask2))));
+    given(input = Input.fromResults(list(depTask1)));
+    given(input2 = Input.fromResults(list(depTask2)));
     when(input).hash();
     thenReturned(input2.hash());
   }
@@ -82,7 +81,7 @@ public class InputTest {
     given(depTask2 = mock(Task.class));
     given(sstring1 = valuesDb.string("abc"));
     given(willReturn(new Output(sstring1)), depTask1).output();
-    given(input = Input.fromResults(list(new Dag<>(depTask1))));
+    given(input = Input.fromResults(list(depTask1)));
     given(input2 = Input.fromValues(list()));
     when(input).hash();
     thenReturned(not(input2.hash()));

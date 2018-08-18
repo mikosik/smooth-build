@@ -16,13 +16,12 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
-import org.smoothbuild.util.Dag;
 
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
   private final TaskBatch taskBatch;
   private final Console console;
-  private final Map<String, Dag<Task>> artifacts;
+  private final Map<String, Task> artifacts;
 
   @Inject
   public ArtifactBuilder(ArtifactSaver artifactSaver, TaskBatch taskBatch, Console console) {
@@ -34,7 +33,7 @@ public class ArtifactBuilder {
 
   public void addArtifact(Function function) {
     Expression expression = function.createCallExpression(list(), Location.unknownLocation());
-    Dag<Task> task = taskBatch.createTasks(expression);
+    Task task = taskBatch.createTasks(expression);
     artifacts.put(function.name(), task);
   }
 
@@ -42,9 +41,9 @@ public class ArtifactBuilder {
     taskBatch.executeAll();
     if (!taskBatch.containsErrors()) {
       console.println("\nbuilt artifact(s):");
-      for (Entry<String, Dag<Task>> artifact : artifacts.entrySet()) {
+      for (Entry<String, Task> artifact : artifacts.entrySet()) {
         String name = artifact.getKey();
-        Task task = artifact.getValue().elem();
+        Task task = artifact.getValue();
         Value value = task.output().result();
         artifactSaver.save(name, value);
         console.println(name.toString() + " -> " + artifactPath(name));
