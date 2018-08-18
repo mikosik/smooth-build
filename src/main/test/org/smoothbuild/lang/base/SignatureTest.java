@@ -39,6 +39,14 @@ public class SignatureTest {
   }
 
   @Test
+  public void parameter_types() throws Exception {
+    given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
+    given(parameter2 = new Parameter(string, "string", mock(Dag.class)));
+    when(() -> new Signature(string, name, list(parameter, parameter2)).parameterTypes());
+    thenReturned(list(blob, string));
+  }
+
+  @Test
   public void to_string() throws Exception {
     given(parameter = new Parameter(blob, "blob", mock(Dag.class)));
     given(parameter2 = new Parameter(string, "string", mock(Dag.class)));

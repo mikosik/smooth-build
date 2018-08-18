@@ -2,6 +2,8 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Named;
@@ -37,6 +39,10 @@ public abstract class Function implements Named {
 
   public ImmutableList<Parameter> parameters() {
     return signature.parameters();
+  }
+
+  public List<Type> parameterTypes() {
+    return signature.parameterTypes();
   }
 
   public abstract Expression createCallExpression(Location location);

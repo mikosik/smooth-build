@@ -1,7 +1,9 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.smoothbuild.util.Lists.map;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.lang.type.Type;
@@ -32,6 +34,10 @@ public class Signature {
 
   public ImmutableList<Parameter> parameters() {
     return parameters;
+  }
+
+  public List<Type> parameterTypes() {
+    return map(parameters, p -> p.type());
   }
 
   @Override
