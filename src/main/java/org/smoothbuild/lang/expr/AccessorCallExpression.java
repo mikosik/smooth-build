@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.expr;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.task.base.Evaluator.accessorCallEvaluator;
 
 import java.util.List;
@@ -22,7 +21,6 @@ public class AccessorCallExpression extends Expression {
 
   @Override
   public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    checkArgument(children().size() == 1);
     return accessorCallEvaluator(accessor, childrenEvaluators(valuesDb, scope), location());
   }
 }
