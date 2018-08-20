@@ -11,7 +11,6 @@ import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.GenericTypeMap;
 import org.smoothbuild.task.base.Evaluator;
 
 public class DefinedCallExpression extends Expression {
@@ -26,10 +25,12 @@ public class DefinedCallExpression extends Expression {
   @Override
   public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
     List<Evaluator> arguments = childrenEvaluators(valuesDb, scope);
-    GenericTypeMap<ConcreteType> mapping =
-        inferMapping(function.parameterTypes(), evaluatorTypes(arguments));
-    ConcreteType actualResultType = mapping.applyTo(function.signature().type());
-    Evaluator evaluator = function.body().createEvaluator(valuesDb, functionScope(arguments))
+    ConcreteType actualResultType =
+        inferMapping(function.parameterTypes(), evaluatorTypes(arguments))
+            .applyTo(function.signature().type());
+    Evaluator evaluator = function
+        .body()
+        .createEvaluator(valuesDb, functionScope(arguments))
         .convertIfNeeded(actualResultType);
     return namedEvaluator(actualResultType, function.name(), evaluator);
   }
