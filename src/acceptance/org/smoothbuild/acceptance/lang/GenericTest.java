@@ -31,4 +31,14 @@ public class GenericTest extends AcceptanceTestCase {
             new Object[] { "bb", "cc" }
         }));
   }
+
+  @Test
+  public void pair_and_identity() throws Exception {
+    givenScript("a testIdentity(a v) = v;                                           \n"
+        + "      [a] pair(a e1, a e2) = [e1, e2];                                   \n"
+        + "      result = pair(e1=testIdentity(v='aa'), e2=testIdentity(v='bb'));   \n");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), isArrayWith("aa", "bb"));
+  }
 }
