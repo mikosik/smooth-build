@@ -31,7 +31,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
   @Test
   public void actual_array_type_can_be_inferred_from_arguments_and_elements_are_converted()
       throws Exception {
-    givenScript("[a] pair(a first, a second) = [first, second];       \n" +
+    givenScript("pair(a first, a second) = [first, second];           \n" +
         "        result = pair(first=[], second=[['aaa']]);           \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
