@@ -160,6 +160,59 @@ public abstract class GenericFileSystemTestCase {
     thenThrown(FileSystemException.class);
   }
 
+  // source()
+
+  @Test
+  public void source_reads_file_content() throws Exception {
+    given(this).createFile(path, bytes);
+    when(() -> fileSystem.source(path).readByteArray());
+    thenReturned(bytes);
+  }
+
+  public void source_throws_exception_when_file_does_not_exist() throws Exception {
+    when(() -> fileSystem.source(path("dir/file")));
+    thenThrown(exception(new FileSystemException("File " + path("dir/file") + " doesn't exist.")));
+  }
+
+  @Test
+  public void source_throws_exception_when_path_is_dir() throws Exception {
+    given(this).createEmptyFile(path);
+    when(() -> fileSystem.source(path.parent()));
+    thenThrown(exception(new FileSystemException("File 'some/dir' doesn't exist. It is a dir.")));
+  }
+
+  @Test
+  public void source_throws_exception_when_path_is_root_dir() throws Exception {
+    when(() -> fileSystem.source(Path.root()));
+    thenThrown(exception(new FileSystemException("File '' doesn't exist. It is a dir.")));
+  }
+
+  // sink()
+
+  @Test
+  public void data_written_via_sink_can_be_read_by_source()
+      throws Exception {
+    writeAndClose(fileSystem.sink(path).outputStream(), bytes);
+    when(() -> fileSystem.source(path).readByteArray());
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void sink_overwrites_existing_file() throws Exception {
+    given(bytes = new byte[] { 1, 2, 3 });
+    writeAndClose(fileSystem.sink(path).outputStream(), new byte[] { 4, 5, 6, 7, 8 });
+    writeAndClose(fileSystem.sink(path).outputStream(), bytes);
+    when(() -> fileSystem.source(path).readByteArray());
+    thenReturned(bytes);
+  }
+
+  @Test
+  public void sink_fails_when_target_file_is_a_dir() throws Exception {
+    given(this).createEmptyFile(dir.append(path));
+    when(() -> fileSystem.sink(dir));
+    thenThrown(FileSystemException.class);
+  }
+
   // move()
 
   @Test
