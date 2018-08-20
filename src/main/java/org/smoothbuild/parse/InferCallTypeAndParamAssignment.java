@@ -89,7 +89,9 @@ public class InferCallTypeAndParamAssignment {
           ParameterInfo parameter = map.get(arg.name());
           Type paramType = parameter.type();
           Type argType = arg.get(Type.class);
-          if (paramType.isParamAssignableFrom(argType)) {
+          if (argType == null) {
+            failed = true;
+          } else if (paramType.isParamAssignableFrom(argType)) {
             arg.set(ParameterInfo.class, parameter);
             parameters.remove(parameter);
           } else {
@@ -110,9 +112,12 @@ public class InferCallTypeAndParamAssignment {
             .filter(a -> a.get(ParameterInfo.class).type().isGeneric())
             .collect(toImmutableList());
         try {
-          return inferMapping(
-              map(argAssignedToGenericParam, a -> a.get(ParameterInfo.class).type()),
-              map(argAssignedToGenericParam, a -> a.get(Type.class)));
+          List<Type> types = map(argAssignedToGenericParam, a -> a.get(ParameterInfo.class).type());
+          List<Type> actualTypes = map(argAssignedToGenericParam, a -> a.get(Type.class));
+          if (actualTypes.contains(null)) {
+            return null;
+          }
+          return inferMapping(types, actualTypes);
         } catch (IllegalArgumentException e) {
           errors.add(new ParseError(call,
               "Cannot infer actual type(s) for generic parameter(s) in call to '" + call.name()
