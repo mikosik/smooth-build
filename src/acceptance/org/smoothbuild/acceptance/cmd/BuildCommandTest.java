@@ -32,6 +32,15 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void build_command_with_function_that_has_parameters_prints_error() throws Exception {
+    givenScript("String testStringIdentity(String value) = value;");
+    whenSmoothBuild("testStringIdentity");
+    thenFinishedWithError();
+    thenOutputContains("error: Function 'testStringIdentity' cannot be invoked from command line "
+        + "as it has parameters.\n");
+  }
+
+  @Test
   public void build_command_with_nonexistent_function_argument_prints_error() throws Exception {
     givenScript("result = 'abc';");
     whenSmoothBuild("nonexistentFunction");
