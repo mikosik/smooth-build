@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
@@ -26,7 +27,13 @@ public class SmoothExecutor {
             + "Use 'smooth list' to see all available functions.\n");
         return;
       }
-      artifactBuilder.addArtifact(functions.get(name));
+      Function function = functions.get(name);
+      if (!function.parameters().isEmpty()) {
+        console.error(
+            "Function '" + name + "' cannot be invoked from command line as it has parameters.\n");
+        return;
+      }
+      artifactBuilder.addArtifact(function);
     }
 
     artifactBuilder.runBuild();
