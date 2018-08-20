@@ -138,12 +138,17 @@ public class InferTypesAndParamAssignment {
           ParameterInfo info = new ParameterInfo(
               param.get(Type.class), param.name(), !param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
-          if (param.hasDefaultValue() && param.defaultValue().get(Type.class) != null) {
-            Type valueType = param.defaultValue().get((Type.class));
-            if (!type.isAssignableFrom(valueType)) {
+          if (param.hasDefaultValue()) {
+            if (param.type().isGeneric()) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
-                  + "' is of type " + type.name() + " so it cannot have default value of type "
-                  + valueType.name() + "."));
+                  + "' has generic type " + type.name() + " so it cannot have default value."));
+            } else {
+              Type valueType = param.defaultValue().get((Type.class));
+              if (valueType != null && !type.isAssignableFrom(valueType)) {
+                errors.add(new ParseError(param, "Parameter '" + param.name()
+                    + "' is of type " + type.name() + " so it cannot have default value of type "
+                    + valueType.name() + "."));
+              }
             }
           }
         }

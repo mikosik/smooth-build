@@ -32,6 +32,16 @@ public class DefaultValueTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void generic_parameter_with_default_value_causes_error()
+      throws Exception {
+    givenScript("a testIdentity(a value = 'aaa') = value;");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(
+        1, "Parameter 'value' has generic type a so it cannot have default value.");
+  }
+
+  @Test
   public void default_value_expression_can_be_a_call()
       throws Exception {
     givenScript("value = 'abc';"
