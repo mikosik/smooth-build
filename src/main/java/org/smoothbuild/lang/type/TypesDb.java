@@ -34,6 +34,12 @@ public class TypesDb {
     this.hashedDb = hashedDb;
     this.cache = new HashMap<>();
     this.instantiator = new Instantiator(hashedDb, this);
+
+    // initialize cache
+    type();
+    string();
+    blob();
+    nothing();
   }
 
   public TypeType type() {
@@ -149,7 +155,7 @@ public class TypesDb {
               + "its Merkle tree's first child is not Type type.");
         }
         HashCode dataHash = hashes.get(1);
-        return readFromDataHash(dataHash, typeHash);
+        return readFromDataHash(dataHash, hash);
       default:
         throw corruptedValueException(
             hash, "Its Merkle tree root has " + hashes.size() + " children.");
@@ -162,11 +168,14 @@ public class TypesDb {
       String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
         case STRING:
-          return string();
         case BLOB:
-          return blob();
         case NOTHING:
-          return nothing();
+          /*
+           * If we reach this case then we have type that has name equal to some basic type but it
+           * hasn't been found in cache by its hash by code that called us.
+           */
+          throw corruptedValueException(typeHash,
+              "It is a type value with name of basic type '" + name + "' but has different hash.");
         case "":
           ConcreteType elementType = read(unmarshaller.readHash());
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
@@ -175,6 +184,10 @@ public class TypesDb {
         default:
       }
       Iterable<Field> fields = readFields(unmarshaller.readHash(), typeHash);
+      if (!unmarshaller.source().exhausted()) {
+        throw corruptedValueException(typeHash,
+            "It is struct type but its Merkle tree has unnecessary children.");
+      }
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     }
