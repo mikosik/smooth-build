@@ -1,8 +1,5 @@
 package org.smoothbuild.io.fs.base;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 
@@ -17,10 +14,6 @@ public interface FileSystem {
   public void move(Path source, Path target);
 
   public void delete(Path path);
-
-  public InputStream openInputStream(Path path);
-
-  public OutputStream openOutputStream(Path path);
 
   public BufferedSource source(Path path);
 

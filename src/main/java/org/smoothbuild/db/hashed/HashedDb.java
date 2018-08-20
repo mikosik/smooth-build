@@ -69,7 +69,7 @@ public class HashedDb {
   public Unmarshaller newUnmarshaller(HashCode hash) {
     Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
-      return new Unmarshaller(hash, fileSystem.openInputStream(path));
+      return new Unmarshaller(hash, fileSystem.source(path).inputStream());
     } else {
       throw new HashedDbException("Could not find " + hash + " object.");
     }

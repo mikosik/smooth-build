@@ -60,7 +60,7 @@ public class RecursiveFilesIterableTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    writeAndClose(fileSystem.openOutputStream(path("my/file")), bytes);
+    writeAndClose(fileSystem.sink(path("my/file")).outputStream(), bytes);
     try {
       recursiveFilesIterable(fileSystem, path("my/file"));
       fail("exception should be thrown");
@@ -74,7 +74,7 @@ public class RecursiveFilesIterableTest {
     FileSystem fileSystem = new MemoryFileSystem();
     for (String name : names) {
       Path path = path(rootDir).append(path(name));
-      writeAndClose(fileSystem.openOutputStream(path), bytes);
+      writeAndClose(fileSystem.sink(path).outputStream(), bytes);
     }
 
     List<Path> created = new ArrayList<>();

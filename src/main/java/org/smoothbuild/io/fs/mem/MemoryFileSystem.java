@@ -7,8 +7,6 @@ import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,10 +14,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.util.Streams;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 /**
  * In memory implementation of FileSystem.
@@ -55,8 +53,8 @@ public class MemoryFileSystem implements FileSystem {
     if (pathState(target) == DIR) {
       throw new FileSystemException("Cannot move to " + target + ". It is directory.");
     }
-    try {
-      Streams.copy(openInputStream(source), openOutputStream(target));
+    try (BufferedSource s = source(source); Sink sink = sink(target)) {
+      s.readAll(sink);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -76,16 +74,6 @@ public class MemoryFileSystem implements FileSystem {
     }
 
     element.parent().removeChild(element);
-  }
-
-  @Override
-  public InputStream openInputStream(Path path) {
-    return source(path).inputStream();
-  }
-
-  @Override
-  public OutputStream openOutputStream(Path path) {
-    return sink(path).outputStream();
   }
 
   @Override

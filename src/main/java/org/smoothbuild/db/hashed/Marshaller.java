@@ -26,7 +26,7 @@ public class Marshaller extends OutputStream {
     this.tempPath = tempPath;
     this.hash = hash;
     this.hasher = Hash.newHasher();
-    this.outputStream = fileSystem.openOutputStream(tempPath);
+    this.outputStream = fileSystem.sink(tempPath).outputStream();
   }
 
   public Marshaller writeHash(HashCode hash) {

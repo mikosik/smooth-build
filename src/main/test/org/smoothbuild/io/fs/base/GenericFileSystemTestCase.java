@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -95,68 +94,6 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
-    thenThrown(FileSystemException.class);
-  }
-
-  // openInputStream()
-
-  @Test
-  public void open_input_stream_reads_file_content() throws Exception {
-    given(this).createFile(path, bytes);
-    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
-    thenReturned(bytes);
-  }
-
-  @Test
-  public void cannot_open_output_stream_when_path_is_dir() throws Exception {
-    given(this).createEmptyFile(path);
-    when(fileSystem).openOutputStream(path.parent());
-    thenThrown(exception(new FileSystemException("Cannot use " + path.parent()
-        + " path. It is already taken by dir.")));
-  }
-
-  @Test
-  public void cannot_open_output_stream_when_path_is_root_dir() throws Exception {
-    when(fileSystem).openOutputStream(Path.root());
-    thenThrown(exception(new FileSystemException("Cannot use " + Path.root()
-        + " path. It is already taken by dir.")));
-  }
-
-  // openOutputStream()
-
-  @Test
-  public void data_written_via_open_output_stream_can_be_read_by_open_input_stream()
-      throws Exception {
-    writeAndClose(fileSystem.openOutputStream(path), bytes);
-    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
-    thenReturned(bytes);
-  }
-
-  @Test
-  public void open_output_stream_overwrites_existing_file() throws Exception {
-    given(bytes = new byte[] { 1, 2, 3 });
-    writeAndClose(fileSystem.openOutputStream(path), new byte[] { 4, 5, 6, 7, 8 });
-    writeAndClose(fileSystem.openOutputStream(path), bytes);
-    when(inputStreamToByteArray(fileSystem.openInputStream(path)));
-    thenReturned(bytes);
-  }
-
-  @Test
-  public void open_output_stream_returns() throws Exception {
-    given(this).createEmptyFile(dir.append(path));
-    when(fileSystem).openOutputStream(dir);
-    thenThrown(FileSystemException.class);
-  }
-
-  public void create_input_stream_throws_exception_when_file_does_not_exist() throws Exception {
-    when(fileSystem).openInputStream(path("dir/file"));
-    thenThrown(exception(new FileSystemException("File " + path("dir/file") + " doesn't exist.")));
-  }
-
-  @Test
-  public void cannot_open_input_stream_when_file_is_a_dir() throws Exception {
-    given(this).createEmptyFile("abc/def/file.txt");
-    when(fileSystem).openInputStream(path("abc/def"));
     thenThrown(FileSystemException.class);
   }
 
@@ -249,9 +186,9 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void moved_file_is_copied_to_target() throws Exception {
     given(this).createFile(path("source"), bytes);
-    when(fileSystem).move(path("source"), path("target"));
+    when(() -> fileSystem.move(path("source"), path("target")));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(inputStreamToByteArray(fileSystem.openInputStream(path("target"))));
+    when(() -> fileSystem.source(path("target")).readByteArray());
     thenReturned(bytes);
   }
 
@@ -259,9 +196,9 @@ public abstract class GenericFileSystemTestCase {
   public void moved_file_overwrites_target_file() throws Exception {
     given(this).createFile(path("source"), bytes);
     given(this).createEmptyFile(path("target"));
-    when(fileSystem).move(path("source"), path("target"));
+    when(() -> fileSystem.move(path("source"), path("target")));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(inputStreamToByteArray(fileSystem.openInputStream(path("target"))));
+    when(() -> fileSystem.source(path("target")).readByteArray());
     thenReturned(bytes);
   }
 
@@ -269,7 +206,7 @@ public abstract class GenericFileSystemTestCase {
   public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
     given(this).createFile(path("source"), bytes);
     when(fileSystem).move(path("source"), path("dir/target"));
-    when(inputStreamToByteArray(fileSystem.openInputStream(path("dir/target"))));
+    when(() -> fileSystem.source(path("dir/target")).readByteArray());
     thenReturned(bytes);
   }
 
@@ -311,7 +248,7 @@ public abstract class GenericFileSystemTestCase {
   public void link_contains_data_from_target() throws Exception {
     given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path);
-    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(linkPath)), bytes);
+    thenEqual(fileSystem.source(linkPath).readByteArray(), bytes);
   }
 
   @Test
@@ -341,8 +278,7 @@ public abstract class GenericFileSystemTestCase {
   public void link_to_dir_can_be_used_to_access_its_file() throws Exception {
     given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path.parent());
-    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(linkPath.append(path.lastPart()))),
-        bytes);
+    thenEqual(fileSystem.source(linkPath.append(path.lastPart())).readByteArray(), bytes);
   }
 
   @Test
