@@ -1,7 +1,6 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.hamcrest.Matchers.sameInstance;
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.thenEqual;
@@ -9,19 +8,19 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.io.OutputStream;
-
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
+
+import okio.BufferedSink;
 
 public class MemoryFileTest {
   private final MemoryDir parent = mock(MemoryDir.class);
   private final Path name = Path.path("some/path");
   private final Path otherName = Path.path("other/path");
-  private final byte[] line = new byte[] { 1, 2, 3 };
+  private final byte[] bytes = new byte[] { 1, 2, 3 };
   private MemoryFile file;
-  private OutputStream outputStream;
+  private BufferedSink sink;
 
   @Test
   public void name() {
@@ -82,16 +81,16 @@ public class MemoryFileTest {
   @Test
   public void opening_input_stream_for_non_existent_file_fails() throws Exception {
     given(file = new MemoryFile(parent, name));
-    when(file).openInputStream();
+    when(file).source();
     thenThrown(FileSystemException.class);
   }
 
   @Test
   public void data_written_to_memory_file_can_be_read_back() throws Exception {
     given(file = new MemoryFile(parent, name));
-    given(outputStream = file.openOutputStream());
-    given(outputStream).write(line);
-    given(outputStream).close();
-    thenEqual(line, inputStreamToByteArray(file.openInputStream()));
+    given(sink = file.sink());
+    given(sink).write(bytes);
+    given(sink).close();
+    thenEqual(bytes, file.source().readByteArray());
   }
 }

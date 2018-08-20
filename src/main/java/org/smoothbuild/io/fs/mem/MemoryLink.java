@@ -1,10 +1,11 @@
 package org.smoothbuild.io.fs.mem;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.Path;
+
+import okio.BufferedSink;
+import okio.BufferedSource;
 
 public class MemoryLink implements MemoryElement {
   private final MemoryDir parent;
@@ -58,12 +59,12 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public InputStream openInputStream() {
-    return target.openInputStream();
+  public BufferedSource source() {
+    return target.source();
   }
 
   @Override
-  public OutputStream openOutputStream() {
-    return target.openOutputStream();
+  public BufferedSink sink() {
+    return target.sink();
   }
 }

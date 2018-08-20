@@ -1,10 +1,11 @@
 package org.smoothbuild.io.fs.mem;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.Path;
+
+import okio.BufferedSink;
+import okio.BufferedSource;
 
 public interface MemoryElement {
   public Path name();
@@ -23,7 +24,7 @@ public interface MemoryElement {
 
   public void addChild(MemoryElement element);
 
-  public InputStream openInputStream();
+  public BufferedSource source();
 
-  public OutputStream openOutputStream();
+  public BufferedSink sink();
 }

@@ -1,18 +1,22 @@
 package org.smoothbuild.io.fs.mem;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import static okio.Okio.buffer;
+
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.ByteString;
+import okio.ForwardingSink;
+
 public class MemoryFile implements MemoryElement {
   private final MemoryDir parent;
   private final Path name;
-  private byte data[];
+  private ByteString data;
 
   public MemoryFile(MemoryDir parent, Path name) {
     this.parent = parent;
@@ -60,22 +64,27 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public InputStream openInputStream() {
+  public BufferedSource source() {
     if (data == null) {
       throw new FileSystemException("File does not exist");
     }
-    return new ByteArrayInputStream(data);
+
+    return new Buffer().write(data);
   }
 
   @Override
-  public OutputStream openOutputStream() {
-    return new MemoryOutputStream();
+  public BufferedSink sink() {
+    return buffer(new MySink());
   }
 
-  private class MemoryOutputStream extends ByteArrayOutputStream {
+  private class MySink extends ForwardingSink {
+    public MySink() {
+      super(new Buffer());
+    }
+
     @Override
     public void close() {
-      MemoryFile.this.data = toByteArray();
+      data = ((Buffer) this.delegate()).readByteString();
     }
   }
 }
