@@ -1,11 +1,15 @@
 package org.smoothbuild.lang.type;
 
+import static com.google.common.hash.HashCode.fromInt;
+import static org.smoothbuild.db.hashed.Hash.integer;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +26,8 @@ public class CorruptedTypeTest {
   protected HashCode hash;
   private TypeType typeType;
   private HashCode dataHash;
+  private HashCode fieldListHash;
+  private HashCode fieldHash;
 
   @Before
   public void before() {
@@ -52,6 +58,8 @@ public class CorruptedTypeTest {
     when(hashedDb.writeHashes(dataHash));
     thenReturned(typesDb.type().hash());
   }
+
+  // testing merkle tree of type root node
 
   @Test
   public void merkle_root_with_three_children_causes_exception() throws Exception {
@@ -89,6 +97,62 @@ public class CorruptedTypeTest {
     given(hash = hashedDb.writeHashes(dataHash));
     when(() -> typesDb.read(hash));
     thenThrown(exception(brokenTypeTypeException(hash)));
+  }
+
+  // testing merkle tree of type data
+
+  @Test
+  public void merkle_root_of_data_of_string_type_with_two_children_causes_exception()
+      throws Exception {
+    doTestCorruptedBasicType("String");
+  }
+
+  @Test
+  public void merkle_root_of_data_of_blob_type_with_two_children_causes_exception()
+      throws Exception {
+    doTestCorruptedBasicType("Blob");
+  }
+
+  @Test
+  public void merkle_root_of_data_of_nothing_type_with_two_children_causes_exception()
+      throws Exception {
+    doTestCorruptedBasicType("Nothing");
+  }
+
+  private void doTestCorruptedBasicType(String typeName) throws IOException {
+    given(typeType = typesDb.type());
+    given(dataHash = hashedDb.writeHashes(hashedDb.writeString(typeName), fromInt(0)));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
+    when(() -> typesDb.read(hash));
+    thenThrown(exception(corruptedValueException(hash,
+        "It is a type value with name of basic type '" + typeName + "' but has different hash.")));
+  }
+
+  @Test
+  public void merkle_root_of_data_of_struct_type_with_e_children_causes_exception()
+      throws Exception {
+    given(typeType = typesDb.type());
+    given(fieldHash = hashedDb.writeHashes(hashedDb.writeString("fname"), typesDb.string().hash()));
+    given(fieldListHash = hashedDb.writeHashes(fieldHash));
+    given(dataHash = hashedDb.writeHashes(
+        hashedDb.writeString("MyType"), fieldListHash, integer(1)));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
+    when(() -> typesDb.read(hash));
+    thenThrown(exception(corruptedValueException(hash,
+        "It is struct type but its Merkle tree has unnecessary children.")));
+  }
+
+  @Test
+  public void merkle_tree_of_struct_type_field_with_more_than_2_children_causes_exception()
+      throws Exception {
+    given(typeType = typesDb.type());
+    given(fieldHash = hashedDb.writeHashes(integer(1), integer(2), integer(3)));
+    given(fieldListHash = hashedDb.writeHashes(fieldHash));
+    given(dataHash = hashedDb.writeHashes(hashedDb.writeString("MyType"), fieldListHash));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
+    when(() -> typesDb.read(hash));
+    thenThrown(exception(corruptedValueException(hash,
+        "It is struct type but one of its field hashes doesn't have two children but 3.")));
   }
 
   private static ValuesDbException brokenTypeTypeException(HashCode hash) {
