@@ -30,6 +30,10 @@ import org.smoothbuild.io.fs.base.PathState;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.Okio;
+
 public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
 
@@ -92,16 +96,26 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public InputStream openInputStream(Path path) {
+    return new BufferedInputStream(source(path).inputStream());
+  }
+
+  @Override
+  public OutputStream openOutputStream(Path path) {
+    return new BufferedOutputStream(sink(path).outputStream());
+  }
+
+  @Override
+  public BufferedSource source(Path path) {
     assertPathIsFile(this, path);
     try {
-      return new BufferedInputStream(Files.newInputStream(jdkPath(path)));
+      return Okio.buffer(Okio.source(jdkPath(path)));
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
   }
 
   @Override
-  public OutputStream openOutputStream(Path path) {
+  public BufferedSink sink(Path path) {
     if (pathState(path) == DIR) {
       throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
     }
@@ -109,7 +123,7 @@ public class DiskFileSystem implements FileSystem {
     createDir(path.parent());
 
     try {
-      return new BufferedOutputStream(Files.newOutputStream(jdkPath(path)));
+      return Okio.buffer(Okio.sink(jdkPath(path)));
     } catch (IOException e) {
       throw new FileSystemException(e);
     }

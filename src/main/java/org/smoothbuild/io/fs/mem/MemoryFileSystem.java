@@ -18,6 +18,9 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.util.Streams;
 
+import okio.BufferedSink;
+import okio.BufferedSource;
+
 /**
  * In memory implementation of FileSystem.
  */
@@ -77,11 +80,21 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public InputStream openInputStream(Path path) {
-    return getFile(path).source().inputStream();
+    return source(path).inputStream();
   }
 
   @Override
   public OutputStream openOutputStream(Path path) {
+    return sink(path).outputStream();
+  }
+
+  @Override
+  public BufferedSource source(Path path) {
+    return getFile(path).source();
+  }
+
+  @Override
+  public BufferedSink sink(Path path) {
     if (pathState(path) == DIR) {
       throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
     }
@@ -90,11 +103,11 @@ public class MemoryFileSystem implements FileSystem {
 
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
-      return dir.child(name).sink().outputStream();
+      return dir.child(name).sink();
     } else {
       MemoryFile child = new MemoryFile(dir, name);
       dir.addChild(child);
-      return child.sink().outputStream();
+      return child.sink();
     }
   }
 
@@ -138,10 +151,14 @@ public class MemoryFileSystem implements FileSystem {
 
   private MemoryElement getFile(Path path) {
     MemoryElement found = findElement(path);
-    if (found != null && found.isFile()) {
-      return found;
-    } else {
+    if (found == null) {
       throw new FileSystemException("File " + path + " doesn't exist.");
+    } else {
+      if (found.isFile()) {
+        return found;
+      } else {
+        throw new FileSystemException("File " + path + " doesn't exist. It is a dir.");
+      }
     }
   }
 
