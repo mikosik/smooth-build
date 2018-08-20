@@ -14,6 +14,8 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
+import okio.BufferedSource;
+
 public class FileReader {
   private final Container container;
 
@@ -30,9 +32,9 @@ public class FileReader {
   }
 
   private Blob createContent(Path path) {
-    InputStream inputStream = container.fileSystem().openInputStream(path);
+    BufferedSource source = container.fileSystem().source(path);
     BlobBuilder contentBuilder = container.create().blobBuilder();
-    doCopy(inputStream, contentBuilder);
+    doCopy(source.inputStream(), contentBuilder);
     return contentBuilder.build();
   }
 

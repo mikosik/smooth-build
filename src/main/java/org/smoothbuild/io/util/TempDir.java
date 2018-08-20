@@ -74,7 +74,7 @@ public class TempDir {
     Path path = path(((SString) file.get("path")).data());
     Blob content = (Blob) file.get("content");
     InputStream inputStream = content.openInputStream();
-    OutputStream outputStream = fileSystem.openOutputStream(rootPath.append(path));
+    OutputStream outputStream = fileSystem.sink(rootPath.append(path)).outputStream();
     Streams.copy(inputStream, outputStream);
   }
 
@@ -108,7 +108,7 @@ public class TempDir {
 
   private Blob readContentImpl(Path path) throws IOException {
     BlobBuilder blobBuilder = container.create().blobBuilder();
-    Streams.copy(fileSystem.openInputStream(rootPath.append(path)), blobBuilder);
+    Streams.copy(fileSystem.source(rootPath.append(path)).inputStream(), blobBuilder);
     return blobBuilder.build();
   }
 

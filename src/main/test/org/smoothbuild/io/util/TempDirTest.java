@@ -75,7 +75,7 @@ public class TempDirTest {
   @Test
   public void file_is_written_to_file_system() throws Exception {
     when(tempDir).writeFile(file(valueFactory, path, bytes));
-    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
+    thenEqual(fileSystem.source(rootPath.append(path)).readByteArray(), bytes);
   }
 
   @Test
@@ -89,7 +89,7 @@ public class TempDirTest {
   public void files_are_written_to_file_system() throws Exception {
     given(array = array(valuesDb, types.file(), file(valueFactory, path, bytes)));
     when(tempDir).writeFiles(array);
-    thenEqual(inputStreamToByteArray(fileSystem.openInputStream(rootPath.append(path))), bytes);
+    thenEqual(fileSystem.source(rootPath.append(path)).readByteArray(), bytes);
   }
 
   @Test
@@ -102,7 +102,7 @@ public class TempDirTest {
 
   @Test
   public void files_are_read_from_file_system() throws Exception {
-    given(writeAndClose(fileSystem.openOutputStream(rootPath.append(path)), bytes));
+    given(writeAndClose(fileSystem.sink(rootPath.append(path)).outputStream(), bytes));
     when(() -> tempDir.readFiles().asIterable(Struct.class));
     thenReturned(contains(file(valueFactory, path, bytes)));
   }
@@ -116,14 +116,14 @@ public class TempDirTest {
 
   @Test
   public void content_is_read_from_file_system() throws Exception {
-    given(writeAndClose(fileSystem.openOutputStream(rootPath.append(path)), bytes));
+    given(writeAndClose(fileSystem.sink(rootPath.append(path)).outputStream(), bytes));
     when(tempDir).readContent(path);
     thenReturned(blobContains(bytes));
   }
 
   @Test
   public void reading_content_after_destroy_throws_exception() throws Exception {
-    given(writeAndClose(fileSystem.openOutputStream(path), bytes));
+    given(writeAndClose(fileSystem.sink(path).outputStream(), bytes));
     given(tempDir).destroy();
     when(tempDir).readContent(path);
     thenThrown(IllegalStateException.class);

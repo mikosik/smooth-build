@@ -12,11 +12,7 @@ import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -92,16 +88,6 @@ public class DiskFileSystem implements FileSystem {
     } catch (IOException e) {
       throw new FileSystemException(e);
     }
-  }
-
-  @Override
-  public InputStream openInputStream(Path path) {
-    return new BufferedInputStream(source(path).inputStream());
-  }
-
-  @Override
-  public OutputStream openOutputStream(Path path) {
-    return new BufferedOutputStream(sink(path).outputStream());
   }
 
   @Override

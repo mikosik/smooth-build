@@ -1,11 +1,7 @@
 package org.smoothbuild.io.fs.disk;
 
-import static org.hamcrest.Matchers.instanceOf;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,7 +10,6 @@ import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.util.Streams;
@@ -34,12 +29,6 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
     if (Files.isDirectory(tempPath)) {
       deleteRecursively(tempPath);
     }
-  }
-
-  @Test
-  public void open_output_stream_returns_buffered_stream() throws Exception {
-    when(fileSystem.openOutputStream(path));
-    thenReturned(instanceOf(BufferedOutputStream.class));
   }
 
   @Override

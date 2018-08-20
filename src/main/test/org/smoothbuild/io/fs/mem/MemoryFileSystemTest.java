@@ -1,14 +1,14 @@
 package org.smoothbuild.io.fs.mem;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.util.Streams.writeAndClose;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import org.junit.Before;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
+
+import okio.BufferedSink;
 
 public class MemoryFileSystemTest extends GenericFileSystemTestCase {
   @Before
@@ -30,7 +30,8 @@ public class MemoryFileSystemTest extends GenericFileSystemTestCase {
 
   @Override
   protected void createFile(Path path, byte[] content) throws IOException {
-    OutputStream outputStream = fileSystem.openOutputStream(path);
-    writeAndClose(outputStream, content);
+    try (BufferedSink sink = fileSystem.sink(path)) {
+      sink.write(content);
+    }
   }
 }
