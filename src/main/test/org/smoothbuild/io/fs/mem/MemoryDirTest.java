@@ -109,14 +109,14 @@ public class MemoryDirTest {
   @Test
   public void create_input_stream_throws_exception() throws Exception {
     given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).openInputStream();
+    when(memoryDir).source();
     thenThrown(UnsupportedOperationException.class);
   }
 
   @Test
   public void createOutputStreamThrowsException() throws Exception {
     given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).openOutputStream();
+    when(memoryDir).sink();
     thenThrown(UnsupportedOperationException.class);
   }
 

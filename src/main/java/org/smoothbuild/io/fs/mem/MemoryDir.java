@@ -1,7 +1,5 @@
 package org.smoothbuild.io.fs.mem;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +7,9 @@ import java.util.Map;
 import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.collect.ImmutableList;
+
+import okio.BufferedSink;
+import okio.BufferedSource;
 
 public class MemoryDir implements MemoryElement {
   private final MemoryDir parent;
@@ -78,12 +79,12 @@ public class MemoryDir implements MemoryElement {
   }
 
   @Override
-  public InputStream openInputStream() {
+  public BufferedSource source() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public OutputStream openOutputStream() {
+  public BufferedSink sink() {
     throw new UnsupportedOperationException();
   }
 }
