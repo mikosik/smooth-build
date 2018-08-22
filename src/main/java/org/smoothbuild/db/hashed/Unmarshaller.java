@@ -1,17 +1,26 @@
 package org.smoothbuild.db.hashed;
 
+import static okio.Okio.buffer;
+
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
 
 import com.google.common.hash.HashCode;
 
-public class Unmarshaller extends InputStream {
-  private final HashCode hash;
-  private final InputStream inputStream;
+import okio.BufferedSource;
+import okio.Source;
 
-  public Unmarshaller(HashCode hash, InputStream inputStream) {
+public class Unmarshaller implements Closeable {
+  private final HashCode hash;
+  private final BufferedSource source;
+
+  public Unmarshaller(HashCode hash, Source source) {
+    this.source = buffer(source);
     this.hash = hash;
-    this.inputStream = inputStream;
+  }
+
+  public BufferedSource source() {
+    return source;
   }
 
   public HashCode readHash() {
@@ -20,21 +29,6 @@ public class Unmarshaller extends InputStream {
 
   public HashCode tryReadHash() {
     return readHash(true);
-  }
-
-  @Override
-  public int read() throws IOException {
-    return inputStream.read();
-  }
-
-  @Override
-  public int read(byte b[], int off, int len) throws IOException {
-    return inputStream.read(b, off, len);
-  }
-
-  @Override
-  public int read(byte b[]) throws IOException {
-    return inputStream.read(b);
   }
 
   private HashCode readHash(boolean allowNull) {
@@ -48,7 +42,7 @@ public class Unmarshaller extends InputStream {
   private byte[] readBytes(int size, String valueName, boolean allowNull) {
     try {
       byte[] bytes = new byte[size];
-      int read = inputStream.read(bytes);
+      int read = source.read(bytes);
       if (read < size) {
         if (read == -1 && allowNull) {
           return null;
@@ -65,11 +59,7 @@ public class Unmarshaller extends InputStream {
   }
 
   @Override
-  public void close() {
-    try {
-      inputStream.close();
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occurred while reading " + hash + " object.");
-    }
+  public void close() throws IOException {
+    source.close();
   }
 }

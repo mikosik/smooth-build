@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
@@ -144,6 +146,8 @@ public class TypesDb {
       Iterable<Field> fields = readFields(unmarshaller.readHash());
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
+    } catch (IOException e) {
+      throw new FileSystemException(e);
     }
   }
 

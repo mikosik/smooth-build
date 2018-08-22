@@ -1,6 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import static com.google.common.io.ByteStreams.toByteArray;
+import static okio.ByteString.encodeUtf8;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Lists.list;
@@ -30,6 +30,7 @@ public class HashedDbTest {
   private HashCode hashId;
   private Unmarshaller unmarshaller;
   private MemoryFileSystem fileSystem;
+  private ByteString byteString;
 
   @Before
   public void before() {
@@ -101,17 +102,18 @@ public class HashedDbTest {
   @Test
   public void written_data_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(ByteString.of((byte) 17)));
+    given(byteString = encodeUtf8("abc"));
+    given(marshaller.sink().write(byteString));
     given(marshaller).close();
-    when(hashedDb.newUnmarshaller(marshaller.hash()).read());
-    thenReturned(17);
+    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readUtf8());
+    thenReturned("abc");
   }
 
   @Test
   public void written_empty_byte_array_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).close();
-    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
     thenReturned(new byte[] {});
   }
 
@@ -121,7 +123,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(hashId));
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
     thenReturned(bytes1);
   }
 
@@ -133,7 +135,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
     thenReturned(bytes1);
   }
 
@@ -145,7 +147,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(marshaller.hash()));
     given(() -> marshaller.sink().write(bytes2));
     given(() -> marshaller.close());
-    when(toByteArray(hashedDb.newUnmarshaller(marshaller.hash())));
+    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
     thenReturned(bytes1);
   }
 

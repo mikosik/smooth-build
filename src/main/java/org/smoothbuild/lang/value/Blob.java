@@ -16,6 +16,6 @@ public class Blob extends AbstractValue {
   }
 
   public InputStream openInputStream() {
-    return hashedDb.newUnmarshaller(dataHash());
+    return hashedDb.newUnmarshaller(dataHash()).source().inputStream();
   }
 }
