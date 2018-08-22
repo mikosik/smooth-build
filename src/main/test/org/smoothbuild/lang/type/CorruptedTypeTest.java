@@ -8,7 +8,6 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.CorruptedValueException;
 
@@ -21,7 +20,6 @@ public class CorruptedTypeTest {
   protected HashCode hash;
   private TypeType typeType;
   private HashCode dataHash;
-  private Marshaller marshaller;
 
   @Before
   public void before() {
@@ -37,11 +35,7 @@ public class CorruptedTypeTest {
      */
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(typeType.hash()));
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> marshaller.hash());
+    when(hashedDb.writeHashes(typeType.hash(), dataHash));
     thenReturned(typesDb.string().hash());
   }
 
@@ -53,10 +47,7 @@ public class CorruptedTypeTest {
      */
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("Type")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> marshaller.hash());
+    when(hashedDb.writeHashes(dataHash));
     thenReturned(typesDb.type().hash());
   }
 
@@ -64,12 +55,8 @@ public class CorruptedTypeTest {
   public void merkle_root_with_three_children_causes_exception() throws Exception {
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(typeType.hash()));
-    given(marshaller.writeHash(dataHash));
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> typesDb.read(marshaller.hash()));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash, dataHash));
+    when(() -> typesDb.read(hash));
     thenThrown(CorruptedValueException.class);
   }
 
@@ -78,11 +65,8 @@ public class CorruptedTypeTest {
       throws Exception {
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(dataHash));
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> typesDb.read(marshaller.hash()));
+    given(hash = hashedDb.writeHashes(dataHash, dataHash));
+    when(() -> typesDb.read(hash));
     thenThrown(CorruptedValueException.class);
   }
 
@@ -90,10 +74,8 @@ public class CorruptedTypeTest {
   public void merkle_root_with_one_children_causes_exception() throws Exception {
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> typesDb.read(marshaller.hash()));
+    given(hash = hashedDb.writeHashes(dataHash));
+    when(() -> typesDb.read(hash));
     thenThrown(CorruptedValueException.class);
   }
 
@@ -101,10 +83,8 @@ public class CorruptedTypeTest {
   public void merkle_tree_for_type_type_but_with_wrong_name_causes_exception() throws Exception {
     given(typeType = typesDb.type());
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("TypeX")));
-    given(marshaller = hashedDb.newMarshaller());
-    given(marshaller.writeHash(dataHash));
-    given(marshaller).close();
-    when(() -> typesDb.read(marshaller.hash()));
+    given(hash = hashedDb.writeHashes(dataHash));
+    when(() -> typesDb.read(hash));
     thenThrown(CorruptedValueException.class);
   }
 }

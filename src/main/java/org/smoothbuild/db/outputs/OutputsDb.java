@@ -4,11 +4,13 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
@@ -43,13 +45,15 @@ public class OutputsDb {
   }
 
   public void write(HashCode taskHash, Output output) {
-    Marshaller marshaller = hashedDb.newMarshaller(taskHash);
-    ImmutableList<Message> messageList = output.messages();
-    marshaller.writeHash(writeMessages(messageList).hash());
-    if (!Messages.containsErrors(messageList)) {
-      marshaller.writeHash(output.result().hash());
+    try (Marshaller marshaller = hashedDb.newMarshaller(taskHash)) {
+      ImmutableList<Message> messageList = output.messages();
+      marshaller.sink().write(writeMessages(messageList).hash().asBytes());
+      if (!Messages.containsErrors(messageList)) {
+        marshaller.sink().write(output.result().hash().asBytes());
+      }
+    } catch (IOException e) {
+      throw new HashedDbException("IOException when storing output", e);
     }
-    marshaller.close();
   }
 
   private Array writeMessages(ImmutableList<Message> messages) {

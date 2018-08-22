@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.google.common.hash.HashCode;
-import com.google.common.primitives.Ints;
 
 public class Unmarshaller extends InputStream {
   private final HashCode hash;
@@ -44,11 +43,6 @@ public class Unmarshaller extends InputStream {
       return null;
     }
     return HashCode.fromBytes(bytes);
-  }
-
-  public int readInt() {
-    byte[] bytes = readBytes(4, "int", false);
-    return Ints.fromByteArray(bytes);
   }
 
   private byte[] readBytes(int size, String valueName, boolean allowNull) {

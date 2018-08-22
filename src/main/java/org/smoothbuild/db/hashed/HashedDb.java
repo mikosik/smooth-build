@@ -38,10 +38,13 @@ public class HashedDb {
   }
 
   public HashCode writeString(String string) {
-    Marshaller marshaller = newMarshaller();
-    marshaller.write(string.getBytes(CHARSET));
-    marshaller.close();
-    return marshaller.hash();
+    try (Marshaller marshaller = newMarshaller()) {
+      marshaller.sink().writeString(string, CHARSET);
+      marshaller.close();
+      return marshaller.hash();
+    } catch (IOException e) {
+      throw new HashedDbException("IO error occurred while writing string value.");
+    }
   }
 
   public String readString(HashCode hash) {
@@ -55,10 +58,12 @@ public class HashedDb {
   public HashCode writeHashes(HashCode... hashes) {
     try (Marshaller marshaller = newMarshaller()) {
       for (HashCode hashCode : hashes) {
-        marshaller.writeHash(hashCode);
+        marshaller.sink().write(hashCode.asBytes());
       }
       marshaller.close();
       return marshaller.hash();
+    } catch (IOException e) {
+      throw new HashedDbException("IO error occurred while writing string value.");
     }
   }
 
