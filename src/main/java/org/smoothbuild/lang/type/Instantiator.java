@@ -3,6 +3,8 @@ package org.smoothbuild.lang.type;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.NotEnoughBytesException;
+import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.value.Value;
 
@@ -18,7 +20,7 @@ public class Instantiator {
   }
 
   public Value instantiate(HashCode hash) {
-    List<HashCode> hashes = hashedDb.readHashes(hash);
+    List<HashCode> hashes = readHashes(hash);
     switch (hashes.size()) {
       case 1:
         // If Merkle tree root has only one child then it must
@@ -30,6 +32,14 @@ public class Instantiator {
       default:
         throw new CorruptedValueException(
             hash, "Its Merkle tree root has " + hashes.size() + " children");
+    }
+  }
+
+  private List<HashCode> readHashes(HashCode hash) {
+    try {
+      return hashedDb.readHashes(hash);
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceValueException(hash);
     }
   }
 }

@@ -23,15 +23,15 @@ public class Unmarshaller implements Closeable {
     return source;
   }
 
-  public HashCode readHash() {
+  public HashCode readHash() throws NotEnoughBytesException {
     return readHash(false);
   }
 
-  public HashCode tryReadHash() {
+  public HashCode tryReadHash() throws NotEnoughBytesException {
     return readHash(true);
   }
 
-  private HashCode readHash(boolean allowNull) {
+  private HashCode readHash(boolean allowNull) throws NotEnoughBytesException {
     byte[] bytes = readBytes(Hash.size(), "hash", allowNull);
     if (bytes == null && allowNull) {
       return null;
@@ -39,7 +39,8 @@ public class Unmarshaller implements Closeable {
     return HashCode.fromBytes(bytes);
   }
 
-  private byte[] readBytes(int size, String valueName, boolean allowNull) {
+  private byte[] readBytes(int size, String valueName, boolean allowNull)
+      throws NotEnoughBytesException {
     try {
       byte[] bytes = new byte[size];
       int read = source.read(bytes);
@@ -48,8 +49,7 @@ public class Unmarshaller implements Closeable {
           return null;
         } else {
           read = Math.max(0, read);
-          throw new HashedDbException("Corrupted " + hash + " object. Value " + valueName
-              + " has expected size = " + size + " but only " + read + " is available.");
+          throw new NotEnoughBytesException(size, read);
         }
       }
       return bytes;
