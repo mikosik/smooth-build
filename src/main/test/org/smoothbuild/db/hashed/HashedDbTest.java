@@ -96,7 +96,7 @@ public class HashedDbTest {
   public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
     given(hash = hashedDb.writeString("12345"));
     when(() -> hashedDb.readHashes(hash));
-    thenThrown(HashedDbException.class);
+    thenThrown(exception(new NotEnoughBytesException(20, 5)));
   }
 
   @Test
@@ -187,7 +187,7 @@ public class HashedDbTest {
     given(() -> marshaller.close());
     given(() -> hashId = marshaller.hash());
     when(() -> hashedDb.newUnmarshaller(hashId).readHash());
-    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 1))));
+    thenThrown(exception(new NotEnoughBytesException(20, 1)));
   }
 
   @Test
@@ -196,8 +196,8 @@ public class HashedDbTest {
     given(() -> marshaller.sink().write(new byte[0]));
     given(() -> marshaller.close());
     given(hashId = marshaller.hash());
-    when(hashedDb.newUnmarshaller(hashId)).readHash();
-    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 0))));
+    when(() -> hashedDb.newUnmarshaller(hashId).readHash());
+    thenThrown(exception(new NotEnoughBytesException(20, 0)));
   }
 
   @Test
@@ -205,7 +205,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(new byte[0]));
     given(() -> marshaller.close());
-    when(hashedDb.newUnmarshaller(marshaller.hash())).tryReadHash();
+    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).tryReadHash());
     thenReturned(null);
   }
 
@@ -216,7 +216,7 @@ public class HashedDbTest {
     given(() -> marshaller.close());
     given(hashId = marshaller.hash());
     when(() -> hashedDb.newUnmarshaller(hashId).tryReadHash());
-    thenThrown(exception(new HashedDbException(corruptedMessage("hash", hashId, 20, 1))));
+    thenThrown(NotEnoughBytesException.class);
   }
 
   @Test
@@ -233,7 +233,6 @@ public class HashedDbTest {
 
   private static String corruptedMessage(String valueName, HashCode hash, int expected,
       int available) {
-    return "Corrupted " + hash + " object. Value " + valueName + " has expected size = " + expected
-        + " but only " + available + " is available.";
+    return "Expected " + expected + " bytes but available is only " + available;
   }
 }

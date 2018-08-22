@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
+import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
 import org.smoothbuild.io.fs.base.FileSystemException;
@@ -104,7 +106,7 @@ public class TypesDb {
     if (cache.containsKey(hash)) {
       return cache.get(hash);
     } else {
-      List<HashCode> hashes = hashedDb.readHashes(hash);
+      List<HashCode> hashes = readHashes(hash, hash);
       switch (hashes.size()) {
         case 1:
           if (!type().hash().equals(hash)) {
@@ -119,16 +121,16 @@ public class TypesDb {
                 "Expected " + type() + " value but got value which hash is " + typeHash);
           }
           HashCode dataHash = hashes.get(1);
-          return readFromDataHash(dataHash);
+          return readFromDataHash(dataHash, typeHash);
         default:
           throw newCorruptedMerkleRootException(hash, hashes.size());
       }
     }
   }
 
-  protected ConcreteType readFromDataHash(HashCode typeDataHash) {
+  protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
-      String name = hashedDb.readString(unmarshaller.readHash());
+      String name = hashedDb.readString(readHash(unmarshaller, typeHash));
       switch (name) {
         case STRING:
           return string();
@@ -137,13 +139,13 @@ public class TypesDb {
         case NOTHING:
           return nothing();
         case "":
-          ConcreteType elementType = read(unmarshaller.readHash());
+          ConcreteType elementType = read(readHash(unmarshaller, typeHash));
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
           return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType,
               instantiator, hashedDb, this));
         default:
       }
-      Iterable<Field> fields = readFields(unmarshaller.readHash());
+      Iterable<Field> fields = readFields(readHash(unmarshaller, typeHash), typeHash);
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     } catch (IOException e) {
@@ -151,10 +153,10 @@ public class TypesDb {
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash) {
+  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) {
     List<Field> result = new ArrayList<>();
-    for (HashCode fieldHash : hashedDb.readHashes(hash)) {
-      List<HashCode> hashes = hashedDb.readHashes(fieldHash);
+    for (HashCode fieldHash : readHashes(hash, typeHash)) {
+      List<HashCode> hashes = readHashes(fieldHash, typeHash);
       if (hashes.size() != 2) {
         throw newCorruptedMerkleRootException(hash, hashes.size());
       }
@@ -178,5 +180,21 @@ public class TypesDb {
   private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
     return new CorruptedValueException(
         hash, "Its Merkle tree root has " + childCount + " children.");
+  }
+
+  private List<HashCode> readHashes(HashCode hash, HashCode typeHash) {
+    try {
+      return hashedDb.readHashes(hash);
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceValueException(hash);
+    }
+  }
+
+  private static HashCode readHash(Unmarshaller unmarshaller, HashCode typeHash) {
+    try {
+      return unmarshaller.readHash();
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceValueException(typeHash);
+    }
   }
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.NotEnoughBytesException;
+import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.type.Instantiator;
@@ -42,7 +44,7 @@ public class Struct extends AbstractValue {
 
   private ImmutableMap<String, Value> fields() {
     if (fields == null) {
-      List<HashCode> hashes = hashedDb.readHashes(dataHash());
+      List<HashCode> hashes = readHashes();
       ImmutableMap<String, Field> fieldTypes = type().fields();
       if (hashes.size() != fieldTypes.size()) {
         throw new CorruptedValueException(hash(), "Its type is " + type() + " with "
@@ -64,5 +66,13 @@ public class Struct extends AbstractValue {
       fields = builder.build();
     }
     return fields;
+  }
+
+  private List<HashCode> readHashes() {
+    try {
+      return hashedDb.readHashes(dataHash());
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceValueException(hash());
+    }
   }
 }

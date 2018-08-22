@@ -3,6 +3,8 @@ package org.smoothbuild.lang.value;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.NotEnoughBytesException;
+import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
 import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
@@ -29,11 +31,7 @@ public class Array extends AbstractValue {
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
     ConcreteType elemType = type().elemType();
     Preconditions.checkArgument(clazz.isAssignableFrom(elemType.jType()));
-    ImmutableList<Value> values = hashedDb
-        .readHashes(dataHash())
-        .stream()
-        .map(h -> instantiator.instantiate(h))
-        .collect(toImmutableList());
+    ImmutableList<Value> values = values();
     for (Value value : values) {
       if (!value.type().equals(elemType)) {
         throw new CorruptedValueException(hash(), "It is array with type " + type()
@@ -41,5 +39,17 @@ public class Array extends AbstractValue {
       }
     }
     return (ImmutableList<T>) values;
+  }
+
+  private ImmutableList<Value> values() {
+    try {
+      return hashedDb
+          .readHashes(dataHash())
+          .stream()
+          .map(h -> instantiator.instantiate(h))
+          .collect(toImmutableList());
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceValueException(hash());
+    }
   }
 }

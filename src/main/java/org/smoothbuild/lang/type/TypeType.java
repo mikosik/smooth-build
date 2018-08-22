@@ -20,6 +20,6 @@ public class TypeType extends ConcreteType {
 
   @Override
   public ConcreteType newValue(HashCode dataHash) {
-    return typesDb.readFromDataHash(dataHash);
+    return typesDb.readFromDataHash(dataHash, hash());
   }
 }

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystemException;
@@ -71,7 +72,7 @@ public class OutputsDb {
 
   public Output read(HashCode taskHash, ConcreteType type) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
-      Value messagesValue = valuesDb.get(unmarshaller.readHash());
+      Value messagesValue = valuesDb.get(readHash(unmarshaller, taskHash));
       ConcreteArrayType messageArrayType = typesDb.array(messagesDb.messageType());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw new CorruptedOutputException(taskHash, "Expected " + messageArrayType
@@ -90,7 +91,7 @@ public class OutputsDb {
       if (Messages.containsErrors(messages)) {
         return new Output(messages);
       } else {
-        HashCode resultObjectHash = unmarshaller.readHash();
+        HashCode resultObjectHash = readHash(unmarshaller, taskHash);
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
           throw new CorruptedOutputException(taskHash, "Expected value of type " + type
@@ -100,6 +101,14 @@ public class OutputsDb {
       }
     } catch (IOException e) {
       throw new FileSystemException(e);
+    }
+  }
+
+  private static HashCode readHash(Unmarshaller unmarshaller, HashCode taskHash) {
+    try {
+      return unmarshaller.readHash();
+    } catch (NotEnoughBytesException e) {
+      throw new CorruptedHashSequenceOutputException(taskHash);
     }
   }
 }
