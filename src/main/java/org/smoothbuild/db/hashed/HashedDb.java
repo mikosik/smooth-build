@@ -4,8 +4,10 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -80,7 +82,21 @@ public class HashedDb {
   }
 
   public Marshaller newMarshaller(HashCode hash) {
-    return new Marshaller(fileSystem, rootPath, tempManager.tempPath(), hash);
+    Path tempPath = tempManager.tempPath();
+    OutputStream outputStream = fileSystem.sink(tempPath).outputStream();
+    if (hash == null) {
+      HashingOutputStream hashing = new HashingOutputStream(outputStream);
+      return newMarshaller(hashing, () -> hashing.hash(), tempPath);
+    } else {
+      return newMarshaller(outputStream, () -> hash, tempPath);
+    }
+  }
+
+  private Marshaller newMarshaller(OutputStream outputStream, Supplier<HashCode> hashSupplier,
+      Path tempPath) {
+    FileStorer storer = new FileStorer(fileSystem, rootPath, tempPath, hashSupplier);
+    StoringOutputStream storingOutputStream = new StoringOutputStream(outputStream, storer);
+    return new Marshaller(storingOutputStream, hashSupplier);
   }
 
   private Path toPath(HashCode hash) {
