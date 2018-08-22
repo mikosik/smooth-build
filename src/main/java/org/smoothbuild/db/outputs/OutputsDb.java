@@ -14,6 +14,7 @@ import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.MessagesDb;
@@ -97,6 +98,8 @@ public class OutputsDb {
         }
         return new Output(value, messages);
       }
+    } catch (IOException e) {
+      throw new FileSystemException(e);
     }
   }
 }

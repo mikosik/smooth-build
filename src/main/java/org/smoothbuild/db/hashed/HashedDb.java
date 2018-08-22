@@ -4,7 +4,6 @@ import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.hash.HashCode.fromBytes;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Hash.hashingSink;
-import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.util.TempManager;
@@ -48,8 +48,8 @@ public class HashedDb {
   }
 
   public String readString(HashCode hash) {
-    try {
-      return inputStreamToString(newUnmarshaller(hash));
+    try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
+      return unmarshaller.source().readString(CHARSET);
     } catch (IOException e) {
       throw new HashedDbException("IO error occurred while reading " + hash + " value.");
     }
@@ -74,6 +74,8 @@ public class HashedDb {
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
         result.add(elementHash);
       }
+    } catch (IOException e) {
+      throw new FileSystemException(e);
     }
     return result;
   }
@@ -81,7 +83,7 @@ public class HashedDb {
   public Unmarshaller newUnmarshaller(HashCode hash) {
     Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
-      return new Unmarshaller(hash, fileSystem.source(path).inputStream());
+      return new Unmarshaller(hash, fileSystem.source(path));
     } else {
       throw new HashedDbException("Could not find " + hash + " object.");
     }
