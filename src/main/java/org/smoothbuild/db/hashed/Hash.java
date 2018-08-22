@@ -15,6 +15,9 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import com.google.common.io.ByteStreams;
 
+import okio.HashingSink;
+import okio.Sink;
+
 public class Hash {
   public static Hasher newHasher() {
     return function().newHasher();
@@ -50,6 +53,10 @@ public class Hash {
 
   public static Path toPath(HashCode hash) {
     return Path.path(hash.toString());
+  }
+
+  public static HashingSink hashingSink(Sink sink) {
+    return HashingSink.sha1(sink);
   }
 
   private static HashFunction function() {

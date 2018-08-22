@@ -1,10 +1,12 @@
 package org.smoothbuild.db.hashed;
 
+import static com.google.common.base.Suppliers.memoize;
+import static com.google.common.hash.HashCode.fromBytes;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.db.hashed.Hash.hashingSink;
 import static org.smoothbuild.util.Streams.inputStreamToString;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -15,6 +17,9 @@ import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.util.TempManager;
 
 import com.google.common.hash.HashCode;
+
+import okio.HashingSink;
+import okio.Sink;
 
 public class HashedDb {
   private final FileSystem fileSystem;
@@ -83,20 +88,22 @@ public class HashedDb {
 
   public Marshaller newMarshaller(HashCode hash) {
     Path tempPath = tempManager.tempPath();
-    OutputStream outputStream = fileSystem.sink(tempPath).outputStream();
+    Sink sink = fileSystem.sink(tempPath);
     if (hash == null) {
-      HashingOutputStream hashing = new HashingOutputStream(outputStream);
-      return newMarshaller(hashing, () -> hashing.hash(), tempPath);
+      HashingSink hashing = hashingSink(sink);
+      // HashingSink.hash() is idempotent so we need to memoize its result.
+      Supplier<HashCode> hashSupplier = memoize(() -> fromBytes(hashing.hash().toByteArray()));
+      return newMarshaller(hashing, hashSupplier, tempPath);
     } else {
-      return newMarshaller(outputStream, () -> hash, tempPath);
+      return newMarshaller(sink, () -> hash, tempPath);
     }
   }
 
-  private Marshaller newMarshaller(OutputStream outputStream, Supplier<HashCode> hashSupplier,
+  private Marshaller newMarshaller(Sink sink, Supplier<HashCode> hashSupplier,
       Path tempPath) {
     FileStorer storer = new FileStorer(fileSystem, rootPath, tempPath, hashSupplier);
-    StoringOutputStream storingOutputStream = new StoringOutputStream(outputStream, storer);
-    return new Marshaller(storingOutputStream, hashSupplier);
+    StoringSink storingSink = new StoringSink(sink, storer);
+    return new Marshaller(storingSink, hashSupplier);
   }
 
   private Path toPath(HashCode hash) {
