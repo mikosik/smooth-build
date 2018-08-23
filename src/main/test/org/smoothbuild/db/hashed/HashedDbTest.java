@@ -230,9 +230,4 @@ public class HashedDbTest {
     when(() -> unmarshaller.tryReadHash());
     thenReturned(null);
   }
-
-  private static String corruptedMessage(String valueName, HashCode hash, int expected,
-      int available) {
-    return "Expected " + expected + " bytes but available is only " + available;
-  }
 }
