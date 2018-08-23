@@ -9,6 +9,7 @@ import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import static org.smoothbuild.io.fs.base.Path.path;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -26,7 +27,8 @@ import org.smoothbuild.lang.value.Struct;
 
 public class JunitFunction {
   @SmoothFunction
-  public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include) {
+  public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include)
+      throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
     Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
         .collect(toMap(f -> toBinaryName(((SString) f.get("path")).data()), identity()));

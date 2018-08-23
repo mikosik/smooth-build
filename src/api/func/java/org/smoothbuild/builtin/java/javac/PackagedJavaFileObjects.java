@@ -2,6 +2,7 @@ package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import org.smoothbuild.lang.value.Struct;
 
 public class PackagedJavaFileObjects {
   public static Iterable<InputClassFile> classesFromJars(NativeApi nativeApi,
-      Iterable<Blob> libraryJars) {
+      Iterable<Blob> libraryJars) throws IOException {
     Set<InputClassFile> result = new HashSet<>();
     for (Blob jarBlob : libraryJars) {
       Array files = UnzipFunction.unzip(nativeApi, (jarBlob), isClassFilePredicate());

@@ -6,7 +6,6 @@ import static org.smoothbuild.util.Streams.copy;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +16,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -32,11 +30,12 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
   @SmoothFunction
-  public static Array unzip(NativeApi nativeApi, Blob blob, Array javaHash) {
+  public static Array unzip(NativeApi nativeApi, Blob blob, Array javaHash) throws IOException {
     return unzip(nativeApi, blob, x -> true);
   }
 
-  public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter) {
+  public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter)
+      throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder fileArrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().file());
     try {
@@ -62,18 +61,17 @@ public class UnzipFunction {
     } catch (ZipException e) {
       nativeApi.log().error("Cannot read archive. Corrupted data?");
       throw new AbortException();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
   }
 
-  private static File copyToTempFile(Blob blob) throws IOException, FileNotFoundException {
+  private static File copyToTempFile(Blob blob) throws IOException {
     File tempFile = createTempFile("unzip", null);
     copy(blob.openInputStream(), new BufferedOutputStream(new FileOutputStream(tempFile)));
     return tempFile;
   }
 
-  private static Struct unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry) {
+  private static Struct unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry)
+      throws IOException {
     String fileName = entry.getName();
     try {
       path(fileName);
@@ -87,19 +85,16 @@ public class UnzipFunction {
     return nativeApi.create().file(path, content);
   }
 
-  private static Blob unzipEntryContent(NativeApi nativeApi, InputStream inputStream) {
+  private static Blob unzipEntryContent(NativeApi nativeApi, InputStream inputStream)
+      throws IOException {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
-    try {
-      BlobBuilder contentBuilder = nativeApi.create().blobBuilder();
-      try (OutputStream outputStream = contentBuilder) {
-        int len;
-        while ((len = inputStream.read(buffer)) > 0) {
-          outputStream.write(buffer, 0, len);
-        }
+    BlobBuilder contentBuilder = nativeApi.create().blobBuilder();
+    try (OutputStream outputStream = contentBuilder) {
+      int len;
+      while ((len = inputStream.read(buffer)) > 0) {
+        outputStream.write(buffer, 0, len);
       }
-      return contentBuilder.build();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
+    return contentBuilder.build();
   }
 }

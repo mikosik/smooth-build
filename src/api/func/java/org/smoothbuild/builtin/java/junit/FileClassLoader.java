@@ -1,14 +1,11 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
 public class FileClassLoader extends ClassLoader {
@@ -25,16 +22,25 @@ public class FileClassLoader extends ClassLoader {
     if (file == null) {
       throw new ClassNotFoundException(name);
     }
-    byte[] byteArray = fileToByteArray(file);
-    return defineClass(name, byteArray, 0, byteArray.length);
+    try {
+      byte[] byteArray = fileToByteArray(file);
+      return defineClass(name, byteArray, 0, byteArray.length);
+    } catch (IOException e) {
+      sneakyRethrow(e);
+      return null;
+    }
   }
 
-  private byte[] fileToByteArray(Struct file) {
-    try {
-      return inputStreamToByteArray(((Blob) file.get("content")).openInputStream());
-    } catch (IOException e) {
-      throw new FileSystemException("Error reading from " + (SString) file.get("path") + ". Java exception is:\n"
-          + stackTraceToString(e));
-    }
+  private byte[] fileToByteArray(Struct file) throws IOException {
+    return inputStreamToByteArray(((Blob) file.get("content")).openInputStream());
+  }
+
+  public static void sneakyRethrow(Throwable t) {
+    FileClassLoader.<Error> sneakyThrow2(t);
+  }
+
+  @SuppressWarnings("unchecked")
+  private static <T extends Throwable> void sneakyThrow2(Throwable t) throws T {
+    throw (T) t;
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.builtin.java.junit;
 import static org.smoothbuild.builtin.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class BinaryNameToClassFile {
 
   public static Map<String, Struct> binaryNameToClassFile(NativeApi nativeApi,
-      Iterable<Blob> libraryJars) {
+      Iterable<Blob> libraryJars) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, Struct> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
