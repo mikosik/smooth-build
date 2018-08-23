@@ -17,7 +17,6 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -29,7 +28,7 @@ import org.smoothbuild.lang.value.Struct;
 public class JavacFunction {
   @SmoothFunction
   public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options,
-      Array javaHash) {
+      Array javaHash) throws IOException {
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
 
@@ -52,7 +51,7 @@ public class JavacFunction {
       this.options = options;
     }
 
-    public Array execute() {
+    public Array execute() throws IOException {
       if (compiler == null) {
         nativeApi.log().error("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
@@ -61,15 +60,13 @@ public class JavacFunction {
       return compile(srcs);
     }
 
-    public Array compile(Array files) {
+    public Array compile(Array files) throws IOException {
       // prepare arguments for compilation
 
       StringWriter additionalCompilerOutput = new StringWriter();
       LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
       Iterable<String> options = options();
-      SandboxedJavaFileManager fileManager = fileManager(diagnostic);
-
-      try {
+      try (SandboxedJavaFileManager fileManager = fileManager(diagnostic)) {
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(Struct.class));
 
         /*
@@ -96,12 +93,6 @@ public class JavacFunction {
           nativeApi.log().warning(additionalInfo);
         }
         return fileManager.resultClassfiles();
-      } finally {
-        try {
-          fileManager.close();
-        } catch (IOException e) {
-          throw new FileSystemException(e);
-        }
       }
     }
 
@@ -111,7 +102,8 @@ public class JavacFunction {
           .collect(Collectors.toList());
     }
 
-    private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic) {
+    private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic)
+        throws IOException {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
       Iterable<InputClassFile> libsClasses = classesFromJars(nativeApi, libs.asIterable(

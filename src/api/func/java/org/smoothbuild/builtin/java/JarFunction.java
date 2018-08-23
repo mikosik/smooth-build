@@ -8,7 +8,6 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
 import org.smoothbuild.builtin.compress.Constants;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
@@ -20,7 +19,8 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class JarFunction {
   @SmoothFunction
-  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash) {
+  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash)
+      throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
@@ -33,8 +33,6 @@ public class JarFunction {
         }
         jarFile(file, jarOutputStream, buffer);
       }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
     return blobBuilder.build();
   }

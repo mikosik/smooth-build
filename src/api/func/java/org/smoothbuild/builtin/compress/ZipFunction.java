@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -18,7 +17,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class ZipFunction {
   @SmoothFunction
-  public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) {
+  public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) throws IOException {
     byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
@@ -31,8 +30,6 @@ public class ZipFunction {
         }
         zipFile(file, zipOutputStream, buffer);
       }
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
     return blobBuilder.build();
   }
