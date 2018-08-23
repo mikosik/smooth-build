@@ -1,8 +1,10 @@
 package org.smoothbuild.task.exec;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.util.Lists.list;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -38,16 +40,29 @@ public class ArtifactBuilder {
   }
 
   public void runBuild() {
-    taskBatch.executeAll();
+    try {
+      taskBatch.executeAll();
+    } catch (IOException e) {
+      console.error("Execution failed due to I/O error. Caught exception:\n"
+          + getStackTraceAsString(e));
+    }
     if (!taskBatch.containsErrors()) {
       console.println("\nbuilt artifact(s):");
       for (Entry<String, Task> artifact : artifacts.entrySet()) {
-        String name = artifact.getKey();
-        Task task = artifact.getValue();
-        Value value = task.output().result();
-        artifactSaver.save(name, value);
-        console.println(name.toString() + " -> " + artifactPath(name));
+        save(artifact);
       }
+    }
+  }
+
+  private void save(Entry<String, Task> artifact) {
+    String name = artifact.getKey();
+    Value value = artifact.getValue().output().result();
+    try {
+      artifactSaver.save(name, value);
+      console.println(name.toString() + " -> " + artifactPath(name));
+    } catch (IOException e) {
+      console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+          + getStackTraceAsString(e));
     }
   }
 }

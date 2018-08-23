@@ -1,5 +1,7 @@
 package org.smoothbuild.task.exec;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 import javax.inject.Provider;
 
@@ -26,7 +28,7 @@ public class TaskExecutor {
     this.containerProvider = containerProvider;
   }
 
-  public <T extends Value> void execute(Task task, Input input) {
+  public <T extends Value> void execute(Task task, Input input) throws IOException {
     HashCode hash = taskHash(task, input);
     boolean isAlreadyCached = outputsDb.contains(hash);
     if (isAlreadyCached) {

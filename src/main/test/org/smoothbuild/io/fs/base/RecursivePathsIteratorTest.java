@@ -1,12 +1,11 @@
 package org.smoothbuild.io.fs.base;
 
-import static com.google.common.collect.Iterables.isEmpty;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.util.Streams.writeAndClose;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
-public class RecursiveFilesIterableTest {
+public class RecursivePathsIteratorTest {
   private final byte[] bytes = new byte[] { 1, 2, 3 };
 
   @Test
@@ -53,8 +52,7 @@ public class RecursiveFilesIterableTest {
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
-
-    assertTrue(isEmpty(recursiveFilesIterable(fileSystem, path)));
+    assertFalse(recursivePathsIterator(fileSystem, path).hasNext());
   }
 
   @Test
@@ -62,7 +60,7 @@ public class RecursiveFilesIterableTest {
     FileSystem fileSystem = new MemoryFileSystem();
     writeAndClose(fileSystem.sink(path("my/file")).outputStream(), bytes);
     try {
-      recursiveFilesIterable(fileSystem, path("my/file"));
+      recursivePathsIterator(fileSystem, path("my/file"));
       fail("exception should be thrown");
     } catch (IllegalArgumentException e) {
       // expected
@@ -77,12 +75,11 @@ public class RecursiveFilesIterableTest {
       writeAndClose(fileSystem.sink(path).outputStream(), bytes);
     }
 
-    List<Path> created = new ArrayList<>();
-    for (String name : expectedNames) {
-      created.add(path(name));
+    PathIterator iterator = recursivePathsIterator(fileSystem, path(expectedRootDir));
+    List<String> created = new ArrayList<>();
+    while (iterator.hasNext()) {
+      created.add(iterator.next().value());
     }
-
-    assertThat(recursiveFilesIterable(fileSystem, path(expectedRootDir)), containsInAnyOrder(created
-        .toArray(new Path[created.size()])));
+    assertThat(created, containsInAnyOrder(expectedNames));
   }
 }

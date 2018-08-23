@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.mem;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.Path;
@@ -59,7 +60,7 @@ public class MemoryLink implements MemoryElement {
   }
 
   @Override
-  public BufferedSource source() {
+  public BufferedSource source() throws IOException {
     return target.source();
   }
 

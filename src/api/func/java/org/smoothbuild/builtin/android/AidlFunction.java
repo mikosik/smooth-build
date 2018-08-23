@@ -22,12 +22,12 @@ public class AidlFunction {
 
   @SmoothFunction
   public static Struct aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
-      Struct interfaceFile) throws InterruptedException {
+      Struct interfaceFile) throws InterruptedException, IOException {
     return execute(nativeApi, buildToolsVersion.data(), apiLevel.data(), interfaceFile);
   }
 
   private static Struct execute(NativeApi nativeApi, String buildToolsVersion, String apiLevel,
-      Struct interfaceFile) throws InterruptedException {
+      Struct interfaceFile) throws InterruptedException, IOException {
     String aidlBinary = AndroidSdk.getAidlBinaryPath(nativeApi, buildToolsVersion).toString();
     String frameworkAidl = AndroidSdk.getFrameworkAidl(nativeApi, apiLevel).toString();
 

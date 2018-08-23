@@ -3,6 +3,8 @@ package org.smoothbuild.builtin.file;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
 
+import java.io.IOException;
+
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.plugin.NotCacheable;
@@ -14,7 +16,7 @@ import org.smoothbuild.task.exec.Container;
 public class FileFunction {
   @SmoothFunction
   @NotCacheable
-  public static Struct file(Container container, SString path) {
+  public static Struct file(Container container, SString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
       container.log().error("Reading file from '.smooth' dir is not allowed.");

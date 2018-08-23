@@ -1,25 +1,24 @@
 package org.smoothbuild.io.fs.base;
 
+import java.io.IOException;
+
 import okio.BufferedSink;
 import okio.BufferedSource;
 
-/**
- * All errors are reported by throwing {@link FileSystemException}.
- */
 public interface FileSystem {
   public PathState pathState(Path path);
 
-  public Iterable<Path> files(Path dir);
+  public Iterable<Path> files(Path dir) throws IOException;
 
-  public void move(Path source, Path target);
+  public void move(Path source, Path target) throws IOException;
 
-  public void delete(Path path);
+  public void delete(Path path) throws IOException;
 
-  public BufferedSource source(Path path);
+  public BufferedSource source(Path path) throws IOException;
 
-  public BufferedSink sink(Path path);
+  public BufferedSink sink(Path path) throws IOException;
 
-  public void createLink(Path link, Path target);
+  public void createLink(Path link, Path target) throws IOException;
 
-  public void createDir(Path path);
+  public void createDir(Path path) throws IOException;
 }

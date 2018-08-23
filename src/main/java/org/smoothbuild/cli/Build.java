@@ -4,13 +4,16 @@ import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.cli.ArgumentValidator.validateFunctionNames;
+import static org.smoothbuild.util.Lists.list;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.Maybe;
@@ -40,8 +43,16 @@ public class Build implements Command {
       console.rawErrors(functionNames.errors());
       return EXIT_CODE_ERROR;
     }
-    fileSystem.delete(ARTIFACTS_PATH);
-    fileSystem.delete(TEMPORARY_PATH);
+
+    for (Path path : list(ARTIFACTS_PATH, TEMPORARY_PATH)) {
+      try {
+        fileSystem.delete(path);
+      } catch (IOException e) {
+        console.rawError("Unable to delete " + path + ".");
+        return EXIT_CODE_ERROR;
+      }
+    }
+
     return runtimeController.setUpRuntimeAndRun((runtime) -> {
       smoothExecutor.execute(runtime, functionNames.value());
     });

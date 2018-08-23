@@ -3,6 +3,7 @@ package org.smoothbuild.db.hashed;
 import static org.smoothbuild.db.hashed.Hash.toPath;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -24,7 +25,7 @@ public class FileStorer {
     this.hashSupplier = hashSupplier;
   }
 
-  public void store() {
+  public void store() throws IOException {
     Path path = hashedDbRoot.append(toPath(hashSupplier.get()));
     if (fileSystem.pathState(path) == NOTHING) {
       fileSystem.move(sourceFile, path);

@@ -14,6 +14,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 
 import org.junit.Test;
 
@@ -73,13 +74,13 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
-    thenThrown(exception(new FileSystemException("Dir " + path("abc") + " doesn't exists.")));
+    thenThrown(exception(new IOException("Dir " + path("abc") + " doesn't exists.")));
   }
 
   public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).files(path);
-    thenThrown(exception(new FileSystemException("Dir " + path + " doesn't exist. It is a file.")));
+    thenThrown(exception(new IOException("Dir " + path + " doesn't exist. It is a file.")));
   }
 
   @Test
@@ -94,7 +95,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
-    thenThrown(FileSystemException.class);
+    thenThrown(IOException.class);
   }
 
   // source()
@@ -108,20 +109,20 @@ public abstract class GenericFileSystemTestCase {
 
   public void source_throws_exception_when_file_does_not_exist() throws Exception {
     when(() -> fileSystem.source(path("dir/file")));
-    thenThrown(exception(new FileSystemException("File " + path("dir/file") + " doesn't exist.")));
+    thenThrown(exception(new IOException("File " + path("dir/file") + " doesn't exist.")));
   }
 
   @Test
   public void source_throws_exception_when_path_is_dir() throws Exception {
     given(this).createEmptyFile(path);
     when(() -> fileSystem.source(path.parent()));
-    thenThrown(exception(new FileSystemException("File 'some/dir' doesn't exist. It is a dir.")));
+    thenThrown(exception(new IOException("File 'some/dir' doesn't exist. It is a dir.")));
   }
 
   @Test
   public void source_throws_exception_when_path_is_root_dir() throws Exception {
     when(() -> fileSystem.source(Path.root()));
-    thenThrown(exception(new FileSystemException("File '' doesn't exist. It is a dir.")));
+    thenThrown(exception(new IOException("File '' doesn't exist. It is a dir.")));
   }
 
   // sink()
@@ -147,7 +148,7 @@ public abstract class GenericFileSystemTestCase {
   public void sink_fails_when_target_file_is_a_dir() throws Exception {
     given(this).createEmptyFile(dir.append(path));
     when(() -> fileSystem.sink(dir));
-    thenThrown(FileSystemException.class);
+    thenThrown(IOException.class);
   }
 
   // move()
@@ -155,7 +156,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void moving_nonexistent_file_fails() throws Exception {
     when(fileSystem).move(path("source"), path("target"));
-    thenThrown(exception(new FileSystemException(
+    thenThrown(exception(new IOException(
         "Cannot move " + path("source") + ". It doesn't exist.")));
   }
 
@@ -163,7 +164,7 @@ public abstract class GenericFileSystemTestCase {
   public void moving_directory_fails() throws Exception {
     given(this).createEmptyFile(path("source/file"));
     when(fileSystem).move(path("source"), path("target"));
-    thenThrown(exception(new FileSystemException(
+    thenThrown(exception(new IOException(
         "Cannot move " + path("source") + ". It is directory.")));
   }
 
@@ -172,7 +173,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path("source"));
     given(this).createEmptyFile(path("target/file"));
     when(fileSystem).move(path("source"), path("target"));
-    thenThrown(exception(new FileSystemException(
+    thenThrown(exception(new IOException(
         "Cannot move to " + path("target") + ". It is directory.")));
   }
 
@@ -295,7 +296,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath, path);
-    thenThrown(exception(new FileSystemException("Cannot use " + linkPath
+    thenThrown(exception(new IOException("Cannot use " + linkPath
         + " path. It is already taken.")));
   }
 
@@ -304,7 +305,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path);
     given(this).createEmptyFile(linkPath);
     when(fileSystem).createLink(linkPath.parent(), path);
-    thenThrown(exception(new FileSystemException("Cannot use " + linkPath.parent()
+    thenThrown(exception(new IOException("Cannot use " + linkPath.parent()
         + " path. It is already taken.")));
   }
 
@@ -328,8 +329,7 @@ public abstract class GenericFileSystemTestCase {
   public void cannot_create_dir_if_such_file_already_exists() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).createDir(path);
-    thenThrown(exception(new FileSystemException("Cannot use " + path
-        + " path. It is already taken by file.")));
+    thenThrown(FileAlreadyExistsException.class);
   }
 
   // helpers
