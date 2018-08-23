@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.plugin;
 
+import java.io.IOException;
+
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.util.CommandExecutor;
@@ -23,5 +25,5 @@ public interface NativeApi {
    * Each call to this methods creates separate dir which is what you should do when your command
    * line tool read data from one dir and outputs it to another.
    */
-  public TempDir createTempDir();
+  public TempDir createTempDir() throws IOException;
 }

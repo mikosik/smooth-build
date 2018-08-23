@@ -1,5 +1,6 @@
 package org.smoothbuild.task.exec;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,14 +59,16 @@ public class Container implements NativeApi {
   }
 
   @Override
-  public TempDir createTempDir() {
+  public TempDir createTempDir() throws IOException {
     TempDir tempDir = tempManager.tempDir(this);
     tempDirs.add(tempDir);
     return tempDir;
   }
 
-  public void destroy() {
-    tempDirs.stream().forEach(TempDir::destroy);
+  public void destroy() throws IOException {
+    for (TempDir tempDir : tempDirs) {
+      tempDir.destroy();
+    }
   }
 
   private static class MessageLoggerImpl implements MessageLogger {

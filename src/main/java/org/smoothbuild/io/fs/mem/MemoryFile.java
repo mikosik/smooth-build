@@ -2,9 +2,9 @@ package org.smoothbuild.io.fs.mem;
 
 import static okio.Okio.buffer;
 
+import java.io.IOException;
 import java.util.List;
 
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 
 import okio.Buffer;
@@ -64,9 +64,9 @@ public class MemoryFile implements MemoryElement {
   }
 
   @Override
-  public BufferedSource source() {
+  public BufferedSource source() throws IOException {
     if (data == null) {
-      throw new FileSystemException("File does not exist");
+      throw new IOException("File does not exist");
     }
 
     return new Buffer().write(data);

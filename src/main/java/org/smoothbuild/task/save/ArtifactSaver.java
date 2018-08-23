@@ -6,6 +6,7 @@ import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
 import static org.smoothbuild.task.save.ArtifactPaths.toFileName;
 
+import java.io.IOException;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ public class ArtifactSaver {
     this.console = console;
   }
 
-  public void save(String name, Value value) {
+  public void save(String name, Value value) throws IOException {
     Path path = path(toFileName(name));
     if (value instanceof Array) {
       saveArray(path, (Array) value);
@@ -44,7 +45,7 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveArray(Path path, Array array) {
+  private void saveArray(Path path, Array array) throws IOException {
     ConcreteType elemType = array.type().elemType();
     fileSystem.createDir(artifactPath(path));
     if (elemType.isArray()) {
@@ -60,7 +61,7 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveValueArray(Path path, Array array) {
+  private void saveValueArray(Path path, Array array) throws IOException {
     Path artifactPath = artifactPath(path);
     int i = 0;
     for (Value value : array.asIterable(Value.class)) {
@@ -72,7 +73,7 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path path, Array fileArray) {
+  private void saveFileArray(Path path, Array fileArray) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Path artifactPath = artifactPath(path);
     for (Struct file : fileArray.asIterable(Struct.class)) {
@@ -95,7 +96,7 @@ public class ArtifactSaver {
     return "Can't store array of Files as it contains files with duplicated paths:" + list;
   }
 
-  private void saveBasicValue(Path path, Value value) {
+  private void saveBasicValue(Path path, Value value) throws IOException {
     Path artifactPath = artifactPath(path);
     Path targetPath = targetPath(value);
     fileSystem.delete(artifactPath);

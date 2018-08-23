@@ -1,36 +1,38 @@
 package org.smoothbuild.io.fs.base;
 
+import java.io.IOException;
+
 public class AssertPath {
 
-  public static Void assertPathIsDir(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsDir(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case DIR:
         return null;
       case FILE:
-        throw new FileSystemException("Dir " + path + " doesn't exist. It is a file.");
+        throw new IOException("Dir " + path + " doesn't exist. It is a file.");
       case NOTHING:
-        throw new FileSystemException("Dir " + path + " doesn't exists.");
+        throw new IOException("Dir " + path + " doesn't exists.");
       default:
         throw newUnknownPathState(state);
     }
   }
 
-  public static Void assertPathIsFile(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsFile(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
         return null;
       case DIR:
-        throw new FileSystemException("File " + path + " doesn't exist. It is a dir.");
+        throw new IOException("File " + path + " doesn't exist. It is a dir.");
       case NOTHING:
-        throw new FileSystemException("File " + path + " doesn't exist.");
+        throw new IOException("File " + path + " doesn't exist.");
       default:
         throw newUnknownPathState(state);
     }
   }
 
-  public static Void assertPathExists(FileSystem fileSystem, Path path) {
+  public static Void assertPathExists(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
@@ -38,18 +40,18 @@ public class AssertPath {
       case DIR:
         return null;
       case NOTHING:
-        throw new FileSystemException("Path " + path + " doesn't exists.");
+        throw new IOException("Path " + path + " doesn't exists.");
       default:
         throw newUnknownPathState(state);
     }
   }
 
-  public static Void assertPathIsUnused(FileSystem fileSystem, Path path) {
+  public static Void assertPathIsUnused(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
       case DIR:
-        throw new FileSystemException("Cannot use " + path + " path. It is already taken.");
+        throw new IOException("Cannot use " + path + " path. It is already taken.");
       case NOTHING:
         return null;
       default:

@@ -2,10 +2,13 @@ package org.smoothbuild.builtin.file;
 
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath;
-import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
+
+import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -17,7 +20,7 @@ import org.smoothbuild.task.exec.Container;
 public class FilesFunction {
   @SmoothFunction
   @NotCacheable
-  public static Array files(Container container, SString dir) {
+  public static Array files(Container container, SString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     FileSystem fileSystem = container.fileSystem();
 
@@ -40,7 +43,8 @@ public class FilesFunction {
     }
   }
 
-  private static Array readFiles(Container container, FileSystem fileSystem, Path dir) {
+  private static Array readFiles(Container container, FileSystem fileSystem, Path dir)
+      throws IOException {
     ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(container.types().file());
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
@@ -49,7 +53,8 @@ public class FilesFunction {
           PathState pathState = fileSystem.pathState(path);
           switch (pathState) {
             case DIR:
-              for (Path currentPath : recursiveFilesIterable(fileSystem, path)) {
+              for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext();) {
+                Path currentPath = it.next();
                 Path projectPath = path.append(currentPath);
                 fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
               }
@@ -63,7 +68,8 @@ public class FilesFunction {
         }
       }
     } else {
-      for (Path path : recursiveFilesIterable(fileSystem, dir)) {
+      for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext();) {
+        Path path = it.next();
         fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
       }
     }

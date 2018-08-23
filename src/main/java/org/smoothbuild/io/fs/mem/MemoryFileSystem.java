@@ -7,11 +7,11 @@ import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Iterator;
 import java.util.List;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 
@@ -38,25 +38,23 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public List<Path> files(Path dir) {
+  public List<Path> files(Path dir) throws IOException {
     return getDir(dir).childNames();
   }
 
   @Override
-  public void move(Path source, Path target) {
+  public void move(Path source, Path target) throws IOException {
     if (pathState(source) == NOTHING) {
-      throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
+      throw new IOException("Cannot move " + source + ". It doesn't exist.");
     }
     if (pathState(source) == DIR) {
-      throw new FileSystemException("Cannot move " + source + ". It is directory.");
+      throw new IOException("Cannot move " + source + ". It is directory.");
     }
     if (pathState(target) == DIR) {
-      throw new FileSystemException("Cannot move to " + target + ". It is directory.");
+      throw new IOException("Cannot move to " + target + ". It is directory.");
     }
     try (BufferedSource s = source(source); Sink sink = sink(target)) {
       s.readAll(sink);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
     }
     delete(source);
   }
@@ -77,14 +75,14 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public BufferedSource source(Path path) {
+  public BufferedSource source(Path path) throws IOException {
     return getFile(path).source();
   }
 
   @Override
-  public BufferedSink sink(Path path) {
+  public BufferedSink sink(Path path) throws IOException {
     if (pathState(path) == DIR) {
-      throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
+      throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
 
     MemoryDir dir = createDirImpl(path.parent());
@@ -100,7 +98,7 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public void createLink(Path link, Path target) {
+  public void createLink(Path link, Path target) throws IOException {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
 
@@ -111,11 +109,11 @@ public class MemoryFileSystem implements FileSystem {
   }
 
   @Override
-  public void createDir(Path path) {
+  public void createDir(Path path) throws IOException {
     createDirImpl(path);
   }
 
-  private MemoryDir createDirImpl(Path dir) {
+  private MemoryDir createDirImpl(Path dir) throws IOException {
     Iterator<Path> it = dir.parts().iterator();
     MemoryDir currentDir = root;
     while (it.hasNext()) {
@@ -125,8 +123,8 @@ public class MemoryFileSystem implements FileSystem {
         if (child.isDir()) {
           currentDir = (MemoryDir) child;
         } else {
-          throw new FileSystemException("Cannot use " + dir
-              + " path. It is already taken by file.");
+          throw new FileAlreadyExistsException(
+              "Cannot use " + dir + " path. It is already taken by file.");
         }
       } else {
         MemoryDir newDir = new MemoryDir(currentDir, name);
@@ -137,25 +135,25 @@ public class MemoryFileSystem implements FileSystem {
     return currentDir;
   }
 
-  private MemoryElement getFile(Path path) {
+  private MemoryElement getFile(Path path) throws IOException {
     MemoryElement found = findElement(path);
     if (found == null) {
-      throw new FileSystemException("File " + path + " doesn't exist.");
+      throw new IOException("File " + path + " doesn't exist.");
     } else {
       if (found.isFile()) {
         return found;
       } else {
-        throw new FileSystemException("File " + path + " doesn't exist. It is a dir.");
+        throw new IOException("File " + path + " doesn't exist. It is a dir.");
       }
     }
   }
 
-  private MemoryElement getDir(Path path) {
+  private MemoryElement getDir(Path path) throws IOException {
     MemoryElement found = findElement(path);
     if (found != null && found.isDir()) {
       return found;
     } else {
-      throw new FileSystemException("Dir " + path + " doesn't exists.");
+      throw new IOException("Dir " + path + " doesn't exists.");
     }
   }
 

@@ -2,15 +2,15 @@ package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.io.fs.base.RecursiveFilesIterable.recursiveFilesIterable;
+import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
@@ -41,18 +41,14 @@ public class TempDir {
     return rootPath.append(path).toJPath().toString();
   }
 
-  public void destroy() {
+  public void destroy() throws IOException {
     fileSystem.delete(rootPath);
     isDestroyed = true;
   }
 
-  public void writeFiles(Array files) {
+  public void writeFiles(Array files) throws IOException {
     assertNotDestroyed();
-    try {
-      writeFilesImpl(files);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    writeFilesImpl(files);
   }
 
   private void writeFilesImpl(Array files) throws IOException {
@@ -61,13 +57,9 @@ public class TempDir {
     }
   }
 
-  public void writeFile(Struct file) {
+  public void writeFile(Struct file) throws IOException {
     assertNotDestroyed();
-    try {
-      writeFileImpl(file);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    writeFileImpl(file);
   }
 
   private void writeFileImpl(Struct file) throws IOException {
@@ -78,18 +70,15 @@ public class TempDir {
     Streams.copy(inputStream, outputStream);
   }
 
-  public Array readFiles() {
+  public Array readFiles() throws IOException {
     assertNotDestroyed();
-    try {
-      return readFilesImpl();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    return readFilesImpl();
   }
 
   private Array readFilesImpl() throws IOException {
     ArrayBuilder arrayBuilder = container.create().arrayBuilder(container.types().file());
-    for (Path path : recursiveFilesIterable(fileSystem, rootPath)) {
+    for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext();) {
+      Path path = it.next();
       Blob content = readContentImpl(path);
       Struct file = container.create().file(container.create().string(path.value()), content);
       arrayBuilder.add(file);
@@ -97,13 +86,9 @@ public class TempDir {
     return arrayBuilder.build();
   }
 
-  public Blob readContent(Path path) {
+  public Blob readContent(Path path) throws IOException {
     assertNotDestroyed();
-    try {
-      return readContentImpl(path);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    return readContentImpl(path);
   }
 
   private Blob readContentImpl(Path path) throws IOException {

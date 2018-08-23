@@ -14,12 +14,10 @@ import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 
@@ -54,104 +52,73 @@ public class DiskFileSystem implements FileSystem {
   }
 
   @Override
-  public Iterable<Path> files(Path dir) {
+  public Iterable<Path> files(Path dir) throws IOException {
     assertPathIsDir(this, dir);
-    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(
-        dir))) {
+    try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
       Builder<Path> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
         builder.add(path(path.getFileName().toString()));
       }
       return builder.build();
-    } catch (IOException e) {
-      throw new FileSystemException(e);
     }
   }
 
   @Override
-  public void move(Path source, Path target) {
+  public void move(Path source, Path target) throws IOException {
     if (pathState(source) == NOTHING) {
-      throw new FileSystemException("Cannot move " + source + ". It doesn't exist.");
+      throw new IOException("Cannot move " + source + ". It doesn't exist.");
     }
     if (pathState(source) == DIR) {
-      throw new FileSystemException("Cannot move " + source + ". It is directory.");
+      throw new IOException("Cannot move " + source + ". It is directory.");
     }
     if (pathState(target) == DIR) {
-      throw new FileSystemException("Cannot move to " + target + ". It is directory.");
+      throw new IOException("Cannot move to " + target + ". It is directory.");
     }
     Path targetParent = target.parent();
     if (pathState(targetParent) == NOTHING) {
       createDir(targetParent);
     }
-    try {
-      Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    Files.move(jdkPath(source), jdkPath(target), ATOMIC_MOVE);
   }
 
   @Override
-  public BufferedSource source(Path path) {
+  public BufferedSource source(Path path) throws IOException {
     assertPathIsFile(this, path);
-    try {
-      return Okio.buffer(Okio.source(jdkPath(path)));
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    return Okio.buffer(Okio.source(jdkPath(path)));
   }
 
   @Override
-  public BufferedSink sink(Path path) {
+  public BufferedSink sink(Path path) throws IOException {
     if (pathState(path) == DIR) {
-      throw new FileSystemException("Cannot use " + path + " path. It is already taken by dir.");
+      throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
-
     createDir(path.parent());
-
-    try {
-      return Okio.buffer(Okio.sink(jdkPath(path)));
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    return Okio.buffer(Okio.sink(jdkPath(path)));
   }
 
   @Override
-  public void createDir(Path path) {
-    try {
-      Files.createDirectories(jdkPath(path));
-    } catch (FileAlreadyExistsException e) {
-      throw new FileSystemException("Cannot use " + path + " path. It is already taken by file.");
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+  public void createDir(Path path) throws IOException {
+    Files.createDirectories(jdkPath(path));
   }
 
   @Override
-  public void delete(Path path) {
+  public void delete(Path path) throws IOException {
     if (pathState(path) == NOTHING) {
       return;
     }
-    try {
-      RecursiveDeleter.deleteRecursively(jdkPath(path));
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    RecursiveDeleter.deleteRecursively(jdkPath(path));
   }
 
   @Override
-  public void createLink(Path link, Path target) {
+  public void createLink(Path link, Path target) throws IOException {
     assertPathExists(this, target);
     assertPathIsUnused(this, link);
 
     createDir(link.parent());
 
-    try {
-      String escape = escapeString(link.parts().size() - 1);
-      java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
-      Files.createSymbolicLink(jdkPath(link), targetJdkPath);
-    } catch (IOException e) {
-      throw new FileSystemException(e);
-    }
+    String escape = escapeString(link.parts().size() - 1);
+    java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
+    Files.createSymbolicLink(jdkPath(link), targetJdkPath);
   }
 
   private static String escapeString(int length) {

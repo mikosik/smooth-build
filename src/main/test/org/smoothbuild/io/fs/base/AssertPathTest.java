@@ -15,6 +15,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 public class AssertPathTest {
@@ -22,7 +24,7 @@ public class AssertPathTest {
   private final Path path = Path.path("some/path");
 
   @Test
-  public void assert_path_is_dir_returns_normally_for_dir_path() {
+  public void assert_path_is_dir_returns_normally_for_dir_path() throws Exception {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(assertPathIsDir(fileSystem, path));
@@ -34,7 +36,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(() -> assertPathIsDir(fileSystem, path));
-    thenThrown(exception(new FileSystemException("Dir " + path + " doesn't exist. It is a file.")));
+    thenThrown(exception(new IOException("Dir " + path + " doesn't exist. It is a file.")));
   }
 
   @Test
@@ -42,11 +44,11 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(() -> assertPathIsDir(fileSystem, path));
-    thenThrown(exception(new FileSystemException("Dir " + path + " doesn't exists.")));
+    thenThrown(exception(new IOException("Dir " + path + " doesn't exists.")));
   }
 
   @Test
-  public void assert_path_is_file_returns_normally_for_file_path() {
+  public void assert_path_is_file_returns_normally_for_file_path() throws Exception {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(assertPathIsFile(fileSystem, path));
@@ -58,7 +60,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(() -> assertPathIsFile(fileSystem, path));
-    thenThrown(exception(new FileSystemException("File " + path + " doesn't exist. It is a dir.")));
+    thenThrown(exception(new IOException("File " + path + " doesn't exist. It is a dir.")));
   }
 
   @Test
@@ -66,11 +68,11 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(() -> assertPathIsFile(fileSystem, path));
-    thenThrown(exception(new FileSystemException("File " + path + " doesn't exist.")));
+    thenThrown(exception(new IOException("File " + path + " doesn't exist.")));
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_file_path() {
+  public void assert_path_exists_returns_normally_for_file_path() throws Exception {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(assertPathExists(fileSystem, path));
@@ -78,7 +80,7 @@ public class AssertPathTest {
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_dir_path() {
+  public void assert_path_exists_returns_normally_for_dir_path() throws Exception {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(assertPathExists(fileSystem, path));
@@ -90,7 +92,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(() -> assertPathExists(fileSystem, path));
-    thenThrown(exception(new FileSystemException("Path " + path + " doesn't exists.")));
+    thenThrown(exception(new IOException("Path " + path + " doesn't exists.")));
   }
 
   @Test
@@ -98,7 +100,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
     when(() -> assertPathIsUnused(fileSystem, path));
-    thenThrown(exception(new FileSystemException("Cannot use " + path
+    thenThrown(exception(new IOException("Cannot use " + path
         + " path. It is already taken.")));
   }
 
@@ -107,12 +109,12 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
     when(() -> assertPathIsUnused(fileSystem, path));
-    thenThrown(exception(new FileSystemException("Cannot use " + path
+    thenThrown(exception(new IOException("Cannot use " + path
         + " path. It is already taken.")));
   }
 
   @Test
-  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() {
+  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() throws Exception {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(assertPathIsUnused(fileSystem, path));

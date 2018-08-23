@@ -8,8 +8,9 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.io.IOException;
+
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 
 import okio.BufferedSink;
@@ -82,7 +83,7 @@ public class MemoryFileTest {
   public void opening_input_stream_for_non_existent_file_fails() throws Exception {
     given(file = new MemoryFile(parent, name));
     when(file).source();
-    thenThrown(FileSystemException.class);
+    thenThrown(IOException.class);
   }
 
   @Test

@@ -83,7 +83,11 @@ public class HashedDb {
   public Unmarshaller newUnmarshaller(HashCode hash) {
     Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
-      return new Unmarshaller(hash, fileSystem.source(path));
+      try {
+        return new Unmarshaller(hash, fileSystem.source(path));
+      } catch (IOException e) {
+        throw new HashedDbException("I/O error.", e);
+      }
     } else {
       throw new HashedDbException("Could not find " + hash + " object.");
     }
@@ -95,7 +99,12 @@ public class HashedDb {
 
   public Marshaller newMarshaller(HashCode hash) {
     Path tempPath = tempManager.tempPath();
-    Sink sink = fileSystem.sink(tempPath);
+    Sink sink;
+    try {
+      sink = fileSystem.sink(tempPath);
+    } catch (IOException e) {
+      throw new HashedDbException("I/O error.", e);
+    }
     if (hash == null) {
       HashingSink hashing = hashingSink(sink);
       // HashingSink.hash() is idempotent so we need to memoize its result.

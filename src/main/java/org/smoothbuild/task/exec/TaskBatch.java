@@ -1,5 +1,6 @@
 package org.smoothbuild.task.exec;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class TaskBatch {
     return builder.build();
   }
 
-  public void executeAll() {
+  public void executeAll() throws IOException {
     for (Task task : rootTasks) {
       executeGraph(task);
       if (task.graphContainsErrors()) {
@@ -60,7 +61,7 @@ public class TaskBatch {
     }
   }
 
-  private void executeGraph(Task task) {
+  private void executeGraph(Task task) throws IOException {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
       if (subTask.graphContainsErrors()) {
