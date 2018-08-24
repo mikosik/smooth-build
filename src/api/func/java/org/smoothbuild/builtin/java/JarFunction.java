@@ -43,7 +43,7 @@ public class JarFunction {
     if (manifest == null) {
       return new JarOutputStream(outputStream);
     } else {
-      try (InputStream manifestStream = manifest.openInputStream()) {
+      try (InputStream manifestStream = manifest.source().inputStream()) {
         return new JarOutputStream(outputStream, new Manifest(manifestStream));
       }
     }
@@ -52,7 +52,7 @@ public class JarFunction {
   private static void jarFile(Struct file, JarOutputStream jarOutputStream, byte[] buffer)
       throws IOException {
     jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).data()));
-    try (InputStream inputStream = ((Blob) file.get("content")).openInputStream()) {
+    try (InputStream inputStream = ((Blob) file.get("content")).source().inputStream()) {
       int readCount = inputStream.read(buffer);
       while (readCount > 0) {
         jarOutputStream.write(buffer, 0, readCount);

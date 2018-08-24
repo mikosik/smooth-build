@@ -1,7 +1,8 @@
 package org.smoothbuild.builtin.compress;
 
+import static okio.Okio.sink;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -15,10 +16,11 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
+import okio.BufferedSource;
+
 public class ZipFunction {
   @SmoothFunction
   public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) throws IOException {
-    byte[] buffer = new byte[Constants.BUFFER_SIZE];
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
@@ -28,22 +30,18 @@ public class ZipFunction {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
           throw new AbortException();
         }
-        zipFile(file, zipOutputStream, buffer);
+        zipFile(file, zipOutputStream);
       }
     }
     return blobBuilder.build();
   }
 
-  private static void zipFile(Struct file, ZipOutputStream zipOutputStream, byte[] buffer)
+  private static void zipFile(Struct file, ZipOutputStream zipOutputStream)
       throws IOException {
     ZipEntry entry = new ZipEntry(((SString) file.get("path")).data());
     zipOutputStream.putNextEntry(entry);
-    try (InputStream inputStream = ((Blob) file.get("content")).openInputStream()) {
-      int readCount = inputStream.read(buffer);
-      while (readCount > 0) {
-        zipOutputStream.write(buffer, 0, readCount);
-        readCount = inputStream.read(buffer);
-      }
+    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+      source.readAll(sink(zipOutputStream));
     }
     zipOutputStream.closeEntry();
   }

@@ -1,12 +1,12 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
-
 import java.io.IOException;
 import java.util.Map;
 
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
+
+import okio.BufferedSource;
 
 public class FileClassLoader extends ClassLoader {
   private final Map<String, Struct> binaryNameToFile;
@@ -32,7 +32,9 @@ public class FileClassLoader extends ClassLoader {
   }
 
   private byte[] fileToByteArray(Struct file) throws IOException {
-    return inputStreamToByteArray(((Blob) file.get("content")).openInputStream());
+    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+      return source.readByteArray();
+    }
   }
 
   public static void sneakyRethrow(Throwable t) {

@@ -2,13 +2,11 @@ package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
 import static okio.Okio.buffer;
+import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.util.Streams.copy;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -28,6 +26,9 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
+
+import okio.BufferedSource;
+import okio.Sink;
 
 public class UnzipFunction {
   @SmoothFunction
@@ -67,7 +68,9 @@ public class UnzipFunction {
 
   private static File copyToTempFile(Blob blob) throws IOException {
     File tempFile = createTempFile("unzip", null);
-    copy(blob.openInputStream(), new BufferedOutputStream(new FileOutputStream(tempFile)));
+    try (BufferedSource source = blob.source(); Sink sink = sink(tempFile)) {
+      source.readAll(sink);
+    }
     return tempFile;
   }
 

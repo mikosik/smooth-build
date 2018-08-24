@@ -12,6 +12,8 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
+import okio.BufferedSource;
+
 public class JarTester {
 
   public static Blob jar(Struct... files) throws IOException {
@@ -28,7 +30,9 @@ public class JarTester {
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
     JarEntry entry = new JarEntry(((SString) file.get("path")).data());
     jarOutputStream.putNextEntry(entry);
-    jarOutputStream.write(toByteArray(((Blob) file.get("content")).openInputStream()));
+    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+      jarOutputStream.write(toByteArray(source.inputStream()));
+    }
     jarOutputStream.closeEntry();
   }
 }

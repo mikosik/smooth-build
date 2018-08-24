@@ -41,7 +41,7 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public InputStream openInputStream() throws IOException {
-    return ((Blob) file.get("content")).openInputStream();
+    return ((Blob) file.get("content")).source().inputStream();
   }
 
   @Override
@@ -50,7 +50,7 @@ public class InputClassFile extends SimpleJavaFileObject {
   }
 
   private boolean equals(InputClassFile inputClassFile) {
-    return Objects.equals((SString) file.get("path"), (SString) inputClassFile.file.get("path"));
+    return Objects.equals(file.get("path"), inputClassFile.file.get("path"));
   }
 
   @Override
