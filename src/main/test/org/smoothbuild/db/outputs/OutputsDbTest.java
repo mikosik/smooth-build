@@ -9,7 +9,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.junit.Before;
@@ -32,7 +31,6 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.TestingValueFactory;
 import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.base.Output;
-import org.smoothbuild.util.Streams;
 
 import com.google.common.hash.HashCode;
 
@@ -153,7 +151,7 @@ public class OutputsDbTest {
 
   private static Blob writeBlob(ValuesDb valuesDb, byte[] bytes) throws IOException {
     BlobBuilder builder = valuesDb.blobBuilder();
-    Streams.copy(new ByteArrayInputStream(bytes), builder);
+    builder.sink().write(bytes);
     return builder.build();
   }
 }

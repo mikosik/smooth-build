@@ -1,6 +1,8 @@
 package org.smoothbuild.builtin.compress;
 
 import static java.io.File.createTempFile;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Streams.copy;
 
@@ -9,7 +11,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
@@ -87,14 +88,8 @@ public class UnzipFunction {
 
   private static Blob unzipEntryContent(NativeApi nativeApi, InputStream inputStream)
       throws IOException {
-    byte[] buffer = new byte[Constants.BUFFER_SIZE];
-    BlobBuilder contentBuilder = nativeApi.create().blobBuilder();
-    try (OutputStream outputStream = contentBuilder) {
-      int len;
-      while ((len = inputStream.read(buffer)) > 0) {
-        outputStream.write(buffer, 0, len);
-      }
-    }
-    return contentBuilder.build();
+    BlobBuilder builder = nativeApi.create().blobBuilder();
+    builder.sink().writeAll(buffer(source(inputStream)));
+    return builder.build();
   }
 }

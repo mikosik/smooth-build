@@ -1,6 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -139,7 +138,7 @@ public class ValueHashTest {
 
   private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
-    writeAndClose(blobBuilder, content);
+    blobBuilder.sink().write(content);
     return blobBuilder.build();
   }
 

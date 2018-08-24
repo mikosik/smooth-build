@@ -3,7 +3,6 @@ package org.smoothbuild.db.values;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Streams.inputStreamToByteArray;
-import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -73,7 +72,7 @@ public class BlobTest {
   @Test
   public void blob_has_content_passed_to_write_byte_method() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).write(0x17);
+    given(blobBuilder.sink().writeByte(0x17));
     given(blob = blobBuilder.build());
     when(blob.openInputStream().read());
     thenReturned(0x17);
@@ -82,19 +81,10 @@ public class BlobTest {
   @Test
   public void blob_has_content_passed_to_write_byte_array_method() throws Exception {
     given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).write(bytes);
+    given(blobBuilder.sink().write(bytes));
     given(blob = blobBuilder.build());
     when(inputStreamToByteArray(blob.openInputStream()));
     thenReturned(bytes);
-  }
-
-  @Test
-  public void blob_has_content_passed_to_write_byte_array_with_range_method() throws Exception {
-    given(blobBuilder = valuesDb.blobBuilder());
-    given(blobBuilder).write(new byte[] { 1, 2, 3, 4, 5 }, 1, 3);
-    given(blob = blobBuilder.build());
-    when(inputStreamToByteArray(blob.openInputStream()));
-    thenReturned(new byte[] { 2, 3, 4 });
   }
 
   @Test
@@ -171,7 +161,7 @@ public class BlobTest {
 
   private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
-    writeAndClose(blobBuilder, content);
+    blobBuilder.sink().write(content);
     return blobBuilder.build();
   }
 

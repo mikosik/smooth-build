@@ -2,7 +2,6 @@ package org.smoothbuild.testing.db.values;
 
 import static org.smoothbuild.util.Lists.list;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.smoothbuild.SmoothConstants;
@@ -19,7 +18,6 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.TestingValueFactory;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
-import org.smoothbuild.util.Streams;
 
 public class ValueCreators {
   public static <T extends Value> Array array(HashedDb hashedDb, ConcreteType elementType,
@@ -62,9 +60,9 @@ public class ValueCreators {
   }
 
   public static Blob blob(ValueFactory valueFactory, byte[] bytes) {
-    BlobBuilder builder = valueFactory.blobBuilder();
     try {
-      Streams.copy(new ByteArrayInputStream(bytes), builder);
+      BlobBuilder builder = valueFactory.blobBuilder();
+      builder.sink().write(bytes);
       return builder.build();
     } catch (IOException e) {
       throw new RuntimeException(e);

@@ -39,7 +39,7 @@ public class JarFunction {
 
   private static JarOutputStream createOutputStream(BlobBuilder blobBuilder, Blob manifest)
       throws IOException {
-    OutputStream outputStream = blobBuilder;
+    OutputStream outputStream = blobBuilder.sink().outputStream();
     if (manifest == null) {
       return new JarOutputStream(outputStream);
     } else {
