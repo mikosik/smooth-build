@@ -1,5 +1,7 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -56,7 +58,9 @@ public class CorruptedStructTest {
     given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(corruptedValueException(structHash, "Its type is "
+        + "Type(\"Person\"):e0eb7c56051fe435ef4b5de175ff78599ea65186 with 2 fields but "
+        + "its data hash Merkle tree contains 1 children.")));
   }
 
   @Test
@@ -67,7 +71,9 @@ public class CorruptedStructTest {
     given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(corruptedValueException(structHash, "Its type is "
+        + "Type(\"Person\"):e0eb7c56051fe435ef4b5de175ff78599ea65186 with 2 fields but "
+        + "its data hash Merkle tree contains 3 children.")));
   }
 
   @Test
@@ -78,7 +84,10 @@ public class CorruptedStructTest {
     given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(corruptedValueException(structHash, "Its type specifies field 'lastName' "
+        + "with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but its data "
+        + "has value of type Type(\"Blob\"):6cb65ce7804fbcabff468d1d7aca46d4b5279f00 assigned "
+        + "to that field.")));
   }
 
   private Struct person(SString firstName, SString lastName) {

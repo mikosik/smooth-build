@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 
 import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
-import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
-import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
@@ -47,7 +47,7 @@ public class Struct extends AbstractValue {
       List<HashCode> hashes = readHashes();
       ImmutableMap<String, Field> fieldTypes = type().fields();
       if (hashes.size() != fieldTypes.size()) {
-        throw new CorruptedValueException(hash(), "Its type is " + type() + " with "
+        throw corruptedValueException(hash(), "Its type is " + type() + " with "
             + fieldTypes.size() + " fields but its data hash Merkle tree contains "
             + hashes.size() + " children.");
       }
@@ -56,9 +56,9 @@ public class Struct extends AbstractValue {
       for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
         Value value = instantiator.instantiate(hashes.get(i));
         if (!entry.getValue().type().equals(value.type())) {
-          throw new CorruptedValueException(hash(),
-              "Its type specifies field '" + entry.getKey() + "' with type " + entry.getValue()
-                  + " but its data has value of type " + value.type() + " assigned to that field.");
+          throw corruptedValueException(hash(), "Its type specifies field '" + entry.getKey()
+              + "' with type " + entry.getValue().type() + " but its data has value of type "
+              + value.type() + " assigned to that field.");
         }
         builder.put(entry.getKey(), value);
         i++;
@@ -72,7 +72,7 @@ public class Struct extends AbstractValue {
     try {
       return hashedDb.readHashes(dataHash());
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceValueException(hash());
+      throw corruptedHashSequenceException(hash());
     }
   }
 }

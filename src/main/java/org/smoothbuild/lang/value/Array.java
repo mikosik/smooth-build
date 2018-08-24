@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
-import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
-import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Instantiator;
@@ -34,7 +34,7 @@ public class Array extends AbstractValue {
     ImmutableList<Value> values = values();
     for (Value value : values) {
       if (!value.type().equals(elemType)) {
-        throw new CorruptedValueException(hash(), "It is array with type " + type()
+        throw corruptedValueException(hash(), "It is array with type " + type()
             + " but one of its elements has type " + value.type());
       }
     }
@@ -49,7 +49,7 @@ public class Array extends AbstractValue {
           .map(h -> instantiator.instantiate(h))
           .collect(toImmutableList());
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceValueException(hash());
+      throw corruptedHashSequenceException(hash());
     }
   }
 }
