@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.value;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -10,7 +11,7 @@ import com.google.common.hash.HashCode;
 
 import okio.BufferedSink;
 
-public class BlobBuilder {
+public class BlobBuilder implements Closeable {
   private final BlobType type;
   private final HashedDb hashedDb;
   private final Marshaller marshaller;
@@ -25,6 +26,7 @@ public class BlobBuilder {
     return marshaller.sink();
   }
 
+  @Override
   public void close() throws IOException {
     marshaller.close();
   }
