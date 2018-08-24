@@ -18,6 +18,7 @@ import org.smoothbuild.task.exec.Container;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Source;
 
 public class TempDir {
   private final Container container;
@@ -64,8 +65,9 @@ public class TempDir {
   private void writeFileImpl(Struct file) throws IOException {
     Path path = path(((SString) file.get("path")).data());
     Blob content = (Blob) file.get("content");
-    try (BufferedSink sink = fileSystem.sink(rootPath.append(path))) {
-      sink.writeAll(content.source());
+    try (BufferedSink sink = fileSystem.sink(rootPath.append(path));
+        Source source = content.source()) {
+      sink.writeAll(source);
     }
   }
 
