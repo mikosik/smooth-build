@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
@@ -17,8 +16,6 @@ public class ToBlobFunction {
   }
 
   public static Blob stringToBlob(NativeApi nativeApi, SString string) throws IOException {
-    BlobBuilder builder = nativeApi.create().blobBuilder();
-    builder.sink().writeString(string.data(), CHARSET);
-    return builder.build();
+    return nativeApi.create().blob(sink -> sink.writeString(string.data(), CHARSET));
   }
 }

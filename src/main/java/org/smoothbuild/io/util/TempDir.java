@@ -12,12 +12,12 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
 import okio.BufferedSink;
+import okio.BufferedSource;
 
 public class TempDir {
   private final Container container;
@@ -91,9 +91,9 @@ public class TempDir {
   }
 
   private Blob readContentImpl(Path path) throws IOException {
-    BlobBuilder blobBuilder = container.create().blobBuilder();
-    blobBuilder.sink().writeAll(fileSystem.source(rootPath.append(path)));
-    return blobBuilder.build();
+    try (BufferedSource source = fileSystem.source(rootPath.append(path))) {
+      return container.create().blob(sink -> sink.writeAll(source));
+    }
   }
 
   private void assertNotDestroyed() {

@@ -4,10 +4,11 @@ import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
+
+import okio.BufferedSource;
 
 public class FileReader {
   private final Container container;
@@ -25,8 +26,8 @@ public class FileReader {
   }
 
   private Blob createContent(Path path) throws IOException {
-    BlobBuilder builder = container.create().blobBuilder();
-    builder.sink().writeAll(container.fileSystem().source(path));
-    return builder.build();
+    try (BufferedSource source = container.fileSystem().source(path)) {
+      return container.create().blob(sink -> sink.writeAll(source));
+    }
   }
 }
