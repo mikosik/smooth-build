@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.util.TempManager;
@@ -75,7 +74,7 @@ public class HashedDb {
         result.add(elementHash);
       }
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw new HashedDbException("IO error occured while reading hashes.", e);
     }
     return result;
   }
