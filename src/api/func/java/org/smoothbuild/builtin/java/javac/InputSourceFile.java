@@ -20,9 +20,13 @@ public class InputSourceFile extends SimpleJavaFileObject {
 
   @Override
   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-    try (Scanner scanner = new Scanner(((Blob) file.get("content")).openInputStream(), "UTF-8")) {
+    try (Scanner scanner = scanner()) {
       scanner.useDelimiter("\\A");
       return scanner.hasNext() ? scanner.next() : "";
     }
+  }
+
+  private Scanner scanner() throws IOException {
+    return new Scanner(((Blob) file.get("content")).source().inputStream(), "UTF-8");
   }
 }

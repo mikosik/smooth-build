@@ -5,8 +5,6 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -18,7 +16,8 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
-import org.smoothbuild.util.Streams;
+
+import okio.BufferedSink;
 
 public class TempDir {
   private final Container container;
@@ -65,9 +64,9 @@ public class TempDir {
   private void writeFileImpl(Struct file) throws IOException {
     Path path = path(((SString) file.get("path")).data());
     Blob content = (Blob) file.get("content");
-    InputStream inputStream = content.openInputStream();
-    OutputStream outputStream = fileSystem.sink(rootPath.append(path)).outputStream();
-    Streams.copy(inputStream, outputStream);
+    try (BufferedSink sink = fileSystem.sink(rootPath.append(path))) {
+      sink.writeAll(content.source());
+    }
   }
 
   public Array readFiles() throws IOException {

@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.array;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
 import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
@@ -132,7 +131,7 @@ public class TempDirTest {
   private static Matcher blobContains(byte[] expected) {
     return (object) -> {
       try {
-        return Arrays.equals(inputStreamToByteArray(((Blob) object).openInputStream()), expected);
+        return Arrays.equals(((Blob) object).source().readByteArray(), expected);
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
