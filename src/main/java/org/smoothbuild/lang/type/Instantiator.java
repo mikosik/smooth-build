@@ -2,7 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.readException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +44,7 @@ public class Instantiator {
     } catch (NotEnoughBytesException e) {
       throw corruptedHashSequenceException(hash);
     } catch (IOException e) {
-      throw readException(e);
+      throw ioException(e);
     }
   }
 }

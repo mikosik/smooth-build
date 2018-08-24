@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.db.values.ValuesDbException.writeException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class ArrayBuilder {
     try {
       return hashedDb.writeHashes(elementHashes);
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 }

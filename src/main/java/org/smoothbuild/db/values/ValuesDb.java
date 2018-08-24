@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.db.values.ValuesDbException.readException;
-import static org.smoothbuild.db.values.ValuesDbException.writeException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 
@@ -49,7 +48,7 @@ public class ValuesDb {
     try {
       return new BlobBuilder(typesDb.blob(), hashedDb);
     } catch (IOException e) {
-      throw readException(e);
+      throw ioException(e);
     }
   }
 
@@ -57,7 +56,7 @@ public class ValuesDb {
     try {
       return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 

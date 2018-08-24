@@ -2,8 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.readException;
-import static org.smoothbuild.db.values.ValuesDbException.writeException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
@@ -76,7 +75,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name));
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 
@@ -91,7 +90,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 
@@ -108,7 +107,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 
@@ -131,7 +130,7 @@ public class TypesDb {
       try {
         return readImpl(hash);
       } catch (IOException e) {
-        throw readException(e);
+        throw ioException(e);
       }
     }
   }
@@ -180,7 +179,7 @@ public class TypesDb {
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     } catch (IOException e) {
-      throw readException(e);
+      throw ioException(e);
     }
   }
 
