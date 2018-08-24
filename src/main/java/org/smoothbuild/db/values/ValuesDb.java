@@ -29,11 +29,7 @@ public class ValuesDb {
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    ConcreteArrayType arrayType = typesDb.array(elementType);
-    if (arrayType == null) {
-      throw new IllegalArgumentException("Cannot create array with element of type " + elementType);
-    }
-    return createArrayBuilder(arrayType);
+    return createArrayBuilder(typesDb.array(elementType));
   }
 
   private ArrayBuilder createArrayBuilder(ConcreteArrayType type) {
