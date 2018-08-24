@@ -1,5 +1,10 @@
 package org.smoothbuild.db.values;
 
+import static org.smoothbuild.db.values.ValuesDbException.readException;
+import static org.smoothbuild.db.values.ValuesDbException.writeException;
+
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -41,11 +46,19 @@ public class ValuesDb {
   }
 
   public BlobBuilder blobBuilder() {
-    return new BlobBuilder(typesDb.blob(), hashedDb);
+    try {
+      return new BlobBuilder(typesDb.blob(), hashedDb);
+    } catch (IOException e) {
+      throw readException(e);
+    }
   }
 
   public SString string(String string) {
-    return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
+    try {
+      return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
+    } catch (IOException e) {
+      throw writeException(e);
+    }
   }
 
   public Value get(HashCode hash) {

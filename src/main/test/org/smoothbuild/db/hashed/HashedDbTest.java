@@ -62,7 +62,7 @@ public class HashedDbTest {
   @Test
   public void not_written_string_cannot_be_read_back() throws Exception {
     when(() -> hashedDb.readString(Hash.string("abc")));
-    thenThrown(HashedDbException.class);
+    thenThrown(IOException.class);
   }
 
   @Test
@@ -89,7 +89,7 @@ public class HashedDbTest {
   @Test
   public void not_written_sequence_of_hashes_cannot_be_read_back() throws Exception {
     when(() -> hashedDb.readHashes(Hash.string("abc")));
-    thenThrown(HashedDbException.class);
+    thenThrown(IOException.class);
   }
 
   @Test
@@ -168,7 +168,7 @@ public class HashedDbTest {
   public void reading_not_stored_value_fails() throws Exception {
     given(hashId = HashCode.fromInt(33));
     when(hashedDb).newUnmarshaller(hashId);
-    thenThrown(exception(new HashedDbException("Could not find " + hashId + " object.")));
+    thenThrown(exception(new IOException("Could not find " + hashId + " object.")));
   }
 
   @Test
@@ -177,7 +177,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(hashId));
     given(() -> marshaller.sink().write(new byte[1024 * 1024]));
     when(() -> hashedDb.newUnmarshaller(hashId));
-    thenThrown(exception(new HashedDbException("Could not find " + hashId + " object.")));
+    thenThrown(exception(new IOException("Could not find " + hashId + " object.")));
   }
 
   @Test

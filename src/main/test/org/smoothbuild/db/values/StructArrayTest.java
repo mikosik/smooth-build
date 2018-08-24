@@ -1,6 +1,5 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -9,7 +8,6 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
@@ -44,7 +42,7 @@ public class StructArrayTest {
     given(hash = HashCode.fromInt(33));
     given(array = typesDb.array(personType()).newValue(hash));
     when(array).asIterable(Struct.class);
-    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
+    thenThrown(ValuesDbException.class);
   }
 
   private StructType personType() {

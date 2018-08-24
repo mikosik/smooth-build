@@ -2,7 +2,9 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.db.values.ValuesDbException.writeException;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +45,16 @@ public class StructBuilder {
         .stream()
         .map(name -> fields.get(name).hash())
         .toArray(HashCode[]::new);
-    HashCode dataHash = hashedDb.writeHashes(hashes);
+    HashCode dataHash = writeHashes(hashes);
     return type.newValue(dataHash);
+  }
+
+  private HashCode writeHashes(HashCode[] hashes) {
+    try {
+      return hashedDb.writeHashes(hashes);
+    } catch (IOException e) {
+      throw writeException(e);
+    }
   }
 
   private List<String> fieldNames() {
