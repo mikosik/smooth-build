@@ -155,7 +155,7 @@ public class TypesDb {
         HashCode dataHash = hashes.get(1);
         return readFromDataHash(dataHash, typeHash);
       default:
-        throw newCorruptedMerkleRootException(hash, hashes.size());
+        throw ValuesDbException.newCorruptedMerkleRootException(hash, hashes.size());
     }
   }
 
@@ -189,7 +189,7 @@ public class TypesDb {
     for (HashCode fieldHash : readHashes(hash, typeHash)) {
       List<HashCode> hashes = readHashes(fieldHash, typeHash);
       if (hashes.size() != 2) {
-        throw newCorruptedMerkleRootException(hash, hashes.size());
+        throw ValuesDbException.newCorruptedMerkleRootException(hash, hashes.size());
       }
       String name = hashedDb.readString(hashes.get(0));
       ConcreteType type = read(hashes.get(1));
@@ -206,11 +206,6 @@ public class TypesDb {
       cache.put(hash, type);
       return type;
     }
-  }
-
-  private static ValuesDbException newCorruptedMerkleRootException(HashCode hash, int childCount) {
-    return corruptedValueException(
-        hash, "Its Merkle tree root has " + childCount + " children.");
   }
 
   private List<HashCode> readHashes(HashCode hash, HashCode typeHash) throws IOException {
