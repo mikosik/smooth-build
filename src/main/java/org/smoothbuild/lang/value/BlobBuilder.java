@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.lang.type.BlobType;
 
@@ -24,39 +23,23 @@ public class BlobBuilder extends OutputStream {
   }
 
   @Override
-  public void write(int b) {
-    try {
-      outputStream.write(b);
-    } catch (IOException e) {
-      rethrowAsHashedDbException(e);
-    }
+  public void write(int b) throws IOException {
+    outputStream.write(b);
   }
 
   @Override
-  public void write(byte b[]) {
+  public void write(byte b[]) throws IOException {
     this.write(b, 0, b.length);
   }
 
   @Override
-  public void write(byte b[], int off, int len) {
-    try {
-      outputStream.write(b, off, len);
-    } catch (IOException e) {
-      rethrowAsHashedDbException(e);
-    }
+  public void write(byte b[], int off, int len) throws IOException {
+    outputStream.write(b, off, len);
   }
 
-  public Blob build() {
-    try {
-      outputStream.close();
-    } catch (IOException e) {
-      rethrowAsHashedDbException(e);
-    }
+  public Blob build() throws IOException {
+    outputStream.close();
     HashCode dataHash = marshaller.hash();
     return new Blob(dataHash, type, hashedDb);
-  }
-
-  private void rethrowAsHashedDbException(Throwable e) {
-    throw new HashedDbException("IO error occurred while writing object.", e);
   }
 }

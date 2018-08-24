@@ -65,9 +65,9 @@ public class ValueCreators {
     BlobBuilder builder = valueFactory.blobBuilder();
     try {
       Streams.copy(new ByteArrayInputStream(bytes), builder);
+      return builder.build();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    return builder.build();
   }
 }
