@@ -131,12 +131,14 @@ public class TypesDb {
         return readImpl(hash);
       } catch (IOException e) {
         throw ioException(e);
+      } catch (NotEnoughBytesException e) {
+        throw corruptedHashSequenceException(hash);
       }
     }
   }
 
-  private ConcreteType readImpl(HashCode hash) throws IOException {
-    List<HashCode> hashes = readHashes(hash, hash);
+  private ConcreteType readImpl(HashCode hash) throws IOException, NotEnoughBytesException {
+    List<HashCode> hashes = hashedDb.readHashes(hash);
     switch (hashes.size()) {
       case 1:
         if (!type().hash().equals(hash)) {
@@ -158,9 +160,10 @@ public class TypesDb {
     }
   }
 
-  protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash) {
+  protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash)
+      throws NotEnoughBytesException, IOException {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
-      String name = hashedDb.readString(readHash(unmarshaller, typeHash));
+      String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
         case STRING:
           return string();
@@ -169,24 +172,22 @@ public class TypesDb {
         case NOTHING:
           return nothing();
         case "":
-          ConcreteType elementType = read(readHash(unmarshaller, typeHash));
+          ConcreteType elementType = read(unmarshaller.readHash());
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
           return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType,
               instantiator, hashedDb, this));
         default:
       }
-      Iterable<Field> fields = readFields(readHash(unmarshaller, typeHash), typeHash);
+      Iterable<Field> fields = readFields(unmarshaller.readHash());
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
-    } catch (IOException e) {
-      throw ioException(e);
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) throws IOException {
+  private Iterable<Field> readFields(HashCode hash) throws IOException, NotEnoughBytesException {
     List<Field> result = new ArrayList<>();
-    for (HashCode fieldHash : readHashes(hash, typeHash)) {
-      List<HashCode> hashes = readHashes(fieldHash, typeHash);
+    for (HashCode fieldHash : hashedDb.readHashes(hash)) {
+      List<HashCode> hashes = hashedDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
         throw ValuesDbException.newCorruptedMerkleRootException(hash, hashes.size());
       }
@@ -204,23 +205,6 @@ public class TypesDb {
     } else {
       cache.put(hash, type);
       return type;
-    }
-  }
-
-  private List<HashCode> readHashes(HashCode hash, HashCode typeHash) throws IOException {
-    try {
-      return hashedDb.readHashes(hash);
-    } catch (NotEnoughBytesException e) {
-      throw corruptedHashSequenceException(hash);
-    }
-  }
-
-  private static HashCode readHash(Unmarshaller unmarshaller, HashCode typeHash)
-      throws IOException {
-    try {
-      return unmarshaller.readHash();
-    } catch (NotEnoughBytesException e) {
-      throw corruptedHashSequenceException(typeHash);
     }
   }
 }
