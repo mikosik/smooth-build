@@ -4,6 +4,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
+import static org.smoothbuild.db.outputs.OutputsDbException.readException;
+import static org.smoothbuild.db.outputs.OutputsDbException.writeException;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
 
 import java.io.IOException;
@@ -12,12 +14,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
 import org.smoothbuild.lang.message.MessagesDb;
@@ -56,7 +56,7 @@ public class OutputsDb {
         marshaller.sink().write(output.result().hash().asBytes());
       }
     } catch (IOException e) {
-      throw new HashedDbException("IOException when storing output", e);
+      throw writeException(e);
     }
   }
 
@@ -102,7 +102,7 @@ public class OutputsDb {
         return new Output(value, messages);
       }
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw readException(e);
     }
   }
 
