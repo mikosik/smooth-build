@@ -36,74 +36,57 @@ public class HashedDb {
     return fileSystem.pathState(path) == PathState.FILE;
   }
 
-  public HashCode writeString(String string) {
+  public HashCode writeString(String string) throws IOException {
     try (Marshaller marshaller = newMarshaller()) {
       marshaller.sink().writeString(string, CHARSET);
       marshaller.close();
       return marshaller.hash();
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occurred while writing string value.");
     }
   }
 
-  public String readString(HashCode hash) {
+  public String readString(HashCode hash) throws IOException {
     try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
       return unmarshaller.source().readString(CHARSET);
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occurred while reading " + hash + " value.");
     }
   }
 
-  public HashCode writeHashes(HashCode... hashes) {
+  public HashCode writeHashes(HashCode... hashes) throws IOException {
     try (Marshaller marshaller = newMarshaller()) {
       for (HashCode hashCode : hashes) {
         marshaller.sink().write(hashCode.asBytes());
       }
       marshaller.close();
       return marshaller.hash();
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occurred while writing string value.");
     }
   }
 
-  public List<HashCode> readHashes(HashCode hash) throws NotEnoughBytesException {
+  public List<HashCode> readHashes(HashCode hash) throws NotEnoughBytesException, IOException {
     List<HashCode> result = new ArrayList<>();
     try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
       HashCode elementHash = null;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
         result.add(elementHash);
       }
-    } catch (IOException e) {
-      throw new HashedDbException("IO error occured while reading hashes.", e);
     }
     return result;
   }
 
-  public Unmarshaller newUnmarshaller(HashCode hash) {
+  public Unmarshaller newUnmarshaller(HashCode hash) throws IOException {
     Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
-      try {
-        return new Unmarshaller(fileSystem.source(path));
-      } catch (IOException e) {
-        throw new HashedDbException("I/O error.", e);
-      }
+      return new Unmarshaller(fileSystem.source(path));
     } else {
-      throw new HashedDbException("Could not find " + hash + " object.");
+      throw new IOException("Could not find " + hash + " object.");
     }
   }
 
-  public Marshaller newMarshaller() {
+  public Marshaller newMarshaller() throws IOException {
     return newMarshaller(null);
   }
 
-  public Marshaller newMarshaller(HashCode hash) {
+  public Marshaller newMarshaller(HashCode hash) throws IOException {
     Path tempPath = tempManager.tempPath();
-    Sink sink;
-    try {
-      sink = fileSystem.sink(tempPath);
-    } catch (IOException e) {
-      throw new HashedDbException("I/O error.", e);
-    }
+    Sink sink = fileSystem.sink(tempPath);
     if (hash == null) {
       HashingSink hashing = hashingSink(sink);
       // HashingSink.hash() is idempotent so we need to memoize its result.

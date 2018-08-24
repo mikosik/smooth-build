@@ -15,7 +15,7 @@ public class BlobBuilder extends OutputStream {
   private final Marshaller marshaller;
   private final OutputStream outputStream;
 
-  public BlobBuilder(BlobType type, HashedDb hashedDb) {
+  public BlobBuilder(BlobType type, HashedDb hashedDb) throws IOException {
     this.type = type;
     this.hashedDb = hashedDb;
     this.marshaller = hashedDb.newMarshaller();

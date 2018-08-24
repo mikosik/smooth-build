@@ -3,7 +3,9 @@ package org.smoothbuild.lang.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.db.values.ValuesDbException.readException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +75,8 @@ public class Struct extends AbstractValue {
       return hashedDb.readHashes(dataHash());
     } catch (NotEnoughBytesException e) {
       throw corruptedHashSequenceException(hash());
+    } catch (IOException e) {
+      throw readException(e);
     }
   }
 }

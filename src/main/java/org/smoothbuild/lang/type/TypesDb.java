@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.type;
 
-import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.readException;
+import static org.smoothbuild.db.values.ValuesDbException.writeException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
@@ -73,14 +73,26 @@ public class TypesDb {
   }
 
   private HashCode writeBasicTypeData(String name) {
-    return hashedDb.writeHashes(hashedDb.writeString(name));
+    try {
+      return hashedDb.writeHashes(hashedDb.writeString(name));
+    } catch (IOException e) {
+      throw writeException(e);
+    }
   }
 
   public ConcreteArrayType array(ConcreteType elementType) {
-    HashCode dataHash = hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
+    HashCode dataHash = writeArray(elementType);
     ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
     return cache(new ConcreteArrayType(dataHash, type(), superType, elementType, instantiator,
         hashedDb, this));
+  }
+
+  private HashCode writeArray(ConcreteType elementType) {
+    try {
+      return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
+    } catch (IOException e) {
+      throw writeException(e);
+    }
   }
 
   private ConcreteArrayType possiblyNullArrayType(ConcreteType elementType) {
@@ -88,18 +100,27 @@ public class TypesDb {
   }
 
   public StructType struct(String name, Iterable<Field> fields) {
-    HashCode hash = hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
+    HashCode hash = writeStruct(name, fields);
     return cache(new StructType(hash, type(), name, fields, instantiator, hashedDb, this));
   }
 
-  private HashCode writeFields(Iterable<Field> fields) {
-    return hashedDb.writeHashes(
-        stream(fields)
-            .map(f -> writeField(f.name(), f.type()))
-            .toArray(HashCode[]::new));
+  private HashCode writeStruct(String name, Iterable<Field> fields) {
+    try {
+      return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
+    } catch (IOException e) {
+      throw writeException(e);
+    }
   }
 
-  private HashCode writeField(String name, ConcreteType type) {
+  private HashCode writeFields(Iterable<Field> fields) throws IOException {
+    List<HashCode> fieldHashes = new ArrayList<>();
+    for (Field field : fields) {
+      fieldHashes.add(writeField(field.name(), field.type()));
+    }
+    return hashedDb.writeHashes(fieldHashes.toArray(new HashCode[fieldHashes.size()]));
+  }
+
+  private HashCode writeField(String name, ConcreteType type) throws IOException {
     return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
   }
 
@@ -107,26 +128,34 @@ public class TypesDb {
     if (cache.containsKey(hash)) {
       return cache.get(hash);
     } else {
-      List<HashCode> hashes = readHashes(hash, hash);
-      switch (hashes.size()) {
-        case 1:
-          if (!type().hash().equals(hash)) {
-            throw corruptedValueException(hash, "Expected value which is instance of 'Type' "
-                + "but its Merkle tree has only one child (so it should be Type type) but "
-                + "it has different hash.");
-          }
-          return type();
-        case 2:
-          HashCode typeHash = hashes.get(0);
-          if (!type().hash().equals(typeHash)) {
-            throw corruptedValueException(hash, "Expected value which is instance of 'Type' but "
-                + "its Merkle tree's first child is not Type type.");
-          }
-          HashCode dataHash = hashes.get(1);
-          return readFromDataHash(dataHash, typeHash);
-        default:
-          throw newCorruptedMerkleRootException(hash, hashes.size());
+      try {
+        return readImpl(hash);
+      } catch (IOException e) {
+        throw readException(e);
       }
+    }
+  }
+
+  private ConcreteType readImpl(HashCode hash) throws IOException {
+    List<HashCode> hashes = readHashes(hash, hash);
+    switch (hashes.size()) {
+      case 1:
+        if (!type().hash().equals(hash)) {
+          throw corruptedValueException(hash, "Expected value which is instance of 'Type' "
+              + "but its Merkle tree has only one child (so it should be Type type) but "
+              + "it has different hash.");
+        }
+        return type();
+      case 2:
+        HashCode typeHash = hashes.get(0);
+        if (!type().hash().equals(typeHash)) {
+          throw corruptedValueException(hash, "Expected value which is instance of 'Type' but "
+              + "its Merkle tree's first child is not Type type.");
+        }
+        HashCode dataHash = hashes.get(1);
+        return readFromDataHash(dataHash, typeHash);
+      default:
+        throw newCorruptedMerkleRootException(hash, hashes.size());
     }
   }
 
@@ -155,7 +184,7 @@ public class TypesDb {
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) {
+  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) throws IOException {
     List<Field> result = new ArrayList<>();
     for (HashCode fieldHash : readHashes(hash, typeHash)) {
       List<HashCode> hashes = readHashes(fieldHash, typeHash);
@@ -184,7 +213,7 @@ public class TypesDb {
         hash, "Its Merkle tree root has " + childCount + " children.");
   }
 
-  private List<HashCode> readHashes(HashCode hash, HashCode typeHash) {
+  private List<HashCode> readHashes(HashCode hash, HashCode typeHash) throws IOException {
     try {
       return hashedDb.readHashes(hash);
     } catch (NotEnoughBytesException e) {

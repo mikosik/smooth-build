@@ -2,7 +2,6 @@ package org.smoothbuild.db.outputs;
 
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
@@ -17,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
@@ -87,7 +85,7 @@ public class OutputsDbTest {
   @Test
   public void reading_not_written_value_fails() throws Exception {
     when(outputsDb).read(hash, typesDb.string());
-    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
+    thenThrown(OutputsDbException.class);
   }
 
   @Test

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.smoothbuild.db.hashed.HashedDb;
@@ -15,7 +16,7 @@ public class Blob extends AbstractValue {
     checkArgument(type.name().equals("Blob"));
   }
 
-  public InputStream openInputStream() {
+  public InputStream openInputStream() throws IOException {
     return hashedDb.newUnmarshaller(dataHash()).source().inputStream();
   }
 }

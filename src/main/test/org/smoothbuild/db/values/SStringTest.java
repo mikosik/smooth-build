@@ -1,7 +1,6 @@
 package org.smoothbuild.db.values;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -10,7 +9,6 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
@@ -122,6 +120,6 @@ public class SStringTest {
     given(hash = HashCode.fromInt(33));
     given(sstring = typesDb.string().newValue(hash));
     when(sstring).data();
-    thenThrown(exception(new HashedDbException("Could not find " + hash + " object.")));
+    thenThrown(ValuesDbException.class);
   }
 }

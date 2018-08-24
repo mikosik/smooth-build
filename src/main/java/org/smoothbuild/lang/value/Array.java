@@ -3,6 +3,9 @@ package org.smoothbuild.lang.value;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.db.values.ValuesDbException.readException;
+
+import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
@@ -50,6 +53,8 @@ public class Array extends AbstractValue {
           .collect(toImmutableList());
     } catch (NotEnoughBytesException e) {
       throw corruptedHashSequenceException(hash());
+    } catch (IOException e) {
+      throw readException(e);
     }
   }
 }
