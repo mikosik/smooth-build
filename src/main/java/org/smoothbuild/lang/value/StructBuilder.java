@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.StructType;
@@ -33,19 +34,20 @@ public class StructBuilder {
   }
 
   public Struct build() {
-    List<String> names = fieldNames();
-    List<String> unspecified = names
+    Set<String> fieldNames = type.fields().keySet();
+    List<String> unspecifiedNames = fieldNames
         .stream()
         .filter(e -> !fields.containsKey(e))
         .collect(toImmutableList());
-    if (0 < unspecified.size()) {
-      throw new IllegalStateException("Field " + unspecified.get(0) + " hasn't been specified.");
+    if (0 < unspecifiedNames.size()) {
+      throw new IllegalStateException(
+          "Field " + unspecifiedNames.get(0) + " hasn't been specified.");
     }
-    HashCode[] hashes = names
+    HashCode[] fieldValueHashes = fieldNames
         .stream()
         .map(name -> fields.get(name).hash())
         .toArray(HashCode[]::new);
-    HashCode dataHash = writeHashes(hashes);
+    HashCode dataHash = writeHashes(fieldValueHashes);
     return type.newValue(dataHash);
   }
 
@@ -55,14 +57,5 @@ public class StructBuilder {
     } catch (IOException e) {
       throw writeException(e);
     }
-  }
-
-  private List<String> fieldNames() {
-    return type
-        .fields()
-        .entrySet()
-        .stream()
-        .map(e -> e.getKey())
-        .collect(toImmutableList());
   }
 }
