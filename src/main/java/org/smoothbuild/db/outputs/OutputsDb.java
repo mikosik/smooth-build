@@ -4,8 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
-import static org.smoothbuild.db.outputs.OutputsDbException.readException;
-import static org.smoothbuild.db.outputs.OutputsDbException.writeException;
+import static org.smoothbuild.db.outputs.OutputsDbException.ioException;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
 
 import java.io.IOException;
@@ -56,7 +55,7 @@ public class OutputsDb {
         marshaller.sink().write(output.result().hash().asBytes());
       }
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 
@@ -102,7 +101,7 @@ public class OutputsDb {
         return new Output(value, messages);
       }
     } catch (IOException e) {
-      throw readException(e);
+      throw ioException(e);
     }
   }
 
