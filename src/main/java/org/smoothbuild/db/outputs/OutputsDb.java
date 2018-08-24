@@ -2,6 +2,8 @@ package org.smoothbuild.db.outputs;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.db.outputs.OutputsDbException.corruptedHashSequenceException;
+import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
 
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class OutputsDb {
       Value messagesValue = valuesDb.get(readHash(unmarshaller, taskHash));
       ConcreteArrayType messageArrayType = typesDb.array(messagesDb.messageType());
       if (!messagesValue.type().equals(messageArrayType)) {
-        throw new CorruptedOutputException(taskHash, "Expected " + messageArrayType
+        throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its merkle root, but got " + messagesValue.type());
       }
 
@@ -84,7 +86,7 @@ public class OutputsDb {
           .collect(toImmutableList());
       messages.stream().forEach(m -> {
         if (!isValidSeverity(m.severity())) {
-          throw new CorruptedOutputException(taskHash,
+          throw corruptedValueException(taskHash,
               "One of messages has invalid severity = '" + m.severity() + "'");
         }
       });
@@ -94,7 +96,7 @@ public class OutputsDb {
         HashCode resultObjectHash = readHash(unmarshaller, taskHash);
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
-          throw new CorruptedOutputException(taskHash, "Expected value of type " + type
+          throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its merkle root, but got " + value.type());
         }
         return new Output(value, messages);
@@ -108,7 +110,7 @@ public class OutputsDb {
     try {
       return unmarshaller.readHash();
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceOutputException(taskHash);
+      throw corruptedHashSequenceException(taskHash);
     }
   }
 }
