@@ -93,7 +93,7 @@ public class TempDir {
 
   private Blob readContentImpl(Path path) throws IOException {
     BlobBuilder blobBuilder = container.create().blobBuilder();
-    Streams.copy(fileSystem.source(rootPath.append(path)).inputStream(), blobBuilder);
+    blobBuilder.sink().writeAll(fileSystem.source(rootPath.append(path)));
     return blobBuilder.build();
   }
 

@@ -1,7 +1,5 @@
 package org.smoothbuild.builtin.file;
 
-import static org.smoothbuild.util.Streams.copy;
-
 import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.Path;
@@ -10,8 +8,6 @@ import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
-
-import okio.BufferedSource;
 
 public class FileReader {
   private final Container container;
@@ -29,9 +25,8 @@ public class FileReader {
   }
 
   private Blob createContent(Path path) throws IOException {
-    BufferedSource source = container.fileSystem().source(path);
-    BlobBuilder contentBuilder = container.create().blobBuilder();
-    copy(source.inputStream(), contentBuilder);
-    return contentBuilder.build();
+    BlobBuilder builder = container.create().blobBuilder();
+    builder.sink().writeAll(container.fileSystem().source(path));
+    return builder.build();
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.string;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -19,9 +18,7 @@ public class ToBlobFunction {
 
   public static Blob stringToBlob(NativeApi nativeApi, SString string) throws IOException {
     BlobBuilder builder = nativeApi.create().blobBuilder();
-    try (OutputStreamWriter writer = new OutputStreamWriter(builder, CHARSET)) {
-      writer.write(string.data());
-    }
+    builder.sink().writeString(string.data(), CHARSET);
     return builder.build();
   }
 }
