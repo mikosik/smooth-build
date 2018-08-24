@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.db.values.ValuesDbException.readException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public class SString extends AbstractValue {
     try {
       return hashedDb.readString(dataHash());
     } catch (IOException e) {
-      throw readException(e);
+      throw ioException(e);
     }
   }
 }

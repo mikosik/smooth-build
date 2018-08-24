@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.db.values.ValuesDbException.writeException;
+import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ public class TypeType extends ConcreteType {
     try {
       return hashedDb.writeHashes(dataHash);
     } catch (IOException e) {
-      throw writeException(e);
+      throw ioException(e);
     }
   }
 
