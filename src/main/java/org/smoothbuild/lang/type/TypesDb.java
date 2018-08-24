@@ -192,7 +192,8 @@ public class TypesDb {
     }
   }
 
-  private static HashCode readHash(Unmarshaller unmarshaller, HashCode typeHash) {
+  private static HashCode readHash(Unmarshaller unmarshaller, HashCode typeHash)
+      throws IOException {
     try {
       return unmarshaller.readHash();
     } catch (NotEnoughBytesException e) {

@@ -106,7 +106,8 @@ public class OutputsDb {
     }
   }
 
-  private static HashCode readHash(Unmarshaller unmarshaller, HashCode taskHash) {
+  private static HashCode readHash(Unmarshaller unmarshaller, HashCode taskHash)
+      throws IOException {
     try {
       return unmarshaller.readHash();
     } catch (NotEnoughBytesException e) {

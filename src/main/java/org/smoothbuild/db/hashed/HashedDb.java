@@ -83,7 +83,7 @@ public class HashedDb {
     Path path = toPath(hash);
     if (fileSystem.pathState(path) == PathState.FILE) {
       try {
-        return new Unmarshaller(hash, fileSystem.source(path));
+        return new Unmarshaller(fileSystem.source(path));
       } catch (IOException e) {
         throw new HashedDbException("I/O error.", e);
       }
