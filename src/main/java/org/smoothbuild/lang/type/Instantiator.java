@@ -1,11 +1,12 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
-import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
-import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
@@ -30,7 +31,7 @@ public class Instantiator {
         ConcreteType type = typesDb.read(hashes.get(0));
         return type.newValue(hashes.get(1));
       default:
-        throw new CorruptedValueException(
+        throw corruptedValueException(
             hash, "Its Merkle tree root has " + hashes.size() + " children");
     }
   }
@@ -39,7 +40,7 @@ public class Instantiator {
     try {
       return hashedDb.readHashes(hash);
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceValueException(hash);
+      throw corruptedHashSequenceException(hash);
     }
   }
 }

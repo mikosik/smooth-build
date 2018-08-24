@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -9,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.db.values.CorruptedValueException;
+import org.smoothbuild.db.values.ValuesDbException;
 
 import com.google.common.hash.HashCode;
 
@@ -57,7 +59,7 @@ public class CorruptedTypeTest {
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
     given(hash = hashedDb.writeHashes(typeType.hash(), dataHash, dataHash));
     when(() -> typesDb.read(hash));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(corruptedValueException(hash, "Its Merkle tree root has 3 children.")));
   }
 
   @Test
@@ -67,7 +69,8 @@ public class CorruptedTypeTest {
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
     given(hash = hashedDb.writeHashes(dataHash, dataHash));
     when(() -> typesDb.read(hash));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(corruptedValueException(hash, "Expected value which is instance of "
+        + "'Type' but its Merkle tree's first child is not Type type.")));
   }
 
   @Test
@@ -76,7 +79,7 @@ public class CorruptedTypeTest {
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("String")));
     given(hash = hashedDb.writeHashes(dataHash));
     when(() -> typesDb.read(hash));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(brokenTypeTypeException(hash)));
   }
 
   @Test
@@ -85,6 +88,11 @@ public class CorruptedTypeTest {
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("TypeX")));
     given(hash = hashedDb.writeHashes(dataHash));
     when(() -> typesDb.read(hash));
-    thenThrown(CorruptedValueException.class);
+    thenThrown(exception(brokenTypeTypeException(hash)));
+  }
+
+  private static ValuesDbException brokenTypeTypeException(HashCode hash) {
+    return corruptedValueException(hash, "Expected value which is instance of 'Type' but its Merkle"
+        + " tree has only one child (so it should be Type type) but it has different hash.");
   }
 }

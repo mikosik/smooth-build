@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.type;
 
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
+import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
@@ -16,9 +18,8 @@ import java.util.Map;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
-import org.smoothbuild.db.values.CorruptedHashSequenceValueException;
-import org.smoothbuild.db.values.CorruptedValueException;
 import org.smoothbuild.db.values.Values;
+import org.smoothbuild.db.values.ValuesDbException;
 import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.base.Field;
 
@@ -110,15 +111,16 @@ public class TypesDb {
       switch (hashes.size()) {
         case 1:
           if (!type().hash().equals(hash)) {
-            throw new CorruptedValueException(
-                "Expected " + type() + " value but got value which hash is " + hash);
+            throw corruptedValueException(hash, "Expected value which is instance of 'Type' "
+                + "but its Merkle tree has only one child (so it should be Type type) but "
+                + "it has different hash.");
           }
           return type();
         case 2:
           HashCode typeHash = hashes.get(0);
           if (!type().hash().equals(typeHash)) {
-            throw new CorruptedValueException(
-                "Expected " + type() + " value but got value which hash is " + typeHash);
+            throw corruptedValueException(hash, "Expected value which is instance of 'Type' but "
+                + "its Merkle tree's first child is not Type type.");
           }
           HashCode dataHash = hashes.get(1);
           return readFromDataHash(dataHash, typeHash);
@@ -177,8 +179,8 @@ public class TypesDb {
     }
   }
 
-  private CorruptedValueException newCorruptedMerkleRootException(HashCode hash, int childCount) {
-    return new CorruptedValueException(
+  private static ValuesDbException newCorruptedMerkleRootException(HashCode hash, int childCount) {
+    return corruptedValueException(
         hash, "Its Merkle tree root has " + childCount + " children.");
   }
 
@@ -186,7 +188,7 @@ public class TypesDb {
     try {
       return hashedDb.readHashes(hash);
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceValueException(hash);
+      throw corruptedHashSequenceException(hash);
     }
   }
 
@@ -194,7 +196,7 @@ public class TypesDb {
     try {
       return unmarshaller.readHash();
     } catch (NotEnoughBytesException e) {
-      throw new CorruptedHashSequenceValueException(typeHash);
+      throw corruptedHashSequenceException(typeHash);
     }
   }
 }
