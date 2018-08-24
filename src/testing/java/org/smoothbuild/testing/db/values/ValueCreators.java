@@ -12,7 +12,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.TestingValueFactory;
@@ -61,9 +60,7 @@ public class ValueCreators {
 
   public static Blob blob(ValueFactory valueFactory, byte[] bytes) {
     try {
-      BlobBuilder builder = valueFactory.blobBuilder();
-      builder.sink().write(bytes);
-      return builder.build();
+      return valueFactory.blob(sink -> sink.write(bytes));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
