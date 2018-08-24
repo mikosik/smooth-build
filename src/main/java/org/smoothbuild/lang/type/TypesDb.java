@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.db.values.ValuesDbException.readException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
@@ -20,7 +21,6 @@ import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
 import org.smoothbuild.db.values.ValuesDbException;
-import org.smoothbuild.io.fs.base.FileSystemException;
 import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
@@ -151,7 +151,7 @@ public class TypesDb {
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     } catch (IOException e) {
-      throw new FileSystemException(e);
+      throw readException(e);
     }
   }
 

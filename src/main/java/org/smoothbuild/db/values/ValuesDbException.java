@@ -12,6 +12,14 @@ public class ValuesDbException extends RuntimeException {
     return new ValuesDbException(hash.toString() + " value in ValuesDb is corrupted. " + message);
   }
 
+  public static ValuesDbException readException(Throwable e) {
+    return new ValuesDbException("IOException when reading from ValuesDb", e);
+  }
+
+  public ValuesDbException(String message, Throwable e) {
+    super(message, e);
+  }
+
   public ValuesDbException(String message) {
     super(message);
   }
