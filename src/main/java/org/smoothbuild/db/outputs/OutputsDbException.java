@@ -1,5 +1,7 @@
 package org.smoothbuild.db.outputs;
 
+import java.io.IOException;
+
 import com.google.common.hash.HashCode;
 
 public class OutputsDbException extends RuntimeException {
@@ -12,12 +14,8 @@ public class OutputsDbException extends RuntimeException {
     return new OutputsDbException(hash.toString() + " value in OutputsDb is corrupted. " + message);
   }
 
-  public static OutputsDbException writeException(Throwable e) {
-    return new OutputsDbException("IOException when writing to OutputsDb", e);
-  }
-
-  public static OutputsDbException readException(Throwable e) {
-    return new OutputsDbException("IOException when reading from OutputsDb", e);
+  public static OutputsDbException ioException(IOException e) {
+    return new OutputsDbException("IOException when accessing OutputsDb", e);
   }
 
   public OutputsDbException(String message) {
