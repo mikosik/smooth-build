@@ -5,6 +5,7 @@ import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
+import static org.smoothbuild.util.Okios.copyAllAndClose;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -17,7 +18,6 @@ import org.smoothbuild.io.fs.base.PathState;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
-import okio.Sink;
 
 /**
  * In memory implementation of FileSystem.
@@ -53,9 +53,7 @@ public class MemoryFileSystem implements FileSystem {
     if (pathState(target) == DIR) {
       throw new IOException("Cannot move to " + target + ". It is directory.");
     }
-    try (BufferedSource s = source(source); Sink sink = sink(target)) {
-      s.readAll(sink);
-    }
+    copyAllAndClose(source(source), sink(target));
     delete(source);
   }
 

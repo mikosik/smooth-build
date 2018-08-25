@@ -4,6 +4,7 @@ import static java.io.File.createTempFile;
 import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.util.Okios.copyAllAndClose;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +25,6 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
-
-import okio.BufferedSource;
-import okio.Sink;
 
 public class UnzipFunction {
   @SmoothFunction
@@ -66,9 +64,7 @@ public class UnzipFunction {
 
   private static File copyToTempFile(Blob blob) throws IOException {
     File tempFile = createTempFile("unzip", null);
-    try (BufferedSource source = blob.source(); Sink sink = sink(tempFile)) {
-      source.readAll(sink);
-    }
+    copyAllAndClose(blob.source(), sink(tempFile));
     return tempFile;
   }
 
