@@ -1,6 +1,6 @@
 package org.smoothbuild.testing.common;
 
-import static com.google.common.io.ByteStreams.toByteArray;
+import static okio.Okio.sink;
 import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 
 import java.io.ByteArrayOutputStream;
@@ -31,7 +31,7 @@ public class JarTester {
     JarEntry entry = new JarEntry(((SString) file.get("path")).data());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = ((Blob) file.get("content")).source()) {
-      jarOutputStream.write(toByteArray(source.inputStream()));
+      source.readAll(sink(jarOutputStream));
     }
     jarOutputStream.closeEntry();
   }
