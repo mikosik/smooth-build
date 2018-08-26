@@ -1,9 +1,10 @@
 package org.smoothbuild.io.fs.disk;
 
+import static okio.Okio.buffer;
+import static okio.Okio.sink;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,7 +13,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.util.Streams;
+
+import okio.BufferedSink;
+import okio.ByteString;
 
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private File tempDir;
@@ -32,25 +35,12 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   }
 
   @Override
-  protected void createEmptyFile(Path path) throws IOException {
-    createEmptyFile(path.value());
-  }
-
-  @Override
-  protected void createEmptyFile(String stringPath) throws IOException {
-    createFile(stringPath, new byte[] {});
-  }
-
-  @Override
-  protected void createFile(Path path, byte[] content) throws IOException {
-    createFile(path.value(), content);
-  }
-
-  private void createFile(String stringPath, byte[] content) throws IOException {
-    File file = stringPathToFile(stringPath);
+  protected void createFile(Path path, ByteString content) throws IOException {
+    File file = stringPathToFile(path.value());
     file.getParentFile().mkdirs();
-    FileOutputStream outputStream = new FileOutputStream(file);
-    Streams.writeAndClose(outputStream, content);
+    try (BufferedSink sink = buffer(sink(file))) {
+      sink.write(content);
+    }
   }
 
   private File stringPathToFile(String stringPath) {
