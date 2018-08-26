@@ -6,7 +6,6 @@ import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.util.Streams.writeAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
@@ -18,9 +17,12 @@ import java.nio.file.FileAlreadyExistsException;
 
 import org.junit.Test;
 
+import okio.BufferedSink;
+import okio.ByteString;
+
 public abstract class GenericFileSystemTestCase {
+  private static final ByteString bytes = ByteString.encodeUtf8("abc");
   protected FileSystem fileSystem;
-  protected byte[] bytes = new byte[] { 1, 2, 3 };
   protected Path path = path("some/dir/myFile");
   protected Path path2 = path("other/dir/otherFile");
 
@@ -103,7 +105,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void source_reads_file_content() throws Exception {
     given(this).createFile(path, bytes);
-    when(() -> fileSystem.source(path).readByteArray());
+    when(() -> fileSystem.source(path).readByteString());
     thenReturned(bytes);
   }
 
@@ -130,18 +132,23 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void data_written_via_sink_can_be_read_by_source()
       throws Exception {
-    writeAndClose(fileSystem.sink(path).outputStream(), bytes);
-    when(() -> fileSystem.source(path).readByteArray());
+    try (BufferedSink sink = fileSystem.sink(path)) {
+      sink.write(bytes);
+    }
+    when(() -> fileSystem.source(path).readByteString());
     thenReturned(bytes);
   }
 
   @Test
   public void sink_overwrites_existing_file() throws Exception {
-    given(bytes = new byte[] { 1, 2, 3 });
-    writeAndClose(fileSystem.sink(path).outputStream(), new byte[] { 4, 5, 6, 7, 8 });
-    writeAndClose(fileSystem.sink(path).outputStream(), bytes);
-    when(() -> fileSystem.source(path).readByteArray());
-    thenReturned(bytes);
+    try (BufferedSink sink = fileSystem.sink(path)) {
+      sink.write(ByteString.encodeUtf8("abc"));
+    }
+    try (BufferedSink sink = fileSystem.sink(path)) {
+      sink.write(ByteString.encodeUtf8("def"));
+    }
+    when(() -> fileSystem.source(path).readByteString());
+    thenReturned(ByteString.encodeUtf8("def"));
   }
 
   @Test
@@ -189,7 +196,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createFile(path("source"), bytes);
     when(() -> fileSystem.move(path("source"), path("target")));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(() -> fileSystem.source(path("target")).readByteArray());
+    when(() -> fileSystem.source(path("target")).readByteString());
     thenReturned(bytes);
   }
 
@@ -199,7 +206,7 @@ public abstract class GenericFileSystemTestCase {
     given(this).createEmptyFile(path("target"));
     when(() -> fileSystem.move(path("source"), path("target")));
     thenEqual(fileSystem.pathState(path("source")), NOTHING);
-    when(() -> fileSystem.source(path("target")).readByteArray());
+    when(() -> fileSystem.source(path("target")).readByteString());
     thenReturned(bytes);
   }
 
@@ -207,7 +214,7 @@ public abstract class GenericFileSystemTestCase {
   public void moving_creates_missing_parent_directories_in_target_path() throws Exception {
     given(this).createFile(path("source"), bytes);
     when(fileSystem).move(path("source"), path("dir/target"));
-    when(() -> fileSystem.source(path("dir/target")).readByteArray());
+    when(() -> fileSystem.source(path("dir/target")).readByteString());
     thenReturned(bytes);
   }
 
@@ -249,7 +256,7 @@ public abstract class GenericFileSystemTestCase {
   public void link_contains_data_from_target() throws Exception {
     given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path);
-    thenEqual(fileSystem.source(linkPath).readByteArray(), bytes);
+    thenEqual(fileSystem.source(linkPath).readByteString(), bytes);
   }
 
   @Test
@@ -279,7 +286,7 @@ public abstract class GenericFileSystemTestCase {
   public void link_to_dir_can_be_used_to_access_its_file() throws Exception {
     given(this).createFile(path, bytes);
     when(fileSystem).createLink(linkPath, path.parent());
-    thenEqual(fileSystem.source(linkPath.append(path.lastPart())).readByteArray(), bytes);
+    thenEqual(fileSystem.source(linkPath.append(path.lastPart())).readByteString(), bytes);
   }
 
   @Test
@@ -334,9 +341,13 @@ public abstract class GenericFileSystemTestCase {
 
   // helpers
 
-  protected abstract void createEmptyFile(String path) throws IOException;
+  protected void createEmptyFile(String stringPath) throws IOException {
+    createFile(path(stringPath), ByteString.of());
+  }
 
-  protected abstract void createEmptyFile(Path path) throws IOException;
+  protected void createEmptyFile(Path path) throws IOException {
+    createFile(path, ByteString.of());
+  }
 
-  protected abstract void createFile(Path path, byte[] content) throws IOException;
+  protected abstract void createFile(Path path, ByteString content) throws IOException;
 }
