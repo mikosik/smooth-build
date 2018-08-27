@@ -96,7 +96,7 @@ public class HashedDbTest {
   public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
     given(hash = hashedDb.writeString("12345"));
     when(() -> hashedDb.readHashes(hash));
-    thenThrown(exception(new NotEnoughBytesException(20, 5)));
+    thenThrown(IOException.class);
   }
 
   @Test
@@ -187,7 +187,7 @@ public class HashedDbTest {
     given(() -> marshaller.close());
     given(() -> hashId = marshaller.hash());
     when(() -> hashedDb.newUnmarshaller(hashId).readHash());
-    thenThrown(exception(new NotEnoughBytesException(20, 1)));
+    thenThrown(IOException.class);
   }
 
   @Test
@@ -197,7 +197,7 @@ public class HashedDbTest {
     given(() -> marshaller.close());
     given(hashId = marshaller.hash());
     when(() -> hashedDb.newUnmarshaller(hashId).readHash());
-    thenThrown(exception(new NotEnoughBytesException(20, 0)));
+    thenThrown(IOException.class);
   }
 
   @Test
@@ -216,7 +216,7 @@ public class HashedDbTest {
     given(() -> marshaller.close());
     given(hashId = marshaller.hash());
     when(() -> hashedDb.newUnmarshaller(hashId).tryReadHash());
-    thenThrown(NotEnoughBytesException.class);
+    thenThrown(IOException.class);
   }
 
   @Test

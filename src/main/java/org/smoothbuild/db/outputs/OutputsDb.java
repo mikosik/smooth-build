@@ -2,7 +2,6 @@ package org.smoothbuild.db.outputs;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.db.outputs.OutputsDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
 import static org.smoothbuild.db.outputs.OutputsDbException.ioException;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
@@ -14,7 +13,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
@@ -73,7 +71,7 @@ public class OutputsDb {
 
   public Output read(HashCode taskHash, ConcreteType type) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
-      Value messagesValue = valuesDb.get(readHash(unmarshaller, taskHash));
+      Value messagesValue = valuesDb.get(unmarshaller.readHash());
       ConcreteArrayType messageArrayType = typesDb.array(messagesDb.messageType());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
@@ -92,7 +90,7 @@ public class OutputsDb {
       if (Messages.containsErrors(messages)) {
         return new Output(messages);
       } else {
-        HashCode resultObjectHash = readHash(unmarshaller, taskHash);
+        HashCode resultObjectHash = unmarshaller.readHash();
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
@@ -102,15 +100,6 @@ public class OutputsDb {
       }
     } catch (IOException e) {
       throw ioException(e);
-    }
-  }
-
-  private static HashCode readHash(Unmarshaller unmarshaller, HashCode taskHash)
-      throws IOException {
-    try {
-      return unmarshaller.readHash();
-    } catch (NotEnoughBytesException e) {
-      throw corruptedHashSequenceException(taskHash);
     }
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.db.hashed;
 import static okio.Okio.buffer;
 
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.IOException;
 
 import com.google.common.hash.HashCode;
@@ -21,30 +22,19 @@ public class Unmarshaller implements Closeable {
     return source;
   }
 
-  public HashCode readHash() throws NotEnoughBytesException, IOException {
+  public HashCode readHash() throws EOFException, IOException {
     return readHash(false);
   }
 
-  public HashCode tryReadHash() throws NotEnoughBytesException, IOException {
+  public HashCode tryReadHash() throws EOFException, IOException {
     return readHash(true);
   }
 
-  private HashCode readHash(boolean allowNull) throws NotEnoughBytesException, IOException {
+  private HashCode readHash(boolean allowNull) throws EOFException, IOException {
     if (allowNull && source.exhausted()) {
       return null;
     }
-    return HashCode.fromBytes(readBytes(Hash.size()));
-  }
-
-  private byte[] readBytes(int size)
-      throws NotEnoughBytesException, IOException {
-    byte[] bytes = new byte[size];
-    int read = source.read(bytes);
-    if (read < size) {
-      read = Math.max(0, read);
-      throw new NotEnoughBytesException(size, read);
-    }
-    return bytes;
+    return HashCode.fromBytes(source.readByteArray(Hash.size()));
   }
 
   @Override

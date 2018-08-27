@@ -10,11 +10,6 @@ public class ValuesDbException extends RuntimeException {
         hash, "Its Merkle tree root has " + childCount + " children.");
   }
 
-  public static ValuesDbException corruptedHashSequenceException(HashCode hash) {
-    return corruptedValueException(hash,
-        "Expected sequence of hashes but number of bytes is not multiple of hash size.");
-  }
-
   public static ValuesDbException corruptedValueException(HashCode hash, String message) {
     return new ValuesDbException(hash.toString() + " value in ValuesDb is corrupted. " + message);
   }

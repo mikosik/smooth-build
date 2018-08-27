@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.hash.HashCode;
@@ -41,8 +39,6 @@ public class Instantiator {
   private List<HashCode> readHashes(HashCode hash) {
     try {
       return hashedDb.readHashes(hash);
-    } catch (NotEnoughBytesException e) {
-      throw corruptedHashSequenceException(hash);
     } catch (IOException e) {
       throw ioException(e);
     }
