@@ -19,6 +19,8 @@ import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.hash.HashCode;
 
+import okio.ByteString;
+
 public class ValueHashTest {
   private TypesDb typesDb;
   private ValuesDb valuesDb;
@@ -57,9 +59,9 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_some_blob_is_stable() throws Exception {
-    given(blob = createBlob(valuesDb, new byte[] { 1, 2, 3 }));
+    given(blob = createBlob(valuesDb, ByteString.encodeUtf8("aaa")));
     when(() -> blob.hash());
-    thenReturned(HashCode.fromString("e8c40738ed9655dcc5cdc344654c20aa365a75bf"));
+    thenReturned(HashCode.fromString("72ae3804e4c12bbd45e26440e9817a5bf3ca0811"));
   }
 
   @Test
@@ -100,7 +102,7 @@ public class ValueHashTest {
   @Test
   public void hash_of_non_empty_blob_array_is_stable() throws Exception {
     given(array = valuesDb.arrayBuilder(typesDb.blob()).add(
-        createBlob(valuesDb, new byte[] {})).build());
+        createBlob(valuesDb, ByteString.of())).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("3dd2f9efc115cc922304f91df183bc8359df9ec8"));
   }
@@ -136,7 +138,7 @@ public class ValueHashTest {
         .build();
   }
 
-  private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
+  private static Blob createBlob(ValuesDb valuesDb, ByteString content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
     blobBuilder.sink().write(content);
     return blobBuilder.build();

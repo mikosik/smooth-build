@@ -1,10 +1,12 @@
 package org.smoothbuild.acceptance;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.util.Okios.readAndClose;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +62,7 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
         result.addAll(actualFiles(file, rootPathLength));
       } else {
         result.add(file.getPath().substring(rootPathLength));
-        result.add(inputStreamToString(new FileInputStream(file)));
+        result.add(readAndClose(buffer(source(file)), s -> s.readString(CHARSET)));
       }
     }
     return result;
@@ -88,7 +90,7 @@ public class FileArrayMatcher extends TypeSafeMatcher<File> {
       if (!(file.exists() && file.isFile())) {
         return false;
       }
-      if (!content.equals(inputStreamToString(new FileInputStream(file)))) {
+      if (!content.equals(readAndClose(buffer(source(file)), s -> s.readString(CHARSET)))) {
         return false;
       }
     }

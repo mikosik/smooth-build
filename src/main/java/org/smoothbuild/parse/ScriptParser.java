@@ -1,10 +1,11 @@
 package org.smoothbuild.parse;
 
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
-import static org.smoothbuild.util.Paths.openBufferedInputStream;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -33,7 +34,7 @@ public class ScriptParser {
   public static Maybe<ModuleContext> parseScript(Path scriptFile) {
     ANTLRInputStream antlrInputStream;
     try {
-      antlrInputStream = new ANTLRInputStream(openBufferedInputStream(scriptFile));
+      antlrInputStream = new ANTLRInputStream(buffer(source(scriptFile)).inputStream());
     } catch (IOException e) {
       return error("error: Cannot read build script file '" + scriptFile + "'.");
     }

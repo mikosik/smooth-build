@@ -13,12 +13,12 @@ import okio.ByteString;
 
 public class ValueCreatorsTest {
   private Blob blob;
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
   public void creates_blob_with_bytes_as_content() throws Exception {
     given(blob = blob(new TestingValueFactory(), bytes));
     when(blob.source().readByteString());
-    thenReturned(ByteString.of(bytes, 0, bytes.length));
+    thenReturned(bytes);
   }
 }

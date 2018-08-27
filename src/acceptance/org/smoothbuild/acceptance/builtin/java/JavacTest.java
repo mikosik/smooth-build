@@ -1,10 +1,11 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.util.Okios.readAndClose;
 import static org.testory.Testory.thenEqual;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -121,7 +122,7 @@ public class JavacTest extends AcceptanceTestCase {
   }
 
   private byte[] byteCode(File classFilePath) throws IOException {
-    return inputStreamToByteArray(new FileInputStream(classFilePath));
+    return readAndClose(buffer(source(classFilePath)), s -> s.readByteArray());
   }
 
   private Class<?> loadClass(MyClassLoader classLoader, byte[] bytes) {

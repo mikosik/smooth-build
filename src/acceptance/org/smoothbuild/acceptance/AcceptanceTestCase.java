@@ -4,7 +4,10 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
@@ -18,11 +21,10 @@ import static org.smoothbuild.cli.Commands.LIST;
 import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static org.smoothbuild.util.Okios.readAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -212,6 +214,6 @@ public abstract class AcceptanceTestCase {
   }
 
   public String artifactContent(String artifact) throws IOException {
-    return inputStreamToString(new FileInputStream(artifact(artifact)));
+    return readAndClose(buffer(source(artifact(artifact))), s -> s.readString(CHARSET));
   }
 }

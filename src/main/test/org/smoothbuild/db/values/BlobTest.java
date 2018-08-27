@@ -22,8 +22,8 @@ import com.google.common.hash.HashCode;
 import okio.ByteString;
 
 public class BlobTest {
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
-  private final byte[] otherBytes = new byte[] { 4, 5, 6 };
+  private final ByteString bytes = ByteString.encodeUtf8("aaa");
+  private final ByteString otherBytes = ByteString.encodeUtf8("bbb");
   private HashedDb hashedDb;
   private TypesDb typesDb;
   private ValuesDb valuesDb;
@@ -67,7 +67,7 @@ public class BlobTest {
   public void blob_has_content_passed_to_builder() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     when(blob.source().readByteString());
-    thenReturned(ByteString.of(bytes, 0, bytes.length));
+    thenReturned(bytes);
   }
 
   @Test
@@ -136,12 +136,12 @@ public class BlobTest {
 
   @Test
   public void to_string() throws Exception {
-    given(blob = createBlob(valuesDb, new byte[] { 1, 2, 3 }));
+    given(blob = createBlob(valuesDb, bytes));
     when(() -> blob.toString());
     thenReturned("Blob(...):" + blob.hash());
   }
 
-  private static Blob createBlob(ValuesDb valuesDb, byte[] content) throws Exception {
+  private static Blob createBlob(ValuesDb valuesDb, ByteString content) throws Exception {
     BlobBuilder blobBuilder = valuesDb.blobBuilder();
     blobBuilder.sink().write(content);
     return blobBuilder.build();

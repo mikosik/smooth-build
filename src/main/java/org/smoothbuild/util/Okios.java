@@ -11,4 +11,10 @@ public class Okios {
       source.readAll(sink);
     }
   }
+
+  public static <T> T readAndClose(BufferedSource source, DataReader<T> reader) throws IOException {
+    try (BufferedSource toClose = source) {
+      return reader.readFrom(source);
+    }
+  }
 }

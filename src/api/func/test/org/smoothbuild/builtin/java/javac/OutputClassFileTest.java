@@ -1,5 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static okio.Okio.buffer;
+import static okio.Okio.sink;
 import static org.hamcrest.Matchers.contains;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -14,12 +16,14 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.TestingContainer;
-import org.smoothbuild.util.Streams;
+
+import okio.BufferedSink;
+import okio.ByteString;
 
 public class OutputClassFileTest {
   private final NativeApi nativeApi = new TestingContainer();
   private final Path path = Path.path("my/path");
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   private ArrayBuilder fileArrayBuilder;
   private OutputClassFile outputClassFile;
@@ -28,7 +32,9 @@ public class OutputClassFileTest {
   public void open_output_stream() throws IOException {
     given(fileArrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().file()));
     given(outputClassFile = new OutputClassFile(fileArrayBuilder, path, nativeApi));
-    Streams.writeAndClose(outputClassFile.openOutputStream(), bytes);
+    try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
+      sink.write(bytes);
+    }
     when(() -> fileArrayBuilder.build().asIterable(Struct.class));
     thenReturned(contains(file(nativeApi.create(), path, bytes)));
   }

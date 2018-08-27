@@ -1,10 +1,10 @@
 package org.smoothbuild.testing.db.values;
 
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
@@ -17,6 +17,8 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.TestingValueFactory;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
+
+import okio.ByteString;
 
 public class ValueCreators {
   public static <T extends Value> Array array(HashedDb hashedDb, ConcreteType elementType,
@@ -38,27 +40,27 @@ public class ValueCreators {
   }
 
   public static Struct file(ValueFactory valueFactory, Path path) {
-    return file(valueFactory, path, path.value().getBytes(SmoothConstants.CHARSET));
+    return file(valueFactory, path, ByteString.encodeString(path.value(), CHARSET));
   }
 
-  public static Struct file(Path path, byte[] content) {
+  public static Struct file(Path path, ByteString content) {
     ValueFactory valueFactory = new TestingValueFactory();
     SString string = valueFactory.string(path.value());
     Blob blob = blob(valueFactory, content);
     return valueFactory.file(string, blob);
   }
 
-  public static Struct file(ValueFactory valueFactory, Path path, byte[] content) {
+  public static Struct file(ValueFactory valueFactory, Path path, ByteString content) {
     SString string = valueFactory.string(path.value());
     Blob blob = blob(valueFactory, content);
     return valueFactory.file(string, blob);
   }
 
-  public static Blob blob(byte[] bytes) {
+  public static Blob blob(ByteString bytes) {
     return blob(new TestingValueFactory(), bytes);
   }
 
-  public static Blob blob(ValueFactory valueFactory, byte[] bytes) {
+  public static Blob blob(ValueFactory valueFactory, ByteString bytes) {
     try {
       return valueFactory.blob(sink -> sink.write(bytes));
     } catch (IOException e) {

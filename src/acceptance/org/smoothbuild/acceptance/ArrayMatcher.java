@@ -1,10 +1,12 @@
 package org.smoothbuild.acceptance;
 
 import static java.util.Arrays.stream;
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.util.Okios.readAndClose;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Arrays;
@@ -60,7 +62,7 @@ public class ArrayMatcher extends TypeSafeMatcher<File> {
     if (file.isDirectory()) {
       return actualArray(file);
     }
-    return inputStreamToString(new FileInputStream(file));
+    return readAndClose(buffer(source(file)), s -> s.readString(CHARSET));
   }
 
   private static Object actualArray(File file) throws IOException {

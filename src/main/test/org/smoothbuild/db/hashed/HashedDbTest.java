@@ -22,8 +22,8 @@ import com.google.common.hash.HashCode;
 import okio.ByteString;
 
 public class HashedDbTest {
-  private final byte[] bytes1 = new byte[] { 1 };
-  private final byte[] bytes2 = new byte[] { 1, 2 };
+  private final ByteString bytes1 = ByteString.encodeUtf8("aaa");
+  private final ByteString bytes2 = ByteString.encodeUtf8("bbb");
   private HashCode hash;
   private HashedDb hashedDb;
   private Marshaller marshaller;
@@ -113,8 +113,8 @@ public class HashedDbTest {
   public void written_empty_byte_array_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).close();
-    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
-    thenReturned(new byte[] {});
+    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
+    thenReturned(ByteString.of());
   }
 
   @Test
@@ -123,7 +123,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(hashId));
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
+    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
     thenReturned(bytes1);
   }
 
@@ -135,7 +135,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
+    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
     thenReturned(bytes1);
   }
 
@@ -147,7 +147,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(marshaller.hash()));
     given(() -> marshaller.sink().write(bytes2));
     given(() -> marshaller.close());
-    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteArray());
+    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
     thenReturned(bytes1);
   }
 

@@ -1,9 +1,6 @@
 package org.smoothbuild.io.util;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -29,9 +26,5 @@ public class JarFile {
 
   public Path path() {
     return path;
-  }
-
-  public InputStream openInputStream() throws FileNotFoundException {
-    return new FileInputStream(path.toFile());
   }
 }

@@ -5,6 +5,6 @@ import java.io.IOException;
 import okio.BufferedSink;
 
 @FunctionalInterface
-public interface DataInjector {
-  public void injectTo(BufferedSink sink) throws IOException;
+public interface DataWriter {
+  public void writeTo(BufferedSink sink) throws IOException;
 }
