@@ -17,7 +17,6 @@ import java.util.Map;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
-import org.smoothbuild.db.values.ValuesDbException;
 import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
@@ -152,7 +151,8 @@ public class TypesDb {
         HashCode dataHash = hashes.get(1);
         return readFromDataHash(dataHash, typeHash);
       default:
-        throw ValuesDbException.newCorruptedMerkleRootException(hash, hashes.size());
+        throw corruptedValueException(
+            hash, "Its Merkle tree root has " + hashes.size() + " children.");
     }
   }
 
@@ -174,18 +174,20 @@ public class TypesDb {
               instantiator, hashedDb, this));
         default:
       }
-      Iterable<Field> fields = readFields(unmarshaller.readHash());
+      Iterable<Field> fields = readFields(unmarshaller.readHash(), typeHash);
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash) throws IOException {
+  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) throws IOException {
     List<Field> result = new ArrayList<>();
     for (HashCode fieldHash : hashedDb.readHashes(hash)) {
       List<HashCode> hashes = hashedDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
-        throw ValuesDbException.newCorruptedMerkleRootException(hash, hashes.size());
+        throw corruptedValueException(typeHash,
+            "It is struct type but one of its field hashes doesn't have two children but "
+                + hashes.size() + ".");
       }
       String name = hashedDb.readString(hashes.get(0));
       ConcreteType type = read(hashes.get(1));
