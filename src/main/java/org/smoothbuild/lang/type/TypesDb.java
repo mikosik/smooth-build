@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.NotEnoughBytesException;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
 import org.smoothbuild.db.values.ValuesDbException;
@@ -131,13 +129,11 @@ public class TypesDb {
         return readImpl(hash);
       } catch (IOException e) {
         throw ioException(e);
-      } catch (NotEnoughBytesException e) {
-        throw corruptedHashSequenceException(hash);
       }
     }
   }
 
-  private ConcreteType readImpl(HashCode hash) throws IOException, NotEnoughBytesException {
+  private ConcreteType readImpl(HashCode hash) throws IOException {
     List<HashCode> hashes = hashedDb.readHashes(hash);
     switch (hashes.size()) {
       case 1:
@@ -161,7 +157,7 @@ public class TypesDb {
   }
 
   protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash)
-      throws NotEnoughBytesException, IOException {
+      throws IOException {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
       String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
@@ -184,7 +180,7 @@ public class TypesDb {
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash) throws IOException, NotEnoughBytesException {
+  private Iterable<Field> readFields(HashCode hash) throws IOException {
     List<Field> result = new ArrayList<>();
     for (HashCode fieldHash : hashedDb.readHashes(hash)) {
       List<HashCode> hashes = hashedDb.readHashes(fieldHash);

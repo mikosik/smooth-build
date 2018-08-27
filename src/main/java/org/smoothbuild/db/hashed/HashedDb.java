@@ -60,7 +60,7 @@ public class HashedDb {
     }
   }
 
-  public List<HashCode> readHashes(HashCode hash) throws NotEnoughBytesException, IOException {
+  public List<HashCode> readHashes(HashCode hash) throws IOException {
     List<HashCode> result = new ArrayList<>();
     try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
       HashCode elementHash = null;

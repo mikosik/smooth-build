@@ -1,12 +1,10 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.db.values.ValuesDbException.corruptedHashSequenceException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.NotEnoughBytesException;
 
 import com.google.common.hash.HashCode;
 
@@ -38,8 +36,6 @@ public class TypeType extends ConcreteType {
       return typesDb.readFromDataHash(dataHash, hash());
     } catch (IOException e) {
       throw ioException(e);
-    } catch (NotEnoughBytesException e) {
-      throw corruptedHashSequenceException(hash());
     }
   }
 }
