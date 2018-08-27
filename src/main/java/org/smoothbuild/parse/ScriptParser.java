@@ -30,11 +30,13 @@ import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.util.Maybe;
 
+import okio.BufferedSource;
+
 public class ScriptParser {
   public static Maybe<ModuleContext> parseScript(Path scriptFile) {
     ANTLRInputStream antlrInputStream;
     try {
-      antlrInputStream = new ANTLRInputStream(buffer(source(scriptFile)).inputStream());
+      antlrInputStream = antlrInputStream(scriptFile);
     } catch (IOException e) {
       return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
@@ -49,6 +51,12 @@ public class ScriptParser {
     parser.addErrorListener(errorListener);
 
     return maybe(parser.module(), errorListener.foundErrors());
+  }
+
+  private static ANTLRInputStream antlrInputStream(Path scriptFile) throws IOException {
+    try (BufferedSource source = buffer(source(scriptFile))) {
+      return new ANTLRInputStream(source.inputStream());
+    }
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
