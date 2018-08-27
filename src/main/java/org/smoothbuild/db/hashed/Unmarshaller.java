@@ -30,24 +30,19 @@ public class Unmarshaller implements Closeable {
   }
 
   private HashCode readHash(boolean allowNull) throws NotEnoughBytesException, IOException {
-    byte[] bytes = readBytes(Hash.size(), "hash", allowNull);
-    if (bytes == null && allowNull) {
+    if (allowNull && source.exhausted()) {
       return null;
     }
-    return HashCode.fromBytes(bytes);
+    return HashCode.fromBytes(readBytes(Hash.size()));
   }
 
-  private byte[] readBytes(int size, String valueName, boolean allowNull)
+  private byte[] readBytes(int size)
       throws NotEnoughBytesException, IOException {
     byte[] bytes = new byte[size];
     int read = source.read(bytes);
     if (read < size) {
-      if (read == -1 && allowNull) {
-        return null;
-      } else {
-        read = Math.max(0, read);
-        throw new NotEnoughBytesException(size, read);
-      }
+      read = Math.max(0, read);
+      throw new NotEnoughBytesException(size, read);
     }
     return bytes;
   }
