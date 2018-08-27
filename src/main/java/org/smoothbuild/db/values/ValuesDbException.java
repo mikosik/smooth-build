@@ -5,11 +5,6 @@ import java.io.IOException;
 import com.google.common.hash.HashCode;
 
 public class ValuesDbException extends RuntimeException {
-  public static ValuesDbException newCorruptedMerkleRootException(HashCode hash, int childCount) {
-    return corruptedValueException(
-        hash, "Its Merkle tree root has " + childCount + " children.");
-  }
-
   public static ValuesDbException corruptedValueException(HashCode hash, String message) {
     return new ValuesDbException(hash.toString() + " value in ValuesDb is corrupted. " + message);
   }
