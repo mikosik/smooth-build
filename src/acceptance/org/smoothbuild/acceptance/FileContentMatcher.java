@@ -1,9 +1,11 @@
 package org.smoothbuild.acceptance;
 
-import static org.smoothbuild.util.Streams.inputStreamToString;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.util.Okios.readAndClose;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.hamcrest.Description;
@@ -29,10 +31,13 @@ public class FileContentMatcher extends TypeSafeMatcher<File> {
   @Override
   protected boolean matchesSafely(File item) {
     try {
-      return item.isFile()
-          && expectedContent.equals(inputStreamToString(new FileInputStream(item)));
+      return item.isFile() && expectedContent.equals(content(item));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private static String content(File item) throws IOException {
+    return readAndClose(buffer(source(item)), s -> s.readString(CHARSET));
   }
 }

@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.util.Streams.writeAndClose;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +14,11 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 
+import okio.BufferedSink;
+import okio.ByteString;
+
 public class RecursivePathsIteratorTest {
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final ByteString bytes = ByteString.encodeUtf8("abc");
 
   @Test
   public void test() throws IOException {
@@ -58,7 +60,9 @@ public class RecursivePathsIteratorTest {
   @Test
   public void throws_exception_when_dir_is_a_file() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    writeAndClose(fileSystem.sink(path("my/file")).outputStream(), bytes);
+    try (BufferedSink sink = fileSystem.sink(path("my/file"))) {
+      sink.write(bytes);
+    }
     try {
       recursivePathsIterator(fileSystem, path("my/file"));
       fail("exception should be thrown");
@@ -72,7 +76,9 @@ public class RecursivePathsIteratorTest {
     FileSystem fileSystem = new MemoryFileSystem();
     for (String name : names) {
       Path path = path(rootDir).append(path(name));
-      writeAndClose(fileSystem.sink(path).outputStream(), bytes);
+      try (BufferedSink sink = fileSystem.sink(path)) {
+        sink.write(bytes);
+      }
     }
 
     PathIterator iterator = recursivePathsIterator(fileSystem, path(expectedRootDir));

@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.javac;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
@@ -13,18 +12,18 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Struct;
 
+import okio.ByteString;
+
 public class InputSourceFileTest {
   private Path path;
-  private String content;
   private Struct file;
 
   @Test
   public void get_char_content_returns_file_content() throws IOException {
     given(path = path("my/path"));
-    given(content = "some content");
-    given(file = file(path, content.getBytes(CHARSET)));
+    given(file = file(path, ByteString.encodeUtf8("abc")));
     when(new InputSourceFile(file)).getCharContent(true);
-    thenReturned(content);
+    thenReturned("abc");
   }
 
   @Test

@@ -34,6 +34,8 @@ import org.smoothbuild.task.base.Output;
 
 import com.google.common.hash.HashCode;
 
+import okio.ByteString;
+
 public class OutputsDbTest {
   private HashedDb hashedDbValues;
   private HashedDb hashedDbOutputs;
@@ -45,7 +47,7 @@ public class OutputsDbTest {
   private OutputsDb outputsDb;
   private final HashCode hash = Hash.string("abc");
 
-  private final byte[] bytes = new byte[] {};
+  private final ByteString bytes = ByteString.encodeUtf8("abc");
   private final Path path = path("file/path");
 
   private Message message;
@@ -149,7 +151,7 @@ public class OutputsDbTest {
     thenReturned(string);
   }
 
-  private static Blob writeBlob(ValuesDb valuesDb, byte[] bytes) throws IOException {
+  private static Blob writeBlob(ValuesDb valuesDb, ByteString bytes) throws IOException {
     BlobBuilder builder = valuesDb.blobBuilder();
     builder.sink().write(bytes);
     return builder.build();

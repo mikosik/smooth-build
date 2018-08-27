@@ -1,9 +1,11 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.db.values.ValueCreators.file;
-import static org.smoothbuild.util.Streams.inputStreamToByteArray;
+import static org.smoothbuild.util.Okios.readAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -14,8 +16,10 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Struct;
 
+import okio.ByteString;
+
 public class InputClassFileTest {
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final ByteString bytes = ByteString.encodeUtf8("abc");
   private InputClassFile inputClassFile;
   private final Path path = path("a/b/MyClass.class");
   private Struct file;
@@ -28,8 +32,8 @@ public class InputClassFileTest {
   @Test
   public void input_class_files_with_equal_paths_but_different_content_are_equal()
       throws Exception {
-    when(new InputClassFile(file(path, new byte[] { 1, 2, 3 })));
-    thenReturned(new InputClassFile(file(path, new byte[] { 4, 5, 6 })));
+    when(new InputClassFile(file(path, ByteString.encodeUtf8("abc"))));
+    thenReturned(new InputClassFile(file(path, ByteString.encodeUtf8("def"))));
   }
 
   @Test
@@ -92,7 +96,8 @@ public class InputClassFileTest {
   public void open_input_stream_returns_file_content() throws Exception {
     given(file = file(path, bytes));
     given(inputClassFile = new InputClassFile(file));
-    when(inputStreamToByteArray(inputClassFile.openInputStream()));
+    when(() -> readAndClose(buffer(source(inputClassFile.openInputStream())),
+        s -> s.readByteString()));
     thenReturned(bytes);
   }
 

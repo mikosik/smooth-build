@@ -14,12 +14,13 @@ import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 import okio.BufferedSink;
+import okio.ByteString;
 
 public class MemoryFileTest {
   private final MemoryDir parent = mock(MemoryDir.class);
   private final Path name = Path.path("some/path");
   private final Path otherName = Path.path("other/path");
-  private final byte[] bytes = new byte[] { 1, 2, 3 };
+  private final ByteString bytes = ByteString.encodeUtf8("aaa");
   private MemoryFile file;
   private BufferedSink sink;
 
@@ -92,6 +93,6 @@ public class MemoryFileTest {
     given(sink = file.sink());
     given(sink).write(bytes);
     given(sink).close();
-    thenEqual(bytes, file.source().readByteArray());
+    thenEqual(bytes, file.source().readByteString());
   }
 }

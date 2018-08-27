@@ -1,10 +1,11 @@
 package org.smoothbuild.parse;
 
+import static okio.Okio.buffer;
+import static okio.Okio.source;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.lang.base.Name.isLegalName;
 import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Maybe.value;
-import static org.smoothbuild.util.Paths.openBufferedInputStream;
 import static org.smoothbuild.util.reflect.ClassLoaders.jarClassLoader;
 import static org.smoothbuild.util.reflect.Classes.CLASS_FILE_EXTENSION;
 import static org.smoothbuild.util.reflect.Classes.binaryPathToBinaryName;
@@ -113,6 +114,6 @@ public class FindNatives {
   }
 
   private static JarInputStream newJarInputStream(Path jarPath) throws IOException {
-    return new JarInputStream(openBufferedInputStream(jarPath));
+    return new JarInputStream(buffer(source(jarPath)).inputStream());
   }
 }

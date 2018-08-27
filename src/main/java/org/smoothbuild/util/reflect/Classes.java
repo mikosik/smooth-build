@@ -1,6 +1,8 @@
 package org.smoothbuild.util.reflect;
 
-import static com.google.common.io.ByteStreams.toByteArray;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.util.Okios.readAndClose;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +12,8 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 import com.google.common.io.ByteStreams;
+
+import okio.ByteString;
 
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";
@@ -42,9 +46,7 @@ public class Classes {
     return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
   }
 
-  public static byte[] bytecode(Class<?> klass) throws IOException {
-    try (InputStream inputStream = byteCodeAsInputStream(klass)) {
-      return toByteArray(inputStream);
-    }
+  public static ByteString bytecode(Class<?> klass) throws IOException {
+    return readAndClose(buffer(source(byteCodeAsInputStream(klass))), s -> s.readByteString());
   }
 }

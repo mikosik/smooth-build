@@ -12,7 +12,9 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.util.ForwardingOutputStream;
+
+import okio.ForwardingSink;
+import okio.Okio;
 
 public class OutputClassFile extends SimpleJavaFileObject {
   private final ArrayBuilder fileArrayBuilder;
@@ -30,15 +32,14 @@ public class OutputClassFile extends SimpleJavaFileObject {
 
   @Override
   public OutputStream openOutputStream() throws IOException {
-    OutputStream outputStream = contentBuilder.sink().outputStream();
-    return new ForwardingOutputStream(outputStream) {
+    return Okio.buffer(new ForwardingSink(contentBuilder.sink()) {
       @Override
       public void close() throws IOException {
-        outputStream.close();
+        super.close();
         SString pathString = nativeApi.create().string(path.value());
         Struct file = nativeApi.create().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
-    };
+    }).outputStream();
   }
 }

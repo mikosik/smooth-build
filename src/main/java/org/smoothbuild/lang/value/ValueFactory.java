@@ -8,7 +8,7 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.util.DataInjector;
+import org.smoothbuild.util.DataWriter;
 
 public class ValueFactory {
   private final Types types;
@@ -39,9 +39,9 @@ public class ValueFactory {
     return valuesDb.blobBuilder();
   }
 
-  public Blob blob(DataInjector dataInjector) throws IOException {
+  public Blob blob(DataWriter dataInjector) throws IOException {
     try (BlobBuilder builder = blobBuilder()) {
-      dataInjector.injectTo(builder.sink());
+      dataInjector.writeTo(builder.sink());
       return builder.build();
     }
   }
