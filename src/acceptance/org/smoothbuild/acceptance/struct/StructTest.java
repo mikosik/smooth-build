@@ -90,12 +90,12 @@ public class StructTest extends AcceptanceTestCase {
   @Test
   public void field_with_unknown_type_causes_error() throws Exception {
     givenScript("MyStruct {             \n"
-        + "        Unknown myField      \n"
+        + "        Undefined myField    \n"
         + "      }                      \n"
         + "      result = 'abc';        \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Unknown type 'Unknown'.\n");
+    thenOutputContainsError(2, "Undefined type 'Undefined'.\n");
   }
 
   @Test

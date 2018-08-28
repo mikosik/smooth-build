@@ -87,19 +87,19 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void call_to_unknown_function_causes_error() throws IOException {
-    givenScript("function1 = unknownFunction();");
+  public void call_to_undefined_function_causes_error() throws IOException {
+    givenScript("function1 = undefinedFunction();");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: 'unknownFunction' is undefined.\n");
+    thenOutputContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
   }
 
   @Test
-  public void call_to_unknown_function_with_argument_causes_error() throws IOException {
-    givenScript("function1 = unknownFunction(abc='a');");
+  public void call_to_undefined_function_with_argument_causes_error() throws IOException {
+    givenScript("function1 = undefinedFunction(abc='a');");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: 'unknownFunction' is undefined.\n");
+    thenOutputContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
   }
 
   @Test
@@ -160,11 +160,11 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_with_unknown_result_type_causes_error() throws IOException {
-    givenScript("Unknown result = 'abc';");
+  public void function_with_result_which_type_is_undefined_causes_error() throws IOException {
+    givenScript("Undefined result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
+    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -207,7 +207,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("a genericResult([b] array);");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown generic type 'a'. "
+    thenOutputContainsError(1, "Undefined generic type 'a'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
@@ -217,7 +217,7 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("[a] result = [];");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown generic type 'a'. "
+    thenOutputContainsError(1, "Undefined generic type 'a'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 

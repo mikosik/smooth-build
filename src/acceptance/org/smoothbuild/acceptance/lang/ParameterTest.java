@@ -43,11 +43,11 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void it_is_NOT_possible_to_declare_parameter_of_type_value() throws Exception {
+  public void it_is_not_possible_to_declare_parameter_of_type_value() throws Exception {
     givenScript("oneParameter(Value value) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown type 'Value'.\n");
+    thenOutputContainsError(1, "Undefined type 'Value'.\n");
   }
 
   @Test
@@ -58,11 +58,11 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void it_is_possible_to_declare_parameter_of_unknown_type() throws Exception {
-    givenScript("oneParameter(Unknown unknown) = 'abc';");
+  public void it_is_not_possible_to_declare_parameter_of_undefined_type() throws Exception {
+    givenScript("oneParameter(Undefined undefined) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
+    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -101,11 +101,11 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void it_is_possible_to_declare_parameter_of_array_of_unknown_type() throws Exception {
-    givenScript("oneParameter([Unknown] unknown) = 'abc';");
+  public void it_is_not_possible_to_declare_parameter_of_array_of_unknown_type() throws Exception {
+    givenScript("oneParameter([Undefined] param) = 'abc';");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
+    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -131,14 +131,6 @@ public class ParameterTest extends AcceptanceTestCase {
     whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(3, "'name1' is already defined at build.smooth:2.\n");
-  }
-
-  @Test
-  public void parameter_with_unknown_type_causes_error() throws Exception {
-    givenScript("func(Unknown string) = 'abc';");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenOutputContainsError(1, "Unknown type 'Unknown'.\n");
   }
 
   @Test
