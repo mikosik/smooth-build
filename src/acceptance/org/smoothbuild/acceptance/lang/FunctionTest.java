@@ -147,8 +147,8 @@ public class FunctionTest extends AcceptanceTestCase {
     givenScript("String result = [];");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Type of function's 'result' expression"
-        + " is [Nothing] which is not convertible to function's declared result type String.\n");
+    thenOutputContainsError(1, "Type of function's 'result' expression is '[Nothing]' which "
+        + "is not convertible to function's declared result type 'String'.\n");
   }
 
   @Test
@@ -256,6 +256,6 @@ public class FunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Type of function's 'result' expression "
-        + "is Blob which is not convertible to function's declared result type File.\n");
+        + "is 'Blob' which is not convertible to function's declared result type 'File'.\n");
   }
 }

@@ -47,7 +47,7 @@ public class Natives {
         Class<?> resultJType = method.getReturnType();
         if (!resultType.jType().equals(resultJType)) {
           errors.add(new ParseError(func, "Function '" + func.name() + "' has result type "
-              + resultType.name() + " so its native implementation result type must be "
+              + resultType.q() + " so its native implementation result type must be "
               + resultType.jType().getCanonicalName() + " but it is "
               + resultJType.getCanonicalName() + "."));
           return;

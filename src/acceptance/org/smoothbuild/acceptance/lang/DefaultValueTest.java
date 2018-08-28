@@ -16,8 +16,8 @@ public class DefaultValueTest extends AcceptanceTestCase {
         + "      result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: Parameter 'withDefault' is of type [String] so"
-        + " it cannot have default value of type String.");
+    thenOutputContains("build.smooth:1: error: Parameter 'withDefault' is of type '[String]' so"
+        + " it cannot have default value of type 'String'.");
   }
 
   @Test
@@ -38,7 +38,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
     whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(
-        1, "Parameter 'value' has generic type a so it cannot have default value.");
+        1, "Parameter 'value' has generic type 'a' so it cannot have default value.");
   }
 
   @Test

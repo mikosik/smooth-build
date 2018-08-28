@@ -119,7 +119,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         + "      result = oneStringParameter('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'oneStringParameter' has result type File "
+    thenOutputContains("Function 'oneStringParameter' has result type 'File' "
         + "so its native implementation result type must be org.smoothbuild.lang.value.Struct "
         + "but it is org.smoothbuild.lang.value.SString.\n");
   }

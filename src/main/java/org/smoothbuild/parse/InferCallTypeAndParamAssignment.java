@@ -97,8 +97,8 @@ public class InferCallTypeAndParamAssignment {
           } else {
             failed = true;
             errors.add(new ParseError(arg,
-                "Type mismatch, cannot convert argument '" + arg.name() + "' of type '"
-                    + argType.name() + "' to '" + paramType.name() + "'."));
+                "Type mismatch, cannot convert argument '" + arg.name() + "' of type "
+                    + argType.q() + " to '" + paramType.name() + "'."));
           }
         }
         return failed;

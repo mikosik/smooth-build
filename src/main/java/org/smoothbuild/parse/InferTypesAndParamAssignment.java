@@ -104,8 +104,8 @@ public class InferTypesAndParamAssignment {
             Type type = createType(func.type());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               errors.add(new ParseError(func, "Type of function's '" + func.name()
-                  + "' expression is " + exprType.name()
-                  + " which is not convertible to function's declared result type " + type.name()
+                  + "' expression is " + exprType.q()
+                  + " which is not convertible to function's declared result type " + type.q()
                   + "."));
             }
             return type;
@@ -141,13 +141,13 @@ public class InferTypesAndParamAssignment {
           if (param.hasDefaultValue()) {
             if (param.type().isGeneric()) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
-                  + "' has generic type " + type.name() + " so it cannot have default value."));
+                  + "' has generic type " + type.q() + " so it cannot have default value."));
             } else {
               Type valueType = param.defaultValue().get((Type.class));
               if (valueType != null && !type.isAssignableFrom(valueType)) {
                 errors.add(new ParseError(param, "Parameter '" + param.name()
-                    + "' is of type " + type.name() + " so it cannot have default value of type "
-                    + valueType.name() + "."));
+                    + "' is of type " + type.q() + " so it cannot have default value of type "
+                    + valueType.q() + "."));
               }
             }
           }
@@ -181,8 +181,8 @@ public class InferTypesAndParamAssignment {
                 ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
             expr.set(Type.class, null);
-            errors.add(new ParseError(expr.location(), "Type '" + exprType.name()
-                + "' doesn't have field '" + expr.fieldName() + "'."));
+            errors.add(new ParseError(expr.location(), "Type " + exprType.q()
+                + " doesn't have field '" + expr.fieldName() + "'."));
           }
         }
       }
@@ -213,8 +213,8 @@ public class InferTypesAndParamAssignment {
           if (elemType == null) {
             errors.add(new ParseError(array,
                 "Array cannot contain elements of incompatible types.\n"
-                    + "First element has type '" + firstType.name()
-                    + "' while element at index " + i + " has type '" + type.name() + "'."));
+                    + "First element has type " + firstType.q()
+                    + " while element at index " + i + " has type " + type.q() + "."));
             return null;
           }
         }
