@@ -32,6 +32,11 @@ public abstract class AbstractType implements Type {
   }
 
   @Override
+  public String q() {
+    return "'" + name + "'";
+  }
+
+  @Override
   public Class<? extends Value> jType() {
     return jType;
   }

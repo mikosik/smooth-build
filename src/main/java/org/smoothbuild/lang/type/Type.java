@@ -12,6 +12,11 @@ public interface Type {
 
   public String name();
 
+  /**
+   * @return single quoted name of this type.
+   */
+  public String q();
+
   public Class<? extends Value> jType();
 
   public Type coreType();

@@ -81,6 +81,37 @@ public class TypesTest {
   }
 
   @Quackery
+  public static Suite quoted_name() {
+    return suite("Type.q").addAll(asList(
+        typeQuotedNameIs(type, "'Type'"),
+        typeQuotedNameIs(string, "'String'"),
+        typeQuotedNameIs(blob, "'Blob'"),
+        typeQuotedNameIs(nothing, "'Nothing'"),
+        typeQuotedNameIs(person, "'Person'"),
+        typeQuotedNameIs(a, "'a'"),
+
+        typeQuotedNameIs(arrayType, "'[Type]'"),
+        typeQuotedNameIs(arrayString, "'[String]'"),
+        typeQuotedNameIs(arrayBlob, "'[Blob]'"),
+        typeQuotedNameIs(arrayNothing, "'[Nothing]'"),
+        typeQuotedNameIs(arrayPerson, "'[Person]'"),
+        typeQuotedNameIs(arrayA, "'[a]'"),
+
+        typeQuotedNameIs(array2Type, "'[[Type]]'"),
+        typeQuotedNameIs(array2String, "'[[String]]'"),
+        typeQuotedNameIs(array2Blob, "'[[Blob]]'"),
+        typeQuotedNameIs(array2Nothing, "'[[Nothing]]'"),
+        typeQuotedNameIs(array2Person, "'[[Person]]'"),
+        typeQuotedNameIs(array2A, "'[[a]]'")));
+  }
+
+  private static Case typeQuotedNameIs(Type type, String expected) {
+    return newCase(
+        "Type " + type.q(),
+        () -> assertEquals(expected, type.q()));
+  }
+
+  @Quackery
   public static Suite to_string() {
     return suite("Type.toString").addAll(asList(
         typeToStringIs(type, "Type(\"Type\")"),
