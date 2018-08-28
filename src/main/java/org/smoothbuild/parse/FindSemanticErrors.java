@@ -46,7 +46,7 @@ public class FindSemanticErrors {
     duplicateFieldNames(errors, ast);
     duplicateParamNames(errors, ast);
     duplicateArgNames(errors, ast);
-    unknownArgNames(errors, functions, ast);
+    undefinedArgNames(errors, functions, ast);
     structNameStartingWithLowercaseLetter(errors, ast);
     firstFieldWithForbiddenType(errors, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(errors, ast);
@@ -125,7 +125,7 @@ public class FindSemanticErrors {
         if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
         } else if (!(isGenericTypeName(type.name()) || all.contains(type.name()))) {
-          errors.add(new ParseError(type.location(), "Unknown type '" + type.name() + "'."));
+          errors.add(new ParseError(type.location(), "Undefined type '" + type.name() + "'."));
         }
       }
     }.visitAst(ast);
@@ -217,7 +217,7 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void unknownArgNames(List<ParseError> errors, Functions functions, Ast ast) {
+  private static void undefinedArgNames(List<ParseError> errors, Functions functions, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitCall(CallNode call) {
@@ -297,7 +297,7 @@ public class FindSemanticErrors {
         if (func.hasType()
             && func.type().isGeneric()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          errors.add(new ParseError(func.type(), "Unknown generic type '"
+          errors.add(new ParseError(func.type(), "Undefined generic type '"
               + func.type().coreType().name()
               + "'. Only generic types used in declaration of function parameters "
               + "can be used here."));
