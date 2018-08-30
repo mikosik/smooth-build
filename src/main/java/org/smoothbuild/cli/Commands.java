@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import org.smoothbuild.MainModule;
 import org.smoothbuild.SmoothPaths;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 
 public class Commands {
@@ -23,24 +24,25 @@ public class Commands {
     if (args.length == 0) {
       args = new String[] { HELP };
     }
-    switch (args[0]) {
-      case BUILD:
-        return runCommand(Build.class, args);
-      case CLEAN:
-        return runCommand(Clean.class, args);
-      case DAG:
-        return runCommand(Dag.class, args);
-      case HELP:
-        return runCommand(Help.class, args);
-      case LIST:
-        return runCommand(List.class, args);
-      case VERSION:
-        return runCommand(Version.class, args);
-      default:
-        System.out.println("smooth: '" + args[0]
-            + "' is not a smooth command. See 'smooth help'.");
-        return EXIT_CODE_ERROR;
+    Class<? extends Command> commandClass = commands().get(args[0]);
+    if (commandClass == null) {
+      System.out.println("smooth: '" + args[0]
+          + "' is not a smooth command. See 'smooth help'.");
+      return EXIT_CODE_ERROR;
+    } else {
+      return runCommand(commandClass, args);
     }
+  }
+
+  private static ImmutableMap<String, Class<? extends Command>> commands() {
+    return ImmutableMap.<String, Class<? extends Command>> builder()
+        .put(BUILD, Build.class)
+        .put(CLEAN, Clean.class)
+        .put(DAG, Dag.class)
+        .put(HELP, Help.class)
+        .put(LIST, List.class)
+        .put(VERSION, Version.class)
+        .build();
   }
 
   private static int runCommand(Class<? extends Command> command, String[] args) {
