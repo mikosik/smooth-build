@@ -34,7 +34,7 @@ public class Clean implements Command {
     try {
       fileSystem.delete(SMOOTH_DIR);
     } catch (IOException e) {
-      console.rawError("Unable to delete " + SMOOTH_DIR + ".");
+      console.error("Unable to delete " + SMOOTH_DIR + ".");
       return EXIT_CODE_ERROR;
     }
     return EXIT_CODE_SUCCESS;

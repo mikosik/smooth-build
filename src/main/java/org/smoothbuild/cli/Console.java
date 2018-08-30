@@ -6,7 +6,6 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.message.Message;
 
 import com.google.common.base.Splitter;
@@ -33,24 +32,15 @@ public class Console {
     this.printStream = printStream;
   }
 
-  public void error(Location location, String message) {
-    println(errorLine(location, message));
-    errorCount++;
-  }
-
-  public void rawErrors(java.util.List<? extends Object> errors) {
+  public void errors(java.util.List<? extends Object> errors) {
     errors
         .stream()
-        .forEach(this::rawError);
+        .forEach(this::error);
   }
 
-  public void rawError(Object error) {
+  public void error(Object error) {
     println(error.toString());
     errorCount++;
-  }
-
-  public static String errorLine(Location location, String message) {
-    return location.toString() + ": error: " + message;
   }
 
   public void error(String message) {
