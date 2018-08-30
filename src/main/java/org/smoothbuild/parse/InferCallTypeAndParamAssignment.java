@@ -41,9 +41,6 @@ public class InferCallTypeAndParamAssignment {
       public void run() {
         call.set(Type.class, null);
         List<? extends ParameterInfo> parametersList = functionParameters();
-        if (parametersList == null) {
-          return;
-        }
         Set<ParameterInfo> parameters = new HashSet<>(parametersList);
         if (assignNamedArguments(parameters)) {
           return;
