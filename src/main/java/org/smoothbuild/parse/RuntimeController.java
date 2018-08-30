@@ -36,7 +36,7 @@ public class RuntimeController {
         .invoke((v) -> loadModule(runtime, valuesDb, paths.defaultScript()))
         .invokeConsumer(ml -> runner.accept(runtime))
         .errors();
-    console.rawErrors(errors);
+    console.errors(errors);
     console.printFinalSummary();
     return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }

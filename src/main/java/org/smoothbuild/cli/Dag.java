@@ -35,7 +35,7 @@ public class Dag implements Command {
     List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
     Maybe<Set<String>> functionNames = validateFunctionNames(argsWithoutFirst);
     if (!functionNames.hasValue()) {
-      console.rawErrors(functionNames.errors());
+      console.errors(functionNames.errors());
       return EXIT_CODE_ERROR;
     }
     return runtimeController.setUpRuntimeAndRun((runtime) -> {

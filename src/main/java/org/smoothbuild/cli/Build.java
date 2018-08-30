@@ -40,7 +40,7 @@ public class Build implements Command {
     List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
     Maybe<Set<String>> functionNames = validateFunctionNames(argsWithoutFirst);
     if (!functionNames.hasValue()) {
-      console.rawErrors(functionNames.errors());
+      console.errors(functionNames.errors());
       return EXIT_CODE_ERROR;
     }
 
@@ -48,7 +48,7 @@ public class Build implements Command {
       try {
         fileSystem.delete(path);
       } catch (IOException e) {
-        console.rawError("Unable to delete " + path + ".");
+        console.error("Unable to delete " + path + ".");
         return EXIT_CODE_ERROR;
       }
     }
