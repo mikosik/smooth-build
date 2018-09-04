@@ -998,8 +998,8 @@ public class TypesTest {
   }
 
   @Quackery
-  public static Suite is_arg_assignable_from() throws Exception {
-    return suite("Type.isArgAssignableFrom").addAll(asList(
+  public static Suite is_param_assignable_from() throws Exception {
+    return suite("Type.isParamAssignableFrom").addAll(asList(
         allowedParameterAssignment(type, type),
         illegalParameterAssignment(type, string),
         illegalParameterAssignment(type, blob),
