@@ -44,7 +44,7 @@
     <property name="lib.junit" value="${dir.lib}/ivy/junit-4.12.jar"/>
     <property name="lib.junittoolbox" value="${dir.lib}/ivy/junit-toolbox-2.4.jar"/>
     <property name="lib.okio" value="${dir.lib}/ivy/okio-1.15.0.jar"/>
-    <property name="lib.quackery" value="${dir.lib}/quackery-0.13.2.jar"/>
+    <property name="lib.quackery" value="${dir.lib}/quackery-0.15.0.jar"/>
     <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.0.8.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.3.0.jar"/>
 
