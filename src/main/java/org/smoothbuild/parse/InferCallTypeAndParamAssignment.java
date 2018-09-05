@@ -1,18 +1,13 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableListMultimap.toImmutableListMultimap;
-import static com.google.common.collect.Sets.filter;
 import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
-import static org.smoothbuild.lang.type.TypeHierarchy.sortedTypes;
-import static org.smoothbuild.parse.arg.ArgsStringHelper.argsToString;
-import static org.smoothbuild.parse.arg.ArgsStringHelper.assignedArgsToString;
+import static org.smoothbuild.parse.ArgToParamInferer.findAssignment;
 import static org.smoothbuild.util.Collections.toMap;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.map;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,17 +16,12 @@ import java.util.Set;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.GenericTypeMap;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.parse.arg.ArgsStringHelper;
-import org.smoothbuild.parse.arg.ParametersPool;
-import org.smoothbuild.parse.arg.TypedParametersPool;
+import org.smoothbuild.parse.ArgToParamInferer.ArgToParamInfererException;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
-
-import com.google.common.collect.ImmutableMultimap;
 
 public class InferCallTypeAndParamAssignment {
   public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime, Ast ast,
@@ -59,7 +49,6 @@ public class InferCallTypeAndParamAssignment {
         if (assignNamelessArguments(parameters)) {
           return;
         }
-        failWhenUnassignedRequiredParameterIsLeft(errors, parameters);
         call.set(Type.class, callType(parametersList, actualTypeMap));
       }
 
@@ -130,76 +119,23 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private boolean assignNamelessArguments(Set<ParameterInfo> parameters) {
-        ParametersPool parametersPool = new ParametersPool(
-            filter(parameters, not(ParameterInfo::isRequired)),
-            filter(parameters, ParameterInfo::isRequired));
-        ImmutableMultimap<ConcreteType, ArgNode> namelessArgs = call
-            .args()
-            .stream()
-            .filter(a -> !a.hasName())
-            .collect(toImmutableListMultimap(a -> (ConcreteType) a.get(Type.class), a -> a));
-        for (ConcreteType type : sortedTypes(namelessArgs.keySet())) {
-          Collection<ArgNode> availableArguments = namelessArgs.get(type);
-          int argsSize = availableArguments.size();
-          TypedParametersPool availableTypedParams = parametersPool.assignableFrom(type);
-          if (argsSize == 1 && availableTypedParams.hasCandidate()) {
-            ArgNode onlyArgument = availableArguments.iterator().next();
-            ParameterInfo candidateParameter = availableTypedParams.candidate();
-            onlyArgument.set(ParameterInfo.class, candidateParameter);
-            parametersPool.take(candidateParameter);
-            parameters.remove(candidateParameter);
-          } else {
-            availableArguments.stream().forEach(a -> a.set(ParameterInfo.class, null));
-            String message = ambiguousAssignmentErrorMessage(
-                call, availableArguments, availableTypedParams);
-            errors.add(new ParseError(call, message));
-            return true;
+        List<ArgNode> namelessArgsList = filter(call.args(), a -> !a.hasName());
+        try {
+          ArrayList<ParameterInfo> parameterList = new ArrayList<>(parameters);
+          List<ArgNode> assignment = findAssignment(namelessArgsList, parameterList);
+          for (int i = 0; i < assignment.size(); i++) {
+            ArgNode arg = assignment.get(i);
+            if (arg != null) {
+              arg.set(ParameterInfo.class, parameterList.get(i));
+            }
           }
+        } catch (ArgToParamInfererException e) {
+          errors.add(new ParseError(call,
+              "Cannot infer arguments to parameters assignment in call to '" + call.name() + "'. "
+                  + e.getMessage()));
+          return true;
         }
         return false;
-      }
-
-      private void failWhenUnassignedRequiredParameterIsLeft(List<ParseError> errors,
-          Set<ParameterInfo> parameters) {
-        Set<ParameterInfo> unassignedRequiredParameters = filter(parameters, p -> p.isRequired());
-        if (!unassignedRequiredParameters.isEmpty()) {
-          errors.add(new ParseError(call,
-              missingRequiredArgsMessage(call, unassignedRequiredParameters)));
-          return;
-        }
-      }
-
-      private String missingRequiredArgsMessage(CallNode call,
-          Set<ParameterInfo> missingRequiredParameters) {
-        return "Not all parameters required by '" + call.name()
-            + "' function has been specified.\n"
-            + "Missing required parameters:\n"
-            + ParameterInfo.iterableToString(missingRequiredParameters)
-            + "All correct 'parameters <- arguments' assignments:\n"
-            + ArgsStringHelper.assignedArgsToString(call);
-      }
-
-      private String ambiguousAssignmentErrorMessage(CallNode call,
-          Collection<ArgNode> availableArgs, TypedParametersPool availableTypedParams) {
-        String assignmentList = assignedArgsToString(call);
-        if (availableTypedParams.isEmpty()) {
-          return "Can't find parameter(s) of proper type in '"
-              + call.name()
-              + "' function for some nameless argument(s):\n"
-              + "List of assignments that were successfully detected so far is following:\n"
-              + assignmentList
-              + "List of arguments for which no parameter could be found is following:\n"
-              + argsToString(availableArgs);
-        } else {
-          return "Can't decide unambiguously to which parameters in '" + call.name()
-              + "' function some nameless arguments should be assigned:\n"
-              + "List of assignments that were successfully detected is following:\n"
-              + assignmentList
-              + "List of nameless arguments that caused problems:\n"
-              + argsToString(availableArgs)
-              + "List of unassigned parameters of desired type is following:\n"
-              + availableTypedParams.toFormattedString();
-        }
       }
 
       private Type callType(List<? extends ParameterInfo> parameters,
