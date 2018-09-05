@@ -14,8 +14,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't find parameter(s) of proper type in 'func'"
-        + " function for some nameless argument(s)");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'. "
+        + "Cannot find any valid assignment between implicit arguments and parameters.");
   }
 
   @Test
@@ -52,8 +52,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'. "
+        + "Found more than one valid assignment between implicit arguments and parameters.");
   }
 
   @Test
@@ -62,8 +62,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'.");
   }
 
   @Test
@@ -72,8 +71,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func('abc', 'def');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'. "
+        + "Found more than one valid assignment between implicit arguments and parameters.");
   }
 
   @Test
@@ -94,8 +93,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = twoBlobs(file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'twoBlobs'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'twoBlobs'.");
   }
 
   @Test
@@ -105,8 +103,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = func(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'func'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'."
+        + " Found more than one valid assignment between implicit arguments and parameters.");
   }
 
   @Test
@@ -117,8 +115,8 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "result = fileAndBlob(file('//file.txt'), file('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't decide unambiguously to which parameters in 'fileAndBlob'"
-        + " function some nameless arguments should be assigned");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'fileAndBlob'."
+        + " Found more than one valid assignment between implicit arguments and parameters.");
   }
 
   @Test
@@ -137,16 +135,7 @@ public class ImplicitAssignmentTest extends AcceptanceTestCase {
         + "      result = file('//file.txt') | func('abc', ['abc'], []);");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Can't decide unambiguously to which parameters in "
-        + "'func' function some nameless arguments should be assigned:\n"
-        + "List of assignments that were successfully detected is following:\n"
-        + "  File    : p3 <- File    : <nameless> #| [build.smooth:1]\n"
-        + "  String  : p1 <- String  : <nameless> #1 [build.smooth:1]\n"
-        + "  [String]: p2 <- [String]: <nameless> #2 [build.smooth:1]\n"
-        + "List of nameless arguments that caused problems:\n"
-        + "  [Nothing]: <nameless> #3 [build.smooth:1]\n"
-        + "List of unassigned parameters of desired type is following:\n"
-        + "  [Blob]: p5\n"
-        + "  [File]: p4\n\n");
+    thenOutputContainsError(1,
+        "Cannot infer arguments to parameters assignment in call to 'func'.");
   }
 }

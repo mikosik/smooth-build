@@ -10,7 +10,7 @@ public class RequiredTest extends AcceptanceTestCase {
         + "      result = func();");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Not all parameters required by 'func' function has been specified.");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'.");
   }
 
   @Test
@@ -19,6 +19,6 @@ public class RequiredTest extends AcceptanceTestCase {
         + "      result = func(stringA='abc');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Not all parameters required by 'func' function has been specified.");
+    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'func'.");
   }
 }
