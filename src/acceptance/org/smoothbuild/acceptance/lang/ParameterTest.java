@@ -134,6 +134,18 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void default_parameter_before_non_default_causes_error() throws Exception {
+    givenScript("defaultBeforeNonDefault(    \n"
+        + "          String default = 'value',         \n"
+        + "          String nonDefault                 \n"
+        + "      ) = 'abc';                            \n");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(3, "parameter with default value must be placed after all parameters " +
+        "which don't have default value.\n");
+  }
+
+  @Test
   public void calling_defined_function_with_one_parameter() throws Exception {
     givenScript("func(String string) = 'abc';"
         + "result = func('def');");
