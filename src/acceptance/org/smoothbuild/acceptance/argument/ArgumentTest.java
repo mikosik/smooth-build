@@ -34,4 +34,13 @@ public class ArgumentTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
   }
+
+  @Test
+  public void all_named_arguments_must_come_after_positional() throws Exception {
+    givenScript("returnFirst(String a, String b) = a;      \n"
+        + "      result = returnFirst(b='def', 'abc');     \n");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContainsError(2, "Named arguments must be placed after all positional arguments.\n");
+  }
 }
