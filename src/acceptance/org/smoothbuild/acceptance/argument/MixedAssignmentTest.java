@@ -10,7 +10,7 @@ public class MixedAssignmentTest extends AcceptanceTestCase {
   @Test
   public void assigns_nameless_to_required_parameter_even_when_not_required_parameter_matches()
       throws Exception {
-    givenScript("oneOptionalOneRequired(String optional = 'def', String required) = required;"
+    givenScript("oneOptionalOneRequired(String required, String optional = 'def') = required;"
         + "      result = oneOptionalOneRequired('abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

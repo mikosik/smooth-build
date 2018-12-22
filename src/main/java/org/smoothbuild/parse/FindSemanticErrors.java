@@ -45,6 +45,7 @@ public class FindSemanticErrors {
     duplicateGlobalNames(errors, runtime, ast);
     duplicateFieldNames(errors, ast);
     duplicateParamNames(errors, ast);
+    defaultParamBeforeNonDefault(errors, ast);
     duplicateArgNames(errors, ast);
     undefinedArgNames(errors, functions, ast);
     structNameStartingWithLowercaseLetter(errors, ast);
@@ -182,7 +183,6 @@ public class FindSemanticErrors {
         super.visitParams(params);
         findDuplicateNames(errors, params);
       }
-
     }.visitAst(ast);
   }
 
@@ -196,6 +196,25 @@ public class FindSemanticErrors {
       }
       alreadyDefined.put(name, named.location());
     }
+  }
+
+  private static void defaultParamBeforeNonDefault(List<ParseError> errors, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitParams(List<ParamNode> params) {
+        super.visitParams(params);
+        boolean foundParamWithDefaultValue = false;
+        for (ParamNode param : params) {
+          if (param.hasDefaultValue()) {
+            foundParamWithDefaultValue = true;
+          } else if (foundParamWithDefaultValue){
+            errors.add(new ParseError(param,
+                "parameter with default value must be placed after all parameters " +
+                    "which don't have default value.\n"));
+          }
+        }
+      }
+    }.visitAst(ast);
   }
 
   private static void duplicateArgNames(List<ParseError> errors, Ast ast) {
