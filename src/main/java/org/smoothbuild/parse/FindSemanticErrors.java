@@ -48,6 +48,7 @@ public class FindSemanticErrors {
     defaultParamBeforeNonDefault(errors, ast);
     duplicateArgNames(errors, ast);
     undefinedArgNames(errors, functions, ast);
+    namedArgBeforePositionalArg(errors, ast);
     structNameStartingWithLowercaseLetter(errors, ast);
     firstFieldWithForbiddenType(errors, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(errors, ast);
@@ -82,7 +83,7 @@ public class FindSemanticErrors {
   }
 
   private static void undefinedReferences(List<ParseError> errors, Functions functions, Ast ast) {
-    Set<String> all = ImmutableSet.<String> builder()
+    Set<String> all = ImmutableSet.<String>builder()
         .addAll(functions.names())
         .addAll(map(ast.funcs(), f -> f.name()))
         .addAll(map(ast.structs(), s -> s.name()))
@@ -99,7 +100,7 @@ public class FindSemanticErrors {
   }
 
   private static void undefinedTypes(List<ParseError> errors, RuntimeTypes types, Ast ast) {
-    Set<String> all = ImmutableSet.<String> builder()
+    Set<String> all = ImmutableSet.<String>builder()
         .addAll(types.names())
         .addAll(map(ast.structs(), s -> s.name()))
         .build();
@@ -207,7 +208,7 @@ public class FindSemanticErrors {
         for (ParamNode param : params) {
           if (param.hasDefaultValue()) {
             foundParamWithDefaultValue = true;
-          } else if (foundParamWithDefaultValue){
+          } else if (foundParamWithDefaultValue) {
             errors.add(new ParseError(param,
                 "parameter with default value must be placed after all parameters " +
                     "which don't have default value.\n"));
@@ -265,6 +266,24 @@ public class FindSemanticErrors {
               .collect(toSet());
         }
         return null;
+      }
+    }.visitAst(ast);
+  }
+
+  private static void namedArgBeforePositionalArg(List<ParseError> errors, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitArgs(List<ArgNode> args) {
+        super.visitArgs(args);
+        boolean foundArgWithName = false;
+        for (ArgNode arg : args) {
+          if (arg.hasName()) {
+            foundArgWithName = true;
+          } else if (foundArgWithName) {
+            errors.add(new ParseError(
+                arg, "Named arguments must be placed after all positional arguments."));
+          }
+        }
       }
     }.visitAst(ast);
   }
@@ -331,7 +350,6 @@ public class FindSemanticErrors {
             .findAny()
             .isPresent();
       }
-
     }.visitAst(ast);
   }
 }

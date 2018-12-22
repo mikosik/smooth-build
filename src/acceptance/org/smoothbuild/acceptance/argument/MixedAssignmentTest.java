@@ -21,7 +21,7 @@ public class MixedAssignmentTest extends AcceptanceTestCase {
   public void assigns_nameless_to_matching_parameter_that_was_left_once_named_was_assigned()
       throws Exception {
     givenScript("twoStrings(String a, String b) = b;"
-        + "      result = twoStrings(a='abc', 'def');");
+        + "      result = twoStrings('def', a='abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("def"));
