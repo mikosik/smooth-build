@@ -38,10 +38,9 @@ public class Dag implements Command {
       console.errors(functionNames.errors());
       return EXIT_CODE_ERROR;
     }
-    return runtimeController.setUpRuntimeAndRun((runtime) -> {
-      functionNames.value().stream()
-          .forEach(name -> print(dagEvaluator(runtime.functions().get(name))));
-    });
+    return runtimeController.setUpRuntimeAndRun(
+        (runtime) -> functionNames.value()
+            .forEach(name -> print(dagEvaluator(runtime.functions().get(name)))));
   }
 
   private Evaluator dagEvaluator(Function function) {
@@ -56,9 +55,6 @@ public class Dag implements Command {
 
   private void print(String indent, Evaluator dag) {
     console.println(indent + dag.name() + "(" + dag.type().name() + ")");
-    dag
-        .children()
-        .stream()
-        .forEach(ch -> print(indent + "  ", ch));
+    dag.children().forEach(ch -> print(indent + "  ", ch));
   }
 }

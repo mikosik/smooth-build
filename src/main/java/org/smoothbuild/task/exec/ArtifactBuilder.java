@@ -1,6 +1,7 @@
 package org.smoothbuild.task.exec;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.util.Lists.list;
 
@@ -30,7 +31,7 @@ public class ArtifactBuilder {
     this.artifactSaver = artifactSaver;
     this.taskBatch = taskBatch;
     this.console = console;
-    this.artifacts = new TreeMap<>((name1, name2) -> name1.toString().compareTo(name2.toString()));
+    this.artifacts = new TreeMap<>(comparing(String::toString));
   }
 
   public void addArtifact(Function function) {
@@ -59,7 +60,7 @@ public class ArtifactBuilder {
     Value value = artifact.getValue().output().result();
     try {
       artifactSaver.save(name, value);
-      console.println(name.toString() + " -> " + artifactPath(name));
+      console.println(name + " -> " + artifactPath(name));
     } catch (IOException e) {
       console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));

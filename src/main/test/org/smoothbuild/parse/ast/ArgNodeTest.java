@@ -72,22 +72,6 @@ public class ArgNodeTest {
     thenReturned("String:<nameless>");
   }
 
-  @Test
-  public void to_padded_string() throws Exception {
-    given(arg = new ArgNode(1, "myName", expr(string), location));
-    given(arg).set(Type.class, string);
-    when(arg).toPaddedString(10, 13, 7);
-    thenReturned("String    : myName        #1       [" + location.toString() + "]");
-  }
-
-  @Test
-  public void to_padded_string_with_short_limits() throws Exception {
-    given(arg = new ArgNode(1, "myName", expr(string), location));
-    given(arg).set(Type.class, string);
-    when(arg).toPaddedString(1, 1, 1);
-    thenReturned("String: myName #1 [" + location.toString() + "]");
-  }
-
   private static ExprNode expr(Type type) {
     ExprNode expr = mock(ExprNode.class);
     given(willReturn(type), expr).get(Type.class);

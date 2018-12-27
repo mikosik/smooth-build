@@ -20,7 +20,7 @@ public class Parameter extends ParameterInfo {
   @Override
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name().toString(), minNameLength, ' ');
+    String namePart = padEnd(name(), minNameLength, ' ');
     return typePart + namePart;
   }
 

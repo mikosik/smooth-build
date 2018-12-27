@@ -31,7 +31,7 @@ public class RuntimeController {
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
-    List<? extends Object> errors = value(null)
+    List<?> errors = value(null)
         .invoke((v) -> loadModule(runtime, valuesDb, paths.funcsModule()))
         .invoke((v) -> loadModule(runtime, valuesDb, paths.defaultScript()))
         .invokeConsumer(ml -> runner.accept(runtime))

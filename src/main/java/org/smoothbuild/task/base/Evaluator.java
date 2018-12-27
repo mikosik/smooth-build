@@ -38,7 +38,7 @@ public class Evaluator {
 
   public static Evaluator nativeCallEvaluator(ConcreteType type, NativeFunction function,
       List<? extends Evaluator> children, Location location) {
-    return new Evaluator(new NativeCallComputation(type, function), function.name().toString(),
+    return new Evaluator(new NativeCallComputation(type, function), function.name(),
         false, function.isCacheable(), children, location);
   }
 

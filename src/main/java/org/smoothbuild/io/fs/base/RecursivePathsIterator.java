@@ -30,7 +30,7 @@ public class RecursivePathsIterator implements PathIterator {
           }
 
           @Override
-          public Path next() throws IOException {
+          public Path next() {
             throw new NoSuchElementException();
           }
         };

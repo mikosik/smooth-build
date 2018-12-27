@@ -1,6 +1,6 @@
 package org.smoothbuild.task.save;
 
-import static java.util.stream.Collectors.joining;
+import static java.lang.String.join;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.task.save.ArtifactPaths.targetPath;
@@ -92,7 +92,7 @@ public class ArtifactSaver {
 
   private String duplicatedPathsMessage(Path path, Set<String> duplicates) {
     String separator = "\n  ";
-    String list = separator + duplicates.stream().collect(joining(separator));
+    String list = separator + join(separator, duplicates);
     return "Can't store array of Files as it contains files with duplicated paths:" + list;
   }
 

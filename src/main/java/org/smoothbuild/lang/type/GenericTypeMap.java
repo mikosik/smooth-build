@@ -21,7 +21,7 @@ public class GenericTypeMap<T extends Type> {
   }
 
   public List<T> applyTo(List<Type> types) {
-    return map(types, t -> applyTo(t));
+    return map(types, this::applyTo);
   }
 
   public T applyTo(Type type) {

@@ -62,13 +62,13 @@ public class ParameterInfo {
 
   public String toPaddedString(int minTypeLength, int minNameLength) {
     String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name().toString(), minNameLength, ' ');
+    String namePart = padEnd(name(), minNameLength, ' ');
     return typePart + namePart;
   }
 
   @Override
   public String toString() {
-    return type.name() + " " + name.toString();
+    return type.name() + " " + name;
   }
 
   public static String iterableToString(Iterable<ParameterInfo> names) {
@@ -91,7 +91,7 @@ public class ParameterInfo {
   public static int longestName(Iterable<ParameterInfo> names) {
     int result = 0;
     for (ParameterInfo name : names) {
-      result = Math.max(result, name.name.toString().length());
+      result = Math.max(result, name.name.length());
     }
     return result;
   }

@@ -32,10 +32,8 @@ public class Console {
     this.printStream = printStream;
   }
 
-  public void errors(java.util.List<? extends Object> errors) {
-    errors
-        .stream()
-        .forEach(this::error);
+  public void errors(java.util.List<?> errors) {
+    errors.forEach(this::error);
   }
 
   public void error(Object error) {

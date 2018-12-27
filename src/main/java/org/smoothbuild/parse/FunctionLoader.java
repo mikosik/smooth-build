@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -62,7 +61,7 @@ public class FunctionLoader {
       private HashCode createNativeFunctionHash(HashCode jarHash, Signature signature) {
         Hasher hasher = Hash.newHasher();
         hasher.putBytes(jarHash.asBytes());
-        hasher.putString(signature.name().toString(), SmoothConstants.CHARSET);
+        hasher.putString(signature.name(), SmoothConstants.CHARSET);
         return hasher.hash();
       }
 

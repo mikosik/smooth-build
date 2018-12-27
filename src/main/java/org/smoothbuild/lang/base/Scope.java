@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 public abstract class Scope<E> {
   public static <E> Scope<E> scope() {
-    return scope(new EmptyScope<E>());
+    return scope(new EmptyScope<>());
   }
 
   public static <E> Scope<E> scope(Scope<E> outerScope) {
@@ -67,7 +67,7 @@ public abstract class Scope<E> {
 
     @Override
     public E get(String name) {
-      throw new NoSuchElementException(name.toString());
+      throw new NoSuchElementException(name);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.android;
 
+import static java.lang.String.join;
 import static org.smoothbuild.builtin.android.AndroidSdk.AIDL_BINARY;
 import static org.smoothbuild.builtin.util.Exceptions.stackTraceToString;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -8,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -87,13 +87,9 @@ public class AidlFunction {
 
   private static String binaryFailedMessage(List<String> command, IOException e) {
     return "Following command line failed:\n"
-        + join(command) + "\n"
+        + join(" ", command) + "\n"
         + "stack trace is:\n"
         + stackTraceToString(e);
-  }
-
-  private static String join(List<String> command) {
-    return command.stream().collect(Collectors.joining(" "));
   }
 
   // Documentation copy/pasted from aidl command line tool:

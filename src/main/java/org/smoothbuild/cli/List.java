@@ -3,6 +3,7 @@ package org.smoothbuild.cli;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.parse.RuntimeController;
 
 public class List implements Command {
@@ -26,9 +27,9 @@ public class List implements Command {
           .stream()
           .filter(f -> f.location().file().equals(paths.defaultScript()))
           .filter(f -> f.parameters().size() == 0)
-          .map(t -> t.name().toString())
+          .map(Function::name)
           .sorted()
-          .forEach(n -> console.println(n));
+          .forEach(console::println);
     });
   }
 }

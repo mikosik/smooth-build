@@ -25,7 +25,7 @@ public class StructType extends ConcreteType {
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
-    return stream(fields).collect(toImmutableMap(f -> f.name(), f -> f));
+    return stream(fields).collect(toImmutableMap(Field::name, f -> f));
   }
 
   private StructType(HashCode dataHash, TypeType type, String name,

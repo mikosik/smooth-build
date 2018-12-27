@@ -33,7 +33,7 @@ public class ReflectionUtil {
       Object... args) {
     try {
       Class<?>[] paramTypes = Arrays.stream(args)
-          .map(a -> a.getClass())
+          .map(Object::getClass)
           .toArray(Class<?>[]::new);
       return object
           .getClass()

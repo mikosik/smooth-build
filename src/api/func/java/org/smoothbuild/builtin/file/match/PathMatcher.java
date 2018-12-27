@@ -179,6 +179,6 @@ public class PathMatcher implements Predicate<Path> {
   }
 
   public static Predicate<Path> hasOnlyOnePartPredicate() {
-    return (path) -> path.isRoot() || path.value().indexOf(Path.SEPARATOR) == -1;
+    return (path) -> path.isRoot() || !path.value().contains(Path.SEPARATOR);
   }
 }

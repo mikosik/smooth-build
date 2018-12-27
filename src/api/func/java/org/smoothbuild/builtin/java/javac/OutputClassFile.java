@@ -31,7 +31,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
   }
 
   @Override
-  public OutputStream openOutputStream() throws IOException {
+  public OutputStream openOutputStream() {
     return Okio.buffer(new ForwardingSink(contentBuilder.sink()) {
       @Override
       public void close() throws IOException {

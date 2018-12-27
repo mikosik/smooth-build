@@ -3,7 +3,6 @@ package org.smoothbuild.db.hashed;
 import static okio.Okio.buffer;
 
 import java.io.Closeable;
-import java.io.EOFException;
 import java.io.IOException;
 
 import com.google.common.hash.HashCode;
@@ -22,15 +21,15 @@ public class Unmarshaller implements Closeable {
     return source;
   }
 
-  public HashCode readHash() throws EOFException, IOException {
+  public HashCode readHash() throws IOException {
     return readHash(false);
   }
 
-  public HashCode tryReadHash() throws EOFException, IOException {
+  public HashCode tryReadHash() throws IOException {
     return readHash(true);
   }
 
-  private HashCode readHash(boolean allowNull) throws EOFException, IOException {
+  private HashCode readHash(boolean allowNull) throws IOException {
     if (allowNull && source.exhausted()) {
       return null;
     }

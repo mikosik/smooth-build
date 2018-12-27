@@ -21,6 +21,7 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.Named;
+import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.Maybe;
@@ -29,10 +30,9 @@ public class SortByDependencies {
   public static Maybe<List<String>> sortByDependencies(Functions functions, Ast ast) {
     List<FuncNode> funcs = ast.funcs();
     Set<String> globalNames = new HashSet<>(functions.names());
-    globalNames.addAll(map(ast.structs(), s -> s.name()));
-    Maybe<List<String>> sorted = sortByDependencies(
+    globalNames.addAll(map(ast.structs(), NamedNode::name));
+    return sortByDependencies(
         "Function call graph", funcs, funcToStackElem(), globalNames);
-    return sorted;
   }
 
   private static Function<FuncNode, StackElem> funcToStackElem() {
@@ -52,9 +52,8 @@ public class SortByDependencies {
   public static Maybe<List<String>> sortByDependencies(RuntimeTypes types, Ast ast) {
     List<StructNode> structs = ast.structs();
     Set<String> globalNames = types.names();
-    Maybe<List<String>> sorted = sortByDependencies(
+    return sortByDependencies(
         "Type hierarchy", structs, structToStackElem(), globalNames);
-    return sorted;
   }
 
   private static Function<StructNode, StackElem> structToStackElem() {

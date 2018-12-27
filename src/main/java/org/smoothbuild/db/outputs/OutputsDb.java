@@ -79,9 +79,9 @@ public class OutputsDb {
       }
 
       List<Message> messages = stream(((Array) messagesValue).asIterable(Struct.class))
-          .map(struct -> new Message(struct))
+          .map(Message::new)
           .collect(toImmutableList());
-      messages.stream().forEach(m -> {
+      messages.forEach(m -> {
         if (!isValidSeverity(m.severity())) {
           throw corruptedValueException(taskHash,
               "One of messages has invalid severity = '" + m.severity() + "'");

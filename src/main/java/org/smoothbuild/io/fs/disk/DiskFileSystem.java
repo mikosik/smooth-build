@@ -1,8 +1,8 @@
 package org.smoothbuild.io.fs.disk;
 
+import static java.lang.String.join;
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.util.Collections.nCopies;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathExists;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsDir;
 import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsFile;
@@ -122,7 +122,7 @@ public class DiskFileSystem implements FileSystem {
   }
 
   private static String escapeString(int length) {
-    return nCopies(length, "..").stream().collect(joining("/"));
+    return join("/", nCopies(length, ".."));
   }
 
   private java.nio.file.Path jdkPath(Path path) {

@@ -82,7 +82,7 @@ public class AstCreator {
       private Set<String> paramNames(List<ParamNode> params) {
         return params
             .stream()
-            .map(p -> p.name())
+            .map(NamedNode::name)
             .collect(toSet());
       }
 

@@ -15,7 +15,7 @@ public class Output {
   private final boolean cacheable;
 
   public Output(Value result) {
-    this(result, ImmutableList.<Message> of());
+    this(result, ImmutableList.of());
   }
 
   public Output(Iterable<? extends Message> messages) {

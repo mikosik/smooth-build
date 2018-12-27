@@ -47,7 +47,7 @@ public class Array extends AbstractValue {
       return hashedDb
           .readHashes(dataHash())
           .stream()
-          .map(h -> instantiator.instantiate(h))
+          .map(instantiator::instantiate)
           .collect(toImmutableList());
     } catch (IOException e) {
       throw ioException(e);

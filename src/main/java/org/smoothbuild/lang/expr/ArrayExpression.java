@@ -41,7 +41,7 @@ public class ArrayExpression extends Expression {
     return (ConcreteArrayType) elements
         .stream()
         .map(e -> (Type) e.type())
-        .reduce((a, b) -> a.commonSuperType(b))
+        .reduce(Type::commonSuperType)
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);
   }

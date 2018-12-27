@@ -116,7 +116,7 @@ public class Path {
     if (index == -1) {
       return this;
     } else {
-      return new Path(value.substring(index + 1, value.length()));
+      return new Path(value.substring(index + 1));
     }
   }
 
