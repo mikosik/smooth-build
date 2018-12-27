@@ -34,6 +34,13 @@ public class ParameterInfo {
     return name;
   }
 
+  /**
+   * @return single quoted name of this Parameter.
+   */
+  public String q() {
+    return "'" + name() + "'";
+  }
+
   public boolean isRequired() {
     return isRequired;
   }

@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import org.smoothbuild.SmoothConstants;
@@ -17,7 +17,6 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
-import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
@@ -30,6 +29,7 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
+import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
@@ -38,6 +38,7 @@ import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hasher;
 
@@ -106,26 +107,23 @@ public class FunctionLoader {
 
       private Expression createCall(CallNode call) {
         Function function = runtime.functions().get(call.name());
-        List<Expression> argExpressions = createSortedArgumentExpressions(call, function);
+        List<Expression> argExpressions = createArgumentExpressions(call, function);
         return function.createCallExpression(argExpressions, call.location());
       }
 
-      private List<Expression> createSortedArgumentExpressions(CallNode call,
+      private List<Expression> createArgumentExpressions(CallNode call,
           Function function) {
-        Map<ParameterInfo, Expression> assignedExpressions = call
-            .args()
-            .stream()
-            .collect(toMap(a -> a.get(ParameterInfo.class), a -> createExpression(a.expr())));
-        return map(function.parameters(), p -> assignedExpression(p, assignedExpressions));
-      }
-
-      private Expression assignedExpression(Parameter parameter,
-          Map<ParameterInfo, Expression> assignedExpressions) {
-        if (assignedExpressions.containsKey(parameter)) {
-          return assignedExpressions.get(parameter);
-        } else {
-          return parameter.defaultValueExpression();
+        ImmutableList<Parameter> parameters = function.parameters();
+        ArrayList<Expression> result = new ArrayList<>(parameters.size());
+        List<ArgNode> args = call.assignedArgs();
+        for (int i = 0; i < parameters.size(); i++) {
+          if (args.get(i) == null) {
+            result.add(parameters.get(i).defaultValueExpression());
+          } else {
+            result.add(createExpression(args.get(i).expr()));
+          }
         }
+        return result;
       }
 
       private Expression createStringLiteral(StringNode string) {

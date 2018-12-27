@@ -33,6 +33,6 @@ public class ConstructorTest extends AcceptanceTestCase {
         + "      result = takeStruct(MyStruct());            \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Cannot infer arguments to parameters assignment in call to 'MyStruct'.");
+    thenOutputContains(" Required parameter 'field' must be specified.");
   }
 }

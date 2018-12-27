@@ -103,9 +103,9 @@ public class InferTypesAndParamAssignment {
           if (func.hasType()) {
             Type type = createType(func.type());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
-              errors.add(new ParseError(func, "Type of function's '" + func.name()
-                  + "' expression is " + exprType.q()
-                  + " which is not convertible to function's declared result type " + type.q()
+              errors.add(new ParseError(func, "Function '" + func.name()
+                  + "' has body which type is " + exprType.q()
+                  + " and it is not convertible to function's declared result type " + type.q()
                   + "."));
             }
             return type;
