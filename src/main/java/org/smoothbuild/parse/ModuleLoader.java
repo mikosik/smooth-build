@@ -1,6 +1,5 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.FunctionLoader.loadFunction;
@@ -9,9 +8,7 @@ import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Constructor;
@@ -30,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class ModuleLoader {
-  public static List<? extends Object> loadModule(SRuntime runtime, ValuesDb valuesDb,
+  public static List<?> loadModule(SRuntime runtime, ValuesDb valuesDb,
       Path script) {
     Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
     return parseScript(script)

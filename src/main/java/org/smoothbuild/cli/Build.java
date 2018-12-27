@@ -53,8 +53,7 @@ public class Build implements Command {
       }
     }
 
-    return runtimeController.setUpRuntimeAndRun((runtime) -> {
-      smoothExecutor.execute(runtime, functionNames.value());
-    });
+    return runtimeController.setUpRuntimeAndRun(
+        (runtime) -> smoothExecutor.execute(runtime, functionNames.value()));
   }
 }

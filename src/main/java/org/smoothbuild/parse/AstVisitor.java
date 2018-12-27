@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -25,7 +24,7 @@ public class AstVisitor {
   }
 
   public void visitStructs(List<StructNode> structs) {
-    visitElements(structs, this::visitStruct);
+    structs.forEach(this::visitStruct);
   }
 
   public void visitStruct(StructNode struct) {
@@ -41,7 +40,7 @@ public class AstVisitor {
   }
 
   public void visitFuncs(List<FuncNode> funcs) {
-    visitElements(funcs, this::visitFunc);
+    funcs.forEach(this::visitFunc);
   }
 
   public void visitFunc(FuncNode func) {
@@ -88,7 +87,7 @@ public class AstVisitor {
   }
 
   public void visitArray(ArrayNode array) {
-    visitElements(array.elements(), this::visitExpr);
+    array.elements().forEach(this::visitExpr);
   }
 
   public void visitCall(CallNode call) {
@@ -98,7 +97,7 @@ public class AstVisitor {
   public void visitRef(RefNode ref) {}
 
   public void visitArgs(List<ArgNode> args) {
-    visitElements(args, this::visitArg);
+    args.forEach(this::visitArg);
   }
 
   public void visitArg(ArgNode arg) {
@@ -106,12 +105,6 @@ public class AstVisitor {
   }
 
   public void visitString(StringNode string) {}
-
-  public <E> void visitElements(List<E> elements, Consumer<? super E> consumer) {
-    elements
-        .stream()
-        .forEach(consumer);
-  }
 
   public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {
     for (int i = 0; i < elements.size(); i++) {

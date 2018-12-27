@@ -63,7 +63,7 @@ public class HashedDb {
   public List<HashCode> readHashes(HashCode hash) throws IOException {
     List<HashCode> result = new ArrayList<>();
     try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
-      HashCode elementHash = null;
+      HashCode elementHash;
       while ((elementHash = unmarshaller.tryReadHash()) != null) {
         result.add(elementHash);
       }

@@ -1,14 +1,12 @@
 package org.smoothbuild.parse;
 
-import static java.util.Collections.sort;
-import static java.util.stream.Collectors.toSet;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.StringUnescaper.unescaped;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +15,6 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
@@ -82,8 +79,8 @@ public class FindSemanticErrors {
   private static void undefinedReferences(List<ParseError> errors, Functions functions, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
         .addAll(functions.names())
-        .addAll(map(ast.funcs(), f -> f.name()))
-        .addAll(map(ast.structs(), s -> s.name()))
+        .addAll(map(ast.funcs(), NamedNode::name))
+        .addAll(map(ast.structs(), NamedNode::name))
         .build();
     new AstVisitor() {
       @Override
@@ -99,7 +96,7 @@ public class FindSemanticErrors {
   private static void undefinedTypes(List<ParseError> errors, RuntimeTypes types, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
         .addAll(types.names())
-        .addAll(map(ast.structs(), s -> s.name()))
+        .addAll(map(ast.structs(), NamedNode::name))
         .build();
     new AstVisitor() {
       @Override
@@ -138,17 +135,7 @@ public class FindSemanticErrors {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(ast.funcs());
-    sort(nameds, (node1, node2) -> {
-      int l1 = node1.location().line();
-      int l2 = node2.location().line();
-      if (l1 < l2) {
-        return -1;
-      } else if (l1 == l2) {
-        return 0;
-      } else {
-        return 1;
-      }
-    });
+    nameds.sort(comparing(n -> n.location().line()));
     for (Named named : nameds) {
       String name = named.name();
       if (defined.containsKey(name)) {
@@ -273,9 +260,7 @@ public class FindSemanticErrors {
         String name = func.type().coreType().name();
         return func.params()
             .stream()
-            .filter(p -> p.type().coreType().name().equals(name))
-            .findAny()
-            .isPresent();
+            .anyMatch(p -> p.type().coreType().name().equals(name));
       }
     }.visitAst(ast);
   }

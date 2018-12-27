@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
-import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;

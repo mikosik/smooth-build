@@ -61,7 +61,7 @@ public class Natives {
           return;
         }
         for (int i = 0; i < params.size(); i++) {
-          String declaredName = params.get(i).name().toString();
+          String declaredName = params.get(i).name();
           Parameter nativeParam = nativeParams[i + 1];
           String nativeName = nativeParam.isNamePresent() ? nativeParam.getName() : "";
           if (!declaredName.equals(nativeName)) {

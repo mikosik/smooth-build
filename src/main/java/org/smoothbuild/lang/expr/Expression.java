@@ -38,7 +38,7 @@ public abstract class Expression {
   }
 
   public static List<ConcreteType> evaluatorTypes(List<Evaluator> argumentEvaluators) {
-    return map(argumentEvaluators, a -> a.type());
+    return map(argumentEvaluators, Evaluator::type);
   }
 
   public abstract Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope);

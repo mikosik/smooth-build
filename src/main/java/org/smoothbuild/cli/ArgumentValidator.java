@@ -17,8 +17,7 @@ import com.google.common.collect.ImmutableList;
 public class ArgumentValidator {
   public static Maybe<Set<String>> validateFunctionNames(List<String> args) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    args.stream()
-        .forEach(a -> duplicatesDetector.addValue(a));
+    args.forEach(duplicatesDetector::addValue);
     Set<String> uniques = duplicatesDetector.getUniqueValues();
 
     if (uniques.isEmpty()) {

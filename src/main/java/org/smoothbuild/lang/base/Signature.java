@@ -37,7 +37,7 @@ public class Signature {
   }
 
   public List<Type> parameterTypes() {
-    return map(parameters, p -> p.type());
+    return map(parameters, ParameterInfo::type);
   }
 
   @Override
@@ -58,7 +58,10 @@ public class Signature {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append(type.name() + " " + name.toString() + "(");
+    builder.append(type.name());
+    builder.append(" ");
+    builder.append(name);
+    builder.append("(");
     int count = 0;
     for (Parameter parameter : parameters) {
       if (count != 0) {

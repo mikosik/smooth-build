@@ -13,6 +13,7 @@ import java.util.zip.ZipEntry;
 
 import com.google.common.io.ByteStreams;
 
+import okio.BufferedSource;
 import okio.ByteString;
 
 public class Classes {
@@ -47,6 +48,7 @@ public class Classes {
   }
 
   public static ByteString bytecode(Class<?> klass) throws IOException {
-    return readAndClose(buffer(source(byteCodeAsInputStream(klass))), s -> s.readByteString());
+    return readAndClose(buffer(source(byteCodeAsInputStream(klass))),
+        BufferedSource::readByteString);
   }
 }

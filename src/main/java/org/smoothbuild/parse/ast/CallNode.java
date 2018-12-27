@@ -19,7 +19,7 @@ public class CallNode extends ExprNode implements Named {
 
   @Override
   public String name() {
-    return name.toString();
+    return name;
   }
 
   public List<ArgNode> args() {

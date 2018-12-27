@@ -66,7 +66,7 @@ public class Ast {
       this.funcs = sortedNames
           .value()
           .stream()
-          .map(n -> nameToFuncMap.get(n))
+          .map(nameToFuncMap::get)
           .collect(Collectors.toList());
       return new ArrayList<>();
     } else {
@@ -80,7 +80,7 @@ public class Ast {
       this.structs = sortedNames
           .value()
           .stream()
-          .map(n -> nameToStructMap.get(n))
+          .map(nameToStructMap::get)
           .collect(Collectors.toList());
       return new ArrayList<>();
     } else {

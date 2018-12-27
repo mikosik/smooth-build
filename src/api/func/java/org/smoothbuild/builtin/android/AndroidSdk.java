@@ -39,11 +39,8 @@ public class AndroidSdk {
 
   private static String fileNotFoundMessage(EnvironmentVariable androidSdkVar,
       Path requiredSdkFile) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Can't find " + requiredSdkFile + " file in android sdk.\n");
-    builder.append("Path to Android SDK was set by the following environment variable:\n");
-    builder.append(androidSdkVar.toString() + "\n");
-    return builder.toString();
+    return "Can't find " + requiredSdkFile + " file in android sdk.\nPath to Android SDK was set" +
+        " by the following environment variable:\n" + androidSdkVar.toString() + "\n";
   }
 
   public static Path getSdkDir(NativeApi nativeApi) {

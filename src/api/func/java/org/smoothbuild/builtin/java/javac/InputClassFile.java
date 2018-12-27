@@ -55,6 +55,6 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public int hashCode() {
-    return ((SString) file.get("path")).hashCode();
+    return file.get("path").hashCode();
   }
 }
