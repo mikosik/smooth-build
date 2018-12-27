@@ -45,7 +45,7 @@ File file(
 
 Blob jar(
   [File] files,
-  Blob manifest = File("META-INF/MANIFEST.MF", toBlob("")),
+  Blob manifest = File(toBlob(""), "META-INF/MANIFEST.MF"),
   [String] javaHash = javaHash(),
 );
 

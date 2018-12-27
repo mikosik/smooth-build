@@ -46,9 +46,6 @@ public class FindSemanticErrors {
     duplicateFieldNames(errors, ast);
     duplicateParamNames(errors, ast);
     defaultParamBeforeNonDefault(errors, ast);
-    duplicateArgNames(errors, ast);
-    undefinedArgNames(errors, functions, ast);
-    namedArgBeforePositionalArg(errors, ast);
     structNameStartingWithLowercaseLetter(errors, ast);
     firstFieldWithForbiddenType(errors, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(errors, ast);
@@ -212,76 +209,6 @@ public class FindSemanticErrors {
             errors.add(new ParseError(param,
                 "parameter with default value must be placed after all parameters " +
                     "which don't have default value.\n"));
-          }
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void duplicateArgNames(List<ParseError> errors, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitArgs(List<ArgNode> args) {
-        super.visitArgs(args);
-        Set<String> names = new HashSet<>();
-        for (ArgNode arg : args) {
-          if (arg.hasName()) {
-            String name = arg.name();
-            if (names.contains(name)) {
-              errors.add(new ParseError(arg, "Argument '" + name + "' assigned twice."));
-            }
-            names.add(name);
-          }
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void undefinedArgNames(List<ParseError> errors, Functions functions, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        Set<String> names = getParameters(call.name(), functions, ast);
-        if (names != null) {
-          for (ArgNode arg : call.args()) {
-            if (arg.hasName() && !names.contains(arg.name())) {
-              errors.add(new ParseError(arg, "Function '" + call.name()
-                  + "' has no parameter '" + arg.name() + "'."));
-            }
-          }
-        }
-      }
-
-      private Set<String> getParameters(String functionName, Functions functions, Ast ast) {
-        if (ast.containsFunc(functionName)) {
-          FuncNode funcNode = ast.func(functionName);
-          return funcNode.params().stream()
-              .map(p -> p.name())
-              .collect(toSet());
-        }
-        if (functions.contains(functionName)) {
-          return functions.get(functionName).parameters().stream()
-              .map(p -> p.name())
-              .collect(toSet());
-        }
-        return null;
-      }
-    }.visitAst(ast);
-  }
-
-  private static void namedArgBeforePositionalArg(List<ParseError> errors, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitArgs(List<ArgNode> args) {
-        super.visitArgs(args);
-        boolean foundArgWithName = false;
-        for (ArgNode arg : args) {
-          if (arg.hasName()) {
-            foundArgWithName = true;
-          } else if (foundArgWithName) {
-            errors.add(new ParseError(
-                arg, "Named arguments must be placed after all positional arguments."));
           }
         }
       }

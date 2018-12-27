@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.lang;
+package org.smoothbuild.acceptance.assign;
 
 import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
@@ -9,9 +9,17 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestCase {
+public abstract class AbstractAssignmentTestCase extends AcceptanceTestCase {
   @Test
-  public void file_is_implicitly_converted_to_blob() throws IOException {
+  public void string_is_assignable_to_string() throws IOException {
+    givenScript(createTestScript("String", "'abc'"));
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifact("result"), hasContent("abc"));
+  }
+
+  @Test
+  public void file_is_assignable_to_blob() throws IOException {
     givenFile("file.txt", "abc");
     givenScript(createTestScript("Blob", "file('//file.txt')"));
     whenSmoothBuild("result");
@@ -20,7 +28,16 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void file_array_is_implicitly_converted_to_blob_array() throws IOException {
+  public void blob_is_not_assignable_to_string() throws IOException {
+    givenFile("file.txt", "abc");
+    givenScript(createTestScript("String", "file('//file.txt').content"));
+    whenSmoothList();
+    thenFinishedWithError();
+    thenAssignmentError("String", "Blob");
+  }
+
+  @Test
+  public void file_array_is_assignable_to_blob_array() throws IOException {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript(createTestScript("[Blob]", "[file('//file1.txt'), file('//file2.txt')]"));
@@ -30,7 +47,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void empty_array_is_implicitly_converted_to_string_array() throws IOException {
+  public void empty_array_is_assignable_to_string_array() throws IOException {
     givenScript(createTestScript("[String]", "[]"));
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -38,7 +55,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void empty_array_is_implicitly_converted_to_blob_array() throws IOException {
+  public void empty_array_is_assignable_to_blob_array() throws IOException {
     givenScript(createTestScript("[Blob]", "[]"));
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -46,7 +63,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void empty_array_is_implicitly_converted_to_file_array() throws IOException {
+  public void empty_array_is_assignable_to_file_array() throws IOException {
     givenScript(createTestScript("[File]", "[]"));
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -54,7 +71,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void empty_array_is_implicitly_converted_to_string_array_array() throws IOException {
+  public void empty_array_is_assignable_to_string_array_array() throws IOException {
     givenScript(createTestScript("[[String]]", "[]"));
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -62,7 +79,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void empty_array_is_implicitly_converted_to_string_array_array_array() throws IOException {
+  public void empty_array_is_assignable_to_string_array_array_array() throws IOException {
     givenScript(createTestScript("[[[String]]]", "[]"));
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -70,7 +87,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void array_with_empty_array_is_implicitly_converted_to_string_array_array()
+  public void array_with_empty_array_is_assignable_to_string_array_array()
       throws Exception {
     givenScript(createTestScript("[[String]]", "[[]]"));
     whenSmoothBuild("result");
@@ -79,7 +96,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void array_with_empty_array_is_implicitly_converted_to_string_array_array_array()
+  public void array_with_empty_array_is_assignable_to_string_array_array_array()
       throws Exception {
     givenScript(createTestScript("[[[String]]]", "[[]]"));
     whenSmoothBuild("result");
@@ -88,7 +105,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void array_with_array_with_empty_array_is_implicitly_converted_to_string_array_array_array()
+  public void array_with_array_with_empty_array_is_assignable_to_string_array_array_array()
       throws Exception {
     givenScript(createTestScript("[[[String]]]", "[[[]]]"));
     whenSmoothBuild("result");
@@ -97,7 +114,7 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   @Test
-  public void file_array_array_is_implicitly_converted_to_blob_array_array() throws IOException {
+  public void file_array_array_is_assignable_to_blob_array_array() throws IOException {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript(createTestScript("[[Blob]]", "[[file('//file1.txt'), file('//file2.txt')]]"));
@@ -122,4 +139,6 @@ public abstract class AbstractImplicitConversionTestCase extends AcceptanceTestC
   }
 
   protected abstract String createTestScript(String type, String value);
+
+  protected abstract void thenAssignmentError(String target, String source);
 }

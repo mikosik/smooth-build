@@ -70,26 +70,24 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
         allowedAssignment("[[a]]", "[[b]]")));
   }
 
-  private static Case allowedAssignment(String assignedType, String assigneeType,
-      String... structs) {
-    return newCase("can assign " + assigneeType + " to param with type " + assignedType, () -> {
-      executeTest(assignedType, assigneeType, (test) -> test.thenFinishedWithSuccess(), structs);
+  private static Case allowedAssignment(String targetType, String sourceType, String... structs) {
+    return newCase("can assign " + sourceType + " to param with type " + targetType, () -> {
+      executeTest(targetType, sourceType, (test) -> test.thenFinishedWithSuccess(), structs);
     });
   }
 
-  private static Case illegalAssignment(String assignedType, String assigneeType,
-      String... structs) {
-    return newCase("can't assign " + assigneeType + " to param with type " + assignedType, () -> {
+  private static Case illegalAssignment(String targetType, String sourceType, String... structs) {
+    return newCase("can't assign " + sourceType + " to param with type " + targetType, () -> {
       Consumer<AcceptanceTestCase> asserter = (test) -> {
         test.thenOutputContainsError(structs.length + 2,
-            "Type mismatch, cannot convert argument 'assignee' of type '"
-                + assigneeType + "' to '" + assignedType + "'.");
+            "Cannot assign argument of type '" + sourceType + "' to " +
+                "parameter 'target' of type '" + targetType + "'.");
       };
-      executeTest(assignedType, assigneeType, asserter, structs);
+      executeTest(targetType, sourceType, asserter, structs);
     });
   }
 
-  private static void executeTest(String assignedType, String assigneeType,
+  private static void executeTest(String targetType, String sourceType,
       Consumer<AcceptanceTestCase> asserter, String... structs) throws IOException {
     AcceptanceTestCase test = new AcceptanceTestCase() {};
     test.init();
@@ -98,8 +96,8 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
         .collect(joining());
     try {
       test.givenScript(declarations
-          + "String innerFunction(" + assignedType + " assignee) = 'abc';                     \n"
-          + "outerFunction(" + assigneeType + " assigned) = innerFunction(assignee=assigned); \n");
+          + "String innerFunction(" + targetType + " target) = 'abc';                     \n"
+          + "outerFunction(" + sourceType + " source) = innerFunction(target=source); \n");
       test.whenSmoothList();
       asserter.accept(test);
     } finally {
