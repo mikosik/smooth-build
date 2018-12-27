@@ -9,7 +9,7 @@ public class Parameter extends ParameterInfo {
   private final Expression defaultValue;
 
   public Parameter(int index, Type type, String name, Expression defaultValue) {
-    super(index, type, name, defaultValue == null);
+    super(index, type, name, defaultValue != null);
     this.defaultValue = defaultValue;
   }
 

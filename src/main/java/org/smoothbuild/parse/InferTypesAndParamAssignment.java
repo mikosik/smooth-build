@@ -65,7 +65,7 @@ public class InferTypesAndParamAssignment {
         super.visitField(index, field);
         field.set(Type.class, field.type().get(Type.class));
         field.set(ParameterInfo.class,
-            new ParameterInfo(index, field.get(Type.class), field.name(), true));
+            new ParameterInfo(index, field.get(Type.class), field.name(), false));
       }
 
       @Override
@@ -134,7 +134,7 @@ public class InferTypesAndParamAssignment {
           param.set(ParameterInfo.class, null);
         } else {
           ParameterInfo info = new ParameterInfo(
-              index, param.get(Type.class), param.name(), !param.hasDefaultValue());
+              index, param.get(Type.class), param.name(), param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
           if (param.hasDefaultValue()) {
             if (param.type().isGeneric()) {

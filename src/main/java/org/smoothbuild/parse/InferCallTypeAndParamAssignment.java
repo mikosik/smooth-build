@@ -80,9 +80,9 @@ public class InferCallTypeAndParamAssignment {
           ParameterInfo param = parameters.get(i);
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
-            if (param.isRequired()) {
+            if (!param.hasDefaultValue()) {
               errors.add(
-                  new ParseError(call, "Required parameter " + param.q() + " must be specified."));
+                  new ParseError(call, "Parameter " + param.q() + " must be specified."));
             }
           } else {
             Type argType = arg.get(Type.class);
