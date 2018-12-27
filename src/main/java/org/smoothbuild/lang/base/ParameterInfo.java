@@ -13,13 +13,13 @@ public class ParameterInfo {
   private final int index;
   private final Type type;
   private final String name;
-  private final boolean isRequired;
+  private final boolean hasDefaultValue;
 
-  public ParameterInfo(int index, Type type, String name, boolean isRequired) {
+  public ParameterInfo(int index, Type type, String name, boolean hasDefaultValue) {
     this.index = index;
-    this.isRequired = isRequired;
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
+    this.hasDefaultValue = hasDefaultValue;
   }
 
   public int index() {
@@ -41,8 +41,8 @@ public class ParameterInfo {
     return "'" + name() + "'";
   }
 
-  public boolean isRequired() {
-    return isRequired;
+  public boolean hasDefaultValue() {
+    return hasDefaultValue;
   }
 
   @Override

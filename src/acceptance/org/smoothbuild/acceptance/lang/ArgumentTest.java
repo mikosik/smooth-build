@@ -32,7 +32,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         + "      result = myIdentity('abc');                                        \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Required parameter 'myArgument2' must be specified.\n");
+    thenOutputContainsError(2, "Parameter 'myArgument2' must be specified.\n");
   }
 
   @Test

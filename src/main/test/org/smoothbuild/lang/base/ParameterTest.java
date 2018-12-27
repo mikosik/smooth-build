@@ -17,20 +17,6 @@ public class ParameterTest {
   private Parameter parameter;
 
   @Test
-  public void optional_parameter_creates_optional_parameter() throws Exception {
-    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
-    when(parameter).isRequired();
-    thenReturned(false);
-  }
-
-  @Test
-  public void required_parameter_creates_required_parameter() throws Exception {
-    given(parameter = new Parameter(0, string, name, null));
-    when(parameter).isRequired();
-    thenReturned(true);
-  }
-
-  @Test
   public void null_type_is_forbidden() {
     when(() -> new Parameter(0, null, name, mock(Expression.class)));
     thenThrown(NullPointerException.class);
@@ -64,17 +50,17 @@ public class ParameterTest {
   }
 
   @Test
-  public void parameter_without_default_value_is_required() throws Exception {
+  public void parameter_without_default() throws Exception {
     given(parameter = new Parameter(0, string, name, null));
-    when(() -> parameter.isRequired());
-    thenReturned(true);
+    when(() -> parameter.hasDefaultValue());
+    thenReturned(false);
   }
 
   @Test
-  public void parameter_with_default_value_is_not_required() throws Exception {
+  public void parameter_with_default_value() throws Exception {
     given(parameter = new Parameter(0, string, name, mock(Expression.class)));
-    when(() -> parameter.isRequired());
-    thenReturned(false);
+    when(() -> parameter.hasDefaultValue());
+    thenReturned(true);
   }
 
   @Test
