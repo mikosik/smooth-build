@@ -19,68 +19,68 @@ public class ParameterTest {
 
   @Test
   public void optional_parameter_creates_optional_parameter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Expression.class)));
+    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
     when(parameter).isRequired();
     thenReturned(false);
   }
 
   @Test
   public void required_parameter_creates_required_parameter() throws Exception {
-    given(parameter = new Parameter(string, name, null));
+    given(parameter = new Parameter(0, string, name, null));
     when(parameter).isRequired();
     thenReturned(true);
   }
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new Parameter(null, name, mock(Expression.class)));
+    when(() -> new Parameter(0, null, name, mock(Expression.class)));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new Parameter(string, null, mock(Expression.class)));
+    when(() -> new Parameter(0, string, null, mock(Expression.class)));
     thenThrown(NullPointerException.class);
   }
 
   @Test
+  public void index_getter() throws Exception {
+    given(parameter = new Parameter(33, string, name, mock(Expression.class)));
+    when(() -> parameter.index());
+    thenReturned(33);
+  }
+
+  @Test
   public void type_getter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Expression.class)));
+    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
     when(() -> parameter.type());
     thenReturned(string);
   }
 
   @Test
   public void name_getter() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Expression.class)));
+    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
     when(() -> parameter.name());
     thenReturned(name);
   }
 
   @Test
-  public void getters() {
-    when(parameter = new Parameter(string, name, null));
-    thenEqual(parameter.type(), string);
-    thenEqual(parameter.name(), name);
-  }
-
-  @Test
   public void parameter_without_default_value_is_required() throws Exception {
-    given(parameter = new Parameter(string, name, null));
+    given(parameter = new Parameter(0, string, name, null));
     when(() -> parameter.isRequired());
     thenReturned(true);
   }
 
   @Test
   public void parameter_with_default_value_is_not_required() throws Exception {
-    given(parameter = new Parameter(string, name, mock(Expression.class)));
+    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
     when(() -> parameter.isRequired());
     thenReturned(false);
   }
 
   @Test
   public void to_string() {
-    given(parameter = new Parameter(string, name, mock(Expression.class)));
+    given(parameter = new Parameter(0, string, name, mock(Expression.class)));
     when(parameter.toString());
     thenReturned("Param(String: name)");
   }

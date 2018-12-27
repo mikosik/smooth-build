@@ -10,14 +10,20 @@ import java.util.Objects;
 import org.smoothbuild.lang.type.Type;
 
 public class ParameterInfo {
+  private final int index;
   private final Type type;
   private final String name;
   private final boolean isRequired;
 
-  public ParameterInfo(Type type, String name, boolean isRequired) {
+  public ParameterInfo(int index, Type type, String name, boolean isRequired) {
+    this.index = index;
     this.isRequired = isRequired;
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
+  }
+
+  public int index() {
+    return index;
   }
 
   public Type type() {

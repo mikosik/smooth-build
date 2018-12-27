@@ -61,11 +61,11 @@ public class InferTypesAndParamAssignment {
       }
 
       @Override
-      public void visitField(FieldNode field) {
-        super.visitField(field);
+      public void visitField(int index, FieldNode field) {
+        super.visitField(index, field);
         field.set(Type.class, field.type().get(Type.class));
         field.set(ParameterInfo.class,
-            new ParameterInfo(field.get(Type.class), field.name(), true));
+            new ParameterInfo(index, field.get(Type.class), field.name(), true));
       }
 
       @Override
@@ -128,15 +128,15 @@ public class InferTypesAndParamAssignment {
       }
 
       @Override
-      public void visitParam(ParamNode param) {
-        super.visitParam(param);
+      public void visitParam(int index, ParamNode param) {
+        super.visitParam(index, param);
         Type type = param.type().get(Type.class);
         param.set(Type.class, type);
         if (type == null) {
           param.set(ParameterInfo.class, null);
         } else {
           ParameterInfo info = new ParameterInfo(
-              param.get(Type.class), param.name(), !param.hasDefaultValue());
+              index, param.get(Type.class), param.name(), !param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
           if (param.hasDefaultValue()) {
             if (param.type().isGeneric()) {

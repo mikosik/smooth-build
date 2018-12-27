@@ -9,7 +9,9 @@ import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Constructor;
@@ -19,11 +21,13 @@ import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
+import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public class ModuleLoader {
   public static List<? extends Object> loadModule(SRuntime runtime, ValuesDb valuesDb,
@@ -50,11 +54,13 @@ public class ModuleLoader {
   }
 
   private static Constructor loadConstructor(StructNode struct) {
-    ImmutableList<Parameter> parameters = struct
-        .fields()
-        .stream()
-        .map(f -> new Parameter(f.get(Type.class), f.name(), null))
-        .collect(toImmutableList());
+    Builder<Parameter> builder = ImmutableList.builder();
+    List<FieldNode> fields = struct.fields();
+    for (int i = 0; i < fields.size(); i++) {
+      FieldNode field = fields.get(i);
+      builder.add(new Parameter(i, field.get(Type.class), field.name(), null));
+    }
+    ImmutableList<Parameter> parameters = builder.build();
     Signature signature = new Signature(struct.get(Type.class), struct.name(), parameters);
     return new Constructor(signature, struct.location());
   }

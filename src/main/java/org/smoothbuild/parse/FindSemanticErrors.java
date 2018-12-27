@@ -114,12 +114,12 @@ public class FindSemanticErrors {
       }
 
       @Override
-      public void visitParam(ParamNode param) {
+      public void visitParam(int index, ParamNode param) {
         assertTypeIsDefined(param.type());
       }
 
       @Override
-      public void visitField(FieldNode field) {
+      public void visitField(int index, FieldNode field) {
         assertTypeIsDefined(field.type());
       }
 

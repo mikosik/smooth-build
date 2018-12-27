@@ -8,8 +8,8 @@ import org.smoothbuild.lang.type.Type;
 public class Parameter extends ParameterInfo {
   private final Expression defaultValue;
 
-  public Parameter(Type type, String name, Expression defaultValue) {
-    super(type, name, defaultValue == null);
+  public Parameter(int index, Type type, String name, Expression defaultValue) {
+    super(index, type, name, defaultValue == null);
     this.defaultValue = defaultValue;
   }
 

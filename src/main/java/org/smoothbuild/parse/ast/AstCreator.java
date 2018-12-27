@@ -89,21 +89,22 @@ public class AstCreator {
       private List<ParamNode> createParams(ParamListContext paramList) {
         ArrayList<ParamNode> result = new ArrayList<>();
         if (paramList != null) {
-          for (ParamContext param : sane(paramList.param())) {
-            result.add(createParam(param));
+          List<ParamContext> paramContexts = sane(paramList.param());
+          for (int i = 0; i < paramContexts.size(); i++) {
+            result.add(createParam(i, paramContexts.get(i)));
           }
         }
         return result;
       }
 
-      private ParamNode createParam(ParamContext param) {
+      private ParamNode createParam(int index, ParamContext param) {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
         Location location = locationOf(file, param);
         ExprNode defaultValue = param.expr() != null
             ? createExpr(param.expr())
             : null;
-        return new ParamNode(type, name, defaultValue, location);
+        return new ParamNode(index, type, name, defaultValue, location);
       }
 
       private ExprNode createPipe(PipeContext pipe) {
