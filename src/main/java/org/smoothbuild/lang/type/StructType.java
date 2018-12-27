@@ -63,7 +63,7 @@ public class StructType extends ConcreteType {
       throw new IllegalArgumentException("Struct " + name() + " doesn't have field " + fieldName);
     }
     return new Accessor(
-        new Signature(field.type(), field.name(), list(new Parameter(this, "value", null))),
+        new Signature(field.type(), field.name(), list(new Parameter(0, this, "value", null))),
         field.name(),
         field.location());
   }

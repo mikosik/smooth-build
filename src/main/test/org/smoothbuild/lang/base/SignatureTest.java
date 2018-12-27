@@ -36,16 +36,16 @@ public class SignatureTest {
 
   @Test
   public void parameter_types() throws Exception {
-    given(parameter = new Parameter(blob, "blob", mock(Expression.class)));
-    given(parameter2 = new Parameter(string, "string", mock(Expression.class)));
+    given(parameter = new Parameter(0, blob, "blob", mock(Expression.class)));
+    given(parameter2 = new Parameter(0, string, "string", mock(Expression.class)));
     when(() -> new Signature(string, "name", list(parameter, parameter2)).parameterTypes());
     thenReturned(list(blob, string));
   }
 
   @Test
   public void to_string() throws Exception {
-    given(parameter = new Parameter(blob, "blob", mock(Expression.class)));
-    given(parameter2 = new Parameter(string, "string", mock(Expression.class)));
+    given(parameter = new Parameter(0, blob, "blob", mock(Expression.class)));
+    given(parameter2 = new Parameter(0, string, "string", mock(Expression.class)));
     when(() -> new Signature(string, "name", list(parameter, parameter2)).toString());
     thenReturned(string.name() + " " + "name" + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");

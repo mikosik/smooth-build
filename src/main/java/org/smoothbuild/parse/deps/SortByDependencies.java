@@ -62,8 +62,8 @@ public class SortByDependencies {
       Set<Named> dependencies = new HashSet<>();
       new AstVisitor() {
         @Override
-        public void visitField(FieldNode field) {
-          super.visitField(field);
+        public void visitField(int index, FieldNode field) {
+          super.visitField(index, field);
           TypeNode type = field.type();
           addToDependencies(type);
         }

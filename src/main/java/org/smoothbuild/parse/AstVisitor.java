@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.smoothbuild.parse.ast.AccessorNode;
@@ -32,10 +33,10 @@ public class AstVisitor {
   }
 
   public void visitFields(List<FieldNode> fields) {
-    visitElements(fields, this::visitField);
+    visitIndexedElements(fields, this::visitField);
   }
 
-  public void visitField(FieldNode field) {
+  public void visitField(int index, FieldNode field) {
     visitType(field.type());
   }
 
@@ -54,10 +55,10 @@ public class AstVisitor {
   }
 
   public void visitParams(List<ParamNode> params) {
-    visitElements(params, this::visitParam);
+    visitIndexedElements(params, this::visitParam);
   }
 
-  public void visitParam(ParamNode param) {
+  public void visitParam(int index, ParamNode param) {
     visitType(param.type());
     if (param.hasDefaultValue()) {
       visitExpr(param.defaultValue());
@@ -110,5 +111,11 @@ public class AstVisitor {
     elements
         .stream()
         .forEach(consumer);
+  }
+
+  public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {
+    for (int i = 0; i < elements.size(); i++) {
+      consumer.accept(i, elements.get(i));
+    }
   }
 }

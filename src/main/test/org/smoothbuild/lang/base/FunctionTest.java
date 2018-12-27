@@ -43,7 +43,7 @@ public class FunctionTest {
 
   @Test
   public void params_returns_signature_params() {
-    given(parameters = list(new Parameter(STRING, "name", null)));
+    given(parameters = list(new Parameter(0, STRING, "name", null)));
     given(signature = new Signature(STRING, "name", parameters));
     given(function = new MyAbstractFunction(signature));
     when(function).parameters();
