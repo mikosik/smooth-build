@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
+import static org.junit.Assert.assertEquals;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = testFlatten(array=[['aa'], ['bb', 'cc']]);   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("aa", "bb", "cc"));
+    assertEquals(list("aa", "bb", "cc"), artifactArray("result"));
   }
 
   @Test
@@ -25,11 +26,7 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = testFlatten(array=[[['aa'], ['bb', 'cc']]]);   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith(
-        new Object[] {
-            new Object[] { "aa" },
-            new Object[] { "bb", "cc" }
-        }));
+    assertEquals(list(list("aa"), list("bb", "cc")), artifactArray("result"));
   }
 
   @Test
@@ -39,6 +36,6 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = pair(e1=testIdentity(v='aa'), e2=testIdentity(v='bb'));   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("aa", "bb"));
+    assertEquals(list("aa", "bb"), artifactArray("result"));
   }
 }

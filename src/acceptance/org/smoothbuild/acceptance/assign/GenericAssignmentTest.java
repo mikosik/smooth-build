@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.lang;
+package org.smoothbuild.acceptance.assign;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
