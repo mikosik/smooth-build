@@ -15,19 +15,9 @@ File aidl(
   File interfaceFile,
 );
 
-[Blob] concatenateBlobArrays(
-  [Blob] blobs,
-  [Blob] with,
-);
-
-[File] concatenateFileArrays(
-  [File] files,
-  [File] with,
-);
-
-[String] concatenateStringArrays(
-  [String] strings,
-  [String] with,
+[a] concatenate(
+  [a] array1,
+  [a] array2,
 );
 
 File file(
@@ -58,7 +48,7 @@ Blob jar(
 ) = javac_(
     srcs = srcs,
     libs = libs,
-    options = concatenateStringArrays(["-source", source, "-target", target], with = options)); 
+    options = concatenate(["-source", source, "-target", target], options));
 
 [File] javac_(
   [File] srcs,
