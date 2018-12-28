@@ -4,6 +4,7 @@ Change Log
 Version 0.17.0 (??????????)
 ---------------------------
 
+ * added 'concatenate' function to platform API (removed non generic versions)
  * redesigned argument assignment from implicit/explicit to positional/named
  * added generics to smooth language
 
