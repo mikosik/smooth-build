@@ -89,7 +89,7 @@ public class HashedDb {
     Sink sink = fileSystem.sink(tempPath);
     if (hash == null) {
       HashingSink hashing = hashingSink(sink);
-      // HashingSink.hash() is idempotent so we need to memoize its result.
+      // HashingSink.hash() is not idempotent so we need to memoize its result.
       Supplier<HashCode> hashSupplier = memoize(() -> fromBytes(hashing.hash().toByteArray()));
       return newMarshaller(hashing, hashSupplier, tempPath);
     } else {
