@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 0.17.0 (??????????)
+---------------------------
+
+ * redesigned argument assignment from implicit/explicit to positional/named
+ * added generics to smooth language
+
 Version 0.16.0 (2018.03.14)
 ---------------------------
 

@@ -19,12 +19,6 @@ and performs following tasks:
  * Passes them to `javac` function that compiles those files.
  * Passes compiled files to `jar` function that packs them into jar file.
 
-Note that there's no need to explicitly create temporary directory for *.class
-files as they are passed as argument to `jar` function straight from `javac`
-output. This is different from how most other build tools work where you need
-explicitly specify (or even create) directory for files being processed.
-
-
 You can invoke execution of `release_jar` function from command line by running:
 
 ```
@@ -41,7 +35,6 @@ first.
 You can consult
 [platform API documentation](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
 for a list of all platform functions.
-
 
 ### Type system
 
@@ -67,7 +60,7 @@ String welcomeString = "Hello World";
 
 ##### _Blob_
 Blob is a sequence of bytes.
-There's no literal for creating Blobs.
+There's no literal for creating Blobs (yet).
 
 ##### Nothing
 Nothing is a type that is convertible to any type.
@@ -108,8 +101,7 @@ Person person = Person(firstName = "John", secondName="Doe");
 ```
 
 Apart from being automatically generated, constructor is an ordinary function and
-behaves exactly like any other function including arguments auto-assignment,
-which we will discuss below in paragraph about functions.
+behaves exactly like any other function.
 
 Accessing specific field of struct value is done using dot `.`.
 
@@ -118,8 +110,9 @@ String name = person.lastName;
 ```
 
 Each struct value can be automatically converted to value of its first field.
-This comes handy when we use arguments auto-assignment discussed
-below in paragraph about functions.
+This happens when we invoke a function passing argument of some struct type
+for parameter that has type equal to type of struct's first field.
+
 
 Most common struct is predefined `File` struct. It is defined as:
 
@@ -168,6 +161,16 @@ then empty array is assignable to any other array.
 [Nothing] emptyArray = [];
 [String] strings = emptyArray;
 ```
+
+#### Generic types
+
+Smooth allows declaring function with generic parameters. To define generic
+parameter simply use a name starting with lowercase. Below declaration of `identity`
+function that returns its only parameter.
+
+```
+a identity(a value) = value;
+``` 
 
 #### Type inference
 
@@ -219,67 +222,35 @@ File release_jar = jar(classes("//src"));
 
 When we define function parameter we can provide default value for some of them.
 This way call to such function does not have to provide value for such parameter.
+The only limitation is that all parameters with default values must be placed
+after parameters without default values. 
 
 Let's create function that creates text file:
 
 ```
-File textFile(String name = "file.txt", String text) =
-  File(content = toBlob(text), path = "name");
+File textFile(String text, String name = "file.txt") =
+  File(toBlob(text), name);
 ```
 
 We can call it without specifying `name` parameter as it has default value:
 
 ```
-File myFile = textFile(text = "I love text files.");
+File myFile = textFile("I love text files.");
 ```
 
 but we can also override default value by specifying value for `name` parameter:
 
 ```
-File myFile = textFile(name = "secret.txt", text = "I love text files.");
+File myFile = textFile("I love text files.", "secret.txt");
 ```
 
-#### Function arguments auto-assignment
+If a function has more than one parameter with default value and we want to specify
+value for only some default parameters we can select that parameters by prefixing
+argument with parameter name and equal sign (`=`). For example:
 
-Most functions can accept more than one argument.
-One example is
-[javac](https://github.com/mikosik/smooth-build/blob/master/doc/api/javac.md).
-Despite that we kept passing only one argument in all above examples,
-it didn't cause any error as smooth was capable to auto-assign arguments
-to proper parameters by comparing argument's type with parameter types.
-Parameters left without match are assigned parameter's default value.
-
-However if there's ambiguity (smooth is not able to deduce which arguments
-should be assigned to which parameters) then it fails with error.
-In such cases ambiguity can be solved by specifying assignment between argument
-and parameter explicitly.
-In the following example we need to explicitly name `source` parameter, as
-without it, smooth would not be able to guess whether `1.8` String value should
-be assigned to `source` or `target` parameter, both of which are of type String.
 ```
-release_jar = files("//src") | javac(source="1.8") | jar;
+File myFile = textFile("I love text files.", name="secret.txt");
 ```
-
-Matching arguments to parameters works according to following algorithm
-(Actual implementation doesn't use brute force but it is much easier to write
-smooth code when you understand this algorithm from brute force perspective):
- 1. All arguments that have explicit assignment specified are assigned to
- those parameters.
- If some parameter is assigned explicitly more than once then algorithm fails.
- 2. For arguments without explicit assignment algorithm generates
- all possible sets of assignments that meet following criteria:
-    * each argument is used in assignment exactly once
-    * each argument is assigned to parameter which type is convertible from that argument type
-    * each parameter without default value is assigned exactly once
-    * each parameter with default value is assigned at most once
-
- 3. If there's exactly one set of assignments generated in 2.
- then it is chosen, otherwise algorithm fails with ambiguity.
-
-Note that currently explicit assignment of argument to parameter
-cannot be done for value that is passed through a pipe.
-This may be a nuisance as you have to use nested function calls in such cases.
-
 
 ### Caching
 
@@ -316,7 +287,7 @@ Such solution gives you access to any build result you have ever executed.
 You just need to checkout relevant code version from your repository
 and run build command that will provide results instantly.
 
-### trailing commas
+### Trailing commas
 
 In every case where comma is used to separate list of language elements,
 it may (or may not) be used also after last element.
