@@ -6,7 +6,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
 public class GenericResult {
-  @SmoothFunction
+  @SmoothFunction("genericResult")
   public static Value genericResult(NativeApi nativeApi, Array array) {
     return nativeApi.create().string("abc");
   }

@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Struct;
 
 public class FileParameter {
-  @SmoothFunction
+  @SmoothFunction("fileParameter")
   public static Struct fileParameter(NativeApi nativeApi, Struct file) {
     return file;
   }

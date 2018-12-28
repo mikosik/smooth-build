@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.lang.nativ.AddElementOfWrongTypeToArray;
 import org.smoothbuild.acceptance.lang.nativ.BrokenIdentity;
+import org.smoothbuild.acceptance.lang.nativ.DifferentJavaName;
 import org.smoothbuild.acceptance.lang.nativ.EmptyStringArray;
 import org.smoothbuild.acceptance.lang.nativ.FileParameter;
 import org.smoothbuild.acceptance.lang.nativ.IllegalName;
@@ -77,6 +78,16 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenOutputContains("Invalid function native implementation in build.jar provided by "
         + IllegalName.class.getCanonicalName()
         + ".illegalName$: Name 'illegalName$' is illegal.\n");
+  }
+
+  @Test
+  public void native_name_is_taken_from_annotation_not_java_method_name() throws Exception {
+    givenNativeJar(DifferentJavaName.class);
+    givenScript("String annotationName();    \n" +
+        "        result = annotationName();  \n");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactContent("result"), equalTo("abc"));
   }
 
   @Test

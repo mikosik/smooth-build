@@ -14,7 +14,7 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {
-  @SmoothFunction
+  @SmoothFunction("file")
   @NotCacheable
   public static Struct file(Container container, SString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);

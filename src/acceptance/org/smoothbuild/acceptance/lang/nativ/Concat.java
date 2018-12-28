@@ -6,7 +6,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
 public class Concat {
-  @SmoothFunction
+  @SmoothFunction("testConcat")
   public static Array testConcat(NativeApi nativeApi, Array first, Array second) {
     return nativeApi.create()
         .arrayBuilder(first.type().elemType())

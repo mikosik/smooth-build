@@ -9,7 +9,7 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Value;
 
 public class Flatten {
-  @SmoothFunction
+  @SmoothFunction("testFlatten")
   public static Array testFlatten(NativeApi nativeApi, Array array) {
     ConcreteType resultArrayElemType = ((ConcreteArrayType) array.type().elemType()).elemType();
     ArrayBuilder builder = nativeApi.create().arrayBuilder(resultArrayElemType);

@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class ThrowRandomException {
-  @SmoothFunction
+  @SmoothFunction("throwRandomException")
   public static SString throwRandomException(NativeApi nativeApi) {
     throw new UnsupportedOperationException(Long.toString(System.nanoTime()));
   }

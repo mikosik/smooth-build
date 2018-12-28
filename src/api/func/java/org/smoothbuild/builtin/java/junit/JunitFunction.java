@@ -26,7 +26,7 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
 public class JunitFunction {
-  @SmoothFunction
+  @SmoothFunction("junit")
   public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include)
       throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());

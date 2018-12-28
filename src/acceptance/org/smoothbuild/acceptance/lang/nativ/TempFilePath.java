@@ -11,7 +11,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class TempFilePath {
-  @SmoothFunction
+  @SmoothFunction("tempFilePath")
   public static SString tempFilePath(NativeApi nativeApi) throws IOException {
     TempDir tempDir = nativeApi.createTempDir();
     String osPath = tempDir.asOsPath(path("file.txt"));

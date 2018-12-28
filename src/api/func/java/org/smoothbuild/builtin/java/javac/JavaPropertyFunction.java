@@ -6,7 +6,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class JavaPropertyFunction {
-  @SmoothFunction()
+  @SmoothFunction("javaProperty")
   @NotCacheable
   public static SString javaProperty(NativeApi nativeApi, SString name) {
     String nameString = name.data();

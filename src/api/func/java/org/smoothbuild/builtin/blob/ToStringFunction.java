@@ -12,7 +12,7 @@ import org.smoothbuild.lang.value.SString;
 import okio.BufferedSource;
 
 public class ToStringFunction {
-  @SmoothFunction
+  @SmoothFunction("toString")
   public static SString toString(NativeApi nativeApi, Blob blob) throws IOException {
     try (BufferedSource source = blob.source()) {
       return nativeApi.create().string(source.readString(CHARSET));

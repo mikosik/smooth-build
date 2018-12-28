@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class NonStaticMethod {
-  @SmoothFunction
+  @SmoothFunction("function")
   public SString function(NativeApi nativeApi) {
     return nativeApi.create().string("abc");
   }
