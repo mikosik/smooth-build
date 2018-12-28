@@ -9,7 +9,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 
 public class UnjarFunction {
-  @SmoothFunction
+  @SmoothFunction("unjar")
   public static Array unjar(NativeApi nativeApi, Blob jar, Array javaHash) throws IOException {
     return UnzipFunction.unzip(nativeApi, jar, string -> !string.equals("META-INF/MANIFEST.MF"));
   }

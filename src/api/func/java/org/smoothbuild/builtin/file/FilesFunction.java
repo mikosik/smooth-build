@@ -18,7 +18,7 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.Container;
 
 public class FilesFunction {
-  @SmoothFunction
+  @SmoothFunction("files")
   @NotCacheable
   public static Array files(Container container, SString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);

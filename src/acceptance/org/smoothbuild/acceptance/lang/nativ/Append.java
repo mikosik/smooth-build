@@ -6,7 +6,7 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
 
 public class Append {
-  @SmoothFunction
+  @SmoothFunction("testAppend")
   public static Array testAppend(NativeApi nativeApi, Array array, Value element) {
     return nativeApi.create()
         .arrayBuilder(array.type().elemType())

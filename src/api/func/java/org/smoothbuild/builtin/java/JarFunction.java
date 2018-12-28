@@ -23,7 +23,7 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunction {
-  @SmoothFunction
+  @SmoothFunction("jar")
   public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();

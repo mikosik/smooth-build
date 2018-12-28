@@ -19,8 +19,7 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.CommandExecutor;
 
 public class AidlFunction {
-
-  @SmoothFunction
+  @SmoothFunction("aidl")
   public static Struct aidl(NativeApi nativeApi, SString apiLevel, SString buildToolsVersion,
       Struct interfaceFile) throws InterruptedException, IOException {
     return execute(nativeApi, buildToolsVersion.data(), apiLevel.data(), interfaceFile);

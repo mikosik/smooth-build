@@ -7,7 +7,7 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.SString;
 
 public class AddElementOfWrongTypeToArray {
-  @SmoothFunction
+  @SmoothFunction("addElementOfWrongTypeToArray")
   public static Array addElementOfWrongTypeToArray(NativeApi nativeApi) {
     ArrayBuilder arrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().blob());
     SString string = nativeApi.create().string("abc");

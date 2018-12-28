@@ -27,7 +27,7 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
-  @SmoothFunction
+  @SmoothFunction("unzip")
   public static Array unzip(NativeApi nativeApi, Blob blob, Array javaHash) throws IOException {
     return unzip(nativeApi, blob, x -> true);
   }

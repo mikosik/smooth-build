@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class ThrowException {
-  @SmoothFunction
+  @SmoothFunction("throwException")
   public static SString throwException(NativeApi nativeApi) {
     throw new UnsupportedOperationException();
   }

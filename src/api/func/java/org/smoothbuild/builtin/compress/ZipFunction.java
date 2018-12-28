@@ -19,7 +19,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 import okio.BufferedSource;
 
 public class ZipFunction {
-  @SmoothFunction
+  @SmoothFunction("zip")
   public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.create().blobBuilder();

@@ -62,8 +62,8 @@ public class FindNatives {
         } else {
           for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(SmoothFunction.class)) {
-              if (isLegalName(method.getName())) {
-                String name = method.getName();
+              String name = method.getAnnotation(SmoothFunction.class).value();
+              if (isLegalName(name)) {
                 if (result.containsKey(name)) {
                   errors.add(error(jarFile, method,
                       "Function with the same name is also provided by "

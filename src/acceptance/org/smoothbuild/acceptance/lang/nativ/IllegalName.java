@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class IllegalName {
-  @SmoothFunction
+  @SmoothFunction("illegalName$")
   public static SString illegalName$(NativeApi nativeApi) {
     return nativeApi.create().string("abc");
   }

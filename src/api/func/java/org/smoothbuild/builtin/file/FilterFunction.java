@@ -15,7 +15,7 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
 public class FilterFunction {
-  @SmoothFunction
+  @SmoothFunction("filter")
   public static Array filter(NativeApi nativeApi, Array files, SString include) {
     Predicate<Path> filter;
     try {

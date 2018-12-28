@@ -4,7 +4,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class WithoutContainer {
-  @SmoothFunction
+  @SmoothFunction("function")
   public static SString function() {
     return null;
   }

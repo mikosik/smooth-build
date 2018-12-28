@@ -10,7 +10,7 @@ import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
-  @SmoothFunction
+  @SmoothFunction("toBlob")
   public static Blob toBlob(NativeApi nativeApi, SString string) throws IOException {
     return stringToBlob(nativeApi, string);
   }

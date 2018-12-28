@@ -5,7 +5,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class ReportWarningAndReturnNull {
-  @SmoothFunction
+  @SmoothFunction("reportWarning")
   public static SString reportWarning(NativeApi nativeApi, SString message) {
     nativeApi.log().warning(message.data());
     return null;
