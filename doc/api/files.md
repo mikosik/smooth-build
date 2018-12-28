@@ -13,5 +13,5 @@ via 'dir' parameter.
 
 Returns all files located in 'src' directory or its subdirectories.
 ```
-sources = files("//src") ;
+[File] sources = files("//src") ;
 ```

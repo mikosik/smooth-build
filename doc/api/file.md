@@ -12,5 +12,5 @@ Returns __File__ read from project tree at given path.
 
 Returns file located at 'doc/contributors.txt' in project tree.
 ```
-names = file("//doc/contributors.txt") ;
+File names = file("//doc/contributors.txt") ;
 ```
