@@ -1,8 +1,9 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
+import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[String] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+    assertEquals(list(), artifactArray("result"));
   }
 
   @Test
@@ -58,7 +59,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = ['abc', 'def'];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("abc", "def"));
+    assertEquals(list("abc", "def"), artifactArray("result"));
   }
 
   @Test
@@ -66,7 +67,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+    assertEquals(list(), artifactArray("result"));
   }
 
   @Test
@@ -74,7 +75,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[Blob] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+    assertEquals(list(), artifactArray("result"));
   }
 
   @Test
@@ -84,7 +85,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = [file('//file1.txt').content, file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("abc", "def"));
+    assertEquals(list("abc", "def"), artifactArray("result"));
   }
 
   @Test
@@ -92,7 +93,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[File] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
+    assertEquals(list(), artifactArray("result"));
   }
 
   @Test

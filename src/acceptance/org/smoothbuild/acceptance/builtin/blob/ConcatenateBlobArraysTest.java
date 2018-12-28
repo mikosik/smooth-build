@@ -1,10 +1,11 @@
 package org.smoothbuild.acceptance.builtin.blob;
 
-import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
-import static org.testory.Testory.then;
+import static org.junit.Assert.assertEquals;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.util.Lists;
 
 public class ConcatenateBlobArraysTest extends AcceptanceTestCase {
   @Test
@@ -14,6 +15,6 @@ public class ConcatenateBlobArraysTest extends AcceptanceTestCase {
     givenScript("result = concatenateBlobArrays(blobs=[file('//0')], with=[file('//1')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("abc", "def"));
+    assertEquals(list("abc", "def"), artifactArray("result"));
   }
 }
