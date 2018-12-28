@@ -1,5 +1,7 @@
 package org.smoothbuild.acceptance.assign;
 
+import org.smoothbuild.acceptance.AcceptanceTestCase;
+
 public class PositionalParameterAssignmentTest extends AbstractAssignmentTestCase {
   @Override
   protected String createTestScript(String type, String value) {
@@ -8,8 +10,8 @@ public class PositionalParameterAssignmentTest extends AbstractAssignmentTestCas
   }
 
   @Override
-  protected void thenAssignmentError(String target, String source) {
-    thenOutputContainsError(2, "Cannot assign argument of type '" + source +
-        "' to parameter 'param' of type '" + target + "'.");
+  protected void thenAssignmentError(AcceptanceTestCase test, String type, String valueType) {
+    test.thenOutputContainsError(2, "Cannot assign argument of type '" + valueType +
+        "' to parameter 'param' of type '" + type + "'.");
   }
 }
