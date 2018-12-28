@@ -1,144 +1,104 @@
 package org.smoothbuild.acceptance.assign;
 
-import static org.smoothbuild.acceptance.ArrayMatcher.isArrayWith;
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static org.junit.Assert.assertEquals;
+import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public abstract class AbstractAssignmentTestCase extends AcceptanceTestCase {
+import com.googlecode.junittoolbox.ParallelRunner;
+
+@RunWith(ParallelRunner.class)
+public abstract class AbstractAssignmentTestCase {
   @Test
-  public void string_is_assignable_to_string() throws IOException {
-    givenScript(createTestScript("String", "'abc'"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+  public void assignment_tests() throws IOException {
+    illegalAssignment("Nothing", "'abc'", "String", "");
+    illegalAssignment("Nothing", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Nothing", "['abc']", "[String]", "");
+    illegalAssignment("Nothing", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+
+    allowedAssignment("String", "'abc'", "",
+        test -> assertEquals("abc", test.artifactArray("result")));
+    allowedAssignment("String", "MyStruct('abc')", "MyStruct{String field}\n",
+        test -> assertEquals("abc", test.artifactArray("result")));
+    illegalAssignment("String", "['abc']", "[String]", "");
+    illegalAssignment("String", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("String", "[['abc']]", "[[String]]", "");
+    illegalAssignment("String", "[[MyStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
+
+    illegalAssignment("Blob", "'abc'", "String", "");
+    illegalAssignment("Blob", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Blob", "['abc']", "[String]", "");
+    illegalAssignment("Blob", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+
+    illegalAssignment("[Nothing]", "'abc'", "String", "");
+    illegalAssignment("[Nothing]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("[Nothing]", "['abc']", "[String]", "");
+    illegalAssignment("[Nothing]", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+
+    illegalAssignment("[String]", "'abc'", "String", "");
+    illegalAssignment("[String]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    allowedAssignment("[String]", "[]", "",
+        test -> assertEquals(list(), test.artifactArray("result")));
+    allowedAssignment("[String]", "['abc', 'def']", "",
+        test -> assertEquals(list("abc", "def"), test.artifactArray("result")));
+    allowedAssignment("[String]", "[MyStruct('abc')]", "MyStruct{String field}\n",
+        test -> assertEquals(list("abc"), test.artifactArray("result")));
+    illegalAssignment("[String]", "[['abc']]", "[[String]]", "");
+
+    allowedAssignment("[Blob]", "[]", "",
+        test -> assertEquals(list(), test.artifactArray("result")));
+
+    allowedAssignment("[MyStruct]", "[]", "MyStruct{String field}\n",
+        test -> assertEquals(list(), test.artifactArray("result")));
+
+    allowedAssignment("[[String]]", "[]", "",
+        test -> assertEquals(list(), test.artifactArray("result")));
+    allowedAssignment("[[String]]", "[[]]", "",
+        test -> assertEquals(list(list()), test.artifactArray("result")));
+
+    allowedAssignment("[[[String]]]", "[]", "",
+        test -> assertEquals(list(), test.artifactArray("result")));
+    allowedAssignment("[[[String]]]", "[[]]", "",
+        test -> assertEquals(list(list()), test.artifactArray("result")));
+    allowedAssignment("[[[String]]]", "[[[]]]", "",
+        test -> assertEquals(list(list(list())), test.artifactArray("result")));
   }
 
-  @Test
-  public void file_is_assignable_to_blob() throws IOException {
-    givenFile("file.txt", "abc");
-    givenScript(createTestScript("Blob", "file('//file.txt')"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+  private void allowedAssignment(String type, String value, String declarations,
+      Consumer<AcceptanceTestCase> artifactAsserter) throws IOException {
+    executeTest(type, value, declarations, test -> {
+      test.thenFinishedWithSuccess();
+      artifactAsserter.accept(test);
+    });
   }
 
-  @Test
-  public void blob_is_not_assignable_to_string() throws IOException {
-    givenFile("file.txt", "abc");
-    givenScript(createTestScript("String", "file('//file.txt').content"));
-    whenSmoothList();
-    thenFinishedWithError();
-    thenAssignmentError("String", "Blob");
+  private void illegalAssignment(String type, String value, String valueType,
+      String declarations) throws IOException {
+    executeTest(type, value, declarations, (test) -> {
+      test.thenFinishedWithError();
+      thenAssignmentError(test, type, valueType);
+    });
   }
 
-  @Test
-  public void file_array_is_assignable_to_blob_array() throws IOException {
-    givenFile("file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript(createTestScript("[Blob]", "[file('//file1.txt'), file('//file2.txt')]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith("abc", "def"));
-  }
-
-  @Test
-  public void empty_array_is_assignable_to_string_array() throws IOException {
-    givenScript(createTestScript("[String]", "[]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
-  }
-
-  @Test
-  public void empty_array_is_assignable_to_blob_array() throws IOException {
-    givenScript(createTestScript("[Blob]", "[]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
-  }
-
-  @Test
-  public void empty_array_is_assignable_to_file_array() throws IOException {
-    givenScript(createTestScript("[File]", "[]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
-  }
-
-  @Test
-  public void empty_array_is_assignable_to_string_array_array() throws IOException {
-    givenScript(createTestScript("[[String]]", "[]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
-  }
-
-  @Test
-  public void empty_array_is_assignable_to_string_array_array_array() throws IOException {
-    givenScript(createTestScript("[[[String]]]", "[]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith());
-  }
-
-  @Test
-  public void array_with_empty_array_is_assignable_to_string_array_array()
-      throws Exception {
-    givenScript(createTestScript("[[String]]", "[[]]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith(new Object[] { new Object[] {} }));
-  }
-
-  @Test
-  public void array_with_empty_array_is_assignable_to_string_array_array_array()
-      throws Exception {
-    givenScript(createTestScript("[[[String]]]", "[[]]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith(new Object[] { new Object[] {} }));
-  }
-
-  @Test
-  public void array_with_array_with_empty_array_is_assignable_to_string_array_array_array()
-      throws Exception {
-    givenScript(createTestScript("[[[String]]]", "[[[]]]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith(new Object[] { new Object[] { new Object[] {} } }));
-  }
-
-  @Test
-  public void file_array_array_is_assignable_to_blob_array_array() throws IOException {
-    givenFile("file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript(createTestScript("[[Blob]]", "[[file('//file1.txt'), file('//file2.txt')]]"));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifact("result"), isArrayWith(new Object[] { new Object[] { "abc", "def" } }));
-  }
-
-  @Test
-  public void string_array_cannot_be_converted_to_string_array_array() throws IOException {
-    givenScript(createTestScript("[[String]]", "['abc']"));
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-  }
-
-  @Test
-  public void file_array_cannot_be_converted_to_blob_array_array() throws IOException {
-    givenFile("file1.txt", "abc");
-    givenScript(createTestScript("[[Blob]]", "[file('//file1.txt')]"));
-    whenSmoothBuild("result");
-    thenFinishedWithError();
+  private void executeTest(String type, String value, String declarations,
+      Consumer<AcceptanceTestCase> asserter) throws IOException {
+    AcceptanceTestCase test = new AcceptanceTestCase() {};
+    test.init();
+    try {
+      test.givenScript(createTestScript(type, value) + "\n" + declarations);
+      test.whenSmoothBuild("result");
+      asserter.accept(test);
+    } finally {
+      test.destroy();
+    }
   }
 
   protected abstract String createTestScript(String type, String value);
 
-  protected abstract void thenAssignmentError(String target, String source);
+  protected abstract void thenAssignmentError(AcceptanceTestCase test, String type, String value);
 }
