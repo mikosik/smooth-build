@@ -15,6 +15,10 @@ File aidl(
   File interfaceFile,
 );
 
+Bool true();
+
+Bool false();
+
 [a] concatenate(
   [a] array1,
   [a] array2,

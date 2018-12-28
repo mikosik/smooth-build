@@ -4,6 +4,7 @@ import static org.smoothbuild.db.values.ValuesDbException.corruptedValueExceptio
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
+import static org.smoothbuild.lang.type.TypeNames.BOOL;
 import static org.smoothbuild.lang.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.type.TypeNames.STRING;
 import static org.smoothbuild.lang.type.TypeNames.TYPE;
@@ -26,6 +27,7 @@ public class TypesDb {
   private final Map<HashCode, ConcreteType> cache;
   private final Instantiator instantiator;
   private TypeType type;
+  private BoolType bool;
   private StringType string;
   private BlobType blob;
   private NothingType nothing;
@@ -37,6 +39,7 @@ public class TypesDb {
 
     // initialize cache
     type();
+    bool();
     string();
     blob();
     nothing();
@@ -48,6 +51,14 @@ public class TypesDb {
       cache.put(type.hash(), type);
     }
     return type;
+  }
+
+  public BoolType bool() {
+    if (bool == null) {
+      bool = new BoolType(writeBasicTypeData(BOOL), type(), hashedDb, this);
+      cache.put(bool.hash(), bool);
+    }
+    return bool;
   }
 
   public StringType string() {
@@ -167,6 +178,7 @@ public class TypesDb {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
       String name = hashedDb.readString(unmarshaller.readHash());
       switch (name) {
+        case BOOL:
         case STRING:
         case BLOB:
         case NOTHING:

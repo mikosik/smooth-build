@@ -6,6 +6,8 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 
 public interface Types {
+  public ConcreteType bool();
+
   public ConcreteType string();
 
   public ConcreteType blob();

@@ -40,6 +40,7 @@ import java.util.concurrent.Future;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -207,30 +208,42 @@ public abstract class AcceptanceTestCase {
     return file(ARTIFACTS_DIR_PATH + name);
   }
 
-  public Object artifactArray(String name) {
+  /**
+   * @return given artifact as ByteString, or List<ByteString> if it is array,
+   * or List<List<ByteString>> if it is array of depth=2, and so on.
+   */
+  public Object artifactAsByteStrings(String name) {
     try {
-      return actual(artifact(name));
+      return actual(artifact(name), s -> s.readByteString());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static Object actual(File file) throws IOException {
+  public Object artifactArray(String name) {
+    try {
+      return actual(artifact(name), s -> s.readString(CHARSET));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static Object actual(File file, DataReader<?> dataReader) throws IOException {
     if (!file.exists()) {
       return null;
     }
     if (file.isDirectory()) {
-      return actualArray(file);
+      return actualArray(file, dataReader);
     }
-    return readAndClose(buffer(source(file)), s -> s.readString(CHARSET));
+    return readAndClose(buffer(source(file)), dataReader);
   }
 
-  private static Object actualArray(File file) throws IOException {
+  private static Object actualArray(File file, DataReader<?> dataReader) throws IOException {
     int count = file.list().length;
 
     List<Object> result = new ArrayList<>(count);
     for (int i = 0; i < count; i++) {
-      result.add(actual(new File(file, Integer.toString(i))));
+      result.add(actual(new File(file, Integer.toString(i)), dataReader));
     }
     return result;
   }

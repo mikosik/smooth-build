@@ -15,6 +15,13 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void it_is_possible_to_declare_parameter_of_type_bool() throws Exception {
+    givenScript("oneParameter(Bool bool) = 'abc';");
+    whenSmoothList();
+    thenFinishedWithSuccess();
+  }
+
+  @Test
   public void it_is_possible_to_declare_parameter_of_type_string() throws Exception {
     givenScript("oneParameter(String string) = 'abc';");
     whenSmoothList();
@@ -63,6 +70,13 @@ public class ParameterTest extends AcceptanceTestCase {
     whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
+  }
+
+  @Test
+  public void it_is_possible_to_declare_parameter_of_type_bool_array() throws Exception {
+    givenScript("oneParameter([Bool] array) = 'abc';");
+    whenSmoothList();
+    thenFinishedWithSuccess();
   }
 
   @Test

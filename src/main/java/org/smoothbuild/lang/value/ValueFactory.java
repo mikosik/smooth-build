@@ -46,6 +46,10 @@ public class ValueFactory {
     }
   }
 
+  public Bool bool(boolean value) {
+    return valuesDb.bool(value);
+  }
+
   public SString string(String string) {
     return valuesDb.string(string);
   }

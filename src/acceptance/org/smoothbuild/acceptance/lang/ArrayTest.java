@@ -2,6 +2,8 @@ package org.smoothbuild.acceptance.lang;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
+import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
@@ -9,11 +11,20 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.testing.db.values.ValueCreators;
 
 public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void empty_array_of_nothings() throws Exception {
     givenScript("result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertEquals(list(), artifactArray("result"));
+  }
+
+  @Test
+  public void empty_array_of_bools() throws Exception {
+    givenScript("[Bool] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertEquals(list(), artifactArray("result"));
@@ -41,6 +52,14 @@ public class ArrayTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertEquals(list(), artifactArray("result"));
+  }
+
+  @Test
+  public void array_of_bools() throws Exception {
+    givenScript("result = [true(), false()];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertEquals(list(trueByteString(), falseByteString()), artifactAsByteStrings("result"));
   }
 
   @Test
@@ -93,6 +112,14 @@ public class ArrayTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertEquals(list(list(), list()), artifactArray("result"));
+  }
+
+  @Test
+  public void empty_array_of_arrays_of_bools() throws Exception {
+    givenScript("[[Bool]] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertEquals(list(), artifactArray("result"));
   }
 
   @Test

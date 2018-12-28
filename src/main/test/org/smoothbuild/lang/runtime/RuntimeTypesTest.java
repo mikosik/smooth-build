@@ -50,6 +50,7 @@ public class RuntimeTypesTest {
   public void names_returns_all_basic_types_initially() throws Exception {
     when(() -> runtimeTypes.names());
     thenReturned(set(
+        typesDb.bool().name(),
         typesDb.string().name(),
         typesDb.blob().name(),
         typesDb.nothing().name()));
@@ -79,6 +80,7 @@ public class RuntimeTypesTest {
   public void name_to_type_map_contains_basic_types_initially() throws Exception {
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(set(
+        typesDb.bool().name(),
         typesDb.string().name(),
         typesDb.blob().name(),
         typesDb.nothing().name()));
@@ -89,6 +91,12 @@ public class RuntimeTypesTest {
     given(runtimeTypes).struct("MyStruct", list());
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(hasItem("MyStruct"));
+  }
+
+  @Test
+  public void bool_type_can_be_retrieved_by_name() throws Exception {
+    when(() -> runtimeTypes.getType("Bool"));
+    thenReturned(typesDb.bool());
   }
 
   @Test

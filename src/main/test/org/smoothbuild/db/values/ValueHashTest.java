@@ -14,6 +14,7 @@ import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.Bool;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
@@ -24,6 +25,7 @@ import okio.ByteString;
 public class ValueHashTest {
   private TypesDb typesDb;
   private ValuesDb valuesDb;
+  private Bool bool;
   private SString sstring;
   private Blob blob;
   private Struct struct;
@@ -34,6 +36,20 @@ public class ValueHashTest {
     HashedDb hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
+  }
+
+  @Test
+  public void hash_of_true_bool_is_stable() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).hash();
+    thenReturned(HashCode.fromString("86ade1928ff1d0175a33d59080289212f79ff921"));
+  }
+
+  @Test
+  public void hash_of_false_bool_is_stable() throws Exception {
+    given(bool = valuesDb.bool(false));
+    when(bool).hash();
+    thenReturned(HashCode.fromString("fe2c2d262ca0d3325738e492c11ef37523469d99"));
   }
 
   @Test
@@ -76,6 +92,20 @@ public class ValueHashTest {
     given(struct = createStruct(valuesDb, "John", "Doe"));
     when(() -> struct.hash());
     thenReturned(HashCode.fromString("a94de85056893e6464baa8ded12a9a765c5b56fc"));
+  }
+
+  @Test
+  public void hash_of_empty_bool_array_is_stable() throws Exception {
+    given(array = valuesDb.arrayBuilder(typesDb.bool()).build());
+    when(() -> array.hash());
+    thenReturned(HashCode.fromString("ddc07c59607a4a56f2d34b6cc8fef9459c51f3f3"));
+  }
+
+  @Test
+  public void hash_of_non_empty_bool_array_is_stable() throws Exception {
+    given(array = valuesDb.arrayBuilder(typesDb.bool()).add(valuesDb.bool(true)).build());
+    when(() -> array.hash());
+    thenReturned(HashCode.fromString("394b5eddb75a2279b8fcf4ab238d8d0258cdac39"));
   }
 
   @Test

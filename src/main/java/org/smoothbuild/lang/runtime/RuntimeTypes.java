@@ -35,6 +35,7 @@ public class RuntimeTypes implements Types {
 
   private static HashMap<String, ConcreteType> createInitializedCache(TypesDb typesDb) {
     HashMap<String, ConcreteType> map = new HashMap<>();
+    putType(map, typesDb.bool());
     putType(map, typesDb.string());
     putType(map, typesDb.blob());
     putType(map, typesDb.nothing());
@@ -51,6 +52,11 @@ public class RuntimeTypes implements Types {
 
   public Map<String, ConcreteType> nameToTypeMap() {
     return unmodifiableMap(cache);
+  }
+
+  @Override
+  public ConcreteType bool() {
+    return typesDb.bool();
   }
 
   @Override

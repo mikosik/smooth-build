@@ -2,13 +2,24 @@ package org.smoothbuild.acceptance.builtin.file;
 
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
+import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.testing.db.values.ValueCreators;
 
 public class ConcatenateTest extends AcceptanceTestCase {
+  @Test
+  public void concatenate_bool_arrays_function() throws Exception {
+    givenScript("result = concatenate([true()], [false()]);");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertEquals(list(trueByteString(), falseByteString()), artifactAsByteStrings("result"));
+  }
+
   @Test
   public void concatenate_string_arrays_function() throws Exception {
     givenScript("result = concatenate(['abc'], ['def']);");
