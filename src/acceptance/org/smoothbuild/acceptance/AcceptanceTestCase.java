@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -203,6 +205,34 @@ public abstract class AcceptanceTestCase {
 
   public File artifact(String name) {
     return file(ARTIFACTS_DIR_PATH + name);
+  }
+
+  public Object artifactArray(String name) {
+    try {
+      return actual(artifact(name));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static Object actual(File file) throws IOException {
+    if (!file.exists()) {
+      return null;
+    }
+    if (file.isDirectory()) {
+      return actualArray(file);
+    }
+    return readAndClose(buffer(source(file)), s -> s.readString(CHARSET));
+  }
+
+  private static Object actualArray(File file) throws IOException {
+    int count = file.list().length;
+
+    List<Object> result = new ArrayList<>(count);
+    for (int i = 0; i < count; i++) {
+      result.add(actual(new File(file, Integer.toString(i))));
+    }
+    return result;
   }
 
   public File file(String path) {
