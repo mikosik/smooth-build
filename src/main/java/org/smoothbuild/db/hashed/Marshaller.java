@@ -26,7 +26,7 @@ public class Marshaller implements Closeable {
   }
 
   public HashCode hash() {
-    checkState(!sink.isOpen(), "");
+    checkState(!sink.isOpen());
     return hashSupplier.get();
   }
 
