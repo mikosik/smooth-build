@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.Instantiator;
@@ -14,6 +15,7 @@ import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.Bool;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.StructBuilder;
 import org.smoothbuild.lang.value.Value;
@@ -55,6 +57,20 @@ public class ValuesDb {
   public SString string(String string) {
     try {
       return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
+    } catch (IOException e) {
+      throw ioException(e);
+    }
+  }
+
+  public Bool bool(boolean value) {
+    return new Bool(writeBool(value), typesDb.bool(), hashedDb);
+  }
+
+  private HashCode writeBool(boolean value) {
+    try (Marshaller marshaller = hashedDb.newMarshaller()) {
+      marshaller.sink().writeByte(value ? 1 : 0);
+      marshaller.close();
+      return marshaller.hash();
     } catch (IOException e) {
       throw ioException(e);
     }

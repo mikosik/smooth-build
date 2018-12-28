@@ -49,6 +49,13 @@ Basic types are predefined by the language (cannot be defined by user).
 Currently we have three basic types: String, Blob, Nothing.
 Others (like Int, Bool) will be added before smooth reaches version 1.0.
 
+##### _Bool_
+Boolean value that can be either `true` or `false`.
+Only instances of that type are returned by functions
+[true](https://github.com/mikosik/smooth-build/blob/master/doc/api/true.md)
+and
+[false](https://github.com/mikosik/smooth-build/blob/master/doc/api/false.md).
+
 ##### _String_
 String is a sequence of characters.
 String value can be defined in-line using String literal,

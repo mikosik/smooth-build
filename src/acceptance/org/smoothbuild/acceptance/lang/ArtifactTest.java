@@ -1,15 +1,28 @@
 package org.smoothbuild.acceptance.lang;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
+import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.testing.db.values.ValueCreators;
 
 public class ArtifactTest extends AcceptanceTestCase {
+  @Test
+  public void store_bool_artifact() throws Exception {
+    givenScript("result = true();");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsByteStrings("result"), equalTo(trueByteString()));
+  }
+
   @Test
   public void store_string_artifact() throws Exception {
     givenScript("result = 'abc';");
@@ -44,6 +57,22 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("my_result_file_txt");
     thenFinishedWithSuccess();
     then(artifact("my_result_file.txt"), hasContent("abc"));
+  }
+
+  @Test
+  public void store_empty_array_of_bools_artifact() throws Exception {
+    givenScript("[Bool] result = [];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertEquals(list(), artifactArray("result"));
+  }
+
+  @Test
+  public void store_array_of_bools_artifact() throws Exception {
+    givenScript("result = [true(), false()];");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsByteStrings("result"), equalTo(list(trueByteString(), falseByteString())));
   }
 
   @Test

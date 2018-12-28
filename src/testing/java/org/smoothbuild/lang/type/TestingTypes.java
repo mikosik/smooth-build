@@ -8,6 +8,7 @@ import org.smoothbuild.lang.base.Field;
 public class TestingTypes {
   public static final TypesDb typesDb = new TestingTypesDb();
   public static final ConcreteType type = typesDb.type();
+  public static final ConcreteType bool = typesDb.bool();
   public static final ConcreteType string = typesDb.string();
   public static final ConcreteType blob = typesDb.blob();
   public static final ConcreteType nothing = typesDb.nothing();
@@ -17,6 +18,7 @@ public class TestingTypes {
   public static final GenericType b = new GenericType("b");
 
   public static final ConcreteArrayType arrayType = array(type);
+  public static final ConcreteArrayType arrayBool = array(bool);
   public static final ConcreteArrayType arrayString = array(string);
   public static final ConcreteArrayType arrayBlob = array(blob);
   public static final ConcreteArrayType arrayNothing = array(nothing);
@@ -26,6 +28,7 @@ public class TestingTypes {
   public static final GenericArrayType arrayB = array(b);
 
   public static final ConcreteArrayType array2Type = array(arrayType);
+  public static final ConcreteArrayType array2Bool = array(arrayBool);
   public static final ConcreteArrayType array2String = array(arrayString);
   public static final ConcreteArrayType array2Blob = array(arrayBlob);
   public static final ConcreteArrayType array2Nothing = array(arrayNothing);

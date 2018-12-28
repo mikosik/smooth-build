@@ -1,0 +1,138 @@
+package org.smoothbuild.db.values;
+
+import static org.hamcrest.Matchers.not;
+import static org.testory.Testory.given;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
+import static org.testory.Testory.when;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.lang.type.TypesDb;
+import org.smoothbuild.lang.value.Bool;
+import org.smoothbuild.lang.value.SString;
+
+import com.google.common.hash.HashCode;
+
+public class BoolTest {
+  private HashedDb hashedDb;
+  private TypesDb typesDb;
+  private ValuesDb valuesDb;
+  private Bool bool;
+  private HashCode hash;
+
+  @Before
+  public void before() {
+    hashedDb = new TestingHashedDb();
+    typesDb = new TypesDb(hashedDb);
+    valuesDb = new ValuesDb(hashedDb, typesDb);
+  }
+
+  @Test
+  public void type_of_bool_is_bool() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).type();
+    thenReturned(typesDb.bool());
+  }
+
+  @Test
+  public void data_returns_java_true_from_true_bool() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).data();
+    thenReturned(true);
+  }
+
+  @Test
+  public void data_returns_java_false_from_false_bool() throws Exception {
+    given(bool = valuesDb.bool(false));
+    when(bool).data();
+    thenReturned(false);
+  }
+
+  @Test
+  public void bools_with_equal_values_are_equal() throws Exception {
+    when(valuesDb.bool(true));
+    thenReturned(valuesDb.bool(true));
+  }
+
+  @Test
+  public void bools_with_different_values_are_not_equal() throws Exception {
+    when(valuesDb.bool(true));
+    thenReturned(not(valuesDb.bool(false)));
+  }
+
+  @Test
+  public void hash_of_true_bools_are_the_same() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).hash();
+    thenReturned(valuesDb.bool(true).hash());
+  }
+
+  @Test
+  public void hash_of_false_bools_are_the_same() throws Exception {
+    given(bool = valuesDb.bool(false));
+    when(bool).hash();
+    thenReturned(valuesDb.bool(false).hash());
+  }
+
+  @Test
+  public void hash_of_bools_with_different_values_is_not_the_same() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).hash();
+    thenReturned(not(valuesDb.bool(false).hash()));
+  }
+
+  @Test
+  public void hash_code_of_true_bools_is_the_same() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).hashCode();
+    thenReturned(valuesDb.bool(true).hashCode());
+  }
+
+  @Test
+  public void hash_code_of_false_bools_is_the_same() throws Exception {
+    given(bool = valuesDb.bool(false));
+    when(bool).hashCode();
+    thenReturned(valuesDb.bool(false).hashCode());
+  }
+
+  @Test
+  public void hash_code_of_bools_with_different_values_is_not_the_same() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(bool).hashCode();
+    thenReturned(not(valuesDb.bool(false).hashCode()));
+  }
+
+  @Test
+  public void bool_can_be_read_back_by_hash() throws Exception {
+    given(bool = valuesDb.bool(true));
+    given(hash = bool.hash());
+    when(() -> new TestingValuesDb(hashedDb).get(hash));
+    thenReturned(bool);
+  }
+
+  @Test
+  public void sstring_read_back_by_hash_has_same_data() throws Exception {
+    given(bool = valuesDb.bool(true));
+    given(hash = bool.hash());
+    when(() -> ((Bool) new TestingValuesDb(hashedDb).get(hash)).data());
+    thenReturned(true);
+  }
+
+  @Test
+  public void to_string_contains_string_value() throws Exception {
+    given(bool = valuesDb.bool(true));
+    when(() -> bool.toString());
+    thenReturned("Bool(...):" + bool.hash());
+  }
+
+  @Test
+  public void reading_not_stored_bool_fails() throws Exception {
+    given(hash = HashCode.fromInt(33));
+    given(bool = typesDb.bool().newValue(hash));
+    when(bool).data();
+    thenThrown(ValuesDbException.class);
+  }
+}

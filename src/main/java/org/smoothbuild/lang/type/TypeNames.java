@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static java.lang.Character.isLowerCase;
 
 public class TypeNames {
+  public static final String BOOL = "Bool";
   public static final String STRING = "String";
   public static final String BLOB = "Blob";
   public static final String TYPE = "Type";

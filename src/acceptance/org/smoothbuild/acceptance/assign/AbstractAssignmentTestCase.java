@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.assign;
 
 import static org.junit.Assert.assertEquals;
+import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -16,32 +17,56 @@ import com.googlecode.junittoolbox.ParallelRunner;
 public abstract class AbstractAssignmentTestCase {
   @Test
   public void assignment_tests() throws IOException {
+    illegalAssignment("Nothing", "true()", "Bool", "");
     illegalAssignment("Nothing", "'abc'", "String", "");
     illegalAssignment("Nothing", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Nothing", "[true()]", "[Bool]", "");
     illegalAssignment("Nothing", "['abc']", "[String]", "");
     illegalAssignment("Nothing", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
 
+    allowedAssignment("Bool", "true()", "",
+        test -> assertEquals(trueByteString(), test.artifactAsByteStrings("result")));
+    illegalAssignment("Bool", "'abc'", "String", "");
+    illegalAssignment("Bool", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Bool", "[true()]", "[Bool]", "");
+    illegalAssignment("Bool", "['abc']", "[String]", "");
+    illegalAssignment("Bool", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("Bool", "[[true()]]", "[[Bool]]", "");
+    illegalAssignment("Bool", "[['abc']]", "[[String]]", "");
+    illegalAssignment("Bool", "[[MyStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
+
+    illegalAssignment("String", "true()", "Bool", "");
     allowedAssignment("String", "'abc'", "",
         test -> assertEquals("abc", test.artifactArray("result")));
     allowedAssignment("String", "MyStruct('abc')", "MyStruct{String field}\n",
         test -> assertEquals("abc", test.artifactArray("result")));
+    illegalAssignment("String", "[true()]", "[Bool]", "");
     illegalAssignment("String", "['abc']", "[String]", "");
     illegalAssignment("String", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("String", "[[true()]]", "[[Bool]]", "");
     illegalAssignment("String", "[['abc']]", "[[String]]", "");
     illegalAssignment("String", "[[MyStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
 
+    illegalAssignment("Blob", "true()", "Bool", "");
     illegalAssignment("Blob", "'abc'", "String", "");
     illegalAssignment("Blob", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Blob", "[true()]", "[Bool]", "");
     illegalAssignment("Blob", "['abc']", "[String]", "");
     illegalAssignment("Blob", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("Blob", "[[true()]]", "[[Bool]]", "");
 
+    illegalAssignment("[Nothing]", "true()", "Bool", "");
     illegalAssignment("[Nothing]", "'abc'", "String", "");
     illegalAssignment("[Nothing]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("[Nothing]", "[true()]", "[Bool]", "");
     illegalAssignment("[Nothing]", "['abc']", "[String]", "");
     illegalAssignment("[Nothing]", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("[Nothing]", "[[true()]]", "[[Bool]]", "");
 
+    illegalAssignment("[String]", "true()", "Bool", "");
     illegalAssignment("[String]", "'abc'", "String", "");
     illegalAssignment("[String]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("[String]", "[[true()]]", "[[Bool]]", "");
     allowedAssignment("[String]", "[]", "",
         test -> assertEquals(list(), test.artifactArray("result")));
     allowedAssignment("[String]", "['abc', 'def']", "",
@@ -49,6 +74,7 @@ public abstract class AbstractAssignmentTestCase {
     allowedAssignment("[String]", "[MyStruct('abc')]", "MyStruct{String field}\n",
         test -> assertEquals(list("abc"), test.artifactArray("result")));
     illegalAssignment("[String]", "[['abc']]", "[[String]]", "");
+    illegalAssignment("[String]", "[true()]", "[Bool]", "");
 
     allowedAssignment("[Blob]", "[]", "",
         test -> assertEquals(list(), test.artifactArray("result")));

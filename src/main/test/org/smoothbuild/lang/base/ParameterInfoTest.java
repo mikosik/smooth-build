@@ -22,6 +22,7 @@ public class ParameterInfoTest {
   private final String name = "name";
   private ParameterInfo parameterInfo;
   private final TypesDb typesDb = new TestingTypesDb();
+  private final ConcreteType bool = typesDb.bool();
   private final ConcreteType string = typesDb.string();
   private final ConcreteType blob = typesDb.blob();
   private final ConcreteType nothing = typesDb.nothing();
@@ -59,7 +60,8 @@ public class ParameterInfoTest {
     tester.addEqualityGroup(
         new ParameterInfo(0, string, "equal", true),
         new ParameterInfo(1, string, "equal", true));
-    for (ConcreteType type : ImmutableList.of(string, typesDb.array(string), blob, nothing, personType())) {
+    for (ConcreteType type : ImmutableList.of(bool, string, typesDb.array(string), blob, nothing,
+        personType())) {
       tester.addEqualityGroup(
           new ParameterInfo(0, type, name, true),
           new ParameterInfo(1, type, name, true));

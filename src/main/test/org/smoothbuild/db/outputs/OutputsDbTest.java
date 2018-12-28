@@ -26,6 +26,7 @@ import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
+import org.smoothbuild.lang.value.Bool;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.TestingValueFactory;
@@ -54,6 +55,7 @@ public class OutputsDbTest {
   private Array array;
   private Struct file;
   private Blob blob;
+  private Bool boolValue;
   private SString stringValue;
   private final String string = "some string";
 
@@ -118,6 +120,16 @@ public class OutputsDbTest {
   }
 
   @Test
+  public void written_bool_array_can_be_read_back() throws Exception {
+    given(boolValue = valuesDb.bool(true));
+    given(array = valuesDb.arrayBuilder(typesDb.bool()).add(boolValue).build());
+    given(outputsDb).write(hash, new Output(array, list()));
+    when(((Array) outputsDb.read(hash, typesDb.array(typesDb.bool())).result())
+        .asIterable(Bool.class).iterator().next());
+    thenReturned(boolValue);
+  }
+
+  @Test
   public void written_string_array_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
     given(array = valuesDb.arrayBuilder(typesDb.string()).add(stringValue).build());
@@ -144,7 +156,15 @@ public class OutputsDbTest {
   }
 
   @Test
-  public void writtend_string_can_be_read_back() throws Exception {
+  public void written_bool_can_be_read_back() throws Exception {
+    given(boolValue = valuesDb.bool(true));
+    given(outputsDb).write(hash, new Output(boolValue, list()));
+    when(((Bool) outputsDb.read(hash, typesDb.bool()).result()).data());
+    thenReturned(true);
+  }
+
+  @Test
+  public void written_string_can_be_read_back() throws Exception {
     given(stringValue = valuesDb.string(string));
     given(outputsDb).write(hash, new Output(stringValue, list()));
     when(((SString) outputsDb.read(hash, typesDb.string()).result()).data());

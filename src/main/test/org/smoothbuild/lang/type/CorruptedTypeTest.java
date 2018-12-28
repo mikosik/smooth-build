@@ -102,6 +102,12 @@ public class CorruptedTypeTest {
   // testing merkle tree of type data
 
   @Test
+  public void merkle_root_of_data_of_bool_type_with_two_children_causes_exception()
+      throws Exception {
+    doTestCorruptedBasicType("Bool");
+  }
+
+  @Test
   public void merkle_root_of_data_of_string_type_with_two_children_causes_exception()
       throws Exception {
     doTestCorruptedBasicType("String");
