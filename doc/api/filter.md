@@ -14,5 +14,5 @@ Returns __[File]__ with filtered results.
 Takes all files (recursively) from "pictures" directory and filters only those that end with "jpg" extension.
 
 ```
-jpgFiles = files("//pictures") | filter("**/*.jpg");
+[File] jpgFiles = files("//pictures") | filter("**/*.jpg");
 ```

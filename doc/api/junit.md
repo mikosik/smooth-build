@@ -16,13 +16,13 @@ Takes all files from "src" directory, compiles them and executes all tests
 among them.
 
 ```
-testJar = files("//src") | javac | jar;
-test = [ testJar ]  | junit;
+File testJar = files("//src") | javac | jar;
+String test = [ testJar ]  | junit;
 ```
 
 Takes all files from "src" directory, compiles them and executes only tests from `org.smoothbuild` package and its subpackages recursively which class name ends with `Test`.
 
 ```
-testJar = files("//src") | javac | jar;
-test = [ testJar ]  | junit(include="org/smoothbuild/**/*Test.class");
+File testJar = files("//src") | javac | jar;
+String test = [ testJar ]  | junit(include="org/smoothbuild/**/*Test.class");
 ```

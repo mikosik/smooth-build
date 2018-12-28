@@ -14,6 +14,6 @@ Returns __File__ containing java source code of generated class.
 
 Generates java class source code for inapp billing.
 ```
-aidl-file = file("//aidl/com/android/vending/billing/IInAppBillingService.aidl");
-src = aidl(apiLevel="19", buildToolsVersion="17.0.0", interfaceFile=aidl-file);
+File aidlFile = file("//aidl/com/android/vending/billing/IInAppBillingService.aidl");
+File src = aidl(apiLevel="19", buildToolsVersion="17.0.0", interfaceFile=aidlFile);
 ```
