@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
 import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
@@ -9,7 +9,6 @@ import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.testing.db.values.ValueCreators;
 
 public class ConcatenateTest extends AcceptanceTestCase {
   @Test
@@ -17,7 +16,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
     givenScript("result = concatenate([true()], [false()]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(trueByteString(), falseByteString()), artifactAsByteStrings("result"));
+    then(artifactAsByteStrings("result"), equalTo(list(trueByteString(), falseByteString())));
   }
 
   @Test
@@ -25,7 +24,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
     givenScript("result = concatenate(['abc'], ['def']);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("abc", "def"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("abc", "def")));
   }
 
   @Test
@@ -45,6 +44,6 @@ public class ConcatenateTest extends AcceptanceTestCase {
     givenScript("result = concatenate([file('//0')], [file('//1')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("abc", "def"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("abc", "def")));
   }
 }

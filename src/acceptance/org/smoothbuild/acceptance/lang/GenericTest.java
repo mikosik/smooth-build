@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
@@ -16,7 +16,7 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = testFlatten(array=[['aa'], ['bb', 'cc']]);   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("aa", "bb", "cc"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("aa", "bb", "cc")));
   }
 
   @Test
@@ -26,7 +26,7 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = testFlatten(array=[[['aa'], ['bb', 'cc']]]);   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(list("aa"), list("bb", "cc")), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list(list("aa"), list("bb", "cc"))));
   }
 
   @Test
@@ -36,6 +36,6 @@ public class GenericTest extends AcceptanceTestCase {
         + "      result = pair(e1=testIdentity(v='aa'), e2=testIdentity(v='bb'));   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("aa", "bb"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("aa", "bb")));
   }
 }
