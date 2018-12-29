@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
@@ -9,10 +8,8 @@ import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.testing.db.values.ValueCreators;
 
 public class ArtifactTest extends AcceptanceTestCase {
   @Test
@@ -64,7 +61,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[Bool] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list()));
   }
 
   @Test
@@ -80,7 +77,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[String] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list()));
   }
 
   @Test
@@ -88,7 +85,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = ['abc', 'def'];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("abc", "def"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("abc", "def")));
   }
 
   @Test
@@ -96,7 +93,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list()));
   }
 
   @Test
@@ -104,7 +101,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[Blob] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list()));
   }
 
   @Test
@@ -114,7 +111,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("result = [file('//file1.txt').content, file('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list("abc", "def"), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list("abc", "def")));
   }
 
   @Test
@@ -122,7 +119,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     givenScript("[File] result = [];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertEquals(list(), artifactArray("result"));
+    then(artifactArray("result"), equalTo(list()));
   }
 
   @Test
