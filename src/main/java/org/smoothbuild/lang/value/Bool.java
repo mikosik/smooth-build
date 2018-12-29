@@ -45,4 +45,9 @@ public class Bool extends AbstractValue {
       throw ioException(e);
     }
   }
+
+  @Override
+  public String toString() {
+    return type().name() + "(" + data() + "):" + hash();
+  }
 }
