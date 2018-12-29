@@ -12,7 +12,6 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
@@ -114,7 +113,7 @@ public class BoolTest {
   }
 
   @Test
-  public void sstring_read_back_by_hash_has_same_data() throws Exception {
+  public void bool_read_back_by_hash_has_same_data() throws Exception {
     given(bool = valuesDb.bool(true));
     given(hash = bool.hash());
     when(() -> ((Bool) new TestingValuesDb(hashedDb).get(hash)).data());
