@@ -122,10 +122,10 @@ public class BoolTest {
   }
 
   @Test
-  public void to_string_contains_string_value() throws Exception {
+  public void to_string_contains_value() throws Exception {
     given(bool = valuesDb.bool(true));
     when(() -> bool.toString());
-    thenReturned("Bool(...):" + bool.hash());
+    thenReturned("Bool(true):" + bool.hash());
   }
 
   @Test
