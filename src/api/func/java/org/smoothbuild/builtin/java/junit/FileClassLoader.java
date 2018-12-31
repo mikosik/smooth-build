@@ -38,7 +38,7 @@ public class FileClassLoader extends ClassLoader {
   }
 
   public static void sneakyRethrow(Throwable t) {
-    FileClassLoader.<Error> sneakyThrow2(t);
+    FileClassLoader.<Error>sneakyThrow2(t);
   }
 
   @SuppressWarnings("unchecked")

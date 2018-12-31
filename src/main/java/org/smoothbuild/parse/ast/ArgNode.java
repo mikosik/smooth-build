@@ -5,7 +5,6 @@ import static com.google.common.base.Preconditions.checkState;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.Type;
 
-
 public class ArgNode extends NamedNode {
   private final int position;
   private final ExprNode expr;

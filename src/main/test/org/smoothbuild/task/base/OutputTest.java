@@ -132,7 +132,7 @@ public class OutputTest {
       throws Exception {
     given(sstring = valuesDb.string("abc"));
     given(output = new Output(sstring, messages));
-    when(output).equals(new Output(sstring, Lists.<Message> list()));
+    when(output).equals(new Output(sstring, Lists.<Message>list()));
     thenReturned(false);
   }
 

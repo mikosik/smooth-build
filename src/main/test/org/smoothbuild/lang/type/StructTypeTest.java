@@ -88,5 +88,4 @@ public class StructTypeTest extends AbstractTypeTestCase {
     }
     return result;
   }
-
 }

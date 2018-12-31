@@ -19,6 +19,6 @@ public class JUnitCoreWrapper {
 
   public ResultWrapper run(Class<?> testClass) {
     return new ResultWrapper(nativeApi, runReflexively(nativeApi, jUnitCore, "run",
-        new Object[] { new Class<?>[] { testClass } }));
+        new Object[] {new Class<?>[] {testClass}}));
   }
 }

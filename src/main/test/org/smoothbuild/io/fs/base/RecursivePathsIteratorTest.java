@@ -33,19 +33,19 @@ public class RecursivePathsIteratorTest {
 
   @Test
   public void iterate_only_sub_dir() throws Exception {
-    String[] names = new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
-        "ghi/6.txt" };
-    String[] expectedNames = new String[] { "4.txt", "5.txt" };
+    String[] names = new String[] {"1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
+        "ghi/6.txt"};
+    String[] expectedNames = new String[] {"4.txt", "5.txt"};
 
     doTestIterable("abc", names, "abc/def", expectedNames);
   }
 
   @Test
   public void iterate_only_super_dir() throws Exception {
-    String[] names = new String[] { "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
-        "ghi/6.txt" };
-    String[] expectedNames = new String[] { "xyz/prs/1.txt", "xyz/prs/2.txt", "xyz/prs/3.txt",
-        "xyz/prs/def/4.txt", "xyz/prs/def/5.txt", "xyz/prs/ghi/6.txt" };
+    String[] names = new String[] {"1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt",
+        "ghi/6.txt"};
+    String[] expectedNames = new String[] {"xyz/prs/1.txt", "xyz/prs/2.txt", "xyz/prs/3.txt",
+        "xyz/prs/def/4.txt", "xyz/prs/def/5.txt", "xyz/prs/ghi/6.txt"};
 
     doTestIterable("abc/xyz/prs", names, "abc", expectedNames);
   }

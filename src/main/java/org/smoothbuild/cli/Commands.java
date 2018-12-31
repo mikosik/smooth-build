@@ -22,7 +22,7 @@ public class Commands {
 
   public static int execute(String[] args) {
     if (args.length == 0) {
-      args = new String[] { HELP };
+      args = new String[] {HELP};
     }
     Class<? extends Command> commandClass = commands().get(args[0]);
     if (commandClass == null) {
@@ -35,7 +35,7 @@ public class Commands {
   }
 
   private static ImmutableMap<String, Class<? extends Command>> commands() {
-    return ImmutableMap.<String, Class<? extends Command>> builder()
+    return ImmutableMap.<String, Class<? extends Command>>builder()
         .put(BUILD, Build.class)
         .put(CLEAN, Clean.class)
         .put(DAG, Dag.class)

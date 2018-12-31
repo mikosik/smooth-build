@@ -4,7 +4,6 @@ import java.util.function.Predicate;
 
 import javax.tools.JavaFileObject.Kind;
 
-
 public class JavaNaming {
   private static final String CLASS_FILE_EXTENSION = Kind.CLASS.extension;
   private static final Predicate<String> IS_CLASS_FILE = (string) -> string.endsWith(

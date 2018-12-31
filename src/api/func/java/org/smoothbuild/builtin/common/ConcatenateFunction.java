@@ -4,7 +4,6 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 
 public class ConcatenateFunction {

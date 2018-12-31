@@ -81,7 +81,8 @@ public class ArgumentTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void assigning_by_name_argument_that_is_assigned_by_position_causes_error() throws Exception {
+  public void assigning_by_name_argument_that_is_assigned_by_position_causes_error() throws
+      Exception {
     givenScript("myIdentity(String myArgument) = myArgument;       \n"
         + "      result = myIdentity('abc', myArgument='abc');     \n");
     whenSmoothBuild("result");
