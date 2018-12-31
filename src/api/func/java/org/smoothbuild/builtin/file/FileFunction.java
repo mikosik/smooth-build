@@ -7,15 +7,13 @@ import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {
-  @SmoothFunction("file")
-  @NotCacheable
+  @SmoothFunction(value = "file", cacheable = false)
   public static Struct file(Container container, SString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {

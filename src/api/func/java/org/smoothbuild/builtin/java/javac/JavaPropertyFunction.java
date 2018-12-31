@@ -1,13 +1,11 @@
 package org.smoothbuild.builtin.java.javac;
 
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
 
 public class JavaPropertyFunction {
-  @SmoothFunction("javaProperty")
-  @NotCacheable
+  @SmoothFunction(value = "javaProperty", cacheable = false)
   public static SString javaProperty(NativeApi nativeApi, SString name) {
     String nameString = name.data();
     String property = System.getProperty(nameString);

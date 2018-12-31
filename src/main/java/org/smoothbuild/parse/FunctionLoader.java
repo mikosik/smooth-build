@@ -21,7 +21,6 @@ import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
-import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.StructType;
@@ -51,7 +50,7 @@ public class FunctionLoader {
         if (func.isNative()) {
           Native nativ = func.get(Native.class);
           HashCode hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
-          boolean isCacheable = !nativ.method().isAnnotationPresent(NotCacheable.class);
+          boolean isCacheable = nativ.cacheable();
           return new NativeFunction(nativ, signature, func.location(), isCacheable, hash);
         } else {
           return new DefinedFunction(signature, func.location(), createExpression(func.expr()));

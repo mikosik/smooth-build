@@ -62,7 +62,8 @@ public class FindNatives {
         } else {
           for (Method method : clazz.getDeclaredMethods()) {
             if (method.isAnnotationPresent(SmoothFunction.class)) {
-              String name = method.getAnnotation(SmoothFunction.class).value();
+              SmoothFunction smoothFunctionAnnotation = method.getAnnotation(SmoothFunction.class);
+              String name = smoothFunctionAnnotation.value();
               if (isLegalName(name)) {
                 if (result.containsKey(name)) {
                   errors.add(error(jarFile, method,
@@ -77,7 +78,8 @@ public class FindNatives {
                       "Providing method should have first parameter of type "
                           + NativeApi.class.getCanonicalName() + "."));
                 } else {
-                  result.put(name, new Native(method, jarFile));
+                  result.put(name,
+                      new Native(method, smoothFunctionAnnotation.cacheable(), jarFile));
                 }
               } else {
                 errors.add(error(jarFile, method, "Name '" + method.getName() + "' is illegal."));

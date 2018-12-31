@@ -10,7 +10,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.lang.plugin.NotCacheable;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
@@ -18,8 +17,7 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.task.exec.Container;
 
 public class FilesFunction {
-  @SmoothFunction("files")
-  @NotCacheable
+  @SmoothFunction(value = "files", cacheable = false)
   public static Array files(Container container, SString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     FileSystem fileSystem = container.fileSystem();
@@ -53,7 +51,7 @@ public class FilesFunction {
           PathState pathState = fileSystem.pathState(path);
           switch (pathState) {
             case DIR:
-              for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext();) {
+              for (PathIterator it = recursivePathsIterator(fileSystem, path); it.hasNext(); ) {
                 Path currentPath = it.next();
                 Path projectPath = path.append(currentPath);
                 fileArrayBuilder.add(reader.createFile(projectPath, projectPath));
@@ -68,7 +66,7 @@ public class FilesFunction {
         }
       }
     } else {
-      for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext();) {
+      for (PathIterator it = recursivePathsIterator(fileSystem, dir); it.hasNext(); ) {
         Path path = it.next();
         fileArrayBuilder.add(reader.createFile(path, dir.append(path)));
       }
