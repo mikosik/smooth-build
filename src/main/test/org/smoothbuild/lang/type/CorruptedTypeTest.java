@@ -131,7 +131,7 @@ public class CorruptedTypeTest {
     given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
     when(() -> typesDb.read(hash));
     thenThrown(exception(corruptedValueException(hash,
-        "It is a type value with name of basic type '" + typeName + "' but has different hash.")));
+        "It is " + typeName + " type but its Merkle tree has unnecessary children.")));
   }
 
   @Test
