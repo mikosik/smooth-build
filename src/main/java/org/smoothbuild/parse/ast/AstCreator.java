@@ -162,10 +162,10 @@ public class AstCreator {
           List<ArgContext> args = argList.arg();
           for (int i = 0; i < args.size(); i++) {
             ArgContext arg = args.get(i);
-            ExprContext expr = arg.expr();
+            PipeContext pipe = arg.pipe();
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
-            ExprNode exprNode = createExpr(expr);
+            ExprNode exprNode = createPipe(pipe);
             result.add(new ArgNode(i + 1, name, exprNode, locationOf(file, arg)));
           }
         }

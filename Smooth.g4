@@ -11,7 +11,7 @@ pipe: expr ( p+='|' call )* ;
 expr : expr accessor | call | STRING | array ;
 call: name ( p='(' argList? ')' )? ;
 argList: arg ( ',' arg )* ','? ;
-arg: ( name '=' )? expr ;
+arg: ( name '=' )? pipe ;
 array: '[' ( expr (',' expr)* (',')? )?  ']' ;
 accessor: '.' name ;
 type: nonArrayType | arrayType ;

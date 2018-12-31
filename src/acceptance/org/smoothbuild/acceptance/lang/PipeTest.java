@@ -1,9 +1,14 @@
 package org.smoothbuild.acceptance.lang;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.testory.Testory.then;
+
 import java.io.IOException;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.testory.Testory;
 
 public class PipeTest extends AcceptanceTestCase {
   @Test
@@ -15,5 +20,15 @@ public class PipeTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'function1' has no parameter 'unknown'.");
+  }
+
+  @Test
+  public void regression_test_pipe_can_be_used_as_argument()
+      throws IOException {
+    givenScript("myIdentity(a value) = value;               \n" +
+        "        result = myIdentity('abc' | myIdentity);   \n");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactContent("result"), equalTo("abc"));
   }
 }

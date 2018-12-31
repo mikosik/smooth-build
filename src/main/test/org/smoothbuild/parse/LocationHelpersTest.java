@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
+import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.lang.base.Location;
 
 public class LocationHelpersTest {
@@ -24,6 +25,7 @@ public class LocationHelpersTest {
   private Location location;
   private ParserRuleContext parserRuleContext;
   private ExprContext expressionContext;
+  private PipeContext pipeContext;
   private ArgContext argContext;
   private NameContext nameContext;
 
@@ -45,8 +47,8 @@ public class LocationHelpersTest {
 
   @Test
   public void locatin_of_arg_context_without_param_name() {
-    given(willReturn(expressionContext), argContext).expr();
-    given(willReturn(startToken), expressionContext).getStart();
+    given(willReturn(pipeContext), argContext).pipe();
+    given(willReturn(startToken), pipeContext).getStart();
     given(willReturn(line), startToken).getLine();
     given(location = locationOf(Paths.get("script.smooth"), argContext));
     when(location.line());

@@ -14,7 +14,7 @@ public class LocationHelpers {
   public static Location locationOf(Path file, ArgContext arg) {
     NameContext name = arg.name();
     if (name == null) {
-      return locationOf(file, arg.expr());
+      return locationOf(file, arg.pipe());
     } else {
       return locationOf(file, name);
     }
