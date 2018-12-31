@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface SmoothFunction {
   String value();
+
+  boolean cacheable() default true;
 }
