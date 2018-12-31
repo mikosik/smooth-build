@@ -13,7 +13,7 @@ public class ClassLoaders {
       throw new RuntimeException("Cannot find '" + absolutePath + "' file");
     }
 
-    return new URLClassLoader(new URL[] { toUrl(absolutePath) }, parent);
+    return new URLClassLoader(new URL[] {toUrl(absolutePath)}, parent);
   }
 
   private static URL toUrl(Path path) {

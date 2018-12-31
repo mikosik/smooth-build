@@ -74,7 +74,7 @@ public class TempDir {
 
   private Array readFilesImpl() throws IOException {
     ArrayBuilder arrayBuilder = container.create().arrayBuilder(container.types().file());
-    for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext();) {
+    for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext(); ) {
       Path path = it.next();
       Blob content = readContentImpl(path);
       Struct file = container.create().file(container.create().string(path.value()), content);

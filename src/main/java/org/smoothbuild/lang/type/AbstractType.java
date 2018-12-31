@@ -75,7 +75,7 @@ public abstract class AbstractType implements Type {
     if (superType() == null) {
       return ImmutableList.of(this);
     } else {
-      return ImmutableList.<Type> builder()
+      return ImmutableList.<Type>builder()
           .addAll(superType().hierarchy())
           .add(this)
           .build();

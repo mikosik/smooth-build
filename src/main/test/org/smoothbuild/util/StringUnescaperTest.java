@@ -43,7 +43,7 @@ public class StringUnescaperTest {
   @Quackery
   public static Suite unsecaping_combined() throws Exception {
     Suite suite = suite("three escaped in a row");
-    ImmutableMap<String, String> mappings = ImmutableMap.<String, String> builder()
+    ImmutableMap<String, String> mappings = ImmutableMap.<String, String>builder()
         .put("\\t", "\t")
         .put("\\b", "\b")
         .put("\\n", "\n")

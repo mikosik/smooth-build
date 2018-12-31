@@ -108,7 +108,8 @@ public class PathMatcher implements Predicate<Path> {
 
       boolean found = false;
 
-      OUT: for (int i = 0; i < steps; i++) {
+      OUT:
+      for (int i = 0; i < steps; i++) {
         for (int j = 0; j < partsCount; j++) {
           Predicate<Path> patternPart = patternParts.get(patternLeft + j);
           Path pathPart = pathParts.get(pathLeft + i + j);

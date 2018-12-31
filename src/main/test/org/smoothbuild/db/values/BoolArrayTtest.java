@@ -12,7 +12,6 @@ import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 

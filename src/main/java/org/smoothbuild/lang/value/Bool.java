@@ -37,9 +37,9 @@ public class Bool extends AbstractValue {
           return false;
         case 1:
           return true;
-          default:
-            throw corruptedValueException(
-                hash(), "It is Bool which value stored in ValuesDb is illegal (=" + value + ").");
+        default:
+          throw corruptedValueException(
+              hash(), "It is Bool which value stored in ValuesDb is illegal (=" + value + ").");
       }
     } catch (IOException e) {
       throw ioException(e);

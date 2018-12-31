@@ -47,7 +47,8 @@ public class PathTest {
       try {
         path(path);
         fail();
-      } catch (IllegalPathException e) {}
+      } catch (IllegalPathException e) {
+      }
     });
   }
 

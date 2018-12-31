@@ -1,6 +1,5 @@
 package org.smoothbuild.acceptance.builtin.bool;
 
-import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
 
 import java.io.IOException;
