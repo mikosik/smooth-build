@@ -1,4 +1,4 @@
-package org.smoothbuild.db.values;
+package org.smoothbuild.db.values.corrupt;
 
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
@@ -7,36 +7,16 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
-import org.smoothbuild.lang.type.TypesDb;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.hash.HashCode;
 
-public class CorruptedStructTest {
-  private HashedDb hashedDb;
-  private TypesDb typesDb;
-  private ValuesDb valuesDb;
-  private HashCode dataHash;
-  private SString lastName;
-  private SString firstName;
+public class CorruptedStructTest extends AbstractCorruptedTestCase {
   private HashCode structHash;
   private Struct struct;
-  private Blob blob;
-
-  @Before
-  public void before() {
-    hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
-  }
 
   @Test
   public void learning_test_create_struct() throws Exception {
@@ -44,18 +24,22 @@ public class CorruptedStructTest {
      * This test makes sure that other tests in this class use proper scheme to save smooth struct
      * in HashedDb.
      */
-    given(firstName = valuesDb.string("John"));
-    given(lastName = valuesDb.string("Doe"));
-    given(dataHash = hashedDb.writeHashes(firstName.hash(), lastName.hash()));
-    when(() -> hashedDb.writeHashes(personType().hash(), dataHash));
-    thenReturned(person(firstName, lastName).hash());
+    when(() ->
+        hash(
+            hash(personType()),
+            hash(
+                string("John"),
+                string("Doe"))));
+    thenReturned(person("John", "Doe").hash());
   }
 
   @Test
   public void struct_with_too_few_fields_is_corrupted() throws Exception {
-    given(firstName = valuesDb.string("John"));
-    given(dataHash = hashedDb.writeHashes(firstName.hash()));
-    given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
+    given(structHash =
+        hash(
+            hash(personType()),
+            hash(
+                string("John"))));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type is "
@@ -65,10 +49,13 @@ public class CorruptedStructTest {
 
   @Test
   public void struct_with_too_many_fields_is_corrupted() throws Exception {
-    given(firstName = valuesDb.string("John"));
-    given(lastName = valuesDb.string("Doe"));
-    given(dataHash = hashedDb.writeHashes(firstName.hash(), lastName.hash(), lastName.hash()));
-    given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
+    given(structHash =
+        hash(
+            hash(personType()),
+            hash(
+                string("John"),
+                string("Doe"),
+                string("junk"))));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type is "
@@ -78,22 +65,24 @@ public class CorruptedStructTest {
 
   @Test
   public void struct_with_field_of_wrong_type_is_corrupted() throws Exception {
-    given(firstName = valuesDb.string("John"));
-    given(blob = valuesDb.blobBuilder().build());
-    given(dataHash = hashedDb.writeHashes(firstName.hash(), blob.hash()));
-    given(structHash = hashedDb.writeHashes(personType().hash(), dataHash));
+    given(structHash =
+        hash(
+            hash(personType()),
+            hash(
+                string("John"),
+                bool(true))));
     given(struct = (Struct) valuesDb.get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type specifies field 'lastName' "
         + "with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but its data "
-        + "has value of type Type(\"Blob\"):6cb65ce7804fbcabff468d1d7aca46d4b5279f00 assigned "
+        + "has value of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 assigned "
         + "to that field.")));
   }
 
-  private Struct person(SString firstName, SString lastName) {
+  private Struct person(String firstName, String lastName) {
     return valuesDb.structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
+        .set("firstName", valuesDb.string(firstName))
+        .set("lastName", valuesDb.string(lastName))
         .build();
   }
 
