@@ -4,8 +4,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
+import java.io.EOFException;
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
@@ -49,6 +51,10 @@ public class Array extends AbstractValue {
           .stream()
           .map(instantiator::instantiate)
           .collect(toImmutableList());
+    } catch (EOFException e) {
+      throw corruptedValueException(hash(),
+          "It is an Array which value stored in ValuesDb number of bytes which is not multiple of" +
+              " hash size = " + Hash.size() + ".");
     } catch (IOException e) {
       throw ioException(e);
     }
