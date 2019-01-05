@@ -3,9 +3,11 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Value;
 
@@ -39,6 +41,9 @@ public class Instantiator {
   private List<HashCode> readHashes(HashCode hash) {
     try {
       return hashedDb.readHashes(hash);
+    } catch (EOFException e) {
+      throw corruptedValueException(hash,
+          "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.");
     } catch (IOException e) {
       throw ioException(e);
     }
