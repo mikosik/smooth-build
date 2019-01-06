@@ -2,10 +2,14 @@ package org.smoothbuild.db.hashed;
 
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.hash.HashCode.fromBytes;
+import static java.nio.ByteBuffer.wrap;
+import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Hash.hashingSink;
 
 import java.io.IOException;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -44,9 +48,14 @@ public class HashedDb {
     }
   }
 
-  public String readString(HashCode hash) throws IOException {
+  public String readString(HashCode hash) throws IOException, DecodingStringException {
     try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
-      return unmarshaller.source().readString(CHARSET);
+      CharsetDecoder charsetDecoder = CHARSET.newDecoder();
+      charsetDecoder.onMalformedInput(REPORT);
+      charsetDecoder.onUnmappableCharacter(REPORT);
+      return charsetDecoder.decode(wrap(unmarshaller.source().readByteArray())).toString();
+    } catch (CharacterCodingException e) {
+      throw new DecodingStringException(e.getMessage(), e);
     }
   }
 

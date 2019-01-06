@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.type;
 
+import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
 import static org.smoothbuild.db.values.ValuesDbException.ioException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
@@ -169,7 +171,8 @@ public class TypesDb {
   protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash)
       throws IOException {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
-      String name = hashedDb.readString(unmarshaller.readHash());
+      HashCode nameHash = unmarshaller.readHash();
+      String name = decodeName(typeHash, nameHash);
       switch (name) {
         case BOOL:
           assertNoMoreData(typeHash, unmarshaller, name);
@@ -197,6 +200,15 @@ public class TypesDb {
     }
   }
 
+  private String decodeName(HashCode typeHash, HashCode nameHash) throws IOException {
+    try {
+      return hashedDb.readString(nameHash);
+    } catch (DecodingStringException e) {
+      throw corruptedValueException(typeHash, "It is an instance of a Type which name cannot be " +
+          "decoded using " + CHARSET + " encoding.");
+    }
+  }
+
   private static void assertNoMoreData(HashCode typeHash, Unmarshaller unmarshaller,
       String typeName) throws IOException {
     if (!unmarshaller.source().exhausted()) {
@@ -214,11 +226,20 @@ public class TypesDb {
             "It is struct type but one of its field hashes doesn't have two children but "
                 + hashes.size() + ".");
       }
-      String name = hashedDb.readString(hashes.get(0));
+      String name = decodeFieldName(typeHash, hashes.get(0));
       ConcreteType type = read(hashes.get(1));
       result.add(new Field(type, name, unknownLocation()));
     }
     return result;
+  }
+
+  private String decodeFieldName(HashCode typeHash, HashCode nameHash) throws IOException {
+    try {
+      return hashedDb.readString(nameHash);
+    } catch (DecodingStringException e) {
+      throw corruptedValueException(typeHash, "It is an instance of a struct Type which field " +
+          "name cannot be decoded using " + CHARSET + " encoding.");
+    }
   }
 
   private <T extends ConcreteType> T cache(T type) {

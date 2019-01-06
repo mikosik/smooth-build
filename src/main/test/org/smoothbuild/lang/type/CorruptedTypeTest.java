@@ -3,6 +3,7 @@ package org.smoothbuild.lang.type;
 import static com.google.common.hash.HashCode.fromInt;
 import static org.smoothbuild.db.hashed.Hash.integer;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
+import static org.smoothbuild.lang.type.TestingTypes.personType;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,10 +15,13 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDbException;
 
 import com.google.common.hash.HashCode;
+
+import okio.ByteString;
 
 public class CorruptedTypeTest {
   protected HashedDb hashedDb;
@@ -57,6 +61,29 @@ public class CorruptedTypeTest {
     given(dataHash = hashedDb.writeHashes(hashedDb.writeString("Type")));
     when(hashedDb.writeHashes(dataHash));
     thenReturned(typesDb.type().hash());
+  }
+
+  @Test
+  public void learning_test_create_struct_type() throws Exception {
+    /*
+     * This test makes sure that other tests in this class use proper scheme to save smooth type in
+     * HashedDb.
+     */
+    given(typeType = typesDb.type());
+    given(dataHash = hashedDb.writeHashes(
+        hashedDb.writeString("Person"),
+        hashedDb.writeHashes(
+            hashedDb.writeHashes(
+                hashedDb.writeString("firstName"),
+                typesDb.string().hash()
+            ),
+            hashedDb.writeHashes(
+                hashedDb.writeString("lastName"),
+                typesDb.string().hash()
+            )
+        )));
+    when(hashedDb.writeHashes(typeType.hash(), dataHash));
+    thenReturned(personType(typesDb).hash());
   }
 
   // testing merkle tree of type root node
@@ -99,6 +126,53 @@ public class CorruptedTypeTest {
     thenThrown(exception(brokenTypeTypeException(hash)));
   }
 
+  // testing merkle tree of name (type name or struct field name) node
+
+  @Test
+  public void merkle_tree_for_type_with_name_that_is_not_legal_utf8_sequence_causes_exception() throws
+      Exception {
+    given(() -> typeType = typesDb.type());
+    given(dataHash = hashedDb.writeHashes(hash(ByteString.of((byte) -64))));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
+    when(() -> typesDb.read(hash));
+    thenThrown(exception(corruptedValueException(hash,
+        "It is an instance of a Type which name cannot be decoded using UTF-8 encoding.")));
+  }
+
+  @Test
+  public void merkle_tree_for_struct_type_with_field_name_that_is_not_legal_utf8_sequence_causes_exception() throws
+      Exception {
+    /*
+     * This test makes sure that other tests in this class use proper scheme to save smooth type in
+     * HashedDb.
+     */
+    given(typeType = typesDb.type());
+    given(dataHash = hashedDb.writeHashes(
+        hashedDb.writeString("Person"),
+        hashedDb.writeHashes(
+            hashedDb.writeHashes(
+                hashedDb.writeString("firstName"),
+                typesDb.string().hash()
+            ),
+            hashedDb.writeHashes(
+                hash(ByteString.of((byte) -64)),
+                typesDb.string().hash()
+            )
+        )));
+    given(hash = hashedDb.writeHashes(typeType.hash(), dataHash));
+    when(() -> typesDb.read(hash));
+    thenThrown(exception(corruptedValueException(hash, "It is an instance of a struct Type which " +
+        "field name cannot be decoded using UTF-8 encoding.")));
+  }
+
+  private HashCode hash(ByteString byteString) throws IOException {
+    try (Marshaller marshaller = hashedDb.newMarshaller()) {
+      marshaller.sink().write(byteString);
+      marshaller.close();
+      return marshaller.hash();
+    }
+  }
+
   // testing merkle tree of type data
 
   @Test
@@ -135,7 +209,7 @@ public class CorruptedTypeTest {
   }
 
   @Test
-  public void merkle_root_of_data_of_struct_type_with_e_children_causes_exception()
+  public void merkle_root_of_data_of_struct_type_with_one_children_causes_exception()
       throws Exception {
     given(typeType = typesDb.type());
     given(fieldHash = hashedDb.writeHashes(hashedDb.writeString("fname"), typesDb.string().hash()));
