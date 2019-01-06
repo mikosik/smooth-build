@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.17.0 (??????????)
+Version 0.17.0 (2019.01.06)
 ---------------------------
 
  * added 'Bool' type to smooth language
