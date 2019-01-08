@@ -19,6 +19,12 @@ Bool true();
 
 Bool false();
 
+a if(
+  Bool condition,
+  a thenValue,
+  a elseValue,
+);
+
 [a] concatenate(
   [a] array1,
   [a] array2,
