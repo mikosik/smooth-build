@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.file;
+package org.smoothbuild.acceptance.builtin.common;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
