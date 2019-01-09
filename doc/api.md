@@ -8,6 +8,7 @@ class source code from android aidl file.
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.
  * [filter](api/filter.md) Filters files according to glob pattern.
+ * [if](api/if.md) Returns one of two values depending on bool condition.
  * [jar](api/jar.md) Jars (compresses) set of files.
  * [javac](api/javac.md) Compiles set of java files.
  * [javaProperty](api/javaProperty.md) Returns Java platform property.
