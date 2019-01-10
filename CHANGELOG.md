@@ -4,6 +4,7 @@ Change Log
 Version 0.18.0 (????.??.??)
 ---------------------------
 
+ * added 'equal' function to platform API
  * added 'if' function to platform API
 
 Version 0.17.0 (2019.01.06)

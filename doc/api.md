@@ -4,6 +4,7 @@ Core smooth functions
  * [aidl](api/aidl.md) Runs android aidl tool to generate java
 class source code from android aidl file.
  * [concatenate](api/concatenate.md) Concatenates two arrays.
+ * [equal](api/equal.md) Returns `true` when arguments are equal.
  * [false](api/false.md) Returns `false` value of type Bool
  * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.

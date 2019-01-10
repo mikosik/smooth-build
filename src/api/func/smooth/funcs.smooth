@@ -19,6 +19,11 @@ Bool true();
 
 Bool false();
 
+Bool equal(
+  a first,
+  b second,
+);
+
 a if(
   Bool condition,
   a thenValue,
