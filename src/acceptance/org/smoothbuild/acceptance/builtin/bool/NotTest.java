@@ -16,7 +16,7 @@ public class NotTest extends AcceptanceTestCase {
     givenScript("result = not(false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 
   @Test
@@ -24,7 +24,7 @@ public class NotTest extends AcceptanceTestCase {
     givenScript("result = not(true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 }
 

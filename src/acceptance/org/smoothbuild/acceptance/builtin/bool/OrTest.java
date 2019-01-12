@@ -16,7 +16,7 @@ public class OrTest extends AcceptanceTestCase {
     givenScript("result = or(false(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 
   @Test
@@ -24,7 +24,7 @@ public class OrTest extends AcceptanceTestCase {
     givenScript("result = or(false(), true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 
   @Test
@@ -32,7 +32,7 @@ public class OrTest extends AcceptanceTestCase {
     givenScript("result = or(true(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 
   @Test
@@ -40,6 +40,6 @@ public class OrTest extends AcceptanceTestCase {
     givenScript("result = or(true(), true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 }

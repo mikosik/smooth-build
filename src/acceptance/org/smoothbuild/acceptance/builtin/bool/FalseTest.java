@@ -15,6 +15,6 @@ public class FalseTest extends AcceptanceTestCase {
     givenScript("result = false();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 }
