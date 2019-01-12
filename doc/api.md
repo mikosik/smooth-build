@@ -3,6 +3,7 @@ Core smooth functions
 
  * [aidl](api/aidl.md) Runs android aidl tool to generate java
 class source code from android aidl file.
+ * [and](api/and.md) Returns `true` if both arguments are `true`.
  * [concatenate](api/concatenate.md) Concatenates two arrays.
  * [equal](api/equal.md) Returns `true` when arguments are equal.
  * [false](api/false.md) Returns `false` value of type Bool
@@ -14,6 +15,8 @@ class source code from android aidl file.
  * [javac](api/javac.md) Compiles set of java files.
  * [javaProperty](api/javaProperty.md) Returns Java platform property.
  * [junit](api/junit.md) Runs junit tests.
+ * [not](api/not.md) Returns negation of its argument.
+ * [or](api/or.md) Returns `true` if any argument is `true`.
  * [toBlob](api/toBlob.md) Converts String to Blob using UTF-8 encoding.
  * [File](api/File.md) Creates File from path and content.
  * [toString](api/toString.md) Converts Blob to String using UTF-8 encoding.

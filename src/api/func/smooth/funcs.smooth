@@ -19,6 +19,20 @@ Bool true();
 
 Bool false();
 
+Bool not(
+  Bool value,
+);
+
+Bool and(
+  Bool first,
+  Bool second,
+);
+
+Bool or(
+  Bool first,
+  Bool second,
+);
+
 Bool equal(
   a first,
   b second,
