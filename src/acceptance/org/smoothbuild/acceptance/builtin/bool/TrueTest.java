@@ -15,6 +15,6 @@ public class TrueTest extends AcceptanceTestCase {
     givenScript("result = true();");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 }

@@ -46,6 +46,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.googlecode.junittoolbox.ParallelRunner;
 
+import okio.ByteString;
+
 @RunWith(ParallelRunner.class)
 public abstract class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
@@ -215,6 +217,27 @@ public abstract class AcceptanceTestCase {
   public Object artifactAsByteStrings(String name) {
     try {
       return actual(artifact(name), s -> s.readByteString());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public boolean artifactAsBoolean(String name) {
+    try {
+      return readAndClose(buffer(source(artifact(name))), s -> {
+        ByteString value = s.readByteString();
+        if (value.size() != 1) {
+          throw new RuntimeException("Expected boolean artifact but got " + value.toString());
+        }
+        switch (value.getByte(0)) {
+          case 0:
+            return false;
+          case 1:
+            return true;
+          default:
+            throw new RuntimeException("Expected boolean artifact but got " + value.toString());
+        }
+      });
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

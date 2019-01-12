@@ -15,7 +15,7 @@ public class AndTest extends AcceptanceTestCase {
     givenScript("result = and(false(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 
   @Test
@@ -23,7 +23,7 @@ public class AndTest extends AcceptanceTestCase {
     givenScript("result = and(false(), true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 
   @Test
@@ -31,7 +31,7 @@ public class AndTest extends AcceptanceTestCase {
     givenScript("result = and(true(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 0));
+    thenEqual(artifactAsBoolean("result"), false);
   }
 
   @Test
@@ -39,6 +39,6 @@ public class AndTest extends AcceptanceTestCase {
     givenScript("result = and(true(), true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsByteStrings("result"), ByteString.of((byte) 1));
+    thenEqual(artifactAsBoolean("result"), true);
   }
 }
