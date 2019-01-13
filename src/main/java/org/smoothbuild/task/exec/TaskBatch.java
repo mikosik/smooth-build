@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.value.Bool;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.RuntimeHash;
 import org.smoothbuild.task.base.Evaluator;
@@ -62,6 +63,42 @@ public class TaskBatch {
   }
 
   private void executeGraph(Task task) throws IOException {
+    if (task.name().equals("if")) {
+      executeIfGraph(task);
+    } else {
+      executeNormalGraph(task);
+    }
+  }
+
+  private void executeIfGraph(Task task) throws IOException {
+    ImmutableList<Task> dependencies = task.dependencies();
+    Task conditionTask = dependencies.get(0);
+    executeGraph(conditionTask);
+    if (conditionTask.graphContainsErrors()) {
+      return;
+    }
+    Task thenTask = dependencies.get(1);
+    Task elseTask = dependencies.get(2);
+    if (((Bool) conditionTask.output().result()).data()) {
+      executeIfTask(task, conditionTask, thenTask);
+    } else {
+      executeIfTask(task, conditionTask, elseTask);
+    }
+  }
+
+  private void executeIfTask(Task task, Task conditionTask, Task dependencyTask) throws
+      IOException {
+    executeGraph(dependencyTask);
+    if (dependencyTask.graphContainsErrors()) {
+      return;
+    }
+    // Only one of then/else values will be used and it will be used twice.
+    // This way TaskExecutor can calculate task hash and use it for caching.
+    List<Task> dependencies = ImmutableList.of(conditionTask, dependencyTask, dependencyTask);
+    taskExecutor.execute(task, Input.fromResults(dependencies));
+  }
+
+  private void executeNormalGraph(Task task) throws IOException {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
       if (subTask.graphContainsErrors()) {
