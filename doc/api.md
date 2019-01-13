@@ -1,8 +1,6 @@
 Core smooth functions
 ---------------------
 
- * [aidl](api/aidl.md) Runs android aidl tool to generate java
-class source code from android aidl file.
  * [and](api/and.md) Returns `true` if both arguments are `true`.
  * [concatenate](api/concatenate.md) Concatenates two arrays.
  * [equal](api/equal.md) Returns `true` when arguments are equal.
