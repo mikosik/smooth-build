@@ -9,12 +9,6 @@ Message {
   String severity,
 }
 
-File aidl(
-  String apiLevel,
-  String buildToolsVersion,
-  File interfaceFile,
-);
-
 Bool true();
 
 Bool false();
