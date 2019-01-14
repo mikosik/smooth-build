@@ -5,7 +5,7 @@ import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.ThrowException;
+import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class IfTest extends AcceptanceTestCase {
   @Test

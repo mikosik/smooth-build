@@ -6,7 +6,7 @@ import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.Flatten;
+import org.smoothbuild.acceptance.testing.Flatten;
 
 public class GenericTest extends AcceptanceTestCase {
   @Test
