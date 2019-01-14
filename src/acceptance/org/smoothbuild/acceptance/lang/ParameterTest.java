@@ -180,7 +180,7 @@ public class ParameterTest extends AcceptanceTestCase {
   @Test
   public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
     givenNativeJar(ThrowException.class);
-    givenScript("String throwException();"
+    givenScript("Nothing throwException();"
         + "      func(String notUsedParameter) = 'abc';"
         + "      result = func(throwException());");
     whenSmoothBuild("result");

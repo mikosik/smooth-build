@@ -73,7 +73,7 @@ public class DefaultValueTest extends AcceptanceTestCase {
   @Test
   public void default_value_is_not_evaluated_when_not_needed() throws Exception {
     givenNativeJar(ThrowException.class);
-    givenScript("String throwException();"
+    givenScript("Nothing throwException();"
         + "      func(String withDefault = throwException) = withDefault;"
         + "      result = func('def');");
     whenSmoothBuild("result");
