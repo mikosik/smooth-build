@@ -210,7 +210,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void exception_from_native_is_reported_as_error() throws Exception {
     givenNativeJar(ThrowException.class);
-    givenScript("String throwException();\n"
+    givenScript("Nothing throwException();\n"
         + "      result = throwException;");
     whenSmoothBuild("result");
     thenFinishedWithError();
