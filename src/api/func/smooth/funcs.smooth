@@ -20,12 +20,12 @@ Bool not(
 Bool and(
   Bool first,
   Bool second,
-);
+) = if(first, second, false());
 
 Bool or(
   Bool first,
   Bool second,
-);
+) = if (first, true(), second);
 
 Bool equal(
   a first,
