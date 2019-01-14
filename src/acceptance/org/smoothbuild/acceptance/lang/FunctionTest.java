@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.GenericResult;
-import org.smoothbuild.acceptance.lang.nativ.ReportError;
+import org.smoothbuild.acceptance.testing.GenericResult;
+import org.smoothbuild.acceptance.testing.ReportError;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Test

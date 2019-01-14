@@ -10,7 +10,7 @@ import java.io.File;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.TempFilePath;
+import org.smoothbuild.acceptance.testing.TempFilePath;
 
 public class BuildCommandTest extends AcceptanceTestCase {
   private String path;

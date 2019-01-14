@@ -7,8 +7,8 @@ import static org.testory.Testory.then;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.Append;
-import org.smoothbuild.acceptance.lang.nativ.Concat;
+import org.smoothbuild.acceptance.testing.Append;
+import org.smoothbuild.acceptance.testing.Concat;
 
 public class GenericInferenceTest extends AcceptanceTestCase {
   @Test

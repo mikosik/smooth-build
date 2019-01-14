@@ -4,7 +4,7 @@ import static org.testory.Testory.thenEqual;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.nativ.ThrowException;
+import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class ParameterTest extends AcceptanceTestCase {
   @Test

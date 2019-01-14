@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.lang.nativ;
+package org.smoothbuild.acceptance.testing;
 
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.lang.value.SString;
