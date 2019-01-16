@@ -8,13 +8,13 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 import okio.ByteString;
 
-public class EqualFunctionTest extends AcceptanceTestCase {
+public class EqualTest extends AcceptanceTestCase {
   @Test
   public void string_is_equal_to_itself() throws Exception {
     givenScript("result = equal('aaa', 'aaa');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 1)));
+    then(artifactAsBoolean("result"), equalTo(true));
   }
 
   @Test
@@ -22,7 +22,15 @@ public class EqualFunctionTest extends AcceptanceTestCase {
     givenScript("result = equal('aaa', 'bbb');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 0)));
+    then(artifactAsBoolean("result"), equalTo(false));
+  }
+
+  @Test
+  public void empty_string_and_non_empty_are_not_equal() throws Exception {
+    givenScript("result = equal('aaa', '');");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsBoolean("result"), equalTo(false));
   }
 
   @Test
@@ -30,7 +38,7 @@ public class EqualFunctionTest extends AcceptanceTestCase {
     givenScript("result = equal(true(), true());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 1)));
+    then(artifactAsBoolean("result"), equalTo(true));
   }
 
   @Test
@@ -38,15 +46,15 @@ public class EqualFunctionTest extends AcceptanceTestCase {
     givenScript("result = equal(false(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 1)));
+    then(artifactAsBoolean("result"), equalTo(true));
   }
 
   @Test
-  public void bool_is_not_equal_to_different_bool() throws Exception {
+  public void true_is_not_equal_to_false() throws Exception {
     givenScript("result = equal(true(), false());");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 0)));
+    then(artifactAsBoolean("result"), equalTo(false));
   }
 
   @Test
@@ -58,7 +66,7 @@ public class EqualFunctionTest extends AcceptanceTestCase {
         "        result = equal(Person('aaa', 'bbb'), Person('aaa', 'bbb'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 1)));
+    then(artifactAsBoolean("result"), equalTo(true));
   }
 
   @Test
@@ -70,7 +78,7 @@ public class EqualFunctionTest extends AcceptanceTestCase {
         "        result = equal(Person('aaa', 'bbb'), Person('aaa', 'ccc'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 0)));
+    then(artifactAsBoolean("result"), equalTo(false));
   }
 
   @Test
@@ -88,6 +96,32 @@ public class EqualFunctionTest extends AcceptanceTestCase {
         "        result = equal(Person('aaa', 'bbb'), Person2('aaa', 'aaa'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(ByteString.of((byte) 0)));
+    then(artifactAsBoolean("result"), equalTo(false));
+  }
+
+  @Test
+  public void string_array_is_equal_to_itself() throws Exception {
+    givenScript("result = equal(['aaa', 'bbb'], ['aaa', 'bbb']);");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsBoolean("result"), equalTo(true));
+  }
+
+  @Test
+  public void empty_nothing_array_is_equal_to_itself() throws Exception {
+    givenScript("result = equal([], []);");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsBoolean("result"), equalTo(true));
+  }
+
+  @Test
+  public void empty_arrays_of_different_types_are_not_equal() throws Exception {
+    givenScript("[String] stringArray = [];     \n" +
+        "        [Bool] boolArray = [];         \n" +
+        "        result = equal(stringArray, boolArray);        \n");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsBoolean("result"), equalTo(false));
   }
 }
