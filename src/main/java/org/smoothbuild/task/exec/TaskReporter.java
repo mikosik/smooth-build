@@ -20,7 +20,7 @@ public class TaskReporter {
 
   public void report(Task task, boolean resultFromCache) {
     ImmutableList<Message> messages = task.output().messages();
-    if (!(task.isInternal() && messages.isEmpty())) {
+    if (!messages.isEmpty()) {
       String header = header(task, resultFromCache);
       console.print(header, messages);
     }

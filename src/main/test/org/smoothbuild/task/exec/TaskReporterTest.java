@@ -59,12 +59,12 @@ public class TaskReporterTest {
   }
 
   @Test
-  public void non_internal_task_without_message_is_printed() {
+  public void non_internal_task_without_message_is_not_printed() {
     given(task = createTask(false));
     given(messages = list());
     given(task).setOutput(new Output(messages));
     when(taskReporter).report(task, false);
-    thenCalled(console).print(header(task, false), messages);
+    thenCalledTimes(0, onInstance(console));
   }
 
   private static Task createTask(boolean isInternal) {
