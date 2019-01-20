@@ -6,6 +6,8 @@ import java.util.Properties;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.Hash;
+
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 
@@ -23,12 +25,16 @@ public class JavaPlatformHashProvider {
 
   public HashCode get() {
     return newHasher()
-        .putString(properties.getProperty("java.vendor"), Charsets.UTF_8)
-        .putString(properties.getProperty("java.version"), Charsets.UTF_8)
-        .putString(properties.getProperty("java.runtime.name"), Charsets.UTF_8)
-        .putString(properties.getProperty("java.runtime.version"), Charsets.UTF_8)
-        .putString(properties.getProperty("java.vm.name"), Charsets.UTF_8)
-        .putString(properties.getProperty("java.vm.version"), Charsets.UTF_8)
+        .putBytes(hash("java.vendor").asBytes())
+        .putBytes(hash("java.version").asBytes())
+        .putBytes(hash("java.runtime.name").asBytes())
+        .putBytes(hash("java.runtime.version").asBytes())
+        .putBytes(hash("java.vm.name").asBytes())
+        .putBytes(hash("java.vm.version").asBytes())
         .hash();
+  }
+
+  private HashCode hash(String name) {
+    return Hash.string(properties.getProperty(name));
   }
 }
