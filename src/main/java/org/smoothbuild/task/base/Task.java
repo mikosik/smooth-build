@@ -16,17 +16,14 @@ import com.google.common.hash.HashCode;
 public class Task {
   private final Evaluator evaluator;
   private final ImmutableList<Task> dependencies;
+  private final HashCode runtimeHash;
   private Output output;
-  private final HashCode hash;
 
   public Task(Evaluator evaluator, List<? extends Task> dependencies, HashCode runtimeHash) {
     this.evaluator = evaluator;
     this.dependencies = ImmutableList.copyOf(dependencies);
+    this.runtimeHash = runtimeHash;
     this.output = null;
-    this.hash = newHasher()
-        .putBytes(evaluator.hash().asBytes())
-        .putBytes(runtimeHash.asBytes())
-        .hash();
   }
 
   public Evaluator evaluator() {
@@ -78,7 +75,11 @@ public class Task {
     return !hasOutput() || containsErrors(output.messages());
   }
 
-  public HashCode hash() {
-    return hash;
+  public HashCode hash(Input input) {
+    return newHasher()
+        .putBytes(runtimeHash.asBytes())
+        .putBytes(evaluator.hash().asBytes())
+        .putBytes(input.hash().asBytes())
+        .hash();
   }
 }
