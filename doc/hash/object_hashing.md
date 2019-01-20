@@ -1,5 +1,6 @@
 
-Instances are stored in HashedDb as Merkle trees.
+Instances are stored in objects db as Merkle trees.
+They are indexed by their hash.
 Tree root has two children (except instance of `Type` type).
 First child of the root represents an instance of type of instance represented by that root.
 Second child depends on the type of of instance represented by root.
