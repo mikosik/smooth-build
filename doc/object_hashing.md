@@ -1,8 +1,8 @@
 
-Instances are kept in HashedDb as Merkle trees.
+Instances are stored in HashedDb as Merkle trees.
 Tree root has two children (except instance of `Type` type).
-First children of the root is an instance of type of instance represented by root.
-Second children depends on the type of of instance represented by root.
+First child of the root represents an instance of type of instance represented by that root.
+Second child depends on the type of of instance represented by root.
 
 Type type
 ---------
@@ -112,7 +112,7 @@ Bool instance
 boolInstanceHash =
 hash(
   boolTypeHash,
-  hash(boolValue)
+  hash(0x01 byte for true values, 0x00 for false values)
 )
 ```
 
@@ -123,7 +123,7 @@ String instance
 stringInstanceHash =
 hash(
   TypeHash,
-  hash(string)
+  hash(bytes of string encoded in UTF-8)
 )
 ```
 
@@ -134,7 +134,7 @@ Blob instance
 blobInstanceHash =
 hash(
   blobTypeHash,
-  hash(string)
+  hash(blob bytes)
 )
 ```
 
