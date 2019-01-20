@@ -11,6 +11,7 @@ import org.junit.Test;
 
 public class JavaPlatformHashProviderTest {
   private Properties properties;
+  private Properties properties2;
 
   @Test
   public void java_platforms_with_same_properties_have_same_hash() throws Exception {
@@ -67,6 +68,19 @@ public class JavaPlatformHashProviderTest {
     given(properties).setProperty("java.vm.version", "different");
     when(() -> new JavaPlatformHashProvider(properties).get());
     thenReturned(not(new JavaPlatformHashProvider(properties()).get()));
+  }
+
+  @Test
+  public void regression_collisions_are_not_possible()
+      throws Exception {
+    given(properties = properties());
+    given(properties).setProperty("java.vendor", "A");
+    given(properties).setProperty("java.version", "");
+    given(properties2 = properties());
+    given(properties2).setProperty("java.vendor", "");
+    given(properties2).setProperty("java.version", "A");
+    when(() -> new JavaPlatformHashProvider(properties).get());
+    thenReturned(not(new JavaPlatformHashProvider(properties2).get()));
   }
 
   private static Properties properties() {
