@@ -60,7 +60,7 @@ public class FunctionLoader {
       private HashCode createNativeFunctionHash(HashCode jarHash, Signature signature) {
         Hasher hasher = Hash.newHasher();
         hasher.putBytes(jarHash.asBytes());
-        hasher.putString(signature.name(), SmoothConstants.CHARSET);
+        hasher.putBytes(Hash.string(signature.name()).asBytes());
         return hasher.hash();
       }
 

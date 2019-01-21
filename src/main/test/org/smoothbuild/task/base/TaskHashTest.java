@@ -97,7 +97,7 @@ public class TaskHashTest {
     given(task = new Task(valueEvaluator(valuesDb.string(""), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("e156f1beee1cac13a6972555685549ea6fc457ac"));
+    thenReturned(HashCode.fromString("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
   }
 
   @Test
@@ -106,7 +106,7 @@ public class TaskHashTest {
         Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("deb797da8e1abd9760b6fe18c2d731c4f1d22a5c"));
+    thenReturned(HashCode.fromString("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
   }
 
   @Test
@@ -115,7 +115,7 @@ public class TaskHashTest {
         list(), Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("30f9b574ef2918098adab1d2d9d80b62261ee5ef"));
+    thenReturned(HashCode.fromString("d20343333435effc353d96a8704cd929f7c39498"));
   }
 
   @Test
@@ -124,7 +124,7 @@ public class TaskHashTest {
         list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("6d021483bdf5a594255209e8c3a22c931a904b89"));
+    thenReturned(HashCode.fromString("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
   }
 
   @Test
@@ -136,7 +136,7 @@ public class TaskHashTest {
         list(), Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("99c0c9fca631d10975dcb70ac2913218b5fd96d2"));
+    thenReturned(HashCode.fromString("63979b8de96889ef68be5dd7132f03a2bc9f7700"));
   }
 
   @Test
@@ -149,7 +149,7 @@ public class TaskHashTest {
         list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("614f96e51aeae41a384437d95608dbfbf062785a"));
+    thenReturned(HashCode.fromString("b32335ae8152db72fe6b39789ca81d2b17cd7891"));
   }
 
   @Test
@@ -161,7 +161,7 @@ public class TaskHashTest {
         mock(Evaluator.class), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("f7b1d64c7e407a7c4dab12cd7e75610f7b23a7a4"));
+    thenReturned(HashCode.fromString("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
   }
 
   @Test
@@ -171,7 +171,7 @@ public class TaskHashTest {
         Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("4a5685212f3dcf2a0db1539191ac995de9317e47"));
+    thenReturned(HashCode.fromString("03e12569eb415cff0fd2084ba233b6f9fdb63945"));
   }
 
   @Test
@@ -181,6 +181,6 @@ public class TaskHashTest {
         Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> task.hash(input));
-    thenReturned(HashCode.fromString("c5e3f9501409070279e43b6df4591971ec0ac94b"));
+    thenReturned(HashCode.fromString("2e18856c213531ddc9f883907e90eda84c8e3e20"));
   }
 }
