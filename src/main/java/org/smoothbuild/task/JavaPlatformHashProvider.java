@@ -1,14 +1,11 @@
 package org.smoothbuild.task;
 
-import static org.smoothbuild.db.hashed.Hash.newHasher;
-
 import java.util.Properties;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 
-import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 
 public class JavaPlatformHashProvider {
@@ -24,14 +21,13 @@ public class JavaPlatformHashProvider {
   }
 
   public HashCode get() {
-    return newHasher()
-        .putBytes(hash("java.vendor").asBytes())
-        .putBytes(hash("java.version").asBytes())
-        .putBytes(hash("java.runtime.name").asBytes())
-        .putBytes(hash("java.runtime.version").asBytes())
-        .putBytes(hash("java.vm.name").asBytes())
-        .putBytes(hash("java.vm.version").asBytes())
-        .hash();
+    return Hash.hashes(
+        hash("java.vendor"),
+        hash("java.version"),
+        hash("java.runtime.name"),
+        hash("java.runtime.version"),
+        hash("java.vm.name"),
+        hash("java.vm.version"));
   }
 
   private HashCode hash(String name) {

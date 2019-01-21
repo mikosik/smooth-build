@@ -23,6 +23,18 @@ public class HashTest {
   private HashCode hash;
 
   @Test
+  public void hash_of_given_array_of_hashes_is_always_the_same() {
+    when(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
+    thenReturned(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
+  }
+
+  @Test
+  public void hash_of_different_array_of_hashes_are_different() {
+    when(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
+    thenReturned(not(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(3))));
+  }
+
+  @Test
   public void hash_of_given_string_is_always_the_same() {
     when(Hash.string(string));
     thenReturned(Hash.string(string));

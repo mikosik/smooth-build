@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Streams.stream;
 
 import java.util.List;
 
@@ -9,7 +10,6 @@ import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.Hasher;
 
 public class Input {
   private final ImmutableList<Value> values;
@@ -43,10 +43,6 @@ public class Input {
   }
 
   private static HashCode calculateHash(Iterable<? extends Value> values) {
-    Hasher hasher = Hash.newHasher();
-    for (Value value : values) {
-      hasher.putBytes(value.hash().asBytes());
-    }
-    return hasher.hash();
+    return Hash.hashes(stream(values).map(Value::hash).toArray(HashCode[]::new));
   }
 }
