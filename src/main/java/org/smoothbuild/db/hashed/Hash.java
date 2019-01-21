@@ -24,6 +24,14 @@ public class Hash {
     return function().newHasher();
   }
 
+  public static HashCode hashes(HashCode... hashes) {
+    Hasher hasher = newHasher();
+    for (HashCode hash : hashes) {
+      hasher.putBytes(hash.asBytes());
+    }
+    return hasher.hash();
+  }
+
   public static HashCode string(String string) {
     return function().hashString(string, CHARSET);
   }

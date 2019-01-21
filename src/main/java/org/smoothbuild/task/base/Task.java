@@ -1,11 +1,11 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.db.hashed.Hash.newHasher;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
@@ -76,10 +76,9 @@ public class Task {
   }
 
   public HashCode hash(Input input) {
-    return newHasher()
-        .putBytes(runtimeHash.asBytes())
-        .putBytes(evaluator.hash().asBytes())
-        .putBytes(input.hash().asBytes())
-        .hash();
+    return Hash.hashes(
+        runtimeHash,
+        evaluator.hash(),
+        input.hash());
   }
 }

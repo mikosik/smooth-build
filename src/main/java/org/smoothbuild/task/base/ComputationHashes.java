@@ -41,15 +41,10 @@ public class ComputationHashes {
   }
 
   private static HashCode hash(int id, HashCode hash) {
-    return Hash.newHasher()
-        .putBytes(Hash.integer(id).asBytes())
-        .putBytes(hash.asBytes())
-        .hash();
+    return Hash.hashes(Hash.integer(id), hash);
   }
 
   private static HashCode hash(int id) {
-    return Hash.newHasher()
-        .putBytes(Hash.integer(id).asBytes())
-        .hash();
+    return Hash.hashes(Hash.integer(id));
   }
 }

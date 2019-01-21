@@ -18,9 +18,8 @@ public class TaskModule extends AbstractModule {
   public HashCode provideRuntimeHash(
       JavaPlatformHashProvider javaPlatformHashProvider,
       SmoothJarHashProvider smoothJarHashProvider) {
-    return Hash.newHasher()
-        .putBytes(javaPlatformHashProvider.get().asBytes())
-        .putBytes(smoothJarHashProvider.get().asBytes())
-        .hash();
+    return Hash.hashes(
+        javaPlatformHashProvider.get(),
+        smoothJarHashProvider.get());
   }
 }

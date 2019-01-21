@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Accessor;
@@ -38,7 +37,6 @@ import org.smoothbuild.parse.ast.StringNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
-import com.google.common.hash.Hasher;
 
 public class FunctionLoader {
   public static Function loadFunction(SRuntime runtime, ValuesDb valuesDb, FuncNode func) {
@@ -58,10 +56,7 @@ public class FunctionLoader {
       }
 
       private HashCode createNativeFunctionHash(HashCode jarHash, Signature signature) {
-        Hasher hasher = Hash.newHasher();
-        hasher.putBytes(jarHash.asBytes());
-        hasher.putBytes(Hash.string(signature.name()).asBytes());
-        return hasher.hash();
+        return Hash.hashes(jarHash, Hash.string(signature.name()));
       }
 
       private Parameter createParameter(ParamNode param) {
