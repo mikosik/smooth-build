@@ -46,12 +46,12 @@ First let's discuss all types available in smooth language.
 
 #### Basic types
 Basic types are predefined by the language (cannot be defined by user).
-Currently we have three basic types: String, Blob, Nothing.
-Others (like Int, Bool) will be added before smooth reaches version 1.0.
+Currently we have three basic types: String, Bool, Blob, Nothing.
+Others (like Int) will be added before smooth reaches version 1.0.
 
 ##### _Bool_
 Boolean value that can be either `true` or `false`.
-Only instances of that type are returned by functions
+The only instances of that type are returned by functions
 [true](https://github.com/mikosik/smooth-build/blob/master/doc/api/true.md)
 and
 [false](https://github.com/mikosik/smooth-build/blob/master/doc/api/false.md).
@@ -77,7 +77,7 @@ This sounds strange but reasons for such type are explain below when discussing 
 #### Struct types
 Struct is a compound of named values known as its fields (like in most programming languages).
 Each field may be of different type.
-It is possible to define struct type in following way:
+It is possible to define struct type in following way (comma after last field is not mandatory):
 
 ```
 Person {
@@ -104,7 +104,7 @@ Constructor of given struct is a function that
 Let's create some value of type Person which we defined above as struct.
 
 ```
-Person person = Person(firstName = "John", secondName="Doe");
+Person person = Person("John", "Doe");
 ```
 
 Apart from being automatically generated, constructor is an ordinary function and
@@ -177,7 +177,7 @@ function that returns its only parameter.
 
 ```
 a identity(a value) = value;
-``` 
+```
 
 #### Type inference
 
@@ -228,9 +228,9 @@ File release_jar = jar(classes("//src"));
 #### Function parameter default value
 
 When we define function parameter we can provide default value for some of them.
-This way call to such function does not have to provide value for such parameter.
+This way call to such function does not have to provide value for such parameters.
 The only limitation is that all parameters with default values must be placed
-after parameters without default values. 
+after parameters without default values.
 
 Let's create function that creates text file:
 
@@ -253,7 +253,7 @@ File myFile = textFile("I love text files.", "secret.txt");
 
 If a function has more than one parameter with default value and we want to specify
 value for only some default parameters we can select that parameters by prefixing
-argument with parameter name and equal sign (`=`). For example:
+argument with parameter name and equal sign `=`. For example:
 
 ```
 File myFile = textFile("I love text files.", name="secret.txt");
@@ -270,7 +270,7 @@ from previous execution.
 However smooth is much smarter.
 Its cache system is much fine grained as it keeps results
 of each function call it has ever executed.
-If it ever has to execute given call (function plus its arguments) again
+When it has to execute given call (function plus its arguments) again
 it just takes result from cache.
 
 You can see how it works by running build for our initial example,
