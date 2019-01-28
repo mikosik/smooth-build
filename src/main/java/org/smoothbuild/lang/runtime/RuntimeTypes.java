@@ -80,6 +80,11 @@ public class RuntimeTypes implements Types {
   }
 
   @Override
+  public StructType message() {
+    return (StructType) getType("Message");
+  }
+
+  @Override
   public ArrayType array(Type elementType) {
     if (elementType.isGeneric()) {
       return array((GenericType) elementType);

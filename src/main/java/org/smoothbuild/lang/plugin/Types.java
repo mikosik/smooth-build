@@ -16,6 +16,8 @@ public interface Types {
 
   public StructType file();
 
+  public StructType message();
+
   public Type getType(String name);
 
   public ArrayType array(Type elementType);

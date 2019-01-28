@@ -17,10 +17,11 @@ import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
-import org.smoothbuild.lang.message.MessagesDb;
+import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Struct;
@@ -33,16 +34,13 @@ import com.google.common.hash.HashCode;
 public class OutputsDb {
   private final HashedDb hashedDb;
   private final ValuesDb valuesDb;
-  private final MessagesDb messagesDb;
-  private final TypesDb typesDb;
+  private final Types types;
 
   @Inject
-  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, MessagesDb messagesDb,
-      TypesDb typesDb) {
+  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, Types types) {
     this.hashedDb = hashedDb;
     this.valuesDb = valuesDb;
-    this.messagesDb = messagesDb;
-    this.typesDb = typesDb;
+    this.types = types;
   }
 
   public void write(HashCode taskHash, Output output) {
@@ -58,7 +56,7 @@ public class OutputsDb {
   }
 
   private Array writeMessages(ImmutableList<Message> messages) {
-    ArrayBuilder builder = valuesDb.arrayBuilder(messagesDb.messageType());
+    ArrayBuilder builder = valuesDb.arrayBuilder(types.message());
     for (Message message : messages) {
       builder.add(message.value());
     }
@@ -72,7 +70,7 @@ public class OutputsDb {
   public Output read(HashCode taskHash, ConcreteType type) {
     try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
       Value messagesValue = valuesDb.get(unmarshaller.readHash());
-      ConcreteArrayType messageArrayType = typesDb.array(messagesDb.messageType());
+      ArrayType messageArrayType = types.array(types.message());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its merkle root, but got " + messagesValue.type());

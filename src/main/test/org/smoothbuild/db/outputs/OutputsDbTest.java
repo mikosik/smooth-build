@@ -68,7 +68,7 @@ public class OutputsDbTest {
     types = new TestingRuntimeTypes(typesDb);
     valueFactory = new TestingValueFactory(types, valuesDb);
     messagesDb = new TestingMessagesDb(valuesDb, types);
-    outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, messagesDb, typesDb);
+    outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, types);
   }
 
   @Test
