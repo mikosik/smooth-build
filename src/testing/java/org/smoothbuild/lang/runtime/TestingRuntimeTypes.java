@@ -12,5 +12,8 @@ public class TestingRuntimeTypes extends RuntimeTypes {
     struct("File", list(
         new Field(blob(), "content", unknownLocation()),
         new Field(string(), "path", unknownLocation())));
+    struct("Message", list(
+        new Field(string(), "text", unknownLocation()),
+        new Field(string(), "severity", unknownLocation())));
   }
 }
