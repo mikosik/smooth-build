@@ -2,9 +2,9 @@
     <info organisation="org.smooth-build" module="smooth-build"/>
     <dependencies>
         <dependency org="com.googlecode.junit-toolbox" name="junit-toolbox" rev="2.4"/>
-        <dependency org="com.google.guava" name="guava" rev="24.0-jre"/>
-        <dependency org="com.google.guava" name="guava-testlib" rev="24.0-jre"/>
-        <dependency org="com.google.inject" name="guice" rev="4.0"/>
+        <dependency org="com.google.guava" name="guava" rev="27.0.1-jre"/>
+        <dependency org="com.google.guava" name="guava-testlib" rev="27.0.1-jre"/>
+        <dependency org="com.google.inject" name="guice" rev="4.2.2"/>
         <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3"/>
         <dependency org="com.squareup.okio" name="okio" rev="1.15.0"/>
         <dependency org="junit" name="junit" rev="4.12"/>
