@@ -9,6 +9,9 @@ public class TypeNames {
   public static final String TYPE = "Type";
   public static final String NOTHING = "Nothing";
 
+  public static final String FILE = "File";
+  public static final String MESSAGE = "Message";
+
   public static boolean isGenericTypeName(String name) {
     return 0 < name.length() && isLowerCase(name.charAt(0));
   }
