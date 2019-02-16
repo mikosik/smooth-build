@@ -34,7 +34,7 @@ public class DependencyStack {
   public ParseError createCycleError() {
     String lastMissing = peek().missing().name();
     int first = -1;
-    StackElem[] array = stack.toArray(new StackElem[stack.size()]);
+    StackElem[] array = stack.toArray(new StackElem[0]);
     for (int i = array.length - 1; 0 <= i; i--) {
       if (array[i].name().equals(lastMissing)) {
         first = i;

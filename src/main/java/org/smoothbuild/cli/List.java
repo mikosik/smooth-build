@@ -20,16 +20,14 @@ public class List implements Command {
 
   @Override
   public int run(String... args) {
-    return runtimeController.setUpRuntimeAndRun(runtime -> {
-      runtime
-          .functions()
-          .all()
-          .stream()
-          .filter(f -> f.location().file().equals(paths.defaultScript()))
-          .filter(f -> f.parameters().size() == 0)
-          .map(Function::name)
-          .sorted()
-          .forEach(console::println);
-    });
+    return runtimeController.setUpRuntimeAndRun(runtime -> runtime
+        .functions()
+        .all()
+        .stream()
+        .filter(f -> f.location().file().equals(paths.defaultScript()))
+        .filter(f -> f.parameters().size() == 0)
+        .map(Function::name)
+        .sorted()
+        .forEach(console::println));
   }
 }

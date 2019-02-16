@@ -7,7 +7,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.util.List;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.value.Value;
 
