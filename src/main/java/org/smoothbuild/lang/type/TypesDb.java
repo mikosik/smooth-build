@@ -125,7 +125,7 @@ public class TypesDb {
     for (Field field : fields) {
       fieldHashes.add(writeField(field.name(), field.type()));
     }
-    return hashedDb.writeHashes(fieldHashes.toArray(new HashCode[fieldHashes.size()]));
+    return hashedDb.writeHashes(fieldHashes.toArray(new HashCode[0]));
   }
 
   private HashCode writeField(String name, ConcreteType type) throws IOException {
