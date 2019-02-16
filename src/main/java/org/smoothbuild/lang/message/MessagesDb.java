@@ -23,7 +23,7 @@ public class MessagesDb {
   }
 
   public StructType messageType() {
-    return (StructType) types.getType("Message");
+    return types.message();
   }
 
   public Message error(String message) {
