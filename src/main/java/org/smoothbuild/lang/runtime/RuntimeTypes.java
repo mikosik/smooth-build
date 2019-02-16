@@ -20,6 +20,7 @@ import org.smoothbuild.lang.type.GenericArrayType;
 import org.smoothbuild.lang.type.GenericType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.type.TypeNames;
 import org.smoothbuild.lang.type.TypesDb;
 
 @Singleton
@@ -76,12 +77,12 @@ public class RuntimeTypes implements Types {
 
   @Override
   public StructType file() {
-    return (StructType) getType("File");
+    return (StructType) getType(TypeNames.FILE);
   }
 
   @Override
   public StructType message() {
-    return (StructType) getType("Message");
+    return (StructType) getType(TypeNames.MESSAGE);
   }
 
   @Override
