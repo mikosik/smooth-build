@@ -44,7 +44,7 @@ public class OutputsDb {
   public void write(HashCode taskHash, Output output) {
     try (Marshaller marshaller = hashedDb.newMarshaller(taskHash)) {
       ImmutableList<Message> messageList = output.messages();
-      marshaller.sink().write(writeMessages(messageList).hash().asBytes());
+      marshaller.sink().write(storeMessageArray(messageList).hash().asBytes());
       if (!Messages.containsErrors(messageList)) {
         marshaller.sink().write(output.result().hash().asBytes());
       }
@@ -53,7 +53,7 @@ public class OutputsDb {
     }
   }
 
-  private Array writeMessages(ImmutableList<Message> messages) {
+  private Array storeMessageArray(ImmutableList<Message> messages) {
     ArrayBuilder builder = valuesDb.arrayBuilder(types.message());
     for (Message message : messages) {
       builder.add(message.value());
