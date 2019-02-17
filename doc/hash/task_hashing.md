@@ -1,10 +1,14 @@
 Task is most atomic operation that can be executed by smooth build internally.
 Task is a computation done one some Input which produces some Output.
 Input is a sequence of smooth objects.
-Output is a single smooth object plus sequence of messages (errors, warnings, infos). 
+Output is a
+ - result (single smooth object) - present only when there's no error messages 
+ - sequence of messages (errors, warnings, infos)
 After each Task execution:
- - its Output is stored in objects db.
- - hash of its Output is stored in results db indexed by Task hash
+ - its Output's result (if present) is stored in objects db
+ - its Output messages are stored as Message array in objects db
+ - hash of Message array plus (optionally) hash of result are stored in outputs db indexed by 
+ Task hash
  
 
 Task
