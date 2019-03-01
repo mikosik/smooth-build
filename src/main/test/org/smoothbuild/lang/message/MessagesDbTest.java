@@ -10,14 +10,20 @@ import static org.testory.Testory.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.db.values.TestingValuesDb;
+import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
+import org.smoothbuild.lang.type.TypesDb;
 
 public class MessagesDbTest {
   private MessagesDb messagesDb;
+  private TestingRuntimeTypes types;
   private Message message;
 
   @Before
   public void before() {
-    messagesDb = new TestingMessagesDb(new TestingHashedDb());
+    TestingHashedDb hashedDb = new TestingHashedDb();
+    types = new TestingRuntimeTypes(new TypesDb(hashedDb));
+    messagesDb = new TestingMessagesDb(new TestingValuesDb(hashedDb), types);
   }
 
   @Test
@@ -52,20 +58,20 @@ public class MessagesDbTest {
   public void smooth_type_of_error_is_message() throws Exception {
     given(message = messagesDb.error("text"));
     when(() -> message.value().type());
-    thenReturned(messagesDb.messageType());
+    thenReturned(types.message());
   }
 
   @Test
   public void smooth_type_of_warning_is_message() throws Exception {
     given(message = messagesDb.warning("text"));
     when(() -> message.value().type());
-    thenReturned(messagesDb.messageType());
+    thenReturned(types.message());
   }
 
   @Test
   public void smooth_type_of_info_is_message() throws Exception {
     given(message = messagesDb.info("text"));
     when(() -> message.value().type());
-    thenReturned(messagesDb.messageType());
+    thenReturned(types.message());
   }
 }
