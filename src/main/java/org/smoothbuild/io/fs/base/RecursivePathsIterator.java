@@ -17,7 +17,8 @@ public class RecursivePathsIterator implements PathIterator {
 
   public static PathIterator recursivePathsIterator(FileSystem fileSystem, Path dir)
       throws IOException {
-    switch (fileSystem.pathState(dir)) {
+    PathState state = fileSystem.pathState(dir);
+    switch (state) {
       case FILE:
         throw new IllegalArgumentException("Path " + dir + " is not a dir but a file.");
       case DIR:
@@ -35,7 +36,7 @@ public class RecursivePathsIterator implements PathIterator {
           }
         };
       default:
-        throw new RuntimeException("Unexpected case: " + fileSystem.pathState(dir));
+        throw new RuntimeException("Unexpected case: " + state);
     }
   }
 
