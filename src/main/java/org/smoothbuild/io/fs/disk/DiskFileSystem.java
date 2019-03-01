@@ -32,7 +32,7 @@ public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
 
   public DiskFileSystem(Path path) {
-    this.rootDir = path.toJPath();
+    this(path.toJPath());
   }
 
   DiskFileSystem(java.nio.file.Path path) {
