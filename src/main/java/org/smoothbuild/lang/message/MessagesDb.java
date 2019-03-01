@@ -7,7 +7,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.value.Value;
 
 public class MessagesDb {
@@ -20,10 +19,6 @@ public class MessagesDb {
   public MessagesDb(ValuesDb valuesDb, Types types) {
     this.valuesDb = valuesDb;
     this.types = types;
-  }
-
-  public StructType messageType() {
-    return types.message();
   }
 
   public Message error(String message) {
@@ -41,7 +36,7 @@ public class MessagesDb {
   private Message newMessage(String text, String severity) {
     Value textValue = valuesDb.string(text);
     Value severityValue = valuesDb.string(severity);
-    Value message = valuesDb.structBuilder(messageType())
+    Value message = valuesDb.structBuilder(types.message())
         .set(TEXT, textValue)
         .set(SEVERITY, severityValue)
         .build();
