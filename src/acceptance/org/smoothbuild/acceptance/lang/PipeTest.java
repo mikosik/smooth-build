@@ -5,10 +5,8 @@ import static org.testory.Testory.then;
 
 import java.io.IOException;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.testory.Testory;
 
 public class PipeTest extends AcceptanceTestCase {
   @Test

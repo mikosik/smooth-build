@@ -7,8 +7,6 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-import okio.ByteString;
-
 public class FalseTest extends AcceptanceTestCase {
   @Test
   public void false_function() throws IOException {

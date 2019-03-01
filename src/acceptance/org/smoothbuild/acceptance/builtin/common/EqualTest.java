@@ -6,8 +6,6 @@ import static org.testory.Testory.then;
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-import okio.ByteString;
-
 public class EqualTest extends AcceptanceTestCase {
   @Test
   public void string_is_equal_to_itself() throws Exception {
