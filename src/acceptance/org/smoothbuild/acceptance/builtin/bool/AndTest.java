@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ThrowException;
 
-import okio.ByteString;
-
 public class AndTest extends AcceptanceTestCase {
   @Test
   public void false_and_false_returns_false() throws IOException {
