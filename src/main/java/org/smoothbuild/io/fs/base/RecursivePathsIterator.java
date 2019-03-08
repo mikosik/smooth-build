@@ -71,7 +71,8 @@ public class RecursivePathsIterator implements PathIterator {
         }
       } else {
         Path file = fileStack.remove();
-        switch (fileSystem.pathState(baseDir.append(file))) {
+        PathState state = fileSystem.pathState(baseDir.append(file));
+        switch (state) {
           case FILE:
             return file;
           case DIR:
@@ -80,8 +81,7 @@ public class RecursivePathsIterator implements PathIterator {
           case NOTHING:
             throw new RuntimeException("Unexpected case: " + NOTHING);
           default:
-            throw new RuntimeException(
-                "Unexpected case: " + fileSystem.pathState(baseDir.append(file)));
+            throw new RuntimeException("Unexpected case: " + state);
         }
       }
     }
