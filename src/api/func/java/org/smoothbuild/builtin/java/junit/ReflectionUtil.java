@@ -9,8 +9,9 @@ import org.smoothbuild.lang.plugin.NativeApi;
 public class ReflectionUtil {
   public static Object newInstance(NativeApi nativeApi, Class<?> clazz) {
     try {
-      return clazz.newInstance();
-    } catch (InstantiationException | IllegalAccessException e) {
+      return clazz.getDeclaredConstructor().newInstance();
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
+        | InvocationTargetException e) {
       reportJunitError(nativeApi, "Cannot instantiate " + clazz.getCanonicalName());
       throw new AbortException();
     }
