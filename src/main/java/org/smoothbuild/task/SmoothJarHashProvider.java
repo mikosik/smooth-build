@@ -1,13 +1,13 @@
 package org.smoothbuild.task;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.util.reflect.Classes;
 
 import com.google.common.hash.HashCode;
 
@@ -16,19 +16,19 @@ public class SmoothJarHashProvider {
   public SmoothJarHashProvider() {}
 
   public HashCode get() {
-    URLClassLoader classLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
-    URL[] urls = classLoader.getURLs();
-    if (urls.length != 1) {
-      throw new RuntimeException(
-          "Too many jars in classpath of URLClassLoader. Expected exactly one.");
-    }
-    File smoothJarFile = new File(urls[0].getPath());
-    return calculateHash(smoothJarFile);
+    String resourcePath = SmoothJarHashProvider.class
+        .getClassLoader()
+        .getResource(Classes.binaryPath(SmoothJarHashProvider.class))
+        .getPath();
+    String smoothJarPath = resourcePath
+        .substring(0, resourcePath.lastIndexOf('!'))
+        .substring("file:".length());
+    return calculateHash(Paths.get(smoothJarPath));
   }
 
-  private static HashCode calculateHash(File smoothJarFile) {
+  private static HashCode calculateHash(Path smoothJarFile) {
     try {
-      return Hash.file(smoothJarFile.toPath());
+      return Hash.file(smoothJarFile);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
