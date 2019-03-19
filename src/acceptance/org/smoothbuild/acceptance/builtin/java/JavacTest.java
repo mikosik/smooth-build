@@ -107,7 +107,7 @@ public class JavacTest extends AcceptanceTestCase {
     givenScript("result = [file('//MyClass.java')] | javac(source='1.4', target='1.4');");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("enums are not supported in -source 1.4");
+    thenOutputContains("Source option 1.4 is no longer supported.");
   }
 
   private Object invoke(File appClassFile, String method) throws IOException,
