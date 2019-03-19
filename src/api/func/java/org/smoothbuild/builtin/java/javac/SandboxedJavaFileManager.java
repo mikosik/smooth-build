@@ -3,9 +3,9 @@ package org.smoothbuild.builtin.java.javac;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -78,11 +78,7 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
             "recurse is not supported by SandboxedJavaFileManager.list()");
       }
       Set<JavaFileObject> result = packageToJavaFileObjects.get(packageName);
-      if (result == null) {
-        return new ArrayList<>();
-      } else {
-        return result;
-      }
+      return result == null ? List.of() : result;
     } else {
       return super.list(location, packageName, kinds, recurse);
     }
