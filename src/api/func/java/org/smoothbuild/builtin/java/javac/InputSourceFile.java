@@ -1,5 +1,7 @@
 package org.smoothbuild.builtin.java.javac;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Scanner;
@@ -27,6 +29,6 @@ public class InputSourceFile extends SimpleJavaFileObject {
   }
 
   private Scanner scanner() throws IOException {
-    return new Scanner(((Blob) file.get("content")).source().inputStream(), "UTF-8");
+    return new Scanner(((Blob) file.get("content")).source().inputStream(), UTF_8);
   }
 }
