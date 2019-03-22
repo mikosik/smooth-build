@@ -4,6 +4,7 @@ Change Log
 Version 0.18.0 (????.??.??)
 ---------------------------
 
+ * suppressed 'illegal reflective access' warnings from java-11 runtime
  * added 'and', 'or', 'not' functions to platform API
  * added 'equal' function to platform API
  * added 'if' function to platform API
