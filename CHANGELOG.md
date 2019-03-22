@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 0.18.0 (????.??.??)
+Version 0.18.0 (2019.03.22)
 ---------------------------
 
  * suppressed 'illegal reflective access' warnings from java-11 runtime
