@@ -71,7 +71,7 @@ public class OutputsDb {
       ArrayType messageArrayType = types.array(types.message());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
-            + " as first child of its merkle root, but got " + messagesValue.type());
+            + " as first child of its Merkle root, but got " + messagesValue.type());
       }
 
       List<Message> messages = stream(((Array) messagesValue).asIterable(Struct.class))
@@ -90,7 +90,7 @@ public class OutputsDb {
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its merkle root, but got " + value.type());
+              + " as second child of its Merkle root, but got " + value.type());
         }
         return new Output(value, messages);
       }

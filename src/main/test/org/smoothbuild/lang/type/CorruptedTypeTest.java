@@ -77,7 +77,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
     thenReturned(personType(typesDb).hash());
   }
 
-  // testing merkle tree of type root node
+  // testing Merkle tree of type root node
 
   @Test
   public void merkle_root_with_three_children_causes_exception() throws Exception {
@@ -126,7 +126,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
     thenThrown(exception(brokenTypeTypeException(instanceHash)));
   }
 
-  // testing merkle tree of name (type name or struct field name) node
+  // testing Merkle tree of name (type name or struct field name) node
 
   @Test
   public void merkle_tree_for_type_with_name_that_is_not_legal_utf8_sequence_causes_exception()
@@ -163,7 +163,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         "Type which field name cannot be decoded using UTF-8 encoding.")));
   }
 
-  // testing merkle tree of type data
+  // testing Merkle tree of type data
 
   @Test
   public void merkle_root_of_data_of_bool_type_with_two_children_causes_exception()
