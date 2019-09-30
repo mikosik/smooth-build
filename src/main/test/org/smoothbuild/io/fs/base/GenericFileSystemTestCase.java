@@ -109,6 +109,7 @@ public abstract class GenericFileSystemTestCase {
     thenReturned(bytes);
   }
 
+  @Test
   public void source_throws_exception_when_file_does_not_exist() throws Exception {
     when(() -> fileSystem.source(path("dir/file")));
     thenThrown(exception(new IOException("File " + path("dir/file") + " doesn't exist.")));
