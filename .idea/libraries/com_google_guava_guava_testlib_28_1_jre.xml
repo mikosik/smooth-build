@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="com.google.guava:guava-testlib:27.0.1-jre" type="repository">
+  <library name="com.google.guava:guava-testlib:28.1-jre" type="repository">
     <properties maven-id="com.google.guava:guava-testlib:27.0.1-jre" />
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava-testlib/27.0.1-jre/guava-testlib-27.0.1-jre.jar!/" />
