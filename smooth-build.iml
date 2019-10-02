@@ -15,8 +15,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="com.googlecode.junit-toolbox:junit-toolbox:2.4" level="project" />
-    <orderEntry type="library" name="com.google.guava:guava:27.0.1-jre" level="project" />
-    <orderEntry type="library" name="com.google.guava:guava-testlib:27.0.1-jre" level="project" />
+    <orderEntry type="library" name="com.google.guava:guava:28.1-jre" level="project" />
+    <orderEntry type="library" name="com.google.guava:guava-testlib:28.1-jre" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio:1.15.0" level="project" />
     <orderEntry type="library" name="org.antlr:antlr4:4.5" level="project" />
     <orderEntry type="library" name="quackery-0.15.0" level="project" />
