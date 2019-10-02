@@ -44,7 +44,9 @@
     <property name="lib.javax.inject" value="${dir.lib}/ivy/javax.inject-1.jar"/>
     <property name="lib.junit" value="${dir.lib}/ivy/junit-4.12.jar"/>
     <property name="lib.junittoolbox" value="${dir.lib}/ivy/junit-toolbox-2.4.jar"/>
-    <property name="lib.okio" value="${dir.lib}/ivy/okio-1.15.0.jar"/>
+    <property name="lib.kotlin-stdlib" value="${dir.lib}/ivy/kotlin-stdlib-1.3.50.jar"/>
+    <property name="lib.kotlin-stdlib-common" value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.50.jar"/>
+    <property name="lib.okio" value="${dir.lib}/ivy/okio-2.4.0.jar"/>
     <property name="lib.quackery" value="${dir.lib}/quackery-0.15.0.jar"/>
     <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.0.8.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.3.0.jar"/>
@@ -92,6 +94,8 @@
         <pathelement location="${lib.guava}"/>
         <pathelement location="${lib.guice}"/>
         <pathelement location="${lib.javax.inject}"/>
+        <pathelement location="${lib.kotlin-stdlib}"/>
+        <pathelement location="${lib.kotlin-stdlib-common}"/>
         <pathelement location="${lib.okio}"/>
     </path>
 
@@ -334,6 +338,8 @@
             <zipfileset src="${lib.guava}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.guice}"        excludes="* META-INF/**"/>
             <zipfileset src="${lib.javax.inject}" excludes="* META-INF/**"/>
+        	<zipfileset src="${lib.kotlin-stdlib}" excludes="* META-INF/**"/>
+        	<zipfileset src="${lib.kotlin-stdlib-common}" excludes="* META-INF/**"/>
         	<zipfileset src="${lib.okio}" excludes="* META-INF/**"/>
 
             <zipfileset dir="${dir.build.class.main.java}"/>
