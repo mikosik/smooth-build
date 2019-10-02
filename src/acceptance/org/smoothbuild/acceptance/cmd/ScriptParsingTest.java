@@ -9,6 +9,6 @@ public class ScriptParsingTest extends AcceptanceTestCase {
     givenScript("result = ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "no viable alternative at input '<EOF>'\n");
+    thenOutputContainsError(1, "mismatched input '<EOF>' expecting ");
   }
 }
