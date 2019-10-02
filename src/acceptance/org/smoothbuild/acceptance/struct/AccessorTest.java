@@ -25,7 +25,7 @@ public class AccessorTest extends AcceptanceTestCase {
         + "      String result = MyStruct.field(MyStruct('abc'));  \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(4, "extraneous input '(' ");
+    thenOutputContainsError(4, "mismatched input '(' ");
   }
 
   @Test
@@ -36,7 +36,7 @@ public class AccessorTest extends AcceptanceTestCase {
         + "      String result = MyStruct('abc').field();  \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(4, "extraneous input '(' expecting ");
+    thenOutputContainsError(4, "mismatched input '(' expecting ");
   }
 
   @Test

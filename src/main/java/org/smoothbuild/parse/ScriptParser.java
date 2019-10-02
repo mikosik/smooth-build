@@ -14,7 +14,8 @@ import java.util.BitSet;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -22,8 +23,6 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.misc.Nullable;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
@@ -34,15 +33,15 @@ import okio.BufferedSource;
 
 public class ScriptParser {
   public static Maybe<ModuleContext> parseScript(Path scriptFile) {
-    ANTLRInputStream antlrInputStream;
+    CharStream charStream;
     try {
-      antlrInputStream = antlrInputStream(scriptFile);
+      charStream = charStream(scriptFile);
     } catch (IOException e) {
       return error("error: Cannot read build script file '" + scriptFile + "'.");
     }
 
     ErrorListener errorListener = new ErrorListener(scriptFile);
-    SmoothLexer lexer = new SmoothLexer(antlrInputStream);
+    SmoothLexer lexer = new SmoothLexer(charStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
 
@@ -53,9 +52,9 @@ public class ScriptParser {
     return maybe(parser.module(), errorListener.foundErrors());
   }
 
-  private static ANTLRInputStream antlrInputStream(Path scriptFile) throws IOException {
+  private static CharStream charStream(Path scriptFile) throws IOException {
     try (BufferedSource source = buffer(source(scriptFile))) {
-      return new ANTLRInputStream(source.inputStream());
+      return CharStreams.fromStream(source.inputStream());
     }
   }
 
@@ -72,8 +71,8 @@ public class ScriptParser {
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line,
-        int charPositionInLine, String msg, @Nullable RecognitionException e) {
+    public void syntaxError(Recognizer<?, ?> recognizer,  Object offendingSymbol, int line,
+        int charPositionInLine, String msg,  RecognitionException e) {
       Location location = createLocation(offendingSymbol, line);
       errors.add(new ParseError(location, msg));
     }
@@ -87,21 +86,21 @@ public class ScriptParser {
     }
 
     @Override
-    public void reportAmbiguity(@NotNull Parser recognizer, @NotNull DFA dfa, int startIndex,
-        int stopIndex, boolean exact, @NotNull BitSet ambigAlts, @NotNull ATNConfigSet configs) {
+    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex,
+        int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Ambiguity in grammar");
     }
 
     @Override
-    public void reportAttemptingFullContext(@NotNull Parser recognizer, @NotNull DFA dfa,
-        int startIndex, int stopIndex, @Nullable BitSet conflictingAlts,
-        @NotNull ATNConfigSet configs) {
+    public void reportAttemptingFullContext(Parser recognizer, DFA dfa,
+        int startIndex, int stopIndex,  BitSet conflictingAlts,
+        ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Attempting full context");
     }
 
     @Override
-    public void reportContextSensitivity(@NotNull Parser recognizer, @NotNull DFA dfa,
-        int startIndex, int stopIndex, int prediction, @NotNull ATNConfigSet configs) {
+    public void reportContextSensitivity(Parser recognizer, DFA dfa,
+        int startIndex, int stopIndex, int prediction, ATNConfigSet configs) {
       reportError(recognizer, startIndex, "Context sensitivity");
     }
 

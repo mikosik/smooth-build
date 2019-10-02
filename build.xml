@@ -31,8 +31,8 @@
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
     <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
 
-    <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.5.jar"/>
-    <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.5.jar"/>
+    <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.7.2.jar"/>
+    <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.7.2.jar"/>
     <property name="lib.antlr3-runtime" value="${dir.lib}/ivy/antlr-runtime-3.5.2.jar"/>
     <property name="lib.aopalliance" value="${dir.lib}/ivy/aopalliance-1.0.jar"/>
     <property name="lib.failureaccess" value="${dir.lib}/ivy/failureaccess-1.0.1.jar"/>
@@ -48,7 +48,7 @@
     <property name="lib.kotlin-stdlib-common" value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.50.jar"/>
     <property name="lib.okio" value="${dir.lib}/ivy/okio-2.4.0.jar"/>
     <property name="lib.quackery" value="${dir.lib}/quackery-0.15.0.jar"/>
-    <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.0.8.jar"/>
+    <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.1.jar"/>
     <property name="lib.testory" value="${dir.lib}/testory-1.3.0.jar"/>
 
     <target name="init">
