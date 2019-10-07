@@ -12,7 +12,7 @@ public class AssertPath {
       case FILE:
         throw new IOException("Dir " + path + " doesn't exist. It is a file.");
       case NOTHING:
-        throw new IOException("Dir " + path + " doesn't exists.");
+        throw new IOException("Dir " + path + " doesn't exist.");
       default:
         throw newUnknownPathState(state);
     }
@@ -40,7 +40,7 @@ public class AssertPath {
       case DIR:
         return null;
       case NOTHING:
-        throw new IOException("Path " + path + " doesn't exists.");
+        throw new IOException("Path " + path + " doesn't exist.");
       default:
         throw newUnknownPathState(state);
     }
