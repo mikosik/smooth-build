@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
@@ -148,10 +149,10 @@ public class BlobTest {
   }
 
   @Test
-  public void reading_not_stored_blob_fails() throws Exception {
+  public void reading_not_stored_blob_fails() {
     given(hash = HashCode.fromInt(33));
     given(blob = typesDb.blob().newValue(hash));
     when(() -> blob.source());
-    thenThrown(exception(new IOException("Could not find " + hash + " object.")));
+    thenThrown(exception(new NoSuchDataException(hash)));
   }
 }
