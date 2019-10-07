@@ -114,8 +114,7 @@ public class HashedDb {
     }
   }
 
-  private Marshaller newMarshaller(Sink sink, Supplier<HashCode> hashSupplier,
-      Path tempPath) {
+  private Marshaller newMarshaller(Sink sink, Supplier<HashCode> hashSupplier, Path tempPath) {
     FileStorer storer = new FileStorer(fileSystem, rootPath, tempPath, hashSupplier);
     StoringSink storingSink = new StoringSink(sink, storer);
     return new Marshaller(storingSink, hashSupplier);
