@@ -74,20 +74,20 @@ public abstract class GenericFileSystemTestCase {
   // filesFrom()
 
   @Test
-  public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
+  public void files_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
     thenThrown(exception(new IOException("Dir " + path("abc") + " doesn't exist.")));
   }
 
   @Test
-  public void files_from_throws_exception_when_path_is_a_file() throws Exception {
+  public void files_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).files(path);
     thenThrown(exception(new IOException("Dir " + path + " doesn't exist. It is a file.")));
   }
 
   @Test
-  public void files_from_returns_all_children() throws Exception {
+  public void files_returns_all_children() throws Exception {
     given(this).createEmptyFile("abc/dir1/file1.txt");
     given(this).createEmptyFile("abc/dir2/file2.txt");
     given(this).createEmptyFile("abc/text.txt");
@@ -96,7 +96,7 @@ public abstract class GenericFileSystemTestCase {
   }
 
   @Test
-  public void files_from_throws_exception_when_path_does_not_exist() throws Exception {
+  public void files_throws_exception_when_path_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
     thenThrown(IOException.class);
   }
