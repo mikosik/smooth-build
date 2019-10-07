@@ -9,7 +9,7 @@ public class OutputsDbException extends RuntimeException {
     return new OutputsDbException(hash.toString() + " value in OutputsDb is corrupted. " + message);
   }
 
-  public static OutputsDbException ioException(IOException e) {
+  public static OutputsDbException outputsDbException(IOException e) {
     return new OutputsDbException("IOException when accessing OutputsDb", e);
   }
 

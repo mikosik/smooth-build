@@ -3,7 +3,7 @@ package org.smoothbuild.db.outputs;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
-import static org.smoothbuild.db.outputs.OutputsDbException.ioException;
+import static org.smoothbuild.db.outputs.OutputsDbException.outputsDbException;
 import static org.smoothbuild.lang.message.Message.isValidSeverity;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class OutputsDb {
         marshaller.sink().write(output.result().hash().asBytes());
       }
     } catch (IOException e) {
-      throw ioException(e);
+      throw outputsDbException(e);
     }
   }
 
@@ -95,7 +95,7 @@ public class OutputsDb {
         return new Output(value, messages);
       }
     } catch (IOException e) {
-      throw ioException(e);
+      throw outputsDbException(e);
     }
   }
 }
