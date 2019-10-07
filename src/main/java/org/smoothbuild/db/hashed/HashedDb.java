@@ -6,6 +6,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Hash.hashingSink;
+import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
@@ -82,10 +83,17 @@ public class HashedDb {
 
   public Unmarshaller newUnmarshaller(HashCode hash) throws IOException {
     Path path = toPath(hash);
-    if (fileSystem.pathState(path) == PathState.FILE) {
-      return new Unmarshaller(fileSystem.source(path));
-    } else {
-      throw new IOException("Could not find " + hash + " object.");
+    PathState pathState = fileSystem.pathState(path);
+    switch (pathState) {
+      case FILE:
+        return new Unmarshaller(fileSystem.source(path));
+      case DIR:
+        throw new CorruptedHashedDbException(
+            "Corrupted HashedDb. " + path + " is a directory not a data file.");
+      case NOTHING:
+        throw new IOException("Could not find " + hash + " object.");
+      default:
+        throw newUnknownPathState(pathState);
     }
   }
 

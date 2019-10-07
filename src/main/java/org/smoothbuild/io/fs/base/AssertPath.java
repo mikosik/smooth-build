@@ -59,7 +59,7 @@ public class AssertPath {
     }
   }
 
-  private static RuntimeException newUnknownPathState(PathState state) {
+  public  static RuntimeException newUnknownPathState(PathState state) {
     return new RuntimeException("Unknown " + PathState.class.getName() + ": " + state);
   }
 }
