@@ -3,7 +3,7 @@ package org.smoothbuild.lang.value;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class SString extends AbstractValue {
     try {
       return hashedDb.readString(dataHash());
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     } catch (DecodingStringException e) {
       throw corruptedValueException(hash(), "It is an instance of a String which data cannot be " +
           "decoded using " + CHARSET + " encoding.");

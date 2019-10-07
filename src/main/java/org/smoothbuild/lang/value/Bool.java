@@ -2,7 +2,7 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public class Bool extends AbstractValue {
               hash(), "It is Bool which value stored in ValuesDb is illegal (=" + value + ").");
       }
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 

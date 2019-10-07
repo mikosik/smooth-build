@@ -1,6 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.IOException;
 
@@ -50,7 +50,7 @@ public class ValuesDb {
     try {
       return new BlobBuilder(typesDb.blob(), hashedDb);
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 
@@ -58,7 +58,7 @@ public class ValuesDb {
     try {
       return new SString(hashedDb.writeString(string), typesDb.string(), hashedDb);
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 
@@ -72,7 +72,7 @@ public class ValuesDb {
       marshaller.close();
       return marshaller.hash();
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 

@@ -9,7 +9,7 @@ public class ValuesDbException extends RuntimeException {
     return new ValuesDbException(hash.toString() + " value in ValuesDb is corrupted. " + message);
   }
 
-  public static ValuesDbException ioException(IOException e) {
+  public static ValuesDbException valuesDbException(IOException e) {
     return new ValuesDbException("IOException when accessing ValuesDb", e);
   }
 
