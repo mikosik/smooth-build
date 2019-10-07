@@ -63,7 +63,7 @@ public class HashedDbTest {
   public void reading_not_written_value_fails() {
     given(hash = Hash.string("abc"));
     when(() -> hashedDb.newUnmarshaller(hash));
-    thenThrown(exception(new IOException("Could not find " + hash + " object.")));
+    thenThrown(exception(new NoSuchDataException(hash)));
   }
 
   @Test
@@ -171,7 +171,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(hash));
     given(() -> marshaller.sink().write(new byte[1024 * 1024]));
     when(() -> hashedDb.newUnmarshaller(hash));
-    thenThrown(exception(new IOException("Could not find " + hash + " object.")));
+    thenThrown(exception(new IOException("No data at " + hash + ".")));
   }
 
   @Test

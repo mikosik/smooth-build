@@ -91,7 +91,7 @@ public class HashedDb {
         throw new CorruptedHashedDbException(
             "Corrupted HashedDb. " + path + " is a directory not a data file.");
       case NOTHING:
-        throw new IOException("Could not find " + hash + " object.");
+        throw new NoSuchDataException(hash);
       default:
         throw newUnknownPathState(pathState);
     }
