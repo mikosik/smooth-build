@@ -2,6 +2,7 @@ package org.smoothbuild.db.hashed;
 
 import static okio.ByteString.encodeUtf8;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
@@ -221,5 +222,25 @@ public class HashedDbTest {
     given(() -> unmarshaller.tryReadHash());
     when(() -> unmarshaller.tryReadHash());
     thenReturned(null);
+  }
+
+  // tests for corrupted db
+
+  @Test
+  public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_reading_data() {
+    given(() -> hash = Hash.integer(33));
+    given(() -> fileSystem.createDir(path(hash.toString())));
+    when(() -> hashedDb.newUnmarshaller(hash));
+    thenThrown(exception(new CorruptedHashedDbException(
+        "Corrupted HashedDb. '" + hash + "' is a directory not a data file.")));
+  }
+
+  @Test
+  public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_writing_data() {
+    given(() -> hash = Hash.bytes(bytes1.toByteArray()));
+    given(() -> fileSystem.createDir(path(hash.toString())));
+    when(() -> hashedDb.newMarshaller().sink().write(bytes1).close());
+    thenThrown(exception(new CorruptedHashedDbException(
+        "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory.")));
   }
 }
