@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.value;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -32,7 +32,7 @@ public class AbstractValue implements Value {
     try {
       return hashedDb.writeHashes(type.hash(), dataHash);
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class Instantiator {
       throw corruptedValueException(hash,
           "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.");
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 }

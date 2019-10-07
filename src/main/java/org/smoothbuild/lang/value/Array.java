@@ -2,7 +2,7 @@ package org.smoothbuild.lang.value;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class Array extends AbstractValue {
           "It is an Array which value stored in ValuesDb number of bytes which is not multiple of" +
               " hash size = " + Hash.size() + ".");
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 }

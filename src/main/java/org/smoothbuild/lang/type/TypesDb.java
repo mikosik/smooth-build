@@ -2,7 +2,7 @@ package org.smoothbuild.lang.type;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.values.ValuesDbException.corruptedValueException;
-import static org.smoothbuild.db.values.ValuesDbException.ioException;
+import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.type.TypeNames.BOOL;
@@ -84,7 +84,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name));
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 
@@ -99,7 +99,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 
@@ -116,7 +116,7 @@ public class TypesDb {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
     } catch (IOException e) {
-      throw ioException(e);
+      throw valuesDbException(e);
     }
   }
 
@@ -139,7 +139,7 @@ public class TypesDb {
       try {
         return readImpl(hash);
       } catch (IOException e) {
-        throw ioException(e);
+        throw valuesDbException(e);
       }
     }
   }
