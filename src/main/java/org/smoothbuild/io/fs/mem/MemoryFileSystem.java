@@ -148,10 +148,14 @@ public class MemoryFileSystem implements FileSystem {
 
   private MemoryElement getDir(Path path) throws IOException {
     MemoryElement found = findElement(path);
-    if (found != null && found.isDir()) {
-      return found;
+    if (found == null) {
+      throw new IOException("Dir " + path + " doesn't exist.");
     } else {
-      throw new IOException("Dir " + path + " doesn't exists.");
+      if (found.isDir()) {
+        return found;
+      } else {
+        throw new IOException("Dir " + path + " doesn't exist. It is a file.");
+      }
     }
   }
 

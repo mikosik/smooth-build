@@ -76,9 +76,10 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_from_throws_exception_when_dir_does_not_exist() throws Exception {
     when(fileSystem).files(path("abc"));
-    thenThrown(exception(new IOException("Dir " + path("abc") + " doesn't exists.")));
+    thenThrown(exception(new IOException("Dir " + path("abc") + " doesn't exist.")));
   }
 
+  @Test
   public void files_from_throws_exception_when_path_is_a_file() throws Exception {
     given(this).createEmptyFile(path);
     when(fileSystem).files(path);

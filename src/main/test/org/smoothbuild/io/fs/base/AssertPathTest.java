@@ -44,7 +44,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(() -> assertPathIsDir(fileSystem, path));
-    thenThrown(exception(new IOException("Dir " + path + " doesn't exists.")));
+    thenThrown(exception(new IOException("Dir " + path + " doesn't exist.")));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class AssertPathTest {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
     when(() -> assertPathExists(fileSystem, path));
-    thenThrown(exception(new IOException("Path " + path + " doesn't exists.")));
+    thenThrown(exception(new IOException("Path " + path + " doesn't exist.")));
   }
 
   @Test
