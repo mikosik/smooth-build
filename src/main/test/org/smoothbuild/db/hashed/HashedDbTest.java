@@ -24,10 +24,9 @@ import okio.ByteString;
 public class HashedDbTest {
   private final ByteString bytes1 = ByteString.encodeUtf8("aaa");
   private final ByteString bytes2 = ByteString.encodeUtf8("bbb");
-  private HashCode hash;
   private HashedDb hashedDb;
   private Marshaller marshaller;
-  private HashCode hashId;
+  private HashCode hash;
   private Unmarshaller unmarshaller;
   private MemoryFileSystem fileSystem;
   private ByteString byteString;
@@ -61,9 +60,9 @@ public class HashedDbTest {
 
   @Test
   public void reading_not_written_value_fails() {
-    given(hashId = Hash.string("abc"));
-    when(() -> hashedDb.newUnmarshaller(hashId));
-    thenThrown(exception(new IOException("Could not find " + hashId + " object.")));
+    given(hash = Hash.string("abc"));
+    when(() -> hashedDb.newUnmarshaller(hash));
+    thenThrown(exception(new IOException("Could not find " + hash + " object.")));
   }
 
   @Test
@@ -120,8 +119,8 @@ public class HashedDbTest {
 
   @Test
   public void written_data_at_given_hash_can_be_read_back() {
-    given(() -> hashId = Hash.integer(33));
-    given(() -> marshaller = hashedDb.newMarshaller(hashId));
+    given(() -> hash = Hash.integer(33));
+    given(() -> marshaller = hashedDb.newMarshaller(hash));
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
     when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
@@ -157,21 +156,21 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    given(() -> hashId = marshaller.hash());
+    given(() -> hash = marshaller.hash());
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(bytes2));
     given(() -> marshaller.close());
     when(marshaller.hash());
-    thenReturned(not(hashId));
+    thenReturned(not(hash));
   }
 
   @Test
   public void written_data_is_not_visible_until_close_is_invoked() {
-    given(() -> hashId = Hash.integer(17));
-    given(() -> marshaller = hashedDb.newMarshaller(hashId));
+    given(() -> hash = Hash.integer(17));
+    given(() -> marshaller = hashedDb.newMarshaller(hash));
     given(() -> marshaller.sink().write(new byte[1024 * 1024]));
-    when(() -> hashedDb.newUnmarshaller(hashId));
-    thenThrown(exception(new IOException("Could not find " + hashId + " object.")));
+    when(() -> hashedDb.newUnmarshaller(hash));
+    thenThrown(exception(new IOException("Could not find " + hash + " object.")));
   }
 
   @Test
@@ -179,8 +178,8 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(new byte[1]));
     given(() -> marshaller.close());
-    given(() -> hashId = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hashId).readHash());
+    given(() -> hash = marshaller.hash());
+    when(() -> hashedDb.newUnmarshaller(hash).readHash());
     thenThrown(IOException.class);
   }
 
@@ -189,8 +188,8 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(new byte[0]));
     given(() -> marshaller.close());
-    given(hashId = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hashId).readHash());
+    given(hash = marshaller.hash());
+    when(() -> hashedDb.newUnmarshaller(hash).readHash());
     thenThrown(IOException.class);
   }
 
@@ -208,8 +207,8 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(new byte[1]));
     given(() -> marshaller.close());
-    given(hashId = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hashId).tryReadHash());
+    given(hash = marshaller.hash());
+    when(() -> hashedDb.newUnmarshaller(hash).tryReadHash());
     thenThrown(IOException.class);
   }
 
