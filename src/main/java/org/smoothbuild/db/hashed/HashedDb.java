@@ -6,6 +6,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Hash.hashingSink;
+import static org.smoothbuild.db.hashed.Hash.toPath;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.smoothbuild.io.fs.base.AssertPath;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -22,6 +24,7 @@ import org.smoothbuild.io.util.TempManager;
 
 import com.google.common.hash.HashCode;
 
+import okio.ForwardingSink;
 import okio.HashingSink;
 import okio.Sink;
 
@@ -115,9 +118,32 @@ public class HashedDb {
   }
 
   private Marshaller newMarshaller(Sink sink, Supplier<HashCode> hashSupplier, Path tempPath) {
-    FileStorer storer = new FileStorer(fileSystem, rootPath, tempPath, hashSupplier);
-    StoringSink storingSink = new StoringSink(sink, storer);
-    return new Marshaller(storingSink, hashSupplier);
+    return new Marshaller(moveOnCloseSink(sink, hashSupplier, tempPath), hashSupplier);
+  }
+
+  private ForwardingSink moveOnCloseSink(Sink sink, Supplier<HashCode> hashSupplier,
+      Path tempPath) {
+    return new ForwardingSink(sink) {
+      @Override
+      public void close() throws IOException {
+        super.close();
+
+        Path path = toPath(hashSupplier.get());
+        PathState pathState = fileSystem.pathState(path);
+        switch (pathState) {
+          case NOTHING:
+            fileSystem.move(tempPath, path);
+          case FILE:
+            // nothing to do, we already stored data with such hash so its content must be equal
+            return;
+          case DIR:
+            throw new CorruptedHashedDbException(
+                "Corrupted HashedDb. Cannot store data at " + path + " as it is a directory.");
+          default:
+            throw AssertPath.newUnknownPathState(pathState);
+        }
+      }
+    };
   }
 
   private Path toPath(HashCode hash) {
