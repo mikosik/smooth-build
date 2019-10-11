@@ -33,7 +33,7 @@ public class Unmarshaller implements Closeable {
     if (allowNull && source.exhausted()) {
       return null;
     }
-    return HashCode.fromBytes(source.readByteArray(Hash.size()));
+    return Hash.read(this.source);
   }
 
   @Override
