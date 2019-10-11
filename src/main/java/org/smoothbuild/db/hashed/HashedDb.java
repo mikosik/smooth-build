@@ -4,9 +4,9 @@ import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.hash.HashCode.fromBytes;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
+import static okio.Okio.buffer;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.db.hashed.Hash.hashingSink;
-import static org.smoothbuild.db.hashed.Hash.toPath;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -24,6 +24,7 @@ import org.smoothbuild.io.util.TempManager;
 
 import com.google.common.hash.HashCode;
 
+import okio.BufferedSource;
 import okio.ForwardingSink;
 import okio.HashingSink;
 import okio.Sink;
@@ -53,11 +54,11 @@ public class HashedDb {
   }
 
   public String readString(HashCode hash) throws IOException, DecodingStringException {
-    try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
+    try (BufferedSource source = source(hash)) {
       CharsetDecoder charsetDecoder = CHARSET.newDecoder();
       charsetDecoder.onMalformedInput(REPORT);
       charsetDecoder.onUnmappableCharacter(REPORT);
-      return charsetDecoder.decode(wrap(unmarshaller.source().readByteArray())).toString();
+      return charsetDecoder.decode(wrap(source.readByteArray())).toString();
     } catch (CharacterCodingException e) {
       throw new DecodingStringException(e.getMessage(), e);
     }
@@ -75,21 +76,20 @@ public class HashedDb {
 
   public List<HashCode> readHashes(HashCode hash) throws IOException {
     List<HashCode> result = new ArrayList<>();
-    try (Unmarshaller unmarshaller = newUnmarshaller(hash)) {
-      HashCode elementHash;
-      while ((elementHash = unmarshaller.tryReadHash()) != null) {
-        result.add(elementHash);
+    try (BufferedSource source = source(hash)) {
+      while (!source.exhausted()) {
+        result.add(Hash.read(source));
       }
     }
     return result;
   }
 
-  public Unmarshaller newUnmarshaller(HashCode hash) throws IOException {
+  public BufferedSource source(HashCode hash) throws IOException {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
       case FILE:
-        return new Unmarshaller(fileSystem.source(path));
+        return buffer(fileSystem.source(path));
       case DIR:
         throw new CorruptedHashedDbException(
             "Corrupted HashedDb. " + path + " is a directory not a data file.");

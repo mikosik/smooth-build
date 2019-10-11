@@ -18,6 +18,6 @@ public class Blob extends AbstractValue {
   }
 
   public BufferedSource source() throws IOException {
-    return hashedDb.newUnmarshaller(dataHash()).source();
+    return hashedDb.source(dataHash());
   }
 }

@@ -7,7 +7,6 @@ import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.hash.HashCode;
@@ -21,8 +20,7 @@ public class Bool extends AbstractValue {
   }
 
   public boolean data() {
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(dataHash())) {
-      BufferedSource source = unmarshaller.source();
+    try (BufferedSource source = hashedDb.source(dataHash())) {
       if (source.exhausted()) {
         throw corruptedValueException(
             hash(), "It is Bool which value stored in ValuesDb has zero bytes.");
