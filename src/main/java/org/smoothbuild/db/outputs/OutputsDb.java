@@ -11,9 +11,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.Marshaller;
-import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.Messages;
@@ -28,6 +28,8 @@ import org.smoothbuild.task.base.Output;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
+
+import okio.BufferedSource;
 
 public class OutputsDb {
   private final HashedDb hashedDb;
@@ -66,8 +68,8 @@ public class OutputsDb {
   }
 
   public Output read(HashCode taskHash, ConcreteType type) {
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(taskHash)) {
-      Value messagesValue = valuesDb.get(unmarshaller.readHash());
+    try (BufferedSource source = hashedDb.source(taskHash)) {
+      Value messagesValue = valuesDb.get(Hash.read(source));
       ArrayType messageArrayType = types.array(types.message());
       if (!messagesValue.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
@@ -86,7 +88,7 @@ public class OutputsDb {
       if (Messages.containsErrors(messages)) {
         return new Output(messages);
       } else {
-        HashCode resultObjectHash = unmarshaller.readHash();
+        HashCode resultObjectHash = Hash.read(source);
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type

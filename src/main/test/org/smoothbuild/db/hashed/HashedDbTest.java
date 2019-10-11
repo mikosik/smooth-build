@@ -28,7 +28,6 @@ public class HashedDbTest {
   private HashedDb hashedDb;
   private Marshaller marshaller;
   private HashCode hash;
-  private Unmarshaller unmarshaller;
   private MemoryFileSystem fileSystem;
   private ByteString byteString;
 
@@ -62,7 +61,7 @@ public class HashedDbTest {
   @Test
   public void reading_not_written_value_fails() {
     given(hash = Hash.string("abc"));
-    when(() -> hashedDb.newUnmarshaller(hash));
+    when(() -> hashedDb.source(hash));
     thenThrown(exception(new NoSuchDataException(hash)));
   }
 
@@ -106,7 +105,7 @@ public class HashedDbTest {
     given(byteString = encodeUtf8("abc"));
     given(marshaller.sink().write(byteString));
     given(marshaller).close();
-    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readUtf8());
+    when(hashedDb.source(marshaller.hash()).readUtf8());
     thenReturned("abc");
   }
 
@@ -114,7 +113,7 @@ public class HashedDbTest {
   public void written_zero_length_data_can_be_read_back() throws IOException {
     given(marshaller = hashedDb.newMarshaller());
     given(marshaller).close();
-    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
+    when(hashedDb.source(marshaller.hash()).readByteString());
     thenReturned(ByteString.of());
   }
 
@@ -124,7 +123,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(hash));
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
+    when(() -> hashedDb.source(marshaller.hash()).readByteString());
     thenReturned(bytes1);
   }
 
@@ -136,7 +135,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller());
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
-    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
+    when(() -> hashedDb.source(marshaller.hash()).readByteString());
     thenReturned(bytes1);
   }
 
@@ -148,7 +147,7 @@ public class HashedDbTest {
     given(() -> marshaller = hashedDb.newMarshaller(marshaller.hash()));
     given(() -> marshaller.sink().write(bytes2));
     given(() -> marshaller.close());
-    when(hashedDb.newUnmarshaller(marshaller.hash()).source().readByteString());
+    when(hashedDb.source(marshaller.hash()).readByteString());
     thenReturned(bytes1);
   }
 
@@ -170,7 +169,7 @@ public class HashedDbTest {
     given(() -> hash = Hash.integer(17));
     given(() -> marshaller = hashedDb.newMarshaller(hash));
     given(() -> marshaller.sink().write(new byte[1024 * 1024]));
-    when(() -> hashedDb.newUnmarshaller(hash));
+    when(() -> hashedDb.source(hash));
     thenThrown(exception(new IOException("No data at " + hash + ".")));
   }
 
@@ -180,7 +179,7 @@ public class HashedDbTest {
     given(() -> marshaller.sink().write(new byte[1]));
     given(() -> marshaller.close());
     given(() -> hash = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hash).readHash());
+    when(() -> Hash.read(hashedDb.source(hash)));
     thenThrown(IOException.class);
   }
 
@@ -190,38 +189,8 @@ public class HashedDbTest {
     given(() -> marshaller.sink().write(new byte[0]));
     given(() -> marshaller.close());
     given(hash = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hash).readHash());
+    when(() -> Hash.read(hashedDb.source(hash)));
     thenThrown(IOException.class);
-  }
-
-  @Test
-  public void trying_to_read_hash_when_db_value_has_zero_bytes_returns_null() {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(new byte[0]));
-    given(() -> marshaller.close());
-    when(() -> hashedDb.newUnmarshaller(marshaller.hash()).tryReadHash());
-    thenReturned(null);
-  }
-
-  @Test
-  public void trying_to_read_hash_when_db_value_has_too_few_bytes_causes_exception() {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(new byte[1]));
-    given(() -> marshaller.close());
-    given(hash = marshaller.hash());
-    when(() -> hashedDb.newUnmarshaller(hash).tryReadHash());
-    thenThrown(IOException.class);
-  }
-
-  @Test
-  public void trying_to_read_hash_twice_when_only_one_is_written_returns_null_second_time() {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(Hash.integer(17).asBytes()));
-    given(() -> marshaller.close());
-    given(() -> unmarshaller = hashedDb.newUnmarshaller(marshaller.hash()));
-    given(() -> unmarshaller.tryReadHash());
-    when(() -> unmarshaller.tryReadHash());
-    thenReturned(null);
   }
 
   // tests for corrupted db
@@ -230,7 +199,7 @@ public class HashedDbTest {
   public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_reading_data() {
     given(() -> hash = Hash.integer(33));
     given(() -> fileSystem.createDir(path(hash.toString())));
-    when(() -> hashedDb.newUnmarshaller(hash));
+    when(() -> hashedDb.source(hash));
     thenThrown(exception(new CorruptedHashedDbException(
         "Corrupted HashedDb. '" + hash + "' is a directory not a data file.")));
   }

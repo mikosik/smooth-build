@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.DecodingStringException;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Unmarshaller;
 import org.smoothbuild.db.values.Values;
 import org.smoothbuild.lang.base.Field;
 
 import com.google.common.hash.HashCode;
+
+import okio.BufferedSource;
 
 public class TypesDb {
   private final HashedDb hashedDb;
@@ -170,31 +172,31 @@ public class TypesDb {
 
   protected ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash)
       throws IOException {
-    try (Unmarshaller unmarshaller = hashedDb.newUnmarshaller(typeDataHash)) {
-      HashCode nameHash = unmarshaller.readHash();
+    try (BufferedSource source = hashedDb.source(typeDataHash)) {
+      HashCode nameHash = Hash.read(source);
       String name = decodeName(typeHash, nameHash);
       switch (name) {
         case BOOL:
-          assertNoMoreData(typeHash, unmarshaller, name);
+          assertNoMoreData(typeHash, source, name);
           return bool();
         case STRING:
-          assertNoMoreData(typeHash, unmarshaller, name);
+          assertNoMoreData(typeHash, source, name);
           return string();
         case BLOB:
-          assertNoMoreData(typeHash, unmarshaller, name);
+          assertNoMoreData(typeHash, source, name);
           return blob();
         case NOTHING:
-          assertNoMoreData(typeHash, unmarshaller, name);
+          assertNoMoreData(typeHash, source, name);
           return nothing();
         case "":
-          ConcreteType elementType = read(unmarshaller.readHash());
+          ConcreteType elementType = read(Hash.read(source));
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
           return cache(new ConcreteArrayType(typeDataHash, type(), superType, elementType,
               instantiator, hashedDb, this));
         default:
       }
-      Iterable<Field> fields = readFields(unmarshaller.readHash(), typeHash);
-      assertNoMoreData(typeHash, unmarshaller, "struct");
+      Iterable<Field> fields = readFields(Hash.read(source), typeHash);
+      assertNoMoreData(typeHash, source, "struct");
       return cache(new StructType(typeDataHash, type(), name, fields, instantiator, hashedDb,
           this));
     }
@@ -209,9 +211,9 @@ public class TypesDb {
     }
   }
 
-  private static void assertNoMoreData(HashCode typeHash, Unmarshaller unmarshaller,
-      String typeName) throws IOException {
-    if (!unmarshaller.source().exhausted()) {
+  private static void assertNoMoreData(HashCode typeHash, BufferedSource source, String typeName)
+      throws IOException {
+    if (!source.exhausted()) {
       throw corruptedValueException(typeHash,
           "It is " + typeName + " type but its Merkle tree has unnecessary children.");
     }
