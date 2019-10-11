@@ -14,6 +14,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
+import okio.BufferedSource;
 import okio.HashingSink;
 import okio.HashingSource;
 import okio.Sink;
@@ -22,6 +23,11 @@ import okio.Source;
 public class Hash {
   public static Hasher newHasher() {
     return function().newHasher();
+  }
+
+  public static HashCode read(BufferedSource source) throws IOException {
+    source.require(size());
+    return HashCode.fromBytes(source.readByteArray(size()));
   }
 
   public static HashCode hashes(HashCode... hashes) {

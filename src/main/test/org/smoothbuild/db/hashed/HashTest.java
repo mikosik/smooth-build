@@ -3,8 +3,10 @@ package org.smoothbuild.db.hashed;
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
+import java.io.EOFException;
 import java.io.File;
 
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.smoothbuild.io.fs.base.Path;
 import com.google.common.hash.HashCode;
 import com.google.common.io.Files;
 
+import okio.Buffer;
 import okio.ByteString;
 
 public class HashTest {
@@ -21,6 +24,30 @@ public class HashTest {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private File file;
   private HashCode hash;
+  private Buffer buffer;
+
+  @Test
+  public void read_from_empty_source_throws_eof_exception() {
+    when(() -> Hash.read(new Buffer()));
+    thenThrown(EOFException.class);
+  }
+
+  @Test
+  public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
+    given(buffer = new Buffer());
+    given(() -> buffer.write(new byte[Hash.size() - 1]));
+    when(() -> Hash.read(buffer));
+    thenThrown(EOFException.class);
+  }
+
+  @Test
+  public void read_hash_from_source() {
+    given(buffer = new Buffer());
+    given(hash = Hash.string("abc"));
+    given(() -> buffer.write(hash.asBytes()));
+    when(() -> Hash.read(buffer));
+    thenReturned(hash);
+  }
 
   @Test
   public void hash_of_given_array_of_hashes_is_always_the_same() {
