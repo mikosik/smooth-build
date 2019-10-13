@@ -173,26 +173,6 @@ public class HashedDbTest {
     thenThrown(exception(new IOException("No data at " + hash + ".")));
   }
 
-  @Test
-  public void reading_hash_when_db_value_has_too_few_bytes_causes_exception() {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(new byte[1]));
-    given(() -> marshaller.close());
-    given(() -> hash = marshaller.hash());
-    when(() -> Hash.read(hashedDb.source(hash)));
-    thenThrown(IOException.class);
-  }
-
-  @Test
-  public void reading_hash_when_db_value_has_zero_bytes_causes_exception() {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(new byte[0]));
-    given(() -> marshaller.close());
-    given(hash = marshaller.hash());
-    when(() -> Hash.read(hashedDb.source(hash)));
-    thenThrown(IOException.class);
-  }
-
   // tests for corrupted db
 
   @Test
