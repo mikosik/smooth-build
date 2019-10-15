@@ -19,10 +19,13 @@ public class TaskReporter {
   }
 
   public void report(Task task, boolean resultFromCache) {
-    ImmutableList<Message> messages = task.output().messages();
-    if (!messages.isEmpty()) {
-      String header = header(task, resultFromCache);
-      console.print(header, messages);
+    if (task.hasOutput()) {
+      ImmutableList<Message> messages = task.output().messages();
+      if (!messages.isEmpty()) {
+        console.print(header(task, resultFromCache), messages);
+      }
+    } else if (task.failure() != null){
+      console.print(header(task, resultFromCache), task.failure());
     }
   }
 

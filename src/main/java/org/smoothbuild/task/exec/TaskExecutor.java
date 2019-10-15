@@ -39,7 +39,7 @@ public class TaskExecutor {
       } finally {
         container.destroy();
       }
-      if (task.isCacheable()) {
+      if (task.hasOutput() && task.isCacheable()) {
         outputsDb.write(hash, task.output());
       }
     }

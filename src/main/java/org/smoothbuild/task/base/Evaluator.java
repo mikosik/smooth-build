@@ -104,7 +104,7 @@ public class Evaluator {
     return location;
   }
 
-  public Output evaluate(Input input, Container container) {
+  public Output evaluate(Input input, Container container) throws ComputationException {
     return computation.execute(input, container);
   }
 

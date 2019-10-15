@@ -10,5 +10,5 @@ public interface Computation {
 
   public ConcreteType type();
 
-  public Output execute(Input input, Container container);
+  public Output execute(Input input, Container container) throws ComputationException;
 }

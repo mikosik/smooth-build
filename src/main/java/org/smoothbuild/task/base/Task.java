@@ -18,6 +18,7 @@ public class Task {
   private final ImmutableList<Task> dependencies;
   private final HashCode runtimeHash;
   private Output output;
+  private ComputationException exception;
 
   public Task(Evaluator evaluator, List<? extends Task> dependencies, HashCode runtimeHash) {
     this.evaluator = evaluator;
@@ -55,7 +56,11 @@ public class Task {
   }
 
   public void execute(Container container, Input input) {
-    output = evaluator.evaluate(input, container);
+    try {
+      output = evaluator.evaluate(input, container);
+    } catch (ComputationException e) {
+      exception = e;
+    }
   }
 
   public Output output() {
@@ -80,5 +85,9 @@ public class Task {
         runtimeHash,
         evaluator.hash(),
         input.hash());
+  }
+
+  public Exception failure() {
+    return exception;
   }
 }

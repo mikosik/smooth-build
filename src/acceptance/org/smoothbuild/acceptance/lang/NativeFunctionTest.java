@@ -214,7 +214,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         + "      result = throwException;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function throwException threw java exception from its native code:\n");
+    thenOutputContains("Function throwException threw java exception from its native code.");
     thenOutputContains("java.lang.UnsupportedOperationException");
   }
 
@@ -292,7 +292,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
-        "Function addElementOfWrongTypeToArray threw java exception from its native code:");
+        "Function addElementOfWrongTypeToArray threw java exception from its native code.");
     thenOutputContains("Element type must be Blob but was String.");
   }
 
