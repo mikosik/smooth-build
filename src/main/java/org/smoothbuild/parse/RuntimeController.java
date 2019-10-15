@@ -38,6 +38,6 @@ public class RuntimeController {
         .errors();
     console.errors(errors);
     console.printFinalSummary();
-    return console.isErrorReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    return console.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

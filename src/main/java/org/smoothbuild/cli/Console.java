@@ -1,5 +1,7 @@
 package org.smoothbuild.cli;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
+
 import java.io.PrintStream;
 import java.util.Iterator;
 
@@ -19,6 +21,7 @@ public class Console {
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final PrintStream printStream;
+  private int failureCount;
   private int errorCount;
   private int warningCount;
   private int infoCount;
@@ -51,6 +54,12 @@ public class Console {
     print(messages);
   }
 
+  public void print(String header, Exception failure) {
+    println(GROUP_PREFIX + header);
+    print(getStackTraceAsString(failure));
+    failureCount++;
+  }
+
   private void print(Iterable<? extends Message> messages) {
     for (Message message : messages) {
       print(message);
@@ -70,11 +79,12 @@ public class Console {
     }
   }
 
-  public boolean isErrorReported() {
-    return errorCount != 0;
+  public boolean isProblemReported() {
+    return failureCount != 0 || errorCount != 0;
   }
 
   public void printFinalSummary() {
+    printStat(failureCount, "failure(s)");
     printStat(errorCount, "error(s)");
     printStat(warningCount, "warning(s)");
     printStat(infoCount, "info(s)");

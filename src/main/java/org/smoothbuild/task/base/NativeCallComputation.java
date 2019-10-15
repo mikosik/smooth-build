@@ -1,6 +1,5 @@
 package org.smoothbuild.task.base;
 
-import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
 import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationHash;
 
@@ -36,7 +35,7 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, Container container) {
+  public Output execute(Input input, Container container) throws ComputationException {
     try {
       Value result = (Value) function.nativ().method()
           .invoke(null, createArguments(container, input.values()));
@@ -57,10 +56,8 @@ public class NativeCallComputation implements Computation {
       if (cause instanceof AbortException) {
         return nullOutput(container);
       } else {
-        container.log().error("Function " + function.name()
-            + " threw java exception from its native code:\n"
-            + getStackTraceAsString(cause));
-        return new Output(null, container.messages(), false);
+        throw new ComputationException(
+            "Function " + function.name() + " threw java exception from its native code.", cause);
       }
     }
   }
