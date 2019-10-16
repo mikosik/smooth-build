@@ -10,6 +10,7 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.hash.HashCode;
 
@@ -28,10 +29,9 @@ public class TaskExecutor {
 
   public <T extends Value> void execute(Task task, Input input) throws IOException {
     HashCode hash = task.hash(input);
-    boolean isAlreadyCached = outputsDb.contains(hash);
-    if (isAlreadyCached) {
+    if (outputsDb.contains(hash)) {
       Output output = outputsDb.read(hash, task.type());
-      task.setOutput(output);
+      task.setResult(new TaskResult(output, true));
     } else {
       Container container = containerProvider.get();
       try {
@@ -39,10 +39,10 @@ public class TaskExecutor {
       } finally {
         container.destroy();
       }
-      if (task.hasOutput() && task.isCacheable()) {
+      if (task.shouldCacheOutput()) {
         outputsDb.write(hash, task.output());
       }
     }
-    reporter.report(task, isAlreadyCached);
+    reporter.report(task);
   }
 }

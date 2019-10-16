@@ -23,6 +23,7 @@ import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.hash.HashCode;
 
@@ -37,15 +38,15 @@ public class TaskReporterTest {
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
     given(messages = list(messagesDb.warning("message")));
-    given(task).setOutput(new Output(messages));
-    when(taskReporter).report(task, false);
-    thenCalled(console).print(header(task, false), messages);
+    given(task).setResult(new TaskResult(new Output(messages), false));
+    when(taskReporter).report(task);
+    thenCalled(console).print(header(task), messages);
   }
 
   @Test
   public void internal_task_without_message_is_not_printed() {
     given(task = createTask(true));
-    when(taskReporter).report(task, false);
+    when(taskReporter).report(task);
     thenCalledTimes(0, onInstance(console));
   }
 
@@ -53,17 +54,17 @@ public class TaskReporterTest {
   public void non_internal_task_with_message_is_printed() {
     given(messages = list(messagesDb.warning("message")));
     given(task = createTask(false));
-    given(task).setOutput(new Output(messages));
-    when(taskReporter).report(task, false);
-    thenCalled(console).print(header(task, false), messages);
+    given(task).setResult(new TaskResult(new Output(messages), false));
+    when(taskReporter).report(task);
+    thenCalled(console).print(header(task), messages);
   }
 
   @Test
   public void non_internal_task_without_message_is_not_printed() {
     given(task = createTask(false));
     given(messages = list());
-    given(task).setOutput(new Output(messages));
-    when(taskReporter).report(task, false);
+    given(task).setResult(new TaskResult(new Output(messages), false));
+    when(taskReporter).report(task);
     thenCalledTimes(0, onInstance(console));
   }
 

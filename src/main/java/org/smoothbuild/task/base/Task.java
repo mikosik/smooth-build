@@ -1,7 +1,6 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.lang.message.Messages.containsErrors;
 
 import java.util.List;
 
@@ -17,14 +16,13 @@ public class Task {
   private final Evaluator evaluator;
   private final ImmutableList<Task> dependencies;
   private final HashCode runtimeHash;
-  private Output output;
-  private ComputationException exception;
+  private TaskResult result;
 
   public Task(Evaluator evaluator, List<? extends Task> dependencies, HashCode runtimeHash) {
     this.evaluator = evaluator;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.runtimeHash = runtimeHash;
-    this.output = null;
+    this.result = null;
   }
 
   public Evaluator evaluator() {
@@ -47,37 +45,24 @@ public class Task {
     return evaluator.isInternal();
   }
 
-  public boolean isCacheable() {
-    return evaluator.isCacheable();
-  }
-
   public Location location() {
     return evaluator.location();
   }
 
   public void execute(Container container, Input input) {
     try {
-      output = evaluator.evaluate(input, container);
+      result = new TaskResult(evaluator.evaluate(input, container), false);
     } catch (ComputationException e) {
-      exception = e;
+      result = new TaskResult(e);
     }
   }
 
   public Output output() {
-    checkState(output != null);
-    return output;
+    return result.output();
   }
 
-  public void setOutput(Output output) {
-    this.output = output;
-  }
-
-  public boolean hasOutput() {
-    return output != null;
-  }
-
-  public boolean graphContainsErrors() {
-    return !hasOutput() || containsErrors(output.messages());
+  public boolean shouldCacheOutput() {
+    return evaluator.isCacheable() && result.hasOutput();
   }
 
   public HashCode hash(Input input) {
@@ -87,7 +72,15 @@ public class Task {
         input.hash());
   }
 
-  public Exception failure() {
-    return exception;
+  public void setResult(TaskResult result) {
+    this.result = result;
+  }
+
+  public TaskResult result() {
+    return result;
+  }
+
+  public boolean hasSuccessfulResult() {
+    return result != null && result.hasOutputWithValue();
   }
 }

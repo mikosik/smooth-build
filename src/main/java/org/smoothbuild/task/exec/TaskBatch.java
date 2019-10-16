@@ -56,7 +56,7 @@ public class TaskBatch {
   public void executeAll() throws IOException {
     for (Task task : rootTasks) {
       executeGraph(task);
-      if (task.graphContainsErrors()) {
+      if (!task.hasSuccessfulResult()) {
         return;
       }
     }
@@ -74,7 +74,7 @@ public class TaskBatch {
     ImmutableList<Task> dependencies = task.dependencies();
     Task conditionTask = dependencies.get(0);
     executeGraph(conditionTask);
-    if (conditionTask.graphContainsErrors()) {
+    if (!conditionTask.hasSuccessfulResult()) {
       return;
     }
     Task thenTask = dependencies.get(1);
@@ -89,7 +89,7 @@ public class TaskBatch {
   private void executeIfTask(Task task, Task conditionTask, Task dependencyTask) throws
       IOException {
     executeGraph(dependencyTask);
-    if (dependencyTask.graphContainsErrors()) {
+    if (!dependencyTask.hasSuccessfulResult()) {
       return;
     }
     // Only one of then/else values will be used and it will be used twice.
@@ -101,7 +101,7 @@ public class TaskBatch {
   private void executeNormalGraph(Task task) throws IOException {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
-      if (subTask.graphContainsErrors()) {
+      if (!subTask.hasSuccessfulResult()) {
         return;
       }
     }
@@ -109,8 +109,8 @@ public class TaskBatch {
   }
 
   public boolean containsErrors() {
-    return rootTasks
+    return !rootTasks
         .stream()
-        .anyMatch(Task::graphContainsErrors);
+        .allMatch(Task::hasSuccessfulResult);
   }
 }
