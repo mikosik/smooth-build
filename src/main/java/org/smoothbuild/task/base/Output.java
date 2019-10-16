@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableList;
 public class Output {
   private final Value result;
   private final ImmutableList<Message> messages;
-  private final boolean cacheable;
 
   public Output(Value result) {
     this(result, ImmutableList.of());
@@ -23,13 +22,8 @@ public class Output {
   }
 
   public Output(Value result, Iterable<? extends Message> messages) {
-    this(result, messages, true);
-  }
-
-  public Output(Value result, Iterable<? extends Message> messages, boolean cacheable) {
     this.result = result;
     this.messages = ImmutableList.copyOf(messages);
-    this.cacheable = cacheable;
   }
 
   public boolean hasResult() {
@@ -43,10 +37,6 @@ public class Output {
 
   public ImmutableList<Message> messages() {
     return messages;
-  }
-
-  public boolean isCacheable() {
-    return cacheable;
   }
 
   @Override
