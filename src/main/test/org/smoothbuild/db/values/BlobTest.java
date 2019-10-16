@@ -7,8 +7,6 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
