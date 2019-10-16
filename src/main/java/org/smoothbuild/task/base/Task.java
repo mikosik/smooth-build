@@ -48,7 +48,7 @@ public class Task {
   }
 
   public boolean isCacheable() {
-    return evaluator.isCacheable() && output.isCacheable();
+    return evaluator.isCacheable();
   }
 
   public Location location() {
