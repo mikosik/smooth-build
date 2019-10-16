@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
@@ -18,23 +19,24 @@ public class TaskReporter {
     this.console = console;
   }
 
-  public void report(Task task, boolean resultFromCache) {
-    if (task.hasOutput()) {
+  public void report(Task task) {
+    TaskResult result = task.result();
+    if (result.hasOutput()) {
       ImmutableList<Message> messages = task.output().messages();
       if (!messages.isEmpty()) {
-        console.print(header(task, resultFromCache), messages);
+        console.print(header(task), messages);
       }
-    } else if (task.failure() != null){
-      console.print(header(task, resultFromCache), task.failure());
+    } else {
+      console.print(header(task), task.result().failure());
     }
   }
 
   @VisibleForTesting
-  static String header(Task task, boolean isResultFromCached) {
+  static String header(Task task) {
     String locationString = task.location().toString();
     int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
-    String cached = isResultFromCached ? " CACHED" : "";
+    String cached = task.result().isFromCache() ? " CACHED" : "";
     return name + locationString + cached;
   }
 }
