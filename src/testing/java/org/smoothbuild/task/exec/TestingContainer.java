@@ -7,7 +7,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
@@ -31,7 +30,7 @@ public class TestingContainer extends Container {
   }
 
   public TestingContainer(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb) {
-    this(fileSystem, types, valuesDb, new TestingMessagesDb(valuesDb, types));
+    this(fileSystem, types, valuesDb, new MessagesDb(valuesDb, types));
   }
 
   public TestingContainer(FileSystem fileSystem, RuntimeTypes types, ValuesDb valuesDb,

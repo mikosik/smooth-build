@@ -1,6 +1,8 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.smoothbuild.lang.message.Messages.severity;
+import static org.smoothbuild.lang.message.Messages.text;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -19,10 +21,13 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.TypesDb;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
+
+import com.google.common.collect.Iterables;
 
 public class ContainerTest {
   private final FileSystem fileSystem = new MemoryFileSystem();
@@ -36,23 +41,25 @@ public class ContainerTest {
     TypesDb typesDb = new TypesDb(hashedDb);
     ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
     TestingRuntimeTypes types = new TestingRuntimeTypes(typesDb);
-    MessagesDb messagesDb = new TestingMessagesDb(valuesDb, types);
+    MessagesDb messagesDb = new MessagesDb(valuesDb, types);
     ValueFactory valueFactory = new ValueFactory(types, valuesDb);
     container = new Container(fileSystem, valueFactory, types, messagesDb, tempDirProvider);
   }
 
   @Test
-  public void file_system() throws Exception {
+  public void file_system() {
     when(container.fileSystem());
     thenReturned(same(fileSystem));
   }
 
   @Test
-  public void messages_are_logged() throws Exception {
+  public void messages_are_logged() {
     when(container.log()).error("message");
-    then(container.messages().size(), equalTo(1));
-    then(container.messages().iterator().next().text(), equalTo("message"));
-    then(container.messages().iterator().next().severity(), equalTo("ERROR"));
+    then(Iterables.size(container.messages().asIterable(Value.class)), equalTo(1));
+    then(text(container.messages().asIterable(Struct.class).iterator().next()),
+        equalTo("message"));
+    then(severity(container.messages().asIterable(Struct.class).iterator().next()),
+        equalTo("ERROR"));
   }
 
   @Test

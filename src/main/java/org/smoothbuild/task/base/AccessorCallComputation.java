@@ -1,6 +1,7 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.accessorCallComputationHash;
 
 import org.smoothbuild.lang.base.Accessor;
@@ -34,6 +35,6 @@ public class AccessorCallComputation implements Computation {
     ImmutableList<Value> values = input.values();
     checkArgument(values.size() == 1);
     Struct struct = (Struct) values.get(0);
-    return new Output(struct.get(accessor.fieldName()));
+    return new Output(struct.get(accessor.fieldName()), emptyMessageArray(container));
   }
 }

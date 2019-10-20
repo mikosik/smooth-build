@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 
 import org.smoothbuild.lang.type.ConcreteType;
@@ -26,6 +27,6 @@ public class IdentityComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    return new Output(input.values().get(0));
+    return new Output(input.values().get(0), emptyMessageArray(container));
   }
 }
