@@ -1,7 +1,5 @@
 package org.smoothbuild.task.base;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;

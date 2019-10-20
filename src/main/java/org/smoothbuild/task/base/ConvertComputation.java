@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 
 import org.smoothbuild.lang.type.ConcreteArrayType;
@@ -36,10 +37,10 @@ public class ConvertComputation implements Computation {
     assertThat(!type.equals(value.type()));
     assertThat(type.isAssignableFrom(value.type()));
     if (value instanceof Array) {
-      return new Output(convertArray(container, (Array) value, type));
+      return new Output(convertArray(container, (Array) value, type), emptyMessageArray(container));
     }
     assertThat(!value.type().isNothing());
-    return new Output(convertStruct(container, (Struct) value, type));
+    return new Output(convertStruct(container, (Struct) value, type), emptyMessageArray(container));
   }
 
   private static Value convertArray(Container container, Array array,

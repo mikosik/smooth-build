@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.constructorCallComputationHash;
 
 import org.smoothbuild.lang.base.Constructor;
@@ -35,6 +36,6 @@ public class ConstructorCallComputation implements Computation {
     for (int i = 0; i < parameters.size(); i++) {
       builder.set(parameters.get(i).name(), input.values().get(i));
     }
-    return new Output(builder.build());
+    return new Output(builder.build(), emptyMessageArray(container));
   }
 }

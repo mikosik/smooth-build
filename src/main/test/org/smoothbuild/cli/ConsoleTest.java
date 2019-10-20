@@ -3,17 +3,19 @@ package org.smoothbuild.cli;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.testing.db.values.ValueCreators.array;
+import static org.smoothbuild.testing.db.values.ValueCreators.errorMessage;
+import static org.smoothbuild.testing.db.values.ValueCreators.infoMessage;
+import static org.smoothbuild.testing.db.values.ValueCreators.warningMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.message.Message;
-import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.message.TestingMessagesDb;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.lang.value.Value;
 
 import com.google.common.base.Throwables;
 
@@ -22,20 +24,19 @@ public class ConsoleTest {
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final PrintStream printStream = new PrintStream(outputStream);
   private final Console console = new Console(printStream);
-  private final MessagesDb messagesDb = new TestingMessagesDb();
+  private final HashedDb hashedDb = new TestingHashedDb();
 
   @Test
-  public void printing_messages_containing_error_message() throws Exception {
-    console.print(name, list(messagesDb.error("message string")));
+  public void printing_messages_containing_error_message() {
+    console.print(name, array(hashedDb, errorMessage(hashedDb, "message string")));
     String expected = " + GROUP NAME\n"
         + "   + ERROR: message string\n";
     assertEquals(expected, outputStream.toString());
   }
 
   @Test
-  public void printing_messages_without_error_message() throws Exception {
-    console.print(name, list(messagesDb.warning("message string\nsecond line")));
-
+  public void printing_messages_without_error_message() {
+    console.print(name, array(hashedDb, warningMessage(hashedDb, "message string\nsecond line")));
     String expected = " + GROUP NAME\n"
         + "   + WARNING: message string\n"
         + "     second line\n";
@@ -45,31 +46,31 @@ public class ConsoleTest {
   // isProblemReported()
 
   @Test
-  public void isProblemReported_returns_false_when_nothing_was_logged() throws Exception {
-    console.print(name, list(messagesDb.info("message string")));
+  public void isProblemReported_returns_false_when_nothing_was_logged() {
+    console.print(name, array(hashedDb, infoMessage(hashedDb, "message string")));
     assertFalse(console.isProblemReported());
   }
 
   @Test
-  public void isProblemReported_returns_false_when_only_info_was_logged() throws Exception {
-    console.print(name, list(messagesDb.info("message string")));
+  public void isProblemReported_returns_false_when_only_info_was_logged() {
+    console.print(name, array(hashedDb, infoMessage(hashedDb, "message string")));
     assertFalse(console.isProblemReported());
   }
 
   @Test
-  public void isProblemReported_returns_false_when_only_warning_was_logged() throws Exception {
-    console.print(name, list(messagesDb.warning("message string")));
+  public void isProblemReported_returns_false_when_only_warning_was_logged() {
+    console.print(name, array(hashedDb, warningMessage(hashedDb, "message string")));
     assertFalse(console.isProblemReported());
   }
 
   @Test
-  public void isProblemReported_returns_true_when_error_was_logged() throws Exception {
-    console.print(name, list(messagesDb.error("message string")));
+  public void isProblemReported_returns_true_when_error_was_logged() {
+    console.print(name, array(hashedDb, errorMessage(hashedDb, "message string")));
     assertTrue(console.isProblemReported());
   }
 
   @Test
-  public void isProblemReported_returns_true_when_failure_was_logged() throws Exception {
+  public void isProblemReported_returns_true_when_failure_was_logged() {
     console.print(name, new RuntimeException("message string"));
     assertTrue(console.isProblemReported());
   }
@@ -77,8 +78,8 @@ public class ConsoleTest {
   // printFinalSummary()
 
   @Test
-  public void final_summary_is_failed_when_error_was_logged() throws Exception {
-    console.print(name, list(messagesDb.error("message string")));
+  public void final_summary_is_failed_when_error_was_logged() {
+    console.print(name, array(hashedDb, errorMessage(hashedDb, "message string")));
     console.printFinalSummary();
 
     String expected = " + GROUP NAME\n"
@@ -88,21 +89,21 @@ public class ConsoleTest {
   }
 
   @Test
-  public void final_summary_contains_all_stats() throws Exception {
-    List<Message> messages = new ArrayList<>();
+  public void final_summary_contains_all_stats() {
+    ArrayList<Value> messages = new ArrayList<>();
     RuntimeException exception = new RuntimeException("failure message");
     console.print(name, exception);
     for (int i = 0; i < 2; i++) {
-      messages.add(messagesDb.error("error string"));
+      messages.add(errorMessage(hashedDb, "error string"));
     }
     for (int i = 0; i < 3; i++) {
-      messages.add(messagesDb.warning("warning string"));
+      messages.add(warningMessage(hashedDb, "warning string"));
     }
     for (int i = 0; i < 4; i++) {
-      messages.add(messagesDb.info("info string"));
+      messages.add(infoMessage(hashedDb, "info string"));
     }
 
-    console.print(name, messages);
+    console.print(name, array(hashedDb, messages.toArray(Value[]::new)));
     console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();

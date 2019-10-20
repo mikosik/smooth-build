@@ -9,11 +9,12 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
@@ -54,8 +55,8 @@ public class Container implements NativeApi {
     return messageLogger;
   }
 
-  public List<Message> messages() {
-    return messageLogger.messages;
+  public Array messages() {
+    return valueFactory.arrayBuilder(types.message()).addAll(messageLogger.messages).build();
   }
 
   @Override
@@ -72,7 +73,7 @@ public class Container implements NativeApi {
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
-    private final List<Message> messages = new ArrayList<>();
+    private final List<Value> messages = new ArrayList<>();
     private final MessagesDb messagesDb;
 
     public MessageLoggerImpl(MessagesDb messagesDb) {

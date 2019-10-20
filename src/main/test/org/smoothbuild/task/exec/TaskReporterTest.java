@@ -1,6 +1,8 @@
 package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.task.exec.TaskReporter.header;
+import static org.smoothbuild.testing.db.values.ValueCreators.emptyMessageArray;
+import static org.smoothbuild.testing.db.values.ValueCreators.messageArrayWithOneError;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -10,15 +12,14 @@ import static org.testory.Testory.thenCalledTimes;
 import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
-import java.util.List;
 
 import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.message.Message;
 import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.message.TestingMessagesDb;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
@@ -31,14 +32,14 @@ public class TaskReporterTest {
   private final Console console = mock(Console.class);
   private final TaskReporter taskReporter = new TaskReporter(console);
   private final MessagesDb messagesDb = new TestingMessagesDb();
-  private List<Message> messages;
+  private Array messages;
   private Task task;
 
   @Test
   public void internal_task_with_message_is_printed() {
     given(task = createTask(true));
-    given(messages = list(messagesDb.warning("message")));
-    given(task).setResult(new TaskResult(new Output(messages), false));
+    given(messages = messageArrayWithOneError());
+    given(task).setResult(new TaskResult(new Output(null, messages), false));
     when(taskReporter).report(task);
     thenCalled(console).print(header(task), messages);
   }
@@ -52,9 +53,9 @@ public class TaskReporterTest {
 
   @Test
   public void non_internal_task_with_message_is_printed() {
-    given(messages = list(messagesDb.warning("message")));
+    given(messages = messageArrayWithOneError());
     given(task = createTask(false));
-    given(task).setResult(new TaskResult(new Output(messages), false));
+    given(task).setResult(new TaskResult(new Output(null, messages), false));
     when(taskReporter).report(task);
     thenCalled(console).print(header(task), messages);
   }
@@ -62,8 +63,8 @@ public class TaskReporterTest {
   @Test
   public void non_internal_task_without_message_is_not_printed() {
     given(task = createTask(false));
-    given(messages = list());
-    given(task).setResult(new TaskResult(new Output(messages), false));
+    given(messages = emptyMessageArray());
+    given(task).setResult(new TaskResult(new Output(null, messages), false));
     when(taskReporter).report(task);
     thenCalledTimes(0, onInstance(console));
   }

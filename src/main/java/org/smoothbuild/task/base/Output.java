@@ -1,29 +1,20 @@
 package org.smoothbuild.task.base;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
-
-import com.google.common.collect.ImmutableList;
 
 public class Output {
   private final Value result;
-  private final ImmutableList<Message> messages;
+  private final Array messages;
 
-  public Output(Value result) {
-    this(result, ImmutableList.of());
-  }
-
-  public Output(Iterable<? extends Message> messages) {
-    this(null, messages);
-  }
-
-  public Output(Value result, Iterable<? extends Message> messages) {
+  public Output(Value result, Array messages) {
     this.result = result;
-    this.messages = ImmutableList.copyOf(messages);
+    this.messages = checkNotNull(messages);
   }
 
   public boolean hasResult() {
@@ -35,7 +26,7 @@ public class Output {
     return result;
   }
 
-  public ImmutableList<Message> messages() {
+  public Array messages() {
     return messages;
   }
 

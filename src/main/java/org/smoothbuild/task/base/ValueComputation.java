@@ -1,5 +1,6 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 
 import org.smoothbuild.lang.type.ConcreteType;
@@ -27,6 +28,6 @@ public class ValueComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    return new Output(value);
+    return new Output(value, emptyMessageArray(container));
   }
 }

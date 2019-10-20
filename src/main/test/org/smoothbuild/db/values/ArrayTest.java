@@ -22,7 +22,6 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.testing.common.ExceptionMatcher;
 
 public class ArrayTest {
   private HashedDb hashedDb;

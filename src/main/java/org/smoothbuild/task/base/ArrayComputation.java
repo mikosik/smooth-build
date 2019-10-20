@@ -1,9 +1,11 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.hash.HashCode;
@@ -27,10 +29,11 @@ public class ArrayComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    return new Output(container
+    Array array = container
         .create()
         .arrayBuilder(arrayType.elemType())
         .addAll(input.values())
-        .build());
+        .build();
+    return new Output(array, emptyMessageArray(container));
   }
 }

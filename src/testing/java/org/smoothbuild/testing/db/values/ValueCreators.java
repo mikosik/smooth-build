@@ -6,10 +6,14 @@ import static org.smoothbuild.util.Lists.list;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.message.TestingMessagesDb;
+import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
@@ -21,6 +25,10 @@ import org.smoothbuild.lang.value.ValueFactory;
 import okio.ByteString;
 
 public class ValueCreators {
+  public static <T extends Value> Array array(HashedDb hashedDb, Value... elements) {
+    return array(new TestingValuesDb(hashedDb), elements[0].type(), elements);
+  }
+
   public static <T extends Value> Array array(HashedDb hashedDb, ConcreteType elementType,
       Value... elements) {
     return array(new TestingValuesDb(hashedDb), elementType, elements);
@@ -29,6 +37,29 @@ public class ValueCreators {
   public static <T extends Value> Array array(ValuesDb valuesDb, ConcreteType elementType,
       Value... elements) {
     return valuesDb.arrayBuilder(elementType).addAll(list(elements)).build();
+  }
+
+  public static Array messageArrayWithOneError() {
+    TestingHashedDb hashedDb = new TestingHashedDb();
+    return array(hashedDb, new TestingMessagesDb(hashedDb).error("error message"));
+  }
+
+  public static Array emptyMessageArray() {
+    TestingHashedDb hashedDb = new TestingHashedDb();
+    TestingRuntimeTypes testingRuntimeTypes = new TestingRuntimeTypes(new TypesDb(hashedDb));
+    return array(hashedDb, testingRuntimeTypes.message());
+  }
+
+  public static Value errorMessage(HashedDb hashedDb, String text) {
+    return new TestingMessagesDb(hashedDb).error(text);
+  }
+
+  public static Value warningMessage(HashedDb hashedDb, String text) {
+    return new TestingMessagesDb(hashedDb).warning(text);
+  }
+
+  public static Value infoMessage(HashedDb hashedDb, String text) {
+    return new TestingMessagesDb(hashedDb).info(text);
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {

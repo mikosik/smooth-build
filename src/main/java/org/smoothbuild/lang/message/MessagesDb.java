@@ -1,7 +1,10 @@
 package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.lang.message.Message.ERROR;
-import static org.smoothbuild.lang.message.Message.WARNING;
+import static org.smoothbuild.lang.message.Messages.ERROR;
+import static org.smoothbuild.lang.message.Messages.INFO;
+import static org.smoothbuild.lang.message.Messages.SEVERITY;
+import static org.smoothbuild.lang.message.Messages.TEXT;
+import static org.smoothbuild.lang.message.Messages.WARNING;
 
 import javax.inject.Inject;
 
@@ -10,8 +13,7 @@ import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.value.Value;
 
 public class MessagesDb {
-  public static final String SEVERITY = "severity";
-  public static final String TEXT = "text";
+
   private final ValuesDb valuesDb;
   private final Types types;
 
@@ -21,25 +23,24 @@ public class MessagesDb {
     this.types = types;
   }
 
-  public Message error(String message) {
+  public Value error(String message) {
     return newMessage(message, ERROR);
   }
 
-  public Message warning(String message) {
+  public Value warning(String message) {
     return newMessage(message, WARNING);
   }
 
-  public Message info(String message) {
-    return newMessage(message, Message.INFO);
+  public Value info(String message) {
+    return newMessage(message, INFO);
   }
 
-  private Message newMessage(String text, String severity) {
+  private Value newMessage(String text, String severity) {
     Value textValue = valuesDb.string(text);
     Value severityValue = valuesDb.string(severity);
-    Value message = valuesDb.structBuilder(types.message())
+    return valuesDb.structBuilder(types.message())
         .set(TEXT, textValue)
         .set(SEVERITY, severityValue)
         .build();
-    return new Message(text, severity, message);
   }
 }

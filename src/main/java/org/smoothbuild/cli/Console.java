@@ -1,6 +1,11 @@
 package org.smoothbuild.cli;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static org.smoothbuild.lang.message.Messages.ERROR;
+import static org.smoothbuild.lang.message.Messages.INFO;
+import static org.smoothbuild.lang.message.Messages.WARNING;
+import static org.smoothbuild.lang.message.Messages.severity;
+import static org.smoothbuild.lang.message.Messages.text;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -8,7 +13,8 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.base.Splitter;
 
@@ -49,7 +55,7 @@ public class Console {
     errorCount++;
   }
 
-  public void print(String header, Iterable<? extends Message> messages) {
+  public void print(String header, Array messages) {
     println(GROUP_PREFIX + header);
     print(messages);
   }
@@ -60,22 +66,23 @@ public class Console {
     failureCount++;
   }
 
-  private void print(Iterable<? extends Message> messages) {
-    for (Message message : messages) {
-      print(message);
-      incrementCount(message);
-    }
-  }
-
-  private void incrementCount(Message message) {
-    if (message.isError()) {
-      errorCount++;
-    } else if (message.isWarning()) {
-      warningCount++;
-    } else if (message.isInfo()) {
-      infoCount++;
-    } else {
-      throw new RuntimeException("Unknown message severity: " + message.severity());
+  private void print(Array messages) {
+    for (Struct message : messages.asIterable(Struct.class)) {
+      String severity = severity(message);
+      printMultiline(severity + ": " + text(message));
+      switch (severity) {
+        case ERROR:
+          errorCount++;
+          break;
+        case WARNING:
+          warningCount++;
+          break;
+        case INFO:
+          infoCount++;
+          break;
+        default:
+          throw new RuntimeException("Unknown message severity: " + severity);
+      }
     }
   }
 
@@ -96,8 +103,8 @@ public class Console {
     }
   }
 
-  protected void print(Message message) {
-    Iterator<String> it = Splitter.on("\n").split(message.toString()).iterator();
+  protected void printMultiline(String text) {
+    Iterator<String> it = Splitter.on("\n").split(text).iterator();
 
     print(MESSAGE_FIRST_LINE_PREFIX);
     println(it.next());

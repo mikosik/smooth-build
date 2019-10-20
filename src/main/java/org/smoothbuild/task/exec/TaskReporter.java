@@ -1,15 +1,16 @@
 package org.smoothbuild.task.exec;
 
+import static org.smoothbuild.lang.message.Messages.isEmpty;
+
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.message.Message;
+import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskResult;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 
 public class TaskReporter {
   private final Console console;
@@ -22,8 +23,8 @@ public class TaskReporter {
   public void report(Task task) {
     TaskResult result = task.result();
     if (result.hasOutput()) {
-      ImmutableList<Message> messages = task.output().messages();
-      if (!messages.isEmpty()) {
+      Array messages = task.output().messages();
+      if (!isEmpty(messages)) {
         console.print(header(task), messages);
       }
     } else {
