@@ -3,6 +3,7 @@ package org.smoothbuild.db.values;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -20,6 +21,8 @@ import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.testing.common.ExceptionMatcher;
 
 public class ArrayTest {
   private HashedDb hashedDb;
@@ -37,6 +40,22 @@ public class ArrayTest {
     hashedDb = new TestingHashedDb();
     typesDb = new TypesDb(hashedDb);
     valuesDb = new ValuesDb(hashedDb, typesDb);
+  }
+
+  @Test
+  public void empty_nothing_array_can_be_iterated_as_struct() {
+    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
+    when(() -> array.asIterable(Struct.class).iterator().hasNext());
+    thenReturned(false);
+  }
+
+  @Test
+  public void string_array_cannot_be_iterated_as_struct() {
+    given(sstring = valuesDb.string("abc"));
+    given(array = valuesDb.arrayBuilder(typesDb.string()).add(sstring).build());
+    when(() -> array.asIterable(Struct.class).iterator().hasNext());
+    thenThrown(exception(new IllegalArgumentException(
+        "Array of type '[String]' cannot be iterated as " + Struct.class.getCanonicalName())));
   }
 
   @Test
