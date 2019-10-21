@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.message.MessagesDb;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
@@ -27,13 +26,13 @@ public class Container implements NativeApi {
 
   @Inject
   public Container(FileSystem fileSystem, ValueFactory valueFactory, Types types,
-      MessagesDb messagesDb, TempManager tempManager) {
+      TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.valueFactory = valueFactory;
     this.types = types;
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
-    this.messageLogger = new MessageLoggerImpl(messagesDb);
+    this.messageLogger = new MessageLoggerImpl(valueFactory);
   }
 
   @Override
@@ -74,25 +73,25 @@ public class Container implements NativeApi {
 
   private static class MessageLoggerImpl implements MessageLogger {
     private final List<Value> messages = new ArrayList<>();
-    private final MessagesDb messagesDb;
+    private final ValueFactory valueFactory;
 
-    public MessageLoggerImpl(MessagesDb messagesDb) {
-      this.messagesDb = messagesDb;
+    public MessageLoggerImpl(ValueFactory valueFactory) {
+      this.valueFactory = valueFactory;
     }
 
     @Override
     public void error(String message) {
-      messages.add(messagesDb.error(message));
+      messages.add(valueFactory.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(messagesDb.warning(message));
+      messages.add(valueFactory.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(messagesDb.info(message));
+      messages.add(valueFactory.infoMessage(message));
     }
   }
 }
