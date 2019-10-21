@@ -13,9 +13,11 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.values.ValuesDbException;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.testing.common.ExceptionMatcher;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.hash.HashCode;
@@ -72,5 +74,25 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
     when(() -> ((Array) valuesDb.get(instanceHash)).asIterable(Value.class));
     thenThrown(exception(corruptedValueException(instanceHash, "It is an Array which value stored" +
         " in ValuesDb number of bytes which is not multiple of hash size = 20.")));
+  }
+
+  @Test
+  public void array_with_one_element_of_wrong_type_is_corrupted() throws IOException {
+    given(instanceHash =
+        hash(
+            hash(typesDb.array(typesDb.string())),
+            hash(
+                hash(
+                    hash(typesDb.string()),
+                    hash("aaa")
+                ),
+                hash(
+                    hash(typesDb.bool()),
+                    hash(true)
+                )
+            )));
+    when(() -> ((Array) valuesDb.get(instanceHash)).asIterable(SString.class));
+    thenThrown(exception(corruptedValueException(instanceHash,
+        "It is array with type '[String]' but one of its elements has type 'Bool'")));
   }
 }

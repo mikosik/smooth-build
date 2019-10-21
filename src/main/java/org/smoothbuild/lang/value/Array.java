@@ -35,8 +35,8 @@ public class Array extends AbstractValue {
     ImmutableList<Value> values = values();
     for (Value value : values) {
       if (!value.type().equals(type().elemType())) {
-        throw corruptedValueException(hash(), "It is array with type " + type()
-            + " but one of its elements has type " + value.type());
+        throw corruptedValueException(hash(), "It is array with type " + type().q()
+            + " but one of its elements has type " + value.type().q());
       }
     }
     return (ImmutableList<T>) values;
