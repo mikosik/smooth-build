@@ -17,8 +17,6 @@ import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.message.MessagesDb;
-import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
@@ -31,7 +29,6 @@ import com.google.common.hash.HashCode;
 public class TaskReporterTest {
   private final Console console = mock(Console.class);
   private final TaskReporter taskReporter = new TaskReporter(console);
-  private final MessagesDb messagesDb = new TestingMessagesDb();
   private Array messages;
   private Task task;
 

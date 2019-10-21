@@ -10,7 +10,6 @@ import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.message.TestingMessagesDb;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.TypesDb;
@@ -41,7 +40,7 @@ public class ValueCreators {
 
   public static Array messageArrayWithOneError() {
     TestingHashedDb hashedDb = new TestingHashedDb();
-    return array(hashedDb, new TestingMessagesDb(hashedDb).error("error message"));
+    return array(hashedDb, new TestingValueFactory(hashedDb).errorMessage("error message"));
   }
 
   public static Array emptyMessageArray() {
@@ -51,15 +50,15 @@ public class ValueCreators {
   }
 
   public static Value errorMessage(HashedDb hashedDb, String text) {
-    return new TestingMessagesDb(hashedDb).error(text);
+    return new TestingValueFactory(hashedDb).errorMessage(text);
   }
 
   public static Value warningMessage(HashedDb hashedDb, String text) {
-    return new TestingMessagesDb(hashedDb).warning(text);
+    return new TestingValueFactory(hashedDb).warningMessage(text);
   }
 
   public static Value infoMessage(HashedDb hashedDb, String text) {
-    return new TestingMessagesDb(hashedDb).info(text);
+    return new TestingValueFactory(hashedDb).infoMessage(text);
   }
 
   public static Struct file(HashedDb hashedDb, Path path) {

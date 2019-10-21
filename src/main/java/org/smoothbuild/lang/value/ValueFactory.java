@@ -1,5 +1,11 @@
 package org.smoothbuild.lang.value;
 
+import static org.smoothbuild.lang.message.Messages.ERROR;
+import static org.smoothbuild.lang.message.Messages.INFO;
+import static org.smoothbuild.lang.message.Messages.SEVERITY;
+import static org.smoothbuild.lang.message.Messages.TEXT;
+import static org.smoothbuild.lang.message.Messages.WARNING;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -32,6 +38,27 @@ public class ValueFactory {
     return structBuilder(types.file())
         .set("content", content)
         .set("path", path)
+        .build();
+  }
+
+  public Struct errorMessage(String text) {
+    return message(ERROR, text);
+  }
+
+  public Struct warningMessage(String text) {
+    return message(WARNING, text);
+  }
+
+  public Struct infoMessage(String text) {
+    return message(INFO, text);
+  }
+
+  private Struct message(String severity, String text) {
+    Value textValue = valuesDb.string(text);
+    Value severityValue = valuesDb.string(severity);
+    return valuesDb.structBuilder(types.message())
+        .set(TEXT, textValue)
+        .set(SEVERITY, severityValue)
         .build();
   }
 
