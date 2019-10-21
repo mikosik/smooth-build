@@ -17,7 +17,7 @@ public class ValueFactoryTest {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
 
   @Test
-  public void testName() throws Exception {
+  public void blob_data_can_be_read_back() throws Exception {
     when(valueFactory.blob(sink -> sink.write(bytes)).source().readByteString());
     thenReturned(bytes);
   }
