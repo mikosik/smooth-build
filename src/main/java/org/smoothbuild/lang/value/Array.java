@@ -32,16 +32,23 @@ public class Array extends AbstractValue {
   }
 
   public <T extends Value> Iterable<T> asIterable(Class<T> clazz) {
-    ConcreteType elemType = type().elemType();
-    Preconditions.checkArgument(clazz.isAssignableFrom(elemType.jType()));
+    assertIsIterableAs(clazz);
     ImmutableList<Value> values = values();
     for (Value value : values) {
-      if (!value.type().equals(elemType)) {
+      if (!value.type().equals(type().elemType())) {
         throw corruptedValueException(hash(), "It is array with type " + type()
             + " but one of its elements has type " + value.type());
       }
     }
     return (ImmutableList<T>) values;
+  }
+
+  private <T extends Value> void assertIsIterableAs(Class<T> clazz) {
+    ConcreteType elemType = type().elemType();
+    if (!(elemType.isNothing() || clazz.isAssignableFrom(elemType.jType()))) {
+      throw new IllegalArgumentException("Array of type " + type().q() + " cannot be iterated as " +
+          Struct.class.getCanonicalName());
+    }
   }
 
   private ImmutableList<Value> values() {
