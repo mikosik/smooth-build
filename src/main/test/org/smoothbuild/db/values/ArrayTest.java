@@ -67,7 +67,7 @@ public class ArrayTest {
   @Test
   public void adding_null_is_forbidden() throws Exception {
     given(arrayBuilder = valuesDb.arrayBuilder(typesDb.string()));
-    when(arrayBuilder).add(sstring);
+    when(arrayBuilder).add(null);
     thenThrown(NullPointerException.class);
   }
 
