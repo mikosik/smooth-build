@@ -6,6 +6,7 @@ import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Parameter;
@@ -17,11 +18,11 @@ import com.google.common.hash.HashCode;
 
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
-  private final Instantiator instantiator;
+  private final ValuesDb valuesDb;
 
   public StructType(HashCode dataHash, TypeType type, String name, Iterable<Field> fields,
-      Instantiator instantiator, HashedDb hashedDb, TypesDb typesDb) {
-    this(dataHash, type, name, fieldsMap(fields), instantiator, hashedDb, typesDb);
+      HashedDb hashedDb, ValuesDb valuesDb) {
+    this(dataHash, type, name, fieldsMap(fields), hashedDb, valuesDb);
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
@@ -29,11 +30,10 @@ public class StructType extends ConcreteType {
   }
 
   private StructType(HashCode dataHash, TypeType type, String name,
-      ImmutableMap<String, Field> fields, Instantiator instantiator, HashedDb hashedDb,
-      TypesDb typesDb) {
-    super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, typesDb);
+      ImmutableMap<String, Field> fields, HashedDb hashedDb, ValuesDb valuesDb) {
+    super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, valuesDb);
     this.fields = checkNotNull(fields);
-    this.instantiator = checkNotNull(instantiator);
+    this.valuesDb = checkNotNull(valuesDb);
   }
 
   private static ConcreteType calculateSuperType(ImmutableMap<String, Field> fields) {
@@ -50,7 +50,7 @@ public class StructType extends ConcreteType {
 
   @Override
   public Struct newValue(HashCode dataHash) {
-    return new Struct(dataHash, this, instantiator, hashedDb);
+    return new Struct(dataHash, this, valuesDb, hashedDb);
   }
 
   public ImmutableMap<String, Field> fields() {

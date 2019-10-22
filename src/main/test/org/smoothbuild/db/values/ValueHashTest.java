@@ -10,7 +10,6 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -23,7 +22,6 @@ import com.google.common.hash.HashCode;
 import okio.ByteString;
 
 public class ValueHashTest {
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Bool bool;
   private SString sstring;
@@ -34,8 +32,7 @@ public class ValueHashTest {
   @Before
   public void before() {
     HashedDb hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
@@ -96,42 +93,42 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_empty_bool_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.bool()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.boolType()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("ddc07c59607a4a56f2d34b6cc8fef9459c51f3f3"));
   }
 
   @Test
   public void hash_of_non_empty_bool_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.bool()).add(valuesDb.bool(true)).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.boolType()).add(valuesDb.bool(true)).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("394b5eddb75a2279b8fcf4ab238d8d0258cdac39"));
   }
 
   @Test
   public void hash_of_empty_string_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.string()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.stringType()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("b2d4a44801204a93da825d1b4db4ef4af2787d82"));
   }
 
   @Test
   public void hash_of_non_empty_string_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.string()).add(valuesDb.string("")).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.stringType()).add(valuesDb.string("")).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("98370fae56927d0832578f133ca73ff1f58fe415"));
   }
 
   @Test
   public void hash_of_empty_blob_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.blob()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.blobType()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("000c25ccefc9fbd916400c36eb99bd2610f507ea"));
   }
 
   @Test
   public void hash_of_non_empty_blob_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.blob()).add(
+    given(array = valuesDb.arrayBuilder(valuesDb.blobType()).add(
         createBlob(valuesDb, ByteString.of())).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("3dd2f9efc115cc922304f91df183bc8359df9ec8"));
@@ -155,7 +152,7 @@ public class ValueHashTest {
 
   @Test
   public void hash_of_empty_nothing_array_is_stable() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.nothing()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.nothingType()).build());
     when(() -> array.hash());
     thenReturned(HashCode.fromString("034da224a1b3f7e2d2702ce8c5dd986f11b9b08a"));
   }
@@ -175,6 +172,6 @@ public class ValueHashTest {
   }
 
   private StructType personType() {
-    return TestingTypes.personType(typesDb);
+    return TestingTypes.personType(valuesDb);
   }
 }

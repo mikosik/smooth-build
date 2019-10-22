@@ -15,7 +15,6 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.TestingTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
@@ -25,7 +24,6 @@ import com.google.common.hash.HashCode;
 
 public class StructTest {
   private HashedDb hashedDb;
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private HashCode hash;
   private SString firstName;
@@ -39,8 +37,7 @@ public class StructTest {
   @Before
   public void before() {
     hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
@@ -57,7 +54,7 @@ public class StructTest {
 
   @Test
   public void setting_field_to_value_of_wrong_type_throws_exception() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.string()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.stringType()).build());
     when(() -> valuesDb.structBuilder(personType()).set("firstName", array));
     thenThrown(IllegalArgumentException.class);
   }
@@ -112,7 +109,7 @@ public class StructTest {
 
   @Test
   public void super_value_is_null_when_struct_type_has_no_fields() throws Exception {
-    given(struct = valuesDb.structBuilder(typesDb.struct("MyStruct", list())).build());
+    given(struct = valuesDb.structBuilder(valuesDb.structType("MyStruct", list())).build());
     when(() -> struct.superValue());
     thenReturned(null);
   }
@@ -235,6 +232,6 @@ public class StructTest {
   }
 
   private StructType personType() {
-    return TestingTypes.personType(typesDb);
+    return TestingTypes.personType(valuesDb);
   }
 }

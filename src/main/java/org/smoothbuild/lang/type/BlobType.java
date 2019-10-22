@@ -3,13 +3,14 @@ package org.smoothbuild.lang.type;
 import static org.smoothbuild.lang.type.TypeNames.BLOB;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Blob;
 
 import com.google.common.hash.HashCode;
 
 public class BlobType extends ConcreteType {
-  protected BlobType(HashCode dataHash, TypeType type, HashedDb hashedDb, TypesDb typesDb) {
-    super(dataHash, type, null, BLOB, Blob.class, hashedDb, typesDb);
+  public BlobType(HashCode dataHash, TypeType type, HashedDb hashedDb, ValuesDb valuesDb) {
+    super(dataHash, type, null, BLOB, Blob.class, hashedDb, valuesDb);
   }
 
   @Override

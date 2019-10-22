@@ -21,10 +21,6 @@ import okio.ByteString;
 public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   protected ConcreteType type;
   protected HashCode hash;
-  private TypeType typeType;
-  private HashCode dataHash;
-  private HashCode fieldListHash;
-  private HashCode fieldHash;
   private HashCode instanceHash;
 
   @Test
@@ -35,10 +31,10 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
      */
     when(() ->
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("String"))));
-    thenReturned(typesDb.string().hash());
+    thenReturned(valuesDb.stringType().hash());
   }
 
   @Test
@@ -51,7 +47,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(
                 hash("Type"))));
-    thenReturned(typesDb.type().hash());
+    thenReturned(valuesDb.typeType().hash());
   }
 
   @Test
@@ -62,19 +58,19 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
      */
     when(() ->
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("Person"),
                 hash(
                     hash(
                         hash("firstName"),
-                        hash(typesDb.string())
+                        hash(valuesDb.stringType())
                     ),
                     hash(
                         hash("lastName"),
-                        hash(typesDb.string()))
+                        hash(valuesDb.stringType()))
                 ))));
-    thenReturned(personType(typesDb).hash());
+    thenReturned(personType(valuesDb).hash());
   }
 
   // testing Merkle tree of type root node
@@ -83,12 +79,12 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   public void merkle_root_with_three_children_causes_exception() throws Exception {
     given(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("String")),
             hash("corrupted")
         ));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(
         exception(corruptedValueException(instanceHash, "Its Merkle tree root has 3 children.")));
   }
@@ -101,9 +97,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash("corrupted"),
             hash(
                 hash("String"))));
-    when(() -> typesDb.read(instanceHash));
-    thenThrown(exception(corruptedValueException(instanceHash, "Expected value which is instance" +
-        " of 'Type' but its Merkle tree's first child is not Type type.")));
+    when(() -> valuesDb.get(instanceHash));
+    thenThrown(ValuesDbException.class);
   }
 
   @Test
@@ -112,7 +107,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(
                 hash("String"))));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(brokenTypeTypeException(instanceHash)));
   }
 
@@ -122,7 +117,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(
                 hash("TypeX"))));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(brokenTypeTypeException(instanceHash)));
   }
 
@@ -133,10 +128,10 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
       throws Exception {
     when(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash(ByteString.of((byte) -64)))));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash,
         "It is an instance of a Type which name cannot be decoded using UTF-8 encoding.")));
   }
@@ -146,19 +141,19 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
       Exception {
     when(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("Person"),
                 hash(
                     hash(
                         hash("firstName"),
-                        hash(typesDb.string())
+                        hash(valuesDb.stringType())
                     ),
                     hash(
                         hash(ByteString.of((byte) -64)),
-                        hash(typesDb.string()))
+                        hash(valuesDb.stringType()))
                 ))));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash, "It is an instance of a struct " +
         "Type which field name cannot be decoded using UTF-8 encoding.")));
   }
@@ -192,11 +187,11 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   private void doTestCorruptedBasicType(String typeName) throws IOException {
     when(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash(typeName),
                 hash("corrupted"))));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash,
         "It is " + typeName + " type but its Merkle tree has unnecessary children.")));
   }
@@ -206,21 +201,21 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
       throws Exception {
     when(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("Person"),
                 hash(
                     hash(
                         hash("firstName"),
-                        hash(typesDb.string())
+                        hash(valuesDb.stringType())
                     ),
                     hash(
                         hash("lastName"),
-                        hash(typesDb.string()))
+                        hash(valuesDb.stringType()))
                 ),
                 hash("corrupted"))
         ));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash,
         "It is struct type but its Merkle tree has unnecessary children.")));
   }
@@ -230,18 +225,18 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
       throws Exception {
     when(instanceHash =
         hash(
-            hash(typesDb.type()),
+            hash(valuesDb.typeType()),
             hash(
                 hash("Person"),
                 hash(
                     hash(
                         hash("firstName"),
-                        hash(typesDb.string()),
+                        hash(valuesDb.stringType()),
                         hash("corrupted")
                     )
                 ))
         ));
-    when(() -> typesDb.read(instanceHash));
+    when(() -> valuesDb.get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash,
         "It is struct type but one of its field hashes doesn't have two children but 3.")));
   }

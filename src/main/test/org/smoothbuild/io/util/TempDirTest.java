@@ -21,7 +21,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
@@ -39,7 +38,6 @@ public class TempDirTest {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private final Path rootPath = path("fake/path");
 
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private TestingRuntimeTypes types;
   private ValueFactory valueFactory;
@@ -50,12 +48,11 @@ public class TempDirTest {
   @Before
   public void before() {
     HashedDb hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
-    types = new TestingRuntimeTypes(typesDb);
+    valuesDb = new ValuesDb(hashedDb);
+    types = new TestingRuntimeTypes(valuesDb);
     valueFactory = new TestingValueFactory(types, valuesDb);
     fileSystem = new MemoryFileSystem();
-    Container container = new TestingContainer(fileSystem, typesDb, valuesDb);
+    Container container = new TestingContainer(fileSystem, types, valuesDb);
     tempDir = new TempDir(container, fileSystem, rootPath);
   }
 

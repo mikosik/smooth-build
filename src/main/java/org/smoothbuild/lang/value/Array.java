@@ -9,20 +9,20 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.Instantiator;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.hash.HashCode;
 
 public class Array extends AbstractValue {
-  private final Instantiator instantiator;
+  private final ValuesDb valuesDb;
 
-  public Array(HashCode dataHash, ConcreteArrayType arrayType, Instantiator instantiator,
+  public Array(HashCode dataHash, ConcreteArrayType arrayType, ValuesDb valuesDb,
       HashedDb hashedDb) {
     super(dataHash, arrayType, hashedDb);
-    this.instantiator = instantiator;
+    this.valuesDb = valuesDb;
   }
 
   @Override
@@ -55,7 +55,7 @@ public class Array extends AbstractValue {
       return hashedDb
           .readHashes(dataHash())
           .stream()
-          .map(instantiator::instantiate)
+          .map(valuesDb::get)
           .collect(toImmutableList());
     } catch (EOFException e) {
       throw corruptedValueException(hash(),

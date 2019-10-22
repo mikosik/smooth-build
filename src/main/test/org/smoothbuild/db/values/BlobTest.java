@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 
@@ -24,7 +23,6 @@ public class BlobTest {
   private final ByteString bytes = ByteString.encodeUtf8("aaa");
   private final ByteString otherBytes = ByteString.encodeUtf8("bbb");
   private HashedDb hashedDb;
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private BlobBuilder blobBuilder;
   private Blob blob;
@@ -34,8 +32,7 @@ public class BlobTest {
   @Before
   public void before() {
     hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
@@ -50,7 +47,7 @@ public class BlobTest {
   public void type_of_blob_is_blob() throws Exception {
     given(blob = createBlob(valuesDb, bytes));
     when(blob).type();
-    thenReturned(typesDb.blob());
+    thenReturned(valuesDb.blobType());
   }
 
   @Test
@@ -149,7 +146,7 @@ public class BlobTest {
   @Test
   public void reading_not_stored_blob_fails() {
     given(hash = HashCode.fromInt(33));
-    given(blob = typesDb.blob().newValue(hash));
+    given(blob = valuesDb.blobType().newValue(hash));
     when(() -> blob.source());
     thenThrown(exception(new NoSuchDataException(hash)));
   }

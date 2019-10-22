@@ -10,14 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.SString;
 
 import com.google.common.hash.HashCode;
 
 public class SStringTest {
   private HashedDb hashedDb;
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private SString sstring;
   private final String string = "my string";
@@ -27,15 +25,14 @@ public class SStringTest {
   @Before
   public void before() {
     hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
   public void type_of_sstring_is_sstring() throws Exception {
     given(sstring = valuesDb.string(string));
     when(sstring).type();
-    thenReturned(typesDb.string());
+    thenReturned(valuesDb.stringType());
   }
 
   @Test
@@ -118,7 +115,7 @@ public class SStringTest {
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(sstring = typesDb.string().newValue(hash));
+    given(sstring = valuesDb.stringType().newValue(hash));
     when(sstring).data();
     thenThrown(ValuesDbException.class);
   }

@@ -19,7 +19,6 @@ import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
@@ -38,7 +37,6 @@ import okio.ByteString;
 public class OutputsDbTest {
   private HashedDb hashedDbValues;
   private HashedDb hashedDbOutputs;
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private TestingRuntimeTypes types;
   private ValueFactory valueFactory;
@@ -61,9 +59,8 @@ public class OutputsDbTest {
   public void before() {
     hashedDbValues = new TestingHashedDb();
     hashedDbOutputs = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDbValues);
-    valuesDb = new ValuesDb(hashedDbValues, typesDb);
-    types = new TestingRuntimeTypes(typesDb);
+    valuesDb = new ValuesDb(hashedDbValues);
+    types = new TestingRuntimeTypes(valuesDb);
     valueFactory = new TestingValueFactory(types, valuesDb);
     outputsDb = new OutputsDb(hashedDbOutputs, valuesDb, types);
   }
@@ -83,7 +80,7 @@ public class OutputsDbTest {
 
   @Test
   public void reading_not_written_value_fails() {
-    when(outputsDb).read(hash, typesDb.string());
+    when(outputsDb).read(hash, valuesDb.stringType());
     thenThrown(OutputsDbException.class);
   }
 
@@ -93,7 +90,7 @@ public class OutputsDbTest {
     given(message = errorMessage(hashedDbValues, "error message"));
     given(messages = array(hashedDbValues, message));
     given(outputsDb).write(hash, new Output(stringValue, messages));
-    when(outputsDb.read(hash, typesDb.string()).messages());
+    when(outputsDb.read(hash, valuesDb.stringType()).messages());
     thenReturned(messages);
   }
 
@@ -102,7 +99,7 @@ public class OutputsDbTest {
     given(file = file(valueFactory, path, bytes));
     given(array = valuesDb.arrayBuilder(types.file()).add(file).build());
     given(outputsDb).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb.read(hash, typesDb.array(types.file())).result())
+    when(((Array) outputsDb.read(hash, valuesDb.arrayType(types.file())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -110,9 +107,9 @@ public class OutputsDbTest {
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
-    given(array = valuesDb.arrayBuilder(typesDb.blob()).add(blob).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.blobType()).add(blob).build());
     given(outputsDb).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb.read(hash, typesDb.array(typesDb.blob())).result())
+    when(((Array) outputsDb.read(hash, valuesDb.arrayType(valuesDb.blobType())).result())
         .asIterable(Blob.class).iterator().next());
     thenReturned(blob);
   }
@@ -120,9 +117,9 @@ public class OutputsDbTest {
   @Test
   public void written_bool_array_can_be_read_back() {
     given(boolValue = valuesDb.bool(true));
-    given(array = valuesDb.arrayBuilder(typesDb.bool()).add(boolValue).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.boolType()).add(boolValue).build());
     given(outputsDb).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb.read(hash, typesDb.array(typesDb.bool())).result())
+    when(((Array) outputsDb.read(hash, valuesDb.arrayType(valuesDb.boolType())).result())
         .asIterable(Bool.class).iterator().next());
     thenReturned(boolValue);
   }
@@ -130,9 +127,9 @@ public class OutputsDbTest {
   @Test
   public void written_string_array_can_be_read_back() {
     given(stringValue = valuesDb.string(string));
-    given(array = valuesDb.arrayBuilder(typesDb.string()).add(stringValue).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.stringType()).add(stringValue).build());
     given(outputsDb).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb.read(hash, typesDb.array(typesDb.string())).result())
+    when(((Array) outputsDb.read(hash, valuesDb.arrayType(valuesDb.stringType())).result())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
   }
@@ -149,7 +146,7 @@ public class OutputsDbTest {
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = writeBlob(valuesDb, bytes));
     given(outputsDb).write(hash, new Output(blob, emptyMessageArray()));
-    when(outputsDb.read(hash, typesDb.blob()).result());
+    when(outputsDb.read(hash, valuesDb.blobType()).result());
     thenReturned(blob);
   }
 
@@ -157,7 +154,7 @@ public class OutputsDbTest {
   public void written_bool_can_be_read_back() {
     given(boolValue = valuesDb.bool(true));
     given(outputsDb).write(hash, new Output(boolValue, emptyMessageArray()));
-    when(((Bool) outputsDb.read(hash, typesDb.bool()).result()).data());
+    when(((Bool) outputsDb.read(hash, valuesDb.boolType()).result()).data());
     thenReturned(true);
   }
 
@@ -165,7 +162,7 @@ public class OutputsDbTest {
   public void written_string_can_be_read_back() {
     given(stringValue = valuesDb.string(string));
     given(outputsDb).write(hash, new Output(stringValue, emptyMessageArray()));
-    when(((SString) outputsDb.read(hash, typesDb.string()).result()).data());
+    when(((SString) outputsDb.read(hash, valuesDb.stringType()).result()).data());
     thenReturned(string);
   }
 

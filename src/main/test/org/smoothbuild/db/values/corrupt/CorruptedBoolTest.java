@@ -32,7 +32,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   private void run_learning_test(boolean value) throws IOException {
     given(instanceHash =
         hash(
-            hash(typesDb.bool()),
+            hash(valuesDb.boolType()),
             hash(value)));
     when(() -> ((Bool) valuesDb.get(instanceHash)).data());
     thenReturned(value);
@@ -42,7 +42,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   public void bool_with_empty_bytes_as_data_is_corrupted() throws Exception {
     given(instanceHash =
         hash(
-            hash(typesDb.bool()),
+            hash(valuesDb.boolType()),
             hash(ByteString.of())));
     when(() -> ((Bool) valuesDb.get(instanceHash)).data());
     thenThrown(exception(corruptedValueException(instanceHash,
@@ -53,7 +53,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   public void bool_with_more_than_one_byte_as_data_is_corrupted() throws Exception {
     given(instanceHash =
         hash(
-            hash(typesDb.bool()),
+            hash(valuesDb.boolType()),
             hash(ByteString.of((byte) 0, (byte) 0))));
     when(() -> ((Bool) valuesDb.get(instanceHash)).data());
     thenThrown(exception(corruptedValueException(instanceHash,
@@ -73,7 +73,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
       IOException {
     given(instanceHash =
         hash(
-            hash(typesDb.bool()),
+            hash(valuesDb.boolType()),
             hash(ByteString.of((value)))));
     when(() -> ((Bool) valuesDb.get(instanceHash)).data());
     thenThrown(exception(corruptedValueException(instanceHash,

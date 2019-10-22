@@ -87,6 +87,6 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
   }
 
   private StructType personType() {
-    return TestingTypes.personType(typesDb);
+    return TestingTypes.personType(valuesDb);
   }
 }

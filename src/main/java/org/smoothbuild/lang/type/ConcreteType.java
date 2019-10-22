@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.AbstractValue;
 import org.smoothbuild.lang.value.Value;
 
@@ -15,22 +16,22 @@ import com.google.common.hash.HashCode;
 public abstract class ConcreteType extends AbstractType implements Value {
   private final AbstractValue value;
   protected final HashedDb hashedDb;
-  private final TypesDb typesDb;
+  private final ValuesDb valuesDb;
 
   protected ConcreteType(HashCode dataHash, TypeType type, ConcreteType superType, String name,
-      Class<? extends Value> jType, HashedDb hashedDb, TypesDb typesDb) {
+      Class<? extends Value> jType, HashedDb hashedDb, ValuesDb valuesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(dataHash, type, hashedDb) {};
     this.hashedDb = hashedDb;
-    this.typesDb = typesDb;
+    this.valuesDb = valuesDb;
   }
 
   protected ConcreteType(HashCode hash, HashCode dataHash, TypeType type, ConcreteType superType,
-      String name, Class<? extends Value> jType, HashedDb hashedDb, TypesDb typesDb) {
+      String name, Class<? extends Value> jType, HashedDb hashedDb, ValuesDb valuesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(hash, dataHash, type, hashedDb) {};
     this.hashedDb = hashedDb;
-    this.typesDb = typesDb;
+    this.valuesDb = valuesDb;
   }
 
   public abstract Value newValue(HashCode dataHash);
@@ -53,7 +54,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
     }
     ConcreteType result = this;
     for (int i = 0; i < delta; i++) {
-      result = typesDb.array(result);
+      result = valuesDb.arrayType(result);
     }
     return result;
   }

@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
@@ -21,25 +22,24 @@ import org.smoothbuild.lang.type.GenericType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.lang.type.TypeNames;
-import org.smoothbuild.lang.type.TypesDb;
 
 @Singleton
 public class RuntimeTypes implements Types {
-  private final TypesDb typesDb;
+  private final ValuesDb valuesDb;
   private final Map<String, ConcreteType> cache;
 
   @Inject
-  public RuntimeTypes(TypesDb typesDb) {
-    this.typesDb = typesDb;
-    this.cache = createInitializedCache(typesDb);
+  public RuntimeTypes(ValuesDb valuesDb) {
+    this.valuesDb = valuesDb;
+    this.cache = createInitializedCache(valuesDb);
   }
 
-  private static HashMap<String, ConcreteType> createInitializedCache(TypesDb typesDb) {
+  private static HashMap<String, ConcreteType> createInitializedCache(ValuesDb valuesDb) {
     HashMap<String, ConcreteType> map = new HashMap<>();
-    putType(map, typesDb.bool());
-    putType(map, typesDb.string());
-    putType(map, typesDb.blob());
-    putType(map, typesDb.nothing());
+    putType(map, valuesDb.boolType());
+    putType(map, valuesDb.stringType());
+    putType(map, valuesDb.blobType());
+    putType(map, valuesDb.nothingType());
     return map;
   }
 
@@ -57,22 +57,22 @@ public class RuntimeTypes implements Types {
 
   @Override
   public ConcreteType bool() {
-    return typesDb.bool();
+    return valuesDb.boolType();
   }
 
   @Override
   public ConcreteType string() {
-    return typesDb.string();
+    return valuesDb.stringType();
   }
 
   @Override
   public ConcreteType blob() {
-    return typesDb.blob();
+    return valuesDb.blobType();
   }
 
   @Override
   public ConcreteType nothing() {
-    return typesDb.nothing();
+    return valuesDb.nothingType();
   }
 
   @Override
@@ -95,7 +95,7 @@ public class RuntimeTypes implements Types {
   }
 
   public ConcreteArrayType array(ConcreteType elementType) {
-    return typesDb.array(elementType);
+    return valuesDb.arrayType(elementType);
   }
 
   public GenericArrayType array(GenericType elementType) {
@@ -119,7 +119,7 @@ public class RuntimeTypes implements Types {
     if (cache.containsKey(name)) {
       throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
     }
-    StructType type = typesDb.struct(name, fields);
+    StructType type = valuesDb.structType(name, fields);
     cache.put(name, type);
     return type;
   }
