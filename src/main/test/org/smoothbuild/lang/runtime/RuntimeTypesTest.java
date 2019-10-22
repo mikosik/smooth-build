@@ -16,18 +16,18 @@ import org.junit.runner.RunWith;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.GenericArrayType;
 import org.smoothbuild.lang.type.GenericType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypesDb;
 
 @RunWith(QuackeryRunner.class)
 public class RuntimeTypesTest {
   private HashedDb hashedDb;
-  private TypesDb typesDb;
+  private ValuesDb valuesDb;
   private RuntimeTypes runtimeTypes;
   private StructType type;
   private ArrayType arrayType;
@@ -36,8 +36,8 @@ public class RuntimeTypesTest {
   @Before
   public void before() {
     given(hashedDb = new TestingHashedDb());
-    given(typesDb = new TypesDb(hashedDb));
-    given(runtimeTypes = new RuntimeTypes(typesDb));
+    given(valuesDb = new ValuesDb(hashedDb));
+    given(runtimeTypes = new RuntimeTypes(valuesDb));
   }
 
   @Test
@@ -50,10 +50,10 @@ public class RuntimeTypesTest {
   public void names_returns_all_basic_types_initially() throws Exception {
     when(() -> runtimeTypes.names());
     thenReturned(set(
-        typesDb.bool().name(),
-        typesDb.string().name(),
-        typesDb.blob().name(),
-        typesDb.nothing().name()));
+        valuesDb.boolType().name(),
+        valuesDb.stringType().name(),
+        valuesDb.blobType().name(),
+        valuesDb.nothingType().name()));
   }
 
   @Test
@@ -80,10 +80,10 @@ public class RuntimeTypesTest {
   public void name_to_type_map_contains_basic_types_initially() throws Exception {
     when(() -> runtimeTypes.nameToTypeMap().keySet());
     thenReturned(set(
-        typesDb.bool().name(),
-        typesDb.string().name(),
-        typesDb.blob().name(),
-        typesDb.nothing().name()));
+        valuesDb.boolType().name(),
+        valuesDb.stringType().name(),
+        valuesDb.blobType().name(),
+        valuesDb.nothingType().name()));
   }
 
   @Test
@@ -96,25 +96,25 @@ public class RuntimeTypesTest {
   @Test
   public void bool_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("Bool"));
-    thenReturned(typesDb.bool());
+    thenReturned(valuesDb.boolType());
   }
 
   @Test
   public void string_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("String"));
-    thenReturned(typesDb.string());
+    thenReturned(valuesDb.stringType());
   }
 
   @Test
   public void blob_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("Blob"));
-    thenReturned(typesDb.blob());
+    thenReturned(valuesDb.blobType());
   }
 
   @Test
   public void nothing_type_can_be_retrieved_by_name() throws Exception {
     when(() -> runtimeTypes.getType("Nothing"));
-    thenReturned(typesDb.nothing());
+    thenReturned(valuesDb.nothingType());
   }
 
   @Test
@@ -126,7 +126,7 @@ public class RuntimeTypesTest {
   @Test
   public void custom_struct_type_can_be_retrieved_by_name() throws Exception {
     given(type = runtimeTypes.struct(
-        "MyStruct", list(new Field(typesDb.string(), "field", unknownLocation()))));
+        "MyStruct", list(new Field(valuesDb.stringType(), "field", unknownLocation()))));
     when(() -> runtimeTypes.getType("MyStruct"));
     thenReturned(type);
   }
@@ -141,7 +141,7 @@ public class RuntimeTypesTest {
   @Test
   public void reusing_struct_name_causes_exception() throws Exception {
     given(type = runtimeTypes.struct(
-        "MyStruct", list(new Field(typesDb.string(), "field", unknownLocation()))));
+        "MyStruct", list(new Field(valuesDb.stringType(), "field", unknownLocation()))));
     when(() -> runtimeTypes.struct("MyStruct", list()));
     thenThrown(IllegalStateException.class);
   }

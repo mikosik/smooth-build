@@ -21,7 +21,6 @@ import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.lang.value.ValueFactory;
@@ -37,9 +36,8 @@ public class ContainerTest {
   @Before
   public void before() {
     HashedDb hashedDb = new TestingHashedDb();
-    TypesDb typesDb = new TypesDb(hashedDb);
-    ValuesDb valuesDb = new ValuesDb(hashedDb, typesDb);
-    TestingRuntimeTypes types = new TestingRuntimeTypes(typesDb);
+    ValuesDb valuesDb = new ValuesDb(hashedDb);
+    TestingRuntimeTypes types = new TestingRuntimeTypes(valuesDb);
     ValueFactory valueFactory = new ValueFactory(types, valuesDb);
     container = new Container(fileSystem, valueFactory, types, tempDirProvider);
   }

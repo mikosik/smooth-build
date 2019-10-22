@@ -10,14 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Bool;
 
 import com.google.common.hash.HashCode;
 
 public class BoolTest {
   private HashedDb hashedDb;
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Bool bool;
   private HashCode hash;
@@ -25,15 +23,14 @@ public class BoolTest {
   @Before
   public void before() {
     hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
   public void type_of_bool_is_bool() throws Exception {
     given(bool = valuesDb.bool(true));
     when(bool).type();
-    thenReturned(typesDb.bool());
+    thenReturned(valuesDb.boolType());
   }
 
   @Test
@@ -130,7 +127,7 @@ public class BoolTest {
   @Test
   public void reading_not_stored_bool_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(bool = typesDb.bool().newValue(hash));
+    given(bool = valuesDb.boolType().newValue(hash));
     when(bool).data();
     thenThrown(ValuesDbException.class);
   }

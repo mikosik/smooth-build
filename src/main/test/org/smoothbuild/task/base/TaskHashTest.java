@@ -24,13 +24,11 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.hash.HashCode;
 
 public class TaskHashTest {
   private final Location location = Location.location(Paths.get("script.smooth"), 2);
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Evaluator evaluator;
   private Evaluator evaluator2;
@@ -44,8 +42,7 @@ public class TaskHashTest {
   @Before
   public void before() {
     HashedDb hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
@@ -111,8 +108,8 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(typesDb.array(typesDb.string()), list(), location),
-        list(), Hash.integer(13)));
+    given(task = new Task(arrayEvaluator(
+        valuesDb.arrayType(valuesDb.stringType()), list(), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
     thenReturned(HashCode.fromString("d20343333435effc353d96a8704cd929f7c39498"));
@@ -120,8 +117,8 @@ public class TaskHashTest {
 
   @Test
   public void hash_of_task_with_array_evaluator_and_non_empty_input_is_stable() throws Exception {
-    given(task = new Task(arrayEvaluator(typesDb.array(typesDb.string()), list(), location),
-        list(), Hash.integer(13)));
+    given(task = new Task(arrayEvaluator(
+        valuesDb.arrayType(valuesDb.stringType()), list(), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> task.hash(input));
     thenReturned(HashCode.fromString("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
@@ -132,8 +129,8 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(typesDb.string(), nativeFunction, list(), location),
-        list(), Hash.integer(13)));
+    given(task = new Task(nativeCallEvaluator(
+        valuesDb.stringType(), nativeFunction, list(), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
     thenReturned(HashCode.fromString("63979b8de96889ef68be5dd7132f03a2bc9f7700"));
@@ -145,8 +142,8 @@ public class TaskHashTest {
     given(nativeFunction = mock(NativeFunction.class));
     given(willReturn(HashCode.fromInt(33)), nativeFunction).hash();
     given(willReturn("name"), nativeFunction).name();
-    given(task = new Task(nativeCallEvaluator(typesDb.string(), nativeFunction, list(), location),
-        list(), Hash.integer(13)));
+    given(task = new Task(nativeCallEvaluator(
+        valuesDb.stringType(), nativeFunction, list(), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"), valuesDb.string("def"))));
     when(() -> task.hash(input));
     thenReturned(HashCode.fromString("b32335ae8152db72fe6b39789ca81d2b17cd7891"));
@@ -155,9 +152,9 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_call_evaluator_and_one_element_input_is_stable() throws Exception {
     given(definedFunction = mock(DefinedFunction.class));
-    given(willReturn(typesDb.string()), definedFunction).type();
+    given(willReturn(valuesDb.stringType()), definedFunction).type();
     given(willReturn("name"), definedFunction).name();
-    given(task = new Task(identityEvaluator(typesDb.string(), definedFunction.name(), false,
+    given(task = new Task(identityEvaluator(valuesDb.stringType(), definedFunction.name(), false,
         mock(Evaluator.class), location), list(), Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> task.hash(input));
@@ -167,7 +164,7 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_convert_from_nothing_evaluator_and_empty_input_is_stable()
       throws Exception {
-    given(task = new Task(convertEvaluator(typesDb.string(), list(), location), list(),
+    given(task = new Task(convertEvaluator(valuesDb.stringType(), list(), location), list(),
         Hash.integer(13)));
     given(input = Input.fromValues(list()));
     when(() -> task.hash(input));
@@ -177,7 +174,7 @@ public class TaskHashTest {
   @Test
   public void hash_of_task_with_convert_from_nothing_evaluator_and_one_element_input_is_stable()
       throws Exception {
-    given(task = new Task(convertEvaluator(typesDb.string(), list(), location), list(),
+    given(task = new Task(convertEvaluator(valuesDb.stringType(), list(), location), list(),
         Hash.integer(13)));
     given(input = Input.fromValues(list(valuesDb.string("abc"))));
     when(() -> task.hash(input));

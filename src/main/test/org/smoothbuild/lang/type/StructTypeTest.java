@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.value.Value;
 
@@ -24,59 +25,59 @@ public class StructTypeTest extends AbstractTypeTestCase {
   private List<Field> fields;
 
   @Override
-  protected ConcreteType getType(TypesDb typesDb) {
-    return typesDb.struct("Struct", fields(typesDb.string(), typesDb.string()));
+  protected ConcreteType getType(ValuesDb valuesDb) {
+    return valuesDb.structType("Struct", fields(valuesDb.stringType(), valuesDb.stringType()));
   }
 
   @Test
   public void struct_type_without_fields_can_be_created() throws Exception {
-    when(() -> typesDb.struct("Struct", list()));
+    when(() -> valuesDb.structType("Struct", list()));
     thenReturned();
   }
 
   @Test
   public void first_field_type_cannot_be_nothing() throws Exception {
-    when(() -> typesDb.struct("Struct", fields(typesDb.nothing())));
+    when(() -> valuesDb.structType("Struct", fields(valuesDb.nothingType())));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_nothing_array() throws Exception {
-    when(() -> typesDb.struct("Struct", fields(typesDb.array(typesDb.nothing()))));
+    when(() -> valuesDb.structType("Struct", fields(valuesDb.arrayType(valuesDb.nothingType()))));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_array() throws Exception {
-    when(() -> typesDb.struct("Struct", fields(typesDb.array(typesDb.string()))));
+    when(() -> valuesDb.structType("Struct", fields(valuesDb.arrayType(valuesDb.stringType()))));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void struct_type_with_different_field_order_has_different_hash() throws Exception {
-    given(fields = fields(typesDb.string(), typesDb.string()));
-    given(type = typesDb.struct("Struct", fields));
-    given(type2 = typesDb.struct("Struct", Lists.reverse(fields)));
+    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
+    given(type = valuesDb.structType("Struct", fields));
+    given(type2 = valuesDb.structType("Struct", Lists.reverse(fields)));
     when(() -> type.hash());
     thenReturned(not(equalTo(type2.hash())));
   }
 
   @Test
   public void two_level_deep_struct_type_can_be_read_back() throws Exception {
-    given(fields = fields(typesDb.string(), typesDb.string()));
-    given(type = typesDb.struct("TypeName", fields));
-    given(fields = fields(typesDb.string(), type));
-    given(type = typesDb.struct("TypeName2", fields));
-    when(() -> new TypesDb(hashedDb).read(type.hash()));
+    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
+    given(type = valuesDb.structType("TypeName", fields));
+    given(fields = fields(valuesDb.stringType(), type));
+    given(type = valuesDb.structType("TypeName2", fields));
+    when(() -> new ValuesDb(hashedDb).get(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 
   @Test
   public void creating_two_different_structs_with_same_name_is_possible() throws Exception {
-    given(fields = fields(typesDb.string()));
-    given(type = typesDb.struct("MyStruct", fields));
-    given(fields = fields(typesDb.string(), typesDb.string()));
-    given(type2 = typesDb.struct("MyStruct", fields));
+    given(fields = fields(valuesDb.stringType()));
+    given(type = valuesDb.structType("MyStruct", fields));
+    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
+    given(type2 = valuesDb.structType("MyStruct", fields));
     when(() -> type.hash());
     thenReturned(not(type2.hash()));
   }

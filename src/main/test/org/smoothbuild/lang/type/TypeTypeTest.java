@@ -1,8 +1,10 @@
 package org.smoothbuild.lang.type;
 
+import org.smoothbuild.db.values.ValuesDb;
+
 public class TypeTypeTest extends AbstractTypeTestCase {
   @Override
-  protected ConcreteType getType(TypesDb typesDb) {
-    return typesDb.type();
+  protected ConcreteType getType(ValuesDb valuesDb) {
+    return valuesDb.typeType();
   }
 }

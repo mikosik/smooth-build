@@ -9,14 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.TestingHashedDb;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Bool;
 
 import com.google.common.hash.HashCode;
 
 public class BoolArrayTtest {
-  private TypesDb typesDb;
   private ValuesDb valuesDb;
   private Array array;
   private HashCode hash;
@@ -24,21 +22,20 @@ public class BoolArrayTtest {
   @Before
   public void before() {
     HashedDb hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   @Test
   public void type_of_bool_array_is_bool_array() throws Exception {
-    given(array = valuesDb.arrayBuilder(typesDb.bool()).build());
+    given(array = valuesDb.arrayBuilder(valuesDb.boolType()).build());
     when(array.type());
-    thenReturned(typesDb.array(typesDb.bool()));
+    thenReturned(valuesDb.arrayType(valuesDb.boolType()));
   }
 
   @Test
   public void reading_elements_from_not_stored_bool_array_fails() throws Exception {
     given(hash = HashCode.fromInt(33));
-    given(array = typesDb.array(typesDb.bool()).newValue(hash));
+    given(array = valuesDb.arrayType(valuesDb.boolType()).newValue(hash));
     when(array).asIterable(Bool.class);
     thenThrown(ValuesDbException.class);
   }

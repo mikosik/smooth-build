@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.type.Instantiator;
 import org.smoothbuild.lang.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
@@ -19,11 +19,11 @@ import com.google.common.hash.HashCode;
 
 public class Struct extends AbstractValue {
   private ImmutableMap<String, Value> fields;
-  private final Instantiator instantiator;
+  private final ValuesDb valuesDb;
 
-  public Struct(HashCode dataHash, StructType type, Instantiator instantiator, HashedDb hashedDb) {
+  public Struct(HashCode dataHash, StructType type, ValuesDb valuesDb, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
-    this.instantiator = instantiator;
+    this.valuesDb = valuesDb;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class Struct extends AbstractValue {
       int i = 0;
       Builder<String, Value> builder = ImmutableMap.builder();
       for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
-        Value value = instantiator.instantiate(hashes.get(i));
+        Value value = valuesDb.get(hashes.get(i));
         if (!entry.getValue().type().equals(value.type())) {
           throw corruptedValueException(hash(), "Its type specifies field '" + entry.getKey()
               + "' with type " + entry.getValue().type() + " but its data has value of type "

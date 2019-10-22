@@ -12,7 +12,6 @@ import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.runtime.TestingRuntimeTypes;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TypesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
@@ -45,7 +44,7 @@ public class ValueCreators {
 
   public static Array emptyMessageArray() {
     TestingHashedDb hashedDb = new TestingHashedDb();
-    TestingRuntimeTypes testingRuntimeTypes = new TestingRuntimeTypes(new TypesDb(hashedDb));
+    TestingRuntimeTypes testingRuntimeTypes = new TestingRuntimeTypes(new ValuesDb(hashedDb));
     return array(hashedDb, testingRuntimeTypes.message());
   }
 

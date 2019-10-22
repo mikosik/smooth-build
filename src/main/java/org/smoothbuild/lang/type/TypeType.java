@@ -5,16 +5,17 @@ import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.values.ValuesDb;
 
 import com.google.common.hash.HashCode;
 
 public class TypeType extends ConcreteType {
-  private final TypesDb typesDb;
+  private final ValuesDb valuesDb;
 
-  protected TypeType(HashCode dataHash, TypesDb typesDb, HashedDb hashedDb) {
+  public TypeType(HashCode dataHash, ValuesDb valuesDb, HashedDb hashedDb) {
     super(writeHashes(hashedDb, dataHash), dataHash, null, null, "Type", ConcreteType.class,
-        hashedDb, typesDb);
-    this.typesDb = typesDb;
+        hashedDb, valuesDb);
+    this.valuesDb = valuesDb;
   }
 
   private static HashCode writeHashes(HashedDb hashedDb, HashCode dataHash) {
@@ -33,7 +34,7 @@ public class TypeType extends ConcreteType {
   @Override
   public ConcreteType newValue(HashCode dataHash) {
     try {
-      return typesDb.readFromDataHash(dataHash, hash());
+      return valuesDb.readFromDataHash(dataHash, hash());
     } catch (IOException e) {
       throw valuesDbException(e);
     }

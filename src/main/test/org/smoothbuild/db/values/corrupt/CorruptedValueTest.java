@@ -28,7 +28,7 @@ public class CorruptedValueTest extends AbstractCorruptedTestCase {
      */
     given(instanceHash =
         hash(
-            hash(typesDb.string()),
+            hash(valuesDb.stringType()),
             hash("aaa")));
     when(() -> ((SString) valuesDb.get(instanceHash)).data());
     thenReturned("aaa");

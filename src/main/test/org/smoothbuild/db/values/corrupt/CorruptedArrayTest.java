@@ -13,11 +13,9 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.values.ValuesDbException;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.testing.common.ExceptionMatcher;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.hash.HashCode;
@@ -35,14 +33,14 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
      */
     given(instanceHash =
         hash(
-            hash(typesDb.array(typesDb.string())),
+            hash(valuesDb.arrayType(valuesDb.stringType())),
             hash(
                 hash(
-                    hash(typesDb.string()),
+                    hash(valuesDb.stringType()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(typesDb.string()),
+                    hash(valuesDb.stringType()),
                     hash("bbb")
                 )
             )));
@@ -67,7 +65,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
       int byteCount) throws IOException {
     given(instanceHash =
         hash(
-            hash(typesDb.array(typesDb.string())),
+            hash(valuesDb.arrayType(valuesDb.stringType())),
             hash(ByteString.of(new byte[byteCount]))
         ));
     ;
@@ -80,14 +78,14 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   public void array_with_one_element_of_wrong_type_is_corrupted() throws IOException {
     given(instanceHash =
         hash(
-            hash(typesDb.array(typesDb.string())),
+            hash(valuesDb.arrayType(valuesDb.stringType())),
             hash(
                 hash(
-                    hash(typesDb.string()),
+                    hash(valuesDb.stringType()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(typesDb.bool()),
+                    hash(valuesDb.boolType()),
                     hash(true)
                 )
             )));

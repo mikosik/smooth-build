@@ -25,7 +25,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
      */
     given(instanceHash =
         hash(
-            hash(typesDb.string()),
+            hash(valuesDb.stringType()),
             hash("aaa")));
     when(() -> ((SString) valuesDb.get(instanceHash)).data());
     thenReturned("aaa");
@@ -35,7 +35,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
   public void string_with_data_being_invalid_utf8_sequence_is_corrupted() throws Exception {
     given(instanceHash =
         hash(
-            hash(typesDb.string()),
+            hash(valuesDb.stringType()),
             hash(ByteString.of((byte) -64))));
     when(() -> ((SString) valuesDb.get(instanceHash)).data());
     thenThrown(exception(corruptedValueException(instanceHash,

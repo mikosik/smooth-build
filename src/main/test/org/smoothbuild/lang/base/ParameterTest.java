@@ -7,12 +7,12 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TestingTypesDb;
 
 public class ParameterTest {
-  private final ConcreteType string = new TestingTypesDb().string();
+  private final ConcreteType string = new TestingValuesDb().stringType();
   private final String name = "name";
   private Parameter parameter;
 

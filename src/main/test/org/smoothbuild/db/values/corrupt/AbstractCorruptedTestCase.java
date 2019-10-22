@@ -8,7 +8,6 @@ import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.TypesDb;
 
 import com.google.common.hash.HashCode;
 
@@ -16,14 +15,12 @@ import okio.ByteString;
 
 public abstract class AbstractCorruptedTestCase {
   protected HashedDb hashedDb;
-  protected TypesDb typesDb;
   protected ValuesDb valuesDb;
 
   @Before
   public void before() {
     hashedDb = new TestingHashedDb();
-    typesDb = new TypesDb(hashedDb);
-    valuesDb = new ValuesDb(hashedDb, typesDb);
+    valuesDb = new ValuesDb(hashedDb);
   }
 
   protected HashCode bool(boolean value) {
