@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
@@ -11,10 +10,11 @@ import java.io.IOException;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class InputSourceFileTest {
+public class InputSourceFileTest extends TestingContext {
   private Path path;
   private Struct file;
 

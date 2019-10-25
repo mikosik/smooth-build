@@ -6,25 +6,20 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.task.exec.Container;
-import org.smoothbuild.task.exec.TestingContainer;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
-public class PathArgValidatorTest {
-  private final ValuesDb valuesDb = new TestingValuesDb();
-  private final Container container = new TestingContainer();
+public class PathArgValidatorTest extends TestingContext {
 
   @Test
   public void illegal_project_paths_are_reported() {
     String name = "name";
     for (String path : listOfInvalidProjectPaths()) {
       try {
-        validatedProjectPath(container, name, valuesDb.string(path));
+        validatedProjectPath(container(), name, string(path));
         fail("exception should be thrown for path = " + path);
       } catch (AbortException e) {
         // expected
@@ -35,7 +30,7 @@ public class PathArgValidatorTest {
   @Test
   public void valid_project_paths_are_accepted() {
     for (String path : listOfCorrectProjectPaths()) {
-      validatedProjectPath(container, "name", valuesDb.string(path));
+      validatedProjectPath(container(), "name", string(path));
     }
   }
 

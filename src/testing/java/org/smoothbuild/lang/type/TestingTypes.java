@@ -1,21 +1,18 @@
 package org.smoothbuild.lang.type;
 
-import static org.smoothbuild.lang.base.Location.unknownLocation;
-import static org.smoothbuild.util.Lists.list;
-
-import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.db.values.ValuesDb;
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.testing.TestingContext;
 
 public class TestingTypes {
-  public static final ValuesDb valuesDb = new TestingValuesDb();
+  private static final TestingContext context = new TestingContext();
+  public static final ValuesDb valuesDb = context.valuesDb();
   public static final ConcreteType type = valuesDb.typeType();
   public static final ConcreteType bool = valuesDb.boolType();
   public static final ConcreteType string = valuesDb.stringType();
   public static final ConcreteType blob = valuesDb.blobType();
   public static final ConcreteType nothing = valuesDb.nothingType();
-  public static final StructType person = personType(valuesDb);
-  public static final StructType file = file();
+  public static final StructType person = context.personType();
+  public static final StructType file = context.fileType();
   public static final GenericType a = new GenericType("a");
   public static final GenericType b = new GenericType("b");
 
@@ -45,18 +42,5 @@ public class TestingTypes {
 
   private static GenericArrayType array(GenericType elemType) {
     return new GenericArrayType(elemType);
-  }
-
-  public static StructType personType(ValuesDb valuesDb) {
-    ConcreteType string = valuesDb.stringType();
-    return valuesDb.structType("Person", list(
-        new Field(string, "firstName", unknownLocation()),
-        new Field(string, "lastName", unknownLocation())));
-  }
-
-  private static StructType file() {
-    return valuesDb.structType("File", list(
-        new Field(blob, "content", unknownLocation()),
-        new Field(string, "path", unknownLocation())));
   }
 }

@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.java.junit;
 import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,14 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.task.exec.TestingContainer;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.testing.common.JarTester;
 
-public class BinaryNameToClassFileTest {
-  private final NativeApi nativeApi = new TestingContainer();
+public class BinaryNameToClassFileTest extends TestingContext {
   private Blob blob;
   private Struct file1;
   private Struct file2;
@@ -31,7 +28,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = file(path("a/Klass.class")));
     given(file2 = file(path("b/Klass.class")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(nativeApi, list(blob)));
+    when(binaryNameToClassFile(nativeApi(), list(blob)));
     thenReturned(mapOf("a.Klass", file1, "b.Klass", file2));
   }
 
@@ -47,7 +44,7 @@ public class BinaryNameToClassFileTest {
     given(file1 = file(path("a/Klass.txt")));
     given(file2 = file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
-    when(binaryNameToClassFile(nativeApi, list(blob)).entrySet());
+    when(binaryNameToClassFile(nativeApi(), list(blob)).entrySet());
     thenReturned(empty());
   }
 }

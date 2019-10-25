@@ -31,53 +31,53 @@ public class StructTypeTest extends AbstractTypeTestCase {
 
   @Test
   public void struct_type_without_fields_can_be_created() throws Exception {
-    when(() -> valuesDb.structType("Struct", list()));
+    when(() -> structType("Struct", list()));
     thenReturned();
   }
 
   @Test
   public void first_field_type_cannot_be_nothing() throws Exception {
-    when(() -> valuesDb.structType("Struct", fields(valuesDb.nothingType())));
+    when(() -> structType("Struct", fields(nothingType())));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_nothing_array() throws Exception {
-    when(() -> valuesDb.structType("Struct", fields(valuesDb.arrayType(valuesDb.nothingType()))));
+    when(() -> structType("Struct", fields(arrayType(nothingType()))));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_array() throws Exception {
-    when(() -> valuesDb.structType("Struct", fields(valuesDb.arrayType(valuesDb.stringType()))));
+    when(() -> structType("Struct", fields(arrayType(stringType()))));
     thenThrown(IllegalArgumentException.class);
   }
 
   @Test
   public void struct_type_with_different_field_order_has_different_hash() throws Exception {
-    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
-    given(type = valuesDb.structType("Struct", fields));
-    given(type2 = valuesDb.structType("Struct", Lists.reverse(fields)));
+    given(fields = fields(stringType(), stringType()));
+    given(type = structType("Struct", fields));
+    given(type2 = structType("Struct", Lists.reverse(fields)));
     when(() -> type.hash());
     thenReturned(not(equalTo(type2.hash())));
   }
 
   @Test
   public void two_level_deep_struct_type_can_be_read_back() throws Exception {
-    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
-    given(type = valuesDb.structType("TypeName", fields));
-    given(fields = fields(valuesDb.stringType(), type));
-    given(type = valuesDb.structType("TypeName2", fields));
-    when(() -> new ValuesDb(hashedDb).get(type.hash()));
+    given(fields = fields(stringType(), stringType()));
+    given(type = structType("TypeName", fields));
+    given(fields = fields(stringType(), type));
+    given(type = structType("TypeName2", fields));
+    when(() -> new ValuesDb(hashedDb()).get(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 
   @Test
   public void creating_two_different_structs_with_same_name_is_possible() throws Exception {
-    given(fields = fields(valuesDb.stringType()));
-    given(type = valuesDb.structType("MyStruct", fields));
-    given(fields = fields(valuesDb.stringType(), valuesDb.stringType()));
-    given(type2 = valuesDb.structType("MyStruct", fields));
+    given(fields = fields(stringType()));
+    given(type = structType("MyStruct", fields));
+    given(fields = fields(stringType(), stringType()));
+    given(type2 = structType("MyStruct", fields));
     when(() -> type.hash());
     thenReturned(not(type2.hash()));
   }

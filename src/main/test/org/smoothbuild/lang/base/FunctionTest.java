@@ -8,12 +8,12 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.testing.TestingContext;
 
-public class FunctionTest {
-  private static final ConcreteType STRING = new TestingValuesDb().stringType();
+public class FunctionTest extends TestingContext {
+  private final ConcreteType STRING = stringType();
   private String name;
   private List<Parameter> parameters;
   private Signature signature;

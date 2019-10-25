@@ -11,12 +11,12 @@ import static org.testory.Testory.willReturn;
 import java.nio.file.Paths;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.testing.TestingContext;
 
-public class ArgNodeTest {
-  private final Type string = new TestingValuesDb().stringType();
+public class ArgNodeTest extends TestingContext {
+  private final Type string = stringType();
   private final Location location = location(Paths.get("path"), 1);
   private final String name = "arg-name";
   private ArgNode arg;

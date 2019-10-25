@@ -1,8 +1,6 @@
 package org.smoothbuild.task.exec;
 
 import static org.smoothbuild.task.exec.TaskReporter.header;
-import static org.smoothbuild.testing.db.values.ValueCreators.emptyMessageArray;
-import static org.smoothbuild.testing.db.values.ValueCreators.messageArrayWithOneError;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -23,10 +21,11 @@ import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskResult;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.hash.HashCode;
 
-public class TaskReporterTest {
+public class TaskReporterTest extends TestingContext{
   private final Console console = mock(Console.class);
   private final TaskReporter taskReporter = new TaskReporter(console);
   private Array messages;

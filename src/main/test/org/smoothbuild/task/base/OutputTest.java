@@ -1,36 +1,32 @@
 package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.testing.db.values.ValueCreators.emptyMessageArray;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.testing.db.values.ValueCreators;
+import org.smoothbuild.testing.TestingContext;
 
-public class OutputTest {
-  private final ValuesDb valuesDb = new TestingValuesDb();
+public class OutputTest extends TestingContext {
   private Output output;
-  private final Array messages = ValueCreators.messageArrayWithOneError();
+  private final Array messages = messageArrayWithOneError();
   private SString sstring;
   private SString otherSstring;
 
   @Test
   public void null_messages_are_forbidden() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     when(() -> new Output(sstring, null));
     thenThrown(NullPointerException.class);
   }
 
   @Test
   public void value_returns_result_value() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).result();
     thenReturned(sstring);
@@ -38,7 +34,7 @@ public class OutputTest {
 
   @Test
   public void messages_returns_messages() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).messages();
     thenReturned(messages);
@@ -46,7 +42,7 @@ public class OutputTest {
 
   @Test
   public void output_created_without_messages_has_no_messages() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, emptyMessageArray()));
     when(output).messages();
     thenReturned(emptyMessageArray());
@@ -61,7 +57,7 @@ public class OutputTest {
 
   @Test
   public void has_value_returns_true_when_value_is_present() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).hasResult();
     thenReturned(true);
@@ -76,7 +72,7 @@ public class OutputTest {
 
   @Test
   public void outputs_with_same_return_value_and_messages_are_equal() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).equals(new Output(sstring, messages));
     thenReturned(true);
@@ -84,7 +80,7 @@ public class OutputTest {
 
   @Test
   public void outputs_with_same_return_value_and_no_messages_are_equal() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, emptyMessageArray()));
     when(output).equals(new Output(sstring, emptyMessageArray()));
     thenReturned(true);
@@ -99,7 +95,7 @@ public class OutputTest {
 
   @Test
   public void outputs_with_same_return_value_but_different_messages_are_not_equal() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).equals(new Output(sstring, emptyMessageArray()));
     thenReturned(false);
@@ -107,8 +103,8 @@ public class OutputTest {
 
   @Test
   public void outputs_with_different_return_values_and_same_messages_are_not_equal() {
-    given(sstring = valuesDb.string("abc"));
-    given(otherSstring = valuesDb.string("def"));
+    given(sstring = string("abc"));
+    given(otherSstring = string("def"));
     given(output = new Output(sstring, messages));
     when(output).equals(new Output(otherSstring, messages));
     thenReturned(false);
@@ -116,14 +112,14 @@ public class OutputTest {
 
   @Test
   public void output_without_return_value_is_not_equal_to_output_with_result_value() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     when(output = new Output(sstring, messages));
     thenReturned(not(new Output(null, messages)));
   }
 
   @Test
   public void identical_outputs_have_same_hash_code() {
-    given(sstring = valuesDb.string("abc"));
+    given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).hashCode();
     thenReturned(new Output(sstring, messages).hashCode());

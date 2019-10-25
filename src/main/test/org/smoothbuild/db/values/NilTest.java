@@ -5,54 +5,44 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.TestingHashedDb;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.testing.TestingContext;
 
-public class NilTest {
-  private HashedDb hashedDb;
-  private ValuesDb valuesDb;
+public class NilTest extends TestingContext {
   private Array array;
-
-  @Before
-  public void before() {
-    hashedDb = new TestingHashedDb();
-    valuesDb = new ValuesDb(hashedDb);
-  }
 
   @Test
   public void type_of_nil_is_nil() throws Exception {
-    given(array = valuesDb.arrayBuilder(valuesDb.nothingType()).build());
+    given(array = arrayBuilder(nothingType()).build());
     when(array.type());
-    thenReturned(valuesDb.arrayType(valuesDb.nothingType()));
+    thenReturned(arrayType(nothingType()));
   }
 
   @Test
   public void nil_array_is_empty() throws Exception {
-    when(() -> valuesDb.arrayBuilder(valuesDb.nothingType()).build().asIterable(Value.class));
+    when(() -> arrayBuilder(nothingType()).build().asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 
   @Test
   public void nil_can_be_read_by_hash() throws Exception {
-    given(array = valuesDb.arrayBuilder(valuesDb.nothingType()).build());
-    when(() -> new TestingValuesDb(hashedDb).get(array.hash()));
+    given(array = arrayBuilder(nothingType()).build());
+    when(() -> valuesDbOther().get(array.hash()));
     thenReturned(array);
   }
 
   @Test
   public void nil_read_by_hash_has_no_elements() throws Exception {
-    given(array = valuesDb.arrayBuilder(valuesDb.nothingType()).build());
-    when(() -> ((Array) new TestingValuesDb(hashedDb).get(array.hash())).asIterable(Value.class));
+    given(array = arrayBuilder(nothingType()).build());
+    when(() -> ((Array) valuesDbOther().get(array.hash())).asIterable(Value.class));
     thenReturned(emptyIterable());
   }
 
   @Test
   public void nil_to_string() throws Exception {
-    given(array = valuesDb.arrayBuilder(valuesDb.nothingType()).build());
+    given(array = arrayBuilder(nothingType()).build());
     when(() -> array.toString());
     thenReturned("[Nothing](...):" + array.hash());
   }

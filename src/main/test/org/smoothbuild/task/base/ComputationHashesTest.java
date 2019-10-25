@@ -19,15 +19,15 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.values.TestingValuesDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.hash.HashCode;
 
-public class ComputationHashesTest {
+public class ComputationHashesTest extends TestingContext {
   private HashSet<HashCode> hashes;
   private NativeFunction function;
   private NativeFunction function2;
@@ -44,7 +44,7 @@ public class ComputationHashesTest {
     given(function = mock(NativeFunction.class));
     given(willReturn(Hash.integer(0)), function).hash();
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TestingValuesDb().structType("MyStruct2", list())), constructor).type();
+    given(willReturn(structType("MyStruct2", list())), constructor).type();
     given(accessor = mock(Accessor.class));
     given(willReturn("myField"), accessor).fieldName();
     given(value = mock(Value.class));
@@ -53,7 +53,7 @@ public class ComputationHashesTest {
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
-    given(hashes.add(convertComputationHash(new TestingValuesDb().stringType())));
+    given(hashes.add(convertComputationHash(stringType())));
     given(hashes.add(constructorCallComputationHash(constructor)));
     given(hashes.add(accessorCallComputationHash(accessor)));
 
@@ -84,17 +84,17 @@ public class ComputationHashesTest {
 
   @Test
   public void convert_computation_has_different_hash_for_different_types() throws Exception {
-    when(convertComputationHash(new TestingValuesDb().stringType()));
-    thenReturned(not(convertComputationHash(new TestingValuesDb().blobType())));
+    when(convertComputationHash(stringType()));
+    thenReturned(not(convertComputationHash(blobType())));
   }
 
   @Test
   public void constructor_call_computation_has_different_hash_for_different_types()
       throws Exception {
     given(constructor = mock(Constructor.class));
-    given(willReturn(new TestingValuesDb().structType("MyStruct1", list())), constructor).type();
+    given(willReturn(structType("MyStruct1", list())), constructor).type();
     given(constructor2 = mock(Constructor.class));
-    given(willReturn(new TestingValuesDb().structType("MyStruct2", list())), constructor2).type();
+    given(willReturn(structType("MyStruct2", list())), constructor2).type();
     when(constructorCallComputationHash(constructor));
     thenReturned(not(constructorCallComputationHash(constructor2)));
   }

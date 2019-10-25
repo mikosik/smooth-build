@@ -28,9 +28,9 @@ public class CorruptedValueTest extends AbstractCorruptedTestCase {
      */
     given(instanceHash =
         hash(
-            hash(valuesDb.stringType()),
+            hash(stringType()),
             hash("aaa")));
-    when(() -> ((SString) valuesDb.get(instanceHash)).data());
+    when(() -> ((SString) valuesDb().get(instanceHash)).data());
     thenReturned("aaa");
   }
 
@@ -48,7 +48,7 @@ public class CorruptedValueTest extends AbstractCorruptedTestCase {
       int byteCount) throws IOException {
     given(instanceHash =
         hash(ByteString.of(new byte[byteCount])));
-    when(() -> valuesDb.get(instanceHash));
+    when(() -> valuesDb().get(instanceHash));
     thenThrown(exception(corruptedValueException(instanceHash,
         "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.")));
   }

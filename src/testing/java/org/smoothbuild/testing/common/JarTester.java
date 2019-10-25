@@ -1,7 +1,6 @@
 package org.smoothbuild.testing.common;
 
 import static okio.Okio.sink;
-import static org.smoothbuild.testing.db.values.ValueCreators.blob;
 
 import java.io.IOException;
 import java.util.jar.JarEntry;
@@ -10,6 +9,7 @@ import java.util.jar.JarOutputStream;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;
 import okio.BufferedSource;
@@ -24,7 +24,7 @@ public class JarTester {
       }
     }
 
-    return blob(buffer.readByteString());
+    return new TestingContext().blob(buffer.readByteString());
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
