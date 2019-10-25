@@ -8,8 +8,6 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.TestingTypes;
 import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.hash.HashCode;
@@ -28,8 +26,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             hash(
-                string("John"),
-                string("Doe"))));
+                hash(string("John")),
+                hash(string("Doe")))));
     thenReturned(person("John", "Doe").hash());
   }
 
@@ -39,8 +37,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             hash(
-                string("John"))));
-    given(struct = (Struct) valuesDb.get(structHash));
+                hash(string("John")))));
+    given(struct = (Struct) valuesDb().get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type is "
         + "Type(\"Person\"):e0eb7c56051fe435ef4b5de175ff78599ea65186 with 2 fields but "
@@ -53,10 +51,10 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             hash(
-                string("John"),
-                string("Doe"),
-                string("junk"))));
-    given(struct = (Struct) valuesDb.get(structHash));
+                hash(string("John")),
+                hash(string("Doe")),
+                hash(string("junk")))));
+    given(struct = (Struct) valuesDb().get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type is "
         + "Type(\"Person\"):e0eb7c56051fe435ef4b5de175ff78599ea65186 with 2 fields but "
@@ -69,24 +67,13 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             hash(
-                string("John"),
-                bool(true))));
-    given(struct = (Struct) valuesDb.get(structHash));
+                hash(string("John")),
+                hash(bool(true)))));
+    given(struct = (Struct) valuesDb().get(structHash));
     when(() -> struct.get("firstName"));
     thenThrown(exception(corruptedValueException(structHash, "Its type specifies field 'lastName' "
         + "with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but its data "
         + "has value of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 assigned "
         + "to that field.")));
-  }
-
-  private Struct person(String firstName, String lastName) {
-    return valuesDb.structBuilder(personType())
-        .set("firstName", valuesDb.string(firstName))
-        .set("lastName", valuesDb.string(lastName))
-        .build();
-  }
-
-  private StructType personType() {
-    return TestingTypes.personType(valuesDb);
   }
 }

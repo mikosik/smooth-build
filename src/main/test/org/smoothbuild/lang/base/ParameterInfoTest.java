@@ -9,23 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.TestingTypes;
+import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-public class ParameterInfoTest {
+public class ParameterInfoTest extends TestingContext {
   private final String name = "name";
   private ParameterInfo parameterInfo;
-  private final ValuesDb valuesDb = new TestingValuesDb();
-  private final ConcreteType bool = valuesDb.boolType();
-  private final ConcreteType string = valuesDb.stringType();
-  private final ConcreteType blob = valuesDb.blobType();
-  private final ConcreteType nothing = valuesDb.nothingType();
+  private final ConcreteType bool = boolType();
+  private final ConcreteType string = stringType();
+  private final ConcreteType blob = blobType();
+  private final ConcreteType nothing = nothingType();
   private final ConcreteType type = string;
 
   @Test
@@ -61,7 +57,7 @@ public class ParameterInfoTest {
         new ParameterInfo(0, string, "equal", true),
         new ParameterInfo(1, string, "equal", true));
     for (ConcreteType type :
-        ImmutableList.of(bool, string, valuesDb.arrayType(string), blob, nothing, personType())) {
+        ImmutableList.of(bool, string, arrayType(string), blob, nothing, personType())) {
       tester.addEqualityGroup(
           new ParameterInfo(0, type, name, true),
           new ParameterInfo(1, type, name, true));
@@ -98,16 +94,12 @@ public class ParameterInfoTest {
     List<ParameterInfo> names = new ArrayList<>();
     names.add(new ParameterInfo(0, string, "param1", true));
     names.add(new ParameterInfo(0, string, "param2-with-very-long", true));
-    names.add(new ParameterInfo(0, valuesDb.arrayType(blob), "param3", true));
+    names.add(new ParameterInfo(0, arrayType(blob), "param3", true));
 
     when(ParameterInfo.iterableToString(names));
     thenReturned(""
         + "  String: param1               \n"
         + "  String: param2-with-very-long\n"
         + "  [Blob]: param3               \n");
-  }
-
-  private StructType personType() {
-    return TestingTypes.personType(valuesDb);
   }
 }

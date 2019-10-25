@@ -1,7 +1,6 @@
 package org.smoothbuild.builtin.java.junit;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.reflect.Classes.binaryPath;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -14,9 +13,10 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.reflect.Classes;
 
-public class FileClassLoaderTest {
+public class FileClassLoaderTest extends TestingContext {
   private FileClassLoader fileClassLoader;
   private Struct file;
   private Class<MyClass> klass;

@@ -33,18 +33,18 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
      */
     given(instanceHash =
         hash(
-            hash(valuesDb.arrayType(valuesDb.stringType())),
+            hash(arrayType(stringType())),
             hash(
                 hash(
-                    hash(valuesDb.stringType()),
+                    hash(stringType()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(valuesDb.stringType()),
+                    hash(stringType()),
                     hash("bbb")
                 )
             )));
-    when(() -> stream(((Array) valuesDb.get(instanceHash))
+    when(() -> stream(((Array) valuesDb().get(instanceHash))
         .asIterable(SString.class))
         .map(SString::data)
         .collect(toList()));
@@ -65,11 +65,11 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
       int byteCount) throws IOException {
     given(instanceHash =
         hash(
-            hash(valuesDb.arrayType(valuesDb.stringType())),
+            hash(arrayType(stringType())),
             hash(ByteString.of(new byte[byteCount]))
         ));
     ;
-    when(() -> ((Array) valuesDb.get(instanceHash)).asIterable(Value.class));
+    when(() -> ((Array) valuesDb().get(instanceHash)).asIterable(Value.class));
     thenThrown(exception(corruptedValueException(instanceHash, "It is an Array which value stored" +
         " in ValuesDb number of bytes which is not multiple of hash size = 20.")));
   }
@@ -78,18 +78,18 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   public void array_with_one_element_of_wrong_type_is_corrupted() throws IOException {
     given(instanceHash =
         hash(
-            hash(valuesDb.arrayType(valuesDb.stringType())),
+            hash(arrayType(stringType())),
             hash(
                 hash(
-                    hash(valuesDb.stringType()),
+                    hash(stringType()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(valuesDb.boolType()),
+                    hash(boolType()),
                     hash(true)
                 )
             )));
-    when(() -> ((Array) valuesDb.get(instanceHash)).asIterable(SString.class));
+    when(() -> ((Array) valuesDb().get(instanceHash)).asIterable(SString.class));
     thenThrown(exception(corruptedValueException(instanceHash,
         "It is array with type '[String]' but one of its elements has type 'Bool'")));
   }

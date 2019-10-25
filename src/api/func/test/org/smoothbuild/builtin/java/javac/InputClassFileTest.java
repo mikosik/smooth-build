@@ -4,7 +4,6 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.testing.db.values.ValueCreators.file;
 import static org.smoothbuild.util.Okios.readAndClose;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -15,10 +14,11 @@ import java.net.URI;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class InputClassFileTest {
+public class InputClassFileTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private InputClassFile inputClassFile;
   private final Path path = path("a/b/MyClass.class");

@@ -2,7 +2,6 @@ package org.smoothbuild.task.base;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.testing.db.values.ValueCreators.emptyMessageArray;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
@@ -11,23 +10,21 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.db.values.TestingValuesDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.testing.TestingContext;
 
-public class InputTest {
+public class InputTest extends TestingContext{
   private Task depTask1;
   private Task depTask2;
   private Input input;
   private Input input2;
-  private final ValuesDb valuesDb = new TestingValuesDb();
   private SString sstring1;
   private SString sstring2;
 
   @Test
   public void input_takes_values_from_dependency_tasks() {
     given(depTask1 = mock(Task.class));
-    given(sstring1 = valuesDb.string("abc"));
+    given(sstring1 = string("abc"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(input = Input.fromResults(list(depTask1)));
     when(input).values();
@@ -38,8 +35,8 @@ public class InputTest {
   public void different_inputs_have_different_hashes() throws Exception {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
-    given(sstring1 = valuesDb.string("abc"));
-    given(sstring2 = valuesDb.string("def"));
+    given(sstring1 = string("abc"));
+    given(sstring2 = string("def"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(willReturn(new Output(sstring2, emptyMessageArray())), depTask2).output();
     given(input = Input.fromResults(list(depTask1)));
@@ -53,8 +50,8 @@ public class InputTest {
       throws Exception {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
-    given(sstring1 = valuesDb.string("abc"));
-    given(sstring2 = valuesDb.string("def"));
+    given(sstring1 = string("abc"));
+    given(sstring2 = string("def"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(willReturn(new Output(sstring2, emptyMessageArray())), depTask2).output();
     given(input = Input.fromResults(list(depTask1, depTask2)));
@@ -67,7 +64,7 @@ public class InputTest {
   public void equal_inputs_have_equal_hashes() throws Exception {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
-    given(sstring1 = valuesDb.string("abc"));
+    given(sstring1 = string("abc"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask2).output();
     given(input = Input.fromResults(list(depTask1)));
@@ -80,7 +77,7 @@ public class InputTest {
   public void input_with_no_values_has_hash_different_from_input_with_one_value() throws Exception {
     given(depTask1 = mock(Task.class));
     given(depTask2 = mock(Task.class));
-    given(sstring1 = valuesDb.string("abc"));
+    given(sstring1 = string("abc"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(input = Input.fromResults(list(depTask1)));
     given(input2 = Input.fromValues(list()));
