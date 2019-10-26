@@ -44,12 +44,11 @@ public class TestingContext {
   private Container container;
   private TestingRuntimeTypes types;
   private RuntimeTypes runtimeTypes;
-  private ValuesDb valuesDb;
   private OutputsDb outputsDb;
-  private HashedDb hashedDbValues;
-  private HashedDb hashedDbOutputs;
-  private FileSystem hashedDbValuesFileSystem;
-  private FileSystem hashedDbOutputsFileSystem;
+  private FileSystem outputsDbFileSystem;
+  private ValuesDb valuesDb;
+  private HashedDb hashedDb;
+  private FileSystem hashedDbFileSystem;
   private MemoryFileSystem fullFileSystem;
 
   public NativeApi nativeApi() {
@@ -94,9 +93,16 @@ public class TestingContext {
 
   public OutputsDb outputsDb() {
     if (outputsDb == null) {
-      outputsDb = new OutputsDb(hashedDbOutputs(), valuesDb(), types());
+      outputsDb = new OutputsDb(outputsDbFileSystem(), valuesDb(), types());
     }
     return outputsDb;
+  }
+
+  public FileSystem outputsDbFileSystem() {
+    if (outputsDbFileSystem == null) {
+      outputsDbFileSystem = new MemoryFileSystem();
+    }
+    return outputsDbFileSystem;
   }
 
   public ValuesDb valuesDbOther() {
@@ -104,33 +110,18 @@ public class TestingContext {
   }
 
   public HashedDb hashedDb() {
-    if (hashedDbValues == null) {
-      hashedDbValues = new HashedDb(
+    if (hashedDb == null) {
+      hashedDb = new HashedDb(
           hashedDbFileSystem(), Path.root(), new TempManager(new MemoryFileSystem()));
     }
-    return hashedDbValues;
-  }
-
-  public HashedDb hashedDbOutputs() {
-    if (hashedDbOutputs == null) {
-      hashedDbOutputs = new HashedDb(
-          hashedDbOutputsFileSystem(), Path.root(), new TempManager(new MemoryFileSystem()));
-    }
-    return hashedDbOutputs;
+    return hashedDb;
   }
 
   private FileSystem hashedDbFileSystem() {
-    if (hashedDbValuesFileSystem == null) {
-      hashedDbValuesFileSystem = new MemoryFileSystem();
+    if (hashedDbFileSystem == null) {
+      hashedDbFileSystem = new MemoryFileSystem();
     }
-    return hashedDbValuesFileSystem;
-  }
-
-  private FileSystem hashedDbOutputsFileSystem() {
-    if (hashedDbOutputsFileSystem == null) {
-      hashedDbOutputsFileSystem = new MemoryFileSystem();
-    }
-    return hashedDbOutputsFileSystem;
+    return hashedDbFileSystem;
   }
 
   public FileSystem fullFileSystem() {

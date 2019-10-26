@@ -1,5 +1,6 @@
 package org.smoothbuild.db.outputs;
 
+import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
 import static org.smoothbuild.db.outputs.OutputsDbException.outputsDbException;
 import static org.smoothbuild.lang.message.Messages.containsErrors;
@@ -11,9 +12,10 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
 import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.type.ArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
@@ -24,26 +26,27 @@ import org.smoothbuild.task.base.Output;
 
 import com.google.common.hash.HashCode;
 
+import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class OutputsDb {
-  private final HashedDb hashedDb;
+  private final FileSystem fileSystem;
   private final ValuesDb valuesDb;
   private final Types types;
 
   @Inject
-  public OutputsDb(@Outputs HashedDb hashedDb, ValuesDb valuesDb, Types types) {
-    this.hashedDb = hashedDb;
+  public OutputsDb(FileSystem fileSystem, ValuesDb valuesDb, Types types) {
+    this.fileSystem = fileSystem;
     this.valuesDb = valuesDb;
     this.types = types;
   }
 
   public void write(HashCode taskHash, Output output) {
-    try (Marshaller marshaller = hashedDb.newMarshaller(taskHash)) {
+    try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
       Array messages = output.messages();
-      marshaller.sink().write(messages.hash().asBytes());
+      sink.write(messages.hash().asBytes());
       if (!containsErrors(messages)) {
-        marshaller.sink().write(output.result().hash().asBytes());
+        sink.write(output.result().hash().asBytes());
       }
     } catch (IOException e) {
       throw outputsDbException(e);
@@ -51,11 +54,22 @@ public class OutputsDb {
   }
 
   public boolean contains(HashCode taskHash) {
-    return hashedDb.contains(taskHash);
+    Path path = toPath(taskHash);
+    PathState pathState = fileSystem.pathState(path);
+    switch (pathState) {
+      case FILE:
+        return true;
+      case NOTHING:
+        return false;
+      case DIR:
+        throw corruptedValueException(taskHash, path + " is directory not a file.");
+      default:
+        throw new RuntimeException("Unexpected case " + pathState);
+    }
   }
 
   public Output read(HashCode taskHash, ConcreteType type) {
-    try (BufferedSource source = hashedDb.source(taskHash)) {
+    try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       Value messagesValue = valuesDb.get(Hash.read(source));
       ArrayType messageArrayType = types.array(types.message());
       if (!messagesValue.type().equals(messageArrayType)) {
@@ -85,5 +99,9 @@ public class OutputsDb {
     } catch (IOException e) {
       throw outputsDbException(e);
     }
+  }
+
+  static Path toPath(HashCode taskHash) {
+    return OUTPUTS_DB_PATH.append(Hash.toPath(taskHash));
   }
 }

@@ -1,6 +1,8 @@
 package org.smoothbuild.db.outputs;
 
+import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -25,7 +27,7 @@ import okio.ByteString;
 public class OutputsDbTest extends TestingContext {
   private final HashCode hash = Hash.string("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
-  private final Path path = path("file/path");
+  private Path path = path("file/path");
 
   private Value message;
   private Array messages;
@@ -37,16 +39,24 @@ public class OutputsDbTest extends TestingContext {
   private final String string = "some string";
 
   @Test
-  public void result_cache_does_not_contain_not_written_result() {
+  public void outputsdb_does_not_contain_not_written_result() {
     when(outputsDb().contains(hash));
     thenReturned(false);
   }
 
   @Test
-  public void result_cache_contains_written_result() {
+  public void outputsdb_contains_written_result() {
     given(outputsDb()).write(hash, new Output(string("result"), emptyMessageArray()));
     when(outputsDb().contains(hash));
     thenReturned(true);
+  }
+
+  @Test
+  public void outputsdb_is_corrupted_when_task_hash_points_to_directory() {
+    given(path = OutputsDb.toPath(hash));
+    given(() -> outputsDbFileSystem().sink(path.append(path("file"))));
+    when(() -> outputsDb().contains(hash));
+    thenThrown(exception(corruptedValueException(hash, path + " is directory not a file.")));
   }
 
   @Test
