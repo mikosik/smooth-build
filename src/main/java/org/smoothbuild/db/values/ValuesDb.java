@@ -54,7 +54,7 @@ public class ValuesDb {
   private NothingType nothing;
 
   @Inject
-  public ValuesDb(@Values HashedDb hashedDb) {
+  public ValuesDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.typesCache = new HashMap<>();
   }
