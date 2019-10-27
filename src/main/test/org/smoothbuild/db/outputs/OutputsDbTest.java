@@ -20,12 +20,10 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 import okio.ByteString;
 
 public class OutputsDbTest extends TestingContext {
-  private final HashCode hash = Hash.string("abc");
+  private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private Path path = path("file/path");
 

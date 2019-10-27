@@ -17,8 +17,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.io.util.TempManager;
 
-import com.google.common.hash.HashCode;
-
 import okio.BufferedSource;
 
 public class HashedDb {
@@ -32,12 +30,12 @@ public class HashedDb {
     this.tempManager = tempManager;
   }
 
-  public boolean contains(HashCode hash) {
+  public boolean contains(Hash hash) {
     Path path = toPath(hash);
     return fileSystem.pathState(path) == PathState.FILE;
   }
 
-  public HashCode writeString(String string) throws IOException {
+  public Hash writeString(String string) throws IOException {
     try (HashingBufferedSink sink = sink()) {
       sink.writeString(string, CHARSET);
       sink.close();
@@ -45,7 +43,7 @@ public class HashedDb {
     }
   }
 
-  public String readString(HashCode hash) throws IOException, DecodingStringException {
+  public String readString(Hash hash) throws IOException, DecodingStringException {
     try (BufferedSource source = source(hash)) {
       CharsetDecoder charsetDecoder = CHARSET.newDecoder();
       charsetDecoder.onMalformedInput(REPORT);
@@ -56,18 +54,18 @@ public class HashedDb {
     }
   }
 
-  public HashCode writeHashes(HashCode... hashes) throws IOException {
+  public Hash writeHashes(Hash... hashes) throws IOException {
     try (HashingBufferedSink sink = sink()) {
-      for (HashCode hashCode : hashes) {
-        sink.write(hashCode.asBytes());
+      for (Hash hash : hashes) {
+        sink.write(hash);
       }
       sink.close();
       return sink.hash();
     }
   }
 
-  public List<HashCode> readHashes(HashCode hash) throws IOException {
-    List<HashCode> result = new ArrayList<>();
+  public List<Hash> readHashes(Hash hash) throws IOException {
+    List<Hash> result = new ArrayList<>();
     try (BufferedSource source = source(hash)) {
       while (!source.exhausted()) {
         result.add(Hash.read(source));
@@ -76,7 +74,7 @@ public class HashedDb {
     return result;
   }
 
-  public BufferedSource source(HashCode hash) throws IOException {
+  public BufferedSource source(Hash hash) throws IOException {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
@@ -96,7 +94,7 @@ public class HashedDb {
     return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
   }
 
-  private Path toPath(HashCode hash) {
+  private Path toPath(Hash hash) {
     return rootPath.append(Hash.toPath(hash));
   }
 }

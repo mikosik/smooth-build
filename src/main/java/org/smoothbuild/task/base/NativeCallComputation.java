@@ -6,14 +6,13 @@ import static org.smoothbuild.task.base.ComputationHashes.nativeCallComputationH
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
-
-import com.google.common.hash.HashCode;
 
 public class NativeCallComputation implements Computation {
   private final ConcreteType type;
@@ -25,7 +24,7 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public HashCode hash() {
+  public Hash hash() {
     return nativeCallComputationHash(function);
   }
 

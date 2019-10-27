@@ -2,10 +2,9 @@ package org.smoothbuild.lang.base;
 
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
-
-import com.google.common.hash.HashCode;
 
 /**
  * Smooth Function implemented natively in java.
@@ -14,11 +13,11 @@ import com.google.common.hash.HashCode;
  */
 public class NativeFunction extends Function {
   private final Native nativ;
-  private final HashCode hash;
+  private final Hash hash;
   private final boolean isCacheable;
 
   public NativeFunction(Native nativ, Signature signature, Location location, boolean isCacheable,
-      HashCode hash) {
+      Hash hash) {
     super(signature, location);
     this.nativ = nativ;
     this.hash = hash;
@@ -29,7 +28,7 @@ public class NativeFunction extends Function {
     return nativ;
   }
 
-  public HashCode hash() {
+  public Hash hash() {
     return hash;
   }
 

@@ -2,10 +2,10 @@ package org.smoothbuild.db.outputs;
 
 import java.io.IOException;
 
-import com.google.common.hash.HashCode;
+import org.smoothbuild.db.hashed.Hash;
 
 public class OutputsDbException extends RuntimeException {
-  public static OutputsDbException corruptedValueException(HashCode hash, String message) {
+  public static OutputsDbException corruptedValueException(Hash hash, String message) {
     return new OutputsDbException(hash.toString() + " value in OutputsDb is corrupted. " + message);
   }
 

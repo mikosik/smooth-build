@@ -5,22 +5,20 @@ import java.nio.file.Path;
 
 import org.smoothbuild.db.hashed.Hash;
 
-import com.google.common.hash.HashCode;
-
 public class JarFile {
   private final Path path;
-  private final HashCode hash;
+  private final Hash hash;
 
   public static JarFile jarFile(Path path) throws IOException {
-    return new JarFile(path, Hash.file(path));
+    return new JarFile(path, Hash.of(path));
   }
 
-  public JarFile(Path path, HashCode hash) {
+  public JarFile(Path path, Hash hash) {
     this.path = path;
     this.hash = hash;
   }
 
-  public HashCode hash() {
+  public Hash hash() {
     return hash;
   }
 

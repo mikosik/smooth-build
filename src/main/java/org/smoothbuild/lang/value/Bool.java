@@ -6,15 +6,14 @@ import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ConcreteType;
-
-import com.google.common.hash.HashCode;
 
 import okio.BufferedSource;
 
 public class Bool extends AbstractValue {
-  public Bool(HashCode dataHash, ConcreteType type, HashedDb hashedDb) {
+  public Bool(Hash dataHash, ConcreteType type, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     checkArgument(type.name().equals("Bool"));
   }

@@ -10,17 +10,16 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDbException;
 import org.smoothbuild.db.values.corrupt.AbstractCorruptedTestCase;
-
-import com.google.common.hash.HashCode;
 
 import okio.ByteString;
 
 public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   protected ConcreteType type;
-  protected HashCode hash;
-  private HashCode instanceHash;
+  protected Hash hash;
+  private Hash instanceHash;
 
   @Test
   public void learning_test_create_string_type() throws Exception {
@@ -240,7 +239,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         "It is struct type but one of its field hashes doesn't have two children but 3.")));
   }
 
-  private static ValuesDbException brokenTypeTypeException(HashCode hash) {
+  private static ValuesDbException brokenTypeTypeException(Hash hash) {
     return corruptedValueException(hash, "Expected value which is instance of 'Type' but its Merkle"
         + " tree has only one child (so it should be Type type) but it has different hash.");
   }

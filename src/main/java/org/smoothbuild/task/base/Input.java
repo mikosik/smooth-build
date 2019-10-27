@@ -9,11 +9,10 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Value;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class Input {
   private final ImmutableList<Value> values;
-  private final HashCode hash;
+  private final Hash hash;
 
   public static Input fromResults(List<Task> children) {
     return fromValues(toResults(children));
@@ -23,7 +22,7 @@ public class Input {
     return new Input(values, calculateHash(values));
   }
 
-  private Input(Iterable<? extends Value> values, HashCode hash) {
+  private Input(Iterable<? extends Value> values, Hash hash) {
     this.values = ImmutableList.copyOf(values);
     this.hash = hash;
   }
@@ -32,7 +31,7 @@ public class Input {
     return values;
   }
 
-  public HashCode hash() {
+  public Hash hash() {
     return hash;
   }
 
@@ -42,7 +41,7 @@ public class Input {
         .collect(toImmutableList());
   }
 
-  private static HashCode calculateHash(Iterable<? extends Value> values) {
-    return Hash.hashes(stream(values).map(Value::hash).toArray(HashCode[]::new));
+  private static Hash calculateHash(Iterable<? extends Value> values) {
+    return Hash.of(stream(values).map(Value::hash).toArray(Hash[]::new));
   }
 }

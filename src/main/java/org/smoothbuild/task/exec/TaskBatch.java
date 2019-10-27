@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.value.Bool;
@@ -17,17 +18,16 @@ import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.hash.HashCode;
 
 public class TaskBatch {
   private final TaskExecutor taskExecutor;
   private final ValuesDb valuesDb;
-  private final HashCode runtimeHash;
+  private final Hash runtimeHash;
   private final List<Task> rootTasks;
 
   @Inject
   public TaskBatch(TaskExecutor taskExecutor, ValuesDb valuesDb,
-      @RuntimeHash HashCode runtimeHash) {
+      @RuntimeHash Hash runtimeHash) {
     this.taskExecutor = taskExecutor;
     this.valuesDb = valuesDb;
     this.runtimeHash = runtimeHash;

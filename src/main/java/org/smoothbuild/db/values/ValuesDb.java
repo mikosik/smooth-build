@@ -39,14 +39,12 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.StructBuilder;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.hash.HashCode;
-
 import okio.BufferedSource;
 
 public class ValuesDb {
   private final HashedDb hashedDb;
 
-  private final Map<HashCode, ConcreteType> typesCache;
+  private final Map<Hash, ConcreteType> typesCache;
   private TypeType type;
   private BoolType bool;
   private StringType string;
@@ -91,7 +89,7 @@ public class ValuesDb {
     return new Bool(writeBool(value), boolType(), hashedDb);
   }
 
-  private HashCode writeBool(boolean value) {
+  private Hash writeBool(boolean value) {
     try (HashingBufferedSink sink = hashedDb.sink()) {
       sink.writeByte(value ? 1 : 0);
       sink.close();
@@ -101,8 +99,8 @@ public class ValuesDb {
     }
   }
 
-  public Value get(HashCode hash) {
-    List<HashCode> hashes = readHashes(hash);
+  public Value get(Hash hash) {
+    List<Hash> hashes = readHashes(hash);
     switch (hashes.size()) {
       case 1:
         // If Merkle tree root has only one child then it must
@@ -121,7 +119,7 @@ public class ValuesDb {
     }
   }
 
-  private List<HashCode> readHashes(HashCode hash) {
+  private List<Hash> readHashes(Hash hash) {
     try {
       return hashedDb.readHashes(hash);
     } catch (EOFException e) {
@@ -172,7 +170,7 @@ public class ValuesDb {
     return nothing;
   }
 
-  private HashCode writeBasicTypeData(String name) {
+  private Hash writeBasicTypeData(String name) {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name));
     } catch (IOException e) {
@@ -181,13 +179,13 @@ public class ValuesDb {
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    HashCode dataHash = writeArray(elementType);
+    Hash dataHash = writeArray(elementType);
     ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
     return cacheType(
         new ConcreteArrayType(dataHash, typeType(), superType, elementType, hashedDb, this));
   }
 
-  private HashCode writeArray(ConcreteType elementType) {
+  private Hash writeArray(ConcreteType elementType) {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
     } catch (IOException e) {
@@ -200,11 +198,11 @@ public class ValuesDb {
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    HashCode hash = writeStruct(name, fields);
+    Hash hash = writeStruct(name, fields);
     return cacheType(new StructType(hash, typeType(), name, fields, hashedDb, this));
   }
 
-  private HashCode writeStruct(String name, Iterable<Field> fields) {
+  private Hash writeStruct(String name, Iterable<Field> fields) {
     try {
       return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
     } catch (IOException e) {
@@ -212,19 +210,19 @@ public class ValuesDb {
     }
   }
 
-  private HashCode writeFields(Iterable<Field> fields) throws IOException {
-    List<HashCode> fieldHashes = new ArrayList<>();
+  private Hash writeFields(Iterable<Field> fields) throws IOException {
+    List<Hash> fieldHashes = new ArrayList<>();
     for (Field field : fields) {
       fieldHashes.add(writeField(field.name(), field.type()));
     }
-    return hashedDb.writeHashes(fieldHashes.toArray(new HashCode[0]));
+    return hashedDb.writeHashes(fieldHashes.toArray(new Hash[0]));
   }
 
-  private HashCode writeField(String name, ConcreteType type) throws IOException {
+  private Hash writeField(String name, ConcreteType type) throws IOException {
     return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
   }
 
-  private ConcreteType getType(HashCode hash) {
+  private ConcreteType getType(Hash hash) {
     if (typesCache.containsKey(hash)) {
       return typesCache.get(hash);
     } else {
@@ -236,8 +234,8 @@ public class ValuesDb {
     }
   }
 
-  private ConcreteType getTypeImpl(HashCode hash) throws IOException {
-    List<HashCode> hashes = hashedDb.readHashes(hash);
+  private ConcreteType getTypeImpl(Hash hash) throws IOException {
+    List<Hash> hashes = hashedDb.readHashes(hash);
     switch (hashes.size()) {
       case 1:
         if (!typeType().hash().equals(hash)) {
@@ -247,12 +245,12 @@ public class ValuesDb {
         }
         return typeType();
       case 2:
-        HashCode typeHash = hashes.get(0);
+        Hash typeHash = hashes.get(0);
         if (!typeType().hash().equals(typeHash)) {
           throw corruptedValueException(hash, "Expected value which is instance of 'Type' but "
               + "its Merkle tree's first child is not Type type.");
         }
-        HashCode dataHash = hashes.get(1);
+        Hash dataHash = hashes.get(1);
         return readFromDataHash(dataHash, hash);
       default:
         throw corruptedValueException(
@@ -260,10 +258,10 @@ public class ValuesDb {
     }
   }
 
-  public ConcreteType readFromDataHash(HashCode typeDataHash, HashCode typeHash)
+  public ConcreteType readFromDataHash(Hash typeDataHash, Hash typeHash)
       throws IOException {
     try (BufferedSource source = hashedDb.source(typeDataHash)) {
-      HashCode nameHash = Hash.read(source);
+      Hash nameHash = Hash.read(source);
       String name = decodeName(typeHash, nameHash);
       switch (name) {
         case BOOL:
@@ -291,7 +289,7 @@ public class ValuesDb {
     }
   }
 
-  private String decodeName(HashCode typeHash, HashCode nameHash) throws IOException {
+  private String decodeName(Hash typeHash, Hash nameHash) throws IOException {
     try {
       return hashedDb.readString(nameHash);
     } catch (DecodingStringException e) {
@@ -300,7 +298,7 @@ public class ValuesDb {
     }
   }
 
-  private static void assertNoMoreData(HashCode typeHash, BufferedSource source, String typeName)
+  private static void assertNoMoreData(Hash typeHash, BufferedSource source, String typeName)
       throws IOException {
     if (!source.exhausted()) {
       throw corruptedValueException(typeHash,
@@ -308,10 +306,10 @@ public class ValuesDb {
     }
   }
 
-  private Iterable<Field> readFields(HashCode hash, HashCode typeHash) throws IOException {
+  private Iterable<Field> readFields(Hash hash, Hash typeHash) throws IOException {
     List<Field> result = new ArrayList<>();
-    for (HashCode fieldHash : hashedDb.readHashes(hash)) {
-      List<HashCode> hashes = hashedDb.readHashes(fieldHash);
+    for (Hash fieldHash : hashedDb.readHashes(hash)) {
+      List<Hash> hashes = hashedDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
         throw corruptedValueException(typeHash,
             "It is struct type but one of its field hashes doesn't have two children but "
@@ -324,7 +322,7 @@ public class ValuesDb {
     return result;
   }
 
-  private String decodeFieldName(HashCode typeHash, HashCode nameHash) throws IOException {
+  private String decodeFieldName(Hash typeHash, Hash nameHash) throws IOException {
     try {
       return hashedDb.readString(nameHash);
     } catch (DecodingStringException e) {
@@ -334,7 +332,7 @@ public class ValuesDb {
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
-    HashCode hash = type.hash();
+    Hash hash = type.hash();
     if (typesCache.containsKey(hash)) {
       return (T) typesCache.get(hash);
     } else {

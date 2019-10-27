@@ -12,7 +12,6 @@ import java.io.File;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
 
-import com.google.common.hash.HashCode;
 import com.google.common.io.Files;
 
 import okio.Buffer;
@@ -21,9 +20,9 @@ import okio.ByteString;
 public class HashTest {
   private final String string = "some string";
   private final String string2 = "some other string";
-  private final ByteString bytes = ByteString.encodeUtf8("abc");
+  private final ByteString byteString = ByteString.of(new byte[] {1, 2, 3, 4});
   private File file;
-  private HashCode hash;
+  private Hash hash;
   private Buffer buffer;
 
   @Test
@@ -35,7 +34,7 @@ public class HashTest {
   @Test
   public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
     given(buffer = new Buffer());
-    given(() -> buffer.write(new byte[Hash.size() - 1]));
+    given(() -> buffer.write(new byte[Hash.hashesSize() - 1]));
     when(() -> Hash.read(buffer));
     thenThrown(EOFException.class);
   }
@@ -43,72 +42,71 @@ public class HashTest {
   @Test
   public void read_hash_from_source() {
     given(buffer = new Buffer());
-    given(hash = Hash.string("abc"));
-    given(() -> buffer.write(hash.asBytes()));
+    given(hash = Hash.of("abc"));
+    given(() -> buffer.write(hash));
     when(() -> Hash.read(buffer));
     thenReturned(hash);
   }
 
   @Test
-  public void hash_of_given_array_of_hashes_is_always_the_same() {
-    when(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
-    thenReturned(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
-  }
-
-  @Test
-  public void hash_of_different_array_of_hashes_are_different() {
-    when(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(2)));
-    thenReturned(not(Hash.hashes(HashCode.fromInt(1), HashCode.fromInt(3))));
-  }
-
-  @Test
-  public void hash_of_given_string_is_always_the_same() {
-    when(Hash.string(string));
-    thenReturned(Hash.string(string));
-  }
-
-  @Test
-  public void hashes_of_different_strings_are_different() {
-    when(Hash.string(string));
-    thenReturned(not(Hash.string(string2)));
-  }
-
-  @Test
-  public void hash_of_given_integer_is_always_the_same() {
-    when(Hash.integer(33));
-    thenReturned(Hash.integer(33));
-  }
-
-  @Test
-  public void hashes_of_different_integers_are_different() {
-    when(Hash.integer(33));
-    thenReturned(not(Hash.integer(34)));
-  }
-
-  @Test
-  public void hash_of_given_bytes_is_always_the_same() {
-    when(Hash.bytes(string.getBytes()));
-    thenReturned(Hash.bytes(string.getBytes()));
-  }
-
-  @Test
-  public void hashes_of_different_bytes_are_different() {
-    when(Hash.bytes(string.getBytes()));
-    thenReturned(not(Hash.bytes(string2.getBytes())));
+  public void to_path() {
+    when(() -> Hash.toPath(Hash.of("abc")));
+    thenReturned(Path.path(Hash.of("abc").hex()));
   }
 
   @Test
   public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
     given(file = File.createTempFile("tmp", ".tmp"));
-    Files.write(bytes.toByteArray(), file);
-    when(Hash.file(file.toPath()));
-    thenReturned(Hash.bytes(bytes.toByteArray()));
+    Files.write(byteString.toByteArray(), file);
+    when(Hash.of(file.toPath()));
+    thenReturned(Hash.of(byteString));
   }
 
   @Test
-  public void toPath() {
-    given(hash = HashCode.fromInt(0xAB));
-    when(Hash.toPath(hash));
-    thenReturned(Path.path("ab000000"));
+  public void hash_of_given_array_of_hashes_is_always_the_same() {
+    when(Hash.of(Hash.of(1), Hash.of(2)));
+    thenReturned(Hash.of(Hash.of(1), Hash.of(2)));
+  }
+
+  @Test
+  public void hash_of_different_array_of_hashes_are_different() {
+    when(Hash.of(Hash.of(1), Hash.of(2)));
+    thenReturned(not(Hash.of(Hash.of(1), Hash.of(3))));
+  }
+
+  @Test
+  public void hash_of_given_string_is_always_the_same() {
+    when(Hash.of(string));
+    thenReturned(Hash.of(string));
+  }
+
+  @Test
+  public void hashes_of_different_strings_are_different() {
+    when(Hash.of(string));
+    thenReturned(not(Hash.of(string2)));
+  }
+
+  @Test
+  public void hash_of_given_integer_is_always_the_same() {
+    when(Hash.of(33));
+    thenReturned(Hash.of(33));
+  }
+
+  @Test
+  public void hashes_of_different_integers_are_different() {
+    when(Hash.of(33));
+    thenReturned(not(Hash.of(34)));
+  }
+
+  @Test
+  public void hash_of_given_bytestring_is_always_the_same() {
+    when(Hash.of(byteString));
+    thenReturned(Hash.of(byteString));
+  }
+
+  @Test
+  public void hashes_of_different_bytes_are_different() {
+    when(Hash.of(byteString));
+    thenReturned(not(byteString.substring(1)));
   }
 }

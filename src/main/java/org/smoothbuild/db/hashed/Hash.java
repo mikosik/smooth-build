@@ -15,55 +15,32 @@ import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 
 import okio.BufferedSource;
+import okio.ByteString;
 import okio.HashingSink;
 import okio.HashingSource;
 import okio.Sink;
 import okio.Source;
 
-public class Hash {
-  public static Hasher newHasher() {
-    return function().newHasher();
+public class Hash extends ByteString {
+  public Hash(ByteString byteString) {
+    this(byteString.toByteArray());
   }
 
-  public static HashCode read(BufferedSource source) throws IOException {
-    source.require(size());
-    return HashCode.fromBytes(source.readByteArray(size()));
+  public Hash(byte[] data) {
+    super(data);
   }
 
-  public static HashCode hashes(HashCode... hashes) {
-    Hasher hasher = newHasher();
-    for (HashCode hash : hashes) {
-      hasher.putBytes(hash.asBytes());
-    }
-    return hasher.hash();
+  @Override
+  public String toString() {
+    return hex();
   }
 
-  public static HashCode string(String string) {
-    return function().hashString(string, CHARSET);
+  public static Hash read(BufferedSource source) throws IOException {
+    return new Hash(source.readByteArray(hashesSize()));
   }
 
-  public static HashCode integer(int value) {
-    return function().hashInt(value);
-  }
-
-  public static HashCode bytes(byte[] bytes) {
-    return function().hashBytes(bytes);
-  }
-
-  public static HashCode file(java.nio.file.Path path) throws IOException {
-    try (Source source = source(path.toFile())) {
-      HashingSource hashingSource = hashingSource(source);
-      buffer(hashingSource).readAll(blackhole());
-      return HashCode.fromBytes(hashingSource.hash().toByteArray());
-    }
-  }
-
-  public static int size() {
-    return function().bits() / 8;
-  }
-
-  public static Path toPath(HashCode hash) {
-    return Path.path(hash.toString());
+  public static Path toPath(Hash hash) {
+    return Path.path(hash.hex());
   }
 
   private static HashingSource hashingSource(Source source) {
@@ -72,6 +49,47 @@ public class Hash {
 
   public static HashingSink hashingSink(Sink sink) {
     return HashingSink.sha1(sink);
+  }
+
+  public static Hash of(java.nio.file.Path path) throws IOException {
+    try (Source source = source(path.toFile())) {
+      HashingSource hashingSource = hashingSource(source);
+      buffer(hashingSource).readAll(blackhole());
+      return new Hash(hashingSource.hash());
+    }
+  }
+
+  /*
+   * Methods below uses guava HashFunction, HashCode and converts it to Hash.
+   * Doing the same with Okio library would require ugly code to catch and swallow IOExceptions.
+   */
+
+  public static Hash of(Hash... hashes) {
+    Hasher hasher = function().newHasher();
+    for (Hash hash : hashes) {
+      hasher.putBytes(hash.toByteArray());
+    }
+    return convert(hasher.hash());
+  }
+
+  public static Hash of(String string) {
+    return convert(function().hashString(string, CHARSET));
+  }
+
+  public static Hash of(int value) {
+    return convert(function().hashInt(value));
+  }
+
+  public static Hash of(ByteString byteString) {
+    return convert(function().hashBytes(byteString.toByteArray()));
+  }
+
+  private static Hash convert(HashCode hash) {
+    return new Hash(hash.asBytes());
+  }
+
+  public static int hashesSize() {
+    return function().bits() / 8;
   }
 
   private static HashFunction function() {

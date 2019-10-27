@@ -13,12 +13,10 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.SString;
 
-import com.google.common.hash.HashCode;
-
 import okio.ByteString;
 
 public class CorruptedValueTest extends AbstractCorruptedTestCase {
-  private HashCode instanceHash;
+  private Hash instanceHash;
 
   @Test
   public void learning_test_create_any_value() throws Exception {
@@ -37,8 +35,8 @@ public class CorruptedValueTest extends AbstractCorruptedTestCase {
   @Test
   public void value_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted() throws
       Exception {
-    for (int i = 0; i <= Hash.size() * 3 + 1; i++) {
-      if (i % Hash.size() != 0) {
+    for (int i = 0; i <= Hash.hashesSize() * 3 + 1; i++) {
+      if (i % Hash.hashesSize() != 0) {
         run_value_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(1);
       }
     }

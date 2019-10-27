@@ -1,25 +1,19 @@
 package org.smoothbuild.db.hashed;
 
 import static okio.ByteString.encodeUtf8;
-import static okio.Okio.sink;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.base.Supplier;
-import com.google.common.hash.HashCode;
 
 import okio.ByteString;
 
@@ -27,13 +21,12 @@ public class HashedDbTest extends TestingContext {
   private final ByteString bytes1 = ByteString.encodeUtf8("aaa");
   private final ByteString bytes2 = ByteString.encodeUtf8("bbb");
   private HashingBufferedSink sink;
-  private HashCode hash;
+  private Hash hash;
   private ByteString byteString;
-  private byte[] bytes;
 
   @Test
   public void db_doesnt_contain_not_written_data() {
-    when(hashedDb().contains(HashCode.fromInt(33)));
+    when(hashedDb().contains(Hash.of(33)));
     thenReturned(false);
   }
 
@@ -54,7 +47,7 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void reading_not_written_value_fails() {
-    given(hash = Hash.string("abc"));
+    given(hash = Hash.of("abc"));
     when(() -> hashedDb().source(hash));
     thenThrown(exception(new NoSuchDataException(hash)));
   }
@@ -68,21 +61,21 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void written_one_element_sequence_of_hashes_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeHashes(Hash.string("abc")));
+    given(hash = hashedDb().writeHashes(Hash.of("abc")));
     when(() -> hashedDb().readHashes(hash));
-    thenReturned(list(Hash.string("abc")));
+    thenReturned(list(Hash.of("abc")));
   }
 
   @Test
   public void written_two_elements_sequence_of_hashes_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeHashes(Hash.string("abc"), Hash.string("def")));
+    given(hash = hashedDb().writeHashes(Hash.of("abc"), Hash.of("def")));
     when(() -> hashedDb().readHashes(hash));
-    thenReturned(list(Hash.string("abc"), Hash.string("def")));
+    thenReturned(list(Hash.of("abc"), Hash.of("def")));
   }
 
   @Test
   public void not_written_sequence_of_hashes_cannot_be_read_back() {
-    when(() -> hashedDb().readHashes(Hash.string("abc")));
+    when(() -> hashedDb().readHashes(Hash.of("abc")));
     thenThrown(IOException.class);
   }
 
@@ -138,10 +131,10 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void written_data_is_not_visible_until_close_is_invoked() {
-    given(() -> bytes = new byte[1024 * 1024]);
-    given(() -> hash = Hash.bytes(bytes));
+    given(() -> byteString = ByteString.of(new byte[1024 * 1024]));
+    given(() -> hash = Hash.of(byteString));
     given(() -> sink = hashedDb().sink());
-    given(() -> sink.write(bytes));
+    given(() -> sink.write(byteString));
     when(() -> hashedDb().source(hash));
     thenThrown(exception(new IOException("No data at " + hash + ".")));
   }
@@ -157,7 +150,7 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_reading_data() {
-    given(() -> hash = Hash.integer(33));
+    given(() -> hash = Hash.of(33));
     given(() -> hashedDbFileSystem().createDir(path(hash.toString())));
     when(() -> hashedDb().source(hash));
     thenThrown(exception(new CorruptedHashedDbException(
@@ -166,7 +159,7 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_writing_data() {
-    given(() -> hash = Hash.bytes(bytes1.toByteArray()));
+    given(() -> hash = Hash.of(bytes1));
     given(() -> hashedDbFileSystem().createDir(Hash.toPath(hash)));
     when(() -> hashedDb().sink().write(bytes1).close());
     thenThrown(exception(new CorruptedHashedDbException(

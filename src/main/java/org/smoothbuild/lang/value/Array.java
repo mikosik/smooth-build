@@ -14,12 +14,11 @@ import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class Array extends AbstractValue {
   private final ValuesDb valuesDb;
 
-  public Array(HashCode dataHash, ConcreteArrayType arrayType, ValuesDb valuesDb,
+  public Array(Hash dataHash, ConcreteArrayType arrayType, ValuesDb valuesDb,
       HashedDb hashedDb) {
     super(dataHash, arrayType, hashedDb);
     this.valuesDb = valuesDb;
@@ -60,7 +59,7 @@ public class Array extends AbstractValue {
     } catch (EOFException e) {
       throw corruptedValueException(hash(),
           "It is an Array which value stored in ValuesDb number of bytes which is not multiple of" +
-              " hash size = " + Hash.size() + ".");
+              " hash size = " + Hash.hashesSize() + ".");
     } catch (IOException e) {
       throw valuesDbException(e);
     }

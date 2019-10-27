@@ -7,14 +7,13 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Bool;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 public class BoolTest extends TestingContext {
   private Bool bool;
-  private HashCode hash;
+  private Hash hash;
 
   @Test
   public void type_of_bool_is_bool() throws Exception {
@@ -116,7 +115,7 @@ public class BoolTest extends TestingContext {
 
   @Test
   public void reading_not_stored_bool_fails() throws Exception {
-    given(hash = HashCode.fromInt(33));
+    given(hash = Hash.of(33));
     given(bool = boolType().newValue(hash));
     when(bool).data();
     thenThrown(ValuesDbException.class);

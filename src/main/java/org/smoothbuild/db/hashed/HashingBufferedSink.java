@@ -11,8 +11,6 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 
-import com.google.common.hash.HashCode;
-
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.ByteString;
@@ -27,7 +25,7 @@ public class HashingBufferedSink implements BufferedSink {
   private final FileSystem fileSystem;
   private final Path tempPath;
   private final Path hashedDbRootPath;
-  private HashCode hash;
+  private Hash hash;
 
   public HashingBufferedSink(FileSystem fileSystem, Path tempPath, Path hashedDbRootPath)
       throws IOException {
@@ -38,12 +36,12 @@ public class HashingBufferedSink implements BufferedSink {
     this.hashedDbRootPath = hashedDbRootPath;
   }
 
-  public HashCode hash() {
+  public Hash hash() {
     if (hash == null) {
       if (isOpen()) {
         throw new IllegalStateException("HashingBufferedSink is not closed.");
       } else {
-        hash = HashCode.fromBytes(hashingSink.hash().toByteArray());
+        hash = new Hash(hashingSink.hash());
       }
     }
     return hash;

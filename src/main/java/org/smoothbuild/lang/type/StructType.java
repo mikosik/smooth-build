@@ -5,6 +5,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.util.Lists.list;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Accessor;
@@ -14,13 +15,12 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.value.Struct;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.hash.HashCode;
 
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
   private final ValuesDb valuesDb;
 
-  public StructType(HashCode dataHash, TypeType type, String name, Iterable<Field> fields,
+  public StructType(Hash dataHash, TypeType type, String name, Iterable<Field> fields,
       HashedDb hashedDb, ValuesDb valuesDb) {
     this(dataHash, type, name, fieldsMap(fields), hashedDb, valuesDb);
   }
@@ -29,7 +29,7 @@ public class StructType extends ConcreteType {
     return stream(fields).collect(toImmutableMap(Field::name, f -> f));
   }
 
-  private StructType(HashCode dataHash, TypeType type, String name,
+  private StructType(Hash dataHash, TypeType type, String name,
       ImmutableMap<String, Field> fields, HashedDb hashedDb, ValuesDb valuesDb) {
     super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, valuesDb);
     this.fields = checkNotNull(fields);
@@ -49,7 +49,7 @@ public class StructType extends ConcreteType {
   }
 
   @Override
-  public Struct newValue(HashCode dataHash) {
+  public Struct newValue(Hash dataHash) {
     return new Struct(dataHash, this, valuesDb, hashedDb);
   }
 

@@ -7,14 +7,13 @@ import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 public abstract class AbstractTypeTestCase extends TestingContext {
   protected ConcreteType type;
-  protected HashCode hash;
+  protected Hash hash;
   private ValuesDb valuesDbOther;
 
   protected abstract ConcreteType getType(ValuesDb valuesDb);
