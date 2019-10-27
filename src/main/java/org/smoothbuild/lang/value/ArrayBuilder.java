@@ -7,10 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ConcreteArrayType;
-
-import com.google.common.hash.HashCode;
 
 public class ArrayBuilder {
   private final ConcreteArrayType type;
@@ -44,14 +43,14 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    HashCode[] elementHashes = elements
+    Hash[] elementHashes = elements
         .stream()
         .map(Value::hash)
-        .toArray(HashCode[]::new);
+        .toArray(Hash[]::new);
     return type.newValue(writeElements(elementHashes));
   }
 
-  private HashCode writeElements(HashCode[] elementHashes) {
+  private Hash writeElements(Hash[] elementHashes) {
     try {
       return hashedDb.writeHashes(elementHashes);
     } catch (IOException e) {

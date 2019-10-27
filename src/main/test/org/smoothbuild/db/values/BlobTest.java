@@ -8,12 +8,11 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.BlobBuilder;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.hash.HashCode;
 
 import okio.ByteString;
 
@@ -23,7 +22,7 @@ public class BlobTest extends TestingContext {
   private BlobBuilder blobBuilder;
   private Blob blob;
   private Blob blob2;
-  private HashCode hash;
+  private Hash hash;
 
   @Test
   public void creating_blob_without_content_creates_empty_blob() throws Exception {
@@ -129,7 +128,7 @@ public class BlobTest extends TestingContext {
 
   @Test
   public void reading_not_stored_blob_fails() {
-    given(hash = HashCode.fromInt(33));
+    given(hash = Hash.of(33));
     given(blob = blobType().newValue(hash));
     when(() -> blob.source());
     thenThrown(exception(new NoSuchDataException(hash)));

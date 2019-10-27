@@ -8,12 +8,11 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Struct;
 
-import com.google.common.hash.HashCode;
-
 public class CorruptedStructTest extends AbstractCorruptedTestCase {
-  private HashCode structHash;
+  private Hash structHash;
   private Struct struct;
 
   @Test

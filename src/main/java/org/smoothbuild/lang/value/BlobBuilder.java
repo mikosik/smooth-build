@@ -3,11 +3,10 @@ package org.smoothbuild.lang.value;
 import java.io.Closeable;
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.type.BlobType;
-
-import com.google.common.hash.HashCode;
 
 import okio.BufferedSink;
 
@@ -33,7 +32,7 @@ public class BlobBuilder implements Closeable {
 
   public Blob build() throws IOException {
     close();
-    HashCode dataHash = sink.hash();
+    Hash dataHash = sink.hash();
     return new Blob(dataHash, type, hashedDb);
   }
 }

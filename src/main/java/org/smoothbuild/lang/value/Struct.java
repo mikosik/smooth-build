@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
@@ -15,13 +16,12 @@ import org.smoothbuild.lang.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.hash.HashCode;
 
 public class Struct extends AbstractValue {
   private ImmutableMap<String, Value> fields;
   private final ValuesDb valuesDb;
 
-  public Struct(HashCode dataHash, StructType type, ValuesDb valuesDb, HashedDb hashedDb) {
+  public Struct(Hash dataHash, StructType type, ValuesDb valuesDb, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     this.valuesDb = valuesDb;
   }
@@ -44,7 +44,7 @@ public class Struct extends AbstractValue {
 
   private ImmutableMap<String, Value> fields() {
     if (fields == null) {
-      List<HashCode> hashes = readHashes();
+      List<Hash> hashes = readHashes();
       ImmutableMap<String, Field> fieldTypes = type().fields();
       if (hashes.size() != fieldTypes.size()) {
         throw corruptedValueException(hash(), "Its type is " + type() + " with "
@@ -68,7 +68,7 @@ public class Struct extends AbstractValue {
     return fields;
   }
 
-  private List<HashCode> readHashes() {
+  private List<Hash> readHashes() {
     try {
       return hashedDb.readHashes(dataHash());
     } catch (IOException e) {

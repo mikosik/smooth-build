@@ -8,15 +8,14 @@ import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class Task {
   private final Evaluator evaluator;
   private final ImmutableList<Task> dependencies;
-  private final HashCode runtimeHash;
+  private final Hash runtimeHash;
   private TaskResult result;
 
-  public Task(Evaluator evaluator, List<? extends Task> dependencies, HashCode runtimeHash) {
+  public Task(Evaluator evaluator, List<? extends Task> dependencies, Hash runtimeHash) {
     this.evaluator = evaluator;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.runtimeHash = runtimeHash;
@@ -63,8 +62,8 @@ public class Task {
     return evaluator.isCacheable() && result.hasOutput();
   }
 
-  public HashCode hash(Input input) {
-    return Hash.hashes(
+  public Hash hash(Input input) {
+    return Hash.of(
         runtimeHash,
         evaluator.hash(),
         input.hash());

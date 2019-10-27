@@ -6,8 +6,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
 
-import com.google.common.hash.HashCode;
-
 public class JavaPlatformHashProvider {
   private final Properties properties;
 
@@ -20,8 +18,8 @@ public class JavaPlatformHashProvider {
     this.properties = properties;
   }
 
-  public HashCode get() {
-    return Hash.hashes(
+  public Hash get() {
+    return Hash.of(
         hash("java.vendor"),
         hash("java.version"),
         hash("java.runtime.name"),
@@ -30,7 +28,7 @@ public class JavaPlatformHashProvider {
         hash("java.vm.version"));
   }
 
-  private HashCode hash(String name) {
-    return Hash.string(properties.getProperty(name));
+  private Hash hash(String name) {
+    return Hash.of(properties.getProperty(name));
   }
 }

@@ -1,13 +1,12 @@
 package org.smoothbuild.lang.value;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.ConcreteType;
 
-import com.google.common.hash.HashCode;
-
 public interface Value {
-  public HashCode hash();
+  public Hash hash();
 
-  public HashCode dataHash();
+  public Hash dataHash();
 
   public ConcreteType type();
 }

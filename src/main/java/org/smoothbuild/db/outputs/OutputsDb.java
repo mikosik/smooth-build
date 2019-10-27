@@ -24,8 +24,6 @@ import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 
-import com.google.common.hash.HashCode;
-
 import okio.BufferedSink;
 import okio.BufferedSource;
 
@@ -41,19 +39,19 @@ public class OutputsDb {
     this.types = types;
   }
 
-  public void write(HashCode taskHash, Output output) {
+  public void write(Hash taskHash, Output output) {
     try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
       Array messages = output.messages();
-      sink.write(messages.hash().asBytes());
+      sink.write(messages.hash());
       if (!containsErrors(messages)) {
-        sink.write(output.result().hash().asBytes());
+        sink.write(output.result().hash());
       }
     } catch (IOException e) {
       throw outputsDbException(e);
     }
   }
 
-  public boolean contains(HashCode taskHash) {
+  public boolean contains(Hash taskHash) {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
@@ -68,7 +66,7 @@ public class OutputsDb {
     }
   }
 
-  public Output read(HashCode taskHash, ConcreteType type) {
+  public Output read(Hash taskHash, ConcreteType type) {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       Value messagesValue = valuesDb.get(Hash.read(source));
       ArrayType messageArrayType = types.array(types.message());
@@ -88,7 +86,7 @@ public class OutputsDb {
       if (containsErrors(messages)) {
         return new Output(null, messages);
       } else {
-        HashCode resultObjectHash = Hash.read(source);
+        Hash resultObjectHash = Hash.read(source);
         Value value = valuesDb.get(resultObjectHash);
         if (!type.equals(value.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
@@ -101,7 +99,7 @@ public class OutputsDb {
     }
   }
 
-  static Path toPath(HashCode taskHash) {
+  static Path toPath(Hash taskHash) {
     return OUTPUTS_DB_PATH.append(Hash.toPath(taskHash));
   }
 }

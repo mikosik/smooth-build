@@ -3,12 +3,11 @@ package org.smoothbuild.lang.type;
 import java.util.List;
 import java.util.Objects;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.AbstractValue;
 import org.smoothbuild.lang.value.Value;
-
-import com.google.common.hash.HashCode;
 
 /**
  * Concrete type in smooth language.
@@ -18,7 +17,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
   protected final HashedDb hashedDb;
   private final ValuesDb valuesDb;
 
-  protected ConcreteType(HashCode dataHash, TypeType type, ConcreteType superType, String name,
+  protected ConcreteType(Hash dataHash, TypeType type, ConcreteType superType, String name,
       Class<? extends Value> jType, HashedDb hashedDb, ValuesDb valuesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(dataHash, type, hashedDb) {};
@@ -26,7 +25,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
     this.valuesDb = valuesDb;
   }
 
-  protected ConcreteType(HashCode hash, HashCode dataHash, TypeType type, ConcreteType superType,
+  protected ConcreteType(Hash hash, Hash dataHash, TypeType type, ConcreteType superType,
       String name, Class<? extends Value> jType, HashedDb hashedDb, ValuesDb valuesDb) {
     super(superType, name, jType);
     this.value = new AbstractValue(hash, dataHash, type, hashedDb) {};
@@ -34,7 +33,7 @@ public abstract class ConcreteType extends AbstractType implements Value {
     this.valuesDb = valuesDb;
   }
 
-  public abstract Value newValue(HashCode dataHash);
+  public abstract Value newValue(Hash dataHash);
 
   @Override
   public ConcreteType superType() {
@@ -97,12 +96,12 @@ public abstract class ConcreteType extends AbstractType implements Value {
   }
 
   @Override
-  public HashCode hash() {
+  public Hash hash() {
     return value.hash();
   }
 
   @Override
-  public HashCode dataHash() {
+  public Hash dataHash() {
     return value.dataHash();
   }
 

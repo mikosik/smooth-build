@@ -8,43 +8,41 @@ import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.type.StructType;
 import org.smoothbuild.lang.value.Value;
 
-import com.google.common.hash.HashCode;
-
 public class ComputationHashes {
-  public static HashCode valueComputationHash(Value value) {
+  public static Hash valueComputationHash(Value value) {
     return hash(0, value.hash());
   }
 
-  public static HashCode arrayComputationHash() {
+  public static Hash arrayComputationHash() {
     return hash(1);
   }
 
-  public static HashCode identityComputationHash() {
+  public static Hash identityComputationHash() {
     return hash(2);
   }
 
-  public static HashCode nativeCallComputationHash(NativeFunction function) {
+  public static Hash nativeCallComputationHash(NativeFunction function) {
     return hash(3, function.hash());
   }
 
-  public static HashCode convertComputationHash(ConcreteType destinationType) {
+  public static Hash convertComputationHash(ConcreteType destinationType) {
     return hash(4, destinationType.hash());
   }
 
-  public static HashCode constructorCallComputationHash(Constructor constructor) {
+  public static Hash constructorCallComputationHash(Constructor constructor) {
     StructType type = constructor.type();
     return hash(5, type.hash());
   }
 
-  public static HashCode accessorCallComputationHash(Accessor accessor) {
-    return hash(6, Hash.string(accessor.fieldName()));
+  public static Hash accessorCallComputationHash(Accessor accessor) {
+    return hash(6, Hash.of(accessor.fieldName()));
   }
 
-  private static HashCode hash(int id, HashCode hash) {
-    return Hash.hashes(Hash.integer(id), hash);
+  private static Hash hash(int id, Hash hash) {
+    return Hash.of(Hash.of(id), hash);
   }
 
-  private static HashCode hash(int id) {
-    return Hash.hashes(Hash.integer(id));
+  private static Hash hash(int id) {
+    return Hash.of(Hash.of(id));
   }
 }

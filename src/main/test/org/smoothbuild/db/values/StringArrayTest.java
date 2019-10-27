@@ -6,15 +6,14 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 public class StringArrayTest extends TestingContext {
   private Array array;
-  private HashCode hash;
+  private Hash hash;
 
   @Test
   public void type_of_string_array_is_string_array() throws Exception {
@@ -25,7 +24,7 @@ public class StringArrayTest extends TestingContext {
 
   @Test
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
-    given(hash = HashCode.fromInt(33));
+    given(hash = Hash.of(33));
     given(array = arrayType(stringType()).newValue(hash));
     when(array).asIterable(SString.class);
     thenThrown(ValuesDbException.class);

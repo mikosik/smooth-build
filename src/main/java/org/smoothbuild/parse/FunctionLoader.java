@@ -36,7 +36,6 @@ import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class FunctionLoader {
   public static Function loadFunction(SRuntime runtime, ValuesDb valuesDb, FuncNode func) {
@@ -47,7 +46,7 @@ public class FunctionLoader {
         Signature signature = new Signature(func.get(Type.class), func.name(), parameters);
         if (func.isNative()) {
           Native nativ = func.get(Native.class);
-          HashCode hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
+          Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
           boolean isCacheable = nativ.cacheable();
           return new NativeFunction(nativ, signature, func.location(), isCacheable, hash);
         } else {
@@ -55,8 +54,8 @@ public class FunctionLoader {
         }
       }
 
-      private HashCode createNativeFunctionHash(HashCode jarHash, Signature signature) {
-        return Hash.hashes(jarHash, Hash.string(signature.name()));
+      private Hash createNativeFunctionHash(Hash jarHash, Signature signature) {
+        return Hash.of(jarHash, Hash.of(signature.name()));
       }
 
       private Parameter createParameter(ParamNode param) {

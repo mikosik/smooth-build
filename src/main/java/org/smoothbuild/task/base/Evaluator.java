@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
@@ -15,7 +16,6 @@ import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.hash.HashCode;
 
 public class Evaluator {
   private final Computation computation;
@@ -76,7 +76,7 @@ public class Evaluator {
     this.location = checkNotNull(location);
   }
 
-  public HashCode hash() {
+  public Hash hash() {
     return computation.hash();
   }
 

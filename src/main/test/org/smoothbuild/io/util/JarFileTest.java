@@ -24,7 +24,7 @@ public class JarFileTest {
     Files.write(bytes.toByteArray(), file);
     given(jarFile = JarFile.jarFile(file.toPath()));
     when(jarFile).hash();
-    thenReturned(Hash.bytes(bytes.toByteArray()));
+    thenReturned(Hash.of(bytes));
   }
 
   @Test

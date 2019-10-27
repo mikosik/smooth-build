@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.StructType;
-
-import com.google.common.hash.HashCode;
 
 public class StructBuilder {
   private final StructType type;
@@ -43,15 +42,15 @@ public class StructBuilder {
       throw new IllegalStateException(
           "Field " + unspecifiedNames.get(0) + " hasn't been specified.");
     }
-    HashCode[] fieldValueHashes = fieldNames
+    Hash[] fieldValueHashes = fieldNames
         .stream()
         .map(name -> fields.get(name).hash())
-        .toArray(HashCode[]::new);
-    HashCode dataHash = writeHashes(fieldValueHashes);
+        .toArray(Hash[]::new);
+    Hash dataHash = writeHashes(fieldValueHashes);
     return type.newValue(dataHash);
   }
 
-  private HashCode writeHashes(HashCode[] hashes) {
+  private Hash writeHashes(Hash[] hashes) {
     try {
       return hashedDb.writeHashes(hashes);
     } catch (IOException e) {

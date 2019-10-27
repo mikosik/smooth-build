@@ -2,20 +2,19 @@ package org.smoothbuild.db.values.corrupt;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 import okio.ByteString;
 
 public abstract class AbstractCorruptedTestCase extends TestingContext {
-  protected HashCode hash(String string) throws IOException {
+  protected Hash hash(String string) throws IOException {
     return hashedDb().writeString(string);
   }
 
-  protected HashCode hash(boolean value) throws IOException {
+  protected Hash hash(boolean value) throws IOException {
     try (HashingBufferedSink sink = hashedDb().sink()) {
       sink.writeByte(value ? 1 : 0);
       sink.close();
@@ -23,7 +22,7 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
     }
   }
 
-  protected HashCode hash(ByteString bytes) throws IOException {
+  protected Hash hash(ByteString bytes) throws IOException {
     try (HashingBufferedSink sink = hashedDb().sink()) {
       sink.write(bytes);
       sink.close();
@@ -31,11 +30,11 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
     }
   }
 
-  protected HashCode hash(Value value) {
+  protected Hash hash(Value value) {
     return value.hash();
   }
 
-  protected HashCode hash(HashCode... hashes) throws IOException {
+  protected Hash hash(Hash... hashes) throws IOException {
     return hashedDb().writeHashes(hashes);
   }
 }

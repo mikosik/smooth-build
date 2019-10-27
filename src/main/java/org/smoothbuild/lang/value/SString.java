@@ -8,13 +8,12 @@ import static org.smoothbuild.db.values.ValuesDbException.valuesDbException;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.DecodingStringException;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.type.ConcreteType;
 
-import com.google.common.hash.HashCode;
-
 public class SString extends AbstractValue {
-  public SString(HashCode dataHash, ConcreteType type, HashedDb hashedDb) {
+  public SString(Hash dataHash, ConcreteType type, HashedDb hashedDb) {
     super(dataHash, type, hashedDb);
     checkArgument(type.name().equals("String"));
   }

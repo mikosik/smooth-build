@@ -3,10 +3,9 @@ package org.smoothbuild.task.base;
 import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.identityComputationHash;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
-
-import com.google.common.hash.HashCode;
 
 public class IdentityComputation implements Computation {
   private final ConcreteType type;
@@ -16,7 +15,7 @@ public class IdentityComputation implements Computation {
   }
 
   @Override
-  public HashCode hash() {
+  public Hash hash() {
     return identityComputationHash();
   }
 

@@ -18,12 +18,10 @@ import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.Lists;
 
-import com.google.common.hash.HashCode;
-
 import okio.ByteString;
 
 public class CorruptedArrayTest extends AbstractCorruptedTestCase {
-  private HashCode instanceHash;
+  private Hash instanceHash;
 
   @Test
   public void learning_test_create_array() throws Exception {
@@ -54,8 +52,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   @Test
   public void array_with_data_size_different_than_multiple_of_hash_size_is_corrupted() throws
       Exception {
-    for (int i = 0; i <= Hash.size() * 3 + 1; i++) {
-      if (i % Hash.size() != 0) {
+    for (int i = 0; i <= Hash.hashesSize() * 3 + 1; i++) {
+      if (i % Hash.hashesSize() != 0) {
         run_array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(i);
       }
     }

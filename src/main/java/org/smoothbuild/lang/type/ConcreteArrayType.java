@@ -2,17 +2,16 @@ package org.smoothbuild.lang.type;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.value.Array;
-
-import com.google.common.hash.HashCode;
 
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
   private final ValuesDb valuesDb;
 
-  public ConcreteArrayType(HashCode dataHash, TypeType type, ConcreteArrayType superType,
+  public ConcreteArrayType(Hash dataHash, TypeType type, ConcreteArrayType superType,
       ConcreteType elemType, HashedDb hashedDb, ValuesDb valuesDb) {
     super(dataHash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb, valuesDb);
     this.elemType = checkNotNull(elemType);
@@ -20,7 +19,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public Array newValue(HashCode dataHash) {
+  public Array newValue(Hash dataHash) {
     return new Array(dataHash, this, valuesDb, hashedDb);
   }
 

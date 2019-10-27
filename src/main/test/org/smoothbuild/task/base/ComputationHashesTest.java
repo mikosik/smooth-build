@@ -25,10 +25,8 @@ import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 public class ComputationHashesTest extends TestingContext {
-  private HashSet<HashCode> hashes;
+  private HashSet<Hash> hashes;
   private NativeFunction function;
   private NativeFunction function2;
   private Constructor constructor;
@@ -42,13 +40,13 @@ public class ComputationHashesTest extends TestingContext {
   public void each_computation_has_different_hash() {
     given(hashes = new HashSet<>());
     given(function = mock(NativeFunction.class));
-    given(willReturn(Hash.integer(0)), function).hash();
+    given(willReturn(Hash.of(0)), function).hash();
     given(constructor = mock(Constructor.class));
     given(willReturn(structType("MyStruct2", list())), constructor).type();
     given(accessor = mock(Accessor.class));
     given(willReturn("myField"), accessor).fieldName();
     given(value = mock(Value.class));
-    given(willReturn(Hash.integer(0)), value).hash();
+    given(willReturn(Hash.of(0)), value).hash();
     given(hashes.add(valueComputationHash(value)));
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
@@ -64,9 +62,9 @@ public class ComputationHashesTest extends TestingContext {
   @Test
   public void value_computation_has_different_hash_for_different_values() throws Exception {
     given(value = mock(Value.class));
-    given(willReturn(Hash.integer(1)), value).hash();
+    given(willReturn(Hash.of(1)), value).hash();
     given(value2 = mock(Value.class));
-    given(willReturn(Hash.integer(2)), value2).hash();
+    given(willReturn(Hash.of(2)), value2).hash();
     when(valueComputationHash(value));
     thenReturned(not(valueComputationHash(value2)));
   }
@@ -75,9 +73,9 @@ public class ComputationHashesTest extends TestingContext {
   public void native_call_computation_has_different_hash_for_different_functions()
       throws Exception {
     given(function = mock(NativeFunction.class));
-    given(willReturn(Hash.integer(1)), function).hash();
+    given(willReturn(Hash.of(1)), function).hash();
     given(function2 = mock(NativeFunction.class));
-    given(willReturn(Hash.integer(2)), function2).hash();
+    given(willReturn(Hash.of(2)), function2).hash();
     when(nativeCallComputationHash(function));
     thenReturned(not(nativeCallComputationHash(function2)));
   }

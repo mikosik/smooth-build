@@ -10,14 +10,13 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.Bool;
-
-import com.google.common.hash.HashCode;
 
 import okio.ByteString;
 
 public class CorruptedBoolTest extends AbstractCorruptedTestCase {
-  private HashCode instanceHash;
+  private Hash instanceHash;
 
   @Test
   public void learning_test_create_bool() throws Exception {

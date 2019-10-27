@@ -23,8 +23,6 @@ import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskResult;
 import org.smoothbuild.testing.TestingContext;
 
-import com.google.common.hash.HashCode;
-
 public class TaskReporterTest extends TestingContext{
   private final Console console = mock(Console.class);
   private final TaskReporter taskReporter = new TaskReporter(console);
@@ -66,7 +64,7 @@ public class TaskReporterTest extends TestingContext{
   }
 
   private static Task createTask(boolean isInternal) {
-    return new Task(new MyEvaluator(isInternal), list(), Hash.integer(13));
+    return new Task(new MyEvaluator(isInternal), list(), Hash.of(13));
   }
 
   private static final class MyEvaluator extends Evaluator {
@@ -81,8 +79,8 @@ public class TaskReporterTest extends TestingContext{
     }
 
     @Override
-    public HashCode hash() {
-      return Hash.integer(17);
+    public Hash hash() {
+      return Hash.of(17);
     }
   }
 }

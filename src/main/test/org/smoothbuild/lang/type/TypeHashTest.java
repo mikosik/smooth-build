@@ -6,11 +6,10 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.testing.TestingContext;
-
-import com.google.common.hash.HashCode;
 
 public class TypeHashTest extends TestingContext {
   @Test
@@ -36,6 +35,6 @@ public class TypeHashTest extends TestingContext {
 
   private void assertHash(ConcreteType type, String hash) {
     when(() -> type.hash());
-    thenReturned(HashCode.fromString(hash));
+    thenReturned(Hash.decodeHex(hash));
   }
 }

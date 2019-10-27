@@ -3,11 +3,10 @@ package org.smoothbuild.task.base;
 import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.valueComputationHash;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
-
-import com.google.common.hash.HashCode;
 
 public class ValueComputation implements Computation {
   private final Value value;
@@ -17,7 +16,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public HashCode hash() {
+  public Hash hash() {
     return valueComputationHash(value);
   }
 

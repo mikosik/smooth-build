@@ -8,14 +8,13 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.value.SString;
-
-import com.google.common.hash.HashCode;
 
 import okio.ByteString;
 
 public class CorruptedStringTest extends AbstractCorruptedTestCase {
-  private HashCode instanceHash;
+  private Hash instanceHash;
 
   @Test
   public void learning_test_create_string() throws Exception {

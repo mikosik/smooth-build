@@ -3,6 +3,7 @@ package org.smoothbuild.task.base;
 import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.type.ConcreteArrayType;
 import org.smoothbuild.lang.type.ConcreteType;
 import org.smoothbuild.lang.value.Array;
@@ -10,8 +11,6 @@ import org.smoothbuild.lang.value.ArrayBuilder;
 import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.exec.Container;
-
-import com.google.common.hash.HashCode;
 
 public class ConvertComputation implements Computation {
   private final ConcreteType type;
@@ -21,7 +20,7 @@ public class ConvertComputation implements Computation {
   }
 
   @Override
-  public HashCode hash() {
+  public Hash hash() {
     return convertComputationHash(type);
   }
 

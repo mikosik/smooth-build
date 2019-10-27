@@ -9,13 +9,11 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.util.reflect.Classes;
 
-import com.google.common.hash.HashCode;
-
 public class SmoothJarHashProvider {
   @Inject
   public SmoothJarHashProvider() {}
 
-  public HashCode get() {
+  public Hash get() {
     String resourcePath = SmoothJarHashProvider.class
         .getClassLoader()
         .getResource(Classes.binaryPath(SmoothJarHashProvider.class))
@@ -26,9 +24,9 @@ public class SmoothJarHashProvider {
     return calculateHash(Paths.get(smoothJarPath));
   }
 
-  private static HashCode calculateHash(Path smoothJarFile) {
+  private static Hash calculateHash(Path smoothJarFile) {
     try {
-      return Hash.file(smoothJarFile);
+      return Hash.of(smoothJarFile);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
