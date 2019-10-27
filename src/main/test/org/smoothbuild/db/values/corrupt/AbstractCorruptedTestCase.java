@@ -2,7 +2,7 @@ package org.smoothbuild.db.values.corrupt;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.testing.TestingContext;
 
@@ -16,18 +16,18 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
   }
 
   protected HashCode hash(boolean value) throws IOException {
-    try (Marshaller marshaller = hashedDb().newMarshaller()) {
-      marshaller.sink().writeByte(value ? 1 : 0);
-      marshaller.close();
-      return marshaller.hash();
+    try (HashingBufferedSink sink = hashedDb().sink()) {
+      sink.writeByte(value ? 1 : 0);
+      sink.close();
+      return sink.hash();
     }
   }
 
   protected HashCode hash(ByteString bytes) throws IOException {
-    try (Marshaller marshaller = hashedDb().newMarshaller()) {
-      marshaller.sink().write(bytes);
-      marshaller.close();
-      return marshaller.hash();
+    try (HashingBufferedSink sink = hashedDb().sink()) {
+      sink.write(bytes);
+      sink.close();
+      return sink.hash();
     }
   }
 

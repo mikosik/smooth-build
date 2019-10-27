@@ -1,11 +1,15 @@
-package org.smoothbuild.util;
+package org.smoothbuild.db.hashed;
+
+import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.io.fs.base.FileSystem;
+import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.PathState;
 
 import com.google.common.hash.HashCode;
 
@@ -14,18 +18,24 @@ import okio.BufferedSink;
 import okio.ByteString;
 import okio.HashingSink;
 import okio.Okio;
-import okio.Sink;
 import okio.Source;
 import okio.Timeout;
 
 public class HashingBufferedSink implements BufferedSink {
   private final HashingSink hashingSink;
   private final BufferedSink bufferedSink;
+  private final FileSystem fileSystem;
+  private final Path tempPath;
+  private final Path hashedDbRootPath;
   private HashCode hash;
 
-  public HashingBufferedSink(Sink sink) {
-    this.hashingSink = Hash.hashingSink(sink);
+  public HashingBufferedSink(FileSystem fileSystem, Path tempPath, Path hashedDbRootPath)
+      throws IOException {
+    this.hashingSink = Hash.hashingSink(fileSystem.sink(tempPath));
     this.bufferedSink = Okio.buffer(hashingSink);
+    this.fileSystem = fileSystem;
+    this.tempPath = tempPath;
+    this.hashedDbRootPath = hashedDbRootPath;
   }
 
   public HashCode hash() {
@@ -40,6 +50,26 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   @Override
+  public void close() throws IOException {
+    bufferedSink.close();
+
+    Path path = hashedDbRootPath.append(Hash.toPath(hash()));
+    PathState pathState = fileSystem.pathState(path);
+    switch (pathState) {
+      case NOTHING:
+        fileSystem.move(tempPath, path);
+      case FILE:
+        // nothing to do, we already stored data with such hash so its content must be equal
+        return;
+      case DIR:
+        throw new CorruptedHashedDbException(
+            "Corrupted HashedDb. Cannot store data at " + path + " as it is a directory.");
+      default:
+        throw newUnknownPathState(pathState);
+    }
+  }
+
+  @Override
   public Buffer buffer() {
     return bufferedSink.getBuffer();
   }
@@ -51,17 +81,20 @@ public class HashingBufferedSink implements BufferedSink {
 
   @Override
   public BufferedSink write(ByteString byteString) throws IOException {
-    return bufferedSink.write(byteString);
+    bufferedSink.write(byteString);
+    return this;
   }
 
   @Override
   public BufferedSink write(byte[] source) throws IOException {
-    return bufferedSink.write(source);
+    bufferedSink.write(source);
+    return this;
   }
 
   @Override
   public BufferedSink write(byte[] source, int offset, int byteCount) throws IOException {
-    return bufferedSink.write(source, offset, byteCount);
+     bufferedSink.write(source, offset, byteCount);
+     return this;
   }
 
   @Override
@@ -71,78 +104,93 @@ public class HashingBufferedSink implements BufferedSink {
 
   @Override
   public BufferedSink write(Source source, long byteCount) throws IOException {
-    return bufferedSink.write(source, byteCount);
+    bufferedSink.write(source, byteCount);
+    return this;
   }
 
   @Override
   public BufferedSink writeUtf8(String string) throws IOException {
-    return bufferedSink.writeUtf8(string);
+    bufferedSink.writeUtf8(string);
+    return this;
   }
 
   @Override
   public BufferedSink writeUtf8(String string, int beginIndex, int endIndex) throws IOException {
-    return bufferedSink.writeUtf8(string, beginIndex, endIndex);
+    bufferedSink.writeUtf8(string, beginIndex, endIndex);
+    return this;
   }
 
   @Override
   public BufferedSink writeUtf8CodePoint(int codePoint) throws IOException {
-    return bufferedSink.writeUtf8CodePoint(codePoint);
+    bufferedSink.writeUtf8CodePoint(codePoint);
+    return this;
   }
 
   @Override
   public BufferedSink writeString(String string, Charset charset) throws IOException {
-    return bufferedSink.writeString(string, charset);
+    bufferedSink.writeString(string, charset);
+    return this;
   }
 
   @Override
   public BufferedSink writeString(String string, int beginIndex, int endIndex,
       Charset charset) throws IOException {
-    return bufferedSink.writeString(string, beginIndex, endIndex, charset);
+    bufferedSink.writeString(string, beginIndex, endIndex, charset);
+    return this;
   }
 
   @Override
   public BufferedSink writeByte(int b) throws IOException {
-    return bufferedSink.writeByte(b);
+    bufferedSink.writeByte(b);
+    return this;
   }
 
   @Override
   public BufferedSink writeShort(int s) throws IOException {
-    return bufferedSink.writeShort(s);
+    bufferedSink.writeShort(s);
+    return this;
   }
 
   @Override
   public BufferedSink writeShortLe(int s) throws IOException {
-    return bufferedSink.writeShortLe(s);
+    bufferedSink.writeShortLe(s);
+    return this;
   }
 
   @Override
   public BufferedSink writeInt(int i) throws IOException {
-    return bufferedSink.writeInt(i);
+    bufferedSink.writeInt(i);
+    return this;
   }
 
   @Override
   public BufferedSink writeIntLe(int i) throws IOException {
-    return bufferedSink.writeIntLe(i);
+     bufferedSink.writeIntLe(i);
+     return this;
   }
 
   @Override
   public BufferedSink writeLong(long v) throws IOException {
-    return bufferedSink.writeLong(v);
+    bufferedSink.writeLong(v);
+    return this;
   }
 
   @Override
   public BufferedSink writeLongLe(long v) throws IOException {
-    return bufferedSink.writeLongLe(v);
+    bufferedSink.writeLongLe(v);
+    return this;
   }
 
   @Override
   public BufferedSink writeDecimalLong(long v) throws IOException {
-    return bufferedSink.writeDecimalLong(v);
+    bufferedSink.writeDecimalLong(v);
+    return this;
   }
 
   @Override
   public BufferedSink writeHexadecimalUnsignedLong(long v) throws IOException {
-    return bufferedSink.writeHexadecimalUnsignedLong(v);
+    bufferedSink.writeHexadecimalUnsignedLong(v);
+    return this;
   }
 
   @Override
@@ -161,18 +209,15 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   @Override
-  public void close() throws IOException {
-    bufferedSink.close();
-  }
-
-  @Override
   public BufferedSink emit() throws IOException {
-    return bufferedSink.emit();
+    bufferedSink.emit();
+    return this;
   }
 
   @Override
   public BufferedSink emitCompleteSegments() throws IOException {
-    return bufferedSink.emitCompleteSegments();
+    bufferedSink.emitCompleteSegments();
+    return this;
   }
 
   @Override

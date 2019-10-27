@@ -50,6 +50,8 @@ public class TestingContext {
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private MemoryFileSystem fullFileSystem;
+  private TempManager tempManager;
+  private FileSystem tempManagerFileSystem;
 
   public NativeApi nativeApi() {
     return container();
@@ -57,8 +59,7 @@ public class TestingContext {
 
   public Container container() {
     if (container == null) {
-      container = new Container(fullFileSystem(), valueFactory(), types(),
-          new TempManager(new MemoryFileSystem()));
+      container = new Container(fullFileSystem(), valueFactory(), types(), tempManager());
     }
     return container;
   }
@@ -112,16 +113,30 @@ public class TestingContext {
   public HashedDb hashedDb() {
     if (hashedDb == null) {
       hashedDb = new HashedDb(
-          hashedDbFileSystem(), Path.root(), new TempManager(new MemoryFileSystem()));
+          hashedDbFileSystem(), Path.root(), tempManager());
     }
     return hashedDb;
   }
 
-  private FileSystem hashedDbFileSystem() {
+  public FileSystem hashedDbFileSystem() {
     if (hashedDbFileSystem == null) {
       hashedDbFileSystem = new MemoryFileSystem();
     }
     return hashedDbFileSystem;
+  }
+
+  public TempManager tempManager() {
+    if (tempManager == null) {
+      tempManager = new TempManager(tempManagerFileSystem());
+    }
+    return tempManager;
+  }
+
+  public FileSystem tempManagerFileSystem() {
+    if (tempManagerFileSystem == null) {
+      tempManagerFileSystem = new MemoryFileSystem();
+    }
+    return tempManagerFileSystem;
   }
 
   public FileSystem fullFileSystem() {

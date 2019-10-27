@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.hashed.Marshaller;
+import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.type.BlobType;
 import org.smoothbuild.lang.type.BoolType;
@@ -92,10 +92,10 @@ public class ValuesDb {
   }
 
   private HashCode writeBool(boolean value) {
-    try (Marshaller marshaller = hashedDb.newMarshaller()) {
-      marshaller.sink().writeByte(value ? 1 : 0);
-      marshaller.close();
-      return marshaller.hash();
+    try (HashingBufferedSink sink = hashedDb.sink()) {
+      sink.writeByte(value ? 1 : 0);
+      sink.close();
+      return sink.hash();
     } catch (IOException e) {
       throw valuesDbException(e);
     }
