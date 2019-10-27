@@ -101,24 +101,12 @@ public class HashedDb {
   }
 
   public Marshaller newMarshaller() throws IOException {
-    return newMarshaller(null);
-  }
-
-  public Marshaller newMarshaller(HashCode hash) throws IOException {
     Path tempPath = tempManager.tempPath();
     Sink sink = fileSystem.sink(tempPath);
-    if (hash == null) {
-      HashingSink hashing = hashingSink(sink);
-      // HashingSink.hash() is not idempotent so we need to memoize its result.
-      Supplier<HashCode> hashSupplier = memoize(() -> fromBytes(hashing.hash().toByteArray()));
-      return newMarshaller(hashing, hashSupplier, tempPath);
-    } else {
-      return newMarshaller(sink, () -> hash, tempPath);
-    }
-  }
-
-  private Marshaller newMarshaller(Sink sink, Supplier<HashCode> hashSupplier, Path tempPath) {
-    return new Marshaller(moveOnCloseSink(sink, hashSupplier, tempPath), hashSupplier);
+    HashingSink hashing = hashingSink(sink);
+    // HashingSink.hash() is not idempotent so we need to memoize its result.
+    Supplier<HashCode> hashSupplier = memoize(() -> fromBytes(hashing.hash().toByteArray()));
+    return new Marshaller(moveOnCloseSink(hashing, hashSupplier, tempPath), hashSupplier);
   }
 
   private ForwardingSink moveOnCloseSink(Sink sink, Supplier<HashCode> hashSupplier,

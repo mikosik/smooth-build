@@ -30,6 +30,7 @@ public class HashedDbTest {
   private HashCode hash;
   private MemoryFileSystem fileSystem;
   private ByteString byteString;
+  private byte[] bytes;
 
   @Before
   public void before() {
@@ -117,15 +118,6 @@ public class HashedDbTest {
     thenReturned(ByteString.of());
   }
 
-  @Test
-  public void written_data_at_given_hash_can_be_read_back() {
-    given(() -> hash = Hash.integer(33));
-    given(() -> marshaller = hashedDb.newMarshaller(hash));
-    given(() -> marshaller.sink().write(bytes1));
-    given(() -> marshaller.close());
-    when(() -> hashedDb.source(marshaller.hash()).readByteString());
-    thenReturned(bytes1);
-  }
 
   @Test
   public void bytes_written_twice_can_be_read_back() {
@@ -136,18 +128,6 @@ public class HashedDbTest {
     given(() -> marshaller.sink().write(bytes1));
     given(() -> marshaller.close());
     when(() -> hashedDb.source(marshaller.hash()).readByteString());
-    thenReturned(bytes1);
-  }
-
-  @Test
-  public void writing_bytes_at_already_used_hash_is_ignored() throws IOException {
-    given(() -> marshaller = hashedDb.newMarshaller());
-    given(() -> marshaller.sink().write(bytes1));
-    given(() -> marshaller.close());
-    given(() -> marshaller = hashedDb.newMarshaller(marshaller.hash()));
-    given(() -> marshaller.sink().write(bytes2));
-    given(() -> marshaller.close());
-    when(hashedDb.source(marshaller.hash()).readByteString());
     thenReturned(bytes1);
   }
 
@@ -166,9 +146,10 @@ public class HashedDbTest {
 
   @Test
   public void written_data_is_not_visible_until_close_is_invoked() {
-    given(() -> hash = Hash.integer(17));
-    given(() -> marshaller = hashedDb.newMarshaller(hash));
-    given(() -> marshaller.sink().write(new byte[1024 * 1024]));
+    given(() -> bytes = new byte[1024 * 1024]);
+    given(() -> hash = Hash.bytes(bytes));
+    given(() -> marshaller = hashedDb.newMarshaller());
+    given(() -> marshaller.sink().write(bytes));
     when(() -> hashedDb.source(hash));
     thenThrown(exception(new IOException("No data at " + hash + ".")));
   }
