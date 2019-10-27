@@ -1,12 +1,9 @@
 package org.smoothbuild.db.hashed;
 
-import static com.google.common.base.Suppliers.memoize;
-import static com.google.common.hash.HashCode.fromBytes;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static okio.Okio.buffer;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.db.hashed.Hash.hashingSink;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
@@ -14,9 +11,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
-import org.smoothbuild.io.fs.base.AssertPath;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -25,9 +20,6 @@ import org.smoothbuild.io.util.TempManager;
 import com.google.common.hash.HashCode;
 
 import okio.BufferedSource;
-import okio.ForwardingSink;
-import okio.HashingSink;
-import okio.Sink;
 
 public class HashedDb {
   private final FileSystem fileSystem;
@@ -46,10 +38,10 @@ public class HashedDb {
   }
 
   public HashCode writeString(String string) throws IOException {
-    try (Marshaller marshaller = newMarshaller()) {
-      marshaller.sink().writeString(string, CHARSET);
-      marshaller.close();
-      return marshaller.hash();
+    try (HashingBufferedSink sink = sink()) {
+      sink.writeString(string, CHARSET);
+      sink.close();
+      return sink.hash();
     }
   }
 
@@ -65,12 +57,12 @@ public class HashedDb {
   }
 
   public HashCode writeHashes(HashCode... hashes) throws IOException {
-    try (Marshaller marshaller = newMarshaller()) {
+    try (HashingBufferedSink sink = sink()) {
       for (HashCode hashCode : hashes) {
-        marshaller.sink().write(hashCode.asBytes());
+        sink.write(hashCode.asBytes());
       }
-      marshaller.close();
-      return marshaller.hash();
+      sink.close();
+      return sink.hash();
     }
   }
 
@@ -100,38 +92,8 @@ public class HashedDb {
     }
   }
 
-  public Marshaller newMarshaller() throws IOException {
-    Path tempPath = tempManager.tempPath();
-    Sink sink = fileSystem.sink(tempPath);
-    HashingSink hashing = hashingSink(sink);
-    // HashingSink.hash() is not idempotent so we need to memoize its result.
-    Supplier<HashCode> hashSupplier = memoize(() -> fromBytes(hashing.hash().toByteArray()));
-    return new Marshaller(moveOnCloseSink(hashing, hashSupplier, tempPath), hashSupplier);
-  }
-
-  private ForwardingSink moveOnCloseSink(Sink sink, Supplier<HashCode> hashSupplier,
-      Path tempPath) {
-    return new ForwardingSink(sink) {
-      @Override
-      public void close() throws IOException {
-        super.close();
-
-        Path path = toPath(hashSupplier.get());
-        PathState pathState = fileSystem.pathState(path);
-        switch (pathState) {
-          case NOTHING:
-            fileSystem.move(tempPath, path);
-          case FILE:
-            // nothing to do, we already stored data with such hash so its content must be equal
-            return;
-          case DIR:
-            throw new CorruptedHashedDbException(
-                "Corrupted HashedDb. Cannot store data at " + path + " as it is a directory.");
-          default:
-            throw AssertPath.newUnknownPathState(pathState);
-        }
-      }
-    };
+  public HashingBufferedSink sink() throws IOException {
+    return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
   }
 
   private Path toPath(HashCode hash) {
