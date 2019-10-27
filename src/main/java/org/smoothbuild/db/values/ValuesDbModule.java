@@ -1,6 +1,6 @@
 package org.smoothbuild.db.values;
 
-import static org.smoothbuild.SmoothConstants.VALUES_DB_PATH;
+import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
 
 import javax.inject.Singleton;
 
@@ -15,15 +15,14 @@ public class ValuesDbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
-  @Values
   @Provides
-  public HashedDb provideValuesHashedDb(FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, VALUES_DB_PATH, tempManager);
+  public HashedDb provideHashedDb(FileSystem fileSystem, TempManager tempManager) {
+    return new HashedDb(fileSystem, HASHED_DB_PATH, tempManager);
   }
 
   @Provides
   @Singleton
-  public ValuesDb provideValuesDb(@Values HashedDb hashedDb) {
+  public ValuesDb provideValuesDb(HashedDb hashedDb) {
     return new ValuesDb(hashedDb);
   }
 }

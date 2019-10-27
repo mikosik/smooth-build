@@ -17,8 +17,8 @@ public class SmoothConstants {
   public static final Charset CHARSET = StandardCharsets.UTF_8;
 
   public static final Path SMOOTH_DIR = path(".smooth");
-  public static final Path VALUES_DIR = path("values");
-  public static final Path VALUES_DB_PATH = SMOOTH_DIR.append(VALUES_DIR);
+  public static final Path HASHED_DB_DIR = path("hashed");
+  public static final Path HASHED_DB_PATH = SMOOTH_DIR.append(HASHED_DB_DIR);
   public static final Path OUTPUTS_DIR = path("outputs");
   public static final Path OUTPUTS_DB_PATH = SMOOTH_DIR.append(OUTPUTS_DIR);
   public static final Path ARTIFACTS_DIR = path("artifacts");

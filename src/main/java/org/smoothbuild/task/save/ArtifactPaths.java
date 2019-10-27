@@ -1,7 +1,7 @@
 package org.smoothbuild.task.save;
 
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
-import static org.smoothbuild.SmoothConstants.VALUES_DB_PATH;
+import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -10,7 +10,7 @@ import org.smoothbuild.lang.value.Value;
 
 public class ArtifactPaths {
   public static Path targetPath(Value value) {
-    return VALUES_DB_PATH.append(Hash.toPath(value.dataHash()));
+    return HASHED_DB_PATH.append(Hash.toPath(value.dataHash()));
   }
 
   public static Path artifactPath(String name) {
