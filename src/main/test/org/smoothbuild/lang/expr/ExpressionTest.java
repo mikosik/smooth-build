@@ -11,9 +11,9 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Evaluator;
 
 public class ExpressionTest {
@@ -50,7 +50,7 @@ public class ExpressionTest {
     }
 
     @Override
-    public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+    public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
       return null;
     }
   }

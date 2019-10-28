@@ -11,12 +11,12 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -27,7 +27,7 @@ public class OutputsDbTest extends TestingContext {
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private Path path = path("file/path");
 
-  private Value message;
+  private SObject message;
   private Array messages;
   private Array array;
   private Struct file;

@@ -1,9 +1,9 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
+import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.TypeNames;
+import org.smoothbuild.lang.object.type.TypeNames;
 
 public class TypeNode extends NamedNode {
   public TypeNode(String name, Location location) {

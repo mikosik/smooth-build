@@ -3,8 +3,8 @@ package org.smoothbuild.builtin.java.junit;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.Struct;
 
 import okio.BufferedSource;
 

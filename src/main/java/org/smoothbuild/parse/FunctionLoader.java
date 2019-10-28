@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Function;
@@ -20,11 +19,12 @@ import org.smoothbuild.lang.expr.ArrayExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -38,7 +38,7 @@ import org.smoothbuild.parse.ast.StringNode;
 import com.google.common.collect.ImmutableList;
 
 public class FunctionLoader {
-  public static Function loadFunction(SRuntime runtime, ValuesDb valuesDb, FuncNode func) {
+  public static Function loadFunction(SRuntime runtime, ObjectsDb objectsDb, FuncNode func) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
@@ -119,7 +119,7 @@ public class FunctionLoader {
       }
 
       private Expression createStringLiteral(StringNode string) {
-        Value literal = valuesDb.string(string.get(String.class));
+        SObject literal = objectsDb.string(string.get(String.class));
         return new LiteralExpression(literal, string.location());
       }
 

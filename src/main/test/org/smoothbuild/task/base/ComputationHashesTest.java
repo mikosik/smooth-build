@@ -22,7 +22,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.testing.TestingContext;
 
 public class ComputationHashesTest extends TestingContext {
@@ -33,8 +33,8 @@ public class ComputationHashesTest extends TestingContext {
   private Constructor constructor2;
   private Accessor accessor;
   private Accessor accessor2;
-  private Value value;
-  private Value value2;
+  private SObject object;
+  private SObject object2;
 
   @Test
   public void each_computation_has_different_hash() {
@@ -45,9 +45,9 @@ public class ComputationHashesTest extends TestingContext {
     given(willReturn(structType("MyStruct2", list())), constructor).type();
     given(accessor = mock(Accessor.class));
     given(willReturn("myField"), accessor).fieldName();
-    given(value = mock(Value.class));
-    given(willReturn(Hash.of(0)), value).hash();
-    given(hashes.add(valueComputationHash(value)));
+    given(object = mock(SObject.class));
+    given(willReturn(Hash.of(0)), object).hash();
+    given(hashes.add(valueComputationHash(object)));
     given(hashes.add(arrayComputationHash()));
     given(hashes.add(identityComputationHash()));
     given(hashes.add(nativeCallComputationHash(function)));
@@ -61,12 +61,12 @@ public class ComputationHashesTest extends TestingContext {
 
   @Test
   public void value_computation_has_different_hash_for_different_values() throws Exception {
-    given(value = mock(Value.class));
-    given(willReturn(Hash.of(1)), value).hash();
-    given(value2 = mock(Value.class));
-    given(willReturn(Hash.of(2)), value2).hash();
-    when(valueComputationHash(value));
-    thenReturned(not(valueComputationHash(value2)));
+    given(object = mock(SObject.class));
+    given(willReturn(Hash.of(1)), object).hash();
+    given(object2 = mock(SObject.class));
+    given(willReturn(Hash.of(2)), object2).hash();
+    when(valueComputationHash(object));
+    thenReturned(not(valueComputationHash(object2)));
   }
 
   @Test

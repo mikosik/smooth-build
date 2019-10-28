@@ -1,8 +1,8 @@
 package org.smoothbuild.builtin.java.javac;
 
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.SString;
 
 public class JavaPropertyFunction {
   @SmoothFunction(value = "javaProperty", cacheable = false)

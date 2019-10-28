@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.plugin;
 
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
 
 public interface Types {
   public ConcreteType bool();

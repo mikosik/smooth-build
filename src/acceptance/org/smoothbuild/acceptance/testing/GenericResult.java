@@ -1,13 +1,13 @@
 package org.smoothbuild.acceptance.testing;
 
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Value;
 
 public class GenericResult {
   @SmoothFunction("genericResult")
-  public static Value genericResult(NativeApi nativeApi, Array array) {
+  public static SObject genericResult(NativeApi nativeApi, Array array) {
     return nativeApi.create().string("abc");
   }
 }

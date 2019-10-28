@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 
 public class ArgNode extends NamedNode {
   private final int position;

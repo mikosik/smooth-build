@@ -1,11 +1,11 @@
 package org.smoothbuild.task.exec;
 
-import static org.smoothbuild.lang.message.Messages.isEmpty;
+import static org.smoothbuild.lang.object.base.Messages.isEmpty;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.TaskResult;
 

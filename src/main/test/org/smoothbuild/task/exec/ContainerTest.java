@@ -1,8 +1,8 @@
 package org.smoothbuild.task.exec;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.smoothbuild.lang.message.Messages.severity;
-import static org.smoothbuild.lang.message.Messages.text;
+import static org.smoothbuild.lang.object.base.Messages.severity;
+import static org.smoothbuild.lang.object.base.Messages.text;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.then;
@@ -14,8 +14,8 @@ import static org.testory.common.Matchers.same;
 import org.junit.Test;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.Iterables;
@@ -34,7 +34,7 @@ public class ContainerTest extends TestingContext {
   @Test
   public void messages_are_logged() {
     when(container().log()).error("message");
-    then(Iterables.size(container().messages().asIterable(Value.class)), equalTo(1));
+    then(Iterables.size(container().messages().asIterable(SObject.class)), equalTo(1));
     then(text(container().messages().asIterable(Struct.class).iterator().next()),
         equalTo("message"));
     then(severity(container().messages().asIterable(Struct.class).iterator().next()),

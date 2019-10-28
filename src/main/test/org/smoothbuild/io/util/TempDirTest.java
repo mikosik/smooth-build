@@ -13,9 +13,9 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 import org.testory.common.Matcher;
 

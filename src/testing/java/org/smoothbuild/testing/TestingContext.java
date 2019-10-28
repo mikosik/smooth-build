@@ -8,45 +8,45 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.outputs.OutputsDb;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.ArrayBuilder;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.BlobBuilder;
+import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.StructBuilder;
+import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.BlobType;
+import org.smoothbuild.lang.object.type.BoolType;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.NothingType;
+import org.smoothbuild.lang.object.type.StringType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
-import org.smoothbuild.lang.type.BlobType;
-import org.smoothbuild.lang.type.BoolType;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.NothingType;
-import org.smoothbuild.lang.type.StringType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.TypeType;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.StructBuilder;
-import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.lang.value.ValueFactory;
 import org.smoothbuild.task.exec.Container;
 
 import okio.ByteString;
 
 public class TestingContext {
-  private ValueFactory valueFactory;
+  private ObjectFactory objectFactory;
   private Container container;
   private TestingRuntimeTypes types;
   private RuntimeTypes runtimeTypes;
   private OutputsDb outputsDb;
   private FileSystem outputsDbFileSystem;
-  private ValuesDb valuesDb;
+  private ObjectsDb objectsDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private MemoryFileSystem fullFileSystem;
@@ -59,42 +59,42 @@ public class TestingContext {
 
   public Container container() {
     if (container == null) {
-      container = new Container(fullFileSystem(), valueFactory(), types(), tempManager());
+      container = new Container(fullFileSystem(), objectFactory(), types(), tempManager());
     }
     return container;
   }
 
-  public ValueFactory valueFactory() {
-    if (valueFactory == null) {
-      valueFactory = new ValueFactory(types(), valuesDb());
+  public ObjectFactory objectFactory() {
+    if (objectFactory == null) {
+      objectFactory = new ObjectFactory(types(), objectsDb());
     }
-    return valueFactory;
+    return objectFactory;
   }
 
   public Types types() {
     if (types == null) {
-      types = new TestingRuntimeTypes(valuesDb());
+      types = new TestingRuntimeTypes(objectsDb());
     }
     return types;
   }
 
   public RuntimeTypes runtimeTypes() {
     if (runtimeTypes == null) {
-      runtimeTypes = new RuntimeTypes(valuesDb());
+      runtimeTypes = new RuntimeTypes(objectsDb());
     }
     return runtimeTypes;
   }
 
-  public ValuesDb valuesDb() {
-    if (valuesDb == null) {
-      valuesDb = new ValuesDb(hashedDb());
+  public ObjectsDb objectsDb() {
+    if (objectsDb == null) {
+      objectsDb = new ObjectsDb(hashedDb());
     }
-    return valuesDb;
+    return objectsDb;
   }
 
   public OutputsDb outputsDb() {
     if (outputsDb == null) {
-      outputsDb = new OutputsDb(outputsDbFileSystem(), valuesDb(), types());
+      outputsDb = new OutputsDb(outputsDbFileSystem(), objectsDb(), types());
     }
     return outputsDb;
   }
@@ -106,8 +106,8 @@ public class TestingContext {
     return outputsDbFileSystem;
   }
 
-  public ValuesDb valuesDbOther() {
-    return new ValuesDb(hashedDb());
+  public ObjectsDb objectsDbOther() {
+    return new ObjectsDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -147,31 +147,31 @@ public class TestingContext {
   }
 
   public TypeType typeType() {
-    return valuesDb().typeType();
+    return objectsDb().typeType();
   }
 
   public BoolType boolType() {
-    return valuesDb().boolType();
+    return objectsDb().boolType();
   }
 
   public StringType stringType() {
-    return valuesDb().stringType();
+    return objectsDb().stringType();
   }
 
   public BlobType blobType() {
-    return valuesDb().blobType();
+    return objectsDb().blobType();
   }
 
   public NothingType nothingType() {
-    return valuesDb().nothingType();
+    return objectsDb().nothingType();
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return valuesDb().arrayType(elementType);
+    return objectsDb().arrayType(elementType);
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    return valuesDb().structType(name, fields);
+    return objectsDb().structType(name, fields);
   }
 
   public StructType personType() {
@@ -188,23 +188,23 @@ public class TestingContext {
   }
 
   public Bool bool(boolean value) {
-    return valuesDb().bool(value);
+    return objectsDb().bool(value);
   }
 
   public SString string(String string) {
-    return valuesDb().string(string);
+    return objectsDb().string(string);
   }
 
   public BlobBuilder blobBuilder() {
-    return valuesDb().blobBuilder();
+    return objectsDb().blobBuilder();
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elemType) {
-    return valuesDb().arrayBuilder(elemType);
+    return objectsDb().arrayBuilder(elemType);
   }
 
   public StructBuilder structBuilder(StructType type) {
-    return valuesDb().structBuilder(type);
+    return objectsDb().structBuilder(type);
   }
 
   public Struct person(String firstName, String lastName) {
@@ -215,31 +215,31 @@ public class TestingContext {
   }
 
   public Array messageArrayWithOneError() {
-    return array(valueFactory().errorMessage("error message"));
+    return array(objectFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
     return array(types().message());
   }
 
-  public <T extends Value> Array array(Value... elements) {
+  public <T extends SObject> Array array(SObject... elements) {
     return array(elements[0].type(), elements);
   }
 
-  public <T extends Value> Array array(ConcreteType elementType, Value... elements) {
-    return valuesDb().arrayBuilder(elementType).addAll(list(elements)).build();
+  public <T extends SObject> Array array(ConcreteType elementType, SObject... elements) {
+    return objectsDb().arrayBuilder(elementType).addAll(list(elements)).build();
   }
 
-  public  Value errorMessage(String text) {
-    return valueFactory().errorMessage(text);
+  public SObject errorMessage(String text) {
+    return objectFactory().errorMessage(text);
   }
 
-  public Value warningMessage(String text) {
-    return valueFactory().warningMessage(text);
+  public SObject warningMessage(String text) {
+    return objectFactory().warningMessage(text);
   }
 
-  public Value infoMessage(String text) {
-    return valueFactory().infoMessage(text);
+  public SObject infoMessage(String text) {
+    return objectFactory().infoMessage(text);
   }
 
   public Struct file(Path path) {
@@ -247,22 +247,22 @@ public class TestingContext {
   }
 
   public Struct file(Path path, ByteString content) {
-    SString string = valueFactory().string(path.value());
+    SString string = objectFactory().string(path.value());
     Blob blob = blob(content);
-    return valueFactory().file(string, blob);
+    return objectFactory().file(string, blob);
   }
 
   public Blob blob(ByteString bytes) {
     try {
-      return valueFactory().blob(sink -> sink.write(bytes));
+      return objectFactory().blob(sink -> sink.write(bytes));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
   public static class TestingRuntimeTypes extends RuntimeTypes {
-    public TestingRuntimeTypes(ValuesDb valuesDb) {
-      super(valuesDb);
+    public TestingRuntimeTypes(ObjectsDb objectsDb) {
+      super(objectsDb);
       struct("File", list(
           new Field(blob(), "content", unknownLocation()),
           new Field(string(), "path", unknownLocation())));

@@ -16,7 +16,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
         + "\n"
         + "All available commands are:\n"
         + "  build   Build artifact(s) by running specified function(s)\n"
-        + "  clean   Remove all cached values and artifacts calculated during previous builds\n"
+        + "  clean   Remove all cached objects and artifacts calculated during previous builds\n"
         + "  help    Print help about given command\n";
   }
 
@@ -39,12 +39,12 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_clean_command_prints_help_for_clean() throws Exception {
     whenSmoothHelp("clean");
     thenFinishedWithSuccess();
-    thenOutputContains(buildClean());
+    thenOutputContains(cleanHelp());
   }
 
-  private static String buildClean() {
+  private static String cleanHelp() {
     return "usage: smooth clean\n"
         + "\n"
-        + "Remove all cached values and artifacts calculated during previous builds\n";
+        + "Remove all cached objects and artifacts calculated during previous builds\n";
   }
 }

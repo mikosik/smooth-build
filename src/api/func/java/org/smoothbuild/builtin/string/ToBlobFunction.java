@@ -4,10 +4,10 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
 
 public class ToBlobFunction {
   @SmoothFunction("toBlob")

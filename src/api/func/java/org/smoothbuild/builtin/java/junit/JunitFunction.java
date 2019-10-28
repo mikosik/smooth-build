@@ -17,13 +17,13 @@ import java.util.function.Predicate;
 import org.smoothbuild.builtin.compress.UnzipFunction;
 import org.smoothbuild.builtin.file.match.IllegalPathPatternException;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 
 public class JunitFunction {
   @SmoothFunction("junit")

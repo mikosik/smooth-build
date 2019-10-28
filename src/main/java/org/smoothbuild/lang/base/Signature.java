@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 
 import com.google.common.collect.ImmutableList;
 

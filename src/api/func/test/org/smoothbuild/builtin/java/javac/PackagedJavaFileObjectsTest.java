@@ -11,9 +11,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.testing.TestingContext;
 
 public class PackagedJavaFileObjectsTest extends TestingContext {

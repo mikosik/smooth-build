@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;

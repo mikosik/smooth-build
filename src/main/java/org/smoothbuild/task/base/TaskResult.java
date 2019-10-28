@@ -1,6 +1,6 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.message.Messages.containsErrors;
+import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
 public class TaskResult {
   private final Output output;

@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Evaluator;
 
 public class BoundValueExpression extends Expression {
@@ -14,7 +14,7 @@ public class BoundValueExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
     return scope.get(name);
   }
 }

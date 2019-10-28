@@ -14,12 +14,12 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ArtifactSaver {
@@ -34,14 +34,14 @@ public class ArtifactSaver {
     this.console = console;
   }
 
-  public void save(String name, Value value) throws IOException {
+  public void save(String name, SObject object) throws IOException {
     Path path = path(toFileName(name));
-    if (value instanceof Array) {
-      saveArray(path, (Array) value);
-    } else if (value.type().equals(types.getType("File"))) {
-      saveBasicValue(path, ((Struct) value).get("content"));
+    if (object instanceof Array) {
+      saveArray(path, (Array) object);
+    } else if (object.type().equals(types.getType("File"))) {
+      saveBasicObject(path, ((Struct) object).get("content"));
     } else {
-      saveBasicValue(path, value);
+      saveBasicObject(path, object);
     }
   }
 
@@ -57,17 +57,17 @@ public class ArtifactSaver {
     } else if (elemType.equals(types.getType("File"))) {
       saveFileArray(path, array);
     } else {
-      saveValueArray(path, array);
+      saveObjectArray(path, array);
     }
   }
 
-  private void saveValueArray(Path path, Array array) throws IOException {
+  private void saveObjectArray(Path path, Array array) throws IOException {
     Path artifactPath = artifactPath(path);
     int i = 0;
-    for (Value value : array.asIterable(Value.class)) {
+    for (SObject object : array.asIterable(SObject.class)) {
       Path filePath = path(Integer.valueOf(i).toString());
       Path sourcePath = artifactPath.append(filePath);
-      Path targetPath = targetPath(value);
+      Path targetPath = targetPath(object);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
@@ -96,9 +96,9 @@ public class ArtifactSaver {
     return "Can't store array of Files as it contains files with duplicated paths:" + list;
   }
 
-  private void saveBasicValue(Path path, Value value) throws IOException {
+  private void saveBasicObject(Path path, SObject object) throws IOException {
     Path artifactPath = artifactPath(path);
-    Path targetPath = targetPath(value);
+    Path targetPath = targetPath(object);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
   }

@@ -1,14 +1,14 @@
 package org.smoothbuild.task.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
+import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.accessorCallComputationHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.collect.ImmutableList;
@@ -32,9 +32,9 @@ public class AccessorCallComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    ImmutableList<Value> values = input.values();
-    checkArgument(values.size() == 1);
-    Struct struct = (Struct) values.get(0);
+    ImmutableList<SObject> objects = input.objects();
+    checkArgument(objects.size() == 1);
+    Struct struct = (Struct) objects.get(0);
     return new Output(struct.get(accessor.fieldName()), emptyMessageArray(container));
   }
 }

@@ -28,11 +28,11 @@ import org.smoothbuild.acceptance.testing.SameName2;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
@@ -131,8 +131,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'oneStringParameter' has result type 'File' "
-        + "so its native implementation result type must be org.smoothbuild.lang.value.Struct "
-        + "but it is org.smoothbuild.lang.value.SString.\n");
+        + "so its native implementation result type must be " + Struct.class.getCanonicalName() +
+        " but it is " + SString.class.getCanonicalName() + ".\n");
   }
 
   @Test
@@ -304,17 +304,17 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function emptyStringArray has faulty native implementation: "
-        + "Its actual result type is [Blob] but it returned value of type [String].");
+        + "Its actual result type is [Blob] but it returned object of type [String].");
   }
 
   @Test
-  public void native_that_returns_value_of_wrong_type_causes_error() throws Exception {
+  public void native_that_returns_object_of_wrong_type_causes_error() throws Exception {
     givenNativeJar(BrokenIdentity.class);
     givenScript("a brokenIdentity(a value);              \n"
         + "      result = brokenIdentity(value=[]);      \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function brokenIdentity has faulty native implementation: "
-        + "Its actual result type is [Nothing] but it returned value of type String.");
+        + "Its actual result type is [Nothing] but it returned object of type String.");
   }
 }

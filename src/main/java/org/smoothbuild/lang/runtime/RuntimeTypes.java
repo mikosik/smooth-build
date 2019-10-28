@@ -2,7 +2,7 @@ package org.smoothbuild.lang.runtime;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
-import static org.smoothbuild.lang.type.TypeNames.isGenericTypeName;
+import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,35 +11,35 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.GenericArrayType;
+import org.smoothbuild.lang.object.type.GenericType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.GenericArrayType;
-import org.smoothbuild.lang.type.GenericType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
-import org.smoothbuild.lang.type.TypeNames;
 
 @Singleton
 public class RuntimeTypes implements Types {
-  private final ValuesDb valuesDb;
+  private final ObjectsDb objectsDb;
   private final Map<String, ConcreteType> cache;
 
   @Inject
-  public RuntimeTypes(ValuesDb valuesDb) {
-    this.valuesDb = valuesDb;
-    this.cache = createInitializedCache(valuesDb);
+  public RuntimeTypes(ObjectsDb objectsDb) {
+    this.objectsDb = objectsDb;
+    this.cache = createInitializedCache(objectsDb);
   }
 
-  private static HashMap<String, ConcreteType> createInitializedCache(ValuesDb valuesDb) {
+  private static HashMap<String, ConcreteType> createInitializedCache(ObjectsDb objectsDb) {
     HashMap<String, ConcreteType> map = new HashMap<>();
-    putType(map, valuesDb.boolType());
-    putType(map, valuesDb.stringType());
-    putType(map, valuesDb.blobType());
-    putType(map, valuesDb.nothingType());
+    putType(map, objectsDb.boolType());
+    putType(map, objectsDb.stringType());
+    putType(map, objectsDb.blobType());
+    putType(map, objectsDb.nothingType());
     return map;
   }
 
@@ -57,22 +57,22 @@ public class RuntimeTypes implements Types {
 
   @Override
   public ConcreteType bool() {
-    return valuesDb.boolType();
+    return objectsDb.boolType();
   }
 
   @Override
   public ConcreteType string() {
-    return valuesDb.stringType();
+    return objectsDb.stringType();
   }
 
   @Override
   public ConcreteType blob() {
-    return valuesDb.blobType();
+    return objectsDb.blobType();
   }
 
   @Override
   public ConcreteType nothing() {
-    return valuesDb.nothingType();
+    return objectsDb.nothingType();
   }
 
   @Override
@@ -95,7 +95,7 @@ public class RuntimeTypes implements Types {
   }
 
   public ConcreteArrayType array(ConcreteType elementType) {
-    return valuesDb.arrayType(elementType);
+    return objectsDb.arrayType(elementType);
   }
 
   public GenericArrayType array(GenericType elementType) {
@@ -119,7 +119,7 @@ public class RuntimeTypes implements Types {
     if (cache.containsKey(name)) {
       throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
     }
-    StructType type = valuesDb.structType(name, fields);
+    StructType type = objectsDb.structType(name, fields);
     cache.put(name, type);
     return type;
   }

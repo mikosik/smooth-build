@@ -1,13 +1,13 @@
 package org.smoothbuild.builtin.common;
 
+import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.Value;
 
 public class EqualFunction {
   @SmoothFunction("equal")
-  public static Bool equalFunction(NativeApi nativeApi, Value first, Value second) {
+  public static Bool equalFunction(NativeApi nativeApi, SObject first, SObject second) {
     return nativeApi.create().bool(first.hash().equals(second.hash()));
   }
 }

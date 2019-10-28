@@ -1,18 +1,18 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.GenericTypeMap;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.GenericTypeMap;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 
 public class NativeCallExpression extends Expression {
@@ -25,8 +25,8 @@ public class NativeCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    List<Evaluator> arguments = childrenEvaluators(valuesDb, scope);
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    List<Evaluator> arguments = childrenEvaluators(objectsDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(parameterTypes, evaluatorTypes(arguments));

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

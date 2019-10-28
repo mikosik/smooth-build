@@ -1,11 +1,11 @@
 package org.smoothbuild.cli;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.lang.message.Messages.ERROR;
-import static org.smoothbuild.lang.message.Messages.INFO;
-import static org.smoothbuild.lang.message.Messages.WARNING;
-import static org.smoothbuild.lang.message.Messages.severity;
-import static org.smoothbuild.lang.message.Messages.text;
+import static org.smoothbuild.lang.object.base.Messages.ERROR;
+import static org.smoothbuild.lang.object.base.Messages.INFO;
+import static org.smoothbuild.lang.object.base.Messages.WARNING;
+import static org.smoothbuild.lang.object.base.Messages.severity;
+import static org.smoothbuild.lang.object.base.Messages.text;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -13,8 +13,8 @@ import java.util.Iterator;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Struct;
 
 import com.google.common.base.Splitter;
 

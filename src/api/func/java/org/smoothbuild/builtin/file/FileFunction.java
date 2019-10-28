@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {

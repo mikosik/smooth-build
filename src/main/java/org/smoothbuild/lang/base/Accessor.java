@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 
 public class Accessor extends Function {
   private final String fieldName;

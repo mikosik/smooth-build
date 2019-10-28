@@ -14,11 +14,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.GenericArrayType;
-import org.smoothbuild.lang.type.GenericType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.GenericArrayType;
+import org.smoothbuild.lang.object.type.GenericType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.testing.TestingContext;
 
 @RunWith(QuackeryRunner.class)

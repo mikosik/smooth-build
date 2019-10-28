@@ -5,13 +5,13 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.task.base.Evaluator;
 
 public class ArrayExpression extends Expression {
@@ -24,8 +24,8 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    List<Evaluator> elements = childrenEvaluators(valuesDb, scope);
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    List<Evaluator> elements = childrenEvaluators(objectsDb, scope);
     ConcreteArrayType actualType = arrayType(elements);
     return arrayEvaluator(
         actualType,

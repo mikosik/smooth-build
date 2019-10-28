@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.lang.base.Native;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;

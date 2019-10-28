@@ -2,8 +2,8 @@ package org.smoothbuild.acceptance.builtin.common;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
-import static org.smoothbuild.testing.db.values.ValueCreators.falseByteString;
-import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
+import static org.smoothbuild.testing.BooleanCreators.falseByteString;
+import static org.smoothbuild.testing.BooleanCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.then;
 

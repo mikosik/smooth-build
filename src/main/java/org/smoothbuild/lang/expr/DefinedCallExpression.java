@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.Scope.scope;
-import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.task.base.Evaluator.identityEvaluator;
 
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.base.Evaluator;
 
 public class DefinedCallExpression extends Expression {
@@ -23,14 +23,14 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    List<Evaluator> arguments = childrenEvaluators(valuesDb, scope);
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    List<Evaluator> arguments = childrenEvaluators(objectsDb, scope);
     ConcreteType actualResultType =
         inferMapping(function.parameterTypes(), evaluatorTypes(arguments))
             .applyTo(function.signature().type());
     Evaluator evaluator = function
         .body()
-        .createEvaluator(valuesDb, functionScope(arguments))
+        .createEvaluator(objectsDb, functionScope(arguments))
         .convertIfNeeded(actualResultType);
     return namedEvaluator(actualResultType, function.name(), evaluator);
   }

@@ -5,14 +5,14 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
 
 public class Output {
-  private final Value result;
+  private final SObject result;
   private final Array messages;
 
-  public Output(Value result, Array messages) {
+  public Output(SObject result, Array messages) {
     this.result = result;
     this.messages = checkNotNull(messages);
   }
@@ -21,7 +21,7 @@ public class Output {
     return result != null;
   }
 
-  public Value result() {
+  public SObject result() {
     checkState(hasResult(), "Output does not contain result.");
     return result;
   }

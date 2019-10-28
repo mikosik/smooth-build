@@ -1,7 +1,7 @@
 package org.smoothbuild.task.base;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 public interface Computation {
