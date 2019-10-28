@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance.testing;
 
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.type.Nothing;
+import org.smoothbuild.lang.value.Nothing;
 
 public class ThrowException {
   @SmoothFunction("throwException")
