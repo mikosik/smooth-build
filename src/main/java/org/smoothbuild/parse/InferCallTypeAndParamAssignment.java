@@ -2,17 +2,17 @@ package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.lang.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.lang.base.ParameterInfo;
+import org.smoothbuild.lang.object.type.GenericTypeMap;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.GenericTypeMap;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;

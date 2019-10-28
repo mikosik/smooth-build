@@ -3,25 +3,25 @@ package org.smoothbuild.db.outputs;
 import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
 import static org.smoothbuild.db.outputs.OutputsDbException.outputsDbException;
-import static org.smoothbuild.lang.message.Messages.containsErrors;
-import static org.smoothbuild.lang.message.Messages.isValidSeverity;
-import static org.smoothbuild.lang.message.Messages.severity;
+import static org.smoothbuild.lang.object.base.Messages.containsErrors;
+import static org.smoothbuild.lang.object.base.Messages.isValidSeverity;
+import static org.smoothbuild.lang.object.base.Messages.severity;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.type.ArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
 import org.smoothbuild.task.base.Output;
 
 import okio.BufferedSink;
@@ -29,13 +29,13 @@ import okio.BufferedSource;
 
 public class OutputsDb {
   private final FileSystem fileSystem;
-  private final ValuesDb valuesDb;
+  private final ObjectsDb objectsDb;
   private final Types types;
 
   @Inject
-  public OutputsDb(FileSystem fileSystem, ValuesDb valuesDb, Types types) {
+  public OutputsDb(FileSystem fileSystem, ObjectsDb objectsDb, Types types) {
     this.fileSystem = fileSystem;
-    this.valuesDb = valuesDb;
+    this.objectsDb = objectsDb;
     this.types = types;
   }
 
@@ -68,14 +68,14 @@ public class OutputsDb {
 
   public Output read(Hash taskHash, ConcreteType type) {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      Value messagesValue = valuesDb.get(Hash.read(source));
+      SObject messagesObject = objectsDb.get(Hash.read(source));
       ArrayType messageArrayType = types.array(types.message());
-      if (!messagesValue.type().equals(messageArrayType)) {
+      if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
-            + " as first child of its Merkle root, but got " + messagesValue.type());
+            + " as first child of its Merkle root, but got " + messagesObject.type());
       }
 
-      Array messages = (Array) messagesValue;
+      Array messages = (Array) messagesObject;
       messages.asIterable(Struct.class).forEach(m -> {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
@@ -87,12 +87,12 @@ public class OutputsDb {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        Value value = valuesDb.get(resultObjectHash);
-        if (!type.equals(value.type())) {
+        SObject object = objectsDb.get(resultObjectHash);
+        if (!type.equals(object.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its Merkle root, but got " + value.type());
+              + " as second child of its Merkle root, but got " + object.type());
         }
-        return new Output(value, messages);
+        return new Output(object, messages);
       }
     } catch (IOException e) {
       throw outputsDbException(e);

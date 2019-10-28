@@ -6,42 +6,42 @@ import static com.google.common.collect.Streams.stream;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
 
 public class Input {
-  private final ImmutableList<Value> values;
+  private final ImmutableList<SObject> objects;
   private final Hash hash;
 
   public static Input fromResults(List<Task> children) {
-    return fromValues(toResults(children));
+    return fromObjects(toResults(children));
   }
 
-  public static Input fromValues(Iterable<? extends Value> values) {
-    return new Input(values, calculateHash(values));
+  public static Input fromObjects(Iterable<? extends SObject> objects) {
+    return new Input(objects, calculateHash(objects));
   }
 
-  private Input(Iterable<? extends Value> values, Hash hash) {
-    this.values = ImmutableList.copyOf(values);
+  private Input(Iterable<? extends SObject> objects, Hash hash) {
+    this.objects = ImmutableList.copyOf(objects);
     this.hash = hash;
   }
 
-  public ImmutableList<Value> values() {
-    return values;
+  public ImmutableList<SObject> objects() {
+    return objects;
   }
 
   public Hash hash() {
     return hash;
   }
 
-  private static ImmutableList<Value> toResults(List<Task> deps) {
+  private static ImmutableList<SObject> toResults(List<Task> deps) {
     return deps.stream()
         .map(t -> t.output().result())
         .collect(toImmutableList());
   }
 
-  private static Hash calculateHash(Iterable<? extends Value> values) {
-    return Hash.of(stream(values).map(Value::hash).toArray(Hash[]::new));
+  private static Hash calculateHash(Iterable<? extends SObject> objects) {
+    return Hash.of(stream(objects).map(SObject::hash).toArray(Hash[]::new));
   }
 }

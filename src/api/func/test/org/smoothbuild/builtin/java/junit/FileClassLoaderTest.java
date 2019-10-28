@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.reflect.Classes;
 

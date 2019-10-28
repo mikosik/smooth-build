@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.SString;
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.testing.TestingContext;
 
 public class InputTest extends TestingContext{
@@ -27,7 +27,7 @@ public class InputTest extends TestingContext{
     given(sstring1 = string("abc"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(input = Input.fromResults(list(depTask1)));
-    when(input).values();
+    when(input).objects();
     thenReturned(contains(sstring1));
   }
 
@@ -80,7 +80,7 @@ public class InputTest extends TestingContext{
     given(sstring1 = string("abc"));
     given(willReturn(new Output(sstring1, emptyMessageArray())), depTask1).output();
     given(input = Input.fromResults(list(depTask1)));
-    given(input2 = Input.fromValues(list()));
+    given(input2 = Input.fromObjects(list()));
     when(input).hash();
     thenReturned(not(input2.hash()));
   }

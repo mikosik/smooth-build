@@ -7,11 +7,11 @@ import java.net.URI;
 import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.object.base.ArrayBuilder;
+import org.smoothbuild.lang.object.base.BlobBuilder;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 
 import okio.ForwardingSink;
 import okio.Okio;

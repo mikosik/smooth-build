@@ -10,8 +10,8 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.util.Maybe;
@@ -19,13 +19,13 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class Dag implements Command {
-  private final ValuesDb valuesDb;
+  private final ObjectsDb objectsDb;
   private final Console console;
   private final RuntimeController runtimeController;
 
   @Inject
-  public Dag(ValuesDb valuesDb, Console console, RuntimeController runtimeController) {
-    this.valuesDb = valuesDb;
+  public Dag(ObjectsDb objectsDb, Console console, RuntimeController runtimeController) {
+    this.objectsDb = objectsDb;
     this.console = console;
     this.runtimeController = runtimeController;
   }
@@ -46,7 +46,7 @@ public class Dag implements Command {
   private Evaluator dagEvaluator(Function function) {
     return function
         .createCallExpression(list(), unknownLocation())
-        .createEvaluator(valuesDb, null);
+        .createEvaluator(objectsDb, null);
   }
 
   private void print(Evaluator dag) {

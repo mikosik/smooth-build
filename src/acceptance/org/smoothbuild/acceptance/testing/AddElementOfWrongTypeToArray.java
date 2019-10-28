@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.ArrayBuilder;
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.SString;
 
 public class AddElementOfWrongTypeToArray {
   @SmoothFunction("addElementOfWrongTypeToArray")

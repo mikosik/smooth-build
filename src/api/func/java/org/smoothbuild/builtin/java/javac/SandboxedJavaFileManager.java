@@ -17,9 +17,9 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.ArrayBuilder;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;

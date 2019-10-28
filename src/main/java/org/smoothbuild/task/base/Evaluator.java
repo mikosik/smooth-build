@@ -10,9 +10,9 @@ import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.collect.ImmutableList;
@@ -25,8 +25,8 @@ public class Evaluator {
   private final Location location;
   private final ImmutableList<Evaluator> children;
 
-  public static Evaluator valueEvaluator(Value value, Location location) {
-    return new Evaluator(new ValueComputation(value), value.type().name(), true, true,
+  public static Evaluator valueEvaluator(SObject object, Location location) {
+    return new Evaluator(new ValueComputation(object), object.type().name(), true, true,
         ImmutableList.of(), location);
   }
 

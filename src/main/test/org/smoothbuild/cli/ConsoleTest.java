@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.base.Throwables;
@@ -84,7 +84,7 @@ public class ConsoleTest extends TestingContext {
 
   @Test
   public void final_summary_contains_all_stats() {
-    ArrayList<Value> messages = new ArrayList<>();
+    ArrayList<SObject> messages = new ArrayList<>();
     RuntimeException exception = new RuntimeException("failure message");
     console.print(name, exception);
     for (int i = 0; i < 2; i++) {
@@ -97,7 +97,7 @@ public class ConsoleTest extends TestingContext {
       messages.add(infoMessage("info string"));
     }
 
-    console.print(name, array(messages.toArray(Value[]::new)));
+    console.print(name, array(messages.toArray(SObject[]::new)));
     console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();

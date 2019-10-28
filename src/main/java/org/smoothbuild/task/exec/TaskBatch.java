@@ -7,10 +7,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.value.Bool;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.RuntimeHash;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
@@ -21,26 +21,26 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class TaskBatch {
   private final TaskExecutor taskExecutor;
-  private final ValuesDb valuesDb;
+  private final ObjectsDb objectsDb;
   private final Hash runtimeHash;
   private final List<Task> rootTasks;
 
   @Inject
-  public TaskBatch(TaskExecutor taskExecutor, ValuesDb valuesDb,
+  public TaskBatch(TaskExecutor taskExecutor, ObjectsDb objectsDb,
       @RuntimeHash Hash runtimeHash) {
     this.taskExecutor = taskExecutor;
-    this.valuesDb = valuesDb;
+    this.objectsDb = objectsDb;
     this.runtimeHash = runtimeHash;
     this.rootTasks = new ArrayList<>();
   }
 
-  public <T extends Value> Task createTasks(Expression expression) {
-    Task root = createTasksImpl(expression.createEvaluator(valuesDb, null));
+  public <T extends SObject> Task createTasks(Expression expression) {
+    Task root = createTasksImpl(expression.createEvaluator(objectsDb, null));
     rootTasks.add(root);
     return root;
   }
 
-  private <T extends Value> Task createTasksImpl(Evaluator evaluator) {
+  private <T extends SObject> Task createTasksImpl(Evaluator evaluator) {
     List<Task> children = createTasksImpl(evaluator.children());
     return new Task(evaluator, children, runtimeHash);
   }

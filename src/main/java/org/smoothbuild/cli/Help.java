@@ -120,7 +120,7 @@ public class Help implements Command {
   }
 
   private static String cleanShortDescription() {
-    return "Remove all cached values and artifacts calculated during previous builds";
+    return "Remove all cached objects and artifacts calculated during previous builds";
   }
 
   private static String dagShortDescription() {

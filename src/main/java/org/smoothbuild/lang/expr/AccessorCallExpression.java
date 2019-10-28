@@ -4,10 +4,10 @@ import static org.smoothbuild.task.base.Evaluator.accessorCallEvaluator;
 
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Evaluator;
 
 public class AccessorCallExpression extends Expression {
@@ -20,7 +20,7 @@ public class AccessorCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    return accessorCallEvaluator(accessor, childrenEvaluators(valuesDb, scope), location());
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    return accessorCallEvaluator(accessor, childrenEvaluators(objectsDb, scope), location());
   }
 }

@@ -4,13 +4,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.StructType;
 
 public class ComputationHashes {
-  public static Hash valueComputationHash(Value value) {
-    return hash(0, value.hash());
+  public static Hash valueComputationHash(SObject object) {
+    return hash(0, object.hash());
   }
 
   public static Hash arrayComputationHash() {

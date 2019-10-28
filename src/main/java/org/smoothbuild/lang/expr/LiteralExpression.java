@@ -2,22 +2,22 @@ package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Evaluator;
 
 public class LiteralExpression extends Expression {
-  private final Value value;
+  private final SObject object;
 
-  public LiteralExpression(Value value, Location location) {
+  public LiteralExpression(SObject object, Location location) {
     super(location);
-    this.value = value;
+    this.object = object;
   }
 
   @Override
-  public Evaluator createEvaluator(ValuesDb valuesDb, Scope<Evaluator> scope) {
-    return valueEvaluator(value, location());
+  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    return valueEvaluator(object, location());
   }
 }

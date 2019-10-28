@@ -10,12 +10,12 @@ import static org.smoothbuild.util.Paths.changeExtension;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.smoothbuild.db.values.ValuesDb;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FieldNode;
@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class ModuleLoader {
-  public static List<?> loadModule(SRuntime runtime, ValuesDb valuesDb,
+  public static List<?> loadModule(SRuntime runtime, ObjectsDb objectsDb,
       Path script) {
     Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
     return parseScript(script)
@@ -37,16 +37,16 @@ public class ModuleLoader {
         .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
         .invoke(ast -> inferTypesAndParamAssignment(runtime, ast))
         .invoke(natives, (ast, n) -> n.assignNatives(ast))
-        .invokeConsumer(ast -> loadFunctions(runtime, valuesDb, ast))
+        .invokeConsumer(ast -> loadFunctions(runtime, objectsDb, ast))
         .errors();
   }
 
-  private static void loadFunctions(SRuntime runtime, ValuesDb valuesDb, Ast ast) {
+  private static void loadFunctions(SRuntime runtime, ObjectsDb objectsDb, Ast ast) {
     for (StructNode struct : ast.structs()) {
       runtime.functions().add(loadConstructor(struct));
     }
     for (FuncNode func : ast.funcs()) {
-      runtime.functions().add(loadFunction(runtime, valuesDb, func));
+      runtime.functions().add(loadFunction(runtime, objectsDb, func));
     }
   }
 

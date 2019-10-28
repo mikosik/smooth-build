@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.message;
 
-import static org.smoothbuild.lang.message.Messages.containsErrors;
+import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.testing.TestingContext;
 
 public class MessagesTest extends TestingContext {

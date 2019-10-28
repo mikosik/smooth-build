@@ -9,35 +9,35 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Value;
-import org.smoothbuild.lang.value.ValueFactory;
 
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
-  private final ValueFactory valueFactory;
+  private final ObjectFactory objectFactory;
   private final Types types;
   private final TempManager tempManager;
   private final List<TempDir> tempDirs;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(FileSystem fileSystem, ValueFactory valueFactory, Types types,
+  public Container(FileSystem fileSystem, ObjectFactory objectFactory, Types types,
       TempManager tempManager) {
     this.fileSystem = fileSystem;
-    this.valueFactory = valueFactory;
+    this.objectFactory = objectFactory;
     this.types = types;
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
-    this.messageLogger = new MessageLoggerImpl(valueFactory);
+    this.messageLogger = new MessageLoggerImpl(objectFactory);
   }
 
   @Override
-  public ValueFactory create() {
-    return valueFactory;
+  public ObjectFactory create() {
+    return objectFactory;
   }
 
   @Override
@@ -55,7 +55,7 @@ public class Container implements NativeApi {
   }
 
   public Array messages() {
-    return valueFactory.arrayBuilder(types.message()).addAll(messageLogger.messages).build();
+    return objectFactory.arrayBuilder(types.message()).addAll(messageLogger.messages).build();
   }
 
   @Override
@@ -72,26 +72,26 @@ public class Container implements NativeApi {
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
-    private final List<Value> messages = new ArrayList<>();
-    private final ValueFactory valueFactory;
+    private final List<SObject> messages = new ArrayList<>();
+    private final ObjectFactory objectFactory;
 
-    public MessageLoggerImpl(ValueFactory valueFactory) {
-      this.valueFactory = valueFactory;
+    public MessageLoggerImpl(ObjectFactory objectFactory) {
+      this.objectFactory = objectFactory;
     }
 
     @Override
     public void error(String message) {
-      messages.add(valueFactory.errorMessage(message));
+      messages.add(objectFactory.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(valueFactory.warningMessage(message));
+      messages.add(objectFactory.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(valueFactory.infoMessage(message));
+      messages.add(objectFactory.infoMessage(message));
     }
   }
 }

@@ -12,28 +12,28 @@ import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
   private final SRuntime runtime;
-  private final ValuesDb valuesDb;
+  private final ObjectsDb objectsDb;
   private final SmoothPaths paths;
   private final Console console;
 
   @Inject
-  public RuntimeController(SRuntime runtime, ValuesDb valuesDb, SmoothPaths paths,
+  public RuntimeController(SRuntime runtime, ObjectsDb objectsDb, SmoothPaths paths,
       Console console) {
     this.runtime = runtime;
-    this.valuesDb = valuesDb;
+    this.objectsDb = objectsDb;
     this.paths = paths;
     this.console = console;
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
     List<?> errors = value(null)
-        .invoke((v) -> loadModule(runtime, valuesDb, paths.funcsModule()))
-        .invoke((v) -> loadModule(runtime, valuesDb, paths.defaultScript()))
+        .invoke((v) -> loadModule(runtime, objectsDb, paths.funcsModule()))
+        .invoke((v) -> loadModule(runtime, objectsDb, paths.defaultScript()))
         .invokeConsumer(ml -> runner.accept(runtime))
         .errors();
     console.errors(errors);

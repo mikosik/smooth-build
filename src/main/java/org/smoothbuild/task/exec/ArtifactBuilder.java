@@ -16,7 +16,7 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
 
@@ -57,9 +57,9 @@ public class ArtifactBuilder {
 
   private void save(Entry<String, Task> artifact) {
     String name = artifact.getKey();
-    Value value = artifact.getValue().output().result();
+    SObject object = artifact.getValue().output().result();
     try {
-      artifactSaver.save(name, value);
+      artifactSaver.save(name, object);
       console.println(name + " -> " + artifactPath(name));
     } catch (IOException e) {
       console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"

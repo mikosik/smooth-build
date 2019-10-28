@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Strings.padEnd;
 
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 
 public class Parameter extends ParameterInfo {
   private final Expression defaultValue;

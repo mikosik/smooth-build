@@ -1,9 +1,9 @@
 package org.smoothbuild.acceptance.testing;
 
+import org.smoothbuild.lang.object.base.Nothing;
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Nothing;
-import org.smoothbuild.lang.value.SString;
 
 public class ReportError {
   @SmoothFunction("reportError")

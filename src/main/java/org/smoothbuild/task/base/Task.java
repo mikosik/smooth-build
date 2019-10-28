@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 import com.google.common.collect.ImmutableList;

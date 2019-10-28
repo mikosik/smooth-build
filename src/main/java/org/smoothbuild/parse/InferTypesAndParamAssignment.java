@@ -9,11 +9,11 @@ import java.util.List;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.type.StructType;
-import org.smoothbuild.lang.type.Type;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -141,11 +141,11 @@ public class InferTypesAndParamAssignment {
               errors.add(new ParseError(param, "Parameter '" + param.name()
                   + "' has generic type " + type.q() + " so it cannot have default value."));
             } else {
-              Type valueType = param.defaultValue().get((Type.class));
-              if (valueType != null && !type.isAssignableFrom(valueType)) {
+              Type defaultValueType = param.defaultValue().get((Type.class));
+              if (defaultValueType != null && !type.isAssignableFrom(defaultValueType)) {
                 errors.add(new ParseError(param, "Parameter '" + param.name()
                     + "' is of type " + type.q() + " so it cannot have default value of type "
-                    + valueType.q() + "."));
+                    + defaultValueType.q() + "."));
               }
             }
           }

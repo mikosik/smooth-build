@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.assign;
 
 import static org.junit.Assert.assertEquals;
-import static org.smoothbuild.testing.db.values.ValueCreators.trueByteString;
+import static org.smoothbuild.testing.BooleanCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;

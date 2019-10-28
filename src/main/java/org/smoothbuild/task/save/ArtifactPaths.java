@@ -6,11 +6,11 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 
 public class ArtifactPaths {
-  public static Path targetPath(Value value) {
-    return HASHED_DB_PATH.append(Hash.toPath(value.dataHash()));
+  public static Path targetPath(SObject object) {
+    return HASHED_DB_PATH.append(Hash.toPath(object.dataHash()));
   }
 
   public static Path artifactPath(String name) {

@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.testing.TestingContext;
 
 public class ArgNodeTest extends TestingContext {

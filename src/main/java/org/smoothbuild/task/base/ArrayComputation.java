@@ -1,12 +1,12 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
+import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.arrayComputationHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 public class ArrayComputation implements Computation {
@@ -31,7 +31,7 @@ public class ArrayComputation implements Computation {
     Array array = container
         .create()
         .arrayBuilder(arrayType.elemType())
-        .addAll(input.values())
+        .addAll(input.objects())
         .build();
     return new Output(array, emptyMessageArray(container));
   }

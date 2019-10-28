@@ -1,8 +1,8 @@
 package org.smoothbuild;
 
-import org.smoothbuild.db.values.ValuesDbModule;
 import org.smoothbuild.io.fs.FileSystemModule;
-import org.smoothbuild.lang.type.TypesModule;
+import org.smoothbuild.lang.object.db.ObjectsDbModule;
+import org.smoothbuild.lang.object.db.TypesModule;
 import org.smoothbuild.task.TaskModule;
 
 import com.google.inject.AbstractModule;
@@ -19,7 +19,7 @@ public class MainModule extends AbstractModule {
     bind(SmoothPaths.class).toInstance(smoothPaths);
     install(new TaskModule());
     install(new TypesModule());
-    install(new ValuesDbModule());
+    install(new ObjectsDbModule());
     install(new FileSystemModule());
   }
 }

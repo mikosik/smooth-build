@@ -3,9 +3,9 @@ package org.smoothbuild.builtin.file;
 import java.io.IOException;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.task.exec.Container;
 
 import okio.BufferedSource;

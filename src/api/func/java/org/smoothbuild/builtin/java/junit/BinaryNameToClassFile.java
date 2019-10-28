@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.smoothbuild.builtin.compress.UnzipFunction;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {

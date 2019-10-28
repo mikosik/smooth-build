@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.value.Array;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.task.base.Evaluator;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;

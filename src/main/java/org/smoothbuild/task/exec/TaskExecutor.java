@@ -7,7 +7,7 @@ import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputsDb;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Output;
 import org.smoothbuild.task.base.Task;
@@ -26,7 +26,7 @@ public class TaskExecutor {
     this.containerProvider = containerProvider;
   }
 
-  public <T extends Value> void execute(Task task, Input input) throws IOException {
+  public <T extends SObject> void execute(Task task, Input input) throws IOException {
     Hash hash = task.hash(input);
     if (outputsDb.contains(hash)) {
       Output output = outputsDb.read(hash, task.type());

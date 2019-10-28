@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.ast.Named;
 
 public class Field implements Named {

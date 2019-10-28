@@ -1,16 +1,21 @@
 package org.smoothbuild.lang.type;
 
-import org.smoothbuild.db.values.ValuesDb;
+import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.GenericArrayType;
+import org.smoothbuild.lang.object.type.GenericType;
+import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.testing.TestingContext;
 
 public class TestingTypes {
   private static final TestingContext context = new TestingContext();
-  public static final ValuesDb valuesDb = context.valuesDb();
-  public static final ConcreteType type = valuesDb.typeType();
-  public static final ConcreteType bool = valuesDb.boolType();
-  public static final ConcreteType string = valuesDb.stringType();
-  public static final ConcreteType blob = valuesDb.blobType();
-  public static final ConcreteType nothing = valuesDb.nothingType();
+  public static final ObjectsDb objectsDb = context.objectsDb();
+  public static final ConcreteType type = objectsDb.typeType();
+  public static final ConcreteType bool = objectsDb.boolType();
+  public static final ConcreteType string = objectsDb.stringType();
+  public static final ConcreteType blob = objectsDb.blobType();
+  public static final ConcreteType nothing = objectsDb.nothingType();
   public static final StructType person = context.personType();
   public static final StructType file = context.fileType();
   public static final GenericType a = new GenericType("a");
@@ -37,7 +42,7 @@ public class TestingTypes {
   public static final GenericArrayType array2B = array(arrayB);
 
   private static ConcreteArrayType array(ConcreteType elemType) {
-    return valuesDb.arrayType(elemType);
+    return objectsDb.arrayType(elemType);
   }
 
   private static GenericArrayType array(GenericType elemType) {

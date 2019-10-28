@@ -7,7 +7,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.type.Type;
+import org.smoothbuild.lang.object.type.Type;
 
 public class ParameterInfo {
   private final int index;

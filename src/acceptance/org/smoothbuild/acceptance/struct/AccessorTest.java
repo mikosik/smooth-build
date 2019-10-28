@@ -57,7 +57,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void applying_accessor_to_string_value_causes_error() throws Exception {
+  public void applying_accessor_to_string_object_causes_error() throws Exception {
     givenScript("value = 'abc';                       \n"
         + "      result = value.accessedField;        \n");
     whenSmoothList();

@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Blob;
+import org.smoothbuild.lang.object.base.BlobBuilder;
+import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.Blob;
-import org.smoothbuild.lang.value.BlobBuilder;
-import org.smoothbuild.lang.value.SString;
-import org.smoothbuild.lang.value.Struct;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import okio.BufferedSource;

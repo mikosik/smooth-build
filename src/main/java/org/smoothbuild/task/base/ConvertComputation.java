@@ -1,15 +1,15 @@
 package org.smoothbuild.task.base;
 
-import static org.smoothbuild.lang.message.Messages.emptyMessageArray;
+import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 import static org.smoothbuild.task.base.ComputationHashes.convertComputationHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.type.ConcreteArrayType;
-import org.smoothbuild.lang.type.ConcreteType;
-import org.smoothbuild.lang.value.Array;
-import org.smoothbuild.lang.value.ArrayBuilder;
-import org.smoothbuild.lang.value.Struct;
-import org.smoothbuild.lang.value.Value;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.ArrayBuilder;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.exec.Container;
 
 public class ConvertComputation implements Computation {
@@ -31,22 +31,22 @@ public class ConvertComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    assertThat(input.values().size() == 1);
-    Value value = input.values().get(0);
-    assertThat(!type.equals(value.type()));
-    assertThat(type.isAssignableFrom(value.type()));
-    if (value instanceof Array) {
-      return new Output(convertArray(container, (Array) value, type), emptyMessageArray(container));
+    assertThat(input.objects().size() == 1);
+    SObject object = input.objects().get(0);
+    assertThat(!type.equals(object.type()));
+    assertThat(type.isAssignableFrom(object.type()));
+    if (object instanceof Array) {
+      return new Output(convertArray(container, (Array) object, type), emptyMessageArray(container));
     }
-    assertThat(!value.type().isNothing());
-    return new Output(convertStruct(container, (Struct) value, type), emptyMessageArray(container));
+    assertThat(!object.type().isNothing());
+    return new Output(convertStruct(container, (Struct) object, type), emptyMessageArray(container));
   }
 
-  private static Value convertArray(Container container, Array array,
+  private static SObject convertArray(Container container, Array array,
       ConcreteType destinationType) {
     ConcreteType elemType = ((ConcreteArrayType) destinationType).elemType();
     ArrayBuilder builder = container.create().arrayBuilder(elemType);
-    for (Value element : array.asIterable(Value.class)) {
+    for (SObject element : array.asIterable(SObject.class)) {
       if (element instanceof Array) {
         builder.add(convertArray(container, (Array) element, elemType));
       } else {
@@ -56,13 +56,13 @@ public class ConvertComputation implements Computation {
     return builder.build();
   }
 
-  private static Value convertStruct(Container container, Struct struct,
+  private static SObject convertStruct(Container container, Struct struct,
       ConcreteType destinationType) {
-    Value superValue = struct.superValue();
-    if (superValue.type().equals(destinationType)) {
-      return superValue;
+    SObject superObject = struct.superObject();
+    if (superObject.type().equals(destinationType)) {
+      return superObject;
     }
-    return convertStruct(container, (Struct) superValue, destinationType);
+    return convertStruct(container, (Struct) superObject, destinationType);
   }
 
   private static void assertThat(boolean expression) {
