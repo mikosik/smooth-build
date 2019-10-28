@@ -46,6 +46,7 @@ import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.value.Array;
 import org.smoothbuild.lang.value.Blob;
 import org.smoothbuild.lang.value.Bool;
+import org.smoothbuild.lang.value.Nothing;
 import org.smoothbuild.lang.value.SString;
 import org.smoothbuild.lang.value.Value;
 

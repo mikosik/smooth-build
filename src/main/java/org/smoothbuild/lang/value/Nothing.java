@@ -1,6 +1,4 @@
-package org.smoothbuild.lang.type;
-
-import org.smoothbuild.lang.value.AbstractValue;
+package org.smoothbuild.lang.value;
 
 public class Nothing extends AbstractValue {
   private Nothing() {
