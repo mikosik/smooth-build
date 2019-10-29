@@ -27,7 +27,7 @@ public class JarFunction {
   public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    BlobBuilder blobBuilder = nativeApi.create().blobBuilder();
+    BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (Struct file : files.asIterable(Struct.class)) {
         String path = ((SString) file.get("path")).data();

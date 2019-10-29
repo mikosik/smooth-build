@@ -34,7 +34,7 @@ public class ModuleLoader {
         .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
         .invoke(ast -> findSemanticErrors(runtime, ast))
         .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
-        .invoke(ast -> ast.sortTypesByDependencies(runtime.types()))
+        .invoke(ast -> ast.sortTypesByDependencies(runtime.objectFactory()))
         .invoke(ast -> inferTypesAndParamAssignment(runtime, ast))
         .invoke(natives, (ast, n) -> n.assignNatives(ast))
         .invokeConsumer(ast -> loadFunctions(runtime, objectsDb, ast))

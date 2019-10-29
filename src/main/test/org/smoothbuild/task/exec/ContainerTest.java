@@ -44,7 +44,7 @@ public class ContainerTest extends TestingContext {
   @Test
   public void create_temp_dir_call_is_forwarded_to_temp_dir_manager() throws Exception {
     given(tempDir = mock(TempDir.class));
-    given(container = new Container(null, null, null, tempManager));
+    given(container = new Container(null, null, tempManager));
     given(willReturn(tempDir), tempManager).tempDir(container);
     when(() -> container.createTempDir());
     thenReturned(tempDir);

@@ -33,17 +33,14 @@ import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.Types;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.task.exec.Container;
 
 import okio.ByteString;
 
 public class TestingContext {
-  private ObjectFactory objectFactory;
   private Container container;
-  private TestingRuntimeTypes types;
-  private RuntimeTypes runtimeTypes;
+  private ObjectFactory objectFactory;
+  private ObjectFactory emptyCacheObjectFactory;
   private OutputsDb outputsDb;
   private FileSystem outputsDbFileSystem;
   private ObjectsDb objectsDb;
@@ -59,30 +56,30 @@ public class TestingContext {
 
   public Container container() {
     if (container == null) {
-      container = new Container(fullFileSystem(), objectFactory(), types(), tempManager());
+      container = new Container(fullFileSystem(), objectFactory(), tempManager());
     }
     return container;
   }
 
+
+  /**
+   * instance with File and Message types
+   */
   public ObjectFactory objectFactory() {
     if (objectFactory == null) {
-      objectFactory = new ObjectFactory(types(), objectsDb());
+      objectFactory = new TestingObjectFactory(objectsDb());
     }
     return objectFactory;
   }
 
-  public Types types() {
-    if (types == null) {
-      types = new TestingRuntimeTypes(objectsDb());
+  /**
+   * instance without File and Message types cached
+   */
+  public ObjectFactory emptyCacheObjectFactory() {
+    if (emptyCacheObjectFactory == null) {
+      emptyCacheObjectFactory = new ObjectFactory(objectsDb());
     }
-    return types;
-  }
-
-  public RuntimeTypes runtimeTypes() {
-    if (runtimeTypes == null) {
-      runtimeTypes = new RuntimeTypes(objectsDb());
-    }
-    return runtimeTypes;
+    return emptyCacheObjectFactory;
   }
 
   public ObjectsDb objectsDb() {
@@ -94,7 +91,7 @@ public class TestingContext {
 
   public OutputsDb outputsDb() {
     if (outputsDb == null) {
-      outputsDb = new OutputsDb(outputsDbFileSystem(), objectsDb(), types());
+      outputsDb = new OutputsDb(outputsDbFileSystem(), objectsDb(), objectFactory());
     }
     return outputsDb;
   }
@@ -219,7 +216,7 @@ public class TestingContext {
   }
 
   public Array emptyMessageArray() {
-    return array(types().message());
+    return array(objectFactory().messageType());
   }
 
   public <T extends SObject> Array array(SObject... elements) {
@@ -260,15 +257,15 @@ public class TestingContext {
     }
   }
 
-  public static class TestingRuntimeTypes extends RuntimeTypes {
-    public TestingRuntimeTypes(ObjectsDb objectsDb) {
+  public static class TestingObjectFactory extends ObjectFactory {
+    public TestingObjectFactory(ObjectsDb objectsDb) {
       super(objectsDb);
       struct("File", list(
-          new Field(blob(), "content", unknownLocation()),
-          new Field(string(), "path", unknownLocation())));
+          new Field(blobType(), "content", unknownLocation()),
+          new Field(stringType(), "path", unknownLocation())));
       struct("Message", list(
-          new Field(string(), "text", unknownLocation()),
-          new Field(string(), "severity", unknownLocation())));
+          new Field(stringType(), "text", unknownLocation()),
+          new Field(stringType(), "severity", unknownLocation())));
     }
   }
 }

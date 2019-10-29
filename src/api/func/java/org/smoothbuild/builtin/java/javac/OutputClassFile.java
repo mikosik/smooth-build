@@ -27,7 +27,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
     this.nativeApi = nativeApi;
-    this.contentBuilder = nativeApi.create().blobBuilder();
+    this.contentBuilder = nativeApi.factory().blobBuilder();
   }
 
   @Override
@@ -36,8 +36,8 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         super.close();
-        SString pathString = nativeApi.create().string(path.value());
-        Struct file = nativeApi.create().file(pathString, contentBuilder.build());
+        SString pathString = nativeApi.factory().string(path.value());
+        Struct file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }
     }).outputStream();

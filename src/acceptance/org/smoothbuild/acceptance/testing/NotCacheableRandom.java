@@ -9,6 +9,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class NotCacheableRandom {
   @SmoothFunction(value = "notCacheableRandom", cacheable = false)
   public static SString notCacheableRandom(NativeApi nativeApi) {
-    return nativeApi.create().string(Integer.toString(new Random().nextInt()));
+    return nativeApi.factory().string(Integer.toString(new Random().nextInt()));
   }
 }

@@ -9,10 +9,10 @@ import java.util.List;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -35,7 +35,7 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class InferTypesAndParamAssignment {
   public static List<ParseError> inferTypesAndParamAssignment(SRuntime runtime, Ast ast) {
-    RuntimeTypes types = runtime.types();
+    ObjectFactory objectFactory = runtime.objectFactory();
     List<ParseError> errors = new ArrayList<>();
     new AstVisitor() {
       Scope<Type> scope;
@@ -52,7 +52,7 @@ public class InferTypesAndParamAssignment {
             fields.add(new Field(type, field.name(), field.location()));
           }
         }
-        ConcreteType type = types.struct(struct.name(), fields);
+        ConcreteType type = objectFactory.struct(struct.name(), fields);
         struct.set(Type.class, type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
@@ -161,9 +161,9 @@ public class InferTypesAndParamAssignment {
       private Type createType(TypeNode type) {
         if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
-          return types.array(createType(elementType));
+          return objectFactory.arrayType(createType(elementType));
         }
-        return types.getType(type.name());
+        return objectFactory.getType(type.name());
       }
 
       @Override
@@ -194,7 +194,7 @@ public class InferTypesAndParamAssignment {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return types.array(types.nothing());
+          return objectFactory.array(objectFactory.nothingType());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {
@@ -216,7 +216,7 @@ public class InferTypesAndParamAssignment {
             return null;
           }
         }
-        return types.array(elemType);
+        return objectFactory.arrayType(elemType);
       }
 
       @Override
@@ -240,7 +240,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, types.string());
+        string.set(Type.class, objectFactory.stringType());
       }
     }.visitAst(ast);
     return errors;

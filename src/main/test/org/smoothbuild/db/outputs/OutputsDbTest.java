@@ -76,9 +76,9 @@ public class OutputsDbTest extends TestingContext {
   @Test
   public void written_file_array_can_be_read_back() {
     given(file = file(path, bytes));
-    given(array = arrayBuilder(types().file()).add(file).build());
+    given(array = arrayBuilder(objectFactory().fileType()).add(file).build());
     given(outputsDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb().read(hash, arrayType(types().file())).result())
+    when(((Array) outputsDb().read(hash, arrayType(objectFactory().fileType())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -117,7 +117,7 @@ public class OutputsDbTest extends TestingContext {
   public void written_file_can_be_read_back() {
     given(file = file(path, bytes));
     given(outputsDb()).write(hash, new Output(file, emptyMessageArray()));
-    when(outputsDb().read(hash, types().file()).result());
+    when(outputsDb().read(hash, objectFactory().fileType()).result());
     thenReturned(file);
   }
 

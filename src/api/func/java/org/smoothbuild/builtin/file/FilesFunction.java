@@ -43,7 +43,7 @@ public class FilesFunction {
 
   private static Array readFiles(Container container, FileSystem fileSystem, Path dir)
       throws IOException {
-    ArrayBuilder fileArrayBuilder = container.create().arrayBuilder(container.types().file());
+    ArrayBuilder fileArrayBuilder = container.factory().arrayBuilder((container.factory()).fileType());
     FileReader reader = new FileReader(container);
     if (dir.isRoot()) {
       for (Path path : fileSystem.files(Path.root())) {

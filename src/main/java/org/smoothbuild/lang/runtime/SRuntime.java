@@ -3,19 +3,21 @@ package org.smoothbuild.lang.runtime;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import org.smoothbuild.lang.object.db.ObjectFactory;
+
 @Singleton
 public class SRuntime {
-  private final RuntimeTypes types;
+  private final ObjectFactory objectFactory;
   private final Functions functions;
 
   @Inject
-  public SRuntime(RuntimeTypes types, Functions functions) {
-    this.types = types;
+  public SRuntime(ObjectFactory objectFactory, Functions functions) {
+    this.objectFactory = objectFactory;
     this.functions = functions;
   }
 
-  public RuntimeTypes types() {
-    return types;
+  public ObjectFactory objectFactory() {
+    return objectFactory;
   }
 
   public Functions functions() {

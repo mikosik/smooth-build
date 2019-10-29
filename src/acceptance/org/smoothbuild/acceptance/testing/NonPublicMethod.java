@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class NonPublicMethod {
   @SmoothFunction("function")
   static SString function(NativeApi nativeApi) {
-    return nativeApi.create().string("abc");
+    return nativeApi.factory().string("abc");
   }
 }

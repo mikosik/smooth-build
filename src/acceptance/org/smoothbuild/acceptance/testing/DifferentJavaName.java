@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class DifferentJavaName {
   @SmoothFunction("annotationName")
   public static SString methodName(NativeApi nativeApi) {
-    return nativeApi.create().string("abc");
+    return nativeApi.factory().string("abc");
   }
 }

@@ -8,7 +8,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class Concat {
   @SmoothFunction("testConcat")
   public static Array testConcat(NativeApi nativeApi, Array first, Array second) {
-    return nativeApi.create()
+    return nativeApi.factory()
         .arrayBuilder(first.type().elemType())
         .addAll(first.asIterable(SObject.class))
         .addAll(second.asIterable(SObject.class))

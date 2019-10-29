@@ -18,16 +18,16 @@ public class FileReader {
   }
 
   public Struct createFile(Path path, Path projectPath) throws IOException {
-    return container.create().file(createPath(path), createContent(projectPath));
+    return container.factory().file(createPath(path), createContent(projectPath));
   }
 
   private SString createPath(Path path) {
-    return container.create().string(path.value());
+    return container.factory().string(path.value());
   }
 
   private Blob createContent(Path path) throws IOException {
     try (BufferedSource source = container.fileSystem().source(path)) {
-      return container.create().blob(sink -> sink.writeAll(source));
+      return container.factory().blob(sink -> sink.writeAll(source));
     }
   }
 }

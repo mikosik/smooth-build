@@ -8,7 +8,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class Append {
   @SmoothFunction("testAppend")
   public static Array testAppend(NativeApi nativeApi, Array array, SObject element) {
-    return nativeApi.create()
+    return nativeApi.factory()
         .arrayBuilder(array.type().elemType())
         .addAll(array.asIterable(SObject.class))
         .add(element)

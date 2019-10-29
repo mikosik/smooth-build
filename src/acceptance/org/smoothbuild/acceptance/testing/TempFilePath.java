@@ -16,6 +16,6 @@ public class TempFilePath {
     TempDir tempDir = nativeApi.createTempDir();
     String osPath = tempDir.asOsPath(path("file.txt"));
     new File(osPath).mkdirs();
-    return nativeApi.create().string(osPath);
+    return nativeApi.factory().string(osPath);
   }
 }

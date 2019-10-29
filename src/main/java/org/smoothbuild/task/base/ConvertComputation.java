@@ -45,7 +45,7 @@ public class ConvertComputation implements Computation {
   private static SObject convertArray(Container container, Array array,
       ConcreteType destinationType) {
     ConcreteType elemType = ((ConcreteArrayType) destinationType).elemType();
-    ArrayBuilder builder = container.create().arrayBuilder(elemType);
+    ArrayBuilder builder = container.factory().arrayBuilder(elemType);
     for (SObject element : array.asIterable(SObject.class)) {
       if (element instanceof Array) {
         builder.add(convertArray(container, (Array) element, elemType));

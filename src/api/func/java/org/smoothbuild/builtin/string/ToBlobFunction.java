@@ -16,6 +16,6 @@ public class ToBlobFunction {
   }
 
   public static Blob stringToBlob(NativeApi nativeApi, SString string) throws IOException {
-    return nativeApi.create().blob(sink -> sink.writeString(string.data(), CHARSET));
+    return nativeApi.factory().blob(sink -> sink.writeString(string.data(), CHARSET));
   }
 }

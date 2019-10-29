@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -38,7 +38,7 @@ public class FindSemanticErrors {
     unescapeStrings(errors, ast);
     parametersReferenceWithParentheses(errors, ast);
     undefinedReferences(errors, functions, ast);
-    undefinedTypes(errors, runtime.types(), ast);
+    undefinedTypes(errors, runtime.objectFactory(), ast);
     duplicateGlobalNames(errors, runtime, ast);
     duplicateFieldNames(errors, ast);
     duplicateParamNames(errors, ast);
@@ -93,9 +93,9 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedTypes(List<ParseError> errors, RuntimeTypes types, Ast ast) {
+  private static void undefinedTypes(List<ParseError> errors, ObjectFactory objectFactory, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
-        .addAll(types.names())
+        .addAll(objectFactory.names())
         .addAll(map(ast.structs(), NamedNode::name))
         .build();
     new AstVisitor() {
@@ -130,7 +130,7 @@ public class FindSemanticErrors {
   private static void duplicateGlobalNames(List<ParseError> errors, SRuntime runtime, Ast ast) {
     Map<String, Object> defined = new HashMap<>();
     defined.putAll(runtime.functions().nameToFunctionMap());
-    defined.putAll(runtime.types().nameToTypeMap());
+    defined.putAll(runtime.objectFactory().nameToTypeMap());
 
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());

@@ -14,35 +14,26 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.Types;
 
 public class Container implements NativeApi {
   private final FileSystem fileSystem;
   private final ObjectFactory objectFactory;
-  private final Types types;
   private final TempManager tempManager;
   private final List<TempDir> tempDirs;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(FileSystem fileSystem, ObjectFactory objectFactory, Types types,
-      TempManager tempManager) {
+  public Container(FileSystem fileSystem, ObjectFactory objectFactory, TempManager tempManager) {
     this.fileSystem = fileSystem;
     this.objectFactory = objectFactory;
-    this.types = types;
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
     this.messageLogger = new MessageLoggerImpl(objectFactory);
   }
 
   @Override
-  public ObjectFactory create() {
+  public ObjectFactory factory() {
     return objectFactory;
-  }
-
-  @Override
-  public Types types() {
-    return types;
   }
 
   public FileSystem fileSystem() {
@@ -55,7 +46,9 @@ public class Container implements NativeApi {
   }
 
   public Array messages() {
-    return objectFactory.arrayBuilder(types.message()).addAll(messageLogger.messages).build();
+    return objectFactory.arrayBuilder(objectFactory.messageType())
+        .addAll(messageLogger.messages)
+        .build();
   }
 
   @Override
