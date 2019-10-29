@@ -18,19 +18,20 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
+import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final RuntimeTypes types;
+  private final ObjectFactory objectFactory;
   private final Console console;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, RuntimeTypes types, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory, Console console) {
     this.fileSystem = fileSystem;
-    this.types = types;
+    this.objectFactory = objectFactory;
     this.console = console;
   }
 
@@ -38,7 +39,7 @@ public class ArtifactSaver {
     Path path = path(toFileName(name));
     if (object instanceof Array) {
       saveArray(path, (Array) object);
-    } else if (object.type().equals(types.getType("File"))) {
+    } else if (object.type().equals(objectFactory.getType(TypeNames.FILE))) {
       saveBasicObject(path, ((Struct) object).get("content"));
     } else {
       saveBasicObject(path, object);
@@ -54,7 +55,7 @@ public class ArtifactSaver {
         saveArray(path.append(path(Integer.toString(i))), element);
         i++;
       }
-    } else if (elemType.equals(types.getType("File"))) {
+    } else if (elemType.equals(objectFactory.getType(TypeNames.FILE))) {
       saveFileArray(path, array);
     } else {
       saveObjectArray(path, array);

@@ -35,7 +35,7 @@ public class UnzipFunction {
   public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter)
       throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    ArrayBuilder fileArrayBuilder = nativeApi.create().arrayBuilder(nativeApi.types().file());
+    ArrayBuilder fileArrayBuilder = nativeApi.factory().arrayBuilder((nativeApi.factory()).fileType());
     try {
       File tempFile = copyToTempFile(blob);
       try (ZipFile zipFile = new ZipFile(tempFile)) {
@@ -78,8 +78,8 @@ public class UnzipFunction {
       return null;
     }
 
-    SString path = nativeApi.create().string(fileName);
-    Blob content = nativeApi.create().blob(sink -> sink.writeAll(source(inputStream)));
-    return nativeApi.create().file(path, content);
+    SString path = nativeApi.factory().string(fileName);
+    Blob content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
+    return nativeApi.factory().file(path, content);
   }
 }

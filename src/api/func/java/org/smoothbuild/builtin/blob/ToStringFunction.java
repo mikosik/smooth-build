@@ -15,7 +15,7 @@ public class ToStringFunction {
   @SmoothFunction("toString")
   public static SString toString(NativeApi nativeApi, Blob blob) throws IOException {
     try (BufferedSource source = blob.source()) {
-      return nativeApi.create().string(source.readString(CHARSET));
+      return nativeApi.factory().string(source.readString(CHARSET));
     }
   }
 }

@@ -8,6 +8,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class GenericResult {
   @SmoothFunction("genericResult")
   public static SObject genericResult(NativeApi nativeApi, Array array) {
-    return nativeApi.create().string("abc");
+    return nativeApi.factory().string("abc");
   }
 }

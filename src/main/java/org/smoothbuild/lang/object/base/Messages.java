@@ -27,7 +27,7 @@ public class Messages {
   }
 
   public static Array emptyMessageArray(Container container) {
-    return container.create().arrayBuilder(container.types().message()).build();
+    return container.factory().arrayBuilder((container.factory()).messageType()).build();
   }
 
   public static boolean isEmpty(Array messages) {

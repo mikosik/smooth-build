@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class SameName2 {
   @SmoothFunction("sameName")
   public static SString sameName(NativeApi nativeApi) {
-    return nativeApi.create().string("abc");
+    return nativeApi.factory().string("abc");
   }
 }

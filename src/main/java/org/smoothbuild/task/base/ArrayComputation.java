@@ -29,7 +29,7 @@ public class ArrayComputation implements Computation {
   @Override
   public Output execute(Input input, Container container) {
     Array array = container
-        .create()
+        .factory()
         .arrayBuilder(arrayType.elemType())
         .addAll(input.objects())
         .build();

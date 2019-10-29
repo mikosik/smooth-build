@@ -60,14 +60,14 @@ public class JunitFunction {
               nativeApi.log().error(
                   "test failed: " + failure.toString() + "\n" + failure.getTrace());
             }
-            return nativeApi.create().string("FAILURE");
+            return nativeApi.factory().string("FAILURE");
           }
         }
       }
       if (testCount == 0) {
         nativeApi.log().warning("No junit tests found.");
       }
-      return nativeApi.create().string("SUCCESS");
+      return nativeApi.factory().string("SUCCESS");
     } finally {
       Thread.currentThread().setContextClassLoader(origClassLoader);
     }

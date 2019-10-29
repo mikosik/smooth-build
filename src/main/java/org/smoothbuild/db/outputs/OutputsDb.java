@@ -18,10 +18,10 @@ import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.plugin.Types;
 import org.smoothbuild.task.base.Output;
 
 import okio.BufferedSink;
@@ -30,13 +30,13 @@ import okio.BufferedSource;
 public class OutputsDb {
   private final FileSystem fileSystem;
   private final ObjectsDb objectsDb;
-  private final Types types;
+  private final ObjectFactory objectFactory;
 
   @Inject
-  public OutputsDb(FileSystem fileSystem, ObjectsDb objectsDb, Types types) {
+  public OutputsDb(FileSystem fileSystem, ObjectsDb objectsDb, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
     this.objectsDb = objectsDb;
-    this.types = types;
+    this.objectFactory = objectFactory;
   }
 
   public void write(Hash taskHash, Output output) {
@@ -69,7 +69,7 @@ public class OutputsDb {
   public Output read(Hash taskHash, ConcreteType type) {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       SObject messagesObject = objectsDb.get(Hash.read(source));
-      ArrayType messageArrayType = types.array(types.message());
+      ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
       if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
             + " as first child of its Merkle root, but got " + messagesObject.type());

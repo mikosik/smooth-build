@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.util.Maybe;
 
 public class Ast {
@@ -74,8 +74,8 @@ public class Ast {
     }
   }
 
-  public List<Object> sortTypesByDependencies(RuntimeTypes types) {
-    Maybe<List<String>> sortedNames = sortByDependencies(types, this);
+  public List<Object> sortTypesByDependencies(ObjectFactory objectFactory) {
+    Maybe<List<String>> sortedNames = sortByDependencies(objectFactory, this);
     if (sortedNames.hasValue()) {
       this.structs = sortedNames
           .value()

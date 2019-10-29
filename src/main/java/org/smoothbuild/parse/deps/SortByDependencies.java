@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.RuntimeTypes;
 import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -49,9 +49,9 @@ public class SortByDependencies {
     };
   }
 
-  public static Maybe<List<String>> sortByDependencies(RuntimeTypes types, Ast ast) {
+  public static Maybe<List<String>> sortByDependencies(ObjectFactory objectFactory, Ast ast) {
     List<StructNode> structs = ast.structs();
-    Set<String> globalNames = types.names();
+    Set<String> globalNames = objectFactory.names();
     return sortByDependencies(
         "Type hierarchy", structs, structToStackElem(), globalNames);
   }

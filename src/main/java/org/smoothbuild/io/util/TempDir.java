@@ -73,11 +73,11 @@ public class TempDir {
   }
 
   private Array readFilesImpl() throws IOException {
-    ArrayBuilder arrayBuilder = container.create().arrayBuilder(container.types().file());
+    ArrayBuilder arrayBuilder = container.factory().arrayBuilder((container.factory()).fileType());
     for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext(); ) {
       Path path = it.next();
       Blob content = readContentImpl(path);
-      Struct file = container.create().file(container.create().string(path.value()), content);
+      Struct file = container.factory().file(container.factory().string(path.value()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();
@@ -90,7 +90,7 @@ public class TempDir {
 
   private Blob readContentImpl(Path path) throws IOException {
     try (BufferedSource source = fileSystem.source(rootPath.append(path))) {
-      return container.create().blob(sink -> sink.writeAll(source));
+      return container.factory().blob(sink -> sink.writeAll(source));
     }
   }
 

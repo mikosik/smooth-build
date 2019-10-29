@@ -31,7 +31,7 @@ public class ConstructorCallComputation implements Computation {
 
   @Override
   public Output execute(Input input, Container container) {
-    StructBuilder builder = container.create().structBuilder(constructor.type());
+    StructBuilder builder = container.factory().structBuilder(constructor.type());
     ImmutableList<Parameter> parameters = constructor.signature().parameters();
     for (int i = 0; i < parameters.size(); i++) {
       builder.set(parameters.get(i).name(), input.objects().get(i));

@@ -8,6 +8,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class EqualFunction {
   @SmoothFunction("equal")
   public static Bool equalFunction(NativeApi nativeApi, SObject first, SObject second) {
-    return nativeApi.create().bool(first.hash().equals(second.hash()));
+    return nativeApi.factory().bool(first.hash().equals(second.hash()));
   }
 }

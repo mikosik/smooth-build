@@ -12,7 +12,7 @@ public class Flatten {
   @SmoothFunction("testFlatten")
   public static Array testFlatten(NativeApi nativeApi, Array array) {
     ConcreteType resultArrayElemType = ((ConcreteArrayType) array.type().elemType()).elemType();
-    ArrayBuilder builder = nativeApi.create().arrayBuilder(resultArrayElemType);
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
     for (Array innerArray : array.asIterable(Array.class)) {
       builder.addAll(innerArray.asIterable(SObject.class));
     }

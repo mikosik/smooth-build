@@ -13,7 +13,7 @@ public class JavaPropertyFunction {
       nativeApi.log().error("Unknown property '" + nameString + "'.");
       return null;
     } else {
-      return nativeApi.create().string(property);
+      return nativeApi.factory().string(property);
     }
   }
 }

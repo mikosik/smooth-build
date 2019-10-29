@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class FalseFunction {
   @SmoothFunction("false")
   public static Bool falseFunction(NativeApi nativeApi) {
-    return nativeApi.create().bool(false);
+    return nativeApi.factory().bool(false);
   }
 }

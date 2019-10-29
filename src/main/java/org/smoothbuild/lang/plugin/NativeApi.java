@@ -7,9 +7,7 @@ import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.util.CommandExecutor;
 
 public interface NativeApi {
-  public ObjectFactory create();
-
-  public Types types();
+  public ObjectFactory factory();
 
   public MessageLogger log();
 
