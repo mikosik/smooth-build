@@ -7,6 +7,7 @@ import org.smoothbuild.io.fs.base.Path;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 public interface MemoryElement {
   public Path name();
@@ -28,4 +29,6 @@ public interface MemoryElement {
   public BufferedSource source() throws IOException;
 
   public BufferedSink sink();
+
+  public Sink sinkWithoutBuffer();
 }

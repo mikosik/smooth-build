@@ -7,6 +7,7 @@ import org.smoothbuild.io.fs.base.Path;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 public class MemoryLink implements MemoryElement {
   private final MemoryDir parent;
@@ -67,5 +68,10 @@ public class MemoryLink implements MemoryElement {
   @Override
   public BufferedSink sink() {
     return target.sink();
+  }
+
+  @Override
+  public Sink sinkWithoutBuffer() {
+    return target.sinkWithoutBuffer();
   }
 }

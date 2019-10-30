@@ -29,7 +29,7 @@ public class HashingBufferedSink implements BufferedSink {
 
   public HashingBufferedSink(FileSystem fileSystem, Path tempPath, Path hashedDbRootPath)
       throws IOException {
-    this.hashingSink = Hash.hashingSink(fileSystem.sink(tempPath));
+    this.hashingSink = Hash.hashingSink(fileSystem.sinkWithoutBuffer(tempPath));
     this.bufferedSink = Okio.buffer(hashingSink);
     this.fileSystem = fileSystem;
     this.tempPath = tempPath;

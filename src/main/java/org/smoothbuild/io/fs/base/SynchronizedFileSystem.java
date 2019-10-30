@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 public class SynchronizedFileSystem implements FileSystem {
   private final FileSystem fileSystem;
@@ -40,6 +41,11 @@ public class SynchronizedFileSystem implements FileSystem {
   @Override
   public synchronized BufferedSink sink(Path path) throws IOException {
     return fileSystem.sink(path);
+  }
+
+  @Override
+  public synchronized Sink sinkWithoutBuffer(Path path) throws IOException {
+    return fileSystem.sinkWithoutBuffer(path);
   }
 
   @Override
