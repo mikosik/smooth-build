@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import okio.Sink;
 
 public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
@@ -89,11 +90,16 @@ public class DiskFileSystem implements FileSystem {
 
   @Override
   public BufferedSink sink(Path path) throws IOException {
+    return Okio.buffer(sinkWithoutBuffer(path));
+  }
+
+  @Override
+  public Sink sinkWithoutBuffer(Path path) throws IOException {
     if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
     createDir(path.parent());
-    return Okio.buffer(Okio.sink(jdkPath(path)));
+    return Okio.sink(jdkPath(path));
   }
 
   @Override

@@ -74,7 +74,12 @@ public class MemoryFile implements MemoryElement {
 
   @Override
   public BufferedSink sink() {
-    return buffer(new MySink());
+    return buffer(sinkWithoutBuffer());
+  }
+
+  @Override
+  public MySink sinkWithoutBuffer() {
+    return new MySink();
   }
 
   private class MySink extends ForwardingSink {

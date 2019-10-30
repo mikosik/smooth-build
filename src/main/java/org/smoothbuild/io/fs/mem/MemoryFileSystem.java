@@ -18,6 +18,8 @@ import org.smoothbuild.io.fs.base.PathState;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Okio;
+import okio.Sink;
 
 /**
  * In memory implementation of FileSystem.
@@ -79,6 +81,11 @@ public class MemoryFileSystem implements FileSystem {
 
   @Override
   public BufferedSink sink(Path path) throws IOException {
+    return Okio.buffer(sinkWithoutBuffer(path));
+  }
+
+  @Override
+  public Sink sinkWithoutBuffer(Path path) throws IOException {
     if (pathState(path) == DIR) {
       throw new IOException("Cannot use " + path + " path. It is already taken by dir.");
     }
@@ -87,11 +94,11 @@ public class MemoryFileSystem implements FileSystem {
 
     Path name = path.lastPart();
     if (dir.hasChild(name)) {
-      return dir.child(name).sink();
+      return dir.child(name).sinkWithoutBuffer();
     } else {
       MemoryFile child = new MemoryFile(dir, name);
       dir.addChild(child);
-      return child.sink();
+      return child.sinkWithoutBuffer();
     }
   }
 

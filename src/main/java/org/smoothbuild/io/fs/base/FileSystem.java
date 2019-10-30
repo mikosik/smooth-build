@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 public interface FileSystem {
   public PathState pathState(Path path);
@@ -17,6 +18,8 @@ public interface FileSystem {
   public BufferedSource source(Path path) throws IOException;
 
   public BufferedSink sink(Path path) throws IOException;
+
+  public Sink sinkWithoutBuffer(Path path) throws IOException;
 
   public void createLink(Path link, Path target) throws IOException;
 

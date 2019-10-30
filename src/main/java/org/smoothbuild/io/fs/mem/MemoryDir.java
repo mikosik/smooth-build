@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
+import okio.Sink;
 
 public class MemoryDir implements MemoryElement {
   private final MemoryDir parent;
@@ -85,6 +86,11 @@ public class MemoryDir implements MemoryElement {
 
   @Override
   public BufferedSink sink() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Sink sinkWithoutBuffer() {
     throw new UnsupportedOperationException();
   }
 }
