@@ -30,9 +30,20 @@ public class HashedDb {
     this.tempManager = tempManager;
   }
 
-  public boolean contains(Hash hash) {
+  public boolean contains(Hash hash) throws CorruptedHashedDbException {
     Path path = toPath(hash);
-    return fileSystem.pathState(path) == PathState.FILE;
+    PathState pathState = fileSystem.pathState(path);
+    switch (pathState) {
+      case FILE:
+        return true;
+      case DIR:
+        throw new CorruptedHashedDbException(
+            "Corrupted HashedDb. " + path + " is a directory not a data file.");
+      case NOTHING:
+        return false;
+      default:
+        throw newUnknownPathState(pathState);
+    }
   }
 
   public Hash writeString(String string) throws IOException {

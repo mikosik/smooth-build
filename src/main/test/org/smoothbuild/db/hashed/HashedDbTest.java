@@ -25,7 +25,7 @@ public class HashedDbTest extends TestingContext {
   private ByteString byteString;
 
   @Test
-  public void db_doesnt_contain_not_written_data() {
+  public void db_doesnt_contain_not_written_data() throws CorruptedHashedDbException {
     when(hashedDb().contains(Hash.of(33)));
     thenReturned(false);
   }
@@ -149,7 +149,16 @@ public class HashedDbTest extends TestingContext {
   // tests for corrupted db
 
   @Test
-  public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_reading_data() {
+  public void when_hash_points_to_directory_then_contains_causes_corrupted_exception() {
+    given(() -> hash = Hash.of(33));
+    given(() -> hashedDbFileSystem().createDir(path(hash.toString())));
+    when(() -> hashedDb().contains(hash));
+    thenThrown(exception(new CorruptedHashedDbException(
+        "Corrupted HashedDb. '" + hash + "' is a directory not a data file.")));
+  }
+
+  @Test
+  public void when_hash_points_to_directory_then_source_causes_corrupted_exception() {
     given(() -> hash = Hash.of(33));
     given(() -> hashedDbFileSystem().createDir(path(hash.toString())));
     when(() -> hashedDb().source(hash));
@@ -158,7 +167,7 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Test
-  public void directory_with_name_equal_to_data_hash_causes_corrupted_exception_when_writing_data() {
+  public void when_hash_points_to_directory_then_sink_causes_corrupted_exception() {
     given(() -> hash = Hash.of(bytes1));
     given(() -> hashedDbFileSystem().createDir(Hash.toPath(hash)));
     when(() -> hashedDb().sink().write(bytes1).close());
