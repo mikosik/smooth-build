@@ -5,21 +5,21 @@ import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbExcepti
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 
 public class TypeType extends ConcreteType {
   private final ObjectsDb objectsDb;
 
-  public TypeType(Hash dataHash, ObjectsDb objectsDb, HashedDb hashedDb) {
-    super(writeHashes(hashedDb, dataHash), dataHash, null, null, "Type", ConcreteType.class,
-        hashedDb, objectsDb);
+  public TypeType(Hash dataHash, ObjectsDb objectsDb, ValuesDb valuesDb) {
+    super(writeHashes(valuesDb, dataHash), dataHash, null, null, "Type", ConcreteType.class,
+        valuesDb, objectsDb);
     this.objectsDb = objectsDb;
   }
 
-  private static Hash writeHashes(HashedDb hashedDb, Hash dataHash) {
+  private static Hash writeHashes(ValuesDb valuesDb, Hash dataHash) {
     try {
-      return hashedDb.writeHashes(dataHash);
+      return valuesDb.writeHashes(dataHash);
     } catch (IOException e) {
       throw objectsDbException(e);
     }

@@ -9,18 +9,18 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 public class SString extends SObjectImpl {
-  public SString(Hash dataHash, ConcreteType type, HashedDb hashedDb) {
-    super(dataHash, type, hashedDb);
+  public SString(Hash dataHash, ConcreteType type, ValuesDb valuesDb) {
+    super(dataHash, type, valuesDb);
     checkArgument(type.name().equals("String"));
   }
 
   public String data() {
     try {
-      return hashedDb.readString(dataHash());
+      return valuesDb.readString(dataHash());
     } catch (IOException e) {
       throw objectsDbException(e);
     } catch (DecodingStringException e) {

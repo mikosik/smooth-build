@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 
 public class ArrayBuilder {
   private final ConcreteArrayType type;
-  private final HashedDb hashedDb;
+  private final ValuesDb valuesDb;
   private final List<SObject> elements;
 
-  public ArrayBuilder(ConcreteArrayType type, HashedDb hashedDb) {
+  public ArrayBuilder(ConcreteArrayType type, ValuesDb valuesDb) {
     this.type = type;
-    this.hashedDb = hashedDb;
+    this.valuesDb = valuesDb;
     this.elements = new ArrayList<>();
   }
 
@@ -52,7 +52,7 @@ public class ArrayBuilder {
 
   private Hash writeElements(Hash[] elementHashes) {
     try {
-      return hashedDb.writeHashes(elementHashes);
+      return valuesDb.writeHashes(elementHashes);
     } catch (IOException e) {
       throw objectsDbException(e);
     }

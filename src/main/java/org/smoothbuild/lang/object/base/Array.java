@@ -8,8 +8,8 @@ import java.io.EOFException;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
@@ -19,8 +19,8 @@ public class Array extends SObjectImpl {
   private final ObjectsDb objectsDb;
 
   public Array(Hash dataHash, ConcreteArrayType arrayType, ObjectsDb objectsDb,
-      HashedDb hashedDb) {
-    super(dataHash, arrayType, hashedDb);
+      ValuesDb valuesDb) {
+    super(dataHash, arrayType, valuesDb);
     this.objectsDb = objectsDb;
   }
 
@@ -51,7 +51,7 @@ public class Array extends SObjectImpl {
 
   private ImmutableList<SObject> elements() {
     try {
-      return hashedDb
+      return valuesDb
           .readHashes(dataHash())
           .stream()
           .map(objectsDb::get)

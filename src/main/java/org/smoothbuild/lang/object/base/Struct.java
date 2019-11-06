@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
@@ -21,8 +21,8 @@ public class Struct extends SObjectImpl {
   private ImmutableMap<String, SObject> fields;
   private final ObjectsDb objectsDb;
 
-  public Struct(Hash dataHash, StructType type, ObjectsDb objectsDb, HashedDb hashedDb) {
-    super(dataHash, type, hashedDb);
+  public Struct(Hash dataHash, StructType type, ObjectsDb objectsDb, ValuesDb valuesDb) {
+    super(dataHash, type, valuesDb);
     this.objectsDb = objectsDb;
   }
 
@@ -70,7 +70,7 @@ public class Struct extends SObjectImpl {
 
   private List<Hash> readHashes() {
     try {
-      return hashedDb.readHashes(dataHash());
+      return valuesDb.readHashes(dataHash());
     } catch (IOException e) {
       throw objectsDbException(e);
     }

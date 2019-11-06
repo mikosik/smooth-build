@@ -4,7 +4,6 @@ import static okio.ByteString.encodeUtf8;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -39,51 +38,10 @@ public class HashedDbTest extends TestingContext {
   }
 
   @Test
-  public void written_string_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeString("abc"));
-    when(() -> hashedDb().readString(hash));
-    thenReturned("abc");
-  }
-
-  @Test
   public void reading_not_written_value_fails() {
     given(hash = Hash.of("abc"));
     when(() -> hashedDb().source(hash));
     thenThrown(exception(new NoSuchDataException(hash)));
-  }
-
-  @Test
-  public void written_empty_sequence_of_hashes_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeHashes());
-    when(() -> hashedDb().readHashes(hash));
-    thenReturned(list());
-  }
-
-  @Test
-  public void written_one_element_sequence_of_hashes_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeHashes(Hash.of("abc")));
-    when(() -> hashedDb().readHashes(hash));
-    thenReturned(list(Hash.of("abc")));
-  }
-
-  @Test
-  public void written_two_elements_sequence_of_hashes_can_be_read_back() throws Exception {
-    given(hash = hashedDb().writeHashes(Hash.of("abc"), Hash.of("def")));
-    when(() -> hashedDb().readHashes(hash));
-    thenReturned(list(Hash.of("abc"), Hash.of("def")));
-  }
-
-  @Test
-  public void not_written_sequence_of_hashes_cannot_be_read_back() {
-    when(() -> hashedDb().readHashes(Hash.of("abc")));
-    thenThrown(IOException.class);
-  }
-
-  @Test
-  public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
-    given(hash = hashedDb().writeString("12345"));
-    when(() -> hashedDb().readHashes(hash));
-    thenThrown(IOException.class);
   }
 
   @Test
