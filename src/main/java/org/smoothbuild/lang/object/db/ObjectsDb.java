@@ -45,11 +45,11 @@ public class ObjectsDb {
   private final HashedDb hashedDb;
 
   private final Map<Hash, ConcreteType> typesCache;
-  private TypeType type;
-  private BoolType bool;
-  private StringType string;
-  private BlobType blob;
-  private NothingType nothing;
+  private TypeType typeType;
+  private BoolType boolType;
+  private StringType stringType;
+  private BlobType blobType;
+  private NothingType nothingType;
 
   @Inject
   public ObjectsDb(HashedDb hashedDb) {
@@ -131,43 +131,43 @@ public class ObjectsDb {
   }
 
   public TypeType typeType() {
-    if (type == null) {
-      type = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
-      typesCache.put(type.hash(), type);
+    if (typeType == null) {
+      typeType = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
+      typesCache.put(typeType.hash(), typeType);
     }
-    return type;
+    return typeType;
   }
 
   public BoolType boolType() {
-    if (bool == null) {
-      bool = new BoolType(writeBasicTypeData(BOOL), typeType(), hashedDb, this);
-      typesCache.put(bool.hash(), bool);
+    if (boolType == null) {
+      boolType = new BoolType(writeBasicTypeData(BOOL), typeType(), hashedDb, this);
+      typesCache.put(boolType.hash(), boolType);
     }
-    return bool;
+    return boolType;
   }
 
   public StringType stringType() {
-    if (string == null) {
-      string = new StringType(writeBasicTypeData(STRING), typeType(), hashedDb, this);
-      typesCache.put(string.hash(), string);
+    if (stringType == null) {
+      stringType = new StringType(writeBasicTypeData(STRING), typeType(), hashedDb, this);
+      typesCache.put(stringType.hash(), stringType);
     }
-    return string;
+    return stringType;
   }
 
   public BlobType blobType() {
-    if (blob == null) {
-      blob = new BlobType(writeBasicTypeData(BLOB), typeType(), hashedDb, this);
-      typesCache.put(blob.hash(), blob);
+    if (blobType == null) {
+      blobType = new BlobType(writeBasicTypeData(BLOB), typeType(), hashedDb, this);
+      typesCache.put(blobType.hash(), blobType);
     }
-    return blob;
+    return blobType;
   }
 
   public NothingType nothingType() {
-    if (nothing == null) {
-      nothing = new NothingType(writeBasicTypeData(NOTHING), typeType(), hashedDb, this);
-      typesCache.put(nothing.hash(), nothing);
+    if (nothingType == null) {
+      nothingType = new NothingType(writeBasicTypeData(NOTHING), typeType(), hashedDb, this);
+      typesCache.put(nothingType.hash(), nothingType);
     }
-    return nothing;
+    return nothingType;
   }
 
   private Hash writeBasicTypeData(String name) {
