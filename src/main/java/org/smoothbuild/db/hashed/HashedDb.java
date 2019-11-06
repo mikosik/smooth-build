@@ -90,7 +90,7 @@ public class HashedDb {
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
       case FILE:
-        return buffer(fileSystem.source(path));
+        return fileSystem.source(path);
       case DIR:
         throw new CorruptedHashedDbException(
             "Corrupted HashedDb. " + path + " is a directory not a data file.");
