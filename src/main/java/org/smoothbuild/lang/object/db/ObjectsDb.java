@@ -58,11 +58,7 @@ public class ObjectsDb {
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    return createArrayBuilder(arrayType(elementType));
-  }
-
-  private ArrayBuilder createArrayBuilder(ConcreteArrayType type) {
-    return new ArrayBuilder(type, hashedDb);
+    return new ArrayBuilder(arrayType(elementType), hashedDb);
   }
 
   public StructBuilder structBuilder(StructType type) {
