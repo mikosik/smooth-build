@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
+import org.smoothbuild.lang.object.db.ValuesDb.WrappedHashedDbException;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -129,6 +130,6 @@ public class BlobTest extends TestingContext {
     given(hash = Hash.of(33));
     given(blob = blobType().newInstance(hash));
     when(() -> blob.source());
-    thenThrown(exception(new NoSuchDataException(hash)));
+    thenThrown(exception(new WrappedHashedDbException(new NoSuchDataException(hash))));
   }
 }

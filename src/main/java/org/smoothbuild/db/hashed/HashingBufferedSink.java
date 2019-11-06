@@ -60,7 +60,7 @@ public class HashingBufferedSink implements BufferedSink {
         // nothing to do, we already stored data with such hash so its content must be equal
         return;
       case DIR:
-        throw new CorruptedHashedDbException(
+        throw new IOException(
             "Corrupted HashedDb. Cannot store data at " + path + " as it is a directory.");
       default:
         throw newUnknownPathState(pathState);

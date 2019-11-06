@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
@@ -60,7 +61,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   }
 
   private void run_array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(
-      int byteCount) throws IOException {
+      int byteCount) throws IOException, HashedDbException {
     given(instanceHash =
         hash(
             hash(arrayType(stringType())),
@@ -73,7 +74,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   }
 
   @Test
-  public void array_with_one_element_of_wrong_type_is_corrupted() throws IOException {
+  public void array_with_one_element_of_wrong_type_is_corrupted() throws IOException,
+      HashedDbException {
     given(instanceHash =
         hash(
             hash(arrayType(stringType())),

@@ -1,8 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import java.io.IOException;
-
-public class CorruptedHashedDbException extends IOException {
+public class CorruptedHashedDbException extends HashedDbException {
   public CorruptedHashedDbException(String message) {
     super(message);
   }

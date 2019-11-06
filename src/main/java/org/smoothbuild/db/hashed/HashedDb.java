@@ -38,12 +38,16 @@ public class HashedDb {
     }
   }
 
-  public BufferedSource source(Hash hash) throws IOException {
+  public BufferedSource source(Hash hash) throws HashedDbException {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
       case FILE:
-        return fileSystem.source(path);
+        try {
+          return fileSystem.source(path);
+        } catch (IOException e) {
+          throw new HashedDbException(hash, e);
+        }
       case DIR:
         throw new CorruptedHashedDbException(
             "Corrupted HashedDb. " + path + " is a directory not a data file.");
@@ -54,8 +58,12 @@ public class HashedDb {
     }
   }
 
-  public HashingBufferedSink sink() throws IOException {
-    return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
+  public HashingBufferedSink sink() throws HashedDbException {
+    try {
+      return new HashingBufferedSink(fileSystem, tempManager.tempPath(), rootPath);
+    } catch (IOException e) {
+      throw new HashedDbException(e);
+    }
   }
 
   private Path toPath(Hash hash) {

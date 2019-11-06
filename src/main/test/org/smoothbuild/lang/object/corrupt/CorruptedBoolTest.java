@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.Bool;
 
 import okio.ByteString;
@@ -28,7 +29,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
     run_learning_test(false);
   }
 
-  private void run_learning_test(boolean value) throws IOException {
+  private void run_learning_test(boolean value) throws IOException, HashedDbException {
     given(instanceHash =
         hash(
             hash(boolType()),
@@ -69,7 +70,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   }
 
   private void run_bool_with_one_byte_data_not_equal_zero_nor_one_is_corrupted(byte value) throws
-      IOException {
+      IOException, HashedDbException {
     given(instanceHash =
         hash(
             hash(boolType()),

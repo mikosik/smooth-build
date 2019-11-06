@@ -15,6 +15,7 @@ import java.util.List;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 
 import okio.BufferedSource;
@@ -66,6 +67,8 @@ public class ValuesDb {
       sink.writeString(string, CHARSET);
       sink.close();
       return sink.hash();
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
     }
   }
 
@@ -77,9 +80,10 @@ public class ValuesDb {
       return charsetDecoder.decode(wrap(source.readByteArray())).toString();
     } catch (CharacterCodingException e) {
       throw new DecodingStringException(e.getMessage(), e);
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
     }
   }
-
 
   public Hash writeHashes(Hash... hashes) throws IOException {
     try (HashingBufferedSink sink = hashedDb.sink()) {
@@ -88,6 +92,8 @@ public class ValuesDb {
       }
       sink.close();
       return sink.hash();
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
     }
   }
 
@@ -97,15 +103,31 @@ public class ValuesDb {
       while (!source.exhausted()) {
         result.add(Hash.read(source));
       }
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
     }
     return result;
   }
 
   public HashingBufferedSink sink() throws IOException {
-    return hashedDb.sink();
+    try {
+      return hashedDb.sink();
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
+    }
   }
 
   public BufferedSource source(Hash hash) throws IOException {
-    return hashedDb.source(hash);
+    try {
+      return hashedDb.source(hash);
+    } catch (HashedDbException e) {
+      throw new WrappedHashedDbException(e);
+    }
+  }
+
+  public static class WrappedHashedDbException extends IOException {
+    public WrappedHashedDbException(HashedDbException e) {
+      super(e);
+    }
   }
 }
