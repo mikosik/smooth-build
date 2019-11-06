@@ -81,17 +81,7 @@ public class ObjectsDb {
   }
 
   public Bool bool(boolean value) {
-    return new Bool(writeBool(value), boolType(), valuesDb);
-  }
-
-  private Hash writeBool(boolean value) {
-    try (HashingBufferedSink sink = valuesDb.sink()) {
-      sink.writeByte(value ? 1 : 0);
-      sink.close();
-      return sink.hash();
-    } catch (IOException e) {
-      throw objectsDbException(e);
-    }
+    return new Bool(valuesDb.writeBoolean(value), boolType(), valuesDb);
   }
 
   public SObject get(Hash hash) {
