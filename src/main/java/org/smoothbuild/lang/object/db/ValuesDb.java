@@ -3,6 +3,8 @@ package org.smoothbuild.lang.object.db;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
+import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
+import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
@@ -24,6 +26,41 @@ public class ValuesDb {
     this.hashedDb = hashedDb;
   }
 
+  public Hash writeBoolean(boolean value) {
+    try (HashingBufferedSink sink = sink()) {
+      sink.writeByte(value ? 1 : 0);
+      sink.close();
+      return sink.hash();
+    } catch (IOException e) {
+      throw objectsDbException(e);
+    }
+  }
+
+  public boolean readBoolean(Hash hash, Hash dataHash) {
+    try (BufferedSource source = source(dataHash)) {
+      if (source.exhausted()) {
+        throw corruptedObjectException(
+            hash, "It is Bool object which stored in ObjectsDb has zero bytes.");
+      }
+      byte value = source.readByte();
+      if (!source.exhausted()) {
+        throw corruptedObjectException(
+            hash, "It is Bool object which stored in ObjectsDb has more than one byte.");
+      }
+      switch (value) {
+        case 0:
+          return false;
+        case 1:
+          return true;
+        default:
+          throw corruptedObjectException(hash,
+              "It is Bool object which stored in ObjectsDb has illegal value (=" + value + ").");
+      }
+    } catch (IOException e) {
+      throw objectsDbException(e);
+    }
+  }
+
   public Hash writeString(String string) throws IOException {
     try (HashingBufferedSink sink = hashedDb.sink()) {
       sink.writeString(string, CHARSET);
@@ -42,6 +79,7 @@ public class ValuesDb {
       throw new DecodingStringException(e.getMessage(), e);
     }
   }
+
 
   public Hash writeHashes(Hash... hashes) throws IOException {
     try (HashingBufferedSink sink = hashedDb.sink()) {

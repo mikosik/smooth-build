@@ -16,6 +16,20 @@ public class ValuesDbTest extends TestingContext {
   private Hash hash;
 
   @Test
+  public void written_true_boolean_can_be_read_back() throws Exception {
+    given(hash = valuesDb().writeBoolean(true));
+    when(() -> valuesDb().readBoolean(null, hash));
+    thenReturned(true);
+  }
+
+  @Test
+  public void written_false_boolean_can_be_read_back() throws Exception {
+    given(hash = valuesDb().writeBoolean(false));
+    when(() -> valuesDb().readBoolean(null, hash));
+    thenReturned(false);
+  }
+
+  @Test
   public void written_string_can_be_read_back() throws Exception {
     given(hash = valuesDb().writeString("abc"));
     when(() -> valuesDb().readString(hash));
