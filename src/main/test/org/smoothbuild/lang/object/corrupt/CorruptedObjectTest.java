@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.SString;
 
 import okio.ByteString;
@@ -43,7 +44,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
   }
 
   private void run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(
-      int byteCount) throws IOException {
+      int byteCount) throws IOException, HashedDbException {
     given(instanceHash =
         hash(ByteString.of(new byte[byteCount])));
     when(() -> objectsDb().get(instanceHash));

@@ -46,19 +46,19 @@ public class HashedDbTest extends TestingContext {
 
   @Test
   public void written_data_can_be_read_back() throws IOException {
-    given(sink = hashedDb().sink());
+    given(() -> sink = hashedDb().sink());
     given(byteString = encodeUtf8("abc"));
     given(sink.write(byteString));
     given(sink).close();
-    when(hashedDb().source(sink.hash()).readUtf8());
+    when(() -> hashedDb().source(sink.hash()).readUtf8());
     thenReturned("abc");
   }
 
   @Test
   public void written_zero_length_data_can_be_read_back() throws IOException {
-    given(sink = hashedDb().sink());
+    given(() -> sink = hashedDb().sink());
     given(sink).close();
-    when(hashedDb().source(sink.hash()).readByteString());
+    when(() -> hashedDb().source(sink.hash()).readByteString());
     thenReturned(ByteString.of());
   }
 
@@ -94,7 +94,7 @@ public class HashedDbTest extends TestingContext {
     given(() -> sink = hashedDb().sink());
     given(() -> sink.write(byteString));
     when(() -> hashedDb().source(hash));
-    thenThrown(exception(new IOException("No data at " + hash + ".")));
+    thenThrown(exception(new NoSuchDataException(hash)));
   }
 
   @Test
@@ -129,7 +129,7 @@ public class HashedDbTest extends TestingContext {
     given(() -> hash = Hash.of(bytes1));
     given(() -> hashedDbFileSystem().createDir(Hash.toPath(hash)));
     when(() -> hashedDb().sink().write(bytes1).close());
-    thenThrown(exception(new CorruptedHashedDbException(
+    thenThrown(exception(new IOException(
         "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory.")));
   }
 }

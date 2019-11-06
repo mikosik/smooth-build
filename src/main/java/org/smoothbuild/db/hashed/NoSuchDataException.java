@@ -1,8 +1,6 @@
 package org.smoothbuild.db.hashed;
 
-import java.io.IOException;
-
-public class NoSuchDataException extends IOException {
+public class NoSuchDataException extends HashedDbException {
   public NoSuchDataException(Hash hash) {
     super("No data at " + hash + ".");
   }
