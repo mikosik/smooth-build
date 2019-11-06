@@ -24,10 +24,10 @@ public class AssertPathTest {
   private final Path path = Path.path("some/path");
 
   @Test
-  public void assert_path_is_dir_returns_normally_for_dir_path() throws Exception {
+  public void assert_path_is_dir_returns_normally_for_dir_path() {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
-    when(assertPathIsDir(fileSystem, path));
+    when(() -> assertPathIsDir(fileSystem, path));
     thenReturned();
   }
 
@@ -48,10 +48,10 @@ public class AssertPathTest {
   }
 
   @Test
-  public void assert_path_is_file_returns_normally_for_file_path() throws Exception {
+  public void assert_path_is_file_returns_normally_for_file_path() {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
-    when(assertPathIsFile(fileSystem, path));
+    when(() -> assertPathIsFile(fileSystem, path));
     thenReturned();
   }
 
@@ -72,18 +72,18 @@ public class AssertPathTest {
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_file_path() throws Exception {
+  public void assert_path_exists_returns_normally_for_file_path() {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(FILE), fileSystem).pathState(path);
-    when(assertPathExists(fileSystem, path));
+    when(() -> assertPathExists(fileSystem, path));
     thenReturned();
   }
 
   @Test
-  public void assert_path_exists_returns_normally_for_dir_path() throws Exception {
+  public void assert_path_exists_returns_normally_for_dir_path() {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(DIR), fileSystem).pathState(path);
-    when(assertPathExists(fileSystem, path));
+    when(() -> assertPathExists(fileSystem, path));
     thenReturned();
   }
 
@@ -114,10 +114,10 @@ public class AssertPathTest {
   }
 
   @Test
-  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() throws Exception {
+  public void assert_path_is_unused_returns_normally_when_path_does_not_exist() {
     given(fileSystem = mock(FileSystem.class));
     given(willReturn(NOTHING), fileSystem).pathState(path);
-    when(assertPathIsUnused(fileSystem, path));
+    when(() -> assertPathIsUnused(fileSystem, path));
     thenReturned();
   }
 }

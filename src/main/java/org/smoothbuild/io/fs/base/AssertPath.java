@@ -4,11 +4,11 @@ import java.io.IOException;
 
 public class AssertPath {
 
-  public static Void assertPathIsDir(FileSystem fileSystem, Path path) throws IOException {
+  public static void assertPathIsDir(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case DIR:
-        return null;
+        return;
       case FILE:
         throw new IOException("Dir " + path + " doesn't exist. It is a file.");
       case NOTHING:
@@ -18,11 +18,11 @@ public class AssertPath {
     }
   }
 
-  public static Void assertPathIsFile(FileSystem fileSystem, Path path) throws IOException {
+  public static void assertPathIsFile(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        return null;
+        return;
       case DIR:
         throw new IOException("File " + path + " doesn't exist. It is a dir.");
       case NOTHING:
@@ -32,13 +32,13 @@ public class AssertPath {
     }
   }
 
-  public static Void assertPathExists(FileSystem fileSystem, Path path) throws IOException {
+  public static void assertPathExists(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
-        return null;
+        return;
       case DIR:
-        return null;
+        return;
       case NOTHING:
         throw new IOException("Path " + path + " doesn't exist.");
       default:
@@ -46,14 +46,14 @@ public class AssertPath {
     }
   }
 
-  public static Void assertPathIsUnused(FileSystem fileSystem, Path path) throws IOException {
+  public static void assertPathIsUnused(FileSystem fileSystem, Path path) throws IOException {
     PathState state = fileSystem.pathState(path);
     switch (state) {
       case FILE:
       case DIR:
         throw new IOException("Cannot use " + path + " path. It is already taken.");
       case NOTHING:
-        return null;
+        return;
       default:
         throw newUnknownPathState(state);
     }
