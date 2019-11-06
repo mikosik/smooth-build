@@ -7,19 +7,19 @@ import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbExcepti
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 import okio.BufferedSource;
 
 public class Bool extends SObjectImpl {
-  public Bool(Hash dataHash, ConcreteType type, HashedDb hashedDb) {
-    super(dataHash, type, hashedDb);
+  public Bool(Hash dataHash, ConcreteType type, ValuesDb valuesDb) {
+    super(dataHash, type, valuesDb);
     checkArgument(type.name().equals("Bool"));
   }
 
   public boolean data() {
-    try (BufferedSource source = hashedDb.source(dataHash())) {
+    try (BufferedSource source = valuesDb.source(dataHash())) {
       if (source.exhausted()) {
         throw corruptedObjectException(
             hash(), "It is Bool object which stored in ObjectsDb has zero bytes.");

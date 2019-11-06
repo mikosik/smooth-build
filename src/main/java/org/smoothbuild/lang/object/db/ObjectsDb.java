@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
@@ -42,7 +41,7 @@ import org.smoothbuild.lang.object.type.TypeType;
 import okio.BufferedSource;
 
 public class ObjectsDb {
-  private final HashedDb hashedDb;
+  private final ValuesDb valuesDb;
 
   private final Map<Hash, ConcreteType> typesCache;
   private TypeType typeType;
@@ -52,22 +51,22 @@ public class ObjectsDb {
   private NothingType nothingType;
 
   @Inject
-  public ObjectsDb(HashedDb hashedDb) {
-    this.hashedDb = hashedDb;
+  public ObjectsDb(ValuesDb valuesDb) {
+    this.valuesDb = valuesDb;
     this.typesCache = new HashMap<>();
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    return new ArrayBuilder(arrayType(elementType), hashedDb);
+    return new ArrayBuilder(arrayType(elementType), valuesDb);
   }
 
   public StructBuilder structBuilder(StructType type) {
-    return new StructBuilder(type, hashedDb);
+    return new StructBuilder(type, valuesDb);
   }
 
   public BlobBuilder blobBuilder() {
     try {
-      return new BlobBuilder(blobType(), hashedDb);
+      return new BlobBuilder(blobType(), valuesDb);
     } catch (IOException e) {
       throw objectsDbException(e);
     }
@@ -75,18 +74,18 @@ public class ObjectsDb {
 
   public SString string(String string) {
     try {
-      return new SString(hashedDb.writeString(string), stringType(), hashedDb);
+      return new SString(valuesDb.writeString(string), stringType(), valuesDb);
     } catch (IOException e) {
       throw objectsDbException(e);
     }
   }
 
   public Bool bool(boolean value) {
-    return new Bool(writeBool(value), boolType(), hashedDb);
+    return new Bool(writeBool(value), boolType(), valuesDb);
   }
 
   private Hash writeBool(boolean value) {
-    try (HashingBufferedSink sink = hashedDb.sink()) {
+    try (HashingBufferedSink sink = valuesDb.sink()) {
       sink.writeByte(value ? 1 : 0);
       sink.close();
       return sink.hash();
@@ -117,7 +116,7 @@ public class ObjectsDb {
 
   private List<Hash> readHashes(Hash hash) {
     try {
-      return hashedDb.readHashes(hash);
+      return valuesDb.readHashes(hash);
     } catch (EOFException e) {
       throw corruptedObjectException(hash,
           "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.");
@@ -128,7 +127,7 @@ public class ObjectsDb {
 
   public TypeType typeType() {
     if (typeType == null) {
-      typeType = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
+      typeType = new TypeType(writeBasicTypeData(TYPE), this, valuesDb);
       typesCache.put(typeType.hash(), typeType);
     }
     return typeType;
@@ -136,7 +135,7 @@ public class ObjectsDb {
 
   public BoolType boolType() {
     if (boolType == null) {
-      boolType = new BoolType(writeBasicTypeData(BOOL), typeType(), hashedDb, this);
+      boolType = new BoolType(writeBasicTypeData(BOOL), typeType(), valuesDb, this);
       typesCache.put(boolType.hash(), boolType);
     }
     return boolType;
@@ -144,7 +143,7 @@ public class ObjectsDb {
 
   public StringType stringType() {
     if (stringType == null) {
-      stringType = new StringType(writeBasicTypeData(STRING), typeType(), hashedDb, this);
+      stringType = new StringType(writeBasicTypeData(STRING), typeType(), valuesDb, this);
       typesCache.put(stringType.hash(), stringType);
     }
     return stringType;
@@ -152,7 +151,7 @@ public class ObjectsDb {
 
   public BlobType blobType() {
     if (blobType == null) {
-      blobType = new BlobType(writeBasicTypeData(BLOB), typeType(), hashedDb, this);
+      blobType = new BlobType(writeBasicTypeData(BLOB), typeType(), valuesDb, this);
       typesCache.put(blobType.hash(), blobType);
     }
     return blobType;
@@ -160,7 +159,7 @@ public class ObjectsDb {
 
   public NothingType nothingType() {
     if (nothingType == null) {
-      nothingType = new NothingType(writeBasicTypeData(NOTHING), typeType(), hashedDb, this);
+      nothingType = new NothingType(writeBasicTypeData(NOTHING), typeType(), valuesDb, this);
       typesCache.put(nothingType.hash(), nothingType);
     }
     return nothingType;
@@ -168,7 +167,7 @@ public class ObjectsDb {
 
   private Hash writeBasicTypeData(String name) {
     try {
-      return hashedDb.writeHashes(hashedDb.writeString(name));
+      return valuesDb.writeHashes(valuesDb.writeString(name));
     } catch (IOException e) {
       throw objectsDbException(e);
     }
@@ -178,12 +177,12 @@ public class ObjectsDb {
     Hash dataHash = writeArray(elementType);
     ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
     return cacheType(
-        new ConcreteArrayType(dataHash, typeType(), superType, elementType, hashedDb, this));
+        new ConcreteArrayType(dataHash, typeType(), superType, elementType, valuesDb, this));
   }
 
   private Hash writeArray(ConcreteType elementType) {
     try {
-      return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
+      return valuesDb.writeHashes(valuesDb.writeString(""), elementType.hash());
     } catch (IOException e) {
       throw objectsDbException(e);
     }
@@ -195,12 +194,12 @@ public class ObjectsDb {
 
   public StructType structType(String name, Iterable<Field> fields) {
     Hash hash = writeStruct(name, fields);
-    return cacheType(new StructType(hash, typeType(), name, fields, hashedDb, this));
+    return cacheType(new StructType(hash, typeType(), name, fields, valuesDb, this));
   }
 
   private Hash writeStruct(String name, Iterable<Field> fields) {
     try {
-      return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
+      return valuesDb.writeHashes(valuesDb.writeString(name), writeFields(fields));
     } catch (IOException e) {
       throw objectsDbException(e);
     }
@@ -211,11 +210,11 @@ public class ObjectsDb {
     for (Field field : fields) {
       fieldHashes.add(writeField(field.name(), field.type()));
     }
-    return hashedDb.writeHashes(fieldHashes.toArray(new Hash[0]));
+    return valuesDb.writeHashes(fieldHashes.toArray(new Hash[0]));
   }
 
   private Hash writeField(String name, ConcreteType type) throws IOException {
-    return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
+    return valuesDb.writeHashes(valuesDb.writeString(name), type.hash());
   }
 
   private ConcreteType getType(Hash hash) {
@@ -231,7 +230,7 @@ public class ObjectsDb {
   }
 
   private ConcreteType getTypeImpl(Hash hash) throws IOException {
-    List<Hash> hashes = hashedDb.readHashes(hash);
+    List<Hash> hashes = valuesDb.readHashes(hash);
     switch (hashes.size()) {
       case 1:
         if (!typeType().hash().equals(hash)) {
@@ -256,7 +255,7 @@ public class ObjectsDb {
 
   public ConcreteType readFromDataHash(Hash typeDataHash, Hash typeHash)
       throws IOException {
-    try (BufferedSource source = hashedDb.source(typeDataHash)) {
+    try (BufferedSource source = valuesDb.source(typeDataHash)) {
       Hash nameHash = Hash.read(source);
       String name = decodeName(typeHash, nameHash);
       switch (name) {
@@ -276,18 +275,18 @@ public class ObjectsDb {
           ConcreteType elementType = getType(Hash.read(source));
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
           return cacheType(new ConcreteArrayType(typeDataHash, typeType(), superType, elementType,
-              hashedDb, this));
+              valuesDb, this));
         default:
       }
       Iterable<Field> fields = readFields(Hash.read(source), typeHash);
       assertNoMoreData(typeHash, source, "struct");
-      return cacheType(new StructType(typeDataHash, typeType(), name, fields, hashedDb, this));
+      return cacheType(new StructType(typeDataHash, typeType(), name, fields, valuesDb, this));
     }
   }
 
   private String decodeName(Hash typeHash, Hash nameHash) throws IOException {
     try {
-      return hashedDb.readString(nameHash);
+      return valuesDb.readString(nameHash);
     } catch (DecodingStringException e) {
       throw corruptedObjectException(typeHash, "It is an instance of a Type which name cannot be " +
           "decoded using " + CHARSET + " encoding.");
@@ -304,8 +303,8 @@ public class ObjectsDb {
 
   private Iterable<Field> readFields(Hash hash, Hash typeHash) throws IOException {
     List<Field> result = new ArrayList<>();
-    for (Hash fieldHash : hashedDb.readHashes(hash)) {
-      List<Hash> hashes = hashedDb.readHashes(fieldHash);
+    for (Hash fieldHash : valuesDb.readHashes(hash)) {
+      List<Hash> hashes = valuesDb.readHashes(fieldHash);
       if (hashes.size() != 2) {
         throw corruptedObjectException(typeHash,
             "It is struct type but one of its field hashes doesn't have two children but "
@@ -320,7 +319,7 @@ public class ObjectsDb {
 
   private String decodeFieldName(Hash typeHash, Hash nameHash) throws IOException {
     try {
-      return hashedDb.readString(nameHash);
+      return valuesDb.readString(nameHash);
     } catch (DecodingStringException e) {
       throw corruptedObjectException(typeHash, "It is an instance of a struct Type which field " +
           "name cannot be decoded using " + CHARSET + " encoding.");

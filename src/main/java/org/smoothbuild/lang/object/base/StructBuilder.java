@@ -11,17 +11,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
   private final StructType type;
-  private final HashedDb hashedDb;
+  private final ValuesDb valuesDb;
   private final Map<String, SObject> fields;
 
-  public StructBuilder(StructType type, HashedDb hashedDb) {
+  public StructBuilder(StructType type, ValuesDb valuesDb) {
     this.type = type;
-    this.hashedDb = hashedDb;
+    this.valuesDb = valuesDb;
     this.fields = new HashMap<>();
   }
 
@@ -52,7 +52,7 @@ public class StructBuilder {
 
   private Hash writeHashes(Hash[] hashes) {
     try {
-      return hashedDb.writeHashes(hashes);
+      return valuesDb.writeHashes(hashes);
     } catch (IOException e) {
       throw objectsDbException(e);
     }

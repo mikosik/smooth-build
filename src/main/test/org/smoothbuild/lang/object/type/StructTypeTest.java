@@ -68,7 +68,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
     given(type = structType("TypeName", fields));
     given(fields = fields(stringType(), type));
     given(type = structType("TypeName2", fields));
-    when(() -> new ObjectsDb(hashedDb()).get(type.hash()));
+    when(() -> objectsDbOther().get(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 

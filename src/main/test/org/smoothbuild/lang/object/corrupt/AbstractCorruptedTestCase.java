@@ -11,7 +11,7 @@ import okio.ByteString;
 
 public abstract class AbstractCorruptedTestCase extends TestingContext {
   protected Hash hash(String string) throws IOException {
-    return hashedDb().writeString(string);
+    return valuesDb().writeString(string);
   }
 
   protected Hash hash(boolean value) throws IOException {
@@ -35,6 +35,6 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
   }
 
   protected Hash hash(Hash... hashes) throws IOException {
-    return hashedDb().writeHashes(hashes);
+    return valuesDb().writeHashes(hashes);
   }
 }

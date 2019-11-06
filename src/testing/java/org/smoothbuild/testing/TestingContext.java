@@ -24,6 +24,7 @@ import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
@@ -44,6 +45,7 @@ public class TestingContext {
   private OutputsDb outputsDb;
   private FileSystem outputsDbFileSystem;
   private ObjectsDb objectsDb;
+  private ValuesDb valuesDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private MemoryFileSystem fullFileSystem;
@@ -84,7 +86,7 @@ public class TestingContext {
 
   public ObjectsDb objectsDb() {
     if (objectsDb == null) {
-      objectsDb = new ObjectsDb(hashedDb());
+      objectsDb = new ObjectsDb(valuesDb());
     }
     return objectsDb;
   }
@@ -104,7 +106,14 @@ public class TestingContext {
   }
 
   public ObjectsDb objectsDbOther() {
-    return new ObjectsDb(hashedDb());
+    return new ObjectsDb(valuesDb());
+  }
+
+  public ValuesDb valuesDb() {
+    if (valuesDb == null) {
+      valuesDb = new ValuesDb(hashedDb());
+    }
+    return valuesDb;
   }
 
   public HashedDb hashedDb() {

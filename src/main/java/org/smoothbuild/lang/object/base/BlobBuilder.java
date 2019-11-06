@@ -4,21 +4,21 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
+import org.smoothbuild.lang.object.db.ValuesDb;
 import org.smoothbuild.lang.object.type.BlobType;
 
 import okio.BufferedSink;
 
 public class BlobBuilder implements Closeable {
   private final BlobType type;
-  private final HashedDb hashedDb;
+  private final ValuesDb valuesDb;
   private final HashingBufferedSink sink;
 
-  public BlobBuilder(BlobType type, HashedDb hashedDb) throws IOException {
+  public BlobBuilder(BlobType type, ValuesDb valuesDb) throws IOException {
     this.type = type;
-    this.hashedDb = hashedDb;
-    this.sink = hashedDb.sink();
+    this.valuesDb = valuesDb;
+    this.sink = valuesDb.sink();
   }
 
   public BufferedSink sink() {
@@ -33,6 +33,6 @@ public class BlobBuilder implements Closeable {
   public Blob build() throws IOException {
     close();
     Hash dataHash = sink.hash();
-    return new Blob(dataHash, type, hashedDb);
+    return new Blob(dataHash, type, valuesDb);
   }
 }

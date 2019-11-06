@@ -1,16 +1,8 @@
 package org.smoothbuild.db.hashed;
 
-import static java.nio.ByteBuffer.wrap;
-import static java.nio.charset.CodingErrorAction.REPORT;
-import static okio.Okio.buffer;
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.CharsetDecoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -44,45 +36,6 @@ public class HashedDb {
       default:
         throw newUnknownPathState(pathState);
     }
-  }
-
-  public Hash writeString(String string) throws IOException {
-    try (HashingBufferedSink sink = sink()) {
-      sink.writeString(string, CHARSET);
-      sink.close();
-      return sink.hash();
-    }
-  }
-
-  public String readString(Hash hash) throws IOException, DecodingStringException {
-    try (BufferedSource source = source(hash)) {
-      CharsetDecoder charsetDecoder = CHARSET.newDecoder();
-      charsetDecoder.onMalformedInput(REPORT);
-      charsetDecoder.onUnmappableCharacter(REPORT);
-      return charsetDecoder.decode(wrap(source.readByteArray())).toString();
-    } catch (CharacterCodingException e) {
-      throw new DecodingStringException(e.getMessage(), e);
-    }
-  }
-
-  public Hash writeHashes(Hash... hashes) throws IOException {
-    try (HashingBufferedSink sink = sink()) {
-      for (Hash hash : hashes) {
-        sink.write(hash);
-      }
-      sink.close();
-      return sink.hash();
-    }
-  }
-
-  public List<Hash> readHashes(Hash hash) throws IOException {
-    List<Hash> result = new ArrayList<>();
-    try (BufferedSource source = source(hash)) {
-      while (!source.exhausted()) {
-        result.add(Hash.read(source));
-      }
-    }
-    return result;
   }
 
   public BufferedSource source(Hash hash) throws IOException {
