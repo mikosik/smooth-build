@@ -251,7 +251,7 @@ public class StructTest extends TestingContext {
   @Test
   public void reading_not_stored_struct_fails() throws Exception {
     given(hash = Hash.of(33));
-    when(() -> personType().newInstance(hash).get("name"));
+    when(() -> personType().newSObject(hash).get("name"));
     thenThrown(ObjectsDbException.class);
   }
 }

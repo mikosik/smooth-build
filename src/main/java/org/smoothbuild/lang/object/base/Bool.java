@@ -3,7 +3,9 @@ package org.smoothbuild.lang.object.base;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 public class Bool extends SObjectImpl {
@@ -13,7 +15,11 @@ public class Bool extends SObjectImpl {
   }
 
   public boolean data() {
-    return valuesDb.readBoolean(hash(), dataHash());
+    try {
+      return valuesDb.readBoolean(dataHash());
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(hash(), e);
+    }
   }
 
   @Override

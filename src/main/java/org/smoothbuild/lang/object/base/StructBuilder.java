@@ -2,16 +2,16 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
@@ -47,14 +47,14 @@ public class StructBuilder {
         .map(name -> fields.get(name).hash())
         .toArray(Hash[]::new);
     Hash dataHash = writeHashes(fieldObjectHashes);
-    return type.newInstance(dataHash);
+    return type.newSObject(dataHash);
   }
 
   private Hash writeHashes(Hash[] hashes) {
     try {
       return valuesDb.writeHashes(hashes);
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 }

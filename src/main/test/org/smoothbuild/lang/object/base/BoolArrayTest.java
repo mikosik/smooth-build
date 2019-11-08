@@ -24,7 +24,7 @@ public class BoolArrayTest extends TestingContext {
   @Test
   public void reading_elements_from_not_stored_bool_array_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(array = arrayType(boolType()).newInstance(hash));
+    given(array = arrayType(boolType()).newSObject(hash));
     when(array).asIterable(Bool.class);
     thenThrown(ObjectsDbException.class);
   }

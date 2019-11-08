@@ -13,7 +13,7 @@ public class StringType extends ConcreteType {
   }
 
   @Override
-  public SString newInstance(Hash dataHash) {
+  public SString newSObject(Hash dataHash) {
     return new SString(dataHash, this, valuesDb);
   }
 }

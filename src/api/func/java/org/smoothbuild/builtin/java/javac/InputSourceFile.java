@@ -2,7 +2,6 @@ package org.smoothbuild.builtin.java.javac;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.Scanner;
 
@@ -21,14 +20,14 @@ public class InputSourceFile extends SimpleJavaFileObject {
   }
 
   @Override
-  public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
     try (Scanner scanner = scanner()) {
       scanner.useDelimiter("\\A");
       return scanner.hasNext() ? scanner.next() : "";
     }
   }
 
-  private Scanner scanner() throws IOException {
+  private Scanner scanner() {
     return new Scanner(((Blob) file.get("content")).source().inputStream(), UTF_8);
   }
 }

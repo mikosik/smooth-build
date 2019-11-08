@@ -1,17 +1,16 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
@@ -44,35 +43,27 @@ public class Struct extends SObjectImpl {
 
   private ImmutableMap<String, SObject> fields() {
     if (fields == null) {
-      List<Hash> hashes = readHashes();
-      ImmutableMap<String, Field> fieldTypes = type().fields();
-      if (hashes.size() != fieldTypes.size()) {
-        throw corruptedObjectException(hash(), "Its type is " + type() + " with "
-            + fieldTypes.size() + " fields but its data hash Merkle tree contains "
-            + hashes.size() + " children.");
-      }
-      int i = 0;
-      Builder<String, SObject> builder = ImmutableMap.builder();
-      for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
-        SObject object = objectsDb.get(hashes.get(i));
-        if (!entry.getValue().type().equals(object.type())) {
-          throw corruptedObjectException(hash(), "Its type specifies field '" + entry.getKey()
-              + "' with type " + entry.getValue().type() + " but its data has object of type "
-              + object.type() + " assigned to that field.");
+      try {
+        ImmutableMap<String, Field> fieldTypes = type().fields();
+        List<Hash> hashes = valuesDb.readHashes(dataHash(), fieldTypes.size());
+        int i = 0;
+        Builder<String, SObject> builder = ImmutableMap.builder();
+        for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
+          SObject object = objectsDb.get(hashes.get(i));
+          if (!entry.getValue().type().equals(object.type())) {
+            throw new ObjectsDbException(hash(), "It" +
+                "s type specifies field '" + entry.getKey()
+                + "' with type " + entry.getValue().type() + " but its data has object of type "
+                + object.type() + " assigned to that field.");
+          }
+          builder.put(entry.getKey(), object);
+          i++;
         }
-        builder.put(entry.getKey(), object);
-        i++;
+        fields = builder.build();
+      } catch (ValuesDbException e) {
+        throw new ObjectsDbException(hash(), e);
       }
-      fields = builder.build();
     }
     return fields;
-  }
-
-  private List<Hash> readHashes() {
-    try {
-      return valuesDb.readHashes(dataHash());
-    } catch (IOException e) {
-      throw objectsDbException(e);
-    }
   }
 }

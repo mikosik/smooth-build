@@ -24,7 +24,7 @@ public class StringArrayTest extends TestingContext {
   @Test
   public void reading_elements_from_not_stored_string_array_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(array = arrayType(stringType()).newInstance(hash));
+    given(array = arrayType(stringType()).newSObject(hash));
     when(array).asIterable(SString.class);
     thenThrown(ObjectsDbException.class);
   }

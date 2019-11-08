@@ -104,7 +104,7 @@ public class StringTest extends TestingContext {
   @Test
   public void reading_not_stored_sstring_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(sstring = stringType().newInstance(hash));
+    given(sstring = stringType().newSObject(hash));
     when(sstring).data();
     thenThrown(ObjectsDbException.class);
   }

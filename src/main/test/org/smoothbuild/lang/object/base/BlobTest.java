@@ -10,7 +10,8 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.lang.object.db.ValuesDb.WrappedHashedDbException;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -128,8 +129,9 @@ public class BlobTest extends TestingContext {
   @Test
   public void reading_not_stored_blob_fails() {
     given(hash = Hash.of(33));
-    given(blob = blobType().newInstance(hash));
+    given(blob = blobType().newSObject(hash));
     when(() -> blob.source());
-    thenThrown(exception(new WrappedHashedDbException(new NoSuchDataException(hash))));
+    thenThrown(exception(new ObjectsDbException(
+        blob.hash(), new ValuesDbException(hash, new NoSuchDataException(hash)))));
   }
 }

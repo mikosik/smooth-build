@@ -116,7 +116,7 @@ public class BoolTest extends TestingContext {
   @Test
   public void reading_not_stored_bool_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(bool = boolType().newInstance(hash));
+    given(bool = boolType().newSObject(hash));
     when(bool).data();
     thenThrown(ObjectsDbException.class);
   }

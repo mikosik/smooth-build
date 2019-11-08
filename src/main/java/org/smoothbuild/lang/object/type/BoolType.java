@@ -13,7 +13,7 @@ public class BoolType extends ConcreteType {
   }
 
   @Override
-  public Bool newInstance(Hash dataHash) {
+  public Bool newSObject(Hash dataHash) {
     return new Bool(dataHash, this, valuesDb);
   }
 }

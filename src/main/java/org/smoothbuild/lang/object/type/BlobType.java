@@ -13,7 +13,7 @@ public class BlobType extends ConcreteType {
   }
 
   @Override
-  public Blob newInstance(Hash dataHash) {
+  public Blob newSObject(Hash dataHash) {
     return new Blob(dataHash, this, valuesDb);
   }
 }

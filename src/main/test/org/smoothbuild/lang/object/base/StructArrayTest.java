@@ -24,7 +24,7 @@ public class StructArrayTest extends TestingContext {
   @Test
   public void reading_elements_from_not_stored_struct_array_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(array = arrayType(personType()).newInstance(hash));
+    given(array = arrayType(personType()).newSObject(hash));
     when(array).asIterable(Struct.class);
     thenThrown(ObjectsDbException.class);
   }

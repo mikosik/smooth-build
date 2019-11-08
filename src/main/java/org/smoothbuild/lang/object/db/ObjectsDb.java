@@ -1,17 +1,12 @@
 package org.smoothbuild.lang.object.db;
 
-import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
 import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.object.type.TypeNames.STRING;
 import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
 
-import java.io.EOFException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +14,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.BlobBuilder;
@@ -37,8 +30,6 @@ import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
-
-import okio.BufferedSource;
 
 public class ObjectsDb {
   private final ValuesDb valuesDb;
@@ -67,51 +58,44 @@ public class ObjectsDb {
   public BlobBuilder blobBuilder() {
     try {
       return new BlobBuilder(blobType(), valuesDb);
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
   public SString string(String string) {
     try {
       return new SString(valuesDb.writeString(string), stringType(), valuesDb);
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
   public Bool bool(boolean value) {
-    return new Bool(valuesDb.writeBoolean(value), boolType(), valuesDb);
-  }
-
-  public SObject get(Hash hash) {
-    List<Hash> hashes = readHashes(hash);
-    switch (hashes.size()) {
-      case 1:
-        // If Merkle tree root has only one child then it must
-        // be Type("Type") smooth object. getType() will verify it.
-        return getType(hash);
-      case 2:
-        ConcreteType type = getType(hashes.get(0));
-        if (type.equals(typeType())) {
-          return getType(hash);
-        } else {
-          return type.newInstance(hashes.get(1));
-        }
-      default:
-        throw corruptedObjectException(
-            hash, "Its Merkle tree root has " + hashes.size() + " children.");
+    try {
+      return new Bool(valuesDb.writeBoolean(value), boolType(), valuesDb);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
-  private List<Hash> readHashes(Hash hash) {
+  public SObject get(Hash hash) {
     try {
-      return valuesDb.readHashes(hash);
-    } catch (EOFException e) {
-      throw corruptedObjectException(hash,
-          "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.");
-    } catch (IOException e) {
-      throw objectsDbException(e);
+      List<Hash> hashes = valuesDb.readHashes(hash, 1, 2);
+      if (hashes.size() == 1) {
+          // If Merkle tree root has only one child then it must
+          // be Type("Type") smooth object. getType() will verify it.
+          return getType(hash);
+      } else {
+          ConcreteType type = getType(hashes.get(0));
+          if (type.equals(typeType())) {
+            return getType(hash);
+          } else {
+            return type.newSObject(hashes.get(1));
+          }
+      }
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(hash, e);
     }
   }
 
@@ -158,8 +142,8 @@ public class ObjectsDb {
   private Hash writeBasicTypeData(String name) {
     try {
       return valuesDb.writeHashes(valuesDb.writeString(name));
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
@@ -173,8 +157,8 @@ public class ObjectsDb {
   private Hash writeArray(ConcreteType elementType) {
     try {
       return valuesDb.writeHashes(valuesDb.writeString(""), elementType.hash());
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
@@ -190,12 +174,12 @@ public class ObjectsDb {
   private Hash writeStruct(String name, Iterable<Field> fields) {
     try {
       return valuesDb.writeHashes(valuesDb.writeString(name), writeFields(fields));
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 
-  private Hash writeFields(Iterable<Field> fields) throws IOException {
+  private Hash writeFields(Iterable<Field> fields) throws ValuesDbException {
     List<Hash> fieldHashes = new ArrayList<>();
     for (Field field : fields) {
       fieldHashes.add(writeField(field.name(), field.type()));
@@ -203,7 +187,7 @@ public class ObjectsDb {
     return valuesDb.writeHashes(fieldHashes.toArray(new Hash[0]));
   }
 
-  private Hash writeField(String name, ConcreteType type) throws IOException {
+  private Hash writeField(String name, ConcreteType type) throws ValuesDbException {
     return valuesDb.writeHashes(valuesDb.writeString(name), type.hash());
   }
 
@@ -211,109 +195,87 @@ public class ObjectsDb {
     if (typesCache.containsKey(hash)) {
       return typesCache.get(hash);
     } else {
-      try {
-        return getTypeImpl(hash);
-      } catch (IOException e) {
-        throw objectsDbException(e);
-      }
+      return newTypeSObject(hash);
     }
   }
 
-  private ConcreteType getTypeImpl(Hash hash) throws IOException {
-    List<Hash> hashes = valuesDb.readHashes(hash);
-    switch (hashes.size()) {
-      case 1:
+  private ConcreteType newTypeSObject(Hash hash) {
+    try {
+      List<Hash> hashes = valuesDb.readHashes(hash, 1, 2);
+      if (hashes.size() == 1) {
         if (!typeType().hash().equals(hash)) {
-          throw corruptedObjectException(hash, "Expected object which is instance of 'Type' type "
-              + "but its Merkle tree has only one child (so it should be Type type) but "
+          throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' type "
+              + "but its Merkle tree has only one child (so it should be 'Type' type) but "
               + "it has different hash.");
         }
         return typeType();
-      case 2:
+      } else {
         Hash typeHash = hashes.get(0);
         if (!typeType().hash().equals(typeHash)) {
-          throw corruptedObjectException(hash, "Expected object which is instance of 'Type' " +
-              "type but its Merkle tree's first child is not Type type.");
+          throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' " +
+              "type but its Merkle tree's first child is not 'Type' type.");
         }
         Hash dataHash = hashes.get(1);
         return readFromDataHash(dataHash, hash);
-      default:
-        throw corruptedObjectException(
-            hash, "Its Merkle tree root has " + hashes.size() + " children.");
+      }
+    } catch (ValuesDbException e) {
+      // TODO calls from this class should catch it and properly wrap to
+      // let user know why we needed to read this type
+      throw new ObjectsDbException(hash, e);
     }
   }
 
-  public ConcreteType readFromDataHash(Hash typeDataHash, Hash typeHash)
-      throws IOException {
-    try (BufferedSource source = valuesDb.source(typeDataHash)) {
-      Hash nameHash = Hash.read(source);
-      String name = decodeName(typeHash, nameHash);
+  public ConcreteType readFromDataHash(Hash typeDataHash, Hash typeHash) {
+    try {
+      List<Hash> hashes = valuesDb.readHashes(typeDataHash, 1, 2);
+      String name = valuesDb.readString(hashes.get(0));
       switch (name) {
         case BOOL:
-          assertNoMoreData(typeHash, source, name);
+          assertSize(typeHash, name, hashes, 1);
           return boolType();
         case STRING:
-          assertNoMoreData(typeHash, source, name);
+          assertSize(typeHash, name, hashes, 1);
           return stringType();
         case BLOB:
-          assertNoMoreData(typeHash, source, name);
+          assertSize(typeHash, name, hashes, 1);
           return blobType();
         case NOTHING:
-          assertNoMoreData(typeHash, source, name);
+          assertSize(typeHash, name, hashes, 1);
           return nothingType();
         case "":
-          ConcreteType elementType = getType(Hash.read(source));
+          assertSize(typeHash, "[]", hashes, 2);
+          ConcreteType elementType = getType(hashes.get(1));
           ConcreteArrayType superType = possiblyNullArrayType(elementType.superType());
-          return cacheType(new ConcreteArrayType(typeDataHash, typeType(), superType, elementType,
-              valuesDb, this));
+          return cacheType(new ConcreteArrayType(
+              typeDataHash, typeType(), superType, elementType, valuesDb, this));
         default:
+          assertSize(typeHash, name, hashes, 2);
+          Iterable<Field> fields = readFields(hashes.get(1));
+          return cacheType(new StructType(typeDataHash, typeType(), name, fields, valuesDb, this));
       }
-      Iterable<Field> fields = readFields(Hash.read(source), typeHash);
-      assertNoMoreData(typeHash, source, "struct");
-      return cacheType(new StructType(typeDataHash, typeType(), name, fields, valuesDb, this));
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(typeHash, e);
     }
   }
 
-  private String decodeName(Hash typeHash, Hash nameHash) throws IOException {
-    try {
-      return valuesDb.readString(nameHash);
-    } catch (DecodingStringException e) {
-      throw corruptedObjectException(typeHash, "It is an instance of a Type which name cannot be " +
-          "decoded using " + CHARSET + " encoding.");
+  private static void assertSize(Hash typeHash, String typeName, List<Hash> hashes,
+      int expectedSize) {
+    if (hashes.size() != expectedSize) {
+      throw new ObjectsDbException(typeHash,
+          "It is '" + typeName + "' type but its Merkle root has " + hashes.size() +
+          " children when " + expectedSize + " is expected.");
     }
   }
 
-  private static void assertNoMoreData(Hash typeHash, BufferedSource source, String typeName)
-      throws IOException {
-    if (!source.exhausted()) {
-      throw corruptedObjectException(typeHash,
-          "It is " + typeName + " type but its Merkle tree has unnecessary children.");
-    }
-  }
-
-  private Iterable<Field> readFields(Hash hash, Hash typeHash) throws IOException {
+  private Iterable<Field> readFields(Hash hash) throws ValuesDbException {
     List<Field> result = new ArrayList<>();
     for (Hash fieldHash : valuesDb.readHashes(hash)) {
-      List<Hash> hashes = valuesDb.readHashes(fieldHash);
-      if (hashes.size() != 2) {
-        throw corruptedObjectException(typeHash,
-            "It is struct type but one of its field hashes doesn't have two children but "
-                + hashes.size() + ".");
-      }
-      String name = decodeFieldName(typeHash, hashes.get(0));
+      List<Hash> hashes = valuesDb.readHashes(fieldHash, 2);
+      String name = valuesDb.readString(hashes.get(0));
       ConcreteType type = getType(hashes.get(1));
       result.add(new Field(type, name, unknownLocation()));
     }
     return result;
-  }
-
-  private String decodeFieldName(Hash typeHash, Hash nameHash) throws IOException {
-    try {
-      return valuesDb.readString(nameHash);
-    } catch (DecodingStringException e) {
-      throw corruptedObjectException(typeHash, "It is an instance of a struct Type which field " +
-          "name cannot be decoded using " + CHARSET + " encoding.");
-    }
   }
 
   private <T extends ConcreteType> T cacheType(T type) {

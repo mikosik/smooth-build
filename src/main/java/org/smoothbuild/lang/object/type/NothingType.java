@@ -12,7 +12,7 @@ public class NothingType extends ConcreteType {
   }
 
   @Override
-  public SObject newInstance(Hash dataHash) {
+  public SObject newSObject(Hash dataHash) {
     throw new RuntimeException("Cannot create instance of type 'Nothing'.");
   }
 }

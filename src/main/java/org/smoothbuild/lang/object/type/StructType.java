@@ -49,7 +49,7 @@ public class StructType extends ConcreteType {
   }
 
   @Override
-  public Struct newInstance(Hash dataHash) {
+  public Struct newSObject(Hash dataHash) {
     return new Struct(dataHash, this, objectsDb, valuesDb);
   }
 
