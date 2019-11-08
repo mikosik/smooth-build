@@ -33,7 +33,7 @@ public abstract class ConcreteType extends AbstractType implements SObject {
     this.objectsDb = objectsDb;
   }
 
-  public abstract SObject newInstance(Hash dataHash);
+  public abstract SObject newSObject(Hash dataHash);
 
   @Override
   public ConcreteType superType() {

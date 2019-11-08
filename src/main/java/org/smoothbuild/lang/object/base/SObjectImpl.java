@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 public class SObjectImpl implements SObject {
@@ -30,8 +30,8 @@ public class SObjectImpl implements SObject {
   private static Hash calculateHash(ConcreteType type, Hash dataHash, ValuesDb valuesDb) {
     try {
       return valuesDb.writeHashes(type.hash(), dataHash);
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 

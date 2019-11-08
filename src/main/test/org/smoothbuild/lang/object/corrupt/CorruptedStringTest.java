@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.object.corrupt;
 
-import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -10,11 +9,14 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.db.DecodingStringException;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 
 import okio.ByteString;
 
 public class CorruptedStringTest extends AbstractCorruptedTestCase {
   private Hash instanceHash;
+  private Hash notStringHash;
 
   @Test
   public void learning_test_create_string() throws Exception {
@@ -32,12 +34,13 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
 
   @Test
   public void string_with_data_being_invalid_utf8_sequence_is_corrupted() throws Exception {
-    given(instanceHash =
+    given(() -> notStringHash = hash(ByteString.of((byte) -64)));
+    given(() -> instanceHash =
         hash(
             hash(stringType()),
-            hash(ByteString.of((byte) -64))));
+            notStringHash));
     when(() -> ((SString) objectsDb().get(instanceHash)).data());
-    thenThrown(exception(corruptedObjectException(instanceHash,
-        "It is an instance of a String which data cannot be decoded using UTF-8 encoding.")));
+    thenThrown(exception(new ObjectsDbException(instanceHash,
+        new DecodingStringException(notStringHash, null))));
   }
 }

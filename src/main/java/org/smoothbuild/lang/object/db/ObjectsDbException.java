@@ -1,23 +1,26 @@
 package org.smoothbuild.lang.object.db;
 
-import java.io.IOException;
-
 import org.smoothbuild.db.hashed.Hash;
 
 public class ObjectsDbException extends RuntimeException {
-  public static ObjectsDbException corruptedObjectException(Hash hash, String message) {
-    return new ObjectsDbException(hash.toString() + " object in ObjectsDb is corrupted. " + message);
+
+  public ObjectsDbException(Hash hash, Exception cause) {
+    this(hash, null, cause);
   }
 
-  public static ObjectsDbException objectsDbException(IOException e) {
-    return new ObjectsDbException("IOException when accessing ObjectsDb", e);
+  public ObjectsDbException(Hash hash, String message) {
+    this(hash, message, null);
   }
 
-  public ObjectsDbException(String message, Throwable e) {
-    super(message, e);
+  public ObjectsDbException(Hash hash, String message, Throwable cause) {
+    super(buildMessage(hash, message), cause);
   }
 
-  public ObjectsDbException(String message) {
-    super(message);
+  private static String buildMessage(Hash hash, String message) {
+    return "Cannot read object at " + hash + " ." + (message == null ? "" : " " + message);
+  }
+
+  public ObjectsDbException(Throwable cause) {
+    super(cause);
   }
 }

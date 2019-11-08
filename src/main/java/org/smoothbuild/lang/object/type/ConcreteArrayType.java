@@ -19,7 +19,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public Array newInstance(Hash dataHash) {
+  public Array newSObject(Hash dataHash) {
     return new Array(dataHash, this, objectsDb, valuesDb);
   }
 

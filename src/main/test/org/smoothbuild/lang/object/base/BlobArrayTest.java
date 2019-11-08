@@ -24,7 +24,7 @@ public class BlobArrayTest extends TestingContext {
   @Test
   public void reading_elements_from_not_stored_blob_array_fails() throws Exception {
     given(hash = Hash.of(33));
-    given(array = arrayType(blobType()).newInstance(hash));
+    given(array = arrayType(blobType()).newSObject(hash));
     when(array).asIterable(Blob.class);
     thenThrown(ObjectsDbException.class);
   }

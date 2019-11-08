@@ -1,15 +1,12 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
-
-import java.io.EOFException;
-import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
@@ -34,7 +31,7 @@ public class Array extends SObjectImpl {
     ImmutableList<SObject> elements = elements();
     for (SObject object : elements) {
       if (!object.type().equals(type().elemType())) {
-        throw corruptedObjectException(hash(), "It is array with type " + type().q()
+        throw new ObjectsDbException(hash(), "It is array with type " + type().q()
             + " but one of its elements has type " + object.type().q());
       }
     }
@@ -56,12 +53,8 @@ public class Array extends SObjectImpl {
           .stream()
           .map(objectsDb::get)
           .collect(toImmutableList());
-    } catch (EOFException e) {
-      throw corruptedObjectException(hash(),
-          "It is an Array object which stored in ObjectsDb has number of bytes which is not " +
-              "multiple of hash size = " + Hash.hashesSize() + ".");
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(hash(), e);
     }
   }
 }

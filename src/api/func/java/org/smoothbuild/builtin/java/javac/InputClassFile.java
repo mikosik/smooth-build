@@ -3,7 +3,6 @@ package org.smoothbuild.builtin.java.javac;
 import static org.smoothbuild.builtin.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Objects;
@@ -40,7 +39,7 @@ public class InputClassFile extends SimpleJavaFileObject {
   }
 
   @Override
-  public InputStream openInputStream() throws IOException {
+  public InputStream openInputStream() {
     return ((Blob) file.get("content")).source().inputStream();
   }
 

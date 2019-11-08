@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.object.corrupt;
 
-import static org.smoothbuild.lang.object.db.ObjectsDbException.corruptedObjectException;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
@@ -13,6 +12,8 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.db.DecodingHashSequenceException;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 
 import okio.ByteString;
 
@@ -48,7 +49,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
     given(instanceHash =
         hash(ByteString.of(new byte[byteCount])));
     when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(corruptedObjectException(instanceHash,
-        "Its Merkle tree root is hash of byte sequence which size is not multiple of hash size.")));
+    thenThrown(exception(new ObjectsDbException(instanceHash,
+        new DecodingHashSequenceException(instanceHash))));
   }
 }

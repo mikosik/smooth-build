@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.lang.object.db.ObjectsDbException.objectsDbException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.db.ValuesDb;
+import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 
 public class ArrayBuilder {
@@ -47,14 +47,14 @@ public class ArrayBuilder {
         .stream()
         .map(SObject::hash)
         .toArray(Hash[]::new);
-    return type.newInstance(writeElements(elementHashes));
+    return type.newSObject(writeElements(elementHashes));
   }
 
   private Hash writeElements(Hash[] elementHashes) {
     try {
       return valuesDb.writeHashes(elementHashes);
-    } catch (IOException e) {
-      throw objectsDbException(e);
+    } catch (ValuesDbException e) {
+      throw new ObjectsDbException(e);
     }
   }
 }
