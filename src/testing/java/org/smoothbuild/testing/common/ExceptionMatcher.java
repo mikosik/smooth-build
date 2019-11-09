@@ -19,14 +19,24 @@ public class ExceptionMatcher extends TypeSafeMatcher<Throwable> {
 
   @Override
   public void describeTo(Description description) {
-    description.appendText("is instance of " + throwable.getClass().getSimpleName()
-        + " with message '"
-        + throwable.getMessage() + "'.");
+    description.appendText("is instance of " + describeExpected(throwable) + ".");
+  }
+
+  private String describeExpected(Throwable expected) {
+    return expected.getClass().getSimpleName()
+        + "(message='" + expected.getMessage() + "'"
+        + (expected.getCause() == null ? "" : ", cause=" + describeExpected(expected.getCause()))
+        + ")";
   }
 
   @Override
-  protected boolean matchesSafely(Throwable item) {
-    return throwable.getClass().isInstance(item)
-        && Objects.equals(item.getMessage(), throwable.getMessage());
+  protected boolean matchesSafely(Throwable actual) {
+    return isMatching(actual, this.throwable);
+  }
+
+  private boolean isMatching(Throwable actual, Throwable expected) {
+    return expected.getClass().isInstance(actual)
+        && Objects.equals(actual.getMessage(), expected.getMessage())
+        && (expected.getCause() == null || isMatching(actual.getCause(), expected.getCause()));
   }
 }
