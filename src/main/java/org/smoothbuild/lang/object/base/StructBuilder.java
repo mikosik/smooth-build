@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.Set;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.lang.object.db.ValuesDb;
-import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
   private final StructType type;
-  private final ValuesDb valuesDb;
+  private final HashedDb hashedDb;
   private final Map<String, SObject> fields;
 
-  public StructBuilder(StructType type, ValuesDb valuesDb) {
+  public StructBuilder(StructType type, HashedDb hashedDb) {
     this.type = type;
-    this.valuesDb = valuesDb;
+    this.hashedDb = hashedDb;
     this.fields = new HashMap<>();
   }
 
@@ -52,8 +52,8 @@ public class StructBuilder {
 
   private Hash writeHashes(Hash[] hashes) {
     try {
-      return valuesDb.writeHashes(hashes);
-    } catch (ValuesDbException e) {
+      return hashedDb.writeHashes(hashes);
+    } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
   }

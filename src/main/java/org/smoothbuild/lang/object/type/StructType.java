@@ -6,13 +6,13 @@ import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ValuesDb;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -21,8 +21,8 @@ public class StructType extends ConcreteType {
   private final ObjectsDb objectsDb;
 
   public StructType(Hash dataHash, TypeType type, String name, Iterable<Field> fields,
-      ValuesDb valuesDb, ObjectsDb objectsDb) {
-    this(dataHash, type, name, fieldsMap(fields), valuesDb, objectsDb);
+      HashedDb hashedDb, ObjectsDb objectsDb) {
+    this(dataHash, type, name, fieldsMap(fields), hashedDb, objectsDb);
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
@@ -30,7 +30,7 @@ public class StructType extends ConcreteType {
   }
 
   private StructType(Hash dataHash, TypeType type, String name,
-      ImmutableMap<String, Field> fields, ValuesDb hashedDb, ObjectsDb objectsDb) {
+      ImmutableMap<String, Field> fields, HashedDb hashedDb, ObjectsDb objectsDb) {
     super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, objectsDb);
     this.fields = checkNotNull(fields);
     this.objectsDb = checkNotNull(objectsDb);
@@ -50,7 +50,7 @@ public class StructType extends ConcreteType {
 
   @Override
   public Struct newSObject(Hash dataHash) {
-    return new Struct(dataHash, this, objectsDb, valuesDb);
+    return new Struct(dataHash, this, objectsDb, hashedDb);
   }
 
   public ImmutableMap<String, Field> fields() {

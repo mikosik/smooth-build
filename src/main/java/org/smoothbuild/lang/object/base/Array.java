@@ -3,10 +3,10 @@ package org.smoothbuild.lang.object.base;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.lang.object.db.ValuesDb;
-import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
@@ -16,8 +16,8 @@ public class Array extends SObjectImpl {
   private final ObjectsDb objectsDb;
 
   public Array(Hash dataHash, ConcreteArrayType arrayType, ObjectsDb objectsDb,
-      ValuesDb valuesDb) {
-    super(dataHash, arrayType, valuesDb);
+      HashedDb hashedDb) {
+    super(dataHash, arrayType, hashedDb);
     this.objectsDb = objectsDb;
   }
 
@@ -48,12 +48,12 @@ public class Array extends SObjectImpl {
 
   private ImmutableList<SObject> elements() {
     try {
-      return valuesDb
+      return hashedDb
           .readHashes(dataHash())
           .stream()
           .map(objectsDb::get)
           .collect(toImmutableList());
-    } catch (ValuesDbException e) {
+    } catch (HashedDbException e) {
       throw new ObjectsDbException(hash(), e);
     }
   }

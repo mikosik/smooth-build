@@ -5,32 +5,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.lang.object.db.ValuesDb;
-import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 public class SObjectImpl implements SObject {
   private final Hash hash;
   private final Hash dataHash;
   private final ConcreteType type;
-  protected final ValuesDb valuesDb;
+  protected final HashedDb hashedDb;
 
-  public SObjectImpl(Hash dataHash, ConcreteType type, ValuesDb valuesDb) {
-    this(calculateHash(type, dataHash, valuesDb), dataHash, type, valuesDb);
+  public SObjectImpl(Hash dataHash, ConcreteType type, HashedDb hashedDb) {
+    this(calculateHash(type, dataHash, hashedDb), dataHash, type, hashedDb);
   }
 
-  public SObjectImpl(Hash hash, Hash dataHash, ConcreteType type, ValuesDb valuesDb) {
+  public SObjectImpl(Hash hash, Hash dataHash, ConcreteType type, HashedDb hashedDb) {
     this.hash = checkNotNull(hash);
     this.dataHash = checkNotNull(dataHash);
     this.type = type;
-    this.valuesDb = checkNotNull(valuesDb);
+    this.hashedDb = checkNotNull(hashedDb);
   }
 
-  private static Hash calculateHash(ConcreteType type, Hash dataHash, ValuesDb valuesDb) {
+  private static Hash calculateHash(ConcreteType type, Hash dataHash, HashedDb hashedDb) {
     try {
-      return valuesDb.writeHashes(type.hash(), dataHash);
-    } catch (ValuesDbException e) {
+      return hashedDb.writeHashes(type.hash(), dataHash);
+    } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
   }

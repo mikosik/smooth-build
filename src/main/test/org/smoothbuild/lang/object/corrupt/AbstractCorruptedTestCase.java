@@ -6,14 +6,13 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
 public abstract class AbstractCorruptedTestCase extends TestingContext {
-  protected Hash hash(String string) throws ValuesDbException {
-    return valuesDb().writeString(string);
+  protected Hash hash(String string) throws HashedDbException {
+    return hashedDb().writeString(string);
   }
 
   protected Hash hash(boolean value) throws IOException, HashedDbException {
@@ -36,7 +35,7 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
     return object.hash();
   }
 
-  protected Hash hash(Hash... hashes) throws ValuesDbException {
-    return valuesDb().writeHashes(hashes);
+  protected Hash hash(Hash... hashes) throws HashedDbException {
+    return hashedDb().writeHashes(hashes);
   }
 }

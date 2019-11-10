@@ -7,9 +7,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.DecodingBooleanException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Bool;
-import org.smoothbuild.lang.object.db.DecodingBooleanException;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
 
 import okio.ByteString;
