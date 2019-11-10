@@ -9,11 +9,11 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.DecodingHashSequenceException;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.util.Lists;
 

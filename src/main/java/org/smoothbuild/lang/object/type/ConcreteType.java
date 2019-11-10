@@ -4,32 +4,32 @@ import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SObjectImpl;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ValuesDb;
 
 /**
  * Concrete type in smooth language.
  */
 public abstract class ConcreteType extends AbstractType implements SObject {
   private final SObjectImpl object;
-  protected final ValuesDb valuesDb;
+  protected final HashedDb hashedDb;
   private final ObjectsDb objectsDb;
 
   protected ConcreteType(Hash dataHash, TypeType type, ConcreteType superType, String name,
-      Class<? extends SObject> jType, ValuesDb valuesDb, ObjectsDb objectsDb) {
+      Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
     super(superType, name, jType);
-    this.object = new SObjectImpl(dataHash, type, valuesDb);
-    this.valuesDb = valuesDb;
+    this.object = new SObjectImpl(dataHash, type, hashedDb);
+    this.hashedDb = hashedDb;
     this.objectsDb = objectsDb;
   }
 
   protected ConcreteType(Hash hash, Hash dataHash, TypeType type, ConcreteType superType,
-      String name, Class<? extends SObject> jType, ValuesDb valuesDb, ObjectsDb objectsDb) {
+      String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
     super(superType, name, jType);
-    this.object = new SObjectImpl(hash, dataHash, type, valuesDb);
-    this.valuesDb = valuesDb;
+    this.object = new SObjectImpl(hash, dataHash, type, hashedDb);
+    this.hashedDb = hashedDb;
     this.objectsDb = objectsDb;
   }
 

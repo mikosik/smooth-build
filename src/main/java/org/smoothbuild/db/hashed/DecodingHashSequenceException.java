@@ -1,8 +1,6 @@
-package org.smoothbuild.lang.object.db;
+package org.smoothbuild.db.hashed;
 
-import org.smoothbuild.db.hashed.Hash;
-
-public class DecodingHashSequenceException extends ValuesDbException {
+public class DecodingHashSequenceException extends HashedDbException {
   public DecodingHashSequenceException(Hash hash) {
     super("Value at " + hash + " cannot be decoded as hash sequence.");
   }

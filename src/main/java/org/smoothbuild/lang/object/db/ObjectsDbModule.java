@@ -21,13 +21,8 @@ public class ObjectsDbModule extends AbstractModule {
   }
 
   @Provides
-  public ValuesDb provideValuesDb(HashedDb hashedDb) {
-    return new ValuesDb(hashedDb);
-  }
-
-  @Provides
   @Singleton
-  public ObjectsDb provideObjectsDb(ValuesDb valuesDb) {
-    return new ObjectsDb(valuesDb);
+  public ObjectsDb provideObjectsDb(HashedDb hashedDb) {
+    return new ObjectsDb(hashedDb);
   }
 }

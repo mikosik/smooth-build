@@ -9,10 +9,10 @@ import static org.testory.Testory.when;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.DecodingHashSequenceException;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
 
 import okio.ByteString;

@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.lang.object.db.ValuesDb;
-import org.smoothbuild.lang.object.db.ValuesDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,8 +20,8 @@ public class Struct extends SObjectImpl {
   private ImmutableMap<String, SObject> fields;
   private final ObjectsDb objectsDb;
 
-  public Struct(Hash dataHash, StructType type, ObjectsDb objectsDb, ValuesDb valuesDb) {
-    super(dataHash, type, valuesDb);
+  public Struct(Hash dataHash, StructType type, ObjectsDb objectsDb, HashedDb hashedDb) {
+    super(dataHash, type, hashedDb);
     this.objectsDb = objectsDb;
   }
 
@@ -45,7 +45,7 @@ public class Struct extends SObjectImpl {
     if (fields == null) {
       try {
         ImmutableMap<String, Field> fieldTypes = type().fields();
-        List<Hash> hashes = valuesDb.readHashes(dataHash(), fieldTypes.size());
+        List<Hash> hashes = hashedDb.readHashes(dataHash(), fieldTypes.size());
         int i = 0;
         Builder<String, SObject> builder = ImmutableMap.builder();
         for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
@@ -60,7 +60,7 @@ public class Struct extends SObjectImpl {
           i++;
         }
         fields = builder.build();
-      } catch (ValuesDbException e) {
+      } catch (HashedDbException e) {
         throw new ObjectsDbException(hash(), e);
       }
     }
