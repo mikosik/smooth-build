@@ -73,11 +73,11 @@ public class ObjectsDb {
   // methods for creating non-type SObjects or its builders
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    return new ArrayBuilder(arrayType(elementType), hashedDb);
+    return new ArrayBuilder(arrayType(elementType), this);
   }
 
   public StructBuilder structBuilder(StructType type) {
-    return new StructBuilder(type, hashedDb);
+    return new StructBuilder(type, this);
   }
 
   public BlobBuilder blobBuilder() {
@@ -85,11 +85,11 @@ public class ObjectsDb {
   }
 
   public SString string(String string) {
-      return wrapException(() -> new SString(hashedDb.writeString(string), stringType, hashedDb));
+      return wrapException(() -> new SString(writeStringData(string), stringType, hashedDb));
   }
 
   public Bool bool(boolean value) {
-    return wrapException(() -> new Bool(hashedDb.writeBoolean(value), boolType, hashedDb));
+    return wrapException(() -> new Bool(writeBoolData(value), boolType, hashedDb));
   }
 
   public SObject get(Hash hash) {
@@ -135,11 +135,11 @@ public class ObjectsDb {
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return cacheType(wrapException(() -> writeConcreteArrayType(elementType)));
+    return cacheType(wrapException(() -> newArrayTypeSObject(elementType)));
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    return cacheType(wrapException(() -> writeStructType(name, fields)));
+    return cacheType(wrapException(() -> newStructTypeSObject(name, fields)));
   }
 
   private ConcreteType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
@@ -241,55 +241,78 @@ public class ObjectsDb {
     }
   }
 
-  // methods for writing type in HashedDb and returning SObject representing it
+  // methods for creating type's SObjects
 
-  private Hash writeBasicTypeData(String name) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeString(name));
-  }
-
-  private ConcreteArrayType writeConcreteArrayType(ConcreteType elementType) throws
+  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType) throws
       HashedDbException {
     Hash dataHash = writeArrayTypeData(elementType);
     return newArrayTypeSObject(elementType, dataHash);
+  }
+
+  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) throws
+      HashedDbException {
+    ConcreteType elementSuperType = elementType.superType();
+    ConcreteArrayType superType =
+        elementSuperType == null ? null : cacheType(newArrayTypeSObject(elementSuperType));
+    return new ConcreteArrayType(dataHash, typeType, superType, elementType, hashedDb, this);
+  }
+
+  private StructType newStructTypeSObject(String name, Iterable<Field> fields) throws HashedDbException {
+    Hash dataHash = writeStructTypeData(name, fields);
+    return newStructTypeSObject(name, fields, dataHash);
+  }
+
+  private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) {
+    return new StructType(dataHash, typeType, name, fields, hashedDb, this);
+  }
+
+  // methods for writing SObject's data Merkle node(s) to HashedDb
+
+  private Hash writeStringData(String string) throws HashedDbException {
+    return hashedDb.writeString(string);
+  }
+
+  private Hash writeBoolData(boolean value) throws HashedDbException {
+    return hashedDb.writeBoolean(value);
+  }
+
+  public Hash writeStructData(List<SObject> fieldValues) throws HashedDbException {
+    return writeSequence(fieldValues);
+  }
+
+  public Hash writeArrayData(List<SObject> elements) throws HashedDbException {
+    return writeSequence(elements);
+  }
+
+  private Hash writeSequence(List<SObject> objects) throws HashedDbException {
+    Hash[] hashes = objects.stream()
+        .map(SObject::hash)
+        .toArray(Hash[]::new);
+    return hashedDb.writeHashes(hashes);
+  }
+
+  private Hash writeStructTypeData(String name, Iterable<Field> fields) throws HashedDbException {
+      return hashedDb.writeHashes(hashedDb.writeString(name), writeFieldSpecs(fields));
+  }
+
+  private Hash writeFieldSpecs(Iterable<Field> fieldSpecs) throws HashedDbException {
+    List<Hash> fieldHashes = new ArrayList<>();
+    for (Field field : fieldSpecs) {
+      fieldHashes.add(writeFieldSpec(field));
+    }
+    return hashedDb.writeHashes(fieldHashes.toArray(new Hash[0]));
+  }
+
+  private Hash writeFieldSpec(Field fieldSpec) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeString(fieldSpec.name()), fieldSpec.type().hash());
   }
 
   private Hash writeArrayTypeData(ConcreteType elementType) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
   }
 
-  private StructType writeStructType(String name, Iterable<Field> fields) throws HashedDbException {
-    Hash dataHash = writeStructTypeData(name, fields);
-    return newStructTypeSObject(name, fields, dataHash);
-  }
-
-  private Hash writeStructTypeData(String name, Iterable<Field> fields) throws HashedDbException {
-      return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
-  }
-
-  private Hash writeFields(Iterable<Field> fields) throws HashedDbException {
-    List<Hash> fieldHashes = new ArrayList<>();
-    for (Field field : fields) {
-      fieldHashes.add(writeField(field.name(), field.type()));
-    }
-    return hashedDb.writeHashes(fieldHashes.toArray(new Hash[0]));
-  }
-
-  private Hash writeField(String name, ConcreteType type) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeString(name), type.hash());
-  }
-
-  // methods for creating SObjects
-
-  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) throws
-      HashedDbException {
-    ConcreteType elementSuperType = elementType.superType();
-    ConcreteArrayType superType =
-        elementSuperType == null ? null : cacheType(writeConcreteArrayType(elementSuperType));
-    return new ConcreteArrayType(dataHash, typeType, superType, elementType, hashedDb, this);
-  }
-
-  private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) {
-    return new StructType(dataHash, typeType, name, fields, hashedDb, this);
+  private Hash writeBasicTypeData(String name) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
   @FunctionalInterface
