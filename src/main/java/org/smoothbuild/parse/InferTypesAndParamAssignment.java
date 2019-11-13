@@ -194,7 +194,7 @@ public class InferTypesAndParamAssignment {
       private Type findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return objectFactory.array(objectFactory.nothingType());
+          return objectFactory.arrayType(objectFactory.nothingType());
         }
         Type firstType = expressions.get(0).get(Type.class);
         if (firstType == null) {

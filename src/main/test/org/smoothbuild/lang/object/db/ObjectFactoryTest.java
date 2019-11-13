@@ -87,7 +87,7 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void names_does_not_contain_name_of_array_type_that_was_queried_before() {
-    given(arrayType = emptyCacheObjectFactory().array(emptyCacheObjectFactory().stringType()));
+    given(arrayType = emptyCacheObjectFactory().arrayType(emptyCacheObjectFactory().stringType()));
     when(() -> emptyCacheObjectFactory().names());
     thenReturned(not(hasItem(arrayType.name())));
   }
