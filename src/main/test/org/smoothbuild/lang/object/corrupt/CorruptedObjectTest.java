@@ -14,19 +14,21 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.testing.common.ExceptionMatcher;
 
 import okio.ByteString;
 
 public class CorruptedObjectTest extends AbstractCorruptedTestCase {
   private Hash instanceHash;
+  private Hash typeHash;
 
   @Test
-  public void learning_test_create_any_value() throws Exception {
+  public void learning_test_create_any_value() {
     /*
      * This test makes sure that other tests in this class use proper scheme to save smooth value
      * in HashedDb.
      */
-    given(instanceHash =
+    given(() -> instanceHash =
         hash(
             hash(stringType()),
             hash("aaa")));
@@ -51,5 +53,17 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
     when(() -> objectsDb().get(instanceHash));
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingHashSequenceException(instanceHash))));
+  }
+
+  @Test
+  public void object_which_type_is_corrupted_is_corrupted() {
+    given(() -> typeHash = Hash.of("not a type"));
+    given(() -> instanceHash =
+        hash(
+            typeHash,
+            hash("aaa")));
+    when(() -> objectsDb().get(instanceHash));
+    thenThrown(ExceptionMatcher.exception(new ObjectsDbException(instanceHash,
+        new ObjectsDbException(typeHash, (Exception) null))));
   }
 }
