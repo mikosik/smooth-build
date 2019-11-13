@@ -39,7 +39,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
       Exception {
     for (int i = 0; i <= Hash.hashesSize() * 3 + 1; i++) {
       if (i % Hash.hashesSize() != 0) {
-        run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(1);
+        run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(i);
       }
     }
   }
