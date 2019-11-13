@@ -8,20 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
   private final StructType type;
-  private final HashedDb hashedDb;
+  private final ObjectsDb objectsDb;
   private final Map<String, SObject> fields;
 
-  public StructBuilder(StructType type, HashedDb hashedDb) {
+  public StructBuilder(StructType type, ObjectsDb objectsDb) {
     this.type = type;
-    this.hashedDb = hashedDb;
+    this.objectsDb = objectsDb;
     this.fields = new HashMap<>();
   }
 
@@ -42,17 +41,12 @@ public class StructBuilder {
       throw new IllegalStateException(
           "Field " + unspecifiedNames.get(0) + " hasn't been specified.");
     }
-    Hash[] fieldObjectHashes = fieldNames
+    List<SObject> objects = fieldNames
         .stream()
-        .map(name -> fields.get(name).hash())
-        .toArray(Hash[]::new);
-    Hash dataHash = writeHashes(fieldObjectHashes);
-    return type.newSObject(dataHash);
-  }
-
-  private Hash writeHashes(Hash[] hashes) {
+        .map(fields::get)
+        .collect(toImmutableList());
     try {
-      return hashedDb.writeHashes(hashes);
+      return type.newSObject(objectsDb.writeStructData(objects));
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }

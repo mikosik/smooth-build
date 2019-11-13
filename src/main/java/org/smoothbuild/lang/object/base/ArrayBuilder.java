@@ -5,20 +5,19 @@ import static com.google.common.collect.Streams.stream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 
 public class ArrayBuilder {
   private final ConcreteArrayType type;
-  private final HashedDb hashedDb;
+  private final ObjectsDb objectsDb;
   private final List<SObject> elements;
 
-  public ArrayBuilder(ConcreteArrayType type, HashedDb hashedDb) {
+  public ArrayBuilder(ConcreteArrayType type, ObjectsDb objectsDb) {
     this.type = type;
-    this.hashedDb = hashedDb;
+    this.objectsDb = objectsDb;
     this.elements = new ArrayList<>();
   }
 
@@ -43,16 +42,8 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    Hash[] elementHashes = elements
-        .stream()
-        .map(SObject::hash)
-        .toArray(Hash[]::new);
-    return type.newSObject(writeElements(elementHashes));
-  }
-
-  private Hash writeElements(Hash[] elementHashes) {
     try {
-      return hashedDb.writeHashes(elementHashes);
+      return type.newSObject(objectsDb.writeArrayData(elements));
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
