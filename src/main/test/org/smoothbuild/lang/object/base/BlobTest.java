@@ -41,7 +41,6 @@ public class BlobTest extends TestingContext {
   @Test
   public void empty_blob_is_empty() throws Exception {
     given(blobBuilder = blobBuilder());
-    given(blobBuilder).close();
     given(blob = blobBuilder.build());
     when(blob.source().readByteString());
     thenReturned(ByteString.of());
