@@ -16,17 +16,30 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import okio.ByteString;
 
 public class CorruptedTypeTest extends AbstractCorruptedTestCase {
-  protected ConcreteType type;
-  protected Hash hash;
+  private ConcreteType type;
+  private Hash hash;
   private Hash instanceHash;
   private Hash notStringHash;
   private Hash dataHash;
 
   @Test
+  public void learning_test_create_type_type() {
+    /*
+     * This test makes sure that other tests in this class use proper scheme to save smooth type
+     * type in HashedDb.
+     */
+    when(() ->
+        hash(
+            hash(
+                hash("Type"))));
+    thenReturned(typeType().hash());
+  }
+
+  @Test
   public void learning_test_create_string_type() {
     /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth type in
-     * HashedDb.
+     * This test makes sure that other tests in this class use proper scheme to save basic smooth
+     * type in HashedDb.
      */
     when(() ->
         hash(
@@ -37,23 +50,27 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   }
 
   @Test
-  public void learning_test_create_type_type() {
+  public void learning_test_create_array_type() {
     /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth type in
-     * HashedDb.
+     * This test makes sure that other tests in this class use proper scheme to save smooth
+     * array type in HashedDb.
      */
-    when(() ->
+    when(() -> instanceHash =
         hash(
+            hash(typeType()),
             hash(
-                hash("Type"))));
-    thenReturned(typeType().hash());
+                hash(""),
+                hash(stringType())
+            )
+        ));
+    thenReturned(arrayType(stringType()).hash());
   }
 
   @Test
   public void learning_test_create_struct_type() {
     /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth type in
-     * HashedDb.
+     * This test makes sure that other tests in this class use proper scheme to save struct smooth
+     * type in HashedDb.
      */
     when(() ->
         hash(
@@ -240,6 +257,46 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
     when(() -> objectsDb().get(instanceHash));
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingHashSequenceException(dataHash, 2, 3))));
+  }
+
+  // corrupted dependentent types
+
+  @Test
+  public void merkle_tree_of_struct_type_with_corrupted_field_type_causes_exception() {
+    given(() -> hash = Hash.of("not a type"));
+    given(() -> instanceHash =
+        hash(
+            hash(typeType()),
+            hash(
+                hash("Person"),
+                hash(
+                    hash(
+                        hash("firstName"),
+                        hash
+                    ),
+                    hash(
+                        hash("lastName"),
+                        hash(stringType()))
+                ))));
+    when(() -> objectsDb().get(instanceHash));
+    thenThrown(exception(
+        new ObjectsDbException(instanceHash, new ObjectsDbException(hash, (Exception) null))));
+  }
+
+  @Test
+  public void merkle_tree_of_array_type_with_corrupted_element_type_causes_exception() {
+    given(() -> hash = Hash.of("not a type"));
+    given(() -> instanceHash =
+        hash(
+            hash(typeType()),
+            hash(
+                hash(""),
+                hash
+            )
+        ));
+    when(() -> objectsDb().get(instanceHash));
+    thenThrown(exception(
+        new ObjectsDbException(instanceHash, new ObjectsDbException(hash, (Exception) null))));
   }
 
   private static ObjectsDbException brokenTypeTypeException(Hash hash) {

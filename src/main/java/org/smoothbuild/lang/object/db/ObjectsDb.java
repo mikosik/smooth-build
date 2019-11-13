@@ -100,7 +100,7 @@ public class ObjectsDb {
           // be Type("Type") smooth object. getType() will verify it.
           return getType(hash);
       } else {
-          ConcreteType type = getType(hashes.get(0));
+        ConcreteType type = getTypeOrWrapException(hashes.get(0), hash);
         if (type.equals(typeType)) {
             return getType(hash);
           } else {
@@ -112,8 +112,8 @@ public class ObjectsDb {
     }
   }
 
-  // methods for returning type SObjects
 
+  // methods for returning type SObjects
   public TypeType typeType() {
     return typeType;
   }
@@ -140,6 +140,14 @@ public class ObjectsDb {
 
   public StructType structType(String name, Iterable<Field> fields) {
     return cacheType(wrapException(() -> writeStructType(name, fields)));
+  }
+
+  private ConcreteType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
+    try {
+      return getType(typeHash);
+    } catch (ObjectsDbException e) {
+      throw new ObjectsDbException(parentHash, e);
+    }
   }
 
   private ConcreteType getType(Hash hash) {
@@ -191,11 +199,11 @@ public class ObjectsDb {
           return nothingType;
         case "":
           assertSize(hash, "[]", hashes, 2);
-          ConcreteType elementType = getType(hashes.get(1));
+          ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
           return cacheType(newArrayTypeSObject(elementType, dataHash));
         default:
           assertSize(hash, name, hashes, 2);
-          Iterable<Field> fields = readFields(hashes.get(1));
+          Iterable<Field> fields = readFields(hashes.get(1), hash);
           return cacheType(newStructTypeSObject(name, fields, dataHash));
       }
     } catch (HashedDbException e) {
@@ -212,12 +220,12 @@ public class ObjectsDb {
     }
   }
 
-  private Iterable<Field> readFields(Hash hash) throws HashedDbException {
+  private Iterable<Field> readFields(Hash hash, Hash parentHash) throws HashedDbException {
     List<Field> result = new ArrayList<>();
     for (Hash fieldHash : hashedDb.readHashes(hash)) {
       List<Hash> hashes = hashedDb.readHashes(fieldHash, 2);
       String name = hashedDb.readString(hashes.get(0));
-      ConcreteType type = getType(hashes.get(1));
+      ConcreteType type = getTypeOrWrapException(hashes.get(1), parentHash);
       result.add(new Field(type, name, unknownLocation()));
     }
     return result;
