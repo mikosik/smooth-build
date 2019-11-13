@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.junit.runner.RunWith;
 import org.quackery.Case;
-import org.quackery.Case.Body;
 import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
@@ -22,13 +21,13 @@ public class StringUnescaperTest {
   @Quackery
   public static Suite preserves_non_escaped_characters() {
     return suite("preserves non escaped characters")
-        .add(shouldUnescape(""))
-        .add(shouldUnescape(" "))
-        .add(shouldUnescape("  "))
-        .add(shouldUnescape("a"))
-        .add(shouldUnescape("ab"))
-        .add(shouldUnescape("abc"))
-        .add(shouldUnescape("abcd"));
+        .add(escapingDoesntChange(""))
+        .add(escapingDoesntChange(" "))
+        .add(escapingDoesntChange("  "))
+        .add(escapingDoesntChange("a"))
+        .add(escapingDoesntChange("ab"))
+        .add(escapingDoesntChange("abc"))
+        .add(escapingDoesntChange("abcd"));
   }
 
   @Quackery
@@ -69,7 +68,7 @@ public class StringUnescaperTest {
     return suite;
   }
 
-  private static Case shouldUnescape(String escaped) {
+  private static Case escapingDoesntChange(String escaped) {
     return shouldUnescape(escaped, escaped);
   }
 
@@ -79,17 +78,13 @@ public class StringUnescaperTest {
   }
 
   private static Case shouldFailUnescaping(String escaped, int index) {
-    return newCase("Unescaping [" + escaped + "] should fail at " + index,
-        new Body() {
-          @Override
-          public void run() throws Throwable {
-            try {
-              unescaped(escaped);
-              fail("exception should be thrown");
-            } catch (UnescapingFailedException e) {
-              assertEquals(index, e.charIndex());
-            }
-          }
-        });
+    return newCase("Unescaping [" + escaped + "] should fail at " + index, () -> {
+      try {
+        unescaped(escaped);
+        fail("exception should be thrown");
+      } catch (UnescapingFailedException e) {
+        assertEquals(index, e.charIndex());
+      }
+    });
   }
 }
