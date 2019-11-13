@@ -81,27 +81,15 @@ public class ObjectsDb {
   }
 
   public BlobBuilder blobBuilder() {
-    try {
-      return new BlobBuilder(blobType, hashedDb);
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+    return wrapException(() -> new BlobBuilder(blobType, hashedDb));
   }
 
   public SString string(String string) {
-    try {
-      return new SString(hashedDb.writeString(string), stringType, hashedDb);
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+      return wrapException(() -> new SString(hashedDb.writeString(string), stringType, hashedDb));
   }
 
   public Bool bool(boolean value) {
-    try {
-      return new Bool(hashedDb.writeBoolean(value), boolType, hashedDb);
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+    return wrapException(() -> new Bool(hashedDb.writeBoolean(value), boolType, hashedDb));
   }
 
   public SObject get(Hash hash) {
@@ -147,11 +135,11 @@ public class ObjectsDb {
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return cacheType(writeConcreteArrayType(elementType));
+    return cacheType(wrapException(() -> writeConcreteArrayType(elementType)));
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    return cacheType(writeStructType(name, fields));
+    return cacheType(wrapException(() -> writeStructType(name, fields)));
   }
 
   private ConcreteType getType(Hash hash) {
@@ -251,30 +239,23 @@ public class ObjectsDb {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  private ConcreteArrayType writeConcreteArrayType(ConcreteType elementType) {
+  private ConcreteArrayType writeConcreteArrayType(ConcreteType elementType) throws
+      HashedDbException {
     Hash dataHash = writeArrayTypeData(elementType);
     return newArrayTypeSObject(elementType, dataHash);
   }
 
-  private Hash writeArrayTypeData(ConcreteType elementType) {
-    try {
-      return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+  private Hash writeArrayTypeData(ConcreteType elementType) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
   }
 
-  private StructType writeStructType(String name, Iterable<Field> fields) {
+  private StructType writeStructType(String name, Iterable<Field> fields) throws HashedDbException {
     Hash dataHash = writeStructTypeData(name, fields);
     return newStructTypeSObject(name, fields, dataHash);
   }
 
-  private Hash writeStructTypeData(String name, Iterable<Field> fields) {
-    try {
+  private Hash writeStructTypeData(String name, Iterable<Field> fields) throws HashedDbException {
       return hashedDb.writeHashes(hashedDb.writeString(name), writeFields(fields));
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
   }
 
   private Hash writeFields(Iterable<Field> fields) throws HashedDbException {
@@ -291,13 +272,28 @@ public class ObjectsDb {
 
   // methods for creating SObjects
 
-  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) {
+  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) throws
+      HashedDbException {
     ConcreteType elementSuperType = elementType.superType();
-    ConcreteArrayType superType = elementSuperType == null ? null : arrayType(elementSuperType);
+    ConcreteArrayType superType =
+        elementSuperType == null ? null : cacheType(writeConcreteArrayType(elementSuperType));
     return new ConcreteArrayType(dataHash, typeType, superType, elementType, hashedDb, this);
   }
 
   private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) {
     return new StructType(dataHash, typeType, name, fields, hashedDb, this);
+  }
+
+  @FunctionalInterface
+  private static interface HashedDbCallable<T> {
+    public T call() throws HashedDbException;
+  }
+
+  private static <T> T wrapException(HashedDbCallable<T> callable) {
+    try {
+      return callable.call();
+    } catch (HashedDbException e) {
+      throw new ObjectsDbException(e);
+    }
   }
 }
