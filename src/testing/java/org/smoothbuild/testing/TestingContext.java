@@ -84,7 +84,7 @@ public class TestingContext {
 
   public ObjectsDb objectsDb() {
     if (objectsDb == null) {
-      objectsDb = new ObjectsDb(hashedDb());
+      objectsDb = ObjectsDb.objectsDb(hashedDb());
     }
     return objectsDb;
   }
@@ -104,7 +104,7 @@ public class TestingContext {
   }
 
   public ObjectsDb objectsDbOther() {
-    return new ObjectsDb(hashedDb());
+    return ObjectsDb.objectsDb(hashedDb());
   }
 
   public HashedDb hashedDb() {

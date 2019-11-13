@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
@@ -43,10 +41,33 @@ public class ObjectsDb {
   private BlobType blobType;
   private NothingType nothingType;
 
-  @Inject
-  public ObjectsDb(HashedDb hashedDb) {
+  public static ObjectsDb objectsDb(HashedDb hashedDb) {
+      ObjectsDb objectsDb = new ObjectsDb(hashedDb);
+      objectsDb.initialize();
+      return objectsDb;
+  }
+
+  private ObjectsDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.typesCache = new HashMap<>();
+  }
+
+  private void initialize() {
+    try {
+      this.typeType = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
+      this.boolType = new BoolType(writeBasicTypeData(BOOL), typeType, hashedDb, this);
+      this.stringType = new StringType(writeBasicTypeData(STRING), typeType, hashedDb, this);
+      this.blobType = new BlobType(writeBasicTypeData(BLOB), typeType, hashedDb, this);
+      this.nothingType = new NothingType(writeBasicTypeData(NOTHING), typeType, hashedDb, this);
+
+      typesCache.put(typeType.hash(), typeType);
+      typesCache.put(boolType.hash(), boolType);
+      typesCache.put(stringType.hash(), stringType);
+      typesCache.put(blobType.hash(), blobType);
+      typesCache.put(nothingType.hash(), nothingType);
+    } catch (HashedDbException e) {
+      throw new ObjectsDbException(e);
+    }
   }
 
   // methods for creating non-type SObjects or its builders
@@ -61,7 +82,7 @@ public class ObjectsDb {
 
   public BlobBuilder blobBuilder() {
     try {
-      return new BlobBuilder(blobType(), hashedDb);
+      return new BlobBuilder(blobType, hashedDb);
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
@@ -69,7 +90,7 @@ public class ObjectsDb {
 
   public SString string(String string) {
     try {
-      return new SString(hashedDb.writeString(string), stringType(), hashedDb);
+      return new SString(hashedDb.writeString(string), stringType, hashedDb);
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
@@ -77,7 +98,7 @@ public class ObjectsDb {
 
   public Bool bool(boolean value) {
     try {
-      return new Bool(hashedDb.writeBoolean(value), boolType(), hashedDb);
+      return new Bool(hashedDb.writeBoolean(value), boolType, hashedDb);
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
@@ -92,7 +113,7 @@ public class ObjectsDb {
           return getType(hash);
       } else {
           ConcreteType type = getType(hashes.get(0));
-          if (type.equals(typeType())) {
+        if (type.equals(typeType)) {
             return getType(hash);
           } else {
             return type.newSObject(hashes.get(1));
@@ -103,40 +124,25 @@ public class ObjectsDb {
     }
   }
 
-  // methods for creating type's SObjects
+  // methods for returning type SObjects
 
   public TypeType typeType() {
-    if (typeType == null) {
-      typeType = cacheType(writeTypeType());
-    }
     return typeType;
   }
 
   public BoolType boolType() {
-    if (boolType == null) {
-      boolType = cacheType(writeBoolType());
-    }
     return boolType;
   }
 
   public StringType stringType() {
-    if (stringType == null) {
-      stringType = cacheType(writeStringType());
-    }
     return stringType;
   }
 
   public BlobType blobType() {
-    if (blobType == null) {
-      blobType = cacheType(writeBlobType());
-    }
     return blobType;
   }
 
   public NothingType nothingType() {
-    if (nothingType == null) {
-      nothingType = cacheType(writeNothingType());
-    }
     return nothingType;
   }
 
@@ -155,15 +161,15 @@ public class ObjectsDb {
       try {
         List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
         if (hashes.size() == 1) {
-          if (!typeType().hash().equals(hash)) {
+          if (!typeType.hash().equals(hash)) {
             throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' type "
                 + "but its Merkle tree has only one child (so it should be 'Type' type) but "
                 + "it has different hash.");
           }
-          return typeType();
+          return typeType;
         } else {
           Hash typeHash = hashes.get(0);
-          if (!typeType().hash().equals(typeHash)) {
+          if (!typeType.hash().equals(typeHash)) {
             throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' " +
                 "type but its Merkle tree's first child is not 'Type' type.");
           }
@@ -185,16 +191,16 @@ public class ObjectsDb {
       switch (name) {
         case BOOL:
           assertSize(hash, name, hashes, 1);
-          return boolType();
+          return boolType;
         case STRING:
           assertSize(hash, name, hashes, 1);
-          return stringType();
+          return stringType;
         case BLOB:
           assertSize(hash, name, hashes, 1);
-          return blobType();
+          return blobType;
         case NOTHING:
           assertSize(hash, name, hashes, 1);
-          return nothingType();
+          return nothingType;
         case "":
           assertSize(hash, "[]", hashes, 2);
           ConcreteType elementType = getType(hashes.get(1));
@@ -241,32 +247,8 @@ public class ObjectsDb {
 
   // methods for writing type in HashedDb and returning SObject representing it
 
-  private TypeType writeTypeType() {
-    return new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
-  }
-
-  private BoolType writeBoolType() {
-    return new BoolType(writeBasicTypeData(BOOL), typeType(), hashedDb, this);
-  }
-
-  private StringType writeStringType() {
-    return new StringType(writeBasicTypeData(STRING), typeType(), hashedDb, this);
-  }
-
-  private BlobType writeBlobType() {
-    return new BlobType(writeBasicTypeData(BLOB), typeType(), hashedDb, this);
-  }
-
-  private NothingType writeNothingType() {
-    return new NothingType(writeBasicTypeData(NOTHING), typeType(), hashedDb, this);
-  }
-
-  private Hash writeBasicTypeData(String name) {
-    try {
-      return hashedDb.writeHashes(hashedDb.writeString(name));
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+  private Hash writeBasicTypeData(String name) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
   private ConcreteArrayType writeConcreteArrayType(ConcreteType elementType) {
@@ -312,10 +294,10 @@ public class ObjectsDb {
   private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) {
     ConcreteType elementSuperType = elementType.superType();
     ConcreteArrayType superType = elementSuperType == null ? null : arrayType(elementSuperType);
-    return new ConcreteArrayType(dataHash, typeType(), superType, elementType, hashedDb, this);
+    return new ConcreteArrayType(dataHash, typeType, superType, elementType, hashedDb, this);
   }
 
   private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) {
-    return new StructType(dataHash, typeType(), name, fields, hashedDb, this);
+    return new StructType(dataHash, typeType, name, fields, hashedDb, this);
   }
 }
