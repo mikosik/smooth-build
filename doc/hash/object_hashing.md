@@ -123,7 +123,7 @@ String instance
 ```
 stringInstanceHash =
 hash(
-  TypeHash,
+  stringTypeHash,
   hash(bytes of string encoded in UTF-8)
 )
 ```
