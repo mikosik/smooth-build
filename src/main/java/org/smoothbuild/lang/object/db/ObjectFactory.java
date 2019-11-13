@@ -149,17 +149,17 @@ public class ObjectFactory {
 
   public ArrayType arrayType(Type elementType) {
     if (elementType.isGeneric()) {
-      return array((GenericType) elementType);
+      return arrayType((GenericType) elementType);
     } else {
-      return array((ConcreteType) elementType);
+      return arrayType((ConcreteType) elementType);
     }
   }
 
-  public ConcreteArrayType array(ConcreteType elementType) {
+  public ConcreteArrayType arrayType(ConcreteType elementType) {
     return objectsDb.arrayType(elementType);
   }
 
-  public GenericArrayType array(GenericType elementType) {
+  public GenericArrayType arrayType(GenericType elementType) {
     return new GenericArrayType(elementType);
   }
 
