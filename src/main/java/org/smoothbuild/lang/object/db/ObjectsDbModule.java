@@ -23,6 +23,6 @@ public class ObjectsDbModule extends AbstractModule {
   @Provides
   @Singleton
   public ObjectsDb provideObjectsDb(HashedDb hashedDb) {
-    return new ObjectsDb(hashedDb);
+    return ObjectsDb.objectsDb(hashedDb);
   }
 }
