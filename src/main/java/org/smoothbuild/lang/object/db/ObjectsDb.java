@@ -173,8 +173,6 @@ public class ObjectsDb {
           return readType(hash, dataHash);
         }
       } catch (HashedDbException e) {
-        // TODO calls from this class should catch it and properly wrap to
-        // let user know why we needed to read this type
         throw new ObjectsDbException(hash, e);
       }
     }
