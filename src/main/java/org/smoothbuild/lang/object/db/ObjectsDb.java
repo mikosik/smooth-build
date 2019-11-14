@@ -201,7 +201,7 @@ public class ObjectsDb {
           return cacheType(newArrayTypeSObject(elementType, dataHash));
         default:
           assertSize(hash, name, hashes, 2);
-          Iterable<Field> fields = readFields(hashes.get(1), hash);
+          Iterable<Field> fields = readFieldSpecs(hashes.get(1), hash);
           return cacheType(newStructTypeSObject(name, fields, dataHash));
       }
     } catch (HashedDbException e) {
@@ -218,15 +218,21 @@ public class ObjectsDb {
     }
   }
 
-  private Iterable<Field> readFields(Hash hash, Hash parentHash) throws HashedDbException {
+  private Iterable<Field> readFieldSpecs(Hash hash, Hash parentHash) throws HashedDbException {
     List<Field> result = new ArrayList<>();
     for (Hash fieldHash : hashedDb.readHashes(hash)) {
-      List<Hash> hashes = hashedDb.readHashes(fieldHash, 2);
-      String name = hashedDb.readString(hashes.get(0));
-      ConcreteType type = getTypeOrWrapException(hashes.get(1), parentHash);
-      result.add(new Field(type, name, unknownLocation()));
+      result.add(getFieldSpec(fieldHash, parentHash));
     }
     return result;
+  }
+
+  private Field getFieldSpec(Hash fieldHash, Hash parentHash) throws HashedDbException {
+    List<Hash> hashes = hashedDb.readHashes(fieldHash, 2);
+    Hash nameHash = hashes.get(0);
+    Hash typeHash = hashes.get(1);
+    String name = hashedDb.readString(nameHash);
+    ConcreteType type = getTypeOrWrapException(typeHash, parentHash);
+    return new Field(type, name, unknownLocation());
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
