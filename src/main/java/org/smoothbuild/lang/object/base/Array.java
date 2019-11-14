@@ -2,7 +2,6 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDb;
@@ -15,9 +14,8 @@ import com.google.common.collect.ImmutableList;
 public class Array extends SObjectImpl {
   private final ObjectsDb objectsDb;
 
-  public Array(Hash dataHash, ConcreteArrayType arrayType, ObjectsDb objectsDb,
-      HashedDb hashedDb) {
-    super(dataHash, arrayType, hashedDb);
+  public Array(MerkleRoot merkleRoot, ObjectsDb objectsDb, HashedDb hashedDb) {
+    super(merkleRoot, hashedDb);
     this.objectsDb = objectsDb;
   }
 

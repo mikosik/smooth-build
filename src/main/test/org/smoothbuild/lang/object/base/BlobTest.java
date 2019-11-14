@@ -1,16 +1,12 @@
 package org.smoothbuild.lang.object.base;
 
 import static org.hamcrest.Matchers.not;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -122,13 +118,5 @@ public class BlobTest extends TestingContext {
     given(blob = blob(bytes));
     when(() -> blob.toString());
     thenReturned("Blob(...):" + blob.hash());
-  }
-
-  @Test
-  public void reading_not_stored_blob_fails() {
-    given(hash = Hash.of(33));
-    given(blob = blobType().newSObject(hash));
-    when(() -> blob.source());
-    thenThrown(exception(new ObjectsDbException(blob.hash(), new NoSuchDataException(hash))));
   }
 }

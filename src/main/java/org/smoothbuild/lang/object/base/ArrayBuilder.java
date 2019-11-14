@@ -1,13 +1,12 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 
 public class ArrayBuilder {
@@ -42,10 +41,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    try {
-      return type.newSObject(objectsDb.writeArrayData(elements));
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+    return wrapException(() -> objectsDb.newArraySObject(type, elements));
   }
 }

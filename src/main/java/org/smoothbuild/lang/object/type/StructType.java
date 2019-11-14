@@ -1,16 +1,17 @@
 package org.smoothbuild.lang.object.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.util.Lists.list;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
+import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 
@@ -20,18 +21,18 @@ public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
   private final ObjectsDb objectsDb;
 
-  public StructType(Hash dataHash, TypeType type, String name, Iterable<Field> fields,
+  public StructType(MerkleRoot merkleRoot, String name, Iterable<Field> fields,
       HashedDb hashedDb, ObjectsDb objectsDb) {
-    this(dataHash, type, name, fieldsMap(fields), hashedDb, objectsDb);
+    this(merkleRoot, name, fieldsMap(fields), hashedDb, objectsDb);
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
     return stream(fields).collect(toImmutableMap(Field::name, f -> f));
   }
 
-  private StructType(Hash dataHash, TypeType type, String name,
-      ImmutableMap<String, Field> fields, HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(dataHash, type, calculateSuperType(fields), name, Struct.class, hashedDb, objectsDb);
+  private StructType(MerkleRoot merkleRoot, String name, ImmutableMap<String, Field> fields,
+      HashedDb hashedDb, ObjectsDb objectsDb) {
+    super(merkleRoot, calculateSuperType(fields), name, Struct.class, hashedDb, objectsDb);
     this.fields = checkNotNull(fields);
     this.objectsDb = checkNotNull(objectsDb);
   }
@@ -49,8 +50,9 @@ public class StructType extends ConcreteType {
   }
 
   @Override
-  public Struct newSObject(Hash dataHash) {
-    return new Struct(dataHash, this, objectsDb, hashedDb);
+  public Struct newSObject(MerkleRoot merkleRoot) {
+    checkArgument(this.equals(merkleRoot.type()));
+    return new Struct(merkleRoot, objectsDb, hashedDb);
   }
 
   public ImmutableMap<String, Field> fields() {
