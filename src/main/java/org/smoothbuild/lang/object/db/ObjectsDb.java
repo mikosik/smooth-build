@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.object.db;
 
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
 import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
@@ -16,11 +17,15 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
+import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.BlobBuilder;
 import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
@@ -54,11 +59,11 @@ public class ObjectsDb {
 
   private void initialize() {
     try {
-      this.typeType = new TypeType(writeBasicTypeData(TYPE), this, hashedDb);
-      this.boolType = new BoolType(writeBasicTypeData(BOOL), typeType, hashedDb, this);
-      this.stringType = new StringType(writeBasicTypeData(STRING), typeType, hashedDb, this);
-      this.blobType = new BlobType(writeBasicTypeData(BLOB), typeType, hashedDb, this);
-      this.nothingType = new NothingType(writeBasicTypeData(NOTHING), typeType, hashedDb, this);
+      this.typeType = new TypeType(writeTypeTypeRoot(), this, hashedDb);
+      this.boolType = new BoolType(writeBasicTypeRoot(BOOL), hashedDb, this);
+      this.stringType = new StringType(writeBasicTypeRoot(STRING), hashedDb, this);
+      this.blobType = new BlobType(writeBasicTypeRoot(BLOB), hashedDb, this);
+      this.nothingType = new NothingType(writeBasicTypeRoot(NOTHING), hashedDb, this);
 
       typesCache.put(typeType.hash(), typeType);
       typesCache.put(boolType.hash(), boolType);
@@ -81,15 +86,15 @@ public class ObjectsDb {
   }
 
   public BlobBuilder blobBuilder() {
-    return wrapException(() -> new BlobBuilder(blobType, hashedDb));
+    return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
   public SString string(String string) {
-      return wrapException(() -> new SString(writeStringData(string), stringType, hashedDb));
+    return wrapException(() -> newStringSObject(string));
   }
 
   public Bool bool(boolean value) {
-    return wrapException(() -> new Bool(writeBoolData(value), boolType, hashedDb));
+    return wrapException(() -> newBoolSObject(value));
   }
 
   public SObject get(Hash hash) {
@@ -104,7 +109,8 @@ public class ObjectsDb {
         if (type.equals(typeType)) {
             return getType(hash);
           } else {
-            return type.newSObject(hashes.get(1));
+          Hash dataHash = hashes.get(1);
+          return type.newSObject(new MerkleRoot(hash, type, dataHash));
           }
       }
     } catch (HashedDbException e) {
@@ -247,6 +253,27 @@ public class ObjectsDb {
 
   // methods for creating type's SObjects
 
+  private Bool newBoolSObject(boolean value) throws HashedDbException {
+    return boolType.newSObject(writeRoot(boolType, writeBoolData(value)));
+  }
+
+  public Blob newBlobSObject(Hash dataHash) throws HashedDbException {
+    return blobType.newSObject(writeRoot(blobType, dataHash));
+  }
+
+  private SString newStringSObject(String string) throws HashedDbException {
+    return stringType.newSObject(writeRoot(stringType, writeStringData(string)));
+  }
+
+  public Array newArraySObject(ConcreteArrayType type, List<SObject> elements) throws
+      HashedDbException {
+    return type.newSObject(writeRoot(type, writeArrayData(elements)));
+  }
+
+  public Struct newStructSObject(StructType type, List<SObject> objects) throws HashedDbException {
+    return type.newSObject(writeRoot(type, writeStructData(objects)));
+  }
+
   private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType) throws
       HashedDbException {
     Hash dataHash = writeArrayTypeData(elementType);
@@ -258,7 +285,8 @@ public class ObjectsDb {
     ConcreteType elementSuperType = elementType.superType();
     ConcreteArrayType superType =
         elementSuperType == null ? null : cacheType(newArrayTypeSObject(elementSuperType));
-    return new ConcreteArrayType(dataHash, typeType, superType, elementType, hashedDb, this);
+    return new ConcreteArrayType(
+        writeRoot(typeType, dataHash), superType, elementType, hashedDb, this);
   }
 
   private StructType newStructTypeSObject(String name, Iterable<Field> fields) throws HashedDbException {
@@ -266,11 +294,27 @@ public class ObjectsDb {
     return newStructTypeSObject(name, fields, dataHash);
   }
 
-  private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) {
-    return new StructType(dataHash, typeType, name, fields, hashedDb, this);
+  private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) throws
+      HashedDbException {
+    return new StructType(writeRoot(typeType, dataHash), name, fields, hashedDb, this);
   }
 
-  // methods for writing SObject's data Merkle node(s) to HashedDb
+  // methods for writing Merkle node(s) to HashedDb
+
+  private MerkleRoot writeTypeTypeRoot() throws HashedDbException {
+    Hash dataHash = writeBasicTypeData(TYPE);
+    Hash hash = hashedDb.writeHashes(dataHash);
+    return new MerkleRoot(hash, null, dataHash);
+  }
+
+  private MerkleRoot writeBasicTypeRoot(String typeName) throws HashedDbException {
+    return writeRoot(typeType, writeBasicTypeData(typeName));
+  }
+
+  private MerkleRoot writeRoot(ConcreteType type, Hash dataHash) throws HashedDbException {
+    Hash hash = hashedDb.writeHashes(type.hash(), dataHash);
+    return new MerkleRoot(hash, type, dataHash);
+  }
 
   private Hash writeStringData(String string) throws HashedDbException {
     return hashedDb.writeString(string);
@@ -317,18 +361,5 @@ public class ObjectsDb {
 
   private Hash writeBasicTypeData(String name) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeString(name));
-  }
-
-  @FunctionalInterface
-  private static interface HashedDbCallable<T> {
-    public T call() throws HashedDbException;
-  }
-
-  private static <T> T wrapException(HashedDbCallable<T> callable) {
-    try {
-      return callable.call();
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
   }
 }

@@ -1,26 +1,28 @@
 package org.smoothbuild.lang.object.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
   private final ObjectsDb objectsDb;
 
-  public ConcreteArrayType(Hash dataHash, TypeType type, ConcreteArrayType superType,
+  public ConcreteArrayType(MerkleRoot merkleRoot, ConcreteArrayType superType,
       ConcreteType elemType, HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(dataHash, type, superType, "[" + elemType.name() + "]", Array.class, hashedDb, objectsDb);
+    super(merkleRoot, superType, "[" + elemType.name() + "]", Array.class, hashedDb, objectsDb);
     this.elemType = checkNotNull(elemType);
     this.objectsDb = checkNotNull(objectsDb);
   }
 
   @Override
-  public Array newSObject(Hash dataHash) {
-    return new Array(dataHash, this, objectsDb, hashedDb);
+  public Array newSObject(MerkleRoot merkleRoot) {
+    checkArgument(this.equals(merkleRoot.type()));
+    return new Array(merkleRoot, objectsDb, hashedDb);
   }
 
   @Override

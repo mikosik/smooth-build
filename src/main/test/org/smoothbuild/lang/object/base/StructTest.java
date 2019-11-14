@@ -10,12 +10,9 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.testing.TestingContext;
 
 public class StructTest extends TestingContext {
-  private Hash hash;
   private SString firstName;
   private SString lastName;
   private Array array;
@@ -246,12 +243,5 @@ public class StructTest extends TestingContext {
         .build());
     when(() -> person.toString());
     thenReturned("Person(...):" + person.hash());
-  }
-
-  @Test
-  public void reading_not_stored_struct_fails() throws Exception {
-    given(hash = Hash.of(33));
-    when(() -> personType().newSObject(hash).get("name"));
-    thenThrown(ObjectsDbException.class);
   }
 }

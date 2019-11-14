@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SObjectImpl;
 import org.smoothbuild.lang.object.db.ObjectsDb;
@@ -17,23 +18,15 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   protected final HashedDb hashedDb;
   private final ObjectsDb objectsDb;
 
-  protected ConcreteType(Hash dataHash, TypeType type, ConcreteType superType, String name,
-      Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(superType, name, jType);
-    this.object = new SObjectImpl(dataHash, type, hashedDb);
-    this.hashedDb = hashedDb;
-    this.objectsDb = objectsDb;
-  }
-
-  protected ConcreteType(Hash hash, Hash dataHash, TypeType type, ConcreteType superType,
+  protected ConcreteType(MerkleRoot merkleRoot, ConcreteType superType,
       String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
     super(superType, name, jType);
-    this.object = new SObjectImpl(hash, dataHash, type, hashedDb);
+    this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
     this.objectsDb = objectsDb;
   }
 
-  public abstract SObject newSObject(Hash dataHash);
+  public abstract SObject newSObject(MerkleRoot merkleRoot);
 
   @Override
   public ConcreteType superType() {

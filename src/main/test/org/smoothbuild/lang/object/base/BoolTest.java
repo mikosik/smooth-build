@@ -3,12 +3,10 @@ package org.smoothbuild.lang.object.base;
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.testing.TestingContext;
 
 public class BoolTest extends TestingContext {
@@ -111,13 +109,5 @@ public class BoolTest extends TestingContext {
     given(bool = bool(true));
     when(() -> bool.toString());
     thenReturned("Bool(true):" + bool.hash());
-  }
-
-  @Test
-  public void reading_not_stored_bool_fails() throws Exception {
-    given(hash = Hash.of(33));
-    given(bool = boolType().newSObject(hash));
-    when(bool).data();
-    thenThrown(ObjectsDbException.class);
   }
 }

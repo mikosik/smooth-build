@@ -2,15 +2,14 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
@@ -45,10 +44,6 @@ public class StructBuilder {
         .stream()
         .map(fields::get)
         .collect(toImmutableList());
-    try {
-      return type.newSObject(objectsDb.writeStructData(objects));
-    } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
-    }
+    return wrapException(() -> objectsDb.newStructSObject(type, objects));
   }
 }

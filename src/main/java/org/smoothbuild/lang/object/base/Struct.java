@@ -20,8 +20,8 @@ public class Struct extends SObjectImpl {
   private ImmutableMap<String, SObject> fields;
   private final ObjectsDb objectsDb;
 
-  public Struct(Hash dataHash, StructType type, ObjectsDb objectsDb, HashedDb hashedDb) {
-    super(dataHash, type, hashedDb);
+  public Struct(MerkleRoot merkleRoot, ObjectsDb objectsDb, HashedDb hashedDb) {
+    super(merkleRoot, hashedDb);
     this.objectsDb = objectsDb;
   }
 

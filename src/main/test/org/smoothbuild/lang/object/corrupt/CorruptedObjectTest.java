@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.testing.common.ExceptionMatcher;
 
 import okio.ByteString;
 
@@ -63,7 +63,15 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
             typeHash,
             hash("aaa")));
     when(() -> objectsDb().get(instanceHash));
-    thenThrown(ExceptionMatcher.exception(new ObjectsDbException(instanceHash,
+    thenThrown(exception(new ObjectsDbException(instanceHash,
         new ObjectsDbException(typeHash, (Exception) null))));
+  }
+
+  @Test
+  public void reading_elements_from_not_stored_object_throws_exception() {
+    given(instanceHash = Hash.of(33));
+    when(() -> objectsDb().get(instanceHash));
+    thenThrown(exception(
+        new ObjectsDbException(instanceHash, new NoSuchDataException(instanceHash))));
   }
 }
