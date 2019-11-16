@@ -5,6 +5,7 @@ import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.Nothing;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectsDbException;
 
 public class NothingType extends ConcreteType {
   public NothingType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectsDb objectsDb) {
@@ -13,6 +14,7 @@ public class NothingType extends ConcreteType {
 
   @Override
   public SObject newSObject(MerkleRoot merkleRoot) {
-    throw new RuntimeException("Cannot create instance of type 'Nothing'.");
+    throw new ObjectsDbException(merkleRoot.hash(),
+        "Object type is Nothing so such object cannot exist.");
   }
 }
