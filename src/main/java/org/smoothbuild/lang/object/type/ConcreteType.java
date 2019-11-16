@@ -16,7 +16,7 @@ import org.smoothbuild.lang.object.db.ObjectsDb;
 public abstract class ConcreteType extends AbstractType implements SObject {
   private final SObjectImpl object;
   protected final HashedDb hashedDb;
-  private final ObjectsDb objectsDb;
+  protected final ObjectsDb objectsDb;
 
   protected ConcreteType(MerkleRoot merkleRoot, ConcreteType superType,
       String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
