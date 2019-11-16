@@ -14,7 +14,7 @@ public class BoolType extends ConcreteType {
   }
 
   @Override
-  public Bool newSObject(MerkleRoot merkleRoot) {
+  public Bool newObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
     return new Bool(merkleRoot, hashedDb);
   }

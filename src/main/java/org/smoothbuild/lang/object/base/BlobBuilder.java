@@ -31,6 +31,6 @@ public class BlobBuilder implements Closeable {
 
   public Blob build() throws IOException {
     close();
-    return wrapException(() -> objectsDb.newBlobSObject(sink.hash()));
+    return wrapException(() -> objectsDb.newBlob(sink.hash()));
   }
 }
