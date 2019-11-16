@@ -106,18 +106,13 @@ public class ObjectsDb {
           return getType(hash);
       } else {
         ConcreteType type = getTypeOrWrapException(hashes.get(0), hash);
-        if (type.equals(typeType)) {
-            return getType(hash);
-          } else {
-          Hash dataHash = hashes.get(1);
-          return type.newObject(new MerkleRoot(hash, type, dataHash));
-          }
+        Hash dataHash = hashes.get(1);
+        return type.newObject(new MerkleRoot(hash, type, dataHash));
       }
     } catch (HashedDbException e) {
       throw new ObjectsDbException(hash, e);
     }
   }
-
 
   // methods for returning type SObjects
   public TypeType typeType() {
@@ -156,7 +151,7 @@ public class ObjectsDb {
     }
   }
 
-  private ConcreteType getType(Hash hash) {
+  public ConcreteType getType(Hash hash) {
     if (typesCache.containsKey(hash)) {
       return typesCache.get(hash);
     } else {
