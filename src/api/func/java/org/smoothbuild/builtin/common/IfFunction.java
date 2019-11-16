@@ -9,7 +9,7 @@ public class IfFunction {
   @SmoothFunction("if")
   public static SObject ifFunction(NativeApi nativeApi, Bool condition, SObject thenValue,
       SObject elseValue) {
-    if (condition.data()) {
+    if (condition.jValue()) {
       return thenValue;
     } else {
       return elseValue;

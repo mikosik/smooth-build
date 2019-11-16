@@ -43,6 +43,6 @@ public class Messages {
   }
 
   private static String stringField(Struct message, String fieldName) {
-    return ((SString) message.get(fieldName)).data();
+    return ((SString) message.get(fieldName)).jValue();
   }
 }

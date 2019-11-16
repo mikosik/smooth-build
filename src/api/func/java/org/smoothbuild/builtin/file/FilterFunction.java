@@ -19,7 +19,7 @@ public class FilterFunction {
   public static Array filter(NativeApi nativeApi, Array files, SString include) {
     Predicate<Path> filter;
     try {
-      filter = pathMatcher(include.data());
+      filter = pathMatcher(include.jValue());
     } catch (IllegalPathPatternException e) {
       nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
       return null;
@@ -27,7 +27,7 @@ public class FilterFunction {
     ArrayBuilder builder = nativeApi.factory().arrayBuilder((nativeApi.factory()).fileType());
 
     for (Struct file : files.asIterable(Struct.class)) {
-      if (filter.test(path(((SString) file.get("path")).data()))) {
+      if (filter.test(path(((SString) file.get("path")).jValue()))) {
         builder.add(file);
       }
     }

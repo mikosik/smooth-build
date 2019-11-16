@@ -25,7 +25,7 @@ public class ZipFunction {
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
       for (Struct file : files.asIterable(Struct.class)) {
-        String path = ((SString) file.get("path")).data();
+        String path = ((SString) file.get("path")).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
           throw new AbortException();
@@ -38,7 +38,7 @@ public class ZipFunction {
 
   private static void zipFile(Struct file, ZipOutputStream zipOutputStream)
       throws IOException {
-    ZipEntry entry = new ZipEntry(((SString) file.get("path")).data());
+    ZipEntry entry = new ZipEntry(((SString) file.get("path")).jValue());
     zipOutputStream.putNextEntry(entry);
     try (BufferedSource source = ((Blob) file.get("content")).source()) {
       source.readAll(sink(zipOutputStream));

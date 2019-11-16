@@ -133,7 +133,7 @@ public class OutputsDbTest extends TestingContext {
   public void written_bool_can_be_read_back() {
     given(boolValue = bool(true));
     given(outputsDb()).write(hash, new Output(boolValue, emptyMessageArray()));
-    when(((Bool) outputsDb().read(hash, boolType()).result()).data());
+    when(((Bool) outputsDb().read(hash, boolType()).result()).jValue());
     thenReturned(true);
   }
 
@@ -141,7 +141,7 @@ public class OutputsDbTest extends TestingContext {
   public void written_string_can_be_read_back() {
     given(stringValue = string(string));
     given(outputsDb()).write(hash, new Output(stringValue, emptyMessageArray()));
-    when(((SString) outputsDb().read(hash, stringType()).result()).data());
+    when(((SString) outputsDb().read(hash, stringType()).result()).jValue());
     thenReturned(string);
   }
 }

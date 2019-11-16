@@ -28,7 +28,7 @@ public class JarTester {
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
-    JarEntry entry = new JarEntry(((SString) file.get("path")).data());
+    JarEntry entry = new JarEntry(((SString) file.get("path")).jValue());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = ((Blob) file.get("content")).source()) {
       source.readAll(sink(jarOutputStream));

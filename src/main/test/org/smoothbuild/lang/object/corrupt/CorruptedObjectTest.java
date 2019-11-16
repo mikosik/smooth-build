@@ -32,7 +32,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).data());
+    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
     thenReturned("aaa");
   }
 

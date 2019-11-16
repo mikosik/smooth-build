@@ -31,7 +31,7 @@ public class JunitFunction {
       throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
     Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
-        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).data()), identity()));
+        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).jValue()), identity()));
     Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
     for (Entry<String, Struct> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
@@ -50,7 +50,7 @@ public class JunitFunction {
       Predicate<Path> filter = createFilter(nativeApi, include);
       int testCount = 0;
       for (String binaryName : testFiles.keySet()) {
-        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).data());
+        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).jValue());
         if (filter.test(filePath)) {
           testCount++;
           Class<?> testClass = loadClass(nativeApi, classLoader, binaryName);
@@ -97,7 +97,7 @@ public class JunitFunction {
 
   private static Predicate<Path> createFilter(NativeApi nativeApi, SString includeParam) {
     try {
-      return pathMatcher(includeParam.data());
+      return pathMatcher(includeParam.jValue());
     } catch (IllegalPathPatternException e) {
       nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
       throw new AbortException();

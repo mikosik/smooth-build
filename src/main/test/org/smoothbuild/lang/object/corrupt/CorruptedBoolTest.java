@@ -33,7 +33,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             hash(value)));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).data());
+    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
     thenReturned(value);
   }
 
@@ -44,7 +44,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).data());
+    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
@@ -56,7 +56,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).data());
+    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
@@ -76,7 +76,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).data());
+    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
