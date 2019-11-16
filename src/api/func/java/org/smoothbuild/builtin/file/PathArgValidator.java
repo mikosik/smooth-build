@@ -12,13 +12,13 @@ public class PathArgValidator {
   private static final String PROJECT_ROOT = "//";
 
   public static Path validatedProjectPath(NativeApi nativeApi, String name, SString stringValue) {
-    String value = stringValue.data();
+    String value = stringValue.jValue();
     if (!value.startsWith(PROJECT_ROOT)) {
       nativeApi.log().error("Param '" + name + "' has illegal value. It should start with \""
           + PROJECT_ROOT + "\" which represents project's root dir.");
       throw new AbortException();
     }
-    return validatedPath(nativeApi, name, stringValue.data().substring(PROJECT_ROOT.length()));
+    return validatedPath(nativeApi, name, stringValue.jValue().substring(PROJECT_ROOT.length()));
   }
 
   private static Path validatedPath(NativeApi nativeApi, String name, String value) {

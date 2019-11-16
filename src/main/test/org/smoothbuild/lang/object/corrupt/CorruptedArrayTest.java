@@ -44,7 +44,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
             )));
     when(() -> stream(((Array) objectsDb().get(instanceHash))
         .asIterable(SString.class))
-        .map(SString::data)
+        .map(SString::jValue)
         .collect(toList()));
     thenReturned(Lists.list("aaa", "bbb"));
   }

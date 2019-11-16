@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class NotFunction {
   @SmoothFunction("not")
   public static Bool not(NativeApi nativeApi, Bool value) {
-    return nativeApi.factory().bool(!value.data());
+    return nativeApi.factory().bool(!value.jValue());
   }
 }

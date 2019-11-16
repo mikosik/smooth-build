@@ -21,16 +21,16 @@ public class BoolTest extends TestingContext {
   }
 
   @Test
-  public void data_returns_java_true_from_true_bool() throws Exception {
+  public void jvalue_returns_java_true_from_true_bool() throws Exception {
     given(bool = bool(true));
-    when(bool).data();
+    when(bool).jValue();
     thenReturned(true);
   }
 
   @Test
-  public void data_returns_java_false_from_false_bool() throws Exception {
+  public void javlue_returns_java_false_from_false_bool() throws Exception {
     given(bool = bool(false));
-    when(bool).data();
+    when(bool).jValue();
     thenReturned(false);
   }
 
@@ -97,10 +97,10 @@ public class BoolTest extends TestingContext {
   }
 
   @Test
-  public void bool_read_back_by_hash_has_same_data() throws Exception {
+  public void bool_read_back_by_hash_has_same_jvalue() throws Exception {
     given(bool = bool(true));
     given(hash = bool.hash());
-    when(() -> ((Bool) objectsDbOther().get(hash)).data());
+    when(() -> ((Bool) objectsDbOther().get(hash)).jValue());
     thenReturned(true);
   }
 

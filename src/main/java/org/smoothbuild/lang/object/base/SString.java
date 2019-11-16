@@ -9,7 +9,7 @@ public class SString extends SObjectImpl {
     super(merkleRoot, hashedDb);
   }
 
-  public String data() {
+  public String jValue() {
     return wrapException(hash(), () -> hashedDb.readString(dataHash()));
   }
 }

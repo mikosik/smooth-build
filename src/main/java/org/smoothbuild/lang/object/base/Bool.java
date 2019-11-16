@@ -9,12 +9,12 @@ public class Bool extends SObjectImpl {
     super(merkleRoot, hashedDb);
   }
 
-  public boolean data() {
+  public boolean jValue() {
     return wrapException(hash(), () -> hashedDb.readBoolean(dataHash()));
   }
 
   @Override
   public String toString() {
-    return type().name() + "(" + data() + "):" + hash();
+    return type().name() + "(" + jValue() + "):" + hash();
   }
 }

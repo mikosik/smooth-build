@@ -28,7 +28,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).data());
+    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
     thenReturned("aaa");
   }
 
@@ -39,7 +39,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             notStringHash));
-    when(() -> ((SString) objectsDb().get(instanceHash)).data());
+    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
     thenThrown(exception(new ObjectsDbException(instanceHash,
         new DecodingStringException(notStringHash, null))));
   }

@@ -30,7 +30,7 @@ public class JarFunction {
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (Struct file : files.asIterable(Struct.class)) {
-        String path = ((SString) file.get("path")).data();
+        String path = ((SString) file.get("path")).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
           return null;
@@ -55,7 +55,7 @@ public class JarFunction {
 
   private static void jarFile(Struct file, JarOutputStream jarOutputStream)
       throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).data()));
+    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).jValue()));
     try (BufferedSource source = ((Blob) file.get("content")).source()) {
       BufferedSink sink = buffer(sink(jarOutputStream));
       source.readAll(sink);

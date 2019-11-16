@@ -98,7 +98,7 @@ public class JavacFunction {
 
     private Iterable<String> options() {
       return StreamSupport.stream(options.asIterable(SString.class).spliterator(), false)
-          .map(SString::data)
+          .map(SString::jValue)
           .collect(Collectors.toList());
     }
 

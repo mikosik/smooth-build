@@ -15,7 +15,7 @@ public class InputSourceFile extends SimpleJavaFileObject {
   private final Struct file;
 
   public InputSourceFile(Struct file) {
-    super(URI.create("string:///" + ((SString) file.get("path")).data()), Kind.SOURCE);
+    super(URI.create("string:///" + ((SString) file.get("path")).jValue()), Kind.SOURCE);
     this.file = file;
   }
 

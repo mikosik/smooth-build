@@ -19,7 +19,7 @@ public class CorruptedNothingTest extends AbstractCorruptedTestCase {
         hash(
             hash(nothingType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).data());
+    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
     thenThrown(exception(new ObjectsDbException(instanceHash,
         "Object type is Nothing so such object cannot exist.")));
   }

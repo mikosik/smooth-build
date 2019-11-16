@@ -8,7 +8,7 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class ReportError {
   @SmoothFunction("reportError")
   public static Nothing reportError(NativeApi nativeApi, SString message) {
-    nativeApi.log().error(message.data());
+    nativeApi.log().error(message.jValue());
     return null;
   }
 }

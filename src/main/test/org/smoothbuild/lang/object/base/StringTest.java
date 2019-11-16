@@ -23,16 +23,16 @@ public class StringTest extends TestingContext {
   }
 
   @Test
-  public void data_returns_java_string() throws Exception {
+  public void jvalue_returns_java_string() throws Exception {
     given(sstring = string(string));
-    when(sstring).data();
+    when(sstring).jValue();
     thenReturned(string);
   }
 
   @Test
-  public void data_returns_empty_java_string_for_empty_sstring() throws Exception {
+  public void jvalue_returns_empty_java_string_for_empty_sstring() throws Exception {
     given(sstring = string(""));
-    when(sstring).data();
+    when(sstring).jValue();
     thenReturned("");
   }
 
@@ -85,10 +85,10 @@ public class StringTest extends TestingContext {
   }
 
   @Test
-  public void sstring_read_back_by_hash_has_same_data() throws Exception {
+  public void sstring_read_back_by_hash_has_same_javlue() throws Exception {
     given(sstring = string(string));
     given(hash = sstring.hash());
-    when(() -> ((SString) objectsDbOther().get(hash)).data());
+    when(() -> ((SString) objectsDbOther().get(hash)).jValue());
     thenReturned(string);
   }
 

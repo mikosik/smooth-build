@@ -79,7 +79,7 @@ public class TaskBatch {
     }
     Task thenTask = dependencies.get(1);
     Task elseTask = dependencies.get(2);
-    if (((Bool) conditionTask.output().result()).data()) {
+    if (((Bool) conditionTask.output().result()).jValue()) {
       executeIfTask(task, conditionTask, thenTask);
     } else {
       executeIfTask(task, conditionTask, elseTask);
