@@ -26,7 +26,7 @@ public abstract class ConcreteType extends AbstractType implements SObject {
     this.objectsDb = objectsDb;
   }
 
-  public abstract SObject newSObject(MerkleRoot merkleRoot);
+  public abstract SObject newObject(MerkleRoot merkleRoot);
 
   @Override
   public ConcreteType superType() {

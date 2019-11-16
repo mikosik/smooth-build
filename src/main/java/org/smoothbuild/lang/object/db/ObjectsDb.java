@@ -90,11 +90,11 @@ public class ObjectsDb {
   }
 
   public SString string(String string) {
-    return wrapException(() -> newStringSObject(string));
+    return wrapException(() -> newString(string));
   }
 
   public Bool bool(boolean value) {
-    return wrapException(() -> newBoolSObject(value));
+    return wrapException(() -> newBool(value));
   }
 
   public SObject get(Hash hash) {
@@ -110,7 +110,7 @@ public class ObjectsDb {
             return getType(hash);
           } else {
           Hash dataHash = hashes.get(1);
-          return type.newSObject(new MerkleRoot(hash, type, dataHash));
+          return type.newObject(new MerkleRoot(hash, type, dataHash));
           }
       }
     } catch (HashedDbException e) {
@@ -141,11 +141,11 @@ public class ObjectsDb {
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return cacheType(wrapException(() -> newArrayTypeSObject(elementType)));
+    return cacheType(wrapException(() -> newArrayType(elementType)));
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    return cacheType(wrapException(() -> newStructTypeSObject(name, fields)));
+    return cacheType(wrapException(() -> newStructType(name, fields)));
   }
 
   private ConcreteType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
@@ -204,11 +204,11 @@ public class ObjectsDb {
         case "":
           assertSize(hash, "[]", hashes, 2);
           ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
-          return cacheType(newArrayTypeSObject(elementType, dataHash));
+          return cacheType(newArrayType(elementType, dataHash));
         default:
           assertSize(hash, name, hashes, 2);
           Iterable<Field> fields = readFieldSpecs(hashes.get(1), hash);
-          return cacheType(newStructTypeSObject(name, fields, dataHash));
+          return cacheType(newStructType(name, fields, dataHash));
       }
     } catch (HashedDbException e) {
       throw new ObjectsDbException(hash, e);
@@ -253,48 +253,48 @@ public class ObjectsDb {
 
   // methods for creating type's SObjects
 
-  private Bool newBoolSObject(boolean value) throws HashedDbException {
-    return boolType.newSObject(writeRoot(boolType, writeBoolData(value)));
+  private Bool newBool(boolean value) throws HashedDbException {
+    return boolType.newObject(writeRoot(boolType, writeBoolData(value)));
   }
 
-  public Blob newBlobSObject(Hash dataHash) throws HashedDbException {
-    return blobType.newSObject(writeRoot(blobType, dataHash));
+  public Blob newBlob(Hash dataHash) throws HashedDbException {
+    return blobType.newObject(writeRoot(blobType, dataHash));
   }
 
-  private SString newStringSObject(String string) throws HashedDbException {
-    return stringType.newSObject(writeRoot(stringType, writeStringData(string)));
+  private SString newString(String string) throws HashedDbException {
+    return stringType.newObject(writeRoot(stringType, writeStringData(string)));
   }
 
-  public Array newArraySObject(ConcreteArrayType type, List<SObject> elements) throws
+  public Array newArray(ConcreteArrayType type, List<SObject> elements) throws
       HashedDbException {
-    return type.newSObject(writeRoot(type, writeArrayData(elements)));
+    return type.newObject(writeRoot(type, writeArrayData(elements)));
   }
 
-  public Struct newStructSObject(StructType type, List<SObject> objects) throws HashedDbException {
-    return type.newSObject(writeRoot(type, writeStructData(objects)));
+  public Struct newStruct(StructType type, List<SObject> objects) throws HashedDbException {
+    return type.newObject(writeRoot(type, writeStructData(objects)));
   }
 
-  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType) throws
+  private ConcreteArrayType newArrayType(ConcreteType elementType) throws
       HashedDbException {
     Hash dataHash = writeArrayTypeData(elementType);
-    return newArrayTypeSObject(elementType, dataHash);
+    return newArrayType(elementType, dataHash);
   }
 
-  private ConcreteArrayType newArrayTypeSObject(ConcreteType elementType, Hash dataHash) throws
+  private ConcreteArrayType newArrayType(ConcreteType elementType, Hash dataHash) throws
       HashedDbException {
     ConcreteType elementSuperType = elementType.superType();
     ConcreteArrayType superType =
-        elementSuperType == null ? null : cacheType(newArrayTypeSObject(elementSuperType));
+        elementSuperType == null ? null : cacheType(newArrayType(elementSuperType));
     return new ConcreteArrayType(
         writeRoot(typeType, dataHash), superType, elementType, hashedDb, this);
   }
 
-  private StructType newStructTypeSObject(String name, Iterable<Field> fields) throws HashedDbException {
+  private StructType newStructType(String name, Iterable<Field> fields) throws HashedDbException {
     Hash dataHash = writeStructTypeData(name, fields);
-    return newStructTypeSObject(name, fields, dataHash);
+    return newStructType(name, fields, dataHash);
   }
 
-  private StructType newStructTypeSObject(String name, Iterable<Field> fields, Hash dataHash) throws
+  private StructType newStructType(String name, Iterable<Field> fields, Hash dataHash) throws
       HashedDbException {
     return new StructType(writeRoot(typeType, dataHash), name, fields, hashedDb, this);
   }

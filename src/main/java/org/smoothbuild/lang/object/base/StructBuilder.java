@@ -44,6 +44,6 @@ public class StructBuilder {
         .stream()
         .map(fields::get)
         .collect(toImmutableList());
-    return wrapException(() -> objectsDb.newStructSObject(type, objects));
+    return wrapException(() -> objectsDb.newStruct(type, objects));
   }
 }

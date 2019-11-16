@@ -13,7 +13,7 @@ public class NothingType extends ConcreteType {
   }
 
   @Override
-  public SObject newSObject(MerkleRoot merkleRoot) {
+  public SObject newObject(MerkleRoot merkleRoot) {
     throw new ObjectsDbException(merkleRoot.hash(),
         "Object type is Nothing so such object cannot exist.");
   }
