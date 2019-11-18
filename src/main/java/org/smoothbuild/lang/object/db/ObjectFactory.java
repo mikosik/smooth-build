@@ -64,8 +64,19 @@ public class ObjectFactory {
     return objectsDb.arrayBuilder(elementType);
   }
 
-  public StructBuilder structBuilder(StructType type) {
-    return objectsDb.structBuilder(type);
+  public Blob blob(DataWriter dataInjector) throws IOException {
+    try (BlobBuilder builder = blobBuilder()) {
+      dataInjector.writeTo(builder.sink());
+      return builder.build();
+    }
+  }
+
+  public BlobBuilder blobBuilder() {
+    return objectsDb.blobBuilder();
+  }
+
+  public Bool bool(boolean value) {
+    return objectsDb.bool(value);
   }
 
   public Struct file(SString path, Blob content) {
@@ -73,6 +84,75 @@ public class ObjectFactory {
         .set("content", content)
         .set("path", path)
         .build();
+  }
+
+  public SString string(String string) {
+    return objectsDb.string(string);
+  }
+
+  public StructBuilder structBuilder(StructType type) {
+    return objectsDb.structBuilder(type);
+  }
+
+  public ArrayType arrayType(Type elementType) {
+    if (elementType.isGeneric()) {
+      return arrayType((GenericType) elementType);
+    } else {
+      return arrayType((ConcreteType) elementType);
+    }
+  }
+
+  public ConcreteArrayType arrayType(ConcreteType elementType) {
+    return objectsDb.arrayType(elementType);
+  }
+
+  public GenericArrayType arrayType(GenericType elementType) {
+    return new GenericArrayType(elementType);
+  }
+
+  public ConcreteType blobType() {
+    return objectsDb.blobType();
+  }
+
+  public ConcreteType boolType() {
+    return objectsDb.boolType();
+  }
+
+  public StructType fileType() {
+    return (StructType) getType(TypeNames.FILE);
+  }
+
+  public StructType messageType() {
+    return (StructType) getType(TypeNames.MESSAGE);
+  }
+
+  public ConcreteType nothingType() {
+    return objectsDb.nothingType();
+  }
+
+  public ConcreteType stringType() {
+    return objectsDb.stringType();
+  }
+
+  public StructType structType(String name, Iterable<Field> fields) {
+    if (cache.containsKey(name)) {
+      throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
+    }
+    StructType type = objectsDb.structType(name, fields);
+    cache.put(name, type);
+    return type;
+  }
+
+  public Type getType(String name) {
+    if (isGenericTypeName(name)) {
+      return new GenericType(name);
+    } else {
+      ConcreteType type = cache.get(name);
+      if (type == null) {
+        throw new IllegalStateException("Unknown runtime type '" + name + "'.");
+      }
+      return type;
+    }
   }
 
   public Struct errorMessage(String text) {
@@ -96,91 +176,11 @@ public class ObjectFactory {
         .build();
   }
 
-  public BlobBuilder blobBuilder() {
-    return objectsDb.blobBuilder();
-  }
-
-  public Blob blob(DataWriter dataInjector) throws IOException {
-    try (BlobBuilder builder = blobBuilder()) {
-      dataInjector.writeTo(builder.sink());
-      return builder.build();
-    }
-  }
-
-  public Bool bool(boolean value) {
-    return objectsDb.bool(value);
-  }
-
-  public SString string(String string) {
-    return objectsDb.string(string);
-  }
-
   public Set<String> names() {
     return unmodifiableSet(cache.keySet());
   }
 
   public Map<String, ConcreteType> nameToTypeMap() {
     return unmodifiableMap(cache);
-  }
-
-  public ConcreteType boolType() {
-    return objectsDb.boolType();
-  }
-
-  public ConcreteType stringType() {
-    return objectsDb.stringType();
-  }
-
-  public ConcreteType blobType() {
-    return objectsDb.blobType();
-  }
-
-  public ConcreteType nothingType() {
-    return objectsDb.nothingType();
-  }
-
-  public StructType fileType() {
-    return (StructType) getType(TypeNames.FILE);
-  }
-
-  public StructType messageType() {
-    return (StructType) getType(TypeNames.MESSAGE);
-  }
-
-  public ArrayType arrayType(Type elementType) {
-    if (elementType.isGeneric()) {
-      return arrayType((GenericType) elementType);
-    } else {
-      return arrayType((ConcreteType) elementType);
-    }
-  }
-
-  public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return objectsDb.arrayType(elementType);
-  }
-
-  public GenericArrayType arrayType(GenericType elementType) {
-    return new GenericArrayType(elementType);
-  }
-
-  public Type getType(String name) {
-    if (isGenericTypeName(name)) {
-      return new GenericType(name);
-    } else {
-      ConcreteType type = cache.get(name);
-      if (type == null) {
-        throw new IllegalStateException("Unknown runtime type '" + name + "'.");
-      }
-      return type;
-    }
-  }
-
-  public StructType struct(String name, Iterable<Field> fields) {
-    if (cache.containsKey(name)) {
-      throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
-    }
-    StructType type = objectsDb.structType(name, fields);
-    cache.put(name, type);
-    return type;
   }
 }

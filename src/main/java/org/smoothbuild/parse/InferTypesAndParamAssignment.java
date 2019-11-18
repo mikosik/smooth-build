@@ -52,7 +52,7 @@ public class InferTypesAndParamAssignment {
             fields.add(new Field(type, field.name(), field.location()));
           }
         }
-        ConcreteType type = objectFactory.struct(struct.name(), fields);
+        ConcreteType type = objectFactory.structType(struct.name(), fields);
         struct.set(Type.class, type);
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
