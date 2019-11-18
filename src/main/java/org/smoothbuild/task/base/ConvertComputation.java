@@ -39,7 +39,7 @@ public class ConvertComputation implements Computation {
       return new Output(convertArray(container, (Array) object, type), emptyMessageArray(container));
     }
     assertThat(!object.type().isNothing());
-    return new Output(convertStruct(container, (Struct) object, type), emptyMessageArray(container));
+    return new Output(convertStruct((Struct) object, type), emptyMessageArray(container));
   }
 
   private static SObject convertArray(Container container, Array array,
@@ -50,19 +50,19 @@ public class ConvertComputation implements Computation {
       if (element instanceof Array) {
         builder.add(convertArray(container, (Array) element, elemType));
       } else {
-        builder.add(convertStruct(container, (Struct) element, elemType));
+        builder.add(convertStruct((Struct) element, elemType));
       }
     }
     return builder.build();
   }
 
-  private static SObject convertStruct(Container container, Struct struct,
+  private static SObject convertStruct(Struct struct,
       ConcreteType destinationType) {
     SObject superObject = struct.superObject();
     if (superObject.type().equals(destinationType)) {
       return superObject;
     }
-    return convertStruct(container, (Struct) superObject, destinationType);
+    return convertStruct((Struct) superObject, destinationType);
   }
 
   private static void assertThat(boolean expression) {
