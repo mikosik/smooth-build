@@ -11,12 +11,10 @@ import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.db.ObjectsDbException;
-import org.smoothbuild.lang.object.type.ConcreteType;
 
 import okio.ByteString;
 
 public class CorruptedTypeTest extends AbstractCorruptedTestCase {
-  private ConcreteType type;
   private Hash hash;
   private Hash instanceHash;
   private Hash notStringHash;
