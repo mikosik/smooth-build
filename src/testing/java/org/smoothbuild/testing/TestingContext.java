@@ -260,10 +260,10 @@ public class TestingContext {
   public static class TestingObjectFactory extends ObjectFactory {
     public TestingObjectFactory(ObjectsDb objectsDb) {
       super(objectsDb);
-      struct("File", list(
+      structType("File", list(
           new Field(blobType(), "content", unknownLocation()),
           new Field(stringType(), "path", unknownLocation())));
-      struct("Message", list(
+      structType("Message", list(
           new Field(stringType(), "text", unknownLocation()),
           new Field(stringType(), "severity", unknownLocation())));
     }

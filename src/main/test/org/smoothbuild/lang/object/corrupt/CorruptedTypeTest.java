@@ -21,33 +21,6 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   private Hash dataHash;
 
   @Test
-  public void learning_test_create_type_type() {
-    /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth type
-     * type in HashedDb.
-     */
-    when(() ->
-        hash(
-            hash(
-                hash("Type"))));
-    thenReturned(typeType().hash());
-  }
-
-  @Test
-  public void learning_test_create_string_type() {
-    /*
-     * This test makes sure that other tests in this class use proper scheme to save basic smooth
-     * type in HashedDb.
-     */
-    when(() ->
-        hash(
-            hash(typeType()),
-            hash(
-                hash("String"))));
-    thenReturned(stringType().hash());
-  }
-
-  @Test
   public void learning_test_create_array_type() {
     /*
      * This test makes sure that other tests in this class use proper scheme to save smooth
@@ -62,6 +35,20 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             )
         ));
     thenReturned(arrayType(stringType()).hash());
+  }
+
+  @Test
+  public void learning_test_create_string_type() {
+    /*
+     * This test makes sure that other tests in this class use proper scheme to save basic smooth
+     * type in HashedDb.
+     */
+    when(() ->
+        hash(
+            hash(typeType()),
+            hash(
+                hash("String"))));
+    thenReturned(stringType().hash());
   }
 
   @Test
@@ -85,6 +72,19 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                         hash(stringType()))
                 ))));
     thenReturned(personType().hash());
+  }
+
+  @Test
+  public void learning_test_create_type_type() {
+    /*
+     * This test makes sure that other tests in this class use proper scheme to save smooth type
+     * type in HashedDb.
+     */
+    when(() ->
+        hash(
+            hash(
+                hash("Type"))));
+    thenReturned(typeType().hash());
   }
 
   // testing Merkle tree of type root node
@@ -257,7 +257,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         new DecodingHashSequenceException(dataHash, 2, 3))));
   }
 
-  // corrupted dependentent types
+  // corrupted dependent types
 
   @Test
   public void merkle_tree_of_struct_type_with_corrupted_field_type_causes_exception() {

@@ -94,7 +94,7 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void names_contain_name_of_struct_that_was_added_before() {
-    given(emptyCacheObjectFactory()).struct("MyStruct", list());
+    given(emptyCacheObjectFactory()).structType("MyStruct", list());
     when(() -> emptyCacheObjectFactory().names());
     thenReturned(hasItem("MyStruct"));
   }
@@ -117,7 +117,7 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void names_to_type_mape_contains_name_of_struct_that_was_added_before() {
-    given(emptyCacheObjectFactory()).struct("MyStruct", list());
+    given(emptyCacheObjectFactory()).structType("MyStruct", list());
     when(() -> emptyCacheObjectFactory().nameToTypeMap().keySet());
     thenReturned(hasItem("MyStruct"));
   }
@@ -154,7 +154,7 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void custom_struct_type_can_be_retrieved_by_name() {
-    given(type = emptyCacheObjectFactory().struct(
+    given(type = emptyCacheObjectFactory().structType(
         "MyStruct", list(new Field(stringType(), "field", unknownLocation()))));
     when(() -> emptyCacheObjectFactory().getType("MyStruct"));
     thenReturned(type);
@@ -169,15 +169,15 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void reusing_struct_name_causes_exception() {
-    given(type = emptyCacheObjectFactory().struct(
+    given(type = emptyCacheObjectFactory().structType(
         "MyStruct", list(new Field(stringType(), "field", unknownLocation()))));
-    when(() -> emptyCacheObjectFactory().struct("MyStruct", list()));
+    when(() -> emptyCacheObjectFactory().structType("MyStruct", list()));
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void reusing_basic_type_name_as_struct_name_causes_exception() {
-    when(() -> emptyCacheObjectFactory().struct("String", list()));
+    when(() -> emptyCacheObjectFactory().structType("String", list()));
     thenThrown(IllegalStateException.class);
   }
 
