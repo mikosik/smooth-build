@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
@@ -53,7 +54,7 @@ public class TaskBatch {
     return builder.build();
   }
 
-  public void executeAll() throws IOException {
+  public void executeAll() throws IOException, OutputsDbException {
     for (Task task : rootTasks) {
       executeGraph(task);
       if (!task.hasSuccessfulResult()) {
@@ -62,7 +63,7 @@ public class TaskBatch {
     }
   }
 
-  private void executeGraph(Task task) throws IOException {
+  private void executeGraph(Task task) throws IOException, OutputsDbException {
     if (task.name().equals("if")) {
       executeIfGraph(task);
     } else {
@@ -70,7 +71,7 @@ public class TaskBatch {
     }
   }
 
-  private void executeIfGraph(Task task) throws IOException {
+  private void executeIfGraph(Task task) throws IOException, OutputsDbException {
     ImmutableList<Task> dependencies = task.dependencies();
     Task conditionTask = dependencies.get(0);
     executeGraph(conditionTask);
@@ -87,7 +88,7 @@ public class TaskBatch {
   }
 
   private void executeIfTask(Task task, Task conditionTask, Task dependencyTask) throws
-      IOException {
+      IOException, OutputsDbException {
     executeGraph(dependencyTask);
     if (!dependencyTask.hasSuccessfulResult()) {
       return;
@@ -98,7 +99,7 @@ public class TaskBatch {
     taskExecutor.execute(task, Input.fromResults(dependencies));
   }
 
-  private void executeNormalGraph(Task task) throws IOException {
+  private void executeNormalGraph(Task task) throws IOException, OutputsDbException {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
       if (!subTask.hasSuccessfulResult()) {
