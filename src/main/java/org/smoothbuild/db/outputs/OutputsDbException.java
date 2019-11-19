@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public class OutputsDbException extends RuntimeException {
+public class OutputsDbException extends Exception {
   public static OutputsDbException corruptedValueException(Hash hash, String message) {
     return new OutputsDbException(hash.toString() + " value in OutputsDb is corrupted. " + message);
   }
@@ -13,11 +13,11 @@ public class OutputsDbException extends RuntimeException {
     return new OutputsDbException("IOException when accessing OutputsDb", e);
   }
 
-  public OutputsDbException(String message) {
+  private OutputsDbException(String message) {
     super(message);
   }
 
-  public OutputsDbException(String message, Throwable e) {
+  private OutputsDbException(String message, Throwable e) {
     super(message, e);
   }
 }

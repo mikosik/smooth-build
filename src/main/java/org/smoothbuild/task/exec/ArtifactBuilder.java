@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.expr.Expression;
@@ -45,6 +46,9 @@ public class ArtifactBuilder {
       taskBatch.executeAll();
     } catch (IOException e) {
       console.error("Execution failed due to I/O error. Caught exception:\n"
+          + getStackTraceAsString(e));
+    } catch (OutputsDbException e) {
+      console.error("Execution failed due to Outputs DB error. Caught exception:\n"
           + getStackTraceAsString(e));
     }
     if (!taskBatch.containsErrors()) {

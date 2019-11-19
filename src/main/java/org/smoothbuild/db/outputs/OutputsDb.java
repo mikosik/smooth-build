@@ -39,7 +39,7 @@ public class OutputsDb {
     this.objectFactory = objectFactory;
   }
 
-  public void write(Hash taskHash, Output output) {
+  public void write(Hash taskHash, Output output) throws OutputsDbException {
     try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
       Array messages = output.messages();
       sink.write(messages.hash());
@@ -51,7 +51,7 @@ public class OutputsDb {
     }
   }
 
-  public boolean contains(Hash taskHash) {
+  public boolean contains(Hash taskHash) throws OutputsDbException {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
@@ -66,7 +66,7 @@ public class OutputsDb {
     }
   }
 
-  public Output read(Hash taskHash, ConcreteType type) {
+  public Output read(Hash taskHash, ConcreteType type) throws OutputsDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       SObject messagesObject = objectsDb.get(Hash.read(source));
       ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
@@ -76,13 +76,14 @@ public class OutputsDb {
       }
 
       Array messages = (Array) messagesObject;
-      messages.asIterable(Struct.class).forEach(m -> {
+      Iterable<Struct> structs = messages.asIterable(Struct.class);
+      for (Struct m : structs) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(taskHash,
               "One of messages has invalid severity = '" + severity + "'");
         }
-      });
+      }
       if (containsErrors(messages)) {
         return new Output(null, messages);
       } else {

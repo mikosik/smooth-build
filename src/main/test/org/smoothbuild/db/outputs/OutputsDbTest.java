@@ -38,14 +38,14 @@ public class OutputsDbTest extends TestingContext {
 
   @Test
   public void outputsdb_does_not_contain_not_written_result() {
-    when(outputsDb().contains(hash));
+    when(() -> outputsDb().contains(hash));
     thenReturned(false);
   }
 
   @Test
   public void outputsdb_contains_written_result() {
-    given(outputsDb()).write(hash, new Output(string("result"), emptyMessageArray()));
-    when(outputsDb().contains(hash));
+    given(() -> outputsDb().write(hash, new Output(string("result"), emptyMessageArray())));
+    when(() -> outputsDb().contains(hash));
     thenReturned(true);
   }
 
@@ -59,7 +59,7 @@ public class OutputsDbTest extends TestingContext {
 
   @Test
   public void reading_not_written_value_fails() {
-    when(outputsDb()).read(hash, stringType());
+    when(() -> outputsDb().read(hash, stringType()));
     thenThrown(OutputsDbException.class);
   }
 
@@ -68,8 +68,8 @@ public class OutputsDbTest extends TestingContext {
     given(stringValue = string("abc"));
     given(message = errorMessage("error message"));
     given(messages = array(message));
-    given(outputsDb()).write(hash, new Output(stringValue, messages));
-    when(outputsDb().read(hash, stringType()).messages());
+    given(() -> outputsDb().write(hash, new Output(stringValue, messages)));
+    when(() -> outputsDb().read(hash, stringType()).messages());
     thenReturned(messages);
   }
 
@@ -77,8 +77,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_file_array_can_be_read_back() {
     given(file = file(path, bytes));
     given(array = arrayBuilder(objectFactory().fileType()).add(file).build());
-    given(outputsDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb().read(hash, arrayType(objectFactory().fileType())).result())
+    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputsDb().read(hash, arrayType(objectFactory().fileType())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -97,8 +97,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_bool_array_can_be_read_back() {
     given(boolValue = bool(true));
     given(array = arrayBuilder(boolType()).add(boolValue).build());
-    given(outputsDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb().read(hash, arrayType(boolType())).result())
+    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputsDb().read(hash, arrayType(boolType())).result())
         .asIterable(Bool.class).iterator().next());
     thenReturned(boolValue);
   }
@@ -107,8 +107,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_string_array_can_be_read_back() {
     given(stringValue = string(string));
     given(array = arrayBuilder(stringType()).add(stringValue).build());
-    given(outputsDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb().read(hash, arrayType(stringType())).result())
+    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputsDb().read(hash, arrayType(stringType())).result())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
   }
@@ -116,8 +116,8 @@ public class OutputsDbTest extends TestingContext {
   @Test
   public void written_file_can_be_read_back() {
     given(file = file(path, bytes));
-    given(outputsDb()).write(hash, new Output(file, emptyMessageArray()));
-    when(outputsDb().read(hash, objectFactory().fileType()).result());
+    given(() -> outputsDb().write(hash, new Output(file, emptyMessageArray())));
+    when(() -> outputsDb().read(hash, objectFactory().fileType()).result());
     thenReturned(file);
   }
 
@@ -132,16 +132,16 @@ public class OutputsDbTest extends TestingContext {
   @Test
   public void written_bool_can_be_read_back() {
     given(boolValue = bool(true));
-    given(outputsDb()).write(hash, new Output(boolValue, emptyMessageArray()));
-    when(((Bool) outputsDb().read(hash, boolType()).result()).jValue());
+    given(() -> outputsDb().write(hash, new Output(boolValue, emptyMessageArray())));
+    when(() -> ((Bool) outputsDb().read(hash, boolType()).result()).jValue());
     thenReturned(true);
   }
 
   @Test
   public void written_string_can_be_read_back() {
     given(stringValue = string(string));
-    given(outputsDb()).write(hash, new Output(stringValue, emptyMessageArray()));
-    when(((SString) outputsDb().read(hash, stringType()).result()).jValue());
+    given(() -> outputsDb().write(hash, new Output(stringValue, emptyMessageArray())));
+    when(() -> ((SString) outputsDb().read(hash, stringType()).result()).jValue());
     thenReturned(string);
   }
 }
