@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.task.base.Evaluator.accessorCallEvaluator;
-
 import java.util.List;
 
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.AccessorCallComputation;
+import org.smoothbuild.task.base.Computation;
+import org.smoothbuild.task.base.Task;
 
 public class AccessorCallExpression extends Expression {
   private final Accessor accessor;
@@ -20,7 +20,9 @@ public class AccessorCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    return accessorCallEvaluator(accessor, childrenEvaluators(objectsDb, scope), location());
+  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    Computation computation = new AccessorCallComputation(accessor);
+    List<Task> dependencies = childrenTasks(objectsDb, scope);
+    return new Task(computation, accessor.name(), true, dependencies, location());
   }
 }

@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Task;
 
 public class ExpressionTest {
   private Location location;
@@ -38,7 +38,7 @@ public class ExpressionTest {
   }
 
   @Test
-  public void code_location() throws Exception {
+  public void code_location() {
     given(expression = new MyExpression(list(), location));
     when(expression.location());
     thenReturned(location);
@@ -50,7 +50,7 @@ public class ExpressionTest {
     }
 
     @Override
-    public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
+    public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
       return null;
     }
   }

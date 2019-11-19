@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.task.base.Evaluator.arrayEvaluator;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -12,7 +11,9 @@ import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.ArrayComputation;
+import org.smoothbuild.task.base.Computation;
+import org.smoothbuild.task.base.Task;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;
@@ -24,23 +25,23 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    List<Evaluator> elements = childrenEvaluators(objectsDb, scope);
+  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    List<Task> elements = childrenTasks(objectsDb, scope);
     ConcreteArrayType actualType = arrayType(elements);
-    return arrayEvaluator(
-        actualType,
-        convertedElements(actualType.elemType(), elements),
-        location());
+
+    Computation computation = new ArrayComputation(actualType);
+    List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
+    return new Task(computation, actualType.name(), true, convertedElements, location());
   }
 
-  private static List<Evaluator> convertedElements(ConcreteType type, List<Evaluator> elements) {
-    return map(elements, e -> e.convertIfNeeded(type));
+  private static List<Task> convertedElements(ConcreteType type, List<Task> elements) {
+    return map(elements, t -> t.convertIfNeeded(type));
   }
 
-  private ConcreteArrayType arrayType(List<Evaluator> elements) {
+  private ConcreteArrayType arrayType(List<Task> elements) {
     return (ConcreteArrayType) elements
         .stream()
-        .map(e -> (Type) e.type())
+        .map(t -> (Type) t.type())
         .reduce(Type::commonSuperType)
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);

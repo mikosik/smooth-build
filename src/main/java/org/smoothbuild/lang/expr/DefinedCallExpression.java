@@ -2,7 +2,7 @@ package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
-import static org.smoothbuild.task.base.Evaluator.identityEvaluator;
+import static org.smoothbuild.task.base.Task.taskTypes;
 
 import java.util.List;
 
@@ -11,7 +11,11 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Computation;
+import org.smoothbuild.task.base.IdentityComputation;
+import org.smoothbuild.task.base.Task;
+
+import com.google.common.collect.ImmutableList;
 
 public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
@@ -23,27 +27,26 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    List<Evaluator> arguments = childrenEvaluators(objectsDb, scope);
+  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    List<Task> arguments = childrenTasks(objectsDb, scope);
     ConcreteType actualResultType =
-        inferMapping(function.parameterTypes(), evaluatorTypes(arguments))
+        inferMapping(function.parameterTypes(), taskTypes(arguments))
             .applyTo(function.signature().type());
-    Evaluator evaluator = function
+    Task task = function
         .body()
-        .createEvaluator(objectsDb, functionScope(arguments))
+        .createTask(objectsDb, functionScope(arguments))
         .convertIfNeeded(actualResultType);
-    return namedEvaluator(actualResultType, function.name(), evaluator);
+
+    Computation computation = new IdentityComputation(actualResultType);
+    List<Task> dependencies = ImmutableList.of(task);
+    return new Task(computation, function.name(), true, dependencies, location());
   }
 
-  private Scope<Evaluator> functionScope(List<Evaluator> arguments) {
-    Scope<Evaluator> functionScope = scope();
+  private Scope<Task> functionScope(List<Task> arguments) {
+    Scope<Task> functionScope = scope();
     for (int i = 0; i < arguments.size(); i++) {
       functionScope.add(function.parameters().get(i).name(), arguments.get(i));
     }
     return functionScope;
-  }
-
-  private Evaluator namedEvaluator(ConcreteType type, String name, Evaluator evaluator) {
-    return identityEvaluator(type, name, false, evaluator, location());
   }
 }
