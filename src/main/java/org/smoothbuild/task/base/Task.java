@@ -1,5 +1,8 @@
 package org.smoothbuild.task.base;
 
+import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
+
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -10,20 +13,21 @@ import org.smoothbuild.task.exec.Container;
 import com.google.common.collect.ImmutableList;
 
 public class Task {
-  private final Evaluator evaluator;
+  private final Computation computation;
   private final ImmutableList<Task> dependencies;
-  private final Hash runtimeHash;
+  private final String name;
+  private final Location location;
+  private final boolean isComputationCacheable;
   private TaskResult result;
 
-  public Task(Evaluator evaluator, List<? extends Task> dependencies, Hash runtimeHash) {
-    this.evaluator = evaluator;
+  public Task(Computation computation, String name, boolean isComputationCacheable,
+      List<? extends Task> dependencies, Location location) {
+    this.computation = computation;
     this.dependencies = ImmutableList.copyOf(dependencies);
-    this.runtimeHash = runtimeHash;
+    this.name = name;
+    this.location = location;
+    this.isComputationCacheable = isComputationCacheable;
     this.result = null;
-  }
-
-  public Evaluator evaluator() {
-    return evaluator;
   }
 
   public ImmutableList<Task> dependencies() {
@@ -31,24 +35,20 @@ public class Task {
   }
 
   public String name() {
-    return evaluator.name();
+    return name;
   }
 
   public ConcreteType type() {
-    return evaluator.type();
-  }
-
-  public boolean isInternal() {
-    return evaluator.isInternal();
+    return computation.type();
   }
 
   public Location location() {
-    return evaluator.location();
+    return location;
   }
 
   public void execute(Container container, Input input) {
     try {
-      result = new TaskResult(evaluator.evaluate(input, container), false);
+      result = new TaskResult(computation.execute(input, container), false);
     } catch (ComputationException e) {
       result = new TaskResult(e);
     }
@@ -59,14 +59,11 @@ public class Task {
   }
 
   public boolean shouldCacheOutput() {
-    return evaluator.isCacheable() && result.hasOutput();
+    return isComputationCacheable && result.hasOutput();
   }
 
-  public Hash hash(Input input) {
-    return Hash.of(
-        runtimeHash,
-        evaluator.hash(),
-        input.hash());
+  public Hash hash() {
+    return computation.hash();
   }
 
   public void setResult(TaskResult result) {
@@ -79,5 +76,19 @@ public class Task {
 
   public boolean hasSuccessfulResult() {
     return result != null && result.hasOutputWithValue();
+  }
+
+  public Task convertIfNeeded(ConcreteType type) {
+    if (type().equals(type)) {
+      return this;
+    } else {
+      Computation computation = new ConvertComputation(type);
+      List<Task> dependencies = list(this);
+      return new Task(computation, "~conversion", true, dependencies, location());
+    }
+  }
+
+  public static List<ConcreteType> taskTypes(List<Task> tasks) {
+    return map(tasks, Task::type);
   }
 }

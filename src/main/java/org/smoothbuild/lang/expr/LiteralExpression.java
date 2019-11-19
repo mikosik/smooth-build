@@ -1,12 +1,16 @@
 package org.smoothbuild.lang.expr;
 
-import static org.smoothbuild.task.base.Evaluator.valueEvaluator;
+import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Computation;
+import org.smoothbuild.task.base.Task;
+import org.smoothbuild.task.base.ValueComputation;
+
+import com.google.common.collect.ImmutableList;
 
 public class LiteralExpression extends Expression {
   private final SObject object;
@@ -17,7 +21,9 @@ public class LiteralExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    return valueEvaluator(object, location());
+  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    Computation computation = new ValueComputation(object);
+    List<Task> dependencies = ImmutableList.of();
+    return new Task(computation, object.type().name(), true, dependencies, location());
   }
 }

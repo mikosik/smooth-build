@@ -8,8 +8,7 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 
@@ -29,17 +28,13 @@ public abstract class Expression {
     this.location = checkNotNull(location);
   }
 
-  public List<Evaluator> childrenEvaluators(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    return map(children, ch -> ch.createEvaluator(objectsDb, scope));
+  public List<Task> childrenTasks(ObjectsDb objectsDb, Scope<Task> scope) {
+    return map(children, ch -> ch.createTask(objectsDb, scope));
   }
 
   public Location location() {
     return location;
   }
 
-  public static List<ConcreteType> evaluatorTypes(List<Evaluator> argumentEvaluators) {
-    return map(argumentEvaluators, Evaluator::type);
-  }
-
-  public abstract Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope);
+  public abstract Task createTask(ObjectsDb objectsDb, Scope<Task> scope);
 }

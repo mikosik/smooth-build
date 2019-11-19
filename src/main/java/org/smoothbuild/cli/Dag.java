@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.parse.RuntimeController;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
@@ -40,21 +40,21 @@ public class Dag implements Command {
     }
     return runtimeController.setUpRuntimeAndRun(
         (runtime) -> functionNames.value()
-            .forEach(name -> print(dagEvaluator(runtime.functions().get(name)))));
+            .forEach(name -> print(dagOf(runtime.functions().get(name)))));
   }
 
-  private Evaluator dagEvaluator(Function function) {
+  private Task dagOf(Function function) {
     return function
         .createCallExpression(list(), unknownLocation())
-        .createEvaluator(objectsDb, null);
+        .createTask(objectsDb, null);
   }
 
-  private void print(Evaluator dag) {
-    print("", dag);
+  private void print(Task task) {
+    print("", task);
   }
 
-  private void print(String indent, Evaluator dag) {
-    console.println(indent + dag.name() + "(" + dag.type().name() + ")");
-    dag.children().forEach(ch -> print(indent + "  ", ch));
+  private void print(String indent, Task task) {
+    console.println(indent + task.name() + "(" + task.type().name() + ")");
+    task.dependencies().forEach(ch -> print(indent + "  ", ch));
   }
 }

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
-import static org.smoothbuild.task.base.Evaluator.nativeCallEvaluator;
+import static org.smoothbuild.task.base.Task.taskTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,9 @@ import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.task.base.Evaluator;
+import org.smoothbuild.task.base.Computation;
+import org.smoothbuild.task.base.NativeCallComputation;
+import org.smoothbuild.task.base.Task;
 
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;
@@ -25,22 +27,21 @@ public class NativeCallExpression extends Expression {
   }
 
   @Override
-  public Evaluator createEvaluator(ObjectsDb objectsDb, Scope<Evaluator> scope) {
-    List<Evaluator> arguments = childrenEvaluators(objectsDb, scope);
+  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    List<Task> arguments = childrenTasks(objectsDb, scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
-    GenericTypeMap<ConcreteType> mapping =
-        inferMapping(parameterTypes, evaluatorTypes(arguments));
+    GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
-    return nativeCallEvaluator(
-        actualResultType,
-        nativeFunction,
-        convertedArguments(mapping.applyTo(parameterTypes), arguments),
-        location());
+
+    Computation computation = new NativeCallComputation(actualResultType, nativeFunction);
+    List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
+    return new Task(
+        computation, nativeFunction.name(), nativeFunction.isCacheable(), dependencies, location());
   }
 
-  private static List<Evaluator> convertedArguments(
-      List<ConcreteType> actualParameterTypes, List<Evaluator> arguments) {
-    List<Evaluator> result = new ArrayList<>();
+  private static List<Task> convertedArguments(
+      List<ConcreteType> actualParameterTypes, List<Task> arguments) {
+    List<Task> result = new ArrayList<>();
     for (int i = 0; i < arguments.size(); i++) {
       result.add(arguments.get(i).convertIfNeeded(actualParameterTypes.get(i)));
     }
