@@ -109,4 +109,10 @@ public class HashTest {
     when(Hash.of(byteString));
     thenReturned(not(byteString.substring(1)));
   }
+
+  @Test
+  public void decode_from_string() {
+    when(() -> Hash.decode("010A"));
+    thenReturned(new Hash(ByteString.of(new byte[] {1, 10})));
+  }
 }

@@ -35,6 +35,6 @@ public class TypeStableHashTest extends TestingContext {
 
   private void assertHash(ConcreteType type, String hash) {
     when(() -> type.hash());
-    thenReturned(Hash.decodeHex(hash));
+    thenReturned(Hash.decode(hash));
   }
 }
