@@ -1,5 +1,7 @@
 package org.smoothbuild.task.exec;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,12 @@ public class TaskBatch {
     this.rootTasks = new ArrayList<>();
   }
 
-  public Task createTasks(Expression expression) {
-    Task root = expression.createTask(objectsDb, null);
-    rootTasks.add(root);
-    return root;
+  public List<Task> rootTasks() {
+    return unmodifiableList(rootTasks);
+  }
+
+  public void createTasks(Expression expression) {
+    rootTasks.add(expression.createTask(objectsDb, null));
   }
 
   public void executeAll() throws IOException, OutputsDbException {
