@@ -1,7 +1,9 @@
 package org.smoothbuild.task.exec;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Comparator.comparing;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
 import static org.smoothbuild.util.Lists.list;
 
@@ -16,10 +18,13 @@ import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
+
+import com.google.common.collect.ImmutableList;
 
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
@@ -36,7 +41,7 @@ public class ArtifactBuilder {
   }
 
   public void addArtifact(Function function) {
-    Expression expression = function.createCallExpression(list(), Location.unknownLocation());
+    Expression expression = function.createAgrlessCallExpression();
     Task task = taskBatch.createTasks(expression);
     artifacts.put(function.name(), task);
   }

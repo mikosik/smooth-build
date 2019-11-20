@@ -28,9 +28,9 @@ public class SmoothExecutor {
         return;
       }
       Function function = functions.get(name);
-      if (!function.parameters().isEmpty()) {
-        console.error(
-            "Function '" + name + "' cannot be invoked from command line as it has parameters.\n");
+      if (!function.canBeCalledArgless()) {
+        console.error("Function '" + name
+            + "' cannot be invoked from command line as it requires arguments.\n");
         return;
       }
       artifactBuilder.addArtifact(function);
