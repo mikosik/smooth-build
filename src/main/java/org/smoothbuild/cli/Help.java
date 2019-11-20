@@ -58,6 +58,7 @@ public class Help implements Command {
     builder.append("All available commands are:\n");
     append(builder, "build", buildShortDescription());
     append(builder, "clean", cleanShortDescription());
+    append(builder, "dag", dagShortDescription());
     append(builder, "help", helpShortDescription());
     append(builder, "list", listShortDescription());
     append(builder, "version", versionShortDescription());
