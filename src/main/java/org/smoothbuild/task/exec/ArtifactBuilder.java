@@ -1,49 +1,38 @@
 package org.smoothbuild.task.exec;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.task.save.ArtifactPaths.artifactPath;
-import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
 
-import com.google.common.collect.ImmutableList;
-
 public class ArtifactBuilder {
   private final ArtifactSaver artifactSaver;
   private final TaskBatch taskBatch;
   private final Console console;
-  private final Map<String, Task> artifacts;
 
   @Inject
   public ArtifactBuilder(ArtifactSaver artifactSaver, TaskBatch taskBatch, Console console) {
     this.artifactSaver = artifactSaver;
     this.taskBatch = taskBatch;
     this.console = console;
-    this.artifacts = new TreeMap<>(comparing(String::toString));
   }
 
   public void addArtifact(Function function) {
     Expression expression = function.createAgrlessCallExpression();
-    Task task = taskBatch.createTasks(expression);
-    artifacts.put(function.name(), task);
+    taskBatch.createTasks(expression);
   }
 
   public void runBuild() {
@@ -58,15 +47,20 @@ public class ArtifactBuilder {
     }
     if (!taskBatch.containsErrors()) {
       console.println("\nbuilt artifact(s):");
-      for (Entry<String, Task> artifact : artifacts.entrySet()) {
+
+      List<Task> sortedTasks = taskBatch.rootTasks()
+          .stream()
+          .sorted(comparing(Task::name))
+          .collect(toList());
+      for (Task artifact : sortedTasks) {
         save(artifact);
       }
     }
   }
 
-  private void save(Entry<String, Task> artifact) {
-    String name = artifact.getKey();
-    SObject object = artifact.getValue().output().result();
+  private void save(Task task) {
+    String name = task.name();
+    SObject object = task.output().result();
     try {
       artifactSaver.save(name, object);
       console.println(name + " -> " + artifactPath(name));

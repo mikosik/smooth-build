@@ -143,7 +143,8 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void info_about_stored_artifacts_is_printed_to_console() throws Exception {
+  public void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order()
+      throws Exception {
     givenScript("result1 = 'abc';"
         + "      result2 = 'abc';"
         + "      result3 = 'abc';");
