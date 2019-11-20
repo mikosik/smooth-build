@@ -84,6 +84,10 @@ public class Hash extends ByteString {
     return convert(function().hashBytes(byteString.toByteArray()));
   }
 
+  public static Hash decode(String string) {
+    return new Hash(ByteString.decodeHex(string));
+  }
+
   private static Hash convert(HashCode hash) {
     return new Hash(hash.asBytes());
   }

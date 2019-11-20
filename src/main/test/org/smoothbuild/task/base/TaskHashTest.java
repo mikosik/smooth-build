@@ -76,7 +76,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ValueComputation(string("")), list()));
     given(input = Input.fromObjects(list()));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
+    thenReturned(Hash.decode("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
   }
 
   @Test
@@ -84,7 +84,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ValueComputation(string("value")), list()));
     given(input = Input.fromObjects(list()));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
+    thenReturned(Hash.decode("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
   }
 
   @Test
@@ -92,7 +92,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ArrayComputation(arrayType(stringType())), list()));
     given(input = Input.fromObjects(list()));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("d20343333435effc353d96a8704cd929f7c39498"));
+    thenReturned(Hash.decode("d20343333435effc353d96a8704cd929f7c39498"));
   }
 
   @Test
@@ -100,7 +100,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ArrayComputation(arrayType(stringType())), list()));
     given(input = Input.fromObjects(list(string("abc"), string("def"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
+    thenReturned(Hash.decode("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
   }
 
   @Test
@@ -111,7 +111,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new NativeCallComputation(stringType(), nativeFunction), list()));
     given(input = Input.fromObjects(list()));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("36cf27551327ed05f5c0122dcced61e86ce01e84"));
+    thenReturned(Hash.decode("36cf27551327ed05f5c0122dcced61e86ce01e84"));
   }
 
   @Test
@@ -122,7 +122,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new NativeCallComputation(stringType(), nativeFunction), list()));
     given(input = Input.fromObjects(list(string("abc"), string("def"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("e3b8532fb64253f571926e8e3cf459a57be34aa0"));
+    thenReturned(Hash.decode("e3b8532fb64253f571926e8e3cf459a57be34aa0"));
   }
 
   @Test
@@ -130,7 +130,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new IdentityComputation(stringType()), list()));
     given(input = Input.fromObjects(list(string("abc"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
+    thenReturned(Hash.decode("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
   }
 
   @Test
@@ -138,7 +138,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ConvertComputation(stringType()), list()));
     given(input = Input.fromObjects(list(string("abc"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("2e18856c213531ddc9f883907e90eda84c8e3e20"));
+    thenReturned(Hash.decode("2e18856c213531ddc9f883907e90eda84c8e3e20"));
   }
 
   @Test
@@ -146,7 +146,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ConstructorCallComputation(constructor()), list()));
     given(input = Input.fromObjects(list()));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("e14ca21fccb6631fd52809c4c4b409f2f66a077c"));
+    thenReturned(Hash.decode("e14ca21fccb6631fd52809c4c4b409f2f66a077c"));
   }
 
   @Test
@@ -154,7 +154,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ConstructorCallComputation(constructor()), list()));
     given(input = Input.fromObjects(list(string("abc"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("68acb231ddf9eb8d878d1a68897aba09888b3b8e"));
+    thenReturned(Hash.decode("68acb231ddf9eb8d878d1a68897aba09888b3b8e"));
   }
 
   @Test
@@ -162,7 +162,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new ConstructorCallComputation(constructor()), list()));
     given(input = Input.fromObjects(list(string("abc"), string("def"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("94296c0f10b807bb7f46c7196035c5e787dc03b2"));
+    thenReturned(Hash.decode("94296c0f10b807bb7f46c7196035c5e787dc03b2"));
   }
 
   private Constructor constructor() {
@@ -175,7 +175,7 @@ public class TaskHashTest extends TestingContext {
     given(task = task(new AccessorCallComputation(accessor()), list()));
     given(input = Input.fromObjects(list(string("abc"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decodeHex("0d0a4fd630fd9ffe0bfe5820a8b38c65b07dcbdc"));
+    thenReturned(Hash.decode("0d0a4fd630fd9ffe0bfe5820a8b38c65b07dcbdc"));
   }
 
   private Accessor accessor() {
