@@ -2,8 +2,6 @@ package org.smoothbuild.cli;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.ArgumentValidator.validateFunctionNames;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
-import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.Set;
@@ -12,6 +10,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Maybe;
@@ -39,13 +38,28 @@ public class Dag implements Command {
       return EXIT_CODE_ERROR;
     }
     return runtimeController.setUpRuntimeAndRun(
-        (runtime) -> functionNames.value()
-            .forEach(name -> print(dagOf(runtime.functions().get(name)))));
+        (runtime) -> {
+          Functions functions = runtime.functions();
+          for (String name : functionNames.value()) {
+            if (!functions.contains(name)) {
+              console.error("Unknown function '" + name + "'.\n"
+                  + "Use 'smooth list' to see all available functions.\n");
+              return;
+            }
+            Function function = functions.get(name);
+            if (!function.canBeCalledArgless()) {
+              console.error(
+                  "Cannot print DAG for '" + name + "' function as it requires arguments.");
+              return;
+            }
+          }
+          functionNames.value().forEach(n -> print(dagOf(runtime.functions().get(n))));
+        });
   }
 
   private Task dagOf(Function function) {
     return function
-        .createCallExpression(list(), unknownLocation())
+        .createAgrlessCallExpression()
         .createTask(objectsDb, null);
   }
 
