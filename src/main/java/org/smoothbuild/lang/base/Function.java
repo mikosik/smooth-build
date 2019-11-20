@@ -45,6 +45,11 @@ public abstract class Function implements Named {
     return signature.parameterTypes();
   }
 
+  public boolean canBeCalledArgless() {
+    return signature.parameters().stream()
+        .allMatch(ParameterInfo::hasDefaultValue);
+  }
+
   public abstract Expression createCallExpression(List<? extends Expression> arguments,
       Location location);
 }
