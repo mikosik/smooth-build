@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 import static org.testory.Testory.thenEqual;
@@ -16,7 +17,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   private String path;
 
   @Test
-  public void build_command_fails_when_script_file_is_missing() throws Exception {
+  public void build_command_fails_when_script_file_is_missing() {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("error: Cannot read build script file 'build.smooth'.\n");
@@ -32,12 +33,20 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void build_command_with_function_that_has_parameters_prints_error() throws Exception {
+  public void build_command_with_function_that_requires_arguments_prints_error() throws Exception {
     givenScript("String testStringIdentity(String value) = value;");
     whenSmoothBuild("testStringIdentity");
     thenFinishedWithError();
     thenOutputContains("error: Function 'testStringIdentity' cannot be invoked from command line "
-        + "as it has parameters.\n");
+        + "as it requires arguments.\n");
+  }
+
+  @Test
+  public void build_command_with_function_which_all_params_are_optional_is_allowed() throws Exception {
+    givenScript("String testStringIdentity(String value = 'default') = value;");
+    whenSmoothBuild("testStringIdentity");
+    thenFinishedWithSuccess();
+    then(artifact("testStringIdentity"), hasContent("default"));
   }
 
   @Test
