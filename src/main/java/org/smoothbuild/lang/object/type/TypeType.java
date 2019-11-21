@@ -16,6 +16,6 @@ public class TypeType extends ConcreteType {
 
   @Override
   public ConcreteType newObject(MerkleRoot merkleRoot) {
-    return objectsDb.getType(merkleRoot.hash());
+    return objectsDb.getType(merkleRoot);
   }
 }

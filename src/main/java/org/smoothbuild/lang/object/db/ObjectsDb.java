@@ -151,7 +151,15 @@ public class ObjectsDb {
     }
   }
 
-  public ConcreteType getType(Hash hash) {
+  public ConcreteType getType(MerkleRoot merkleRoot) {
+    if (typesCache.containsKey(merkleRoot.hash())) {
+      return typesCache.get(merkleRoot.hash());
+    } else {
+      return readType(merkleRoot.hash(), merkleRoot.dataHash());
+    }
+  }
+
+  private ConcreteType getType(Hash hash) {
     if (typesCache.containsKey(hash)) {
       return typesCache.get(hash);
     } else {
@@ -179,7 +187,7 @@ public class ObjectsDb {
     }
   }
 
-  public ConcreteType readType(Hash hash, Hash dataHash) {
+  private ConcreteType readType(Hash hash, Hash dataHash) {
     try {
       List<Hash> hashes = hashedDb.readHashes(dataHash, 1, 2);
       String name = hashedDb.readString(hashes.get(0));
@@ -312,7 +320,7 @@ public class ObjectsDb {
     return new MerkleRoot(hash, type, dataHash);
   }
 
-  public Hash writeArrayData(List<SObject> elements) throws HashedDbException {
+  private Hash writeArrayData(List<SObject> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -324,7 +332,7 @@ public class ObjectsDb {
     return hashedDb.writeString(string);
   }
 
-  public Hash writeStructData(List<SObject> fieldValues) throws HashedDbException {
+  private Hash writeStructData(List<SObject> fieldValues) throws HashedDbException {
     return writeSequence(fieldValues);
   }
 
