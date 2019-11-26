@@ -9,7 +9,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
@@ -27,8 +26,8 @@ public class NativeCallExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
-    List<Task> arguments = childrenTasks(objectsDb, scope);
+  public Task createTask(Scope<Task> scope) {
+    List<Task> arguments = childrenTasks(scope);
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());

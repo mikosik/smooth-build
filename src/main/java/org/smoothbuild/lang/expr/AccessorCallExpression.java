@@ -5,7 +5,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.AccessorCallComputation;
 import org.smoothbuild.task.base.Computation;
 import org.smoothbuild.task.base.Task;
@@ -20,9 +19,9 @@ public class AccessorCallExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+  public Task createTask(Scope<Task> scope) {
     Computation computation = new AccessorCallComputation(accessor);
-    List<Task> dependencies = childrenTasks(objectsDb, scope);
+    List<Task> dependencies = childrenTasks(scope);
     return new Task(computation, accessor.name(), true, dependencies, location());
   }
 }

@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Task;
 
 public class ExpressionTest {
@@ -50,7 +49,7 @@ public class ExpressionTest {
     }
 
     @Override
-    public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+    public Task createTask(Scope<Task> scope) {
       return null;
     }
   }

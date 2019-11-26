@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.Bool;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Task;
 
@@ -19,13 +18,11 @@ import com.google.common.collect.ImmutableList;
 
 public class TaskBatch {
   private final TaskExecutor taskExecutor;
-  private final ObjectsDb objectsDb;
   private final List<Task> rootTasks;
 
   @Inject
-  public TaskBatch(TaskExecutor taskExecutor, ObjectsDb objectsDb) {
+  public TaskBatch(TaskExecutor taskExecutor) {
     this.taskExecutor = taskExecutor;
-    this.objectsDb = objectsDb;
     this.rootTasks = new ArrayList<>();
   }
 
@@ -34,7 +31,7 @@ public class TaskBatch {
   }
 
   public void createTasks(Expression expression) {
-    rootTasks.add(expression.createTask(objectsDb, null));
+    rootTasks.add(expression.createTask(null));
   }
 
   public void executeAll() throws IOException, OutputsDbException {

@@ -5,7 +5,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Computation;
 import org.smoothbuild.task.base.ConstructorCallComputation;
 import org.smoothbuild.task.base.Task;
@@ -20,9 +19,9 @@ public class ConstructorCallExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+  public Task createTask(Scope<Task> scope) {
     Computation computation = new ConstructorCallComputation(constructor);
-    List<Task> dependencies = childrenTasks(objectsDb, scope);
+    List<Task> dependencies = childrenTasks(scope);
     return new Task(computation, constructor.name(), true, dependencies, location());
   }
 }

@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.task.base.Task;
@@ -18,13 +17,11 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class Dag implements Command {
-  private final ObjectsDb objectsDb;
   private final Console console;
   private final RuntimeController runtimeController;
 
   @Inject
-  public Dag(ObjectsDb objectsDb, Console console, RuntimeController runtimeController) {
-    this.objectsDb = objectsDb;
+  public Dag(Console console, RuntimeController runtimeController) {
     this.console = console;
     this.runtimeController = runtimeController;
   }
@@ -60,7 +57,7 @@ public class Dag implements Command {
   private Task dagOf(Function function) {
     return function
         .createAgrlessCallExpression()
-        .createTask(objectsDb, null);
+        .createTask(null);
   }
 
   private void print(Task task) {

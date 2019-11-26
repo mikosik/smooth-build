@@ -5,7 +5,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Computation;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.base.ValueComputation;
@@ -21,7 +20,7 @@ public class LiteralExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+  public Task createTask(Scope<Task> scope) {
     Computation computation = new ValueComputation(object);
     List<Task> dependencies = ImmutableList.of();
     return new Task(computation, object.type().name(), true, dependencies, location());

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -25,8 +24,8 @@ public class ArrayExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
-    List<Task> elements = childrenTasks(objectsDb, scope);
+  public Task createTask(Scope<Task> scope) {
+    List<Task> elements = childrenTasks(scope);
     ConcreteArrayType actualType = arrayType(elements);
 
     Computation computation = new ArrayComputation(actualType);
