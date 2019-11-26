@@ -1,5 +1,6 @@
 package org.smoothbuild.db.hashed;
 
+import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
@@ -159,7 +160,7 @@ public class HashedDb {
         }
       case DIR:
         throw new CorruptedHashedDbException(
-            "Corrupted HashedDb. " + path + " is a directory not a data file.");
+            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path));
       case NOTHING:
         throw new NoSuchDataException(hash);
       default:
