@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.lang.type.TestingTypes.blob;
-import static org.smoothbuild.lang.type.TestingTypes.string;
+import static org.smoothbuild.lang.object.type.TestingTypes.blob;
+import static org.smoothbuild.lang.object.type.TestingTypes.string;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;

@@ -1,11 +1,6 @@
-package org.smoothbuild.lang.type;
+package org.smoothbuild.lang.object.type;
 
 import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.GenericArrayType;
-import org.smoothbuild.lang.object.type.GenericType;
-import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.testing.TestingContext;
 
 public class TestingTypes {
