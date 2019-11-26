@@ -1,5 +1,6 @@
 package org.smoothbuild.db.hashed;
 
+import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
 import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.io.fs.base.Path.path;
@@ -122,7 +123,7 @@ public class HashedDbTest extends TestingContext {
     given(() -> hashedDbFileSystem().createDir(path(hash.toString())));
     when(() -> hashedDb().source(hash));
     thenThrown(exception(new CorruptedHashedDbException(
-        "Corrupted HashedDb. '" + hash + "' is a directory not a data file.")));
+        format("Corrupted HashedDb at %s. '%s' is a directory not a data file.", hash, hash))));
   }
 
   @Test
