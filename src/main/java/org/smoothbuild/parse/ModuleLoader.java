@@ -13,7 +13,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
@@ -27,8 +26,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 public class ModuleLoader {
-  public static List<?> loadModule(SRuntime runtime, ObjectsDb objectsDb,
-      Path script) {
+  public static List<?> loadModule(SRuntime runtime, Path script) {
     Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
     return parseScript(script)
         .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
@@ -37,16 +35,16 @@ public class ModuleLoader {
         .invoke(ast -> ast.sortTypesByDependencies(runtime.objectFactory()))
         .invoke(ast -> inferTypesAndParamAssignment(runtime, ast))
         .invoke(natives, (ast, n) -> n.assignNatives(ast))
-        .invokeConsumer(ast -> loadFunctions(runtime, objectsDb, ast))
+        .invokeConsumer(ast -> loadFunctions(runtime, ast))
         .errors();
   }
 
-  private static void loadFunctions(SRuntime runtime, ObjectsDb objectsDb, Ast ast) {
+  private static void loadFunctions(SRuntime runtime, Ast ast) {
     for (StructNode struct : ast.structs()) {
       runtime.functions().add(loadConstructor(struct));
     }
     for (FuncNode func : ast.funcs()) {
-      runtime.functions().add(loadFunction(runtime, objectsDb, func));
+      runtime.functions().add(loadFunction(runtime, func));
     }
   }
 
