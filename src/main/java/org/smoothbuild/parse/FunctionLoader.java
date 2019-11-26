@@ -20,7 +20,6 @@ import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
@@ -38,7 +37,7 @@ import org.smoothbuild.parse.ast.StringNode;
 import com.google.common.collect.ImmutableList;
 
 public class FunctionLoader {
-  public static Function loadFunction(SRuntime runtime, ObjectsDb objectsDb, FuncNode func) {
+  public static Function loadFunction(SRuntime runtime, FuncNode func) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
@@ -119,7 +118,7 @@ public class FunctionLoader {
       }
 
       private Expression createStringLiteral(StringNode string) {
-        SObject literal = objectsDb.string(string.get(String.class));
+        SObject literal = runtime.objectFactory().string(string.get(String.class));
         return new LiteralExpression(literal, string.location());
       }
 
