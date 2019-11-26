@@ -9,7 +9,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.task.base.Computation;
 import org.smoothbuild.task.base.IdentityComputation;
@@ -27,14 +26,14 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
-    List<Task> arguments = childrenTasks(objectsDb, scope);
+  public Task createTask(Scope<Task> scope) {
+    List<Task> arguments = childrenTasks(scope);
     ConcreteType actualResultType =
         inferMapping(function.parameterTypes(), taskTypes(arguments))
             .applyTo(function.signature().type());
     Task task = function
         .body()
-        .createTask(objectsDb, functionScope(arguments))
+        .createTask(functionScope(arguments))
         .convertIfNeeded(actualResultType);
 
     Computation computation = new IdentityComputation(actualResultType);

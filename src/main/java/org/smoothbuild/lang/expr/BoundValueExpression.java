@@ -2,7 +2,6 @@ package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Task;
 
 public class BoundValueExpression extends Expression {
@@ -14,7 +13,7 @@ public class BoundValueExpression extends Expression {
   }
 
   @Override
-  public Task createTask(ObjectsDb objectsDb, Scope<Task> scope) {
+  public Task createTask(Scope<Task> scope) {
     return scope.get(name);
   }
 }

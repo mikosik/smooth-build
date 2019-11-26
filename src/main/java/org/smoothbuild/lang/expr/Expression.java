@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
@@ -28,13 +27,13 @@ public abstract class Expression {
     this.location = checkNotNull(location);
   }
 
-  public List<Task> childrenTasks(ObjectsDb objectsDb, Scope<Task> scope) {
-    return map(children, ch -> ch.createTask(objectsDb, scope));
+  public List<Task> childrenTasks(Scope<Task> scope) {
+    return map(children, ch -> ch.createTask(scope));
   }
 
   public Location location() {
     return location;
   }
 
-  public abstract Task createTask(ObjectsDb objectsDb, Scope<Task> scope);
+  public abstract Task createTask(Scope<Task> scope);
 }
