@@ -8,10 +8,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.RuntimeController;
-import org.smoothbuild.task.base.Task;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;

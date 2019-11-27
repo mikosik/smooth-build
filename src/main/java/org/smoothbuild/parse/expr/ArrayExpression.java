@@ -4,15 +4,15 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
+import org.smoothbuild.exec.comp.ArrayComputation;
+import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.task.base.ArrayComputation;
-import org.smoothbuild.task.base.Computation;
-import org.smoothbuild.task.base.Task;
 
 public class ArrayExpression extends Expression {
   private final ArrayType arrayType;

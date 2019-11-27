@@ -4,7 +4,7 @@ import static com.google.common.collect.Streams.stream;
 
 import java.util.Set;
 
-import org.smoothbuild.task.exec.Container;
+import org.smoothbuild.exec.task.Container;
 
 import com.google.common.collect.ImmutableSet;
 

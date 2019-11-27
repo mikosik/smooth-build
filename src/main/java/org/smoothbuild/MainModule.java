@@ -1,8 +1,8 @@
 package org.smoothbuild;
 
+import org.smoothbuild.exec.TaskModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.lang.object.db.ObjectsDbModule;
-import org.smoothbuild.task.TaskModule;
 
 import com.google.inject.AbstractModule;
 

@@ -7,6 +7,7 @@ import static org.smoothbuild.util.Okios.copyAllAndClose;
 
 import java.io.IOException;
 
+import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
@@ -15,7 +16,6 @@ import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.task.exec.Container;
 
 import okio.BufferedSource;
 

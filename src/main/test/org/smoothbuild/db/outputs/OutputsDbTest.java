@@ -10,6 +10,7 @@ import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
@@ -17,7 +18,6 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.task.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

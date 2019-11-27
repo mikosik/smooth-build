@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.exec.Container;
 import org.smoothbuild.util.Maybe;
 
 public class FindNatives {
