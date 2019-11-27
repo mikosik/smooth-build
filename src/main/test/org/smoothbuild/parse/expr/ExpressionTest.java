@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.parse.expr;
 
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.given;

@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import org.smoothbuild.lang.expr.DefinedCallExpression;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.parse.expr.DefinedCallExpression;
+import org.smoothbuild.parse.expr.Expression;
 
 /**
  * Smooth function defined in smooth language via smooth expression.

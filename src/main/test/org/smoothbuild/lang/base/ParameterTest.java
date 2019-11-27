@@ -7,8 +7,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
 public class ParameterTest extends TestingContext {

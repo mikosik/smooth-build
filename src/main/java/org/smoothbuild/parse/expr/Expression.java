@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.parse.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.util.Lists.map;

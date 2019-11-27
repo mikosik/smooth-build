@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.parse.expr;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
