@@ -4,8 +4,8 @@ import static org.smoothbuild.exec.comp.ComputationHashes.identityComputationHas
 import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class IdentityComputation implements Computation {
   private final ConcreteType type;
@@ -25,7 +25,7 @@ public class IdentityComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, Container container) {
-    return new Output(input.objects().get(0), emptyMessageArray(container));
+  public Output execute(Input input, NativeApi nativeApi) {
+    return new Output(input.objects().get(0), emptyMessageArray(nativeApi));
   }
 }

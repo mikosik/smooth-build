@@ -4,9 +4,9 @@ import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
 import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class ValueComputation implements Computation {
   private final SObject object;
@@ -26,7 +26,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, Container container) {
-    return new Output(object, emptyMessageArray(container));
+  public Output execute(Input input, NativeApi nativeApi) {
+    return new Output(object, emptyMessageArray(nativeApi));
   }
 }

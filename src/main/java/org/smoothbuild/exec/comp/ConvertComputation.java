@@ -4,13 +4,13 @@ import static org.smoothbuild.exec.comp.ComputationHashes.convertComputationHash
 import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 public class ConvertComputation implements Computation {
   private final ConcreteType type;
@@ -30,25 +30,25 @@ public class ConvertComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, Container container) {
+  public Output execute(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
     SObject object = input.objects().get(0);
     assertThat(!type.equals(object.type()));
     assertThat(type.isAssignableFrom(object.type()));
     if (object instanceof Array) {
-      return new Output(convertArray(container, (Array) object, type), emptyMessageArray(container));
+      return new Output(convertArray(nativeApi, (Array) object, type), emptyMessageArray(nativeApi));
     }
     assertThat(!object.type().isNothing());
-    return new Output(convertStruct((Struct) object, type), emptyMessageArray(container));
+    return new Output(convertStruct((Struct) object, type), emptyMessageArray(nativeApi));
   }
 
-  private static SObject convertArray(Container container, Array array,
+  private static SObject convertArray(NativeApi nativeApi, Array array,
       ConcreteType destinationType) {
     ConcreteType elemType = ((ConcreteArrayType) destinationType).elemType();
-    ArrayBuilder builder = container.factory().arrayBuilder(elemType);
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemType);
     for (SObject element : array.asIterable(SObject.class)) {
       if (element instanceof Array) {
-        builder.add(convertArray(container, (Array) element, elemType));
+        builder.add(convertArray(nativeApi, (Array) element, elemType));
       } else {
         builder.add(convertStruct((Struct) element, elemType));
       }

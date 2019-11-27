@@ -3,6 +3,7 @@ package org.smoothbuild.lang.plugin;
 import java.io.IOException;
 
 import org.smoothbuild.io.util.TempDir;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.util.CommandExecutor;
 
@@ -10,6 +11,8 @@ public interface NativeApi {
   public ObjectFactory factory();
 
   public MessageLogger log();
+
+  public Array messages();
 
   /**
    * Creates temporary dir in native Operating System. Such dir is automatically deleted by smooth

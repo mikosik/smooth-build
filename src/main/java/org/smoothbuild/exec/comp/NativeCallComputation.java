@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -34,26 +33,26 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, Container container) throws ComputationException {
+  public Output execute(Input input, NativeApi nativeApi) throws ComputationException {
     try {
       SObject result = (SObject) function.nativ().method()
-          .invoke(null, createArguments(container, input.objects()));
+          .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
-        return nullOutput(container);
+        return nullOutput(nativeApi);
       }
       if (!type.equals(result.type())) {
-        container.log().error("Function " + function.name()
+        nativeApi.log().error("Function " + function.name()
             + " has faulty native implementation: Its actual result type is " + type.name()
             + " but it returned object of type " + result.type().name() + ".");
-        return new Output(null, container.messages());
+        return new Output(null, nativeApi.messages());
       }
-      return new Output(result, container.messages());
+      return new Output(result, nativeApi.messages());
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
       Throwable cause = e.getCause();
       if (cause instanceof AbortException) {
-        return nullOutput(container);
+        return nullOutput(nativeApi);
       } else {
         throw new ComputationException(
             "Function " + function.name() + " threw java exception from its native code.", cause);
@@ -61,12 +60,12 @@ public class NativeCallComputation implements Computation {
     }
   }
 
-  private Output nullOutput(Container container) {
-    if (!containsErrors(container.messages())) {
-      container.log().error("Function " + function.name()
+  private Output nullOutput(NativeApi nativeApi) {
+    if (!containsErrors(nativeApi.messages())) {
+      nativeApi.log().error("Function " + function.name()
           + " has faulty native implementation: it returned 'null' but logged no error.");
     }
-    return new Output(null, container.messages());
+    return new Output(null, nativeApi.messages());
   }
 
   private static Object[] createArguments(NativeApi nativeApi, List<SObject> arguments) {
