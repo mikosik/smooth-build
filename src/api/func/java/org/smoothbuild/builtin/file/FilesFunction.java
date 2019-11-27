@@ -6,6 +6,7 @@ import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIt
 
 import java.io.IOException;
 
+import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
@@ -14,7 +15,6 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.exec.Container;
 
 public class FilesFunction {
   @SmoothFunction(value = "files", cacheable = false)

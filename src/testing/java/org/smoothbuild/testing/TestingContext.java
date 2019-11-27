@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.outputs.OutputsDb;
+import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
@@ -33,7 +34,6 @@ import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.task.exec.Container;
 
 import okio.ByteString;
 

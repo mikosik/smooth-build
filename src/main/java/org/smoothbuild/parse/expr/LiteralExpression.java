@@ -2,12 +2,12 @@ package org.smoothbuild.parse.expr;
 
 import java.util.List;
 
+import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.comp.ValueComputation;
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.task.base.Computation;
-import org.smoothbuild.task.base.Task;
-import org.smoothbuild.task.base.ValueComputation;
 
 import com.google.common.collect.ImmutableList;
 

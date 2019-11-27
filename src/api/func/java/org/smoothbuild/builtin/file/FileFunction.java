@@ -5,12 +5,12 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath
 
 import java.io.IOException;
 
+import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.SmoothFunction;
-import org.smoothbuild.task.exec.Container;
 
 public class FileFunction {
   @SmoothFunction(value = "file", cacheable = false)

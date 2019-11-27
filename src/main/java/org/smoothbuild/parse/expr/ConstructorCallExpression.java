@@ -2,12 +2,12 @@ package org.smoothbuild.parse.expr;
 
 import java.util.List;
 
+import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.comp.ConstructorCallComputation;
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.task.base.Computation;
-import org.smoothbuild.task.base.ConstructorCallComputation;
-import org.smoothbuild.task.base.Task;
 
 public class ConstructorCallExpression extends Expression {
   private final Constructor constructor;

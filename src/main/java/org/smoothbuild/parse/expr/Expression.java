@@ -5,9 +5,9 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.task.base.Task;
 
 import com.google.common.collect.ImmutableList;
 

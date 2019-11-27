@@ -2,12 +2,12 @@ package org.smoothbuild.parse.expr;
 
 import java.util.List;
 
+import org.smoothbuild.exec.comp.AccessorCallComputation;
+import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.task.base.AccessorCallComputation;
-import org.smoothbuild.task.base.Computation;
-import org.smoothbuild.task.base.Task;
 
 public class AccessorCallExpression extends Expression {
   private final Accessor accessor;

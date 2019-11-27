@@ -12,10 +12,10 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.exec.run.SmoothExecutor;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.RuntimeController;
-import org.smoothbuild.task.exec.SmoothExecutor;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;

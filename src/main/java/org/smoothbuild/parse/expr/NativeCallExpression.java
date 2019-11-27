@@ -1,20 +1,20 @@
 package org.smoothbuild.parse.expr;
 
+import static org.smoothbuild.exec.task.Task.taskTypes;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
-import static org.smoothbuild.task.base.Task.taskTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.comp.NativeCallComputation;
+import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.task.base.Computation;
-import org.smoothbuild.task.base.NativeCallComputation;
-import org.smoothbuild.task.base.Task;
 
 public class NativeCallExpression extends Expression {
   private final NativeFunction nativeFunction;

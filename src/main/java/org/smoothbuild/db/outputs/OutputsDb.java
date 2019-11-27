@@ -12,6 +12,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
@@ -22,7 +23,6 @@ import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.db.ObjectsDb;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.task.base.Output;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
