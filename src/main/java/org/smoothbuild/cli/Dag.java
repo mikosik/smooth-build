@@ -8,9 +8,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.exec.task.Task;
-import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.runtime.Functions;
+import org.smoothbuild.exec.run.DagRunner;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.util.Maybe;
 
@@ -19,11 +17,13 @@ import com.google.common.collect.ImmutableList;
 public class Dag implements Command {
   private final Console console;
   private final RuntimeController runtimeController;
+  private final DagRunner dagRunner;
 
   @Inject
-  public Dag(Console console, RuntimeController runtimeController) {
+  public Dag(Console console, RuntimeController runtimeController, DagRunner dagRunner) {
     this.console = console;
     this.runtimeController = runtimeController;
+    this.dagRunner = dagRunner;
   }
 
   @Override
@@ -35,37 +35,6 @@ public class Dag implements Command {
       return EXIT_CODE_ERROR;
     }
     return runtimeController.setUpRuntimeAndRun(
-        (runtime) -> {
-          Functions functions = runtime.functions();
-          for (String name : functionNames.value()) {
-            if (!functions.contains(name)) {
-              console.error("Unknown function '" + name + "'.\n"
-                  + "Use 'smooth list' to see all available functions.\n");
-              return;
-            }
-            Function function = functions.get(name);
-            if (!function.canBeCalledArgless()) {
-              console.error(
-                  "Cannot print DAG for '" + name + "' function as it requires arguments.");
-              return;
-            }
-          }
-          functionNames.value().forEach(n -> print(dagOf(runtime.functions().get(n))));
-        });
-  }
-
-  private Task dagOf(Function function) {
-    return function
-        .createAgrlessCallExpression()
-        .createTask(null);
-  }
-
-  private void print(Task task) {
-    print("", task);
-  }
-
-  private void print(String indent, Task task) {
-    console.println(indent + task.name() + "(" + task.type().name() + ")");
-    task.dependencies().forEach(ch -> print(indent + "  ", ch));
+        (runtime) -> dagRunner.execute(runtime, functionNames.value()));
   }
 }
