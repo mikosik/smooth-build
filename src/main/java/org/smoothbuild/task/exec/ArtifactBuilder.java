@@ -13,8 +13,8 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.outputs.OutputsDbException;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.task.base.Task;
 import org.smoothbuild.task.save.ArtifactSaver;
 

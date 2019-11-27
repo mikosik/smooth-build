@@ -10,7 +10,7 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.parse.expr.Expression;
 
 public class SignatureTest {
   private Parameter parameter;

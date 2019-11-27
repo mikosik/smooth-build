@@ -6,9 +6,9 @@ import static org.smoothbuild.lang.base.Location.unknownLocation;
 
 import java.util.List;
 
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Named;
+import org.smoothbuild.parse.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 

@@ -9,8 +9,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.outputs.OutputsDbException;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.task.base.Input;
 import org.smoothbuild.task.base.Task;
 

@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 import java.util.List;
 
 import org.junit.Test;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
 public class FunctionTest extends TestingContext {

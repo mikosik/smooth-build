@@ -2,9 +2,9 @@ package org.smoothbuild.lang.base;
 
 import java.util.List;
 
-import org.smoothbuild.lang.expr.AccessorCallExpression;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.parse.expr.AccessorCallExpression;
+import org.smoothbuild.parse.expr.Expression;
 
 public class Accessor extends Function {
   private final String fieldName;

@@ -15,10 +15,6 @@ import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.expr.ArrayExpression;
-import org.smoothbuild.lang.expr.BoundValueExpression;
-import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.LiteralExpression;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -33,6 +29,10 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
+import org.smoothbuild.parse.expr.ArrayExpression;
+import org.smoothbuild.parse.expr.BoundValueExpression;
+import org.smoothbuild.parse.expr.Expression;
+import org.smoothbuild.parse.expr.LiteralExpression;
 
 import com.google.common.collect.ImmutableList;
 

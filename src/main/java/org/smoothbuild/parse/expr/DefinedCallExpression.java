@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.expr;
+package org.smoothbuild.parse.expr;
 
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
