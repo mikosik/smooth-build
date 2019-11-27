@@ -114,27 +114,27 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(concat(BUILD, args));
+    whenSmooth(concat(BUILD.name(), args));
   }
 
   public void whenSmoothClean(String... args) {
-    whenSmooth(concat(CLEAN, args));
+    whenSmooth(concat(CLEAN.name(), args));
   }
 
   public void whenSmoothDag(String... args) {
-    whenSmooth(concat(DAG, args));
+    whenSmooth(concat(DAG.name(), args));
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(concat(HELP, args));
+    whenSmooth(concat(HELP.name(), args));
   }
 
   public void whenSmoothList(String... args) {
-    whenSmooth(concat(LIST, args));
+    whenSmooth(concat(LIST.name(), args));
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(concat(VERSION, args));
+    whenSmooth(concat(VERSION.name(), args));
   }
 
   public void whenSmooth(String... smoothCommandArgs) {
