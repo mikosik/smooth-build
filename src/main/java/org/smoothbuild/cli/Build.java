@@ -12,7 +12,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.exec.run.SmoothExecutor;
+import org.smoothbuild.exec.run.BuildRunner;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.RuntimeController;
@@ -23,15 +23,15 @@ import com.google.common.collect.ImmutableList;
 public class Build implements Command {
   private final Console console;
   private final RuntimeController runtimeController;
-  private final SmoothExecutor smoothExecutor;
+  private final BuildRunner buildRunner;
   private final FileSystem fileSystem;
 
   @Inject
-  public Build(Console console, RuntimeController runtimeController, SmoothExecutor smoothExecutor,
+  public Build(Console console, RuntimeController runtimeController, BuildRunner buildRunner,
       FileSystem fileSystem) {
     this.console = console;
     this.runtimeController = runtimeController;
-    this.smoothExecutor = smoothExecutor;
+    this.buildRunner = buildRunner;
     this.fileSystem = fileSystem;
   }
 
@@ -54,6 +54,6 @@ public class Build implements Command {
     }
 
     return runtimeController.setUpRuntimeAndRun(
-        (runtime) -> smoothExecutor.execute(runtime, functionNames.value()));
+        (runtime) -> buildRunner.execute(runtime, functionNames.value()));
   }
 }
