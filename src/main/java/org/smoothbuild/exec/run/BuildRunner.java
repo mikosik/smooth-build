@@ -10,12 +10,12 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
-public class SmoothExecutor {
+public class BuildRunner {
   private final ArtifactBuilder artifactBuilder;
   private final Console console;
 
   @Inject
-  public SmoothExecutor(ArtifactBuilder artifactBuilder, Console console) {
+  public BuildRunner(ArtifactBuilder artifactBuilder, Console console) {
     this.artifactBuilder = artifactBuilder;
     this.console = console;
   }
