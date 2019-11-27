@@ -28,6 +28,7 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
 public class TaskHashTest extends TestingContext {
@@ -204,7 +205,7 @@ public class TaskHashTest extends TestingContext {
       }
 
       @Override
-      public Output execute(Input input, Container container) {
+      public Output execute(Input input, NativeApi nativeApi) {
         return null;
       }
     };

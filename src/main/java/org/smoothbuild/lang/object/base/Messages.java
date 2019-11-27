@@ -4,7 +4,7 @@ import static com.google.common.collect.Streams.stream;
 
 import java.util.Set;
 
-import org.smoothbuild.exec.task.Container;
+import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -26,8 +26,8 @@ public class Messages {
     return SEVERITIES.contains(severity);
   }
 
-  public static Array emptyMessageArray(Container container) {
-    return container.factory().arrayBuilder((container.factory()).messageType()).build();
+  public static Array emptyMessageArray(NativeApi nativeApi) {
+    return nativeApi.factory().arrayBuilder((nativeApi.factory()).messageType()).build();
   }
 
   public static boolean isEmpty(Array messages) {
