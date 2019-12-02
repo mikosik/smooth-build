@@ -63,10 +63,10 @@ public class ObjectsDb {
       this.stringType = new StringType(writeBasicTypeRoot(typeType, STRING), hashedDb, this);
 
       typeCache.cache(typeType);
-      typeCache.cache(boolType);
-      typeCache.cache(stringType);
       typeCache.cache(blobType);
+      typeCache.cache(boolType);
       typeCache.cache(nothingType);
+      typeCache.cache(stringType);
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
