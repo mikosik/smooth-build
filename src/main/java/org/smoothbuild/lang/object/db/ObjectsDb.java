@@ -9,9 +9,7 @@ import static org.smoothbuild.lang.object.type.TypeNames.STRING;
 import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -38,8 +36,7 @@ import org.smoothbuild.lang.object.type.TypeType;
 
 public class ObjectsDb {
   private final HashedDb hashedDb;
-
-  private final Map<Hash, ConcreteType> typesCache;
+  private final TypeCache typeCache;
   private BoolType boolType;
   private BlobType blobType;
   private NothingType nothingType;
@@ -54,7 +51,7 @@ public class ObjectsDb {
 
   private ObjectsDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.typesCache = new HashMap<>();
+    this.typeCache = new TypeCache();
   }
 
   private void initialize() {
@@ -65,11 +62,11 @@ public class ObjectsDb {
       this.nothingType = new NothingType(writeBasicTypeRoot(typeType, NOTHING), hashedDb, this);
       this.stringType = new StringType(writeBasicTypeRoot(typeType, STRING), hashedDb, this);
 
-      typesCache.put(typeType.hash(), typeType);
-      typesCache.put(boolType.hash(), boolType);
-      typesCache.put(stringType.hash(), stringType);
-      typesCache.put(blobType.hash(), blobType);
-      typesCache.put(nothingType.hash(), nothingType);
+      typeCache.cache(typeType);
+      typeCache.cache(boolType);
+      typeCache.cache(stringType);
+      typeCache.cache(blobType);
+      typeCache.cache(nothingType);
     } catch (HashedDbException e) {
       throw new ObjectsDbException(e);
     }
@@ -152,16 +149,18 @@ public class ObjectsDb {
   }
 
   public ConcreteType getType(MerkleRoot merkleRoot) {
-    if (typesCache.containsKey(merkleRoot.hash())) {
-      return typesCache.get(merkleRoot.hash());
+    ConcreteType type = typeCache.get(merkleRoot.hash());
+    if (type != null) {
+      return type;
     } else {
       return readType(merkleRoot.hash(), merkleRoot.dataHash());
     }
   }
 
   private ConcreteType getType(Hash hash) {
-    if (typesCache.containsKey(hash)) {
-      return typesCache.get(hash);
+    ConcreteType type = typeCache.get(hash);
+    if (type != null) {
+      return type;
     } else {
       try {
         List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
@@ -245,13 +244,7 @@ public class ObjectsDb {
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
-    Hash hash = type.hash();
-    if (typesCache.containsKey(hash)) {
-      return (T) typesCache.get(hash);
-    } else {
-      typesCache.put(hash, type);
-      return type;
-    }
+    return (T) typeCache.cache(type);
   }
 
   // methods for creating type's SObjects
