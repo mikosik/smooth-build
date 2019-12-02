@@ -1,8 +1,8 @@
 package org.smoothbuild.io.fs.base;
 
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.format;
 import static org.smoothbuild.io.fs.base.Path.root;
-import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -79,7 +79,9 @@ public class RecursivePathsIterator implements PathIterator {
             dirStack.push(file);
             break;
           case NOTHING:
-            throw new RuntimeException("Unexpected case: " + NOTHING);
+            throw new IOException(format(
+                "FileSystem changed when iterating tree of directory %s. Cannot find %s.",
+                baseDir, baseDir.append(file)));
           default:
             throw new RuntimeException("Unexpected case: " + state);
         }
