@@ -5,6 +5,7 @@ import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
+import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
@@ -177,6 +178,10 @@ public class HashedDb {
   }
 
   private Path toPath(Hash hash) {
-    return rootPath.append(Hash.toPath(hash));
+    return dataFullPath(rootPath, hash);
+  }
+
+  public static Path dataFullPath(Path hashedDbPath, Hash hash) {
+    return hashedDbPath.append(path(hash.hex()));
   }
 }

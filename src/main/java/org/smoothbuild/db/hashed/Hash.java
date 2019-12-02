@@ -7,8 +7,6 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 
-import org.smoothbuild.io.fs.base.Path;
-
 import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hasher;
@@ -37,10 +35,6 @@ public class Hash extends ByteString {
 
   public static Hash read(BufferedSource source) throws IOException {
     return new Hash(source.readByteArray(hashesSize()));
-  }
-
-  public static Path toPath(Hash hash) {
-    return Path.path(hash.hex());
   }
 
   private static HashingSource hashingSource(Source source) {
