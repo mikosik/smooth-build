@@ -129,7 +129,7 @@ public class HashedDbTest extends TestingContext {
   @Test
   public void when_hash_points_to_directory_then_sink_causes_corrupted_exception() {
     given(() -> hash = Hash.of(bytes1));
-    given(() -> hashedDbFileSystem().createDir(Hash.toPath(hash)));
+    given(() -> hashedDbFileSystem().createDir(path(hash.hex())));
     when(() -> hashedDb().sink().write(bytes1).close());
     thenThrown(exception(new IOException(
         "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory.")));

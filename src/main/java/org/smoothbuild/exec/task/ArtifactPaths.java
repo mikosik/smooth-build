@@ -4,13 +4,13 @@ import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 
-import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.SObject;
 
 public class ArtifactPaths {
   public static Path targetPath(SObject object) {
-    return HASHED_DB_PATH.append(Hash.toPath(object.dataHash()));
+    return HashedDb.dataFullPath(HASHED_DB_PATH, object.dataHash());
   }
 
   public static Path artifactPath(String name) {

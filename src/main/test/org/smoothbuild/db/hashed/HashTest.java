@@ -10,7 +10,6 @@ import java.io.EOFException;
 import java.io.File;
 
 import org.junit.Test;
-import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.io.Files;
 
@@ -46,12 +45,6 @@ public class HashTest {
     given(() -> buffer.write(hash));
     when(() -> Hash.read(buffer));
     thenReturned(hash);
-  }
-
-  @Test
-  public void to_path() {
-    when(() -> Hash.toPath(Hash.of("abc")));
-    thenReturned(Path.path(Hash.of("abc").hex()));
   }
 
   @Test
