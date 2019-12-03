@@ -34,6 +34,9 @@ import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
 
+/**
+ * This class is thread-safe.
+ */
 public class ObjectsDb {
   private final HashedDb hashedDb;
   private final TypeCache typeCache;
