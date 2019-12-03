@@ -10,9 +10,9 @@ import static org.smoothbuild.lang.object.base.Messages.WARNING;
 import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,10 +36,13 @@ import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.util.DataWriter;
 
+/**
+ * This class is thread-safe.
+ */
 @Singleton
 public class ObjectFactory {
   private final ObjectsDb objectsDb;
-  private final Map<String, ConcreteType> cache;
+  private final ConcurrentHashMap<String, ConcreteType> cache;
 
   @Inject
   public ObjectFactory(ObjectsDb objectsDb) {
@@ -47,8 +50,8 @@ public class ObjectFactory {
     this.cache = createInitializedCache(objectsDb);
   }
 
-  private static HashMap<String, ConcreteType> createInitializedCache(ObjectsDb objectsDb) {
-    HashMap<String, ConcreteType> map = new HashMap<>();
+  private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectsDb objectsDb) {
+    ConcurrentHashMap<String, ConcreteType> map = new ConcurrentHashMap<>();
     putType(map, objectsDb.boolType());
     putType(map, objectsDb.stringType());
     putType(map, objectsDb.blobType());
@@ -56,7 +59,7 @@ public class ObjectFactory {
     return map;
   }
 
-  private static void putType(HashMap<String, ConcreteType> map, ConcreteType type) {
+  private static void putType(Map<String, ConcreteType> map, ConcreteType type) {
     map.put(type.name(), type);
   }
 
@@ -135,11 +138,11 @@ public class ObjectFactory {
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    if (cache.containsKey(name)) {
+    StructType type = objectsDb.structType(name, fields);
+    ConcreteType previousValue = cache.putIfAbsent(name, type);
+    if (previousValue != null) {
       throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
     }
-    StructType type = objectsDb.structType(name, fields);
-    cache.put(name, type);
     return type;
   }
 
