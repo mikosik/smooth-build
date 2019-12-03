@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.object.db;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.not;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
@@ -9,7 +7,6 @@ import static org.smoothbuild.lang.object.base.Messages.WARNING;
 import static org.smoothbuild.lang.object.base.Messages.severity;
 import static org.smoothbuild.lang.object.base.Messages.text;
 import static org.smoothbuild.util.Lists.list;
-import static org.smoothbuild.util.Sets.set;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
@@ -69,56 +66,29 @@ public class ObjectFactoryTest extends TestingContext {
   }
 
   @Test
-  public void names_returns_unmodifiable_set() {
-    when(() -> emptyCacheObjectFactory().names().remove("abc"));
-    thenThrown(UnsupportedOperationException.class);
+  public void contains_all_basic_types_initially() {
+    when(() -> emptyCacheObjectFactory().containsType(blobType().name()));
+    thenReturned(true);
+    when(() -> emptyCacheObjectFactory().containsType(boolType().name()));
+    thenReturned(true);
+    when(() -> emptyCacheObjectFactory().containsType(nothingType().name()));
+    thenReturned(true);
+    when(() -> emptyCacheObjectFactory().containsType(stringType().name()));
+    thenReturned(true);
   }
 
   @Test
-  public void names_returns_all_basic_types_initially() {
-    when(() -> emptyCacheObjectFactory().names());
-    thenReturned(set(
-        boolType().name(),
-        stringType().name(),
-        blobType().name(),
-        nothingType().name()));
-  }
-
-  @Test
-  public void names_does_not_contain_name_of_array_type_that_was_queried_before() {
+  public void contains_not_array_type_that_was_queried_before() {
     given(arrayType = emptyCacheObjectFactory().arrayType(emptyCacheObjectFactory().stringType()));
-    when(() -> emptyCacheObjectFactory().names());
-    thenReturned(not(hasItem(arrayType.name())));
+    when(() -> emptyCacheObjectFactory().containsType(arrayType.name()));
+    thenReturned(false);
   }
 
   @Test
-  public void names_contain_name_of_struct_that_was_added_before() {
+  public void contains_struct_that_was_added_before() {
     given(emptyCacheObjectFactory()).structType("MyStruct", list());
-    when(() -> emptyCacheObjectFactory().names());
-    thenReturned(hasItem("MyStruct"));
-  }
-
-  @Test
-  public void name_to_type_map_is_unmodifiable() {
-    when(() -> emptyCacheObjectFactory().nameToTypeMap().remove("abc"));
-    thenThrown(UnsupportedOperationException.class);
-  }
-
-  @Test
-  public void name_to_type_map_contains_basic_types_initially() {
-    when(() -> emptyCacheObjectFactory().nameToTypeMap().keySet());
-    thenReturned(set(
-        boolType().name(),
-        stringType().name(),
-        blobType().name(),
-        nothingType().name()));
-  }
-
-  @Test
-  public void names_to_type_mape_contains_name_of_struct_that_was_added_before() {
-    given(emptyCacheObjectFactory()).structType("MyStruct", list());
-    when(() -> emptyCacheObjectFactory().nameToTypeMap().keySet());
-    thenReturned(hasItem("MyStruct"));
+    when(() -> emptyCacheObjectFactory().containsType("MyStruct"));
+    thenReturned(true);
   }
 
   @Test
