@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.object.db;
 
-import static java.util.Collections.unmodifiableMap;
-import static java.util.Collections.unmodifiableSet;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.SEVERITY;
@@ -11,7 +9,6 @@ import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
@@ -179,11 +176,7 @@ public class ObjectFactory {
         .build();
   }
 
-  public Set<String> names() {
-    return unmodifiableSet(cache.keySet());
-  }
-
-  public Map<String, ConcreteType> nameToTypeMap() {
-    return unmodifiableMap(cache);
+  public boolean containsType(String name) {
+    return cache.containsKey(name);
   }
 }

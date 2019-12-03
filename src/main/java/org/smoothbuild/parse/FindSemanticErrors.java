@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
@@ -94,10 +95,7 @@ public class FindSemanticErrors {
   }
 
   private static void undefinedTypes(List<ParseError> errors, ObjectFactory objectFactory, Ast ast) {
-    Set<String> all = ImmutableSet.<String>builder()
-        .addAll(objectFactory.names())
-        .addAll(map(ast.structs(), NamedNode::name))
-        .build();
+    List<String> structNames = map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {
@@ -120,18 +118,23 @@ public class FindSemanticErrors {
       private void assertTypeIsDefined(TypeNode type) {
         if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
-        } else if (!(isGenericTypeName(type.name()) || all.contains(type.name()))) {
+        } else if (!isDefinedType(type)) {
           errors.add(new ParseError(type.location(), "Undefined type '" + type.name() + "'."));
         }
+      }
+
+      private boolean isDefinedType(TypeNode type) {
+        return isGenericTypeName(type.name())
+            || structNames.contains(type.name())
+            || objectFactory.containsType(type.name());
       }
     }.visitAst(ast);
   }
 
   private static void duplicateGlobalNames(List<ParseError> errors, SRuntime runtime, Ast ast) {
-    Map<String, Object> defined = new HashMap<>();
-    defined.putAll(runtime.functions().nameToFunctionMap());
-    defined.putAll(runtime.objectFactory().nameToTypeMap());
-
+    Functions functions = runtime.functions();
+    ObjectFactory objectFactory = runtime.objectFactory();
+    Map<String, Named> defined = new HashMap<>(functions.nameToFunctionMap());
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(ast.funcs());
@@ -139,16 +142,21 @@ public class FindSemanticErrors {
     for (Named named : nameds) {
       String name = named.name();
       if (defined.containsKey(name)) {
-        Object otherDefinition = defined.get(name);
-        String atLocation = (otherDefinition instanceof Named)
-            ? " at " + ((Named) otherDefinition).location()
-            : "";
-        errors.add(new ParseError(named.location(),
-            "'" + name + "' is already defined" + atLocation + "."));
+        Named otherDefinition = defined.get(name);
+        String atLocation = " at " + otherDefinition.location();
+        errors.add(alreadyDefinedError(named, name, atLocation));
       } else {
-        defined.put(name, named);
+        if (objectFactory.containsType(name)) {
+          errors.add(alreadyDefinedError(named, name, ""));
+        }  else {
+          defined.put(name, named);
+        }
       }
     }
+  }
+
+  private static ParseError alreadyDefinedError(Named named, String name, String atLocation) {
+    return new ParseError(named.location(), "'" + name + "' is already defined" + atLocation + ".");
   }
 
   private static void duplicateFieldNames(List<ParseError> errors, Ast ast) {

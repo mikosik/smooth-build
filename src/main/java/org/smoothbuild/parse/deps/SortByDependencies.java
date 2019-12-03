@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
@@ -32,7 +33,7 @@ public class SortByDependencies {
     Set<String> globalNames = new HashSet<>(functions.names());
     globalNames.addAll(map(ast.structs(), NamedNode::name));
     return sortByDependencies(
-        "Function call graph", funcs, funcToStackElem(), globalNames);
+        "Function call graph", funcs, funcToStackElem(), globalNames::contains);
   }
 
   private static Function<FuncNode, StackElem> funcToStackElem() {
@@ -51,9 +52,8 @@ public class SortByDependencies {
 
   public static Maybe<List<String>> sortByDependencies(ObjectFactory objectFactory, Ast ast) {
     List<StructNode> structs = ast.structs();
-    Set<String> globalNames = objectFactory.names();
     return sortByDependencies(
-        "Type hierarchy", structs, structToStackElem(), globalNames);
+        "Type hierarchy", structs, structToStackElem(), objectFactory::containsType);
   }
 
   private static Function<StructNode, StackElem> structToStackElem() {
@@ -79,8 +79,11 @@ public class SortByDependencies {
     };
   }
 
-  private static <T extends Named> Maybe<List<String>> sortByDependencies(String stackName,
-      List<T> nodes, Function<T, StackElem> newStackElem, Set<String> globalNames) {
+  private static <T extends Named> Maybe<List<String>> sortByDependencies(
+      String stackName,
+      List<T> nodes,
+      Function<T, StackElem> newStackElem,
+      Predicate<String> isAlreadyDefined) {
     Map<String, T> notSorted = toMap(nodes, Named::name);
     List<String> sorted = new ArrayList<>(nodes.size());
     DependencyStack stack = new DependencyStack(stackName);
@@ -90,7 +93,8 @@ public class SortByDependencies {
         stack.push(newStackElem.apply(named));
       }
       StackElem topElem = stack.peek();
-      Named missing = findNotYetProcessedDependency(globalNames, sorted, topElem.dependencies());
+      Named missing = findNotYetProcessedDependency(
+          isAlreadyDefined, sorted, topElem.dependencies());
       if (missing == null) {
         sorted.add(stack.pop().name());
       } else {
@@ -107,10 +111,10 @@ public class SortByDependencies {
   }
 
   private static Named findNotYetProcessedDependency(
-      Set<String> globalNames, List<String> sorted, Set<Named> dependencies) {
+      Predicate<String> isAlreadyDefined, List<String> sorted, Set<Named> dependencies) {
     for (Named dependency : dependencies) {
       String name = dependency.name();
-      if (!(sorted.contains(name) || globalNames.contains(name))) {
+      if (!(sorted.contains(name) || isAlreadyDefined.test(name))) {
         return dependency;
       }
     }
