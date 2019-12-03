@@ -68,7 +68,6 @@ public class ObjectFactoryTest extends TestingContext {
     thenReturned("text");
   }
 
-
   @Test
   public void names_returns_unmodifiable_set() {
     when(() -> emptyCacheObjectFactory().names().remove("abc"));
