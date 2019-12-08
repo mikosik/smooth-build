@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
 public class TypeStableHashTest extends TestingContext {
@@ -24,13 +24,13 @@ public class TypeStableHashTest extends TestingContext {
     assertHash(arrayType(stringType()), "e512d5a472c0a1f893f98e42f06477a1a0a1a675");
     assertHash(arrayType(blobType()), "a9e9aaa1450fee5c9a1a18a9c2cf1674e6ee611b");
     assertHash(arrayType(nothingType()), "5338d0bb9718388a329374e779726c6ed0a4d6d4");
-    assertHash(structType(objectsDb()), "a23d6de28f8161a221df3720bf89429ef9b4c62c");
+    assertHash(structType(objectDb()), "a23d6de28f8161a221df3720bf89429ef9b4c62c");
   }
 
-  private StructType structType(ObjectsDb objectsDb) {
-    return objectsDb.structType("NewType", list(
-        new Field(objectsDb.stringType(), "name", unknownLocation()),
-        new Field(objectsDb.blobType(), "data", unknownLocation())));
+  private StructType structType(ObjectDb objectDb) {
+    return objectDb.structType("NewType", list(
+        new Field(objectDb.stringType(), "name", unknownLocation()),
+        new Field(objectDb.blobType(), "data", unknownLocation())));
   }
 
   private void assertHash(ConcreteType type, String hash) {

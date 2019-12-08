@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.DecodingBooleanException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Bool;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 import okio.ByteString;
 
@@ -33,7 +33,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             hash(value)));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
+    when(() -> ((Bool) objectDb().get(instanceHash)).jValue());
     thenReturned(value);
   }
 
@@ -44,8 +44,8 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((Bool) objectDb().get(instanceHash)).jValue());
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
 
@@ -56,8 +56,8 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((Bool) objectDb().get(instanceHash)).jValue());
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
 
@@ -76,8 +76,8 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolType()),
             dataHash));
-    when(() -> ((Bool) objectsDb().get(instanceHash)).jValue());
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((Bool) objectDb().get(instanceHash)).jValue());
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingBooleanException(dataHash))));
   }
 }

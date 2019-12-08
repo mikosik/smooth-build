@@ -8,7 +8,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SObjectImpl;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 /**
  * Concrete type in smooth language.
@@ -16,14 +16,14 @@ import org.smoothbuild.lang.object.db.ObjectsDb;
 public abstract class ConcreteType extends AbstractType implements SObject {
   private final SObjectImpl object;
   protected final HashedDb hashedDb;
-  protected final ObjectsDb objectsDb;
+  protected final ObjectDb objectDb;
 
   protected ConcreteType(MerkleRoot merkleRoot, ConcreteType superType,
-      String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectsDb objectsDb) {
+      String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectDb objectDb) {
     super(superType, name, jType);
     this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
   }
 
   public abstract SObject newObject(MerkleRoot merkleRoot);
@@ -46,7 +46,7 @@ public abstract class ConcreteType extends AbstractType implements SObject {
     }
     ConcreteType result = this;
     for (int i = 0; i < delta; i++) {
-      result = objectsDb.arrayType(result);
+      result = objectDb.arrayType(result);
     }
     return result;
   }

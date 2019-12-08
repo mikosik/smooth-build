@@ -1,16 +1,16 @@
 package org.smoothbuild.lang.object.type;
 
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
 public class TestingTypes {
   private static final TestingContext context = new TestingContext();
-  public static final ObjectsDb objectsDb = context.objectsDb();
-  public static final ConcreteType type = objectsDb.typeType();
-  public static final ConcreteType bool = objectsDb.boolType();
-  public static final ConcreteType string = objectsDb.stringType();
-  public static final ConcreteType blob = objectsDb.blobType();
-  public static final ConcreteType nothing = objectsDb.nothingType();
+  public static final ObjectDb objectDb = context.objectDb();
+  public static final ConcreteType type = objectDb.typeType();
+  public static final ConcreteType bool = objectDb.boolType();
+  public static final ConcreteType string = objectDb.stringType();
+  public static final ConcreteType blob = objectDb.blobType();
+  public static final ConcreteType nothing = objectDb.nothingType();
   public static final StructType person = context.personType();
   public static final StructType file = context.fileType();
   public static final GenericType a = new GenericType("a");
@@ -37,7 +37,7 @@ public class TestingTypes {
   public static final GenericArrayType array2B = array(arrayB);
 
   private static ConcreteArrayType array(ConcreteType elemType) {
-    return objectsDb.arrayType(elemType);
+    return objectDb.arrayType(elemType);
   }
 
   private static GenericArrayType array(GenericType elemType) {

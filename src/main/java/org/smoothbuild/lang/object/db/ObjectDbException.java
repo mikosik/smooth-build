@@ -2,17 +2,17 @@ package org.smoothbuild.lang.object.db;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public class ObjectsDbException extends RuntimeException {
+public class ObjectDbException extends RuntimeException {
 
-  public ObjectsDbException(Hash hash, Exception cause) {
+  public ObjectDbException(Hash hash, Exception cause) {
     this(hash, null, cause);
   }
 
-  public ObjectsDbException(Hash hash, String message) {
+  public ObjectDbException(Hash hash, String message) {
     this(hash, message, null);
   }
 
-  public ObjectsDbException(Hash hash, String message, Throwable cause) {
+  public ObjectDbException(Hash hash, String message, Throwable cause) {
     super(buildMessage(hash, message), cause);
   }
 
@@ -20,7 +20,7 @@ public class ObjectsDbException extends RuntimeException {
     return "Cannot read object at " + hash + " ." + (message == null ? "" : " " + message);
   }
 
-  public ObjectsDbException(Throwable cause) {
+  public ObjectDbException(Throwable cause) {
     super(cause);
   }
 }

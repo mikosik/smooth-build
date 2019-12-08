@@ -14,7 +14,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.util.Lists;
 
 import okio.ByteString;
@@ -42,7 +42,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash("bbb")
                 )
             )));
-    when(() -> stream(((Array) objectsDb().get(instanceHash))
+    when(() -> stream(((Array) objectDb().get(instanceHash))
         .asIterable(SString.class))
         .map(SString::jValue)
         .collect(toList()));
@@ -66,8 +66,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
             hash(arrayType(stringType())),
             notHashOfHashSequence
         ));
-    when(() -> ((Array) objectsDb().get(instanceHash)).asIterable(SObject.class));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((Array) objectDb().get(instanceHash)).asIterable(SObject.class));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingHashSequenceException(notHashOfHashSequence))));
   }
 
@@ -86,8 +86,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash(true)
                 )
             )));
-    when(() -> ((Array) objectsDb().get(instanceHash)).asIterable(SString.class));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((Array) objectDb().get(instanceHash)).asIterable(SString.class));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         "It is array with type '[String]' but one of its elements has type 'Bool'")));
   }
 }

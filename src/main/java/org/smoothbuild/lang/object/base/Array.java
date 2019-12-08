@@ -4,19 +4,19 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDb;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 import com.google.common.collect.ImmutableList;
 
 public class Array extends SObjectImpl {
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
 
-  public Array(MerkleRoot merkleRoot, ObjectsDb objectsDb, HashedDb hashedDb) {
+  public Array(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
   }
 
   @Override
@@ -29,7 +29,7 @@ public class Array extends SObjectImpl {
     ImmutableList<SObject> elements = elements();
     for (SObject object : elements) {
       if (!object.type().equals(type().elemType())) {
-        throw new ObjectsDbException(hash(), "It is array with type " + type().q()
+        throw new ObjectDbException(hash(), "It is array with type " + type().q()
             + " but one of its elements has type " + object.type().q());
       }
     }
@@ -49,10 +49,10 @@ public class Array extends SObjectImpl {
       return hashedDb
           .readHashes(dataHash())
           .stream()
-          .map(objectsDb::get)
+          .map(objectDb::get)
           .collect(toImmutableList());
     } catch (HashedDbException e) {
-      throw new ObjectsDbException(hash(), e);
+      throw new ObjectDbException(hash(), e);
     }
   }
 }

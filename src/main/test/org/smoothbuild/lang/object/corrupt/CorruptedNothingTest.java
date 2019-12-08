@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 public class CorruptedNothingTest extends AbstractCorruptedTestCase {
   private Hash instanceHash;
@@ -19,8 +19,8 @@ public class CorruptedNothingTest extends AbstractCorruptedTestCase {
         hash(
             hash(nothingType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((SString) objectDb().get(instanceHash)).jValue());
+    thenThrown(exception(new ObjectDbException(instanceHash,
         "Object type is Nothing so such object cannot exist.")));
   }
 }

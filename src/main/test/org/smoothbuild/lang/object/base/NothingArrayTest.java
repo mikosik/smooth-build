@@ -27,14 +27,14 @@ public class NothingArrayTest extends TestingContext {
   @Test
   public void nothing_array_can_be_read_by_hash() throws Exception {
     given(array = arrayBuilder(nothingType()).build());
-    when(() -> objectsDbOther().get(array.hash()));
+    when(() -> objectDbOther().get(array.hash()));
     thenReturned(array);
   }
 
   @Test
   public void nothing_array_read_by_hash_has_no_elements() throws Exception {
     given(array = arrayBuilder(nothingType()).build());
-    when(() -> ((Array) objectsDbOther().get(array.hash())).asIterable(SObject.class));
+    when(() -> ((Array) objectDbOther().get(array.hash())).asIterable(SObject.class));
     thenReturned(emptyIterable());
   }
 

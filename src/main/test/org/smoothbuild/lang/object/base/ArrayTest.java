@@ -146,7 +146,7 @@ public class ArrayTest extends TestingContext {
     given(arrayBuilder).add(string("abc"));
     given(arrayBuilder).add(string("def"));
     given(array = arrayBuilder.build());
-    when(() -> objectsDbOther().get(array.hash()));
+    when(() -> objectDbOther().get(array.hash()));
     thenReturned(array);
   }
 
@@ -158,7 +158,7 @@ public class ArrayTest extends TestingContext {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> ((Array) objectsDbOther().get(array.hash())).asIterable(SString.class));
+    when(() -> ((Array) objectDbOther().get(array.hash())).asIterable(SString.class));
     thenReturned(contains(sstring, sstring2));
   }
 
@@ -170,7 +170,7 @@ public class ArrayTest extends TestingContext {
     given(arrayBuilder).add(sstring);
     given(arrayBuilder).add(sstring2);
     given(array = arrayBuilder.build());
-    when(() -> objectsDbOther().get(array.hash()).hash());
+    when(() -> objectDbOther().get(array.hash()).hash());
     thenReturned(array.hash());
   }
 

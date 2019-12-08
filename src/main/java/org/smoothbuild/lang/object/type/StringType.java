@@ -6,11 +6,11 @@ import static org.smoothbuild.lang.object.type.TypeNames.STRING;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 public class StringType extends ConcreteType {
-  public StringType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(merkleRoot, null, STRING, SString.class, hashedDb, objectsDb);
+  public StringType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
+    super(merkleRoot, null, STRING, SString.class, hashedDb, objectDb);
   }
 
   @Override

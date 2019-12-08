@@ -24,7 +24,7 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
@@ -43,7 +43,7 @@ public class TestingContext {
   private ObjectFactory emptyCacheObjectFactory;
   private OutputsDb outputsDb;
   private FileSystem outputsDbFileSystem;
-  private ObjectsDb objectsDb;
+  private ObjectDb objectDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private MemoryFileSystem fullFileSystem;
@@ -67,7 +67,7 @@ public class TestingContext {
    */
   public ObjectFactory objectFactory() {
     if (objectFactory == null) {
-      objectFactory = new TestingObjectFactory(objectsDb());
+      objectFactory = new TestingObjectFactory(objectDb());
     }
     return objectFactory;
   }
@@ -77,21 +77,21 @@ public class TestingContext {
    */
   public ObjectFactory emptyCacheObjectFactory() {
     if (emptyCacheObjectFactory == null) {
-      emptyCacheObjectFactory = new ObjectFactory(objectsDb());
+      emptyCacheObjectFactory = new ObjectFactory(objectDb());
     }
     return emptyCacheObjectFactory;
   }
 
-  public ObjectsDb objectsDb() {
-    if (objectsDb == null) {
-      objectsDb = ObjectsDb.objectsDb(hashedDb());
+  public ObjectDb objectDb() {
+    if (objectDb == null) {
+      objectDb = ObjectDb.objectDb(hashedDb());
     }
-    return objectsDb;
+    return objectDb;
   }
 
   public OutputsDb outputsDb() {
     if (outputsDb == null) {
-      outputsDb = new OutputsDb(outputsDbFileSystem(), objectsDb(), objectFactory());
+      outputsDb = new OutputsDb(outputsDbFileSystem(), objectDb(), objectFactory());
     }
     return outputsDb;
   }
@@ -103,8 +103,8 @@ public class TestingContext {
     return outputsDbFileSystem;
   }
 
-  public ObjectsDb objectsDbOther() {
-    return ObjectsDb.objectsDb(hashedDb());
+  public ObjectDb objectDbOther() {
+    return ObjectDb.objectDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -144,31 +144,31 @@ public class TestingContext {
   }
 
   public TypeType typeType() {
-    return objectsDb().typeType();
+    return objectDb().typeType();
   }
 
   public BoolType boolType() {
-    return objectsDb().boolType();
+    return objectDb().boolType();
   }
 
   public StringType stringType() {
-    return objectsDb().stringType();
+    return objectDb().stringType();
   }
 
   public BlobType blobType() {
-    return objectsDb().blobType();
+    return objectDb().blobType();
   }
 
   public NothingType nothingType() {
-    return objectsDb().nothingType();
+    return objectDb().nothingType();
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return objectsDb().arrayType(elementType);
+    return objectDb().arrayType(elementType);
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    return objectsDb().structType(name, fields);
+    return objectDb().structType(name, fields);
   }
 
   public StructType personType() {
@@ -185,23 +185,23 @@ public class TestingContext {
   }
 
   public Bool bool(boolean value) {
-    return objectsDb().bool(value);
+    return objectDb().bool(value);
   }
 
   public SString string(String string) {
-    return objectsDb().string(string);
+    return objectDb().string(string);
   }
 
   public BlobBuilder blobBuilder() {
-    return objectsDb().blobBuilder();
+    return objectDb().blobBuilder();
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elemType) {
-    return objectsDb().arrayBuilder(elemType);
+    return objectDb().arrayBuilder(elemType);
   }
 
   public StructBuilder structBuilder(StructType type) {
-    return objectsDb().structBuilder(type);
+    return objectDb().structBuilder(type);
   }
 
   public Struct person(String firstName, String lastName) {
@@ -224,7 +224,7 @@ public class TestingContext {
   }
 
   public <T extends SObject> Array array(ConcreteType elementType, SObject... elements) {
-    return objectsDb().arrayBuilder(elementType).addAll(list(elements)).build();
+    return objectDb().arrayBuilder(elementType).addAll(list(elements)).build();
   }
 
   public SObject errorMessage(String text) {
@@ -258,8 +258,8 @@ public class TestingContext {
   }
 
   public static class TestingObjectFactory extends ObjectFactory {
-    public TestingObjectFactory(ObjectsDb objectsDb) {
-      super(objectsDb);
+    public TestingObjectFactory(ObjectDb objectDb) {
+      super(objectDb);
       structType("File", list(
           new Field(blobType(), "content", unknownLocation()),
           new Field(stringType(), "path", unknownLocation())));

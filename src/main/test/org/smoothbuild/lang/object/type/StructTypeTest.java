@@ -16,7 +16,7 @@ import java.util.List;
 import org.junit.Test;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 import com.google.common.collect.Lists;
 
@@ -25,8 +25,8 @@ public class StructTypeTest extends AbstractTypeTestCase {
   private List<Field> fields;
 
   @Override
-  protected ConcreteType getType(ObjectsDb objectsDb) {
-    return objectsDb.structType("Struct", fields(objectsDb.stringType(), objectsDb.stringType()));
+  protected ConcreteType getType(ObjectDb objectDb) {
+    return objectDb.structType("Struct", fields(objectDb.stringType(), objectDb.stringType()));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
     given(type = structType("TypeName", fields));
     given(fields = fields(stringType(), type));
     given(type = structType("TypeName2", fields));
-    when(() -> objectsDbOther().get(type.hash()));
+    when(() -> objectDbOther().get(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 

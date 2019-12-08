@@ -14,7 +14,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 import okio.ByteString;
 
@@ -32,7 +32,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
+    when(() -> ((SString) objectDb().get(instanceHash)).jValue());
     thenReturned("aaa");
   }
 
@@ -50,8 +50,8 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
       int byteCount) throws IOException, HashedDbException {
     given(instanceHash =
         hash(ByteString.of(new byte[byteCount])));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingHashSequenceException(instanceHash))));
   }
 
@@ -62,16 +62,16 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
         hash(
             typeHash,
             hash("aaa")));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
-        new ObjectsDbException(typeHash, (Exception) null))));
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
+        new ObjectDbException(typeHash, (Exception) null))));
   }
 
   @Test
   public void reading_elements_from_not_stored_object_throws_exception() {
     given(instanceHash = Hash.of(33));
-    when(() -> objectsDb().get(instanceHash));
+    when(() -> objectDb().get(instanceHash));
     thenThrown(exception(
-        new ObjectsDbException(instanceHash, new NoSuchDataException(instanceHash))));
+        new ObjectDbException(instanceHash, new NoSuchDataException(instanceHash))));
   }
 }

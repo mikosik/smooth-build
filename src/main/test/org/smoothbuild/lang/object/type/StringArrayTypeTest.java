@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.object.type;
 
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 public class StringArrayTypeTest extends AbstractTypeTestCase {
   @Override
-  protected ConcreteType getType(ObjectsDb objectsDb) {
-    return objectsDb.arrayType(objectsDb.stringType());
+  protected ConcreteType getType(ObjectDb objectDb) {
+    return objectDb.arrayType(objectDb.stringType());
   }
 }

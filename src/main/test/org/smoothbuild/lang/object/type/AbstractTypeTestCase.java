@@ -8,43 +8,43 @@ import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
 public abstract class AbstractTypeTestCase extends TestingContext {
   protected ConcreteType type;
   protected Hash hash;
-  private ObjectsDb objectsDbOther;
+  private ObjectDb objectDbOther;
 
-  protected abstract ConcreteType getType(ObjectsDb objectsDb);
+  protected abstract ConcreteType getType(ObjectDb objectDb);
 
   @Test
   public void type_can_be_read_back() throws Exception {
-    given(type = getType(objectsDb()));
-    when(() -> objectsDbOther().get(type.hash()));
+    given(type = getType(objectDb()));
+    when(() -> objectDbOther().get(type.hash()));
     thenReturned(typeMatchingThoroughly(type));
   }
 
   @Test
   public void type_is_cached() throws Exception {
-    given(type = getType(objectsDb()));
-    when(() -> getType(objectsDb()));
+    given(type = getType(objectDb()));
+    when(() -> getType(objectDb()));
     thenReturned(same(type));
   }
 
   @Test
   public void type_is_cached_when_read_by_hash() throws Exception {
-    given(type = getType(objectsDb()));
-    when(() -> objectsDb().get(type.hash()));
+    given(type = getType(objectDb()));
+    when(() -> objectDb().get(type.hash()));
     thenReturned(same(type));
   }
 
   @Test
   public void type_is_cached_when_read_twice_by_hash() throws Exception {
-    given(hash = getType(objectsDb()).hash());
-    given(objectsDbOther = objectsDbOther());
-    given(type = (ConcreteType) objectsDbOther.get(hash));
-    when(() -> objectsDbOther.get(hash));
+    given(hash = getType(objectDb()).hash());
+    given(objectDbOther = objectDbOther());
+    given(type = (ConcreteType) objectDbOther.get(hash));
+    when(() -> objectDbOther.get(hash));
     thenReturned(same(type));
   }
 }
