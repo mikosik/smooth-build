@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class StructBuilder {
   private final StructType type;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final Map<String, SObject> fields;
 
-  public StructBuilder(StructType type, ObjectsDb objectsDb) {
+  public StructBuilder(StructType type, ObjectDb objectDb) {
     this.type = type;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
     this.fields = new HashMap<>();
   }
 
@@ -44,6 +44,6 @@ public class StructBuilder {
         .stream()
         .map(fields::get)
         .collect(toImmutableList());
-    return wrapException(() -> objectsDb.newStruct(type, objects));
+    return wrapException(() -> objectDb.newStruct(type, objects));
   }
 }

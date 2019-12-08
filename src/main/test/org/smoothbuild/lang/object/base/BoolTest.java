@@ -92,7 +92,7 @@ public class BoolTest extends TestingContext {
   public void bool_can_be_read_back_by_hash() throws Exception {
     given(bool = bool(true));
     given(hash = bool.hash());
-    when(() -> objectsDbOther().get(hash));
+    when(() -> objectDbOther().get(hash));
     thenReturned(bool);
   }
 
@@ -100,7 +100,7 @@ public class BoolTest extends TestingContext {
   public void bool_read_back_by_hash_has_same_jvalue() throws Exception {
     given(bool = bool(true));
     given(hash = bool.hash());
-    when(() -> ((Bool) objectsDbOther().get(hash)).jValue());
+    when(() -> ((Bool) objectDbOther().get(hash)).jValue());
     thenReturned(true);
   }
 

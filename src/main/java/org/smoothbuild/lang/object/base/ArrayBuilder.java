@@ -6,17 +6,17 @@ import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 
 public class ArrayBuilder {
   private final ConcreteArrayType type;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final List<SObject> elements;
 
-  public ArrayBuilder(ConcreteArrayType type, ObjectsDb objectsDb) {
+  public ArrayBuilder(ConcreteArrayType type, ObjectDb objectDb) {
     this.type = type;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
     this.elements = new ArrayList<>();
   }
 
@@ -41,6 +41,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapException(() -> objectsDb.newArray(type, elements));
+    return wrapException(() -> objectDb.newArray(type, elements));
   }
 }

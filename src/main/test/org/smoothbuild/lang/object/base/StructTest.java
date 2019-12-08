@@ -216,7 +216,7 @@ public class StructTest extends TestingContext {
         .set("firstName", firstName)
         .set("lastName", lastName)
         .build());
-    when(() -> objectsDbOther().get(person.hash()));
+    when(() -> objectDbOther().get(person.hash()));
     thenReturned(person);
   }
 
@@ -228,7 +228,7 @@ public class StructTest extends TestingContext {
         .set("firstName", firstName)
         .set("lastName", lastName)
         .build());
-    when(person2 = (Struct) objectsDbOther().get(person.hash()));
+    when(person2 = (Struct) objectDbOther().get(person.hash()));
     thenEqual(person2.get("firstName"), person.get("firstName"));
     thenEqual(person2.get("lastName"), person.get("lastName"));
   }

@@ -6,11 +6,11 @@ import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.MerkleRoot;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 public class BoolType extends ConcreteType {
-  public BoolType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(merkleRoot, null, BOOL, Bool.class, hashedDb, objectsDb);
+  public BoolType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
+    super(merkleRoot, null, BOOL, Bool.class, hashedDb, objectDb);
   }
 
   @Override

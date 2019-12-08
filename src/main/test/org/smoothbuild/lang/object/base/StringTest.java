@@ -80,7 +80,7 @@ public class StringTest extends TestingContext {
   public void sstring_can_be_read_back_by_hash() throws Exception {
     given(sstring = string(string));
     given(hash = sstring.hash());
-    when(() -> objectsDbOther().get(hash));
+    when(() -> objectDbOther().get(hash));
     thenReturned(sstring);
   }
 
@@ -88,7 +88,7 @@ public class StringTest extends TestingContext {
   public void sstring_read_back_by_hash_has_same_javlue() throws Exception {
     given(sstring = string(string));
     given(hash = sstring.hash());
-    when(() -> ((SString) objectsDbOther().get(hash)).jValue());
+    when(() -> ((SString) objectDbOther().get(hash)).jValue());
     thenReturned(string);
   }
 

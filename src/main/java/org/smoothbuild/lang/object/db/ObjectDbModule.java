@@ -11,7 +11,7 @@ import org.smoothbuild.io.util.TempManager;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 
-public class ObjectsDbModule extends AbstractModule {
+public class ObjectDbModule extends AbstractModule {
   @Override
   protected void configure() {}
 
@@ -22,7 +22,7 @@ public class ObjectsDbModule extends AbstractModule {
 
   @Provides
   @Singleton
-  public ObjectsDb provideObjectsDb(HashedDb hashedDb) {
-    return ObjectsDb.objectsDb(hashedDb);
+  public ObjectDb provideObjectDb(HashedDb hashedDb) {
+    return ObjectDb.objectDb(hashedDb);
   }
 }

@@ -9,8 +9,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.object.db.ObjectsDb;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDb;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
@@ -18,11 +18,11 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 public class Struct extends SObjectImpl {
   private ImmutableMap<String, SObject> fields;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
 
-  public Struct(MerkleRoot merkleRoot, ObjectsDb objectsDb, HashedDb hashedDb) {
+  public Struct(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
   }
 
   @Override
@@ -49,9 +49,9 @@ public class Struct extends SObjectImpl {
         int i = 0;
         Builder<String, SObject> builder = ImmutableMap.builder();
         for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
-          SObject object = objectsDb.get(hashes.get(i));
+          SObject object = objectDb.get(hashes.get(i));
           if (!entry.getValue().type().equals(object.type())) {
-            throw new ObjectsDbException(hash(), "It" +
+            throw new ObjectDbException(hash(), "It" +
                 "s type specifies field '" + entry.getKey()
                 + "' with type " + entry.getValue().type() + " but its data has object of type "
                 + object.type() + " assigned to that field.");
@@ -61,7 +61,7 @@ public class Struct extends SObjectImpl {
         }
         fields = builder.build();
       } catch (HashedDbException e) {
-        throw new ObjectsDbException(hash(), e);
+        throw new ObjectDbException(hash(), e);
       }
     }
     return fields;

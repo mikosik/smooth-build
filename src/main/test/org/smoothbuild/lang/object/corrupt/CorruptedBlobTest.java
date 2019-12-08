@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 import okio.ByteString;
 
@@ -30,7 +30,7 @@ public class CorruptedBlobTest  extends AbstractCorruptedTestCase {
         hash(
             hash(blobType()),
             hash(byteString)));
-    when(() -> ((Blob) objectsDb().get(instanceHash)).source().readByteString());
+    when(() -> ((Blob) objectDb().get(instanceHash)).source().readByteString());
     thenReturned(byteString);
   }
 
@@ -41,7 +41,7 @@ public class CorruptedBlobTest  extends AbstractCorruptedTestCase {
         hash(
             hash(blobType()),
             dataHash));
-    when(() -> ((Blob) objectsDb().get(instanceHash)).source());
-    thenThrown(exception(new ObjectsDbException(instanceHash, new NoSuchDataException(dataHash))));
+    when(() -> ((Blob) objectDb().get(instanceHash)).source());
+    thenThrown(exception(new ObjectDbException(instanceHash, new NoSuchDataException(dataHash))));
   }
 }

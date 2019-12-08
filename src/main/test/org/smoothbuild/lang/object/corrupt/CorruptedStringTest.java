@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 import okio.ByteString;
 
@@ -28,7 +28,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             hash("aaa")));
-    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
+    when(() -> ((SString) objectDb().get(instanceHash)).jValue());
     thenReturned("aaa");
   }
 
@@ -39,8 +39,8 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringType()),
             notStringHash));
-    when(() -> ((SString) objectsDb().get(instanceHash)).jValue());
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> ((SString) objectDb().get(instanceHash)).jValue());
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingStringException(notStringHash, null))));
   }
 }

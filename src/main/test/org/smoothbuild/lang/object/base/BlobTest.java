@@ -101,7 +101,7 @@ public class BlobTest extends TestingContext {
   public void blob_can_be_read_by_hash() throws Exception {
     given(blob = blob(bytes));
     given(hash = blob.hash());
-    when(() -> objectsDbOther().get(hash));
+    when(() -> objectDbOther().get(hash));
     thenReturned(blob);
   }
 
@@ -109,7 +109,7 @@ public class BlobTest extends TestingContext {
   public void blob_read_by_hash_has_same_content() throws Exception {
     given(blob = blob(bytes));
     given(hash = blob.hash());
-    when(((Blob) objectsDbOther().get(hash)).source().readByteString());
+    when(((Blob) objectDbOther().get(hash)).source().readByteString());
     thenReturned(blob.source().readByteString());
   }
 

@@ -13,17 +13,17 @@ import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 
 import com.google.common.collect.ImmutableMap;
 
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
 
   public StructType(MerkleRoot merkleRoot, String name, Iterable<Field> fields,
-      HashedDb hashedDb, ObjectsDb objectsDb) {
-    this(merkleRoot, name, fieldsMap(fields), hashedDb, objectsDb);
+      HashedDb hashedDb, ObjectDb objectDb) {
+    this(merkleRoot, name, fieldsMap(fields), hashedDb, objectDb);
   }
 
   private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
@@ -31,10 +31,10 @@ public class StructType extends ConcreteType {
   }
 
   private StructType(MerkleRoot merkleRoot, String name, ImmutableMap<String, Field> fields,
-      HashedDb hashedDb, ObjectsDb objectsDb) {
-    super(merkleRoot, calculateSuperType(fields), name, Struct.class, hashedDb, objectsDb);
+      HashedDb hashedDb, ObjectDb objectDb) {
+    super(merkleRoot, calculateSuperType(fields), name, Struct.class, hashedDb, objectDb);
     this.fields = checkNotNull(fields);
-    this.objectsDb = checkNotNull(objectsDb);
+    this.objectDb = checkNotNull(objectDb);
   }
 
   private static ConcreteType calculateSuperType(ImmutableMap<String, Field> fields) {
@@ -52,7 +52,7 @@ public class StructType extends ConcreteType {
   @Override
   public Struct newObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
-    return new Struct(merkleRoot, objectsDb, hashedDb);
+    return new Struct(merkleRoot, objectDb, hashedDb);
   }
 
   public ImmutableMap<String, Field> fields() {

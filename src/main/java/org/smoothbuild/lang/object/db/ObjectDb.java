@@ -37,7 +37,7 @@ import org.smoothbuild.lang.object.type.TypeType;
 /**
  * This class is thread-safe.
  */
-public class ObjectsDb {
+public class ObjectDb {
   private final HashedDb hashedDb;
   private final TypeCache typeCache;
   private BoolType boolType;
@@ -46,13 +46,13 @@ public class ObjectsDb {
   private StringType stringType;
   private TypeType typeType;
 
-  public static ObjectsDb objectsDb(HashedDb hashedDb) {
-      ObjectsDb objectsDb = new ObjectsDb(hashedDb);
-      objectsDb.initialize();
-      return objectsDb;
+  public static ObjectDb objectDb(HashedDb hashedDb) {
+      ObjectDb objectDb = new ObjectDb(hashedDb);
+      objectDb.initialize();
+      return objectDb;
   }
 
-  private ObjectsDb(HashedDb hashedDb) {
+  private ObjectDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
     this.typeCache = new TypeCache();
   }
@@ -71,7 +71,7 @@ public class ObjectsDb {
       typeCache.cache(nothingType);
       typeCache.cache(stringType);
     } catch (HashedDbException e) {
-      throw new ObjectsDbException(e);
+      throw new ObjectDbException(e);
     }
   }
 
@@ -110,7 +110,7 @@ public class ObjectsDb {
         return type.newObject(new MerkleRoot(hash, type, dataHash));
       }
     } catch (HashedDbException e) {
-      throw new ObjectsDbException(hash, e);
+      throw new ObjectDbException(hash, e);
     }
   }
 
@@ -146,8 +146,8 @@ public class ObjectsDb {
   private ConcreteType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
     try {
       return getType(typeHash);
-    } catch (ObjectsDbException e) {
-      throw new ObjectsDbException(parentHash, e);
+    } catch (ObjectDbException e) {
+      throw new ObjectDbException(parentHash, e);
     }
   }
 
@@ -169,7 +169,7 @@ public class ObjectsDb {
         List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
         if (hashes.size() == 1) {
           if (!typeType.hash().equals(hash)) {
-            throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' type "
+            throw new ObjectDbException(hash, "Expected object which is instance of 'Type' type "
                 + "but its Merkle tree has only one child (so it should be 'Type' type) but "
                 + "it has different hash.");
           }
@@ -177,14 +177,14 @@ public class ObjectsDb {
         } else {
           Hash typeHash = hashes.get(0);
           if (!typeType.hash().equals(typeHash)) {
-            throw new ObjectsDbException(hash, "Expected object which is instance of 'Type' " +
+            throw new ObjectDbException(hash, "Expected object which is instance of 'Type' " +
                 "type but its Merkle tree's first child is not 'Type' type.");
           }
           Hash dataHash = hashes.get(1);
           return readType(hash, dataHash);
         }
       } catch (HashedDbException e) {
-        throw new ObjectsDbException(hash, e);
+        throw new ObjectDbException(hash, e);
       }
     }
   }
@@ -216,14 +216,14 @@ public class ObjectsDb {
           return cacheType(newStructType(name, fields, dataHash));
       }
     } catch (HashedDbException e) {
-      throw new ObjectsDbException(hash, e);
+      throw new ObjectDbException(hash, e);
     }
   }
 
   private static void assertSize(Hash hash, String typeName, List<Hash> hashes,
       int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new ObjectsDbException(hash,
+      throw new ObjectDbException(hash,
           "It is '" + typeName + "' type but its Merkle root has " + hashes.size() +
           " children when " + expectedSize + " is expected.");
     }

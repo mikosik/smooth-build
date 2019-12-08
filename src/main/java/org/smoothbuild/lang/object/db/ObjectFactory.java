@@ -38,21 +38,21 @@ import org.smoothbuild.util.DataWriter;
  */
 @Singleton
 public class ObjectFactory {
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final ConcurrentHashMap<String, ConcreteType> cache;
 
   @Inject
-  public ObjectFactory(ObjectsDb objectsDb) {
-    this.objectsDb = objectsDb;
-    this.cache = createInitializedCache(objectsDb);
+  public ObjectFactory(ObjectDb objectDb) {
+    this.objectDb = objectDb;
+    this.cache = createInitializedCache(objectDb);
   }
 
-  private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectsDb objectsDb) {
+  private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectDb objectDb) {
     ConcurrentHashMap<String, ConcreteType> map = new ConcurrentHashMap<>();
-    putType(map, objectsDb.boolType());
-    putType(map, objectsDb.stringType());
-    putType(map, objectsDb.blobType());
-    putType(map, objectsDb.nothingType());
+    putType(map, objectDb.boolType());
+    putType(map, objectDb.stringType());
+    putType(map, objectDb.blobType());
+    putType(map, objectDb.nothingType());
     return map;
   }
 
@@ -61,7 +61,7 @@ public class ObjectFactory {
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
-    return objectsDb.arrayBuilder(elementType);
+    return objectDb.arrayBuilder(elementType);
   }
 
   public Blob blob(DataWriter dataWriter) throws IOException {
@@ -72,11 +72,11 @@ public class ObjectFactory {
   }
 
   public BlobBuilder blobBuilder() {
-    return objectsDb.blobBuilder();
+    return objectDb.blobBuilder();
   }
 
   public Bool bool(boolean value) {
-    return objectsDb.bool(value);
+    return objectDb.bool(value);
   }
 
   public Struct file(SString path, Blob content) {
@@ -87,11 +87,11 @@ public class ObjectFactory {
   }
 
   public SString string(String string) {
-    return objectsDb.string(string);
+    return objectDb.string(string);
   }
 
   public StructBuilder structBuilder(StructType type) {
-    return objectsDb.structBuilder(type);
+    return objectDb.structBuilder(type);
   }
 
   public ArrayType arrayType(Type elementType) {
@@ -103,7 +103,7 @@ public class ObjectFactory {
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
-    return objectsDb.arrayType(elementType);
+    return objectDb.arrayType(elementType);
   }
 
   public GenericArrayType arrayType(GenericType elementType) {
@@ -111,11 +111,11 @@ public class ObjectFactory {
   }
 
   public ConcreteType blobType() {
-    return objectsDb.blobType();
+    return objectDb.blobType();
   }
 
   public ConcreteType boolType() {
-    return objectsDb.boolType();
+    return objectDb.boolType();
   }
 
   public StructType fileType() {
@@ -127,15 +127,15 @@ public class ObjectFactory {
   }
 
   public ConcreteType nothingType() {
-    return objectsDb.nothingType();
+    return objectDb.nothingType();
   }
 
   public ConcreteType stringType() {
-    return objectsDb.stringType();
+    return objectDb.stringType();
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    StructType type = objectsDb.structType(name, fields);
+    StructType type = objectDb.structType(name, fields);
     ConcreteType previousValue = cache.putIfAbsent(name, type);
     if (previousValue != null) {
       throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
@@ -168,9 +168,9 @@ public class ObjectFactory {
   }
 
   private Struct message(String severity, String text) {
-    SObject textObject = objectsDb.string(text);
-    SObject severityObject = objectsDb.string(severity);
-    return objectsDb.structBuilder(messageType())
+    SObject textObject = objectDb.string(text);
+    SObject severityObject = objectDb.string(severity);
+    return objectDb.structBuilder(messageType())
         .set(TEXT, textObject)
         .set(SEVERITY, severityObject)
         .build();

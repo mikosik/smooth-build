@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 public class CorruptedStructTest extends AbstractCorruptedTestCase {
   private Hash structHash;
@@ -41,9 +41,9 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             fieldValuesHash));
-    given(struct = (Struct) objectsDb().get(structHash));
+    given(struct = (Struct) objectDb().get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(exception(new ObjectsDbException(structHash,
+    thenThrown(exception(new ObjectDbException(structHash,
         new DecodingHashSequenceException(fieldValuesHash, 2, 1))));
   }
 
@@ -58,9 +58,9 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             fieldValuesHash));
-    given(struct = (Struct) objectsDb().get(structHash));
+    given(struct = (Struct) objectDb().get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(exception(new ObjectsDbException(structHash,
+    thenThrown(exception(new ObjectDbException(structHash,
         new DecodingHashSequenceException(fieldValuesHash, 2, 3))));
   }
 
@@ -72,9 +72,9 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
             hash(
                 hash(string("John")),
                 hash(bool(true)))));
-    given(struct = (Struct) objectsDb().get(structHash));
+    given(struct = (Struct) objectDb().get(structHash));
     when(() -> struct.get("firstName"));
-    thenThrown(exception(new ObjectsDbException(structHash, "Its type specifies field 'lastName' "
+    thenThrown(exception(new ObjectDbException(structHash, "Its type specifies field 'lastName' "
         + "with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but its data "
         + "has object of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 assigned "
         + "to that field.")));

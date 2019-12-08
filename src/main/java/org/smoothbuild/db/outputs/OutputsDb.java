@@ -21,7 +21,7 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.db.ObjectsDb;
+import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
@@ -30,13 +30,13 @@ import okio.BufferedSource;
 
 public class OutputsDb {
   private final FileSystem fileSystem;
-  private final ObjectsDb objectsDb;
+  private final ObjectDb objectDb;
   private final ObjectFactory objectFactory;
 
   @Inject
-  public OutputsDb(FileSystem fileSystem, ObjectsDb objectsDb, ObjectFactory objectFactory) {
+  public OutputsDb(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
-    this.objectsDb = objectsDb;
+    this.objectDb = objectDb;
     this.objectFactory = objectFactory;
   }
 
@@ -69,7 +69,7 @@ public class OutputsDb {
 
   public Output read(Hash taskHash, ConcreteType type) throws OutputsDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      SObject messagesObject = objectsDb.get(Hash.read(source));
+      SObject messagesObject = objectDb.get(Hash.read(source));
       ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
       if (!messagesObject.type().equals(messageArrayType)) {
         throw corruptedValueException(taskHash, "Expected " + messageArrayType
@@ -89,7 +89,7 @@ public class OutputsDb {
         return new Output(null, messages);
       } else {
         Hash resultObjectHash = Hash.read(source);
-        SObject object = objectsDb.get(resultObjectHash);
+        SObject object = objectDb.get(resultObjectHash);
         if (!type.equals(object.type())) {
           throw corruptedValueException(taskHash, "Expected value of type " + type
               + " as second child of its Merkle root, but got " + object.type());

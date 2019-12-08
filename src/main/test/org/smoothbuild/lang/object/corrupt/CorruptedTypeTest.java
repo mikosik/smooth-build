@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.db.ObjectsDbException;
+import org.smoothbuild.lang.object.db.ObjectDbException;
 
 import okio.ByteString;
 
@@ -98,8 +98,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                 hash("String")),
             hash("corrupted")
         ));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash, null, null)));
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash, null, null)));
   }
 
   @Test
@@ -110,8 +110,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash("corrupted"),
             hash(
                 hash("String"))));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(ObjectsDbException.class);
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(ObjectDbException.class);
   }
 
   @Test
@@ -120,7 +120,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(
                 hash("String"))));
-    when(() -> objectsDb().get(instanceHash));
+    when(() -> objectDb().get(instanceHash));
     thenThrown(exception(brokenTypeTypeException(instanceHash)));
   }
 
@@ -130,7 +130,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(
                 hash("TypeX"))));
-    when(() -> objectsDb().get(instanceHash));
+    when(() -> objectDb().get(instanceHash));
     thenThrown(exception(brokenTypeTypeException(instanceHash)));
   }
 
@@ -145,8 +145,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash(typeType()),
             hash(
                 notStringHash)));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingStringException(notStringHash, null))));
   }
 
@@ -167,8 +167,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                         notStringHash,
                         hash(stringType()))
                 ))));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingStringException(notStringHash, null))));
   }
 
@@ -201,8 +201,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash(
                 hash(typeName),
                 hash("corrupted"))));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash, "It is '" + typeName +
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash, "It is '" + typeName +
             "' type but its Merkle root has 2 children when 1 is expected.")));
   }
 
@@ -216,8 +216,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                 hash("Person")
             )
         ));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         "It is 'Person' type but its Merkle root has 1 children when 2 is expected.")));
   }
 
@@ -231,8 +231,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                 hash("")
             )
         ));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         "It is '[]' type but its Merkle root has 1 children when 2 is expected.")));
   }
 
@@ -252,8 +252,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                     dataHash
                 ))
         ));
-    when(() -> objectsDb().get(instanceHash));
-    thenThrown(exception(new ObjectsDbException(instanceHash,
+    when(() -> objectDb().get(instanceHash));
+    thenThrown(exception(new ObjectDbException(instanceHash,
         new DecodingHashSequenceException(dataHash, 2, 3))));
   }
 
@@ -276,9 +276,9 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                         hash("lastName"),
                         hash(stringType()))
                 ))));
-    when(() -> objectsDb().get(instanceHash));
+    when(() -> objectDb().get(instanceHash));
     thenThrown(exception(
-        new ObjectsDbException(instanceHash, new ObjectsDbException(hash, (Exception) null))));
+        new ObjectDbException(instanceHash, new ObjectDbException(hash, (Exception) null))));
   }
 
   @Test
@@ -292,13 +292,13 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
                 hash
             )
         ));
-    when(() -> objectsDb().get(instanceHash));
+    when(() -> objectDb().get(instanceHash));
     thenThrown(exception(
-        new ObjectsDbException(instanceHash, new ObjectsDbException(hash, (Exception) null))));
+        new ObjectDbException(instanceHash, new ObjectDbException(hash, (Exception) null))));
   }
 
-  private static ObjectsDbException brokenTypeTypeException(Hash hash) {
-    return new ObjectsDbException(hash, "Expected object which is instance of 'Type' type but " +
+  private static ObjectDbException brokenTypeTypeException(Hash hash) {
+    return new ObjectDbException(hash, "Expected object which is instance of 'Type' type but " +
         "its Merkle tree has only one child (so it should be 'Type' type) " +
         "but it has different hash.");
   }
