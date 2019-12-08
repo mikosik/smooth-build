@@ -36,9 +36,9 @@ public class TempDirTest extends TestingContext {
   }
 
   @Test
-  public void destroying_twice_is_allowed() throws Exception {
-    given(tempDir).destroy();
-    when(tempDir).destroy();
+  public void destroying_twice_is_allowed() {
+    given(() -> tempDir.destroy());
+    when(() -> tempDir.destroy());
     thenReturned();
   }
 
@@ -50,29 +50,29 @@ public class TempDirTest extends TestingContext {
 
   @Test
   public void file_is_written_to_file_system() throws Exception {
-    when(tempDir).writeFile(file(path, bytes));
+    when(() -> tempDir.writeFile(file(path, bytes)));
     thenEqual(fullFileSystem().source(rootPath.append(path)).readByteString(), bytes);
   }
 
   @Test
-  public void writing_file_after_destroy_throws_exception() throws Exception {
-    given(tempDir).destroy();
-    when(tempDir).writeFile(file(path, bytes));
+  public void writing_file_after_destroy_throws_exception() {
+    given(() -> tempDir.destroy());
+    when(() -> tempDir.writeFile(file(path, bytes)));
     thenThrown(IllegalStateException.class);
   }
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
     given(array = array(file(path, bytes)));
-    when(tempDir).writeFiles(array);
+    when(() -> tempDir.writeFiles(array));
     thenEqual(fullFileSystem().source(rootPath.append(path)).readByteString(), bytes);
   }
 
   @Test
-  public void writing_files_after_destroy_throws_exception() throws Exception {
+  public void writing_files_after_destroy_throws_exception() {
     given(array = array(file(path, bytes)));
-    given(tempDir).destroy();
-    when(tempDir).writeFiles(array);
+    given(() -> tempDir.destroy());
+    when(() -> tempDir.writeFiles(array));
     thenThrown(IllegalStateException.class);
   }
 
@@ -86,9 +86,9 @@ public class TempDirTest extends TestingContext {
   }
 
   @Test
-  public void reading_files_after_destroy_throws_exception() throws Exception {
-    given(tempDir).destroy();
-    when(tempDir).readFiles();
+  public void reading_files_after_destroy_throws_exception() {
+    given(() -> tempDir.destroy());
+    when(() -> tempDir.readFiles());
     thenThrown(IllegalStateException.class);
   }
 
@@ -97,7 +97,7 @@ public class TempDirTest extends TestingContext {
     try (BufferedSink sink = fullFileSystem().sink(rootPath.append(path))) {
       sink.write(bytes);
     }
-    when(tempDir).readContent(path);
+    when(() -> tempDir.readContent(path));
     thenReturned(blobContains(bytes));
   }
 
