@@ -4,6 +4,7 @@ import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,10 +13,13 @@ import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 
+/**
+ * This class is thread safe.
+ */
 @Singleton
 public class TempManager {
   private final FileSystem fileSystem;
-  private int id = 0;
+  private AtomicInteger id = new AtomicInteger();
 
   @Inject
   public TempManager(FileSystem fileSystem) {
@@ -23,8 +27,7 @@ public class TempManager {
   }
 
   public Path tempPath() {
-    id++;
-    return TEMPORARY_PATH.append(path(Integer.toString(id)));
+    return TEMPORARY_PATH.append(path(Integer.toString(id.getAndIncrement())));
   }
 
   public TempDir tempDir(Container container) throws IOException {
