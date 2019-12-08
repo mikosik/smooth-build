@@ -64,9 +64,9 @@ public class ObjectFactory {
     return objectsDb.arrayBuilder(elementType);
   }
 
-  public Blob blob(DataWriter dataInjector) throws IOException {
+  public Blob blob(DataWriter dataWriter) throws IOException {
     try (BlobBuilder builder = blobBuilder()) {
-      dataInjector.writeTo(builder.sink());
+      dataWriter.writeTo(builder.sink());
       return builder.build();
     }
   }
