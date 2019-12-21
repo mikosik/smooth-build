@@ -1,6 +1,6 @@
 package org.smoothbuild.db.outputs;
 
-import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
+import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
 import static org.testory.Testory.given;
@@ -22,7 +22,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class OutputsDbTest extends TestingContext {
+public class OutputDbTest extends TestingContext {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private Path path = path("file/path");
@@ -37,30 +37,30 @@ public class OutputsDbTest extends TestingContext {
   private final String string = "some string";
 
   @Test
-  public void outputsdb_does_not_contain_not_written_result() {
-    when(() -> outputsDb().contains(hash));
+  public void outputdb_does_not_contain_not_written_result() {
+    when(() -> outputDb().contains(hash));
     thenReturned(false);
   }
 
   @Test
-  public void outputsdb_contains_written_result() {
-    given(() -> outputsDb().write(hash, new Output(string("result"), emptyMessageArray())));
-    when(() -> outputsDb().contains(hash));
+  public void outputdb_contains_written_result() {
+    given(() -> outputDb().write(hash, new Output(string("result"), emptyMessageArray())));
+    when(() -> outputDb().contains(hash));
     thenReturned(true);
   }
 
   @Test
-  public void outputsdb_is_corrupted_when_task_hash_points_to_directory() {
-    given(path = OutputsDb.toPath(hash));
-    given(() -> outputsDbFileSystem().sink(path.append(path("file"))));
-    when(() -> outputsDb().contains(hash));
+  public void outputdb_is_corrupted_when_task_hash_points_to_directory() {
+    given(path = OutputDb.toPath(hash));
+    given(() -> outputDbFileSystem().sink(path.append(path("file"))));
+    when(() -> outputDb().contains(hash));
     thenThrown(exception(corruptedValueException(hash, path + " is directory not a file.")));
   }
 
   @Test
   public void reading_not_written_value_fails() {
-    when(() -> outputsDb().read(hash, stringType()));
-    thenThrown(OutputsDbException.class);
+    when(() -> outputDb().read(hash, stringType()));
+    thenThrown(OutputDbException.class);
   }
 
   @Test
@@ -68,8 +68,8 @@ public class OutputsDbTest extends TestingContext {
     given(stringValue = string("abc"));
     given(message = errorMessage("error message"));
     given(messages = array(message));
-    given(() -> outputsDb().write(hash, new Output(stringValue, messages)));
-    when(() -> outputsDb().read(hash, stringType()).messages());
+    given(() -> outputDb().write(hash, new Output(stringValue, messages)));
+    when(() -> outputDb().read(hash, stringType()).messages());
     thenReturned(messages);
   }
 
@@ -77,8 +77,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_file_array_can_be_read_back() {
     given(file = file(path, bytes));
     given(array = arrayBuilder(objectFactory().fileType()).add(file).build());
-    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputsDb().read(hash, arrayType(objectFactory().fileType())).result())
+    given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputDb().read(hash, arrayType(objectFactory().fileType())).result())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -87,8 +87,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_blob_array_can_be_read_back() throws Exception {
     given(blob = blob(bytes));
     given(array = arrayBuilder(blobType()).add(blob).build());
-    given(outputsDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputsDb().read(hash, arrayType(blobType())).result())
+    given(outputDb()).write(hash, new Output(array, emptyMessageArray()));
+    when(((Array) outputDb().read(hash, arrayType(blobType())).result())
         .asIterable(Blob.class).iterator().next());
     thenReturned(blob);
   }
@@ -97,8 +97,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_bool_array_can_be_read_back() {
     given(boolValue = bool(true));
     given(array = arrayBuilder(boolType()).add(boolValue).build());
-    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputsDb().read(hash, arrayType(boolType())).result())
+    given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputDb().read(hash, arrayType(boolType())).result())
         .asIterable(Bool.class).iterator().next());
     thenReturned(boolValue);
   }
@@ -107,8 +107,8 @@ public class OutputsDbTest extends TestingContext {
   public void written_string_array_can_be_read_back() {
     given(stringValue = string(string));
     given(array = arrayBuilder(stringType()).add(stringValue).build());
-    given(() -> outputsDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputsDb().read(hash, arrayType(stringType())).result())
+    given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
+    when(() -> ((Array) outputDb().read(hash, arrayType(stringType())).result())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
   }
@@ -116,32 +116,32 @@ public class OutputsDbTest extends TestingContext {
   @Test
   public void written_file_can_be_read_back() {
     given(file = file(path, bytes));
-    given(() -> outputsDb().write(hash, new Output(file, emptyMessageArray())));
-    when(() -> outputsDb().read(hash, objectFactory().fileType()).result());
+    given(() -> outputDb().write(hash, new Output(file, emptyMessageArray())));
+    when(() -> outputDb().read(hash, objectFactory().fileType()).result());
     thenReturned(file);
   }
 
   @Test
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = blob(bytes));
-    given(outputsDb()).write(hash, new Output(blob, emptyMessageArray()));
-    when(outputsDb().read(hash, blobType()).result());
+    given(outputDb()).write(hash, new Output(blob, emptyMessageArray()));
+    when(outputDb().read(hash, blobType()).result());
     thenReturned(blob);
   }
 
   @Test
   public void written_bool_can_be_read_back() {
     given(boolValue = bool(true));
-    given(() -> outputsDb().write(hash, new Output(boolValue, emptyMessageArray())));
-    when(() -> ((Bool) outputsDb().read(hash, boolType()).result()).jValue());
+    given(() -> outputDb().write(hash, new Output(boolValue, emptyMessageArray())));
+    when(() -> ((Bool) outputDb().read(hash, boolType()).result()).jValue());
     thenReturned(true);
   }
 
   @Test
   public void written_string_can_be_read_back() {
     given(stringValue = string(string));
-    given(() -> outputsDb().write(hash, new Output(stringValue, emptyMessageArray())));
-    when(() -> ((SString) outputsDb().read(hash, stringType()).result()).jValue());
+    given(() -> outputDb().write(hash, new Output(stringValue, emptyMessageArray())));
+    when(() -> ((SString) outputDb().read(hash, stringType()).result()).jValue());
     thenReturned(string);
   }
 }

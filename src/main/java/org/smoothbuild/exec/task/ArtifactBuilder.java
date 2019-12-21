@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.db.outputs.OutputsDbException;
+import org.smoothbuild.db.outputs.OutputDbException;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.parse.expr.Expression;
@@ -39,7 +39,7 @@ public class ArtifactBuilder {
     } catch (IOException e) {
       console.error("Execution failed due to I/O error. Caught exception:\n"
           + getStackTraceAsString(e));
-    } catch (OutputsDbException e) {
+    } catch (OutputDbException e) {
       console.error("Execution failed due to Outputs DB error. Caught exception:\n"
           + getStackTraceAsString(e));
     }
