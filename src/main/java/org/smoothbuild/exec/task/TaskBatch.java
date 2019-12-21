@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.outputs.OutputsDbException;
+import org.smoothbuild.db.outputs.OutputDbException;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.parse.expr.Expression;
@@ -33,7 +33,7 @@ public class TaskBatch {
     rootTasks.add(expression.createTask(null));
   }
 
-  public void executeAll() throws IOException, OutputsDbException {
+  public void executeAll() throws IOException, OutputDbException {
     for (Task task : rootTasks) {
       executeGraph(task);
       if (!task.hasSuccessfulResult()) {
@@ -42,7 +42,7 @@ public class TaskBatch {
     }
   }
 
-  private void executeGraph(Task task) throws IOException, OutputsDbException {
+  private void executeGraph(Task task) throws IOException, OutputDbException {
     if (task.name().equals("if")) {
       executeIfGraph(task);
     } else {
@@ -50,7 +50,7 @@ public class TaskBatch {
     }
   }
 
-  private void executeIfGraph(Task task) throws IOException, OutputsDbException {
+  private void executeIfGraph(Task task) throws IOException, OutputDbException {
     ImmutableList<Task> dependencies = task.dependencies();
     Task conditionTask = dependencies.get(0);
     executeGraph(conditionTask);
@@ -67,7 +67,7 @@ public class TaskBatch {
   }
 
   private void executeIfTask(Task task, Task conditionTask, Task dependencyTask) throws
-      IOException, OutputsDbException {
+      IOException, OutputDbException {
     executeGraph(dependencyTask);
     if (!dependencyTask.hasSuccessfulResult()) {
       return;
@@ -78,7 +78,7 @@ public class TaskBatch {
     taskExecutor.execute(task, Input.fromResults(dependencies));
   }
 
-  private void executeNormalGraph(Task task) throws IOException, OutputsDbException {
+  private void executeNormalGraph(Task task) throws IOException, OutputDbException {
     for (Task subTask : task.dependencies()) {
       executeGraph(subTask);
       if (!subTask.hasSuccessfulResult()) {

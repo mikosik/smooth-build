@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.outputs.OutputsDb;
+import org.smoothbuild.db.outputs.OutputDb;
 import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -41,8 +41,8 @@ public class TestingContext {
   private Container container;
   private ObjectFactory objectFactory;
   private ObjectFactory emptyCacheObjectFactory;
-  private OutputsDb outputsDb;
-  private FileSystem outputsDbFileSystem;
+  private OutputDb outputDb;
+  private FileSystem outputDbFileSystem;
   private ObjectDb objectDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -89,18 +89,18 @@ public class TestingContext {
     return objectDb;
   }
 
-  public OutputsDb outputsDb() {
-    if (outputsDb == null) {
-      outputsDb = new OutputsDb(outputsDbFileSystem(), objectDb(), objectFactory());
+  public OutputDb outputDb() {
+    if (outputDb == null) {
+      outputDb = new OutputDb(outputDbFileSystem(), objectDb(), objectFactory());
     }
-    return outputsDb;
+    return outputDb;
   }
 
-  public FileSystem outputsDbFileSystem() {
-    if (outputsDbFileSystem == null) {
-      outputsDbFileSystem = new MemoryFileSystem();
+  public FileSystem outputDbFileSystem() {
+    if (outputDbFileSystem == null) {
+      outputDbFileSystem = new MemoryFileSystem();
     }
-    return outputsDbFileSystem;
+    return outputDbFileSystem;
   }
 
   public ObjectDb objectDbOther() {

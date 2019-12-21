@@ -1,8 +1,8 @@
 package org.smoothbuild.db.outputs;
 
 import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
-import static org.smoothbuild.db.outputs.OutputsDbException.corruptedValueException;
-import static org.smoothbuild.db.outputs.OutputsDbException.outputsDbException;
+import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
+import static org.smoothbuild.db.outputs.OutputDbException.outputDbException;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 import static org.smoothbuild.lang.object.base.Messages.isValidSeverity;
@@ -31,19 +31,19 @@ import okio.BufferedSource;
 /**
  * This class is thread-safe.
  */
-public class OutputsDb {
+public class OutputDb {
   private final FileSystem fileSystem;
   private final ObjectDb objectDb;
   private final ObjectFactory objectFactory;
 
   @Inject
-  public OutputsDb(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
+  public OutputDb(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
     this.objectDb = objectDb;
     this.objectFactory = objectFactory;
   }
 
-  public synchronized void write(Hash taskHash, Output output) throws OutputsDbException {
+  public synchronized void write(Hash taskHash, Output output) throws OutputDbException {
     try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
       Array messages = output.messages();
       sink.write(messages.hash());
@@ -51,11 +51,11 @@ public class OutputsDb {
         sink.write(output.result().hash());
       }
     } catch (IOException e) {
-      throw outputsDbException(e);
+      throw outputDbException(e);
     }
   }
 
-  public synchronized boolean contains(Hash taskHash) throws OutputsDbException {
+  public synchronized boolean contains(Hash taskHash) throws OutputDbException {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
@@ -70,7 +70,7 @@ public class OutputsDb {
     }
   }
 
-  public synchronized Output read(Hash taskHash, ConcreteType type) throws OutputsDbException {
+  public synchronized Output read(Hash taskHash, ConcreteType type) throws OutputDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       SObject messagesObject = objectDb.get(Hash.read(source));
       ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
@@ -100,7 +100,7 @@ public class OutputsDb {
         return new Output(object, messages);
       }
     } catch (IOException e) {
-      throw outputsDbException(e);
+      throw outputDbException(e);
     }
   }
 

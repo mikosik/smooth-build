@@ -6,32 +6,32 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.outputs.OutputsDb;
-import org.smoothbuild.db.outputs.OutputsDbException;
+import org.smoothbuild.db.outputs.OutputDb;
+import org.smoothbuild.db.outputs.OutputDbException;
 import org.smoothbuild.exec.RuntimeHash;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 
 public class TaskExecutor {
-  private final OutputsDb outputsDb;
+  private final OutputDb outputDb;
   private final TaskReporter reporter;
   private final Hash runtimeHash;
   private final Provider<Container> containerProvider;
 
   @Inject
-  public TaskExecutor(OutputsDb outputsDb, TaskReporter reporter, @RuntimeHash Hash runtimeHash,
+  public TaskExecutor(OutputDb outputDb, TaskReporter reporter, @RuntimeHash Hash runtimeHash,
       Provider<Container> containerProvider) {
-    this.outputsDb = outputsDb;
+    this.outputDb = outputDb;
     this.reporter = reporter;
     this.runtimeHash = runtimeHash;
     this.containerProvider = containerProvider;
   }
 
   public void execute(Task task, Input input) throws IOException,
-      OutputsDbException {
+      OutputDbException {
     Hash hash = taskHash(task, input);
-    if (outputsDb.contains(hash)) {
-      Output output = outputsDb.read(hash, task.type());
+    if (outputDb.contains(hash)) {
+      Output output = outputDb.read(hash, task.type());
       task.setResult(new TaskResult(output, true));
     } else {
       Container container = containerProvider.get();
@@ -41,7 +41,7 @@ public class TaskExecutor {
         container.destroy();
       }
       if (task.shouldCacheOutput()) {
-        outputsDb.write(hash, task.output());
+        outputDb.write(hash, task.output());
       }
     }
     reporter.report(task);
