@@ -28,6 +28,9 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import okio.BufferedSink;
 import okio.BufferedSource;
 
+/**
+ * This class is thread-safe.
+ */
 public class OutputsDb {
   private final FileSystem fileSystem;
   private final ObjectDb objectDb;
@@ -40,7 +43,7 @@ public class OutputsDb {
     this.objectFactory = objectFactory;
   }
 
-  public void write(Hash taskHash, Output output) throws OutputsDbException {
+  public synchronized void write(Hash taskHash, Output output) throws OutputsDbException {
     try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
       Array messages = output.messages();
       sink.write(messages.hash());
@@ -52,7 +55,7 @@ public class OutputsDb {
     }
   }
 
-  public boolean contains(Hash taskHash) throws OutputsDbException {
+  public synchronized boolean contains(Hash taskHash) throws OutputsDbException {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     switch (pathState) {
@@ -67,7 +70,7 @@ public class OutputsDb {
     }
   }
 
-  public Output read(Hash taskHash, ConcreteType type) throws OutputsDbException {
+  public synchronized Output read(Hash taskHash, ConcreteType type) throws OutputsDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       SObject messagesObject = objectDb.get(Hash.read(source));
       ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
