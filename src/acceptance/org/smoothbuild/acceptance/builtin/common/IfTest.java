@@ -17,7 +17,7 @@ public class IfTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void if_returns_second_value_when_condition_is_true() throws Exception {
+  public void if_returns_second_value_when_condition_is_false() throws Exception {
     givenScript("result = if(false(), 'then clause', 'else clause');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
