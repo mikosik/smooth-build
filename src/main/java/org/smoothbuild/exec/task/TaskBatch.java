@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.task;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Collections.unmodifiableList;
 
 import java.io.IOException;
@@ -9,15 +10,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.outputs.OutputDbException;
-import org.smoothbuild.exec.comp.Input;
-import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.exec.task.TaskNode.IfNode;
+import org.smoothbuild.exec.task.TaskNode.NormalNode;
 import org.smoothbuild.parse.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
 public class TaskBatch {
   private final TaskExecutor taskExecutor;
-  private final List<Task> rootTasks;
+  private final List<TaskNode> rootTasks;
 
   @Inject
   public TaskBatch(TaskExecutor taskExecutor) {
@@ -25,72 +26,40 @@ public class TaskBatch {
     this.rootTasks = new ArrayList<>();
   }
 
-  public List<Task> rootTasks() {
+  public List<TaskNode> rootTasks() {
     return unmodifiableList(rootTasks);
   }
 
   public void createTasks(Expression expression) {
-    rootTasks.add(expression.createTask(null));
+    rootTasks.add(toTaskNode(expression.createTask(null)));
+  }
+
+  private static TaskNode toTaskNode(Task task) {
+    if (task.name().equals("if")) {
+      return new IfNode(task, toTaskNodes(task.dependencies()));
+    } else {
+      return new NormalNode(task, toTaskNodes(task.dependencies()));
+    }
+  }
+
+  private static ImmutableList<TaskNode> toTaskNodes(ImmutableList<Task> dependencies) {
+    return dependencies.stream()
+        .map(TaskBatch::toTaskNode)
+        .collect(toImmutableList());
   }
 
   public void executeAll() throws IOException, OutputDbException {
-    for (Task task : rootTasks) {
-      executeGraph(task);
-      if (!task.hasSuccessfulResult()) {
+    for (TaskNode node : rootTasks) {
+      node.execute(taskExecutor);
+      if (!(node.hasSuccessfulResult())) {
         return;
       }
     }
-  }
-
-  private void executeGraph(Task task) throws IOException, OutputDbException {
-    if (task.name().equals("if")) {
-      executeIfGraph(task);
-    } else {
-      executeNormalGraph(task);
-    }
-  }
-
-  private void executeIfGraph(Task task) throws IOException, OutputDbException {
-    ImmutableList<Task> dependencies = task.dependencies();
-    Task conditionTask = dependencies.get(0);
-    executeGraph(conditionTask);
-    if (!conditionTask.hasSuccessfulResult()) {
-      return;
-    }
-    Task thenTask = dependencies.get(1);
-    Task elseTask = dependencies.get(2);
-    if (((Bool) conditionTask.output().result()).jValue()) {
-      executeIfTask(task, conditionTask, thenTask);
-    } else {
-      executeIfTask(task, conditionTask, elseTask);
-    }
-  }
-
-  private void executeIfTask(Task task, Task conditionTask, Task dependencyTask) throws
-      IOException, OutputDbException {
-    executeGraph(dependencyTask);
-    if (!dependencyTask.hasSuccessfulResult()) {
-      return;
-    }
-    // Only one of then/else values will be used and it will be used twice.
-    // This way TaskExecutor can calculate task hash and use it for caching.
-    List<Task> dependencies = ImmutableList.of(conditionTask, dependencyTask, dependencyTask);
-    taskExecutor.execute(task, Input.fromResults(dependencies));
-  }
-
-  private void executeNormalGraph(Task task) throws IOException, OutputDbException {
-    for (Task subTask : task.dependencies()) {
-      executeGraph(subTask);
-      if (!subTask.hasSuccessfulResult()) {
-        return;
-      }
-    }
-    taskExecutor.execute(task, Input.fromResults(task.dependencies()));
   }
 
   public boolean containsErrors() {
     return !rootTasks
         .stream()
-        .allMatch(Task::hasSuccessfulResult);
+        .allMatch(TaskNode::hasSuccessfulResult);
   }
 }

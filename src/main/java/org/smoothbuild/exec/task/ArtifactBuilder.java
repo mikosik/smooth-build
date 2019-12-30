@@ -46,19 +46,19 @@ public class ArtifactBuilder {
     if (!taskBatch.containsErrors()) {
       console.println("\nbuilt artifact(s):");
 
-      List<Task> sortedTasks = taskBatch.rootTasks()
+      List<TaskNode> sortedTasks = taskBatch.rootTasks()
           .stream()
-          .sorted(comparing(Task::name))
+          .sorted(comparing(TaskNode::name))
           .collect(toList());
-      for (Task artifact : sortedTasks) {
+      for (TaskNode artifact : sortedTasks) {
         save(artifact);
       }
     }
   }
 
-  private void save(Task task) {
-    String name = task.name();
-    SObject object = task.output().result();
+  private void save(TaskNode node) {
+    String name = node.name();
+    SObject object = node.result().output().result();
     try {
       artifactSaver.save(name, object);
       console.println(name + " -> " + artifactPath(name));
