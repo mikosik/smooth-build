@@ -20,8 +20,8 @@ import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.db.ObjectDb;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
