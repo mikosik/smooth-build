@@ -22,7 +22,6 @@ public class Task {
   private final String name;
   private final Location location;
   private final boolean isComputationCacheable;
-  private TaskResult result;
 
   public Task(Computation computation, String name, boolean isComputationCacheable,
       List<? extends Task> dependencies, Location location) {
@@ -31,7 +30,6 @@ public class Task {
     this.name = name;
     this.location = location;
     this.isComputationCacheable = isComputationCacheable;
-    this.result = null;
   }
 
   public ImmutableList<Task> dependencies() {
@@ -50,36 +48,16 @@ public class Task {
     return location;
   }
 
-  public void execute(Container container, Input input) {
-    try {
-      result = new TaskResult(computation.execute(input, container), false);
-    } catch (ComputationException e) {
-      result = new TaskResult(e);
-    }
+  public Output execute(Container container, Input input) throws ComputationException {
+    return computation.execute(input, container);
   }
 
-  public Output output() {
-    return result.output();
-  }
-
-  public boolean shouldCacheOutput() {
-    return isComputationCacheable && result.hasOutput();
+  public boolean isComputationCacheable() {
+    return isComputationCacheable;
   }
 
   public Hash hash() {
     return computation.hash();
-  }
-
-  public void setResult(TaskResult result) {
-    this.result = result;
-  }
-
-  public TaskResult result() {
-    return result;
-  }
-
-  public boolean hasSuccessfulResult() {
-    return result != null && result.hasOutputWithValue();
   }
 
   public Task convertIfNeeded(ConcreteType type) {

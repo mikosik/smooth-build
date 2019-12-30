@@ -9,6 +9,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputDb;
 import org.smoothbuild.db.outputs.OutputDbException;
 import org.smoothbuild.exec.RuntimeHash;
+import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 
@@ -27,24 +28,38 @@ public class TaskExecutor {
     this.containerProvider = containerProvider;
   }
 
-  public void execute(Task task, Input input) throws IOException,
+  public TaskResult execute(Task task, Input input) throws IOException,
       OutputDbException {
+    TaskResult taskResult = executeImpl2(task, input);
+    // TODO reporter should be invoked from code that calls us
+    reporter.report(task, taskResult);
+    return taskResult;
+  }
+
+  private TaskResult executeImpl2(final Task task, final Input input) throws OutputDbException,
+      IOException {
     Hash hash = taskHash(task, input);
     if (outputDb.contains(hash)) {
       Output output = outputDb.read(hash, task.type());
-      task.setResult(new TaskResult(output, true));
+      return new TaskResult(output, true);
     } else {
-      Container container = containerProvider.get();
-      try {
-        task.execute(container, input);
-      } finally {
-        container.destroy();
+      TaskResult taskResult = executeImpl(task, input);
+      if (task.isComputationCacheable() && taskResult.hasOutput()) {
+        outputDb.write(hash, taskResult.output());
       }
-      if (task.shouldCacheOutput()) {
-        outputDb.write(hash, task.output());
-      }
+      return taskResult;
     }
-    reporter.report(task);
+  }
+
+  private TaskResult executeImpl(final Task task, final Input input) throws IOException {
+    Container container = containerProvider.get();
+    try {
+      return new TaskResult(task.execute(container, input), false);
+    } catch (ComputationException e) {
+      return new TaskResult(e);
+    } finally {
+      container.destroy();
+    }
   }
 
   private Hash taskHash(Task task, Input input) {
