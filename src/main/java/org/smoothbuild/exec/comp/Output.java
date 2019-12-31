@@ -9,21 +9,21 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 
 public class Output {
-  private final SObject result;
+  private final SObject value;
   private final Array messages;
 
-  public Output(SObject result, Array messages) {
-    this.result = result;
+  public Output(SObject value, Array messages) {
+    this.value = value;
     this.messages = checkNotNull(messages);
   }
 
-  public boolean hasResult() {
-    return result != null;
+  public boolean hasValue() {
+    return value != null;
   }
 
-  public SObject result() {
-    checkState(hasResult(), "Output does not contain result.");
-    return result;
+  public SObject value() {
+    checkState(hasValue(), "Output does not contain value.");
+    return value;
   }
 
   public Array messages() {
@@ -36,17 +36,17 @@ public class Output {
   }
 
   private boolean equals(Output output) {
-    return Objects.equals(result, output.result)
+    return Objects.equals(value, output.value)
         && Objects.equals(messages, output.messages);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(result, messages);
+    return Objects.hash(value, messages);
   }
 
   @Override
   public String toString() {
-    return "TaskOutput(" + result + ", " + messages + ")";
+    return "TaskOutput(" + value + ", " + messages + ")";
   }
 }

@@ -58,7 +58,7 @@ public class ArtifactBuilder {
 
   private void save(TaskNode node) {
     String name = node.name();
-    SObject object = node.result().output().result();
+    SObject object = node.result().output().value();
     try {
       artifactSaver.save(name, object);
       console.println(name + " -> " + artifactPath(name));
