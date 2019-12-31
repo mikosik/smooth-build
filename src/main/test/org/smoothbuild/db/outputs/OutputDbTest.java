@@ -78,7 +78,7 @@ public class OutputDbTest extends TestingContext {
     given(file = file(path, bytes));
     given(array = arrayBuilder(objectFactory().fileType()).add(file).build());
     given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputDb().read(hash, arrayType(objectFactory().fileType())).result())
+    when(() -> ((Array) outputDb().read(hash, arrayType(objectFactory().fileType())).value())
         .asIterable(Struct.class).iterator().next());
     thenReturned(file);
   }
@@ -88,7 +88,7 @@ public class OutputDbTest extends TestingContext {
     given(blob = blob(bytes));
     given(array = arrayBuilder(blobType()).add(blob).build());
     given(outputDb()).write(hash, new Output(array, emptyMessageArray()));
-    when(((Array) outputDb().read(hash, arrayType(blobType())).result())
+    when(((Array) outputDb().read(hash, arrayType(blobType())).value())
         .asIterable(Blob.class).iterator().next());
     thenReturned(blob);
   }
@@ -98,7 +98,7 @@ public class OutputDbTest extends TestingContext {
     given(boolValue = bool(true));
     given(array = arrayBuilder(boolType()).add(boolValue).build());
     given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputDb().read(hash, arrayType(boolType())).result())
+    when(() -> ((Array) outputDb().read(hash, arrayType(boolType())).value())
         .asIterable(Bool.class).iterator().next());
     thenReturned(boolValue);
   }
@@ -108,7 +108,7 @@ public class OutputDbTest extends TestingContext {
     given(stringValue = string(string));
     given(array = arrayBuilder(stringType()).add(stringValue).build());
     given(() -> outputDb().write(hash, new Output(array, emptyMessageArray())));
-    when(() -> ((Array) outputDb().read(hash, arrayType(stringType())).result())
+    when(() -> ((Array) outputDb().read(hash, arrayType(stringType())).value())
         .asIterable(SString.class).iterator().next());
     thenReturned(stringValue);
   }
@@ -117,7 +117,7 @@ public class OutputDbTest extends TestingContext {
   public void written_file_can_be_read_back() {
     given(file = file(path, bytes));
     given(() -> outputDb().write(hash, new Output(file, emptyMessageArray())));
-    when(() -> outputDb().read(hash, objectFactory().fileType()).result());
+    when(() -> outputDb().read(hash, objectFactory().fileType()).value());
     thenReturned(file);
   }
 
@@ -125,7 +125,7 @@ public class OutputDbTest extends TestingContext {
   public void written_blob_can_be_read_back() throws Exception {
     given(blob = blob(bytes));
     given(outputDb()).write(hash, new Output(blob, emptyMessageArray()));
-    when(outputDb().read(hash, blobType()).result());
+    when(outputDb().read(hash, blobType()).value());
     thenReturned(blob);
   }
 
@@ -133,7 +133,7 @@ public class OutputDbTest extends TestingContext {
   public void written_bool_can_be_read_back() {
     given(boolValue = bool(true));
     given(() -> outputDb().write(hash, new Output(boolValue, emptyMessageArray())));
-    when(() -> ((Bool) outputDb().read(hash, boolType()).result()).jValue());
+    when(() -> ((Bool) outputDb().read(hash, boolType()).value()).jValue());
     thenReturned(true);
   }
 
@@ -141,7 +141,7 @@ public class OutputDbTest extends TestingContext {
   public void written_string_can_be_read_back() {
     given(stringValue = string(string));
     given(() -> outputDb().write(hash, new Output(stringValue, emptyMessageArray())));
-    when(() -> ((SString) outputDb().read(hash, stringType()).result()).jValue());
+    when(() -> ((SString) outputDb().read(hash, stringType()).value()).jValue());
     thenReturned(string);
   }
 }

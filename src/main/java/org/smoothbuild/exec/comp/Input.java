@@ -44,7 +44,7 @@ public class Input {
 
   private static ImmutableList<SObject> toValues(List<TaskResult> deps) {
     return deps.stream()
-        .map(t -> t.output().result())
+        .map(t -> t.output().value())
         .collect(toImmutableList());
   }
 

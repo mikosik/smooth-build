@@ -48,7 +48,7 @@ public class OutputDb {
       Array messages = output.messages();
       sink.write(messages.hash());
       if (!containsErrors(messages)) {
-        sink.write(output.result().hash());
+        sink.write(output.value().hash());
       }
     } catch (IOException e) {
       throw outputDbException(e);

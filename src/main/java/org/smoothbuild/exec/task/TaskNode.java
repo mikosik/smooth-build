@@ -66,7 +66,7 @@ public abstract class TaskNode {
       }
       TaskNode thenTask = children.get(1);
       TaskNode elseTask = children.get(2);
-      if (((Bool) conditionTask.result().output().result()).jValue()) {
+      if (((Bool) conditionTask.result().output().value()).jValue()) {
         executeIfTask(conditionTask, thenTask, taskExecutor);
       } else {
         executeIfTask(conditionTask, elseTask, taskExecutor);

@@ -25,10 +25,10 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void result_returns_result_value() {
+  public void value_returns_value() {
     given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
-    when(output).result();
+    when(output).value();
     thenReturned(sstring);
   }
 
@@ -49,29 +49,29 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void result_throws_exception_when_no_result_is_present() {
+  public void value_throws_exception_when_no_value_is_present() {
     given(output = new Output(null, messages));
-    when(output).result();
+    when(output).value();
     thenThrown(IllegalStateException.class);
   }
 
   @Test
-  public void has_result_returns_true_when_result_is_present() {
+  public void has_value_returns_true_when_value_is_present() {
     given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
-    when(output).hasResult();
+    when(output).hasValue();
     thenReturned(true);
   }
 
   @Test
-  public void has_result_returns_false_when_result_is_present() {
+  public void has_value_returns_false_when_no_value_is_present() {
     given(output = new Output(null, messages));
-    when(output).hasResult();
+    when(output).hasValue();
     thenReturned(false);
   }
 
   @Test
-  public void outputs_with_same_result_and_messages_are_equal() {
+  public void outputs_with_same_value_and_messages_are_equal() {
     given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).equals(new Output(sstring, messages));
@@ -79,7 +79,7 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void outputs_with_same_result_and_no_messages_are_equal() {
+  public void outputs_with_same_value_and_no_messages_are_equal() {
     given(sstring = string("abc"));
     given(output = new Output(sstring, emptyMessageArray()));
     when(output).equals(new Output(sstring, emptyMessageArray()));
@@ -87,14 +87,14 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void outputs_with_same_message_and_no_result_are_equal() {
+  public void outputs_with_same_message_and_no_value_are_equal() {
     given(output = new Output(null, messages));
     when(output).equals(new Output(null, messages));
     thenReturned(true);
   }
 
   @Test
-  public void outputs_with_same_result_but_different_messages_are_not_equal() {
+  public void outputs_with_same_value_but_different_messages_are_not_equal() {
     given(sstring = string("abc"));
     given(output = new Output(sstring, messages));
     when(output).equals(new Output(sstring, emptyMessageArray()));
@@ -102,7 +102,7 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void outputs_with_different_result_and_same_messages_are_not_equal() {
+  public void outputs_with_different_value_and_same_messages_are_not_equal() {
     given(sstring = string("abc"));
     given(otherSstring = string("def"));
     given(output = new Output(sstring, messages));
@@ -111,7 +111,7 @@ public class OutputTest extends TestingContext {
   }
 
   @Test
-  public void output_without_result_is_not_equal_to_output_with_result() {
+  public void output_without_value_is_not_equal_to_output_with_value() {
     given(sstring = string("abc"));
     when(output = new Output(sstring, messages));
     thenReturned(not(new Output(null, messages)));
