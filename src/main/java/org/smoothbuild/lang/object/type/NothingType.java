@@ -7,6 +7,9 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
 
+/**
+ * This class is immutable.
+ */
 public class NothingType extends ConcreteType {
   public NothingType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, null, "Nothing", Nothing.class, hashedDb, objectDb);

@@ -4,6 +4,9 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+/**
+ * This class is immutable.
+ */
 public class TypeType extends ConcreteType {
   public TypeType(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
     super(merkleRoot, null, "Type", ConcreteType.class, hashedDb, objectDb);

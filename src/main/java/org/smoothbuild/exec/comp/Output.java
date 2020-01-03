@@ -8,6 +8,9 @@ import java.util.Objects;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 
+/**
+ * This class is immutable.
+ */
 public class Output {
   private final SObject value;
   private final Array messages;

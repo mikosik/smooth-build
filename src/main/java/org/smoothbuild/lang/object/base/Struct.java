@@ -16,6 +16,9 @@ import org.smoothbuild.lang.object.type.StructType;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
+/**
+ * This class is immutable.
+ */
 public class Struct extends SObjectImpl {
   private ImmutableMap<String, SObject> fields;
   private final ObjectDb objectDb;

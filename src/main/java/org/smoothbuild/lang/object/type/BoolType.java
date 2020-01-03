@@ -8,6 +8,9 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+/**
+ * This class is immutable.
+ */
 public class BoolType extends ConcreteType {
   public BoolType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, null, BOOL, Bool.class, hashedDb, objectDb);

@@ -8,6 +8,9 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+/**
+ * This class is immutable.
+ */
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
   private final ObjectDb objectDb;

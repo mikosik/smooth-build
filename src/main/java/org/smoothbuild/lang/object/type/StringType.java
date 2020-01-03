@@ -8,6 +8,9 @@ import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+/**
+ * This class is immutable.
+ */
 public class StringType extends ConcreteType {
   public StringType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, null, STRING, SString.class, hashedDb, objectDb);

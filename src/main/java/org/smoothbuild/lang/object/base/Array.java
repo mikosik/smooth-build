@@ -11,6 +11,9 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is immutable.
+ */
 public class Array extends SObjectImpl {
   private final ObjectDb objectDb;
 

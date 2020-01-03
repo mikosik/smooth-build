@@ -5,6 +5,9 @@ import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Output;
 
+/**
+ * This class is immutable.
+ */
 public class TaskResult {
   private final Output output;
   private final ComputationException failure;

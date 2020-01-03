@@ -20,6 +20,9 @@ import org.smoothbuild.io.util.TempManager;
 
 import okio.BufferedSource;
 
+/**
+ * This class is thread-safe.
+ */
 public class HashedDb {
   private final FileSystem fileSystem;
   private final Path rootPath;
