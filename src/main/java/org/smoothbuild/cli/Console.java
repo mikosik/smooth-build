@@ -18,6 +18,9 @@ import org.smoothbuild.lang.object.base.Struct;
 
 import com.google.common.base.Splitter;
 
+/**
+ * This class is thread-save.
+ */
 @Singleton
 public class Console {
   public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
@@ -41,26 +44,26 @@ public class Console {
     this.printStream = printStream;
   }
 
-  public void errors(java.util.List<?> errors) {
+  public synchronized void errors(java.util.List<?> errors) {
     errors.forEach(this::error);
   }
 
-  public void error(Object error) {
+  public synchronized void error(Object error) {
     println(error.toString());
     errorCount++;
   }
 
-  public void error(String message) {
+  public synchronized void error(String message) {
     println("error: " + message);
     errorCount++;
   }
 
-  public void print(String header, Array messages) {
+  public synchronized void print(String header, Array messages) {
     println(GROUP_PREFIX + header);
     print(messages);
   }
 
-  public void print(String header, Exception failure) {
+  public synchronized void print(String header, Exception failure) {
     println(GROUP_PREFIX + header);
     print(getStackTraceAsString(failure));
     failureCount++;
@@ -86,11 +89,11 @@ public class Console {
     }
   }
 
-  public boolean isProblemReported() {
+  public synchronized boolean isProblemReported() {
     return failureCount != 0 || errorCount != 0;
   }
 
-  public void printFinalSummary() {
+  public synchronized void printFinalSummary() {
     printStat(failureCount, "failure(s)");
     printStat(errorCount, "error(s)");
     printStat(warningCount, "warning(s)");
@@ -103,7 +106,7 @@ public class Console {
     }
   }
 
-  protected void printMultiline(String text) {
+  private void printMultiline(String text) {
     Iterator<String> it = Splitter.on("\n").split(text).iterator();
 
     print(MESSAGE_FIRST_LINE_PREFIX);
@@ -115,11 +118,11 @@ public class Console {
     }
   }
 
-  public void println(String line) {
+  public synchronized void println(String line) {
     printStream.println(line);
   }
 
-  public void print(String line) {
+  public synchronized void print(String line) {
     printStream.print(line);
   }
 }
