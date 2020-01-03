@@ -17,6 +17,9 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * This class is immutable.
+ */
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
   private final ObjectDb objectDb;

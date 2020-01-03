@@ -8,6 +8,9 @@ import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+/**
+ * This class is immutable.
+ */
 public class BlobType extends ConcreteType {
   public BlobType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, null, BLOB, Blob.class, hashedDb, objectDb);

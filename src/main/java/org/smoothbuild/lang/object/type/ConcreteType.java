@@ -12,6 +12,8 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 
 /**
  * Concrete type in smooth language.
+ *
+ * This class is immutable.
  */
 public abstract class ConcreteType extends AbstractType implements SObject {
   private final SObjectImpl object;

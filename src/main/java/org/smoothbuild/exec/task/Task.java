@@ -16,6 +16,9 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is immutable.
+ */
 public class Task {
   private final Computation computation;
   private final ImmutableList<Task> dependencies;

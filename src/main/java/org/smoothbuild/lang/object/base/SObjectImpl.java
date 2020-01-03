@@ -8,6 +8,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
+/**
+ * This class is immutable.
+ */
 public class SObjectImpl implements SObject {
   private final MerkleRoot merkleRoot;
   protected final HashedDb hashedDb;

@@ -10,6 +10,9 @@ import org.smoothbuild.lang.object.base.Array;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 
+/**
+ * This class is thread-safe.
+ */
 public class TaskReporter {
   private final Console console;
 
