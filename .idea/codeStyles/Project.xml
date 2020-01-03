@@ -5,7 +5,6 @@
     <option name="RIGHT_MARGIN" value="100" />
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="true" />
     <JavaCodeStyleSettings>
-      <option name="GENERATE_FINAL_PARAMETERS" value="true" />
       <option name="ANNOTATION_PARAMETER_WRAP" value="1" />
       <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />
       <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99999" />
