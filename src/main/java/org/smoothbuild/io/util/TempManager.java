@@ -19,7 +19,7 @@ import org.smoothbuild.io.fs.base.Path;
 @Singleton
 public class TempManager {
   private final FileSystem fileSystem;
-  private AtomicInteger id = new AtomicInteger();
+  private final AtomicInteger id = new AtomicInteger();
 
   @Inject
   public TempManager(FileSystem fileSystem) {
