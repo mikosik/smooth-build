@@ -76,4 +76,9 @@ public class Task {
   public static List<ConcreteType> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);
   }
+
+  @Override
+  public String toString() {
+    return "Task(" + name + ")";
+  }
 }
