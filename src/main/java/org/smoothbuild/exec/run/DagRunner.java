@@ -48,6 +48,6 @@ public class DagRunner {
 
   private void print(String indent, Task task) {
     console.println(indent + task.name() + "(" + task.type().name() + ")");
-    task.dependencies().forEach(ch -> print(indent + "  ", ch));
+    task.children().forEach(ch -> print(indent + "  ", ch));
   }
 }
