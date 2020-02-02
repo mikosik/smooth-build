@@ -36,9 +36,9 @@ public class TaskBatch {
 
   private static TaskNode toTaskNode(Task task) {
     if (task.name().equals("if")) {
-      return new IfNode(task, toTaskNodes(task.dependencies()));
+      return new IfNode(task, toTaskNodes(task.children()));
     } else {
-      return new NormalNode(task, toTaskNodes(task.dependencies()));
+      return new NormalNode(task, toTaskNodes(task.children()));
     }
   }
 

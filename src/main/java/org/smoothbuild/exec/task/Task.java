@@ -13,13 +13,14 @@ import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.util.TreeNode;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class Task {
+public class Task implements TreeNode<Task> {
   private final Computation computation;
   private final ImmutableList<Task> dependencies;
   private final String name;
@@ -35,7 +36,8 @@ public class Task {
     this.isComputationCacheable = isComputationCacheable;
   }
 
-  public ImmutableList<Task> dependencies() {
+  @Override
+  public ImmutableList<Task> children() {
     return dependencies;
   }
 
