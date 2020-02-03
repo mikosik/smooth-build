@@ -1,5 +1,6 @@
 package org.smoothbuild.util;
 
+import static org.smoothbuild.testing.common.TestTreeNode.node;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.TreeNodes.walk;
 import static org.testory.Testory.given;
@@ -12,14 +13,14 @@ import static org.testory.Testory.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.junit.Test;
+import org.smoothbuild.testing.common.TestTreeNode;
 
 public class TreeNodesTest {
-  private Consumer<Node> consumer;
-  private List<Node> nodes;
+  private Consumer<TestTreeNode> consumer;
+  private List<TestTreeNode> nodes;
 
   @Test
   public void to_string_for_null_generates_empty_string_with_EOL() {
@@ -116,50 +117,5 @@ public class TreeNodesTest {
     );
     thenEqual(nodes, list(
         node("name"), node("child 1"), node("child A"), node("child B"), node("child 2")));
-  }
-
-  private static Node node(String name) {
-    return node(name, List.of());
-  }
-
-  private static Node node(String name, List<Node> children) {
-    return new Node(name, children);
-  }
-
-  private static class Node implements TreeNode<Node> {
-    private String name;
-    private List<Node> children;
-
-    public Node(String name, List<Node> children) {
-      this.name = name;
-      this.children = children;
-    }
-
-    @Override
-    public List<Node> children() {
-      return children;
-    }
-
-    @Override
-    public String toString() {
-      return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
-      Node node = (Node) o;
-      return Objects.equals(name, node.name);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(name);
-    }
   }
 }
