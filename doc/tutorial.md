@@ -98,7 +98,7 @@ Dog {
 Definition of each struct automatically generates constructor for that struct.
 Constructor of given struct is a function that
  - returns value of given struct type
- - has the same name as given struct
+ - has the same name as given struct with first letter lowercased
  - has parameter for each struct's field with the same name and type as that field
 
 Let's create some value of type Person which we defined above as struct.

@@ -80,7 +80,7 @@ public class FindSemanticErrors {
     Set<String> all = ImmutableSet.<String>builder()
         .addAll(functions.names())
         .addAll(map(ast.funcs(), NamedNode::name))
-        .addAll(map(ast.structs(), NamedNode::name))
+        .addAll(map(ast.structs(), structNode -> structNode.constructor().name()))
         .build();
     new AstVisitor() {
       @Override
@@ -136,6 +136,7 @@ public class FindSemanticErrors {
     Map<String, Named> defined = new HashMap<>(functions.nameToFunctionMap());
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
+    nameds.addAll(map(ast.structs(), StructNode::constructor));
     nameds.addAll(ast.funcs());
     nameds.sort(comparing(n -> n.location().line()));
     for (Named named : nameds) {

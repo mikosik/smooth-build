@@ -142,7 +142,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
     givenNativeJar(Append.class);
     givenScript("[a] testAppend([a] array, a element);                              \n"
         + "      StringStruct { String value }                                      \n"
-        + "      result = testAppend(array=['aaa'], element=StringStruct('bbb'));   \n");
+        + "      result = testAppend(array=['aaa'], element=stringStruct('bbb'));   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("aaa", "bbb")));
@@ -154,7 +154,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
     givenScript("[a] testAppend([a] array, a element);                                      \n"
         + "      StringStruct { String value }                                              \n"
         + "      [String] emptyStringArray = [];                                            \n"
-        + "      result = testAppend(array=emptyStringArray, element=StringStruct('bbb'));  \n");
+        + "      result = testAppend(array=emptyStringArray, element=stringStruct('bbb'));  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("bbb")));
@@ -165,7 +165,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
     givenNativeJar(Append.class);
     givenScript("[a] testAppend([a] array, a element);                              \n"
         + "      StringStruct { String value }                                      \n"
-        + "      result = testAppend(array=[[]], element=StringStruct('bbb'));      \n");
+        + "      result = testAppend(array=[[]], element=stringStruct('bbb'));      \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(3,

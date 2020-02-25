@@ -19,59 +19,59 @@ public abstract class AbstractAssignmentTestCase {
   public void assignment_tests() throws IOException {
     illegalAssignment("Nothing", "true()", "Bool", "");
     illegalAssignment("Nothing", "'abc'", "String", "");
-    illegalAssignment("Nothing", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Nothing", "myStruct('abc')", "MyStruct", "MyStruct{String field}");
     illegalAssignment("Nothing", "[true()]", "[Bool]", "");
     illegalAssignment("Nothing", "['abc']", "[String]", "");
-    illegalAssignment("Nothing", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("Nothing", "[myStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
 
     allowedAssignment("Bool", "true()", "",
         test -> assertEquals(trueByteString(), test.artifactAsByteStrings("result")));
     illegalAssignment("Bool", "'abc'", "String", "");
-    illegalAssignment("Bool", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Bool", "myStruct('abc')", "MyStruct", "MyStruct{String field}");
     illegalAssignment("Bool", "[true()]", "[Bool]", "");
     illegalAssignment("Bool", "['abc']", "[String]", "");
-    illegalAssignment("Bool", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("Bool", "[myStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
     illegalAssignment("Bool", "[[true()]]", "[[Bool]]", "");
     illegalAssignment("Bool", "[['abc']]", "[[String]]", "");
-    illegalAssignment("Bool", "[[MyStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
+    illegalAssignment("Bool", "[[myStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
 
     illegalAssignment("String", "true()", "Bool", "");
     allowedAssignment("String", "'abc'", "",
         test -> assertEquals("abc", test.artifactArray("result")));
-    allowedAssignment("String", "MyStruct('abc')", "MyStruct{String field}\n",
+    allowedAssignment("String", "myStruct('abc')", "MyStruct{String field}\n",
         test -> assertEquals("abc", test.artifactArray("result")));
     illegalAssignment("String", "[true()]", "[Bool]", "");
     illegalAssignment("String", "['abc']", "[String]", "");
-    illegalAssignment("String", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("String", "[myStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
     illegalAssignment("String", "[[true()]]", "[[Bool]]", "");
     illegalAssignment("String", "[['abc']]", "[[String]]", "");
-    illegalAssignment("String", "[[MyStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
+    illegalAssignment("String", "[[myStruct('abc')]]", "[[MyStruct]]", "MyStruct{String field}");
 
     illegalAssignment("Blob", "true()", "Bool", "");
     illegalAssignment("Blob", "'abc'", "String", "");
-    illegalAssignment("Blob", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("Blob", "myStruct('abc')", "MyStruct", "MyStruct{String field}");
     illegalAssignment("Blob", "[true()]", "[Bool]", "");
     illegalAssignment("Blob", "['abc']", "[String]", "");
-    illegalAssignment("Blob", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("Blob", "[myStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
     illegalAssignment("Blob", "[[true()]]", "[[Bool]]", "");
 
     illegalAssignment("[Nothing]", "true()", "Bool", "");
     illegalAssignment("[Nothing]", "'abc'", "String", "");
-    illegalAssignment("[Nothing]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("[Nothing]", "myStruct('abc')", "MyStruct", "MyStruct{String field}");
     illegalAssignment("[Nothing]", "[true()]", "[Bool]", "");
     illegalAssignment("[Nothing]", "['abc']", "[String]", "");
-    illegalAssignment("[Nothing]", "[MyStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
+    illegalAssignment("[Nothing]", "[myStruct('abc')]", "[MyStruct]", "MyStruct{String field}");
     illegalAssignment("[Nothing]", "[[true()]]", "[[Bool]]", "");
 
     illegalAssignment("[String]", "true()", "Bool", "");
     illegalAssignment("[String]", "'abc'", "String", "");
-    illegalAssignment("[String]", "MyStruct('abc')", "MyStruct", "MyStruct{String field}");
+    illegalAssignment("[String]", "myStruct('abc')", "MyStruct", "MyStruct{String field}");
     illegalAssignment("[String]", "[[true()]]", "[[Bool]]", "");
     allowedAssignment("[String]", "[]", "",
         test -> assertEquals(list(), test.artifactArray("result")));
     allowedAssignment("[String]", "['abc', 'def']", "",
         test -> assertEquals(list("abc", "def"), test.artifactArray("result")));
-    allowedAssignment("[String]", "[MyStruct('abc')]", "MyStruct{String field}\n",
+    allowedAssignment("[String]", "[myStruct('abc')]", "MyStruct{String field}\n",
         test -> assertEquals(list("abc"), test.artifactArray("result")));
     illegalAssignment("[String]", "[['abc']]", "[[String]]", "");
     illegalAssignment("[String]", "[true()]", "[Bool]", "");

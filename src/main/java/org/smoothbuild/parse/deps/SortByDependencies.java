@@ -22,7 +22,6 @@ import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.Named;
-import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
 import org.smoothbuild.util.Maybe;
@@ -31,7 +30,7 @@ public class SortByDependencies {
   public static Maybe<List<String>> sortByDependencies(Functions functions, Ast ast) {
     List<FuncNode> funcs = ast.funcs();
     Set<String> globalNames = new HashSet<>(functions.names());
-    globalNames.addAll(map(ast.structs(), NamedNode::name));
+    globalNames.addAll(map(ast.structs(), structNode -> structNode.constructor().name()));
     return sortByDependencies(
         "Function call graph", funcs, funcToStackElem(), globalNames::contains);
   }

@@ -56,7 +56,8 @@ public class ModuleLoader {
       builder.add(new Parameter(i, field.get(Type.class), field.name(), null));
     }
     ImmutableList<Parameter> parameters = builder.build();
-    Signature signature = new Signature(struct.get(Type.class), struct.name(), parameters);
+    Signature signature =
+        new Signature(struct.get(Type.class), struct.constructor().name(), parameters);
     return new Constructor(signature, struct.location());
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.parse.ast.StructNode.constructorNameToTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +106,9 @@ public class InferCallTypeAndParamAssignment {
         if (ast.containsFunc(name)) {
           return ast.func(name).getParameterInfos();
         }
-        if (ast.containsStruct(name)) {
-          return ast.struct(name).getParameterInfos();
+        String structName = constructorNameToTypeName(name);
+        if (ast.containsStruct(structName)) {
+          return ast.struct(structName).getParameterInfos();
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
@@ -152,8 +154,9 @@ public class InferCallTypeAndParamAssignment {
         if (ast.containsFunc(name)) {
           return ast.func(name).get(Type.class);
         }
-        if (ast.containsStruct(name)) {
-          return ast.struct(name).get(Type.class);
+        String structName = constructorNameToTypeName(name);
+        if (ast.containsStruct(structName)) {
+          return ast.struct(structName).get(Type.class);
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
