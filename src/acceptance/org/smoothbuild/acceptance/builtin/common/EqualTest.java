@@ -61,7 +61,7 @@ public class EqualTest extends AcceptanceTestCase {
         "          String firstName," +
         "          String secondName," +
         "        }" +
-        "        result = equal(Person('aaa', 'bbb'), Person('aaa', 'bbb'));");
+        "        result = equal(person('aaa', 'bbb'), person('aaa', 'bbb'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactAsBoolean("result"), equalTo(true));
@@ -73,7 +73,7 @@ public class EqualTest extends AcceptanceTestCase {
         "          String firstName," +
         "          String secondName," +
         "        }" +
-        "        result = equal(Person('aaa', 'bbb'), Person('aaa', 'ccc'));");
+        "        result = equal(person('aaa', 'bbb'), person('aaa', 'ccc'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactAsBoolean("result"), equalTo(false));
@@ -91,7 +91,7 @@ public class EqualTest extends AcceptanceTestCase {
         "          String secondName," +
         "        }" +
         "        " +
-        "        result = equal(Person('aaa', 'bbb'), Person2('aaa', 'aaa'));");
+        "        result = equal(person('aaa', 'bbb'), person2('aaa', 'aaa'));");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactAsBoolean("result"), equalTo(false));

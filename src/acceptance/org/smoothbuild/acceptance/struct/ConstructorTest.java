@@ -8,7 +8,7 @@ public class ConstructorTest extends AcceptanceTestCase {
   public void creating_empty_struct_is_possible() throws Exception {
     givenScript("MyStruct {}                                 \n"
         + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(MyStruct());            \n");
+        + "      result = takeStruct(myStruct());            \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
@@ -19,7 +19,7 @@ public class ConstructorTest extends AcceptanceTestCase {
         + "        String field,                             \n"
         + "      }                                           \n"
         + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(MyStruct('def'));       \n");
+        + "      result = takeStruct(myStruct('def'));       \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
@@ -29,8 +29,8 @@ public class ConstructorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                                  \n"
         + "        String field,                             \n"
         + "      }                                           \n"
-        + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(MyStruct());            \n");
+        + "      String takeStruct(myStruct struct) = 'abc'; \n"
+        + "      result = takeStruct(myStruct());            \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Parameter 'field' must be specified.");

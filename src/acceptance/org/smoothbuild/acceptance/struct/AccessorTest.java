@@ -11,7 +11,7 @@ public class AccessorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                              \n"
         + "        String field,                         \n"
         + "      }                                       \n"
-        + "      String result = MyStruct('abc').field;  \n");
+        + "      String result = myStruct('abc').field;  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactContent("result"), "abc");
@@ -50,7 +50,7 @@ public class AccessorTest extends AcceptanceTestCase {
         + "      S3 {                                         \n"
         + "        String f3,                                 \n"
         + "      }                                            \n"
-        + "      String result = S1(S2(S3('abc'))).f1.f2.f3;  \n");
+        + "      String result = s1(s2(s3('abc'))).f1.f2.f3;  \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactContent("result"), "abc");
@@ -70,7 +70,7 @@ public class AccessorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                               \n"
         + "        String field,                          \n"
         + "      }                                        \n"
-        + "      result = MyStruct('abc').otherField;     \n");
+        + "      result = myStruct('abc').otherField;     \n");
     whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(4, "Type 'MyStruct' doesn't have field 'otherField'.");

@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * changed default constructor name to be equal to struct name with lowercased first letter
  * renamed 'file' function to 'aFile' in platform API
 
 Version 0.18.0 (2019.03.22)
