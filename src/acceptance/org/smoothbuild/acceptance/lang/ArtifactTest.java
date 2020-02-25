@@ -30,8 +30,7 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_blob_artifact() throws Exception {
-    givenFile("file.txt", "abc");
-    givenScript("result = aFile('//file.txt').content;");
+    givenScript("result = toBlob('abc');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -39,8 +38,7 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_file_artifact() throws Exception {
-    givenFile("file.txt", "abc");
-    givenScript("result = aFile('//file.txt');");
+    givenScript("result = file(toBlob('abc'), 'file.txt');");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));
@@ -49,8 +47,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void storing_function_with_underscore_in_name_converts_last_underscore_to_dot()
       throws Exception {
-    givenFile("file.txt", "abc");
-    givenScript("my_result_file_txt = aFile('//file.txt').content;");
+    givenScript("my_result_file_txt = toBlob('abc');");
     whenSmoothBuild("my_result_file_txt");
     thenFinishedWithSuccess();
     then(artifact("my_result_file.txt"), hasContent("abc"));
@@ -106,9 +103,7 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_blobs_artifact() throws Exception {
-    givenFile("file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript("result = [aFile('//file1.txt').content, aFile('//file2.txt').content];");
+    givenScript("result = [ toBlob('abc'), toBlob('def') ];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -124,9 +119,7 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_files_artifact() throws Exception {
-    givenFile("file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript("result = [aFile('//file1.txt'), aFile('//file2.txt')];");
+    givenScript("result = [file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
@@ -134,8 +127,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
-    givenFile("file.txt", "abc");
-    givenScript("result = [aFile('//file.txt'), aFile('//file.txt')];");
+    givenScript(
+        "myFile = file(toBlob('abc'), 'file.txt');   \n" +
+        "result = [myFile, myFile];                    ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"

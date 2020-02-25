@@ -11,9 +11,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class JarUnjarTest extends AcceptanceTestCase {
   @Test
   public void jar_unjar() throws IOException {
-    givenFile("dir/file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript("result = [aFile('//dir/file1.txt'), aFile('//file2.txt')] | jar | unjar;");
+    givenScript("result = [" +
+        "file(toBlob('abc'), 'dir/file1.txt'), " +
+        "file(toBlob('def'), 'file2.txt')] " +
+        "| jar | unjar;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
