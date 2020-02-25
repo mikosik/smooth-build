@@ -199,7 +199,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
       throws Exception {
     givenNativeJar(FileParameter.class);
     givenScript("File fileParameter(Blob file);\n"
-        + "      result = fileParameter(file('//file.txt'));");
+        + "      result = fileParameter(aFile('//file.txt'));");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'fileParameter' parameter 'file' has type Blob "

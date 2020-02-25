@@ -13,7 +13,7 @@ public class ZipUnzipTest extends AcceptanceTestCase {
   public void zip_unzip() throws IOException {
     givenFile("dir/file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [file('//dir/file1.txt'), file('//file2.txt')] | zip | unzip;");
+    givenScript("result = [aFile('//dir/file1.txt'), aFile('//file2.txt')] | zip | unzip;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));

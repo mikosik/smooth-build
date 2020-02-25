@@ -47,10 +47,10 @@ public class FunctionTest extends AcceptanceTestCase {
 
   @Test
   public void overriding_core_function_causes_error() throws Exception {
-    givenScript("file = 'abc';");
-    whenSmoothBuild("file");
+    givenScript("aFile = 'abc';");
+    whenSmoothBuild("aFile");
     thenFinishedWithError();
-    thenOutputContainsError(1, "'file' is already defined at");
+    thenOutputContainsError(1, "'aFile' is already defined at");
   }
 
   @Test
@@ -241,7 +241,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void function_with_result_type_which_is_supertype_of_function_expression()
       throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("Blob func = file('//file.txt');"
+    givenScript("Blob func = aFile('//file.txt');"
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -251,7 +251,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void function_result_cannot_be_assigned_to_non_convertible_type_even_when_function_expression_is_convertible()
       throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("Blob func = file('//file.txt');"
+    givenScript("Blob func = aFile('//file.txt');"
         + "      File result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();

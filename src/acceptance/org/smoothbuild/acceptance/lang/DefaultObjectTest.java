@@ -24,7 +24,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
   public void default_value_can_have_type_convertible_to_parameter_type()
       throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("func(Blob param = file('//file.txt')) = param;"
+    givenScript("func(Blob param = aFile('//file.txt')) = param;"
         + "      result = func;");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

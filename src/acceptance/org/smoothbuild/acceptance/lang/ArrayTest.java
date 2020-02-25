@@ -73,7 +73,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_of_blobs() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [file('//file1.txt').content, file('//file2.txt').content];");
+    givenScript("result = [aFile('//file1.txt').content, aFile('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -83,7 +83,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_of_files() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [file('//file1.txt'), file('//file2.txt')];");
+    givenScript("result = [aFile('//file1.txt'), aFile('//file2.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
@@ -173,7 +173,7 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     givenFile("file.txt", "abc");
-    givenScript("result = [file('//file.txt'), file('//file.txt')];");
+    givenScript("result = [aFile('//file.txt'), aFile('//file.txt')];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
@@ -222,7 +222,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_elements_of_compatible_types() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = [file('//file1.txt'), file('//file2.txt').content];");
+    givenScript("result = [aFile('//file1.txt'), aFile('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -231,7 +231,7 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void array_with_elements_of_incompatible_types() throws Exception {
     givenFile("file1.txt", "abc");
-    givenScript("result = ['abc', file('//file2.txt').content];");
+    givenScript("result = ['abc', aFile('//file2.txt').content];");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Array cannot contain elements of incompatible types.\n"

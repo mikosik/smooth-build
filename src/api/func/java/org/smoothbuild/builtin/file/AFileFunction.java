@@ -12,8 +12,8 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 
-public class FileFunction {
-  @SmoothFunction(value = "file", cacheable = false)
+public class AFileFunction {
+  @SmoothFunction(value = "aFile", cacheable = false)
   public static Struct file(Container container, SString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {

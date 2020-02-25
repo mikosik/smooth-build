@@ -1,12 +1,12 @@
 Core smooth functions
 ---------------------
 
+ * [aFile](api/aFile.md) Reads single file from project filesystem.
  * [and](api/and.md) Returns `true` if both arguments are `true`.
  * [concatenate](api/concatenate.md) Concatenates two arrays.
  * [equal](api/equal.md) Returns `true` when arguments are equal.
  * [false](api/false.md) Returns `false` value of type Bool
  * [File](api/File.md) Creates File from path and content.
- * [file](api/file.md) Reads single file from project filesystem.
  * [files](api/files.md) Reads set of files from project filesystem.
  * [filter](api/filter.md) Filters files according to glob pattern.
  * [if](api/if.md) Returns one of two values depending on bool condition.
