@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
@@ -23,7 +24,6 @@ import org.smoothbuild.antlr.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
-import org.smoothbuild.antlr.SmoothParser.NonArrayTypeContext;
 import org.smoothbuild.antlr.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
@@ -40,8 +40,8 @@ public class AstCreator {
 
       @Override
       public Void visitStruct(StructContext struct) {
-        String name = struct.name().getText();
-        Location location = locationOf(file, struct.name());
+        String name = struct.TYPE_IDENTIFIER().getText();
+        Location location = locationOf(file, struct.TYPE_IDENTIFIER().getSymbol());
         List<FieldNode> fields = createFields(struct.fieldList());
         structs.add(new StructNode(name, fields, location));
         return null;
@@ -173,8 +173,8 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeContext type) {
-        if (type.nonArrayType() != null) {
-          return createNonArrayType(type.nonArrayType());
+        if (type.TYPE_IDENTIFIER() != null) {
+          return createType(type.TYPE_IDENTIFIER());
         }
         if (type.arrayType() != null) {
           return createArrayType(type.arrayType());
@@ -183,8 +183,8 @@ public class AstCreator {
             + " without children.");
       }
 
-      private TypeNode createNonArrayType(NonArrayTypeContext nonArrayType) {
-        return new TypeNode(nonArrayType.getText(), locationOf(file, nonArrayType));
+      private TypeNode createType(TerminalNode type) {
+        return new TypeNode(type.getText(), locationOf(file, type.getSymbol()));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {

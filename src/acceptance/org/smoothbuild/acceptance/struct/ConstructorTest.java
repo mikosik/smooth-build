@@ -29,7 +29,7 @@ public class ConstructorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                                  \n"
         + "        String field,                             \n"
         + "      }                                           \n"
-        + "      String takeStruct(myStruct struct) = 'abc'; \n"
+        + "      String takeStruct(MyStruct struct) = 'abc'; \n"
         + "      result = takeStruct(myStruct());            \n");
     whenSmoothBuild("result");
     thenFinishedWithError();

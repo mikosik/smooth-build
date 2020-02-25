@@ -117,8 +117,8 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void generic_type_can_be_retrieved_by_name() {
-    when(() -> emptyCacheObjectFactory().getType("a"));
-    thenReturned(new GenericType("a"));
+    when(() -> emptyCacheObjectFactory().getType("A"));
+    thenReturned(new GenericType("A"));
   }
 
   @Test
@@ -131,9 +131,9 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void generic_array_type_can_be_created() {
-    given(a = emptyCacheObjectFactory().getType("a"));
+    given(a = emptyCacheObjectFactory().getType("A"));
     when(() -> emptyCacheObjectFactory().arrayType(a));
-    thenReturned(new GenericArrayType(new GenericType("a")));
+    thenReturned(new GenericArrayType(new GenericType("A")));
   }
 
   @Test

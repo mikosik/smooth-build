@@ -217,7 +217,7 @@ public class FindSemanticErrors {
         String name = struct.name();
         if (isGenericTypeName(name)) {
           errors.add(new ParseError(struct.location(),
-              "Struct name '" + name + "' should start with capital letter."));
+              "'" + name + "' is illegal struct name. It must have at least two characters."));
         }
       }
     }.visitAst(ast);

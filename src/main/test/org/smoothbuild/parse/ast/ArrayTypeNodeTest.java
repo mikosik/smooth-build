@@ -16,24 +16,24 @@ public class ArrayTypeNodeTest {
   private TypeNode elementTypeNode;
 
   @Test
-  public void array_node_with_generic_element_name_is_generic() throws Exception {
-    given(typeNode = new ArrayTypeNode(new TypeNode("b", LOCATION), LOCATION));
+  public void array_node_with_generic_element_name_is_generic() {
+    given(typeNode = new ArrayTypeNode(new TypeNode("B", LOCATION), LOCATION));
     when(() -> typeNode.isGeneric());
     thenReturned(true);
   }
 
   @Test
-  public void array_node_with_non_generic_element_name_is_not_generic() throws Exception {
+  public void array_node_with_non_generic_element_name_is_not_generic() {
     given(typeNode = new ArrayTypeNode(new TypeNode("MyType", LOCATION), LOCATION));
     when(() -> typeNode.isGeneric());
     thenReturned(false);
   }
 
   @Test
-  public void array_node_of_depth_2_with_generic_element_name_is_generic() throws Exception {
+  public void array_node_of_depth_2_with_generic_element_name_is_generic() {
     given(typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
-            new TypeNode("b", LOCATION),
+            new TypeNode("B", LOCATION),
             LOCATION),
         LOCATION));
     when(() -> typeNode.isGeneric());
@@ -41,8 +41,7 @@ public class ArrayTypeNodeTest {
   }
 
   @Test
-  public void array_node_of_depth_2_with_non_generic_element_name_is_not_generic()
-      throws Exception {
+  public void array_node_of_depth_2_with_non_generic_element_name_is_not_generic() {
     given(typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
             new TypeNode("MyType", LOCATION),
@@ -53,7 +52,7 @@ public class ArrayTypeNodeTest {
   }
 
   @Test
-  public void array_type_node_core_type_is_element_node() throws Exception {
+  public void array_type_node_core_type_is_element_node() {
     given(elementTypeNode = new TypeNode("MyType", LOCATION));
     given(typeNode = new ArrayTypeNode(elementTypeNode, LOCATION));
     when(() -> typeNode.coreType());
@@ -61,7 +60,7 @@ public class ArrayTypeNodeTest {
   }
 
   @Test
-  public void array_of_array_type_node_core_type_is_element_node() throws Exception {
+  public void array_of_array_type_node_core_type_is_element_node() {
     given(elementTypeNode = new TypeNode("MyType", LOCATION));
     given(typeNode = new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, LOCATION), LOCATION));
     when(() -> typeNode.coreType());

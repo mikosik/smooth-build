@@ -9,7 +9,16 @@ public class StructTest extends AcceptanceTestCase {
     givenScript("myStruct {}");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Struct name 'myStruct' should start with capital letter.\n");
+    thenOutputContainsError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
+  }
+
+  @Test
+  public void struct_name_with_one_large_letter_causes_error() throws Exception {
+    givenScript("A {}");
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContainsError(
+        1, "'A' is illegal struct name. It must have at least two characters.\n");
   }
 
   @Test
@@ -56,16 +65,6 @@ public class StructTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
-  }
-
-  @Test
-  public void struct_with_same_name_as_function_causes_error() throws Exception {
-    givenScript("String myFunction = 'abc';     \n"
-        + "      myFunction {}                  \n"
-        + "      result = 'abc';                \n");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenOutputContainsError(2, "'myFunction' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -132,7 +131,7 @@ public class StructTest extends AcceptanceTestCase {
   @Test
   public void first_field_with_generic_type_causes_error() throws Exception {
     givenScript("MyStruct {               \n"
-        + "        a myField              \n"
+        + "        A myField              \n"
         + "      }                        \n");
     whenSmoothList();
     thenFinishedWithError();
@@ -143,7 +142,7 @@ public class StructTest extends AcceptanceTestCase {
   public void non_first_field_with_generic_type_causes_error() throws Exception {
     givenScript("MyStruct {               \n"
         + "        String myField,        \n"
-        + "        a genericField,        \n"
+        + "        A genericField,        \n"
         + "      }                        \n");
     whenSmoothList();
     thenFinishedWithError();

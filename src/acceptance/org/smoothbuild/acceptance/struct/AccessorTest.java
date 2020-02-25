@@ -22,10 +22,10 @@ public class AccessorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                                        \n"
         + "        String field,                                   \n"
         + "      }                                                 \n"
-        + "      String result = MyStruct.field(MyStruct('abc'));  \n");
+        + "      String result = MyStruct.field(myStruct('abc'));  \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(4, "mismatched input '(' ");
+    thenOutputContainsError(4, "mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING}");
   }
 
   @Test
@@ -33,7 +33,7 @@ public class AccessorTest extends AcceptanceTestCase {
     givenScript("MyStruct {                                \n"
         + "        String field,                           \n"
         + "      }                                         \n"
-        + "      String result = MyStruct('abc').field();  \n");
+        + "      String result = myStruct('abc').field();  \n");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(4, "mismatched input '(' expecting ");

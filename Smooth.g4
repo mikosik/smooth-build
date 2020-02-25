@@ -1,7 +1,7 @@
 grammar Smooth;
 
 module: ( struct | func )* EOF ;
-struct: name '{' fieldList? '}' ;
+struct: TYPE_IDENTIFIER '{' fieldList? '}' ;
 fieldList: field ( ',' field )* ','? ;
 field: type name ;
 func: type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
@@ -14,16 +14,18 @@ argList: arg ( ',' arg )* ','? ;
 arg: ( name '=' )? pipe ;
 array: '[' ( expr (',' expr)* (',')? )?  ']' ;
 accessor: '.' name ;
-type: nonArrayType | arrayType ;
-nonArrayType: IDENTIFIER ;
+type: TYPE_IDENTIFIER | arrayType ;
 arrayType: '[' type ']' ;
 name: IDENTIFIER ;
 
-IDENTIFIER: LETTER ( LETTER | NON_LETTER )* ;
+IDENTIFIER:      SMALL_LETTER ( IDENTIFIER_CHAR )* ;
+TYPE_IDENTIFIER: LARGE_LETTER ( IDENTIFIER_CHAR )* ;
 STRING: '"' (ESC | ~('\r' | '\n'))*? '"' ;
 
 fragment ESC : '\\"' | '\\\\' ;
-fragment LETTER: 'a'..'z' | 'A'..'Z' ;
+fragment IDENTIFIER_CHAR: SMALL_LETTER | LARGE_LETTER | NON_LETTER ;
+fragment SMALL_LETTER: 'a'..'z' ;
+fragment LARGE_LETTER: 'A'..'Z' ;
 fragment NON_LETTER: '0'..'9' | '_' ;
 
 COMMENT: '#'  ~( '\r' | '\n' )* -> skip ;
