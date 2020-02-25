@@ -42,21 +42,21 @@ public class TypeNodeTest {
   }
 
   @Test
-  public void node_with_generic_name_is_generic() throws Exception {
-    given(typeNode = new TypeNode("b", LOCATION));
+  public void node_with_generic_name_is_generic() {
+    given(typeNode = new TypeNode("B", LOCATION));
     when(() -> typeNode.isGeneric());
     thenReturned(true);
   }
 
   @Test
-  public void node_with_non_generic_name_is_not_generic() throws Exception {
+  public void node_with_non_generic_name_is_not_generic() {
     given(typeNode = new TypeNode("MyType", LOCATION));
     when(() -> typeNode.isGeneric());
     thenReturned(false);
   }
 
   @Test
-  public void type_node_core_type_is_that_node() throws Exception {
+  public void type_node_core_type_is_that_node() {
     given(typeNode = new TypeNode("MyType", LOCATION));
     when(() -> typeNode.coreType());
     thenReturned(typeNode);

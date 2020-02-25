@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.object.type;
 
-import static java.lang.Character.isLowerCase;
+import static java.lang.Character.isUpperCase;
 
 public class TypeNames {
   public static final String BLOB = "Blob";
@@ -13,6 +13,6 @@ public class TypeNames {
   public static final String MESSAGE = "Message";
 
   public static boolean isGenericTypeName(String name) {
-    return 0 < name.length() && isLowerCase(name.charAt(0));
+    return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 }

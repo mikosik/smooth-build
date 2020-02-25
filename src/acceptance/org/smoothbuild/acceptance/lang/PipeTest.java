@@ -23,7 +23,7 @@ public class PipeTest extends AcceptanceTestCase {
   @Test
   public void regression_test_pipe_can_be_used_as_argument()
       throws IOException {
-    givenScript("myIdentity(a value) = value;               \n" +
+    givenScript("myIdentity(A value) = value;               \n" +
         "        result = myIdentity('abc' | myIdentity);   \n");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();

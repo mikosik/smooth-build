@@ -59,7 +59,7 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Test
   public void it_is_possible_to_declare_parameter_of_generic_type() throws Exception {
-    givenScript("oneParameter(a param) = 'abc';");
+    givenScript("oneParameter(A param) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
@@ -109,7 +109,7 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Test
   public void it_is_possible_to_declare_parameter_of_type_generic_array() throws Exception {
-    givenScript("oneParameter([a] array) = 'abc';");
+    givenScript("oneParameter([A] array) = 'abc';");
     whenSmoothList();
     thenFinishedWithSuccess();
   }

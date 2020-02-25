@@ -28,19 +28,19 @@ Bool or(
 ) = if (first, true(), second);
 
 Bool equal(
-  a first,
-  b second,
+  A first,
+  B second,
 );
 
-a if(
+A if(
   Bool condition,
-  a thenValue,
-  a elseValue,
+  A thenValue,
+  A elseValue,
 );
 
-[a] concatenate(
-  [a] array1,
-  [a] array2,
+[A] concatenate(
+  [A] array1,
+  [A] array2,
 );
 
 File aFile(

@@ -310,7 +310,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_returns_object_of_wrong_type_causes_error() throws Exception {
     givenNativeJar(BrokenIdentity.class);
-    givenScript("a brokenIdentity(a value);              \n"
+    givenScript("A brokenIdentity(A value);              \n"
         + "      result = brokenIdentity(value=[]);      \n");
     whenSmoothBuild("result");
     thenFinishedWithError();

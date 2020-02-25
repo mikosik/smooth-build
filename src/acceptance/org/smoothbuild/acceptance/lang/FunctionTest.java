@@ -13,10 +13,29 @@ import org.smoothbuild.acceptance.testing.ReportError;
 public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void illegal_function_name_causes_error() throws Exception {
-    givenScript("function^name = 'abc';"
+    givenScript("function^ = 'abc';"
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
+    thenOutputContainsError(1, "token recognition error at: '^'");
+  }
+
+  @Test
+  public void function_name_starting_with_large_letter_causes_error() throws Exception {
+    givenScript("FunctionName = 'abc';"
+        + "      result = 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContainsError(1, "no viable alternative at input 'FunctionName='");
+  }
+
+  @Test
+  public void function_name_with_one_large_letter_causes_error() throws Exception {
+    givenScript("F = 'abc';"
+        + "      result = 'abc';");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenOutputContainsError(1, "no viable alternative at input 'F='");
   }
 
   @Test
@@ -29,29 +48,12 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_with_same_name_as_struct_causes_error() throws Exception {
-    givenScript("MyStruct {}         \n"
-        + "      MyStruct = 'def';   \n");
-    whenSmoothBuild("MyStruct");
-    thenFinishedWithError();
-    thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
-  }
-
-  @Test
   public void function_with_same_name_as_constructor_causes_error() throws Exception {
     givenScript("MyStruct {}         \n"
         + "      myStruct = 'def';   \n");
     whenSmoothBuild("myStruct");
     thenFinishedWithError();
     thenOutputContainsError(2, "'myStruct' is already defined at build.smooth:1.\n");
-  }
-
-  @Test
-  public void function_with_same_name_as_basic_type_causes_error() throws Exception {
-    givenScript("String = 'def';\n");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenOutputContainsError(1, "'String' is already defined.\n");
   }
 
   @Test
@@ -179,7 +181,7 @@ public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void function_with_generic_result_type_when_some_param_has_such_type_is_allowed()
       throws Exception {
-    givenScript("a testIdentity(a value) = value;");
+    givenScript("A testIdentity(A value) = value;");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
@@ -188,7 +190,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void function_with_generic_result_type_when_some_param_has_such_core_type_is_allowed()
       throws Exception {
     givenNativeJar(GenericResult.class);
-    givenScript("a genericResult([a] array);");
+    givenScript("A genericResult([A] array);");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
@@ -196,7 +198,7 @@ public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void function_with_generic_array_result_type_when_some_param_has_such_type_is_allowed()
       throws Exception {
-    givenScript("[a] testArrayIdentity(a value) = [value];");
+    givenScript("[A] testArrayIdentity(A value) = [value];");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
@@ -204,7 +206,7 @@ public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void function_with_generic_array_result_type_when_some_param_has_such_core_type_is_allowed()
       throws Exception {
-    givenScript("[a] testArrayIdentity([a] value) = value;");
+    givenScript("[A] testArrayIdentity([A] value) = value;");
     whenSmoothList();
     thenFinishedWithSuccess();
   }
@@ -213,20 +215,20 @@ public class FunctionTest extends AcceptanceTestCase {
   public void function_with_generic_result_type_when_no_param_has_such_core_type_causes_error()
       throws Exception {
     givenNativeJar(GenericResult.class);
-    givenScript("a genericResult([b] array);");
+    givenScript("A genericResult([B] array);");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined generic type 'a'. "
+    thenOutputContainsError(1, "Undefined generic type 'A'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
   @Test
   public void function_with_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
       throws IOException {
-    givenScript("[a] result = [];");
+    givenScript("[A] result = [];");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined generic type 'a'. "
+    thenOutputContainsError(1, "Undefined generic type 'A'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 

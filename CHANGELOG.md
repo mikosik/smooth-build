@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * changed generic type names from one small letter to one large letter
  * changed default constructor name to be equal to struct name with lowercased first letter
  * renamed 'file' function to 'aFile' in platform API
 
