@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 0.19.0 (????.??.??)
+---------------------------
+
+ * renamed 'file' function to 'aFile' in platform API
+
 Version 0.18.0 (2019.03.22)
 ---------------------------
 

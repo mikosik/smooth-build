@@ -43,7 +43,7 @@ a if(
   [a] array2,
 );
 
-File file(
+File aFile(
   String path,
 );
 

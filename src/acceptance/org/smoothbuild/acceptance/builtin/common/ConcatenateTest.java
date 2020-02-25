@@ -31,7 +31,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
   public void concatenate_file_arrays() throws Exception {
     givenFile("file1.txt", "abc");
     givenFile("file2.txt", "def");
-    givenScript("result = concatenate([file('//file1.txt')], [file('//file2.txt')]);");
+    givenScript("result = concatenate([aFile('//file1.txt')], [aFile('//file2.txt')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
@@ -41,7 +41,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
   public void concatenate_blob_arrays_function() throws Exception {
     givenFile("0", "abc");
     givenFile("1", "def");
-    givenScript("result = concatenate([file('//0')], [file('//1')]);");
+    givenScript("result = concatenate([aFile('//0')], [aFile('//1')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));

@@ -1,4 +1,4 @@
-## file
+## aFile
 
 Returns file read from project tree at given path.
 
@@ -12,5 +12,5 @@ Returns __File__ read from project tree at given path.
 
 Returns file located at 'doc/contributors.txt' in project tree.
 ```
-File names = file("//doc/contributors.txt") ;
+File names = aFile("//doc/contributors.txt") ;
 ```
