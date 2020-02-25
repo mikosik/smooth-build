@@ -240,8 +240,7 @@ public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void function_with_result_type_which_is_supertype_of_function_expression()
       throws IOException {
-    givenFile("file.txt", "abc");
-    givenScript("Blob func = aFile('//file.txt');"
+    givenScript("Blob func = file(toBlob('abc'), 'file.txt');"
         + "      result = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -250,8 +249,7 @@ public class FunctionTest extends AcceptanceTestCase {
   @Test
   public void function_result_cannot_be_assigned_to_non_convertible_type_even_when_function_expression_is_convertible()
       throws IOException {
-    givenFile("file.txt", "abc");
-    givenScript("Blob func = aFile('//file.txt');"
+    givenScript("Blob func = file(toBlob('abc'), 'file.txt');"
         + "      File result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();

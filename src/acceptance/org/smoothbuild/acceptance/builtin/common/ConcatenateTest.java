@@ -29,9 +29,8 @@ public class ConcatenateTest extends AcceptanceTestCase {
 
   @Test
   public void concatenate_file_arrays() throws Exception {
-    givenFile("file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript("result = concatenate([aFile('//file1.txt')], [aFile('//file2.txt')]);");
+    givenScript("result = concatenate([file(toBlob('abc'), 'file1.txt')], " +
+        "[file(toBlob('def'), 'file2.txt')]);");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
