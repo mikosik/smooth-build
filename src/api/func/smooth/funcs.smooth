@@ -29,7 +29,7 @@ Bool or(
 
 Bool equal(
   A first,
-  B second,
+  A second,
 );
 
 A if(

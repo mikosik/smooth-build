@@ -88,8 +88,9 @@ public class EqualTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void struct_is_not_equal_to_struct_with_same_field_values_but_different_type() throws
+  public void struct_is_equal_to_different_struct_when_their_first_fields_are_equal() throws
       Exception {
+    // This is caused by the fact that struct can be auto-converted to value of its first field.
     givenScript(
         "  Person {                                                      ",
         "    String firstName,                                           ",
@@ -97,13 +98,32 @@ public class EqualTest extends AcceptanceTestCase {
         "  }                                                             ",
         "  Person2 {                                                     ",
         "    String firstName,                                           ",
+        "  }                                                             ",
+        "                                                                ",
+        "  result = equal(person('aaa', 'bbb'), person2('aaa'));  ");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    then(artifactAsBoolean("result"), equalTo(true));
+  }
+
+  @Test
+  public void struct_cannot_be_compared_to_different_struct_when_their_first_field_types_are_not_equal()
+      throws Exception {
+    givenScript(
+        "  Person {                                                      ",
+        "    String firstName,                                           ",
+        "    String secondName,                                          ",
+        "  }                                                             ",
+        "  Person2 {                                                     ",
+        "    Bool   firstName,                                           ",
         "    String secondName,                                          ",
         "  }                                                             ",
         "                                                                ",
-        "  result = equal(person('aaa', 'bbb'), person2('aaa', 'aaa'));  ");
+        "  result = equal(person('aaa', 'bbb'), person2(true, 'bbb'));   ");
     whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    thenFinishedWithError();
+    thenOutputContainsError(
+        10, "Cannot infer actual type(s) for generic parameter(s) in call to 'equal'.");
   }
 
   @Test
@@ -125,13 +145,13 @@ public class EqualTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void empty_arrays_of_different_types_are_not_equal() throws Exception {
+  public void empty_nothing_arrays_is_equal_to_empty_string_array() throws Exception {
     givenScript(
-        "  [String] stringArray = [];               ",
-        "  [Bool] boolArray = [];                   ",
-        "  result = equal(stringArray, boolArray);  ");
+        "  [Nothing] nothingArray = [];                ",
+        "  [String] stringArray = [];                  ",
+        "  result = equal(nothingArray, stringArray);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    then(artifactAsBoolean("result"), equalTo(true));
   }
 }
