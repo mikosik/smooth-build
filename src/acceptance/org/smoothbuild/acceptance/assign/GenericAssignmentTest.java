@@ -79,7 +79,7 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
   private static Case illegalAssignment(String targetType, String sourceType, String... structs) {
     return newCase("can't assign " + sourceType + " to param with type " + targetType, () -> {
       Consumer<AcceptanceTestCase> asserter = (test) -> {
-        test.thenOutputContainsError(structs.length + 2,
+        test.thenOutputContainsError(structs.length + 3,
             "Cannot assign argument of type '" + sourceType + "' to " +
                 "parameter 'target' of type '" + targetType + "'.");
       };
@@ -95,9 +95,9 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
         .map(s -> s.concat("{}\n"))
         .collect(joining());
     try {
-      test.givenScript(declarations
-          + "String innerFunction(" + targetType + " target) = 'abc';                     \n"
-          + "outerFunction(" + sourceType + " source) = innerFunction(target=source); \n");
+      test.givenScript(declarations,
+          "String innerFunction(" + targetType + " target) = 'abc';                  ",
+          "outerFunction(" + sourceType + " source) = innerFunction(target=source);  ");
       test.whenSmoothList();
       asserter.accept(test);
     } finally {

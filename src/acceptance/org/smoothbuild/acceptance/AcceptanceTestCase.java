@@ -4,6 +4,8 @@ import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
+import static java.lang.String.join;
+import static java.util.stream.Collectors.joining;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.Assert.fail;
@@ -31,6 +33,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -38,6 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.smoothbuild.util.DataReader;
@@ -71,8 +75,8 @@ public abstract class AcceptanceTestCase {
     deleteRecursively(projectDir().toPath());
   }
 
-  public void givenScript(String buildScript) throws IOException {
-    givenRawScript(buildScript.replace('\'', '"'));
+  public void givenScript(String... lines) throws IOException {
+    givenRawScript(join("\n", lines).replace('\'', '"'));
   }
 
   public void givenRawScript(String buildScript) throws IOException {

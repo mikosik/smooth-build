@@ -13,8 +13,9 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void result_from_cacheable_function_is_cached() throws Exception {
     givenNativeJar(CacheableRandom.class);
-    givenScript("String cacheableRandom();\n"
-        + "      result = cacheableRandom;");
+    givenScript(
+        "  String cacheableRandom();  ",
+        "  result = cacheableRandom;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     String resultFromFirstCall = artifactContent("result");
@@ -26,8 +27,9 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void result_from_not_cacheable_function_is_not_cached() throws Exception {
     givenNativeJar(NotCacheableRandom.class);
-    givenScript("String notCacheableRandom();\n"
-        + "      result = notCacheableRandom;");
+    givenScript(
+        "  String notCacheableRandom();  ",
+        "  result = notCacheableRandom;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     String resultFromFirstCall = artifactContent("result");

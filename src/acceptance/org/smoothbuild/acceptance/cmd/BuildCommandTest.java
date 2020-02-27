@@ -25,7 +25,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_without_function_argument_prints_error() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild();
     thenFinishedWithError();
     thenOutputContains("error: Specify at least one function to be executed.\n"
@@ -34,7 +35,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_function_that_requires_arguments_prints_error() throws Exception {
-    givenScript("String testStringIdentity(String value) = value;");
+    givenScript(
+        "  String testStringIdentity(String value) = value;  ");
     whenSmoothBuild("testStringIdentity");
     thenFinishedWithError();
     thenOutputContains("error: Function 'testStringIdentity' cannot be invoked from command line "
@@ -43,7 +45,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_function_which_all_params_are_optional_is_allowed() throws Exception {
-    givenScript("String testStringIdentity(String value = 'default') = value;");
+    givenScript(
+        "  String testStringIdentity(String value = 'default') = value;  ");
     whenSmoothBuild("testStringIdentity");
     thenFinishedWithSuccess();
     then(artifact("testStringIdentity"), hasContent("default"));
@@ -51,7 +54,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_nonexistent_function_argument_prints_error() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
     thenOutputContains("error: Unknown function 'nonexistentFunction'.\n"
@@ -61,8 +65,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
   @Test
   public void temp_file_is_deleted_after_build_execution() throws Exception {
     givenNativeJar(TempFilePath.class);
-    givenScript("String tempFilePath();"
-        + "      result = tempFilePath();");
+    givenScript(
+        "  String tempFilePath();    ",
+        "  result = tempFilePath();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(new File(artifactContent("result")).exists(), false);
@@ -70,7 +75,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_illegal_function_name_prints_error() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("illegal^name");
     thenFinishedWithError();
     thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
@@ -79,7 +85,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
   @Test
   public void build_command_with_illegal_function_names_prints_error_for_each_one()
       throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("illegal^name other^name");
     thenFinishedWithError();
     thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
@@ -88,7 +95,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_with_function_specified_twice_prints_error() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
     thenOutputContains("error: Function 'result' has been specified more than once.\n");
@@ -97,7 +105,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
   @Test
   public void build_command_with_many_functions_specified_twice_prints_error_for_each_one()
       throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result", "result", "other", "other");
     thenFinishedWithError();
     thenOutputContains("error: Function 'result' has been specified more than once.\n");
@@ -108,7 +117,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_clears_artifacts_dir() throws Exception {
     given(path = ARTIFACTS_PATH.value() + "/file.txt");
     givenFile(path, "content");
-    givenScript("syntactically incorrect script");
+    givenScript(
+        "  syntactically incorrect script  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(!file(path).exists());
@@ -118,7 +128,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_clears_temporary_dir() throws Exception {
     given(path = TEMPORARY_PATH.value() + "/file.txt");
     givenFile(path, "content");
-    givenScript("syntactically incorrect script");
+    givenScript(
+        "  syntactically incorrect script  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     then(!file(path).exists());

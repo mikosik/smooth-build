@@ -14,7 +14,8 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void false_or_false_returns_false() throws IOException {
-    givenScript("result = or(false(), false());");
+    givenScript(
+        "  result = or(false(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), false);
@@ -22,7 +23,8 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void false_or_true_returns_true() throws IOException {
-    givenScript("result = or(false(), true());");
+    givenScript(
+        "  result = or(false(), true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), true);
@@ -30,7 +32,8 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void true_or_false_returns_true() throws IOException {
-    givenScript("result = or(true(), false());");
+    givenScript(
+        "  result = or(true(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), true);
@@ -38,7 +41,8 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void true_or_true_returns_true() throws IOException {
-    givenScript("result = or(true(), true());");
+    givenScript(
+        "  result = or(true(), true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), true);
@@ -47,8 +51,9 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
     givenNativeJar(ThrowException.class);
-    givenScript("Nothing throwException();" +
-        "        result = or(true(), throwException());");
+    givenScript(
+        "  Nothing throwException();               ",
+        "  result = or(true(), throwException());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactAsBoolean("result"), equalTo(true));

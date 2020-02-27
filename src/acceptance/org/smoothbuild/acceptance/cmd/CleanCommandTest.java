@@ -11,7 +11,8 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CleanCommandTest extends AcceptanceTestCase {
   @Test
   public void clean_command_deletes_smooth_dir() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     whenSmoothClean();
@@ -21,7 +22,8 @@ public class CleanCommandTest extends AcceptanceTestCase {
 
   @Test
   public void clean_command_with_arguments_prints_error() throws Exception {
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
     thenOutputContains("error: Unknown arguments: [some, arguments]\n");

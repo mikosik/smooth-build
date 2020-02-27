@@ -38,8 +38,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_can_return_passed_argument() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String oneStringParameter(String string);"
-        + "      result = oneStringParameter('token');");
+    givenScript(
+        "  String oneStringParameter(String string);  ",
+        "  result = oneStringParameter('token');      ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactContent("result"), equalTo("token"));
@@ -49,8 +50,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   public void native_declaration_without_native_implementation_causes_error()
       throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String function;"
-        + "      result = function;");
+    givenScript(
+        "  String function;    ",
+        "  result = function;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'function' is native but does not have native implementation.\n");
@@ -59,7 +61,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_jar_with_two_functions_with_same_name_causes_error() throws Exception {
     givenNativeJar(SameName.class, SameName2.class);
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
@@ -72,7 +75,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_illegal_name_causes_error() throws Exception {
     givenNativeJar(IllegalName.class);
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Invalid function native implementation in build.jar provided by "
@@ -83,8 +87,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_name_is_taken_from_annotation_not_java_method_name() throws Exception {
     givenNativeJar(DifferentJavaName.class);
-    givenScript("String annotationName();    \n" +
-        "        result = annotationName();  \n");
+    givenScript(
+        "  String annotationName();    ",
+        "  result = annotationName();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactContent("result"), equalTo("abc"));
@@ -93,7 +98,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_provided_by_non_public_method_causes_error() throws Exception {
     givenNativeJar(NonPublicMethod.class);
-    givenScript("result = 'abc';");
+    givenScript(
+        "  String oneStringParameter;    ",
+        "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Invalid function native implementation in build.jar provided by "
@@ -104,7 +111,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_provided_by_non_static_method_causes_error() throws Exception {
     givenNativeJar(NonStaticMethod.class);
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Invalid function native implementation in build.jar provided by "
@@ -115,8 +123,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_without_declared_result_type_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("oneStringParameter;\n"
-        + "      result = oneStringParameter;");
+    givenScript(
+        "  oneStringParameter;           ",
+        "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
@@ -126,8 +135,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_different_result_type_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("File oneStringParameter(String string);\n"
-        + "      result = oneStringParameter('abc');");
+    givenScript(
+        "  File oneStringParameter(String string);  ",
+        "  result = oneStringParameter('abc');      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'oneStringParameter' has result type 'File' "
@@ -138,7 +148,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_without_container_parameter_causes_error() throws Exception {
     givenNativeJar(WithoutContainer.class);
-    givenScript("result = 'abc';");
+    givenScript(
+        "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Invalid function native implementation in build.jar provided by "
@@ -150,8 +161,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_too_many_parameters_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String oneStringParameter;\n"
-        + "      result = oneStringParameter;");
+    givenScript(
+        "  String oneStringParameter;    ",
+        "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
@@ -162,8 +174,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_too_few_parameters_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String oneStringParameter(String a, String b);\n"
-        + "      result = oneStringParameter(a='abc', b='abc');");
+    givenScript(
+        "  String oneStringParameter(String a, String b);  ",
+        "  result = oneStringParameter(a='abc', b='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
@@ -174,8 +187,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_different_parameter_name_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String oneStringParameter(String different);\n"
-        + "      result = oneStringParameter('abc');");
+    givenScript(
+        "  String oneStringParameter(String different);  ",
+        "  result = oneStringParameter('abc');           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'oneStringParameter' has parameter named 'different'"
@@ -185,8 +199,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_different_parameter_type_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
-    givenScript("String oneStringParameter([String] string);\n"
-        + "      result = oneStringParameter([]);");
+    givenScript(
+        "  String oneStringParameter([String] string);  ",
+        "  result = oneStringParameter([]);             ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'oneStringParameter' parameter 'string' has type [String] "
@@ -198,8 +213,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   public void native_with_parameter_type_that_is_subtype_of_declared_causes_error()
       throws Exception {
     givenNativeJar(FileParameter.class);
-    givenScript("File fileParameter(Blob file);\n"
-        + "      result = fileParameter(file(toBlob('abc'), 'file.txt'));");
+    givenScript(
+        "  File fileParameter(Blob file);                            ",
+        "  result = fileParameter(file(toBlob('abc'), 'file.txt'));  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'fileParameter' parameter 'file' has type Blob "
@@ -210,8 +226,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void exception_from_native_is_reported_as_error() throws Exception {
     givenNativeJar(ThrowException.class);
-    givenScript("Nothing throwException();\n"
-        + "      result = throwException;");
+    givenScript(
+        "  Nothing throwException();  ",
+        "  result = throwException;   ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function throwException threw java exception from its native code.");
@@ -222,8 +239,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   public void error_thrown_as_exception_from_native_is_reported_along_errors_logged_via_native_api()
       throws Exception {
     givenNativeJar(ReportTwoErrors.class);
-    givenScript("String reportTwoErrors(String message1, String message2);\n"
-        + "      result = reportTwoErrors(message1='first error', message2='second error');");
+    givenScript(
+        "  String reportTwoErrors(String message1, String message2);                   ",
+        "  result = reportTwoErrors(message1='first error', message2='second error');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("first error\n");
@@ -233,8 +251,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void error_wrapping_exception_from_native_is_not_cached() throws Exception {
     givenNativeJar(ThrowRandomException.class);
-    givenScript("String throwRandomException();\n"
-        + "      result = throwRandomException;");
+    givenScript(
+        "  String throwRandomException();  ",
+        "  result = throwRandomException;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     String timestamp1 = fetchTimestamp(output());
@@ -255,8 +274,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void error_reported_is_logged() throws Exception {
     givenNativeJar(ReportError.class);
-    givenScript("Nothing reportError(String message);\n"
-        + "      result = reportError('error_reported_is_logged');");
+    givenScript(
+        "  Nothing reportError(String message);               ",
+        "  result = reportError('error_reported_is_logged');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("error_reported_is_logged");
@@ -265,8 +285,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void returning_null_without_logging_error_causes_error() throws Exception {
     givenNativeJar(ReturnNull.class);
-    givenScript("String returnNull();\n"
-        + "      result = returnNull();");
+    givenScript(
+        "  String returnNull();    ",
+        "  result = returnNull();  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function returnNull has faulty native implementation: "
@@ -276,8 +297,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void returning_null_and_logs_only_warning_causes_error() throws Exception {
     givenNativeJar(ReportWarningAndReturnNull.class);
-    givenScript("String reportWarning(String message);\n"
-        + "      result = reportWarning('test message');");
+    givenScript(
+        "  String reportWarning(String message);    ",
+        "  result = reportWarning('test message');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function reportWarning has faulty native implementation: "
@@ -287,8 +309,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_adds_element_of_wrong_type_to_array_causes_error() throws Exception {
     givenNativeJar(AddElementOfWrongTypeToArray.class);
-    givenScript("[Blob] addElementOfWrongTypeToArray();\n"
-        + "      result = addElementOfWrongTypeToArray;");
+    givenScript(
+        "  [Blob] addElementOfWrongTypeToArray();  ",
+        "  result = addElementOfWrongTypeToArray;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains(
@@ -299,8 +322,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_returns_array_of_wrong_type_causes_error() throws Exception {
     givenNativeJar(EmptyStringArray.class);
-    givenScript("[Blob] emptyStringArray();\n"
-        + "      result = emptyStringArray;");
+    givenScript(
+        "  [Blob] emptyStringArray();  ",
+        "  result = emptyStringArray;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function emptyStringArray has faulty native implementation: "
@@ -310,8 +334,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_returns_object_of_wrong_type_causes_error() throws Exception {
     givenNativeJar(BrokenIdentity.class);
-    givenScript("A brokenIdentity(A value);              \n"
-        + "      result = brokenIdentity(value=[]);      \n");
+    givenScript(
+        "  A brokenIdentity(A value);          ",
+        "  result = brokenIdentity(value=[]);  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function brokenIdentity has faulty native implementation: "

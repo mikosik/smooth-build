@@ -15,7 +15,8 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void empty_array_of_nothings() throws Exception {
-    givenScript("result = [];");
+    givenScript(
+        "  result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -23,7 +24,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_bools() throws Exception {
-    givenScript("[Bool] result = [];");
+    givenScript(
+        "  [Bool] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -31,7 +33,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_strings() throws Exception {
-    givenScript("[String] result = [];");
+    givenScript(
+        "  [String] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -39,7 +42,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_blobs() throws Exception {
-    givenScript("[Blob] result = [];");
+    givenScript(
+        "  [Blob] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -47,7 +51,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_files() throws Exception {
-    givenScript("[File] result = [];");
+    givenScript(
+        "  [File] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -55,7 +60,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_bools() throws Exception {
-    givenScript("result = [true(), false()];");
+    givenScript(
+        "  result = [ true(), false() ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactAsByteStrings("result"), equalTo(list(trueByteString(), falseByteString())));
@@ -63,7 +69,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_strings() throws Exception {
-    givenScript("result = ['abc', 'def'];");
+    givenScript(
+        "  result = [ 'abc', 'def' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -71,7 +78,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_blobs() throws Exception {
-    givenScript("result = [toBlob('abc'), toBlob('def')];");
+    givenScript(
+        "  result = [ toBlob('abc'), toBlob('def') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -79,7 +87,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_files() throws Exception {
-    givenScript("result = [file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt')];");
+    givenScript(
+        "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
@@ -87,7 +96,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_nothings() throws Exception {
-    givenScript("[[Nothing]] result = [];");
+    givenScript(
+        "  [[Nothing]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -95,7 +105,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_arrays_of_nothings_with_one_element() throws Exception {
-    givenScript("[[Nothing]] result = [[]];");
+    givenScript(
+        "  [[Nothing]] result = [ [] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list(list())));
@@ -103,7 +114,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_arrays_of_nothings_with_two_elements() throws Exception {
-    givenScript("[[Nothing]] result = [[], []];");
+    givenScript(
+        "  [[Nothing]] result = [ [], [] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list(list(), list())));
@@ -111,7 +123,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_bools() throws Exception {
-    givenScript("[[Bool]] result = [];");
+    givenScript(
+        "  [[Bool]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -119,7 +132,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_strings() throws Exception {
-    givenScript("[[String]] result = [];");
+    givenScript(
+        "  [[String]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -127,7 +141,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_blobs() throws Exception {
-    givenScript("[[Blob]] result = [];");
+    givenScript(
+        "  [[Blob]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -135,7 +150,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_files() throws Exception {
-    givenScript("[[File]] result = [];");
+    givenScript(
+        "  [[File]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -143,7 +159,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_arrays_of_strings() throws Exception {
-    givenScript("[[String]] result = [[], ['abc'], ['def', 'ghi']];");
+    givenScript(
+        "  [[String]] result = [ [], [ 'abc' ], [ 'def', 'ghi' ] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list(list(), list("abc"), list("def", "ghi"))));
@@ -151,7 +168,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_of_arrays_of_arrays_of_nothings() throws Exception {
-    givenScript("[[[Nothing]]] result = [];");
+    givenScript(
+        "  [[[Nothing]]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list()));
@@ -159,7 +177,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_of_arrays_of_arrays_of_strings() throws Exception {
-    givenScript("[[[String]]] result = [[[]], [['abc'], ['def', 'ghi']]];");
+    givenScript(
+        "  [[[String]]] result = [ [ [] ], [ [ 'abc' ], [ 'def', 'ghi' ] ] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"),
@@ -169,8 +188,8 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     givenScript(
-        "myFile = file(toBlob('abc'), 'file.txt');   \n" +
-        "result = [myFile, myFile];                    ");
+        "  myFile = file(toBlob('abc'), 'file.txt');  ",
+        "  result = [ myFile, myFile ];                 ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
@@ -179,14 +198,16 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_with_comma_causes_error() throws Exception {
-    givenScript("result = [,];");
+    givenScript(
+        "  result = [,];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
   }
 
   @Test
   public void array_with_one_element() throws Exception {
-    givenScript("result = ['abc'];");
+    givenScript(
+        "  result = [ 'abc' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc")));
@@ -194,7 +215,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_trailing_comma() throws Exception {
-    givenScript("result = ['abc',];");
+    givenScript(
+        "  result = [ 'abc', ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc")));
@@ -202,14 +224,16 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_two_trailing_commas_causes_error() throws Exception {
-    givenScript("result = ['abc',,];");
+    givenScript(
+        "  result = [ 'abc', , ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
   }
 
   @Test
   public void array_with_elements_of_the_same_type() throws Exception {
-    givenScript("result = ['abc', 'def'];");
+    givenScript(
+        "  result = [ 'abc', 'def' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -217,8 +241,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_elements_of_compatible_types() throws Exception {
-    givenScript("myFile = file(toBlob('abc'), 'file.txt');   \n" +
-        "result = [myFile, toBlob('def')];                     ");
+    givenScript(
+        "  myFile = file(toBlob('abc'), 'file.txt');  ",
+        "  result = [ myFile, toBlob('def') ];          ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifactArray("result"), equalTo(list("abc", "def")));
@@ -226,7 +251,8 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_elements_of_incompatible_types() throws Exception {
-    givenScript("result = ['abc', toBlob('abc')];");
+    givenScript(
+        "  result = [ 'abc', toBlob('abc') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContainsError(1, "Array cannot contain elements of incompatible types.\n"
@@ -236,8 +262,9 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void first_element_expression_error_doesnt_suppress_second_element_expression_error()
       throws IOException {
-    givenScript("function1 = 'abc';"
-        + "      result = [ function1(unknown1=''), function1(unknown2='') ];");
+    givenScript(
+        "  function1 = 'abc';                                            ",
+        "  result = [ function1(unknown1=''), function1(unknown2='') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Function 'function1' has no parameter 'unknown1'.");

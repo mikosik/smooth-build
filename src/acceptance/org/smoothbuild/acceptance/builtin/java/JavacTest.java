@@ -15,8 +15,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class JavacTest extends AcceptanceTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
-    givenScript("result = [file(toBlob('public private class MyClass {}'), 'MyClass.java')]" +
-        " | javac;");
+    givenScript(
+        "  result = [ file(toBlob('public private class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac;                                                                      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("modifier private not allowed here");
@@ -24,7 +25,8 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void zero_files_can_be_compiled() throws Exception {
-    givenScript("result = [] | javac;");
+    givenScript(
+        "  result = [] | javac;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenOutputContains("Param 'srcs' is empty list.");
@@ -34,7 +36,8 @@ public class JavacTest extends AcceptanceTestCase {
   public void one_file_can_be_compiled() throws Exception {
     String classSource = "public class MyClass { "
         + "public static String myMethod() {return \\\"test-string\\\";}}";
-    givenScript("result = [file(toBlob('" + classSource + "'), 'MyClass.java')] | javac;");
+    givenScript(
+        "  result = [file(toBlob('" + classSource+ "'), 'MyClass.java')] | javac;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual("test-string", invoke(new File(artifact("result"), "MyClass.class"), "myMethod"));
@@ -60,9 +63,10 @@ public class JavacTest extends AcceptanceTestCase {
 
     givenFile("src/MyClass.java", classSource.toString());
     givenFile("srclib/library/LibraryClass.java", librarySource.toString());
-    givenScript("libraryJar = files('//srclib') | javac | jar;"
-        + "result = files('//src') | javac(libs=[libraryJar])"
-        + " | concatenate(array2=javac(files('//srclib')));");
+    givenScript(
+        "  libraryJar = files('//srclib') | javac | jar;           ",
+        "  result = files('//src') | javac(libs = [ libraryJar ])  ",
+        "  | concatenate(array2 = javac(files('//srclib')));       ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
 
@@ -75,8 +79,9 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void duplicate_java_files_cause_error() throws Exception {
-    givenScript("classFile = file(toBlob('public class MyClass {}'), 'MyClass.java');\n" +
-        "result = [classFile, classFile] | javac;");
+    givenScript(
+        "  classFile = file(toBlob('public class MyClass {}'), 'MyClass.java');  ",
+        "  result = [ classFile, classFile ] | javac;                            ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("duplicate class: MyClass");
@@ -84,8 +89,9 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void illegal_source_parameter_causes_error() throws Exception {
-    givenScript("result = [file(toBlob('public class MyClass {}'), 'MyClass.java')]" +
-        " | javac(source='0.9');");
+    givenScript(
+        "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac(source='0.9');                                                ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("invalid source release: 0.9");
@@ -93,8 +99,9 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void illegal_target_parameter_causes_error() throws Exception {
-    givenScript("result = [file(toBlob('public class MyClass {}'), 'MyClass.java')]" +
-        " | javac(target='0.9');");
+    givenScript(
+        "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac(target='0.9');                                                ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("invalid target release: 0.9");
@@ -103,8 +110,9 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
       throws Exception {
-    givenScript("result = [file(toBlob('public enum MyClass { VALUE }'), 'MyClass.java')]" +
-        " | javac(source='1.4', target='1.4');");
+    givenScript(
+        "  result = [ file(toBlob('public enum MyClass { VALUE }'), 'MyClass.java') ]  ",
+        "  | javac(source='1.4', target='1.4');                                        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Source option 1.4 is no longer supported.");

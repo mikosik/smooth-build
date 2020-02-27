@@ -6,31 +6,34 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ConstructorTest extends AcceptanceTestCase {
   @Test
   public void creating_empty_struct_is_possible() throws Exception {
-    givenScript("MyStruct {}                                 \n"
-        + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(myStruct());            \n");
+    givenScript(
+        "  MyStruct {}                                  ",
+        "  String takeStruct(MyStruct struct) = 'abc';  ",
+        "  result = takeStruct(myStruct());             ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
 
   @Test
   public void creating_non_empty_struct_is_possible() throws Exception {
-    givenScript("MyStruct {                                  \n"
-        + "        String field,                             \n"
-        + "      }                                           \n"
-        + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(myStruct('def'));       \n");
+    givenScript(
+        "  MyStruct {                                   ",
+        "    String field,                              ",
+        "  }                                            ",
+        "  String takeStruct(MyStruct struct) = 'abc';  ",
+        "  result = takeStruct(myStruct('def'));        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
   }
 
   @Test
   public void calling_constructor_without_all_parameters_causes_error() throws Exception {
-    givenScript("MyStruct {                                  \n"
-        + "        String field,                             \n"
-        + "      }                                           \n"
-        + "      String takeStruct(MyStruct struct) = 'abc'; \n"
-        + "      result = takeStruct(myStruct());            \n");
+    givenScript(
+        "  MyStruct {                                   ",
+        "    String field,                              ",
+        "  }                                            ",
+        "  String takeStruct(MyStruct struct) = 'abc';  ",
+        "  result = takeStruct(myStruct());             ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenOutputContains("Parameter 'field' must be specified.");
