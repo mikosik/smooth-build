@@ -37,7 +37,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
     whenSmoothList();
     thenFinishedWithError();
     thenOutputContainsError(
-        1, "Parameter 'value' has generic type 'A' so it cannot have default value.");
+        1, "Parameter 'value' is of type 'A' so it cannot have default value of type 'String'.");
   }
 
   @Test
