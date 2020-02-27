@@ -12,7 +12,8 @@ public class ToBlobTest extends AcceptanceTestCase {
   @Test
   public void to_blob_function() throws IOException {
     givenFile("file.txt", "abc");
-    givenScript("result = toBlob('abc');");
+    givenScript(
+        "  result = toBlob('abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));

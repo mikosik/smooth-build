@@ -11,7 +11,8 @@ public class NotTest extends AcceptanceTestCase {
 
   @Test
   public void not_false_returns_true() throws IOException {
-    givenScript("result = not(false());");
+    givenScript(
+        "  result = not(false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), true);
@@ -19,7 +20,8 @@ public class NotTest extends AcceptanceTestCase {
 
   @Test
   public void not_true_returns_false() throws IOException {
-    givenScript("result = not(true());");
+    givenScript(
+        "  result = not(true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenEqual(artifactAsBoolean("result"), false);

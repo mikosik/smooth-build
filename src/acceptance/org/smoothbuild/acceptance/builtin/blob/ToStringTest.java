@@ -11,7 +11,8 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ToStringTest extends AcceptanceTestCase {
   @Test
   public void to_string_function() throws IOException {
-    givenScript("result = file(toBlob('abc'), 'file1.txt').content | toString;");
+    givenScript(
+        "  result = file(toBlob('abc'), 'file1.txt').content | toString;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent("abc"));

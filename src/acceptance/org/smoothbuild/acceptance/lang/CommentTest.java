@@ -11,7 +11,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CommentTest extends AcceptanceTestCase {
   @Test
   public void full_line_comment() throws IOException {
-    givenScript("# ((( full line comment '\n result = '';");
+    givenScript(
+        "  # ((( full line comment '  ",
+        "  result = '';               ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
@@ -19,7 +21,8 @@ public class CommentTest extends AcceptanceTestCase {
 
   @Test
   public void trailing_comment() throws IOException {
-    givenScript("result = '' ;  # comment at the end of line");
+    givenScript(
+        "  result = '' ;  # comment at the end of line  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     then(artifact("result"), hasContent(""));
