@@ -24,8 +24,7 @@ import okio.BufferedSource;
 
 public class JarFunction {
   @SmoothFunction("jar")
-  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest, Array javaHash)
-      throws IOException {
+  public static Blob jar(NativeApi nativeApi, Array files, Blob manifest) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {

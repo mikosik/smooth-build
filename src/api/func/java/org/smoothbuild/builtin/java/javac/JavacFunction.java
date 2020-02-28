@@ -27,8 +27,8 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 
 public class JavacFunction {
   @SmoothFunction("javac_")
-  public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options,
-      Array javaHash) throws IOException {
+  public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options)
+      throws IOException {
     return new Worker(nativeApi, srcs, libs, options).execute();
   }
 
