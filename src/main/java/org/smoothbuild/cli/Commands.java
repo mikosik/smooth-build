@@ -3,6 +3,7 @@ package org.smoothbuild.cli;
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
+import static org.smoothbuild.util.Text.unlines;
 
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -59,11 +60,13 @@ public class Commands {
     return new CommandSpec(Build.class) {
       @Override
       public String description() {
-        return "usage: smooth build <function>...\n"
-            + "\n"
-            + shortDescription() + "\n"
-            + "\n"
-            + "  <function>  function which execution result is saved as artifact";
+        return unlines(
+            "usage: smooth build <function>...",
+            "",
+            shortDescription(),
+            "",
+            "  <function>  function which execution result is saved as artifact"
+        );
       }
 
       @Override
@@ -77,9 +80,11 @@ public class Commands {
     return new CommandSpec(Clean.class) {
       @Override
       public String description() {
-        return "usage: smooth clean\n"
-            + "\n"
-            + shortDescription();
+        return unlines(
+            "usage: smooth clean",
+            "",
+            shortDescription()
+        );
       }
 
       @Override public String shortDescription() {
@@ -92,9 +97,11 @@ public class Commands {
     return new CommandSpec(Dag.class) {
       @Override
       public String description() {
-        return "usage: smooth dag <function>...\n"
-            + "\n"
-            + shortDescription();
+        return unlines(
+            "usage: smooth dag <function>...",
+            "",
+            shortDescription()
+        );
       }
 
       @Override
@@ -108,12 +115,14 @@ public class Commands {
     return new CommandSpec(Help.class) {
       @Override
       public String description() {
-        return "usage: smooth help <command>\n"
-            + "\n"
-            + shortDescription() + "\n"
-            + "\n"
-            + "arguments:\n"
-            + "  <command>  command for which help is printed";
+        return unlines(
+            "usage: smooth help <command>",
+            "",
+            shortDescription(),
+            "",
+            "arguments:",
+            "  <command>  command for which help is printed"
+        );
       }
 
       @Override
@@ -127,10 +136,12 @@ public class Commands {
     return new CommandSpec(List.class) {
       @Override
       public String description() {
-        return "usage: smooth list\n"
-            + "\n"
-            + shortDescription() + "\n"
-            + "\n";
+        return unlines(
+            "usage: smooth list",
+            "",
+            shortDescription(),
+            ""
+        );
       }
 
       @Override
@@ -144,10 +155,12 @@ public class Commands {
     return new CommandSpec(Version.class) {
       @Override
       public String description() {
-        return "usage: smooth version\n"
-            + "\n"
-            + shortDescription() + "\n"
-            + "\n";
+        return unlines(
+            "usage: smooth version",
+            "",
+            shortDescription(),
+            ""
+        );
       }
 
       @Override
