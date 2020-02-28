@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static java.lang.String.join;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
@@ -88,7 +89,15 @@ public class ScriptParser {
     @Override
     public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex,
         int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
-      reportError(recognizer, startIndex, "Ambiguity in grammar");
+      String message = join("\n",
+          "Found ambiguity in grammar.",
+          "Report this as a bug together with file: " + file + ", details:",
+          "startIndex=" + startIndex,
+          "stopiIndex=" + stopIndex,
+          "exact=" + exact,
+          "ambigAlts=" + ambigAlts,
+          "dfa=" + dfa);
+      reportError(recognizer, startIndex, message);
     }
 
     @Override
