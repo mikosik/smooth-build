@@ -20,7 +20,7 @@ import okio.BufferedSource;
 
 public class ZipFunction {
   @SmoothFunction("zip")
-  public static Blob zip(NativeApi nativeApi, Array files, Array javaHash) throws IOException {
+  public static Blob zip(NativeApi nativeApi, Array files) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
