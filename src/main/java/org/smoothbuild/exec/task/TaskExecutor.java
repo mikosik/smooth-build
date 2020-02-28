@@ -8,7 +8,7 @@ import javax.inject.Provider;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputDb;
 import org.smoothbuild.db.outputs.OutputDbException;
-import org.smoothbuild.exec.RuntimeHash;
+import org.smoothbuild.exec.SandboxHash;
 import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
@@ -16,15 +16,15 @@ import org.smoothbuild.exec.comp.Output;
 public class TaskExecutor {
   private final OutputDb outputDb;
   private final TaskReporter reporter;
-  private final Hash runtimeHash;
+  private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
 
   @Inject
-  public TaskExecutor(OutputDb outputDb, TaskReporter reporter, @RuntimeHash Hash runtimeHash,
+  public TaskExecutor(OutputDb outputDb, TaskReporter reporter, @SandboxHash Hash sandboxHash,
       Provider<Container> containerProvider) {
     this.outputDb = outputDb;
     this.reporter = reporter;
-    this.runtimeHash = runtimeHash;
+    this.sandboxHash = sandboxHash;
     this.containerProvider = containerProvider;
   }
 
@@ -63,7 +63,7 @@ public class TaskExecutor {
   }
 
   private Hash taskHash(Task task, Input input) {
-    return taskHash(task, input, runtimeHash);
+    return taskHash(task, input, sandboxHash);
   }
 
   public static Hash taskHash(Task task, Input input, Hash runtimeHash) {

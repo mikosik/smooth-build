@@ -13,8 +13,8 @@ public class TaskModule extends AbstractModule {
 
   @Provides
   @Singleton
-  @RuntimeHash
-  public Hash provideRuntimeHash(
+  @SandboxHash
+  public Hash provideSandboxHash(
       JavaPlatformHashProvider javaPlatformHashProvider,
       SmoothJarHashProvider smoothJarHashProvider) {
     return Hash.of(
