@@ -13,9 +13,11 @@ public class ListCommandTest extends AcceptanceTestCase {
         "  cFunction = 'abc';  ");
     whenSmoothList();
     thenFinishedWithSuccess();
-    thenOutputContains("aFunction\n"
-        + "bFunction\n"
-        + "cFunction\n"
-        + "dFunction\n");
+    thenOutputContains(
+        "aFunction",
+        "bFunction",
+        "cFunction",
+        "dFunction",
+        "");
   }
 }

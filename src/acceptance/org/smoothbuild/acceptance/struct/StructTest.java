@@ -226,9 +226,10 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';     ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:2: error: "
-        + "Type hierarchy contains cycle:\n"
-        + "build.smooth:2: MyStruct -> MyStruct\n");
+    thenOutputContains(
+        "build.smooth:2: error: Type hierarchy contains cycle:",
+        "build.smooth:2: MyStruct -> MyStruct",
+        "");
   }
 
   @Test
@@ -257,9 +258,11 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Type hierarchy contains cycle:\n"
-        + "build.smooth:2: MyStruct -> OtherStruct\n"
-        + "build.smooth:5: OtherStruct -> MyStruct\n");
+    thenOutputContains(
+        "Type hierarchy contains cycle:",
+        "build.smooth:2: MyStruct -> OtherStruct",
+        "build.smooth:5: OtherStruct -> MyStruct",
+        "");
   }
 
   @Test

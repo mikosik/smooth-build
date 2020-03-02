@@ -29,8 +29,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenOutputContains("error: Specify at least one function to be executed.\n"
-        + "Use 'smooth list' to see all available functions.\n");
+    thenOutputContains(
+        "error: Specify at least one function to be executed.",
+        "Use 'smooth list' to see all available functions.");
   }
 
   @Test
@@ -58,8 +59,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
-    thenOutputContains("error: Unknown function 'nonexistentFunction'.\n"
-        + "Use 'smooth list' to see all available functions.\n");
+    thenOutputContains(
+        "error: Unknown function 'nonexistentFunction'.",
+        "Use 'smooth list' to see all available functions.\n");
   }
 
   @Test

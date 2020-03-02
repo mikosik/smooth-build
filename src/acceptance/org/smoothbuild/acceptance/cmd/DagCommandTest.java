@@ -1,5 +1,7 @@
 package org.smoothbuild.acceptance.cmd;
 
+import static org.smoothbuild.util.Text.unlines;
+
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -12,12 +14,12 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  result = mySingleton('abc');                     ");
     whenSmoothDag("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(
-        "[String] result\n" +
-        "  [String] mySingleton\n" +
-        "    [String] [String]\n" +
-        "      String 'abc'\n" +
-        "      String 'def'"));
+    thenOutputContains(quotesX2(unlines(
+        "[String] result",
+        "  [String] mySingleton",
+        "    [String] [String]",
+        "      String 'abc'",
+        "      String 'def'")));
   }
 
   @Test
@@ -26,9 +28,10 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  result = '012345678901234567890123456789';  ");
     whenSmoothDag("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(
-        "String result\n" +
-        "  String '012345678901234'...\n"));
+    thenOutputContains(quotesX2(unlines(
+        "String result",
+        "  String '012345678901234'...",
+        "")));
   }
 
   @Test
@@ -37,13 +40,13 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  Blob result = file(toBlob('abc'), 'name.txt');  ");
     whenSmoothDag("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(
-        "Blob result\n" +
-        "  Blob ~conversion\n" +
-        "    File file\n" +
-        "      Blob toBlob\n" +
-        "        String 'abc'\n" +
-        "      String 'name.txt'"));
+    thenOutputContains(quotesX2(unlines(
+        "Blob result",
+        "  Blob ~conversion",
+        "    File file",
+        "      Blob toBlob",
+        "        String 'abc'",
+        "      String 'name.txt'")));
   }
 
   @Test
@@ -59,8 +62,10 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothDag();
     thenFinishedWithError();
-    thenOutputContains("error: Specify at least one function to be executed.\n"
-        + "Use 'smooth list' to see all available functions.\n");
+    thenOutputContains(
+        "error: Specify at least one function to be executed.",
+        "Use 'smooth list' to see all available functions.",
+        "");
   }
 
   @Test
@@ -87,8 +92,10 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothDag("nonexistentFunction");
     thenFinishedWithError();
-    thenOutputContains("error: Unknown function 'nonexistentFunction'.\n"
-        + "Use 'smooth list' to see all available functions.\n");
+    thenOutputContains(
+        "error: Unknown function 'nonexistentFunction'.",
+        "Use 'smooth list' to see all available functions.",
+        "");
   }
 
   @Test

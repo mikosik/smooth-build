@@ -146,8 +146,10 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = [ myFile, myFile ];               ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
-        + "  file.txt\n");
+    thenOutputContains(
+        "Can't store array of Files as it contains files with duplicated paths:",
+        "  file.txt",
+        "");
   }
 
   @Test
@@ -159,9 +161,11 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result3 = 'abc';  ");
     whenSmoothBuild("result2 result3 result1");
     thenFinishedWithSuccess();
-    thenOutputContains("built artifact(s):\n"
-        + "result1 -> '.smooth/artifacts/result1'\n"
-        + "result2 -> '.smooth/artifacts/result2'\n"
-        + "result3 -> '.smooth/artifacts/result3'\n");
+    thenOutputContains(
+        "built artifact(s):",
+        "result1 -> '.smooth/artifacts/result1'",
+        "result2 -> '.smooth/artifacts/result2'",
+        "result3 -> '.smooth/artifacts/result3'",
+        "");
   }
 }
