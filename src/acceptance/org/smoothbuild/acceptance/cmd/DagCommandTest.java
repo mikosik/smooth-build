@@ -13,11 +13,37 @@ public class DagCommandTest extends AcceptanceTestCase {
     whenSmoothDag("result");
     thenFinishedWithSuccess();
     thenOutputContains(quotesX2(
-        "result([String])\n" +
-        "  mySingleton([String])\n" +
-        "    [String]([String])\n" +
-        "      'abc'(String)\n" +
-        "      'def'(String)"));
+        "[String] result\n" +
+        "  [String] mySingleton\n" +
+        "    [String] [String]\n" +
+        "      String 'abc'\n" +
+        "      String 'def'"));
+  }
+
+  @Test
+  public void dag_with_long_string_literal() throws Exception {
+    givenScript(
+        "  result = '012345678901234567890123456789';  ");
+    whenSmoothDag("result");
+    thenFinishedWithSuccess();
+    thenOutputContains(quotesX2(
+        "String result\n" +
+        "  String '012345678901234'...\n"));
+  }
+
+  @Test
+  public void dag_with_convert_computation() throws Exception {
+    givenScript(
+        "  Blob result = file(toBlob('abc'), 'name.txt');  ");
+    whenSmoothDag("result");
+    thenFinishedWithSuccess();
+    thenOutputContains(quotesX2(
+        "Blob result\n" +
+        "  Blob ~conversion\n" +
+        "    File file\n" +
+        "      Blob toBlob\n" +
+        "        String 'abc'\n" +
+        "      String 'name.txt'"));
   }
 
   @Test
