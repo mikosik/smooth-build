@@ -192,8 +192,10 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ myFile, myFile ];                 ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Can't store array of Files as it contains files with duplicated paths:\n"
-        + "  file.txt\n");
+    thenOutputContains(
+        "Can't store array of Files as it contains files with duplicated paths:",
+        "  file.txt",
+        "");
   }
 
   @Test

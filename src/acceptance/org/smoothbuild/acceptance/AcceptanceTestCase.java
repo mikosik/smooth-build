@@ -5,7 +5,6 @@ import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
 import static java.lang.String.join;
-import static java.util.stream.Collectors.joining;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.Assert.fail;
@@ -24,6 +23,7 @@ import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Okios.readAndClose;
+import static org.smoothbuild.util.Text.unlines;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.File;
@@ -33,7 +33,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +40,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.smoothbuild.util.DataReader;
@@ -197,7 +195,8 @@ public abstract class AcceptanceTestCase {
     thenOutputContains("build.smooth:" + lineNumber + ": error: " + text);
   }
 
-  public void thenOutputContains(String text) {
+  public void thenOutputContains(String... lines) {
+    String text = unlines(lines);
     if (!outputData.contains(text)) {
       fail("Expected output to contain:\n"
           + text + "\n"
