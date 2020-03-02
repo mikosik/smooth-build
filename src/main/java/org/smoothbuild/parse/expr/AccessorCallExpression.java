@@ -22,6 +22,6 @@ public class AccessorCallExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     Computation computation = new AccessorCallComputation(accessor);
     List<Task> dependencies = childrenTasks(scope);
-    return new Task(computation, accessor.name(), true, dependencies, location());
+    return new Task(computation, true, dependencies, location());
   }
 }

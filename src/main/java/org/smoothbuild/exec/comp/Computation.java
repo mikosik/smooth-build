@@ -5,6 +5,8 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public interface Computation {
+  public String name();
+
   public Hash hash();
 
   public ConcreteType type();

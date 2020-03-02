@@ -23,6 +23,6 @@ public class LiteralExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     Computation computation = new ValueComputation(object);
     List<Task> dependencies = ImmutableList.of();
-    return new Task(computation, object.type().name(), true, dependencies, location());
+    return new Task(computation, true, dependencies, location());
   }
 }

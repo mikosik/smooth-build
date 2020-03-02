@@ -36,9 +36,9 @@ public class DefinedCallExpression extends Expression {
         .createTask(functionScope(arguments))
         .convertIfNeeded(actualResultType);
 
-    Computation computation = new IdentityComputation(actualResultType);
+    Computation computation = new IdentityComputation(function.name(), actualResultType);
     List<Task> dependencies = ImmutableList.of(task);
-    return new Task(computation, function.name(), true, dependencies, location());
+    return new Task(computation, true, dependencies, location());
   }
 
   private Scope<Task> functionScope(List<Task> arguments) {

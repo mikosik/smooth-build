@@ -76,7 +76,11 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenScript(String... lines) throws IOException {
-    givenRawScript(join("\n", lines).replace('\'', '"'));
+    givenRawScript(quotesX2(join("\n", lines)));
+  }
+
+  public static String quotesX2(String string) {
+    return string.replace('\'', '"');
   }
 
   public void givenRawScript(String buildScript) throws IOException {

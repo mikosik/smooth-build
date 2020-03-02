@@ -12,12 +12,12 @@ public class DagCommandTest extends AcceptanceTestCase {
         "  result = mySingleton('abc');                     ");
     whenSmoothDag("result");
     thenFinishedWithSuccess();
-    thenOutputContains(
+    thenOutputContains(quotesX2(
         "result([String])\n" +
         "  mySingleton([String])\n" +
         "    [String]([String])\n" +
-        "      String(String)\n" +
-        "      String(String)");
+        "      'abc'(String)\n" +
+        "      'def'(String)"));
   }
 
   @Test

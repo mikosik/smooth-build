@@ -20,6 +20,11 @@ public class ConvertComputation implements Computation {
   }
 
   @Override
+  public String name() {
+    return "~conversion";
+  }
+
+  @Override
   public Hash hash() {
     return convertComputationHash(type);
   }

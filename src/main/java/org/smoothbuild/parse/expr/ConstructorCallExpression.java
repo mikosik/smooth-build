@@ -22,6 +22,6 @@ public class ConstructorCallExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     Computation computation = new ConstructorCallComputation(constructor);
     List<Task> dependencies = childrenTasks(scope);
-    return new Task(computation, constructor.name(), true, dependencies, location());
+    return new Task(computation, true, dependencies, location());
   }
 }

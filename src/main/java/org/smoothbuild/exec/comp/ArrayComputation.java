@@ -17,6 +17,11 @@ public class ArrayComputation implements Computation {
   }
 
   @Override
+  public String name() {
+    return arrayType.name();
+  }
+
+  @Override
   public Hash hash() {
     return arrayComputationHash();
   }

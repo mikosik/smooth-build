@@ -21,6 +21,11 @@ public class AccessorCallComputation implements Computation {
   }
 
   @Override
+  public String name() {
+    return accessor.name();
+  }
+
+  @Override
   public Hash hash() {
     return accessorCallComputationHash(accessor);
   }
