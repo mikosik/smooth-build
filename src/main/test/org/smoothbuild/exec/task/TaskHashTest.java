@@ -136,7 +136,7 @@ public class TaskHashTest extends TestingContext {
 
   @Test
   public void hash_of_task_with_identity_computation_and_one_element_input_is_stable() {
-    given(task = task(new IdentityComputation(stringType()), list()));
+    given(task = task(new IdentityComputation("name", stringType()), list()));
     given(input = Input.fromObjects(list(string("abc"))));
     when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
     thenReturned(Hash.decode("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
@@ -195,6 +195,11 @@ public class TaskHashTest extends TestingContext {
   private static Computation computation(Hash hash) {
     return new Computation() {
       @Override
+      public String name() {
+        return "computation-name";
+      }
+
+      @Override
       public Hash hash() {
         return hash;
       }
@@ -212,6 +217,6 @@ public class TaskHashTest extends TestingContext {
   }
 
   private static Task task(Computation computation, List<? extends Task> dependencies) {
-    return new Task(computation, "task-name", true, dependencies, unknownLocation());
+    return new Task(computation, true, dependencies, unknownLocation());
   }
 }

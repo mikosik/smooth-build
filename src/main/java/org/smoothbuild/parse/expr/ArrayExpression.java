@@ -30,7 +30,7 @@ public class ArrayExpression extends Expression {
 
     Computation computation = new ArrayComputation(actualType);
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new Task(computation, actualType.name(), true, convertedElements, location());
+    return new Task(computation, true, convertedElements, location());
   }
 
   private static List<Task> convertedElements(ConcreteType type, List<Task> elements) {

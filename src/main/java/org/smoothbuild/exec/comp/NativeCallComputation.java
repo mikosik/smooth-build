@@ -23,6 +23,11 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
+  public String name() {
+    return function.name();
+  }
+
+  @Override
   public Hash hash() {
     return nativeCallComputationHash(function);
   }

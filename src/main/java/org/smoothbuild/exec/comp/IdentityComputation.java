@@ -8,10 +8,17 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class IdentityComputation implements Computation {
+  private final String name;
   private final ConcreteType type;
 
-  public IdentityComputation(ConcreteType type) {
+  public IdentityComputation(String name, ConcreteType type) {
+    this.name = name;
     this.type = type;
+  }
+
+  @Override
+  public String name() {
+    return name;
   }
 
   @Override

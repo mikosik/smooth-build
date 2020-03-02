@@ -23,15 +23,13 @@ import com.google.common.collect.ImmutableList;
 public class Task implements TreeNode<Task> {
   private final Computation computation;
   private final ImmutableList<Task> dependencies;
-  private final String name;
   private final Location location;
   private final boolean isComputationCacheable;
 
-  public Task(Computation computation, String name, boolean isComputationCacheable,
+  public Task(Computation computation, boolean isComputationCacheable,
       List<? extends Task> dependencies, Location location) {
     this.computation = computation;
     this.dependencies = ImmutableList.copyOf(dependencies);
-    this.name = name;
     this.location = location;
     this.isComputationCacheable = isComputationCacheable;
   }
@@ -42,7 +40,7 @@ public class Task implements TreeNode<Task> {
   }
 
   public String name() {
-    return name;
+    return computation.name();
   }
 
   public ConcreteType type() {
@@ -71,7 +69,7 @@ public class Task implements TreeNode<Task> {
     } else {
       Computation computation = new ConvertComputation(type);
       List<Task> dependencies = list(this);
-      return new Task(computation, "~conversion", true, dependencies, location());
+      return new Task(computation, true, dependencies, location());
     }
   }
 
@@ -81,6 +79,6 @@ public class Task implements TreeNode<Task> {
 
   @Override
   public String toString() {
-    return "Task(" + name + ")";
+    return "Task(" + computation.name() + ")";
   }
 }

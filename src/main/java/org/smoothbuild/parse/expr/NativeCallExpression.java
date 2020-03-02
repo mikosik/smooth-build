@@ -34,8 +34,7 @@ public class NativeCallExpression extends Expression {
 
     Computation computation = new NativeCallComputation(actualResultType, nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
-    return new Task(
-        computation, nativeFunction.name(), nativeFunction.isCacheable(), dependencies, location());
+    return new Task(computation, nativeFunction.isCacheable(), dependencies, location());
   }
 
   private static List<Task> convertedArguments(

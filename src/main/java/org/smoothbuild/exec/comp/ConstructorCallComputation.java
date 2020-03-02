@@ -20,6 +20,11 @@ public class ConstructorCallComputation implements Computation {
   }
 
   @Override
+  public String name() {
+    return constructor.name();
+  }
+
+  @Override
   public Hash hash() {
     return constructorCallComputationHash(constructor);
   }
