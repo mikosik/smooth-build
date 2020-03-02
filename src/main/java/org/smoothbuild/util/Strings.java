@@ -1,6 +1,6 @@
 package org.smoothbuild.util;
 
-public class StringUnescaper {
+public class Strings {
 
   private static final char TAB = '\t';
   private static final char BACKSPACE = '\b';
