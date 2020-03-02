@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.run.Runners.expect;
-import static org.smoothbuild.util.StringUnescaper.unescaped;
+import static org.smoothbuild.util.Strings.unescaped;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -22,7 +22,7 @@ import org.quackery.report.AssumeException;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(QuackeryRunner.class)
-public class StringUnescaperTest {
+public class StringsTest {
 
   @Quackery
   public static Suite mainSuite() {
