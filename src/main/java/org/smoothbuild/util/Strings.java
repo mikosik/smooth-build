@@ -34,6 +34,61 @@ public class Strings {
     }
   }
 
+
+  /**
+   * Escapes string so it can be used as String literal in smooth code.
+   * Replaces all escaped characters according to following rules:
+   *
+   * <pre>
+   * tab is replaced with \t
+   * backspace is replaced with \b
+   * newline is replaced with \n
+   * carriage return is replaced with \r
+   * formfeed is replaced with \f
+   * double quotes character is replaced with a \"
+   * backslash character is replaced with \\
+   * </pre>
+   */
+  public static String escaped(String string) {
+    StringBuilder stringBuilder = new StringBuilder(string.length());
+    for (int i = 0; i < string.length(); i++) {
+      char currentChar = string.charAt(i);
+      switch (currentChar) {
+        case TAB:
+          stringBuilder.append('\\');
+          stringBuilder.append('t');
+          break;
+        case BACKSPACE:
+          stringBuilder.append('\\');
+          stringBuilder.append('b');
+          break;
+        case NEW_LINE:
+          stringBuilder.append('\\');
+          stringBuilder.append('n');
+          break;
+        case CARRIAGE_RETURN:
+          stringBuilder.append('\\');
+          stringBuilder.append('r');
+          break;
+        case FORM_FEED:
+          stringBuilder.append('\\');
+          stringBuilder.append('f');
+          break;
+        case DOUBLE_QUOTE:
+          stringBuilder.append('\\');
+          stringBuilder.append('"');
+          break;
+        case BACKSLASH:
+          stringBuilder.append('\\');
+          stringBuilder.append('\\');
+          break;
+        default:
+          stringBuilder.append(currentChar);
+      }
+    }
+    return stringBuilder.toString();
+  }
+
   private static String unescapedImpl(String string) {
     char[] result = new char[string.length()];
     int stringIndex = 0;
