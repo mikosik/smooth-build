@@ -1,5 +1,7 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.base.Strings.repeat;
+import static java.lang.Math.max;
 import static java.lang.String.join;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
@@ -7,6 +9,7 @@ import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,6 +21,7 @@ import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.IntStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -72,10 +76,40 @@ public class ScriptParser {
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer,  Object offendingSymbol, int line,
-        int charPositionInLine, String msg,  RecognitionException e) {
-      Location location = createLocation(offendingSymbol, line);
-      errors.add(new ParseError(location, msg));
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int lineNumber,
+        int charNumber, String message, RecognitionException e) {
+      Location location = createLocation(offendingSymbol, lineNumber);
+      String text = unlines(
+          message,
+          errorLine(recognizer, lineNumber),
+          markingLine((Token) offendingSymbol, charNumber));
+      errors.add(new ParseError(location, text));
+    }
+
+    private static String markingLine(Token offendingSymbol, int charNumber) {
+      String spaces = repeat(" ", charNumber);
+      if (offendingSymbol == null) {
+        return spaces + "^";
+      } else {
+        int start = offendingSymbol.getStartIndex();
+        int stop = offendingSymbol.getStopIndex();
+        return spaces + repeat("^", max(1, stop - start + 1));
+      }
+    }
+
+    private static String errorLine(Recognizer<?, ?> recognizer, int lineNumber) {
+      String[] lines = extractSourceCode(recognizer).split("\n");
+      return lines[lineNumber - 1];
+    }
+
+    private static String extractSourceCode(Recognizer<?, ?> recognizer) {
+      IntStream inputStream = recognizer.getInputStream();
+      if (inputStream instanceof CharStream) {
+        return inputStream.toString();
+      } else {
+        CommonTokenStream tokens = (CommonTokenStream) inputStream;
+        return tokens.getTokenSource().getInputStream().toString();
+      }
     }
 
     private Location createLocation(Object offendingSymbol, int line) {

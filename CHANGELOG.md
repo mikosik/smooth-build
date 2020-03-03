@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * extended parser errors with source code where problematic part is marked
  * renamed 'smooth dag' command to 'smooth tree'
  * fixed 'equal' function so both parameters have the same generic type 
  * changed generic type names from one small letter to one large letter
