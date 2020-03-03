@@ -8,7 +8,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class TreeCommandTest extends AcceptanceTestCase {
 
   @Test
-  public void tree() throws Exception {
+  public void with_parameter_and_array() throws Exception {
     givenScript(
         "  mySingleton(String element) = [element, 'def'];  ",
         "  result = mySingleton('abc');                     ");
@@ -23,7 +23,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_with_long_string_literal() throws Exception {
+  public void with_long_string_literal() throws Exception {
     givenScript(
         "  result = '012345678901234567890123456789';  ");
     whenSmoothTree("result");
@@ -35,7 +35,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_with_convert_computation() throws Exception {
+  public void with_convert_computation() throws Exception {
     givenScript(
         "  Blob result = file(toBlob('abc'), 'name.txt');  ");
     whenSmoothTree("result");
@@ -50,14 +50,14 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_fails_when_script_file_is_missing() {
+  public void fails_when_script_file_is_missing() {
     whenSmoothTree("result");
     thenFinishedWithError();
     thenOutputContains("error: Cannot read build script file 'build.smooth'.\n");
   }
 
   @Test
-  public void tree_command_without_function_argument_prints_error() throws Exception {
+  public void fails_when_no_function_is_specified() throws Exception {
     givenScript(
         "  result = 'abc';  ");
     whenSmoothTree();
@@ -69,7 +69,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_function_that_requires_arguments_prints_error() throws Exception {
+  public void fails_when_specified_function_requires_argument() throws Exception {
     givenScript(
         "  withArguments(String element) = element;  ");
     whenSmoothTree("withArguments");
@@ -79,7 +79,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_function_which_all_params_are_optional_is_allowed() throws Exception {
+  public void works_when_function_has_all_params_optional() throws Exception {
     givenScript(
         "  String testStringIdentity(String value = 'default') = value;  ");
     whenSmoothTree("testStringIdentity");
@@ -87,7 +87,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_nonexistent_function_argument_prints_error() throws Exception {
+  public void fails_when_function_doesnt_exist() throws Exception {
     givenScript(
         "  result = 'abc';  ");
     whenSmoothTree("nonexistentFunction");
@@ -99,7 +99,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_illegal_function_name_prints_error() throws Exception {
+  public void fails_when_function_name_is_illegal() throws Exception {
     givenScript(
         "  result = 'abc';  ");
     whenSmoothTree("illegal^name");
@@ -108,7 +108,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_illegal_function_names_prints_error_for_each_one()
+  public void fails_when_more_function_names_are_illegal()
       throws Exception {
     givenScript(
         "  result = 'abc';  ");
@@ -119,7 +119,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_function_specified_twice_prints_error() throws Exception {
+  public void fails_when_function_is_specified_more_than_once() throws Exception {
     givenScript(
         "  result = 'abc';  ");
     whenSmoothTree("result", "result");
@@ -128,7 +128,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void tree_command_with_many_functions_specified_twice_prints_error_for_each_one()
+  public void prints_error_for_every_function_that_is_specified_more_than_once()
       throws Exception {
     givenScript(
         "  result = 'abc';  ");
