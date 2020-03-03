@@ -8,15 +8,18 @@ import static org.quackery.Suite.suite;
 import static org.quackery.run.Runners.expect;
 import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.unescaped;
+import static org.smoothbuild.util.Strings.unlines;
+import static org.testory.Testory.thenReturned;
+import static org.testory.Testory.when;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quackery.Case;
 import org.quackery.Quackery;
 import org.quackery.Suite;
-import org.quackery.Test;
 import org.quackery.junit.QuackeryRunner;
 import org.quackery.report.AssumeException;
 
@@ -24,6 +27,32 @@ import com.google.common.collect.ImmutableBiMap;
 
 @RunWith(QuackeryRunner.class)
 public class StringsTest {
+  @Test
+  public void unlining_zero_lines_gives_empty_string() {
+    when(unlines());
+    thenReturned("");
+  }
+
+  @Test
+  public void unlining_one_line_gives_unchanged_line() {
+    when(unlines("abc"));
+    thenReturned("abc");
+  }
+
+  @Test
+  public void unlining_more_lines() {
+    when(unlines(
+        "abc",
+        "def",
+        "ghi"));
+    thenReturned("abc\ndef\nghi");
+  }
+
+  @Test
+  public void unlining_doesnt_change_new_lines() {
+    when(unlines("abc\n123"));
+    thenReturned("abc\n123");
+  }
 
   @Quackery
   public static Suite mainSuite() {
@@ -116,18 +145,18 @@ public class StringsTest {
         () -> assertEquals(unescaped, unescaped(escaped)));
   }
 
-  private static Test failsUnescaping(String escaped, int index) {
+  private static org.quackery.Test failsUnescaping(String escaped, int index) {
     return suite(escaped)
         .add(failsWithException(escaped))
         .add(failsAtIndex(escaped, index));
   }
 
-  private static Test failsWithException(String escaped) {
+  private static org.quackery.Test failsWithException(String escaped) {
     return expect(UnescapingFailedException.class,
         newCase(format("Unescaping [%s] should fail", escaped), () -> unescaped(escaped)));
   }
 
-  private static Test failsAtIndex(String escaped, int index) {
+  private static org.quackery.Test failsAtIndex(String escaped, int index) {
     return newCase(format("at index %d", index), () -> {
       try {
         unescaped(escaped);

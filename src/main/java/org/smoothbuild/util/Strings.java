@@ -12,6 +12,10 @@ public class Strings {
 
   private static final String BACKSLASH_STRING = "\\";
 
+  public static String unlines(String... lines) {
+    return String.join("\n", lines);
+  }
+
   /**
    * Unescapes Smooth string. Replaces all escaped characters according to
    * following rules:
