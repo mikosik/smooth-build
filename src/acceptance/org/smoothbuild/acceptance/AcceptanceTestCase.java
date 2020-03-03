@@ -16,9 +16,9 @@ import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.cli.Commands.BUILD;
 import static org.smoothbuild.cli.Commands.CLEAN;
-import static org.smoothbuild.cli.Commands.DAG;
 import static org.smoothbuild.cli.Commands.HELP;
 import static org.smoothbuild.cli.Commands.LIST;
+import static org.smoothbuild.cli.Commands.TREE;
 import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
@@ -127,8 +127,8 @@ public abstract class AcceptanceTestCase {
     whenSmooth(concat(CLEAN.name(), args));
   }
 
-  public void whenSmoothDag(String... args) {
-    whenSmooth(concat(DAG.name(), args));
+  public void whenSmoothTree(String... args) {
+    whenSmooth(concat(TREE.name(), args));
   }
 
   public void whenSmoothHelp(String... args) {

@@ -17,9 +17,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
         + "All available commands are:\n"
         + "  build   Build artifact(s) by running specified function(s)\n"
         + "  clean   Remove all cached objects and artifacts calculated during previous builds\n"
-        + "  dag     Prints execution DAG (directed acyclic graph) of for given function(s)\n"
         + "  help    Print help about given command\n"
         + "  list    Print arg-less user defined functions\n"
+        + "  tree    Prints execution tree for specified function(s)\n"
         + "  version Print smooth build version number\n";
   }
 

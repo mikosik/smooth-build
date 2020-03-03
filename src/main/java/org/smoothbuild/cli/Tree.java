@@ -8,22 +8,22 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.exec.run.DagRunner;
+import org.smoothbuild.exec.run.TreeRunner;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
-public class Dag implements Command {
+public class Tree implements Command {
   private final Console console;
   private final RuntimeController runtimeController;
-  private final DagRunner dagRunner;
+  private final TreeRunner treeRunner;
 
   @Inject
-  public Dag(Console console, RuntimeController runtimeController, DagRunner dagRunner) {
+  public Tree(Console console, RuntimeController runtimeController, TreeRunner treeRunner) {
     this.console = console;
     this.runtimeController = runtimeController;
-    this.dagRunner = dagRunner;
+    this.treeRunner = treeRunner;
   }
 
   @Override
@@ -35,6 +35,6 @@ public class Dag implements Command {
       return EXIT_CODE_ERROR;
     }
     return runtimeController.setUpRuntimeAndRun(
-        (runtime) -> dagRunner.execute(runtime, functionNames.value()));
+        (runtime) -> treeRunner.execute(runtime, functionNames.value()));
   }
 }
