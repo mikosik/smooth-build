@@ -10,11 +10,11 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
-public class DagRunner {
+public class TreeRunner {
   private final Console console;
 
   @Inject
-  public DagRunner(Console console) {
+  public TreeRunner(Console console) {
     this.console = console;
   }
 
@@ -29,14 +29,14 @@ public class DagRunner {
       Function function = functions.get(name);
       if (!function.canBeCalledArgless()) {
         console.error(
-            "Cannot print DAG for '" + name + "' function as it requires arguments.");
+            "Cannot print execution tree for '" + name + "' function as it requires arguments.");
         return;
       }
     }
-    functionNames.forEach(n -> print(dagOf(runtime.functions().get(n))));
+    functionNames.forEach(n -> print(treeOf(runtime.functions().get(n))));
   }
 
-  private Task dagOf(Function function) {
+  private Task treeOf(Function function) {
     return function
         .createAgrlessCallExpression()
         .createTask(null);

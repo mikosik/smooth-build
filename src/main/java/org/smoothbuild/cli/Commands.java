@@ -17,13 +17,13 @@ import com.google.inject.Injector;
 public class Commands {
   public static final CommandSpec BUILD = buildCommand();
   public static final CommandSpec CLEAN = cleanCommand();
-  public static final CommandSpec DAG = dagCommand();
+  public static final CommandSpec TREE = treeCommand();
   public static final CommandSpec HELP = helpCommand();
   public static final CommandSpec LIST = listCommand();
   public static final CommandSpec VERSION = versionCommand();
 
   public static final ImmutableList<CommandSpec> COMMANDS = ImmutableList.of(
-      BUILD, CLEAN, DAG, HELP, LIST, VERSION);
+      BUILD, CLEAN, HELP, LIST, TREE, VERSION);
 
   public static int execute(String[] args) {
     if (args.length == 0) {
@@ -93,12 +93,12 @@ public class Commands {
     };
   }
 
-  private static CommandSpec dagCommand() {
-    return new CommandSpec(Dag.class) {
+  private static CommandSpec treeCommand() {
+    return new CommandSpec(Tree.class) {
       @Override
       public String description() {
         return unlines(
-            "usage: smooth dag <function>...",
+            "usage: smooth tree <function>...",
             "",
             shortDescription()
         );
@@ -106,7 +106,7 @@ public class Commands {
 
       @Override
       public String shortDescription() {
-        return "Prints execution DAG (directed acyclic graph) of for given function(s)";
+        return "Prints execution tree for specified function(s)";
       }
     };
   }
