@@ -3,7 +3,7 @@ package org.smoothbuild.cli;
 import static com.google.inject.Guice.createInjector;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.SMOOTH_HOME_ENV_VARIABLE;
-import static org.smoothbuild.util.Text.unlines;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.nio.file.Paths;
 import java.util.Optional;

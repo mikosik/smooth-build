@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.smoothbuild.util.Text.unlines;
+import static org.smoothbuild.util.Strings.unlines;
 
 import org.junit.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;

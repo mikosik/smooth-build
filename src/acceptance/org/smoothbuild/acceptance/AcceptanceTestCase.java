@@ -23,7 +23,7 @@ import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Okios.readAndClose;
-import static org.smoothbuild.util.Text.unlines;
+import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.File;
