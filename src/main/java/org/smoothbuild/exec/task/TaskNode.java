@@ -1,11 +1,16 @@
 package org.smoothbuild.exec.task;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.exec.comp.Input.input;
+import static org.smoothbuild.util.Lists.list;
+
 import java.io.IOException;
 import java.util.List;
 
 import org.smoothbuild.db.outputs.OutputDbException;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.lang.object.base.Bool;
+import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
 
@@ -48,7 +53,7 @@ public abstract class TaskNode {
           return;
         }
       }
-      result = taskExecutor.execute(task, Input.fromNodeResults(children));
+      result = taskExecutor.execute(task, resultValuesToInput(children));
     }
   }
 
@@ -81,9 +86,16 @@ public abstract class TaskNode {
       }
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.
-      List<TaskResult> dependencies = ImmutableList.of(conditionNode.result(),
-          dependencyNode.result(), dependencyNode.result());
-      result = taskExecutor.execute(task, Input.fromResults(dependencies));
+      Input input = resultValuesToInput(list(conditionNode, dependencyNode, dependencyNode));
+      result = taskExecutor.execute(task, input);
     }
+  }
+
+  private static Input resultValuesToInput(List<TaskNode> children) {
+    List<SObject> childValues = children
+        .stream()
+        .map(taskNode -> taskNode.result().output().value())
+        .collect(toImmutableList());
+    return input(childValues);
   }
 }
