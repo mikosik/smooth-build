@@ -36,7 +36,7 @@ public class TaskExecutor {
     return taskResult;
   }
 
-  private TaskResult executeImpl2(final Task task, final Input input) throws OutputDbException,
+  private TaskResult executeImpl2(Task task, Input input) throws OutputDbException,
       IOException {
     Hash hash = taskHash(task, input);
     if (outputDb.contains(hash)) {
@@ -51,7 +51,7 @@ public class TaskExecutor {
     }
   }
 
-  private TaskResult executeImpl(final Task task, final Input input) throws IOException {
+  private TaskResult executeImpl(Task task, Input input) throws IOException {
     Container container = containerProvider.get();
     try {
       return new TaskResult(task.execute(container, input), false);
