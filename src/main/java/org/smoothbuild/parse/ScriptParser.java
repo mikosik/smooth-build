@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.base.Strings.repeat;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.Math.max;
 import static java.lang.String.join;
 import static okio.Okio.buffer;
@@ -98,8 +99,8 @@ public class ScriptParser {
     }
 
     private static String errorLine(Recognizer<?, ?> recognizer, int lineNumber) {
-      String[] lines = extractSourceCode(recognizer).split("\n");
-      return lines[lineNumber - 1];
+      List<String> lines = extractSourceCode(recognizer).lines().collect(toImmutableList());
+      return lines.get(lineNumber - 1);
     }
 
     private static String extractSourceCode(Recognizer<?, ?> recognizer) {
