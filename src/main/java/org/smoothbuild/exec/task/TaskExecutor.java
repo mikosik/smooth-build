@@ -58,7 +58,7 @@ public class TaskExecutor {
     } catch (ComputationException e) {
       return new TaskResult(e);
     } finally {
-      container.destroy();
+      container.close();
     }
   }
 
