@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.task;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class Container implements NativeApi {
+public class Container implements NativeApi, Closeable {
   private final FileSystem fileSystem;
   private final ObjectFactory objectFactory;
   private final TempManager tempManager;
@@ -59,7 +60,8 @@ public class Container implements NativeApi {
     return tempDir;
   }
 
-  public void destroy() throws IOException {
+  @Override
+  public void close() throws IOException {
     for (TempDir tempDir : tempDirs) {
       tempDir.destroy();
     }
