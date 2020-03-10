@@ -51,6 +51,10 @@ public class SObjectImpl implements SObject {
 
   @Override
   public String toString() {
-    return type().name() + "(...):" + hash();
+    return type().name() + "(" + valueToString() + "):" + hash();
+  }
+
+  protected String valueToString() {
+    return "...";
   }
 }
