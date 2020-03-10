@@ -28,19 +28,19 @@ import com.google.common.collect.ImmutableBiMap;
 @RunWith(QuackeryRunner.class)
 public class StringsTest {
   @Test
-  public void unlining_zero_lines_gives_empty_string() {
+  public void unline_zero_lines_gives_empty_string() {
     when(unlines());
     thenReturned("");
   }
 
   @Test
-  public void unlining_one_line_gives_unchanged_line() {
+  public void unline_one_line_gives_unchanged_line() {
     when(unlines("abc"));
     thenReturned("abc");
   }
 
   @Test
-  public void unlining_more_lines() {
+  public void unline_more_lines() {
     when(unlines(
         "abc",
         "def",
@@ -49,7 +49,7 @@ public class StringsTest {
   }
 
   @Test
-  public void unlining_doesnt_change_new_lines() {
+  public void unline_doesnt_change_new_lines() {
     when(unlines("abc\n123"));
     thenReturned("abc\n123");
   }
