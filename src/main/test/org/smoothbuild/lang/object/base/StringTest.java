@@ -96,6 +96,20 @@ public class StringTest extends TestingContext {
   public void to_string_contains_string_value() throws Exception {
     given(sstring = string(string));
     when(() -> sstring.toString());
-    thenReturned("String(...):" + sstring.hash());
+    thenReturned("String(\"my string\"):" + sstring.hash());
+  }
+
+  @Test
+  public void to_string_contains_shortened_string_value_for_long_strings() throws Exception {
+    given(sstring = string("123456789012345678901234567890"));
+    when(() -> sstring.toString());
+    thenReturned("String(\"1234567890123456789012345\"...):" + sstring.hash());
+  }
+
+  @Test
+  public void to_string_contains_properly_escaped_special_characters() throws Exception {
+    given(sstring = string("\t \b \n \r \f \" \\"));
+    when(() -> sstring.toString());
+    thenReturned("String(\"\\t \\b \\n \\r \\f \\\" \\\\\"):" + sstring.hash());
   }
 }
