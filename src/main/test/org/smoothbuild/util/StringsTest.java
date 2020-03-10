@@ -7,6 +7,7 @@ import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.quackery.run.Runners.expect;
 import static org.smoothbuild.util.Strings.escaped;
+import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.testory.Testory.thenReturned;
@@ -52,6 +53,24 @@ public class StringsTest {
   public void unline_doesnt_change_new_lines() {
     when(unlines("abc\n123"));
     thenReturned("abc\n123");
+  }
+
+  @Test
+  public void escaped_with_ellipsis_doesnt_change_string_which_length_is_below_limit() {
+    when(escapedAndLimitedWithEllipsis("12345678", 10));
+    thenReturned("\"12345678\"");
+  }
+
+  @Test
+  public void escaped_with_ellipsis_adds_ellipsis_when_quoted_string_exceeds_limit() {
+    when(escapedAndLimitedWithEllipsis("123456789", 10));
+    thenReturned("\"12345\"...");
+  }
+
+  @Test
+  public void escaped_with_ellipsis_adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
+    when(escapedAndLimitedWithEllipsis("12345678\n", 10));
+    thenReturned("\"12345\"...");
   }
 
   @Quackery
