@@ -2,7 +2,7 @@ package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
 import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
-import static org.smoothbuild.util.Strings.escaped;
+import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.SObject;
@@ -19,13 +19,7 @@ public class ValueComputation implements Computation {
 
   @Override
   public String name() {
-    String escaped = escaped(((SString) object).jValue());
-    int limit = 20;
-    if (limit < (escaped.length() + 2)) {
-      return "\"" + escaped.substring(0, limit - 5) + "\"...";
-    } else {
-      return "\"" + escaped + "\"";
-    }
+    return escapedAndLimitedWithEllipsis(((SString) object).jValue(), 20);
   }
 
   @Override

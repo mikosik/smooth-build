@@ -38,6 +38,18 @@ public class Strings {
     }
   }
 
+  /**
+   * Escapes string same way as {@link #escaped(String)}, additionally double quoting it
+   * and (if its length after quoting exceeds limit) trims it and appends ellipsis.
+   */
+  public static String escapedAndLimitedWithEllipsis(String string, int limit) {
+    String escaped = escaped(string);
+    if (limit < (escaped.length() + 2)) {
+      return "\"" + escaped.substring(0, limit - 5) + "\"...";
+    } else {
+      return "\"" + escaped + "\"";
+    }
+  }
 
   /**
    * Escapes string so it can be used as String literal in smooth code.
