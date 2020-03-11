@@ -4,8 +4,6 @@ import static com.google.common.collect.Streams.stream;
 
 import java.util.Set;
 
-import org.smoothbuild.lang.plugin.NativeApi;
-
 import com.google.common.collect.ImmutableSet;
 
 public class Messages {
@@ -24,10 +22,6 @@ public class Messages {
 
   public static boolean isValidSeverity(String severity) {
     return SEVERITIES.contains(severity);
-  }
-
-  public static Array emptyMessageArray(NativeApi nativeApi) {
-    return nativeApi.factory().arrayBuilder((nativeApi.factory()).messageType()).build();
   }
 
   public static boolean isEmpty(Array messages) {

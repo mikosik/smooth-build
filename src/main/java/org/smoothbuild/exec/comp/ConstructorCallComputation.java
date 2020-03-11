@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.ComputationHashes.constructorCallComputationHash;
-import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Constructor;
@@ -41,6 +40,6 @@ public class ConstructorCallComputation implements Computation {
     for (int i = 0; i < parameters.size(); i++) {
       builder.set(parameters.get(i).name(), input.objects().get(i));
     }
-    return new Output(builder.build(), emptyMessageArray(nativeApi));
+    return new Output(builder.build(), nativeApi.messages());
   }
 }

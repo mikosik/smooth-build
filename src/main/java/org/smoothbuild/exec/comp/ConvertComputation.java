@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.ComputationHashes.convertComputationHash;
-import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
@@ -41,10 +40,10 @@ public class ConvertComputation implements Computation {
     assertThat(!type.equals(object.type()));
     assertThat(type.isAssignableFrom(object.type()));
     if (object instanceof Array) {
-      return new Output(convertArray(nativeApi, (Array) object, type), emptyMessageArray(nativeApi));
+      return new Output(convertArray(nativeApi, (Array) object, type), nativeApi.messages());
     }
     assertThat(!object.type().isNothing());
-    return new Output(convertStruct((Struct) object, type), emptyMessageArray(nativeApi));
+    return new Output(convertStruct((Struct) object, type), nativeApi.messages());
   }
 
   private static SObject convertArray(NativeApi nativeApi, Array array,
