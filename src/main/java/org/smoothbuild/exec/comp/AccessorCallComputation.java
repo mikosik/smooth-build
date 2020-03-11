@@ -2,7 +2,6 @@ package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.comp.ComputationHashes.accessorCallComputationHash;
-import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
@@ -40,6 +39,6 @@ public class AccessorCallComputation implements Computation {
     ImmutableList<SObject> objects = input.objects();
     checkArgument(objects.size() == 1);
     Struct struct = (Struct) objects.get(0);
-    return new Output(struct.get(accessor.fieldName()), emptyMessageArray(nativeApi));
+    return new Output(struct.get(accessor.fieldName()), nativeApi.messages());
   }
 }

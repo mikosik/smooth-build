@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.ComputationHashes.arrayComputationHash;
-import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
@@ -38,6 +37,6 @@ public class ArrayComputation implements Computation {
         .arrayBuilder(arrayType.elemType())
         .addAll(input.objects())
         .build();
-    return new Output(array, emptyMessageArray(nativeApi));
+    return new Output(array, nativeApi.messages());
   }
 }

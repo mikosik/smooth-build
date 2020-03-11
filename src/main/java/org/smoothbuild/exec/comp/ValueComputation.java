@@ -1,7 +1,6 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
-import static org.smoothbuild.lang.object.base.Messages.emptyMessageArray;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -34,6 +33,6 @@ public class ValueComputation implements Computation {
 
   @Override
   public Output execute(Input input, NativeApi nativeApi) {
-    return new Output(object, emptyMessageArray(nativeApi));
+    return new Output(object, nativeApi.messages());
   }
 }
