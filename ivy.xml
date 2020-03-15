@@ -9,7 +9,7 @@
         <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3"/>
         <dependency org="org.mockito" name="mockito-core" rev="3.3.0"/>
         <dependency org="com.squareup.okio" name="okio" rev="2.4.0"/>
-        <dependency org="junit" name="junit" rev="4.12"/>
+        <dependency org="junit" name="junit" rev="4.13"/>
         <dependency org="org.antlr" name="antlr4" rev="4.7.2"/>
     </dependencies>
 </ivy-module>

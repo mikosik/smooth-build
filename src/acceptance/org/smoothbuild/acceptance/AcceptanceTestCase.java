@@ -103,7 +103,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenJunitCopied() {
-    copyLib("junit-4.12.jar", "junit/");
+    copyLib("junit-4.13.jar", "junit/");
     copyLib("hamcrest-core-1.3.jar", "junit/");
   }
 
