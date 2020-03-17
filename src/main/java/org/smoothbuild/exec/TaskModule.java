@@ -14,11 +14,7 @@ public class TaskModule extends AbstractModule {
   @Provides
   @Singleton
   @SandboxHash
-  public Hash provideSandboxHash(
-      JavaPlatformHashProvider javaPlatformHashProvider,
-      SmoothJarHashProvider smoothJarHashProvider) {
-    return Hash.of(
-        javaPlatformHashProvider.get(),
-        smoothJarHashProvider.get());
+  public Hash provideSandboxHash() {
+    return SandboxHashProvider.get();
   }
 }
