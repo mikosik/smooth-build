@@ -1,7 +1,5 @@
 package org.smoothbuild.exec.task;
 
-import static org.smoothbuild.lang.object.base.Messages.containsErrors;
-
 import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Output;
 
@@ -42,6 +40,6 @@ public class TaskResult {
   }
 
   public boolean hasOutputWithValue() {
-    return output != null && !containsErrors(output.messages());
+    return output != null && output.hasValue();
   }
 }
