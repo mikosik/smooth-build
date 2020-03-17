@@ -1,8 +1,10 @@
 package org.smoothbuild.cli;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -23,18 +25,20 @@ public class ConsoleTest extends TestingContext {
   @Test
   public void printing_messages_containing_error_message() {
     console.print(name, array(errorMessage("message string")));
-    String expected = " + GROUP NAME\n"
-        + "   + ERROR: message string\n";
-    assertEquals(expected, outputStream.toString());
+    assertThat(outputStream.toString()).isEqualTo(unlines(
+        " + GROUP NAME",
+        "   + ERROR: message string",
+        ""));
   }
 
   @Test
   public void printing_messages_without_error_message() {
     console.print(name, array(warningMessage("message string\nsecond line")));
-    String expected = " + GROUP NAME\n"
-        + "   + WARNING: message string\n"
-        + "     second line\n";
-    assertEquals(expected, outputStream.toString());
+    assertThat(outputStream.toString()).isEqualTo(unlines(
+        " + GROUP NAME",
+        "   + WARNING: message string",
+        "     second line",
+        ""));
   }
 
   // isProblemReported()
@@ -76,10 +80,11 @@ public class ConsoleTest extends TestingContext {
     console.print(name, array(errorMessage("message string")));
     console.printFinalSummary();
 
-    String expected = " + GROUP NAME\n"
-        + "   + ERROR: message string\n"
-        + "   + 1 error(s)\n";
-    assertEquals(expected, outputStream.toString());
+    assertThat(outputStream.toString()).isEqualTo(unlines(
+        " + GROUP NAME",
+        "   + ERROR: message string",
+        "   + 1 error(s)",
+        ""));
   }
 
   @Test

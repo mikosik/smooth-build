@@ -6,17 +6,16 @@ import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
 import static org.smoothbuild.lang.object.base.Messages.severity;
 import static org.smoothbuild.lang.object.base.Messages.text;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.PrintStream;
-import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Struct;
-
-import com.google.common.base.Splitter;
 
 /**
  * This class is thread-save.
@@ -30,10 +29,10 @@ public class Console {
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final PrintStream printStream;
-  private int failureCount;
-  private int errorCount;
-  private int warningCount;
-  private int infoCount;
+  private final AtomicInteger failureCount;
+  private final AtomicInteger errorCount;
+  private final AtomicInteger warningCount;
+  private final AtomicInteger infoCount;
 
   @Inject
   public Console() {
@@ -42,87 +41,96 @@ public class Console {
 
   public Console(PrintStream printStream) {
     this.printStream = printStream;
+    this.failureCount = new AtomicInteger();
+    this.errorCount = new AtomicInteger();
+    this.warningCount = new AtomicInteger();
+    this.infoCount = new AtomicInteger();
   }
 
-  public synchronized void errors(java.util.List<?> errors) {
+  public void errors(java.util.List<?> errors) {
     errors.forEach(this::error);
   }
 
-  public synchronized void error(Object error) {
+  public void error(Object error) {
     println(error.toString());
-    errorCount++;
+    errorCount.incrementAndGet();
   }
 
-  public synchronized void error(String message) {
+  public void error(String message) {
     println("error: " + message);
-    errorCount++;
+    errorCount.incrementAndGet();
   }
 
-  public synchronized void print(String header, Array messages) {
-    println(GROUP_PREFIX + header);
-    print(messages);
+  public void print(String header, Array messages) {
+    print(toTextAndIncreaseCounts(header, messages));
   }
 
-  public synchronized void print(String header, Exception failure) {
-    println(GROUP_PREFIX + header);
-    print(getStackTraceAsString(failure));
-    failureCount++;
-  }
-
-  private void print(Array messages) {
+  private String toTextAndIncreaseCounts(String header, Array messages) {
+    StringBuilder text = new StringBuilder(GROUP_PREFIX + header + "\n");
     for (Struct message : messages.asIterable(Struct.class)) {
       String severity = severity(message);
-      printMultiline(severity + ": " + text(message));
-      switch (severity) {
-        case ERROR:
-          errorCount++;
-          break;
-        case WARNING:
-          warningCount++;
-          break;
-        case INFO:
-          infoCount++;
-          break;
-        default:
-          throw new RuntimeException("Unknown message severity: " + severity);
-      }
+      text.append(prefixMultiline(severity + ": " + text(message)));
+      increaseCount(severity);
+    }
+    return text.toString();
+  }
+
+  public void print(String header, Throwable failure) {
+    print(GROUP_PREFIX + header + "\n" + getStackTraceAsString(failure));
+    failureCount.incrementAndGet();
+  }
+
+  private void increaseCount(String severity) {
+    switch (severity) {
+      case ERROR:
+        errorCount.incrementAndGet();
+        break;
+      case WARNING:
+        warningCount.incrementAndGet();
+        break;
+      case INFO:
+        infoCount.incrementAndGet();
+        break;
+      default:
+        throw new RuntimeException("Unknown message severity: " + severity);
     }
   }
 
-  public synchronized boolean isProblemReported() {
-    return failureCount != 0 || errorCount != 0;
+  public boolean isProblemReported() {
+    return failureCount.get() != 0 || errorCount.get() != 0;
   }
 
-  public synchronized void printFinalSummary() {
-    printStat(failureCount, "failure(s)");
-    printStat(errorCount, "error(s)");
-    printStat(warningCount, "warning(s)");
-    printStat(infoCount, "info(s)");
+  public void printFinalSummary() {
+    print(
+        statText(failureCount, "failure(s)") +
+        statText(errorCount, "error(s)") +
+        statText(warningCount, "warning(s)") +
+        statText(infoCount, "info(s)"));
   }
 
-  private void printStat(int count, String messageType) {
-    if (count != 0) {
-      println(MESSAGE_FIRST_LINE_PREFIX + count + " " + messageType);
+  private static String statText(AtomicInteger count, String messageType) {
+    int value = count.get();
+    if (value != 0) {
+      return MESSAGE_FIRST_LINE_PREFIX + value + " " + messageType + "\n";
+    } else {
+      return "";
     }
   }
 
-  private void printMultiline(String text) {
-    Iterator<String> it = Splitter.on("\n").split(text).iterator();
-
-    print(MESSAGE_FIRST_LINE_PREFIX);
-    println(it.next());
-
-    while (it.hasNext()) {
-      print(MESSAGE_OTHER_LINES_PREFIX);
-      println(it.next());
+  private static String prefixMultiline(String text) {
+    String[] lines = text.lines().toArray(String[]::new);
+    lines[0] = MESSAGE_FIRST_LINE_PREFIX + lines[0];
+    for (int i = 1; i < lines.length; i++) {
+      lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
     }
+    return unlines(lines) + "\n";
   }
 
-  public synchronized void println(String line) {
+  public void println(String line) {
     printStream.println(line);
   }
 
-  public synchronized void print(String line) {
+  public void print(String line) {
     printStream.print(line);
   }
 }
