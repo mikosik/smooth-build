@@ -109,15 +109,9 @@ public class ConsoleTest extends TestingContext {
     builder.append(" + GROUP NAME\n");
     builder.append(Throwables.getStackTraceAsString(exception));
     builder.append(" + GROUP NAME\n");
-    for (int i = 0; i < 2; i++) {
-      builder.append("   + ERROR: error string\n");
-    }
-    for (int i = 0; i < 3; i++) {
-      builder.append("   + WARNING: warning string\n");
-    }
-    for (int i = 0; i < 4; i++) {
-      builder.append("   + INFO: info string\n");
-    }
+    builder.append("   + ERROR: error string\n".repeat(2));
+    builder.append("   + WARNING: warning string\n".repeat(3));
+    builder.append("   + INFO: info string\n".repeat(4));
 
     builder.append("   + 1 failure(s)\n");
     builder.append("   + 2 error(s)\n");
