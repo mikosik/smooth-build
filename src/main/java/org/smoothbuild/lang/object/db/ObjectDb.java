@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.object.db;
 
+import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
@@ -10,6 +11,7 @@ import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -39,7 +41,7 @@ import org.smoothbuild.lang.object.type.TypeType;
  */
 public class ObjectDb {
   private final HashedDb hashedDb;
-  private final TypeCache typeCache;
+  private final ConcurrentHashMap<Hash, ConcreteType> typeCache;
   private BoolType boolType;
   private BlobType blobType;
   private NothingType nothingType;
@@ -54,7 +56,7 @@ public class ObjectDb {
 
   private ObjectDb(HashedDb hashedDb) {
     this.hashedDb = hashedDb;
-    this.typeCache = new TypeCache();
+    this.typeCache = new ConcurrentHashMap<>();
   }
 
   private void initialize() {
@@ -65,11 +67,11 @@ public class ObjectDb {
       this.nothingType = new NothingType(writeBasicTypeRoot(typeType, NOTHING), hashedDb, this);
       this.stringType = new StringType(writeBasicTypeRoot(typeType, STRING), hashedDb, this);
 
-      typeCache.cache(typeType);
-      typeCache.cache(blobType);
-      typeCache.cache(boolType);
-      typeCache.cache(nothingType);
-      typeCache.cache(stringType);
+      cacheType(typeType);
+      cacheType(blobType);
+      cacheType(boolType);
+      cacheType(nothingType);
+      cacheType(stringType);
     } catch (HashedDbException e) {
       throw new ObjectDbException(e);
     }
@@ -247,7 +249,7 @@ public class ObjectDb {
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
-    return (T) typeCache.cache(type);
+    return (T) requireNonNullElse(typeCache.putIfAbsent(type.hash(), type), type);
   }
 
   // methods for creating type's SObjects
