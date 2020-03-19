@@ -155,6 +155,7 @@
         <pathelement location="${lib.junit}"/>
         <pathelement location="${lib.junittoolbox}"/>
         <pathelement location="${lib.quackery}"/>
+        <pathelement location="${lib.truth}"/>
     </path>
 
     <target name="compile-testing.java" depends="compile-main.java">
