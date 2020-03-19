@@ -1,10 +1,7 @@
 package org.smoothbuild.exec.comp;
 
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.Test;
 import org.smoothbuild.lang.object.base.Array;
@@ -12,116 +9,107 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.testing.TestingContext;
 
 public class OutputTest extends TestingContext {
-  private Output output;
-  private final Array messages = messageArrayWithOneError();
-  private SString sstring;
-  private SString otherSstring;
-
   @Test
   public void null_messages_are_forbidden() {
-    given(sstring = string("abc"));
-    when(() -> new Output(sstring, null));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new Output(aString(), null))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void value_returns_value() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).value();
-    thenReturned(sstring);
+    assertThat(new Output(aString(), messages()).value())
+        .isEqualTo(aString());
   }
 
   @Test
   public void messages_returns_messages() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).messages();
-    thenReturned(messages);
+    Output output = new Output(aString(), messages());
+    assertThat(output.messages())
+        .isEqualTo(messages());
   }
 
   @Test
   public void output_created_without_messages_has_no_messages() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, emptyMessageArray()));
-    when(output).messages();
-    thenReturned(emptyMessageArray());
+    Output output = new Output(aString(), emptyMessageArray());
+    assertThat(output.messages())
+        .isEqualTo(emptyMessageArray());
   }
 
   @Test
   public void value_throws_exception_when_no_value_is_present() {
-    given(output = new Output(null, messages));
-    when(output).value();
-    thenThrown(IllegalStateException.class);
+    Output output = new Output(null, messages());
+    assertCall(output::value)
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
   public void has_value_returns_true_when_value_is_present() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).hasValue();
-    thenReturned(true);
+    Output output = new Output(aString(), messages());
+    assertThat(output.hasValue())
+        .isTrue();
   }
 
   @Test
   public void has_value_returns_false_when_no_value_is_present() {
-    given(output = new Output(null, messages));
-    when(output).hasValue();
-    thenReturned(false);
+    Output output = new Output(null, messages());
+    assertThat(output.hasValue())
+        .isFalse();
   }
 
   @Test
   public void outputs_with_same_value_and_messages_are_equal() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).equals(new Output(sstring, messages));
-    thenReturned(true);
+    Output output = new Output(aString(), messages());
+    assertThat(output)
+        .isEqualTo(new Output(aString(), messages()));
   }
 
   @Test
   public void outputs_with_same_value_and_no_messages_are_equal() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, emptyMessageArray()));
-    when(output).equals(new Output(sstring, emptyMessageArray()));
-    thenReturned(true);
+    Output output = new Output(aString(), emptyMessageArray());
+    assertThat(output)
+        .isEqualTo(new Output(aString(), emptyMessageArray()));
   }
 
   @Test
   public void outputs_with_same_message_and_no_value_are_equal() {
-    given(output = new Output(null, messages));
-    when(output).equals(new Output(null, messages));
-    thenReturned(true);
+    Output output = new Output(null, messages());
+    assertThat(output)
+        .isEqualTo(new Output(null, messages()));
   }
 
   @Test
   public void outputs_with_same_value_but_different_messages_are_not_equal() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).equals(new Output(sstring, emptyMessageArray()));
-    thenReturned(false);
+    Output output = new Output(aString(), messages());
+    assertThat(output)
+        .isNotEqualTo(new Output(aString(), emptyMessageArray()));
   }
 
   @Test
   public void outputs_with_different_value_and_same_messages_are_not_equal() {
-    given(sstring = string("abc"));
-    given(otherSstring = string("def"));
-    given(output = new Output(sstring, messages));
-    when(output).equals(new Output(otherSstring, messages));
-    thenReturned(false);
+    Output output = new Output(aString(), messages());
+    assertThat(output)
+        .isNotEqualTo(new Output(string("def"), messages()));
   }
 
   @Test
   public void output_without_value_is_not_equal_to_output_with_value() {
-    given(sstring = string("abc"));
-    when(output = new Output(sstring, messages));
-    thenReturned(not(new Output(null, messages)));
+    Output output = new Output(aString(), messages());
+    assertThat(output)
+        .isNotEqualTo(new Output(null, messages()));
   }
 
   @Test
   public void identical_outputs_have_same_hash_code() {
-    given(sstring = string("abc"));
-    given(output = new Output(sstring, messages));
-    when(output).hashCode();
-    thenReturned(new Output(sstring, messages).hashCode());
+    Output output = new Output(aString(), messages());
+    assertThat(output)
+        .isEqualTo(new Output(aString(), messages()));
+  }
+
+  private Array messages() {
+    return messageArrayWithOneError();
+  }
+
+  private SString aString() {
+    return string("abc");
   }
 }
