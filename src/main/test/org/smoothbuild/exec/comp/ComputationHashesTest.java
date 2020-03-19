@@ -1,6 +1,8 @@
 package org.smoothbuild.exec.comp;
 
-import static org.hamcrest.Matchers.not;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.ComputationHashes.accessorCallComputationHash;
 import static org.smoothbuild.exec.comp.ComputationHashes.arrayComputationHash;
 import static org.smoothbuild.exec.comp.ComputationHashes.constructorCallComputationHash;
@@ -9,13 +11,9 @@ import static org.smoothbuild.exec.comp.ComputationHashes.identityComputationHas
 import static org.smoothbuild.exec.comp.ComputationHashes.nativeCallComputationHash;
 import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -26,85 +24,89 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.testing.TestingContext;
 
 public class ComputationHashesTest extends TestingContext {
-  private HashSet<Hash> hashes;
-  private NativeFunction function;
-  private NativeFunction function2;
-  private Constructor constructor;
-  private Constructor constructor2;
-  private Accessor accessor;
-  private Accessor accessor2;
-  private SObject object;
-  private SObject object2;
-
   @Test
   public void each_computation_has_different_hash() {
-    given(hashes = new HashSet<>());
-    given(function = mock(NativeFunction.class));
-    given(willReturn(Hash.of(0)), function).hash();
-    given(constructor = mock(Constructor.class));
-    given(willReturn(structType("MyStruct2", list())), constructor).type();
-    given(accessor = mock(Accessor.class));
-    given(willReturn("myField"), accessor).fieldName();
-    given(object = mock(SObject.class));
-    given(willReturn(Hash.of(0)), object).hash();
-    given(hashes.add(valueComputationHash(object)));
-    given(hashes.add(arrayComputationHash()));
-    given(hashes.add(identityComputationHash()));
-    given(hashes.add(nativeCallComputationHash(function)));
-    given(hashes.add(convertComputationHash(stringType())));
-    given(hashes.add(constructorCallComputationHash(constructor)));
-    given(hashes.add(accessorCallComputationHash(accessor)));
+    Set<Hash> hashes = new HashSet<>();
+    NativeFunction function = nativeFunctionWithHash(Hash.of(0));
+    Constructor constructor = constructor("MyStruct2");
+    Accessor accessor = accessor("myField");
+    SObject object = object(Hash.of(0));
 
-    when(hashes).size();
-    thenReturned(7);
+    hashes.add(valueComputationHash(object));
+    hashes.add(arrayComputationHash());
+    hashes.add(identityComputationHash());
+    hashes.add(nativeCallComputationHash(function));
+    hashes.add(convertComputationHash(stringType()));
+    hashes.add(constructorCallComputationHash(constructor));
+    hashes.add(accessorCallComputationHash(accessor));
+
+    assertThat(hashes.size())
+        .isEqualTo(7);
   }
 
   @Test
-  public void value_computation_has_different_hash_for_different_values() throws Exception {
-    given(object = mock(SObject.class));
-    given(willReturn(Hash.of(1)), object).hash();
-    given(object2 = mock(SObject.class));
-    given(willReturn(Hash.of(2)), object2).hash();
-    when(valueComputationHash(object));
-    thenReturned(not(valueComputationHash(object2)));
+  public void value_computation_has_different_hash_for_different_values() {
+    SObject object = object(Hash.of(1));
+    SObject object2 = object(Hash.of(2));
+
+    assertThat(valueComputationHash(object))
+        .isNotEqualTo(valueComputationHash(object2));
   }
 
   @Test
-  public void native_call_computation_has_different_hash_for_different_functions()
-      throws Exception {
-    given(function = mock(NativeFunction.class));
-    given(willReturn(Hash.of(1)), function).hash();
-    given(function2 = mock(NativeFunction.class));
-    given(willReturn(Hash.of(2)), function2).hash();
-    when(nativeCallComputationHash(function));
-    thenReturned(not(nativeCallComputationHash(function2)));
+  public void native_call_computation_has_different_hash_for_different_functions() {
+    NativeFunction function = nativeFunctionWithHash(Hash.of(1));
+    NativeFunction function2 = nativeFunctionWithHash(Hash.of(2));
+
+    assertThat(nativeCallComputationHash(function))
+        .isNotEqualTo(nativeCallComputationHash(function2));
   }
 
   @Test
-  public void convert_computation_has_different_hash_for_different_types() throws Exception {
-    when(convertComputationHash(stringType()));
-    thenReturned(not(convertComputationHash(blobType())));
+  public void convert_computation_has_different_hash_for_different_types() {
+    assertThat(convertComputationHash(stringType()))
+        .isNotEqualTo(convertComputationHash(blobType()));
   }
 
   @Test
-  public void constructor_call_computation_has_different_hash_for_different_types()
-      throws Exception {
-    given(constructor = mock(Constructor.class));
-    given(willReturn(structType("MyStruct1", list())), constructor).type();
-    given(constructor2 = mock(Constructor.class));
-    given(willReturn(structType("MyStruct2", list())), constructor2).type();
-    when(constructorCallComputationHash(constructor));
-    thenReturned(not(constructorCallComputationHash(constructor2)));
+  public void constructor_call_computation_has_different_hash_for_different_types() {
+    Constructor constructor = constructor("MyStruct1");
+    Constructor constructor2 = constructor("MyStruct2");
+
+    assertThat(constructorCallComputationHash(constructor))
+        .isNotEqualTo(constructorCallComputationHash(constructor2));
   }
 
   @Test
-  public void accessor_call_computation_has_different_hash_for_different_types()
-      throws Exception {
-    given(accessor = mock(Accessor.class));
-    given(willReturn("myField"), accessor).fieldName();
-    given(accessor2 = mock(Accessor.class));
-    given(willReturn("myField2"), accessor2).fieldName();
-    when(accessorCallComputationHash(accessor));
-    thenReturned(not(accessorCallComputationHash(accessor2)));
+  public void accessor_call_computation_has_different_hash_for_different_types() {
+    Accessor accessor = accessor("myField");
+    Accessor accessor2 = accessor("myField2");
+
+    assertThat(accessorCallComputationHash(accessor))
+        .isNotEqualTo(accessorCallComputationHash(accessor2));
+  }
+
+  private static Accessor accessor(String fieldName) {
+    Accessor accessor = mock(Accessor.class);
+    when(accessor.fieldName()).thenReturn(fieldName);
+    return accessor;
+  }
+
+  private static NativeFunction nativeFunctionWithHash(Hash hash) {
+    NativeFunction function = mock(NativeFunction.class);
+    when(function.hash()).thenReturn(hash);
+    return function;
+  }
+
+  private Constructor constructor(String typeName) {
+    Constructor constructor = mock(Constructor.class);
+    when(constructor.type()).thenReturn(structType(typeName, list()));
+    return constructor;
+  }
+
+  private static SObject object(Hash hash) {
+    SObject object = mock(SObject.class);
+    when(object.hash()).thenReturn(hash);
+    return object;
   }
 }
