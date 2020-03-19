@@ -1,10 +1,7 @@
 package org.smoothbuild.db.hashed;
 
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.EOFException;
 import java.io.File;
@@ -26,86 +23,86 @@ public class HashTest {
 
   @Test
   public void read_from_empty_source_throws_eof_exception() {
-    when(() -> Hash.read(new Buffer()));
-    thenThrown(EOFException.class);
+    assertCall(() -> Hash.read(new Buffer()))
+        .throwsException(EOFException.class);
   }
 
   @Test
   public void read_from_source_having_less_bytes_than_needed_throws_eof_exception() {
-    given(buffer = new Buffer());
-    given(() -> buffer.write(new byte[Hash.hashesSize() - 1]));
-    when(() -> Hash.read(buffer));
-    thenThrown(EOFException.class);
+    buffer = new Buffer();
+    buffer.write(new byte[Hash.hashesSize() - 1]);
+    assertCall(() -> Hash.read(buffer))
+        .throwsException(EOFException.class);
   }
 
   @Test
-  public void read_hash_from_source() {
-    given(buffer = new Buffer());
-    given(hash = Hash.of("abc"));
-    given(() -> buffer.write(hash));
-    when(() -> Hash.read(buffer));
-    thenReturned(hash);
+  public void read_hash_from_source() throws Exception {
+    buffer = new Buffer();
+    hash = Hash.of("abc");
+    buffer.write(hash);
+    assertThat(Hash.read(buffer))
+        .isEqualTo(hash);
   }
 
   @Test
   public void hash_of_file_is_equal_to_hash_of_its_bytes() throws Exception {
-    given(file = File.createTempFile("tmp", ".tmp"));
+    file = File.createTempFile("tmp", ".tmp");
     Files.write(byteString.toByteArray(), file);
-    when(Hash.of(file.toPath()));
-    thenReturned(Hash.of(byteString));
+    assertThat(Hash.of(file.toPath()))
+        .isEqualTo(Hash.of(byteString));
   }
 
   @Test
   public void hash_of_given_array_of_hashes_is_always_the_same() {
-    when(Hash.of(Hash.of(1), Hash.of(2)));
-    thenReturned(Hash.of(Hash.of(1), Hash.of(2)));
+    assertThat(Hash.of(Hash.of(1), Hash.of(2)))
+        .isEqualTo(Hash.of(Hash.of(1), Hash.of(2)));
   }
 
   @Test
   public void hash_of_different_array_of_hashes_are_different() {
-    when(Hash.of(Hash.of(1), Hash.of(2)));
-    thenReturned(not(Hash.of(Hash.of(1), Hash.of(3))));
+    assertThat(Hash.of(Hash.of(1), Hash.of(2)))
+        .isNotEqualTo(Hash.of(Hash.of(1), Hash.of(3)));
   }
 
   @Test
   public void hash_of_given_string_is_always_the_same() {
-    when(Hash.of(string));
-    thenReturned(Hash.of(string));
+    assertThat(Hash.of(string))
+        .isEqualTo(Hash.of(string));
   }
 
   @Test
   public void hashes_of_different_strings_are_different() {
-    when(Hash.of(string));
-    thenReturned(not(Hash.of(string2)));
+    assertThat(Hash.of(string))
+        .isNotEqualTo(Hash.of(string2));
   }
 
   @Test
   public void hash_of_given_integer_is_always_the_same() {
-    when(Hash.of(33));
-    thenReturned(Hash.of(33));
+    assertThat(Hash.of(33))
+        .isEqualTo(Hash.of(33));
   }
 
   @Test
   public void hashes_of_different_integers_are_different() {
-    when(Hash.of(33));
-    thenReturned(not(Hash.of(34)));
+    assertThat(Hash.of(33))
+        .isNotEqualTo(Hash.of(34));
   }
 
   @Test
   public void hash_of_given_bytestring_is_always_the_same() {
-    when(Hash.of(byteString));
-    thenReturned(Hash.of(byteString));
+    assertThat(Hash.of(byteString))
+        .isEqualTo(Hash.of(byteString));
   }
 
   @Test
   public void hashes_of_different_bytes_are_different() {
-    when(Hash.of(byteString));
-    thenReturned(not(byteString.substring(1)));
+    assertThat(Hash.of(byteString))
+        .isNotEqualTo(byteString.substring(1));
   }
 
   @Test
   public void decode_from_string() {
-    when(() -> Hash.decode("010A"));
-    thenReturned(new Hash(ByteString.of(new byte[] {1, 10})));
+    assertThat(Hash.decode("010A"))
+        .isEqualTo(new Hash(ByteString.of(new byte[] {1, 10})));
   }
 }
