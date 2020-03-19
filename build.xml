@@ -149,7 +149,7 @@
 
     <!-- compile src/testing/java -->
 
-    <path id="classpath.for.main.testing.java">
+    <path id="classpath.for.testing.java">
         <path refid="classpath.with.main.java"/>
         <pathelement location="${lib.hamcrest}"/>
         <pathelement location="${lib.junit}"/>
@@ -164,17 +164,18 @@
                debuglevel="lines,vars,source">
             <src path="${dir.src.testing.java}"/>
             <classpath>
-                <path refid="classpath.for.main.testing.java"/>
+                <path refid="classpath.for.testing.java"/>
             </classpath>
         </javac>
     </target>
 
     <path id="classpath.with.testing.java">
-        <path refid="classpath.for.main.testing.java"/>
+        <path refid="classpath.for.testing.java"/>
         <pathelement location="${dir.build.class.testing.java}"/>
     </path>
 
     <!-- classpath with testing frameworks/libs -->
+
     <path id="classpath.testing.libs">
         <pathelement location="${lib.guava-testlib}"/>
         <pathelement location="${lib.hamcrest-library}"/>
