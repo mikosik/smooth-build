@@ -1,16 +1,11 @@
 package org.smoothbuild.io.fs.mem;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
-import static org.testory.Testory.then;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
-import static org.testory.common.Matchers.same;
 
 import org.junit.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -24,100 +19,101 @@ public class MemoryDirTest {
 
   @Test
   public void name() {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).name();
-    thenReturned(path);
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.name())
+        .isEqualTo(path);
   }
 
   @Test
-  public void parent() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).parent();
-    thenReturned(parent);
+  public void parent() {
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.parent())
+        .isEqualTo(parent);
   }
 
   @Test
-  public void memory_dir_is_not_file() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).isFile();
-    thenReturned(false);
+  public void memory_dir_is_not_file() {
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.isFile())
+        .isFalse();
   }
 
   @Test
-  public void memory_dir_is_file() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).isDir();
-    thenReturned(true);
+  public void memory_dir_is_file() {
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.isDir())
+        .isTrue();
   }
 
   @Test
   public void does_not_have_not_added_child() {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).hasChild(child.name());
-    thenReturned(false);
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.hasChild(child.name()))
+        .isFalse();
   }
 
   @Test
   public void has_child_that_has_been_added_to_it() {
-    given(memoryDir = new MemoryDir(parent, path));
-    given(memoryDir).addChild(child);
-    when(memoryDir).hasChild(child.name());
-    thenReturned(true);
+    memoryDir = new MemoryDir(parent, path);
+    memoryDir.addChild(child);
+    assertThat(memoryDir.hasChild(child.name()))
+        .isTrue();
   }
 
   @Test
-  public void returns_child_added_to_it_with_given_name() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    given(memoryDir).addChild(child);
-    when(memoryDir).child(child.name());
-    thenReturned(same(child));
+  public void returns_child_added_to_it_with_given_name() {
+    memoryDir = new MemoryDir(parent, path);
+    memoryDir.addChild(child);
+    assertThat(memoryDir.child(child.name()))
+        .isSameInstanceAs(child);
   }
 
   @Test
-  public void cannot_add_the_same_child_twice() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    given(memoryDir).addChild(child);
-    when(memoryDir).addChild(child);
-    thenThrown(IllegalStateException.class);
+  public void cannot_add_the_same_child_twice() {
+    memoryDir = new MemoryDir(parent, path);
+    memoryDir.addChild(child);
+    assertCall(() -> memoryDir.addChild(child))
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
   public void child_names_is_empty_when_no_child_was_added() {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).childNames();
-    thenReturned(empty());
+    memoryDir = new MemoryDir(parent, path);
+    assertThat(memoryDir.childNames())
+        .isEmpty();
   }
 
   @Test
-  public void child_names_returns_all_added_children() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    given(memoryDir).addChild(child);
-    given(memoryDir).addChild(child2);
-    when(memoryDir).childNames();
-    thenReturned(containsInAnyOrder(child.name(), child2.name()));
+  public void child_names_returns_all_added_children() {
+    memoryDir = new MemoryDir(parent, path);
+    memoryDir.addChild(child);
+    memoryDir.addChild(child2);
+    assertThat(memoryDir.childNames())
+        .containsExactly(child.name(), child2.name());
   }
 
   @Test
-  public void has_no_children_after_removing_all_children() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    given(memoryDir).addChild(child);
-    given(memoryDir).addChild(child2);
-    when(memoryDir).removeAllChildren();
-    then(memoryDir.childNames(), empty());
+  public void has_no_children_after_removing_all_children() {
+    memoryDir = new MemoryDir(parent, path);
+    memoryDir.addChild(child);
+    memoryDir.addChild(child2);
+    memoryDir.removeAllChildren();
+    assertThat(memoryDir.childNames())
+        .isEmpty();
   }
 
   @Test
-  public void create_input_stream_throws_exception() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).source();
-    thenThrown(UnsupportedOperationException.class);
+  public void create_input_stream_throws_exception() {
+    memoryDir = new MemoryDir(parent, path);
+    assertCall(() -> memoryDir.source())
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
-  public void createOutputStreamThrowsException() throws Exception {
-    given(memoryDir = new MemoryDir(parent, path));
-    when(memoryDir).sink();
-    thenThrown(UnsupportedOperationException.class);
+  public void createOutputStreamThrowsException() {
+    memoryDir = new MemoryDir(parent, path);
+    assertCall(() -> memoryDir.sink())
+        .throwsException(UnsupportedOperationException.class);
   }
 
   private static MemoryElement createChild(Path name) {
