@@ -1,75 +1,74 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Name.isLegalName;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import org.junit.Test;
 
 public class NameTest {
   @Test
-  public void name_with_letters_only_is_legal() throws Exception {
-    when(isLegalName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
-    thenReturned(true);
+  public void name_with_letters_only_is_legal() {
+    assertThat(isLegalName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_underscore_is_legal() throws Exception {
-    when(isLegalName("some_name"));
-    thenReturned(true);
+  public void name_with_underscore_is_legal() {
+    assertThat(isLegalName("some_name"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_underscore_at_beginning_is_legal() throws Exception {
-    when(isLegalName("_somename"));
-    thenReturned(true);
+  public void name_with_underscore_at_beginning_is_legal() {
+    assertThat(isLegalName("_somename"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_underscore_at_end_is_legal() throws Exception {
-    when(isLegalName("somename_"));
-    thenReturned(true);
+  public void name_with_underscore_at_end_is_legal() {
+    assertThat(isLegalName("somename_"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_dash_is_legal() throws Exception {
-    when(isLegalName("some-name"));
-    thenReturned(true);
+  public void name_with_dash_is_legal() {
+    assertThat(isLegalName("some-name"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_dash_at_beginning_is_illegal() throws Exception {
-    when(isLegalName("-somename"));
-    thenReturned(false);
+  public void name_with_dash_at_beginning_is_illegal() {
+    assertThat(isLegalName("-somename"))
+        .isFalse();
   }
 
   @Test
-  public void name_with_dash_at_end_is_legal() throws Exception {
-    when(isLegalName("somename-"));
-    thenReturned(true);
+  public void name_with_dash_at_end_is_legal() {
+    assertThat(isLegalName("somename-"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_dot_is_legal() throws Exception {
-    when(isLegalName("some.name"));
-    thenReturned(true);
+  public void name_with_dot_is_legal() {
+    assertThat(isLegalName("some.name"))
+        .isTrue();
   }
 
   @Test
-  public void name_with_dot_at_beginning_is_illegal() throws Exception {
-    when(isLegalName(".somename"));
-    thenReturned(false);
+  public void name_with_dot_at_beginning_is_illegal() {
+    assertThat(isLegalName(".somename"))
+        .isFalse();
   }
 
   @Test
-  public void name_with_dot_at_end_is_legal() throws Exception {
-    when(isLegalName("somename."));
-    thenReturned(true);
+  public void name_with_dot_at_end_is_legal() {
+    assertThat(isLegalName("somename."))
+        .isTrue();
   }
 
   @Test
-  public void empty_name_is_illegal() throws Exception {
-    when(isLegalName(""));
-    thenReturned(false);
+  public void empty_name_is_illegal() {
+    assertThat(isLegalName(""))
+        .isFalse();
   }
 }
