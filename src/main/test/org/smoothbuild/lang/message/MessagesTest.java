@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.message;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.lang.object.base.Array;
@@ -14,29 +12,29 @@ public class MessagesTest extends TestingContext {
 
   @Test
   public void empty_list_contains_no_errors() {
-    given(messages = emptyMessageArray());
-    when(containsErrors(messages));
-    thenReturned(false);
+    messages = emptyMessageArray();
+    assertThat(containsErrors(messages))
+        .isFalse();
   }
 
   @Test
   public void list_with_info_messsage_contains_no_errors() {
-    given(messages = array(infoMessage("info message")));
-    when(containsErrors(messages));
-    thenReturned(false);
+    messages = array(infoMessage("info message"));
+    assertThat(containsErrors(messages))
+        .isFalse();
   }
 
   @Test
   public void list_with_warning_messsage_contains_no_errors() {
-    given(messages = array(warningMessage("warning message")));
-    when(containsErrors(messages));
-    thenReturned(false);
+    messages = array(warningMessage("warning message"));
+    assertThat(containsErrors(messages))
+        .isFalse();
   }
 
   @Test
   public void list_with_error_messsage_contains_errors() {
-    given(messages = array(errorMessage("error message")));
-    when(containsErrors(messages));
-    thenReturned(true);
+    messages = array(errorMessage("error message"));
+    assertThat(containsErrors(messages))
+        .isTrue();
   }
 }
