@@ -1,13 +1,11 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.object.type.TestingTypes.blob;
 import static org.smoothbuild.lang.object.type.TestingTypes.string;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import org.junit.Test;
 import org.smoothbuild.parse.expr.Expression;
@@ -18,36 +16,38 @@ public class SignatureTest {
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new Signature(null, "name", list()));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new Signature(null, "name", list()))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new Signature(string, null, list()));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new Signature(string, null, list()))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_param_is_forbidden() {
-    when(() -> new Signature(string, "name", null));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new Signature(string, "name", null))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void parameter_types() throws Exception {
-    given(parameter = new Parameter(0, blob, "blob", mock(Expression.class)));
-    given(parameter2 = new Parameter(0, string, "string", mock(Expression.class)));
-    when(() -> new Signature(string, "name", list(parameter, parameter2)).parameterTypes());
-    thenReturned(list(blob, string));
+  public void parameter_types() {
+    parameter = new Parameter(0, blob, "blob", mock(Expression.class));
+    parameter2 = new Parameter(0, string, "string", mock(Expression.class));
+    assertThat(new Signature(string, "name", list(parameter, parameter2)).parameterTypes())
+        .containsExactly(blob, string)
+        .inOrder();
   }
 
   @Test
-  public void to_string() throws Exception {
-    given(parameter = new Parameter(0, blob, "blob", mock(Expression.class)));
-    given(parameter2 = new Parameter(0, string, "string", mock(Expression.class)));
-    when(() -> new Signature(string, "name", list(parameter, parameter2)).toString());
-    thenReturned(string.name() + " " + "name" + "(" + parameter.type().name() + " "
+  public void to_string() {
+    parameter = new Parameter(0, blob, "blob", mock(Expression.class));
+    parameter2 = new Parameter(0, string, "string", mock(Expression.class));
+    Signature signature = new Signature(string, "name", list(parameter, parameter2));
+    assertThat(signature.toString())
+        .isEqualTo(string.name() + " " + "name" + "(" + parameter.type().name() + " "
         + parameter.name() + ", " + parameter2.type().name() + " " + parameter2.name() + ")");
   }
 }
