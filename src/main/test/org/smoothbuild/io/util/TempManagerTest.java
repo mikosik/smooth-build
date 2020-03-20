@@ -1,19 +1,15 @@
 package org.smoothbuild.io.util;
 
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
 
 public class TempManagerTest {
-  private TempManager tempManager;
 
   @Test
-  public void each_path_is_different() throws Exception {
-    given(tempManager = new TempManager(null));
-    when(tempManager.tempPath());
-    thenReturned(not(tempManager.tempPath()));
+  public void each_path_is_different() {
+    TempManager tempManager = new TempManager(null);
+    assertThat(tempManager.tempPath())
+        .isNotEqualTo(tempManager.tempPath());
   }
 }
