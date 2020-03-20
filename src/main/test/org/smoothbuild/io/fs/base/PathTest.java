@@ -1,5 +1,6 @@
 package org.smoothbuild.io.fs.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static java.text.MessageFormat.format;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
@@ -7,11 +8,9 @@ import static org.quackery.report.AssertException.assertEquals;
 import static org.quackery.report.AssertException.assertTrue;
 import static org.quackery.report.AssertException.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -54,14 +53,14 @@ public class PathTest {
 
   @Test
   public void empty_string_path_is_root() {
-    when(path("").isRoot());
-    thenReturned(true);
+    assertThat(path("").isRoot())
+        .isTrue();
   }
 
   @Test
   public void simple_path_is_not_root() {
-    when(path("file.txt").isRoot());
-    thenReturned(false);
+    assertThat(path("file.txt").isRoot())
+        .isFalse();
   }
 
   @Quackery
@@ -94,8 +93,8 @@ public class PathTest {
 
   @Test
   public void parent_of_root_dir_throws_exception() {
-    when(Path.root()).parent();
-    thenThrown(IllegalArgumentException.class);
+    assertCall(() -> Path.root().parent())
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Quackery
@@ -167,8 +166,8 @@ public class PathTest {
 
   @Test
   public void last_part_of_root_dir_throws_exception() {
-    when(Path.root()).lastPart();
-    thenThrown(IllegalArgumentException.class);
+    assertCall(() -> Path.root().lastPart())
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Quackery
@@ -188,8 +187,8 @@ public class PathTest {
 
   @Test
   public void first_part_of_root_dir_throws_exception() {
-    when(Path.root()).firstPart();
-    thenThrown(IllegalArgumentException.class);
+    assertCall(() -> Path.root().firstPart())
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Quackery
@@ -248,8 +247,8 @@ public class PathTest {
 
   @Test
   public void test_to_string() {
-    when(path("abc/def").toString());
-    thenReturned("'abc/def'");
+    assertThat(path("abc/def").toString())
+        .isEqualTo("'abc/def'");
   }
 
   public static List<String> listOfCorrectPaths() {
