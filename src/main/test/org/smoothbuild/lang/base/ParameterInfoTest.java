@@ -1,9 +1,8 @@
 package org.smoothbuild.lang.base;
 
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,28 +25,28 @@ public class ParameterInfoTest extends TestingContext {
 
   @Test
   public void null_type_is_forbidden() {
-    when(() -> new ParameterInfo(0, null, name, true));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new ParameterInfo(0, null, name, true))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    when(() -> new ParameterInfo(0, type, null, true));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new ParameterInfo(0, type, null, true))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void type_getter() throws Exception {
-    given(parameterInfo = new ParameterInfo(0, type, name, true));
-    when(() -> parameterInfo.type());
-    thenReturned(type);
+  public void type_getter() {
+    parameterInfo = new ParameterInfo(0, type, name, true);
+    assertThat(parameterInfo.type())
+        .isEqualTo(type);
   }
 
   @Test
-  public void name_getter() throws Exception {
-    given(parameterInfo = new ParameterInfo(0, type, name, true));
-    when(() -> parameterInfo.name());
-    thenReturned(name);
+  public void name_getter() {
+    parameterInfo = new ParameterInfo(0, type, name, true);
+    assertThat(parameterInfo.name())
+        .isEqualTo(name);
   }
 
   @Test
@@ -70,23 +69,23 @@ public class ParameterInfoTest extends TestingContext {
 
   @Test
   public void to_padded_string() {
-    given(parameterInfo = new ParameterInfo(0, string, "myName", true));
-    when(parameterInfo.toPaddedString(10, 13));
-    thenReturned("String    : myName       ");
+    parameterInfo = new ParameterInfo(0, string, "myName", true);
+    assertThat(parameterInfo.toPaddedString(10, 13))
+        .isEqualTo("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    given(parameterInfo = new ParameterInfo(0, string, "myName", true));
-    when(parameterInfo.toPaddedString(1, 1));
-    thenReturned("String: myName");
+    parameterInfo = new ParameterInfo(0, string, "myName", true);
+    assertThat(parameterInfo.toPaddedString(1, 1))
+        .isEqualTo("String: myName");
   }
 
   @Test
-  public void to_string() throws Exception {
-    given(parameterInfo = new ParameterInfo(0, string, "myName", true));
-    when(() -> parameterInfo.toString());
-    thenReturned("String myName");
+  public void to_string() {
+    parameterInfo = new ParameterInfo(0, string, "myName", true);
+    assertThat(parameterInfo.toString())
+        .isEqualTo("String myName");
   }
 
   @Test
@@ -96,10 +95,11 @@ public class ParameterInfoTest extends TestingContext {
     names.add(new ParameterInfo(0, string, "param2-with-very-long", true));
     names.add(new ParameterInfo(0, arrayType(blob), "param3", true));
 
-    when(ParameterInfo.iterableToString(names));
-    thenReturned(""
-        + "  String: param1               \n"
-        + "  String: param2-with-very-long\n"
-        + "  [Blob]: param3               \n");
+    assertThat(ParameterInfo.iterableToString(names))
+        .isEqualTo(unlines(
+            "  String: param1               ",
+            "  String: param2-with-very-long",
+            "  [Blob]: param3               ",
+            ""));
   }
 }
