@@ -1,11 +1,9 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Paths;
 
@@ -18,21 +16,21 @@ public class LocationTest {
 
   @Test
   public void line_returns_value_passed_during_construction() {
-    given(location = location(Paths.get("abc"), 13));
-    when(location.line());
-    thenReturned(13);
+    location = location(Paths.get("abc"), 13);
+    assertThat(location.line())
+        .isEqualTo(13);
   }
 
   @Test
   public void zero_line_is_forbidden() {
-    when(() -> location(Paths.get("abc"), 0));
-    thenThrown(IllegalArgumentException.class);
+    assertCall(() -> location(Paths.get("abc"), 0))
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void negative_line_is_forbidden() {
-    when(() -> location(Paths.get("abc"), -1));
-    thenThrown(IllegalArgumentException.class);
+    assertCall(() -> location(Paths.get("abc"), -1))
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Test
@@ -49,15 +47,15 @@ public class LocationTest {
 
   @Test
   public void file_code_location_to_string() {
-    given(location = location(Paths.get("abc"), 2));
-    when(location.toString());
-    thenReturned("abc:2");
+    location = location(Paths.get("abc"), 2);
+    assertThat(location.toString())
+        .isEqualTo("abc:2");
   }
 
   @Test
   public void command_line_code_location_to_string() {
-    given(location = unknownLocation());
-    when(location.toString());
-    thenReturned("unknown location");
+    location = unknownLocation();
+    assertThat(location.toString())
+        .isEqualTo("unknown location");
   }
 }
