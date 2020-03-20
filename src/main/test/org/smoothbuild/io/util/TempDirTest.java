@@ -1,12 +1,8 @@
 package org.smoothbuild.io.util;
 
-import static org.hamcrest.Matchers.contains;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 
@@ -17,7 +13,6 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
-import org.testory.common.Matcher;
 
 import okio.BufferedSink;
 import okio.ByteString;
@@ -36,44 +31,45 @@ public class TempDirTest extends TestingContext {
   }
 
   @Test
-  public void destroying_twice_is_allowed() {
-    given(() -> tempDir.destroy());
-    when(() -> tempDir.destroy());
-    thenReturned();
+  public void destroying_twice_is_allowed() throws Exception {
+    tempDir.destroy();
+    tempDir.destroy();
   }
 
   @Test
   public void root_os_path() {
-    when(tempDir.rootOsPath());
-    thenReturned(rootPath.value());
+    assertThat(tempDir.rootOsPath())
+        .isEqualTo(rootPath.value());
   }
 
   @Test
   public void file_is_written_to_file_system() throws Exception {
-    when(() -> tempDir.writeFile(file(path, bytes)));
-    thenEqual(fullFileSystem().source(rootPath.append(path)).readByteString(), bytes);
+    tempDir.writeFile(file(path, bytes));
+    assertThat(fullFileSystem().source(rootPath.append(path)).readByteString())
+        .isEqualTo(bytes);
   }
 
   @Test
-  public void writing_file_after_destroy_throws_exception() {
-    given(() -> tempDir.destroy());
-    when(() -> tempDir.writeFile(file(path, bytes)));
-    thenThrown(IllegalStateException.class);
+  public void writing_file_after_destroy_throws_exception() throws Exception {
+    tempDir.destroy();
+    assertCall(() -> tempDir.writeFile(file(path, bytes)))
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
   public void files_are_written_to_file_system() throws Exception {
-    given(array = array(file(path, bytes)));
-    when(() -> tempDir.writeFiles(array));
-    thenEqual(fullFileSystem().source(rootPath.append(path)).readByteString(), bytes);
+    array = array(file(path, bytes));
+    tempDir.writeFiles(array);
+    assertThat(fullFileSystem().source(rootPath.append(path)).readByteString())
+        .isEqualTo(bytes);
   }
 
   @Test
-  public void writing_files_after_destroy_throws_exception() {
-    given(array = array(file(path, bytes)));
-    given(() -> tempDir.destroy());
-    when(() -> tempDir.writeFiles(array));
-    thenThrown(IllegalStateException.class);
+  public void writing_files_after_destroy_throws_exception() throws Exception {
+    array = array(file(path, bytes));
+    tempDir.destroy();
+    assertCall(() -> tempDir.writeFiles(array))
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
@@ -81,15 +77,15 @@ public class TempDirTest extends TestingContext {
     try (BufferedSink sink = fullFileSystem().sink(rootPath.append(path))) {
       sink.write(bytes);
     }
-    when(() -> tempDir.readFiles().asIterable(Struct.class));
-    thenReturned(contains(file(path, bytes)));
+    assertThat(tempDir.readFiles().asIterable(Struct.class))
+        .containsExactly(file(path, bytes));
   }
 
   @Test
-  public void reading_files_after_destroy_throws_exception() {
-    given(() -> tempDir.destroy());
-    when(() -> tempDir.readFiles());
-    thenThrown(IllegalStateException.class);
+  public void reading_files_after_destroy_throws_exception() throws Exception {
+    tempDir.destroy();
+    assertCall(() -> tempDir.readFiles())
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
@@ -97,8 +93,8 @@ public class TempDirTest extends TestingContext {
     try (BufferedSink sink = fullFileSystem().sink(rootPath.append(path))) {
       sink.write(bytes);
     }
-    when(() -> tempDir.readContent(path));
-    thenReturned(blobContains(bytes));
+    assertThat(blobToByteString(tempDir.readContent(path)))
+        .isEqualTo(bytes);
   }
 
   @Test
@@ -106,18 +102,16 @@ public class TempDirTest extends TestingContext {
     try (BufferedSink sink = fullFileSystem().sink(path)) {
       sink.write(bytes);
     }
-    given(tempDir).destroy();
-    when(tempDir).readContent(path);
-    thenThrown(IllegalStateException.class);
+    tempDir.destroy();
+    assertCall(() -> tempDir.readContent(path))
+        .throwsException(IllegalStateException.class);
   }
 
-  private static Matcher blobContains(ByteString expected) {
-    return (object) -> {
-      try {
-        return ((Blob) object).source().readByteString().equals(expected);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    };
+  private static ByteString blobToByteString(Blob object) {
+    try {
+      return object.source().readByteString();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
