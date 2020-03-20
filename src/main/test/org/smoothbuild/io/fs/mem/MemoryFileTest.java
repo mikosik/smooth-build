@@ -1,12 +1,8 @@
 package org.smoothbuild.io.fs.mem;
 
-import static org.hamcrest.Matchers.sameInstance;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 
@@ -26,73 +22,74 @@ public class MemoryFileTest {
 
   @Test
   public void name() {
-    given(file = new MemoryFile(parent, name));
-    when(file.name());
-    thenReturned(name);
+    file = new MemoryFile(parent, name);
+    assertThat(file.name())
+        .isEqualTo(name);
   }
 
   @Test
-  public void parent() throws Exception {
-    given(file = new MemoryFile(parent, name));
-    when(file.parent());
-    thenReturned(sameInstance(parent));
+  public void parent() {
+    file = new MemoryFile(parent, name);
+    assertThat(file.parent())
+        .isSameInstanceAs(parent);
   }
 
   @Test
-  public void memory_file_is_file() throws Exception {
-    given(file = new MemoryFile(parent, name));
-    when(file).isFile();
-    thenReturned(true);
+  public void memory_file_is_file() {
+    file = new MemoryFile(parent, name);
+    assertThat(file.isFile())
+        .isTrue();
   }
 
   @Test
-  public void memory_file_is_not_dir() throws Exception {
-    given(file = new MemoryFile(parent, name));
-    when(file).isDir();
-    thenReturned(false);
+  public void memory_file_is_not_dir() {
+    file = new MemoryFile(parent, name);
+    assertThat(file.isDir())
+        .isFalse();
   }
 
   @Test
   public void does_not_have_any_children() {
-    given(file = new MemoryFile(parent, name));
-    when(file).hasChild(otherName);
-    thenReturned(false);
+    file = new MemoryFile(parent, name);
+    assertThat(file.hasChild(otherName))
+        .isFalse();
   }
 
   @Test
   public void accessing_children_causes_exception() {
-    given(file = new MemoryFile(parent, name));
-    when(file).child(otherName);
-    thenThrown(UnsupportedOperationException.class);
+    file = new MemoryFile(parent, name);
+    assertCall(() -> file.child(otherName))
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
   public void child_names_throws_exception() {
-    given(file = new MemoryFile(parent, name));
-    when(file).childNames();
-    thenThrown(UnsupportedOperationException.class);
+    file = new MemoryFile(parent, name);
+    assertCall(() -> file.childNames())
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
   public void add_child_throws_exception() {
-    given(file = new MemoryFile(parent, name));
-    when(file).addChild(mock(MemoryElement.class));
-    thenThrown(UnsupportedOperationException.class);
+    file = new MemoryFile(parent, name);
+    assertCall(() -> file.addChild(mock(MemoryElement.class)))
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
-  public void opening_input_stream_for_non_existent_file_fails() throws Exception {
-    given(file = new MemoryFile(parent, name));
-    when(file).source();
-    thenThrown(IOException.class);
+  public void opening_input_stream_for_non_existent_file_fails() {
+    file = new MemoryFile(parent, name);
+    assertCall(() -> file.source())
+        .throwsException(IOException.class);
   }
 
   @Test
   public void data_written_to_memory_file_can_be_read_back() throws Exception {
-    given(file = new MemoryFile(parent, name));
-    given(sink = file.sink());
-    given(sink).write(bytes);
-    given(sink).close();
-    thenEqual(bytes, file.source().readByteString());
+    file = new MemoryFile(parent, name);
+    sink = file.sink();
+    sink.write(bytes);
+    sink.close();
+    assertThat(file.source().readByteString())
+        .isEqualTo(bytes);
   }
 }
