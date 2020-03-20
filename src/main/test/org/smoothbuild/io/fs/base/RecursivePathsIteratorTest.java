@@ -6,9 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,9 +67,8 @@ public class RecursivePathsIteratorTest {
     iterator.next();
     fileSystem.delete(path("dir/subdir"));
 
-    when(() -> iterator.next());
-    thenThrown(exception(new IOException("FileSystem changed when iterating " +
-        "tree of directory 'dir'. Cannot find 'dir/subdir'.")));
+    assertCall(iterator::next).throwsException(new IOException(
+        "FileSystem changed when iterating tree of directory 'dir'. Cannot find 'dir/subdir'."));
   }
 
   private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
