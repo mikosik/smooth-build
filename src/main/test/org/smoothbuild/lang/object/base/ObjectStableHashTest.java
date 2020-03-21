@@ -61,9 +61,9 @@ public class ObjectStableHashTest extends TestingContext {
 
   @Test
   public void hash_of_empty_struct_is_stable() throws Exception {
-    given(struct = person("John", "Doe"));
+    given(struct = empty());
     when(() -> struct.hash());
-    thenReturned(Hash.decode("a94de85056893e6464baa8ded12a9a765c5b56fc"));
+    thenReturned(Hash.decode("051da6959e63ecd62e25f64a30ac667b3811609d"));
   }
 
   @Test
