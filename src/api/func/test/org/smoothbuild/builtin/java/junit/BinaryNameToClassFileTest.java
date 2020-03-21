@@ -1,6 +1,5 @@
 package org.smoothbuild.builtin.java.junit;
 
-import static org.hamcrest.Matchers.empty;
 import static org.smoothbuild.builtin.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.util.Lists.list;
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Struct;
@@ -45,6 +45,6 @@ public class BinaryNameToClassFileTest extends TestingContext {
     given(file2 = file(path("b/Klass.java")));
     given(blob = JarTester.jar(file1, file2));
     when(binaryNameToClassFile(nativeApi(), list(blob)).entrySet());
-    thenReturned(empty());
+    thenReturned(Matchers.empty());
   }
 }

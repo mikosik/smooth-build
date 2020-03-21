@@ -171,6 +171,10 @@ public class TestingContext {
     return objectDb().structType(name, fields);
   }
 
+  public StructType emptyType() {
+    return structType("Empty", list());
+  }
+
   public StructType personType() {
     ConcreteType string = stringType();
     return structType("Person", list(
@@ -202,6 +206,10 @@ public class TestingContext {
 
   public StructBuilder structBuilder(StructType type) {
     return objectDb().structBuilder(type);
+  }
+
+  public Struct empty() {
+    return structBuilder(emptyType()).build();
   }
 
   public Struct person(String firstName, String lastName) {
