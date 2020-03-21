@@ -42,8 +42,6 @@
     <property name="lib.hamcrest" value="${dir.lib}/ivy/hamcrest-core-1.3.jar"/>
     <property name="lib.hamcrest-library" value="${dir.lib}/ivy/hamcrest-library-1.3.jar"/>
     <property name="lib.javax.inject" value="${dir.lib}/ivy/javax.inject-1.jar"/>
-    <property name="lib.junit" value="${dir.lib}/ivy/junit-4.13.jar"/>
-    <property name="lib.junittoolbox" value="${dir.lib}/ivy/junit-toolbox-2.4.jar"/>
     <property name="lib.kotlin-stdlib" value="${dir.lib}/ivy/kotlin-stdlib-1.3.50.jar"/>
     <property name="lib.kotlin-stdlib-common" value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.50.jar"/>
     <property name="lib.mockito" value="${dir.lib}/ivy/mockito-core-3.3.0.jar"/>
@@ -90,6 +88,19 @@
             </classpath>
         </java>
     </target>
+
+    <path id="classpath.with.junit-platform">
+        <pathelement location="${dir.lib}/ivy/junit-platform-commons-1.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-platform-engine-1.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-platform-launcher-1.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-vintage-engine-5.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-4.13.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-jupiter-api-5.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-jupiter-engine-5.6.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/junit-toolbox-2.4.jar"/>
+        <pathelement location="${dir.lib}/ivy/apiguardian-api-1.1.0.jar"/>
+        <pathelement location="${dir.lib}/ivy/opentest4j-1.2.0.jar"/>
+    </path>
 
     <!-- compile src/main/java -->
 
@@ -151,9 +162,8 @@
 
     <path id="classpath.for.testing.java">
         <path refid="classpath.with.main.java"/>
+        <path refid="classpath.with.junit-platform"/>
         <pathelement location="${lib.hamcrest}"/>
-        <pathelement location="${lib.junit}"/>
-        <pathelement location="${lib.junittoolbox}"/>
         <pathelement location="${lib.quackery}"/>
         <pathelement location="${lib.truth}"/>
     </path>
@@ -180,7 +190,6 @@
     <path id="classpath.testing.libs">
         <pathelement location="${lib.guava-testlib}"/>
         <pathelement location="${lib.hamcrest-library}"/>
-        <pathelement location="${lib.junit}"/>
         <pathelement location="${lib.testory}"/>
         <pathelement location="${lib.truth}"/>
         <pathelement location="${lib.diffutils}"/>
@@ -293,43 +302,49 @@
     <!-- run src/testing/test -->
 
     <target name="run-testing.test" depends="compile-testing.test">
-        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
+        <junitlauncher haltonfailure="yes">
             <classpath>
                 <path refid="classpath.with.testing.test"/>
             </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest todir="${dir.build}">
+            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
+            <!-- <listener type="legacy-brief"/> -->
+            <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
+                <fork/>
+            </testclasses>
+        </junitlauncher>
     </target>
 
     <!-- run src/main/test -->
 
     <target name="run-main.test" depends="compile-main.test" description="runs main.test">
-        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
+        <junitlauncher haltonfailure="yes">
             <classpath>
                 <path refid="classpath.with.main.test"/>
             </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest todir="${dir.build}">
+            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
+            <!-- <listener type="legacy-brief"/> -->
+            <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
+                <fork/>
+            </testclasses>
+        </junitlauncher>
     </target>
 
     <!-- run src/func/test -->
 
     <target name="run-func.test" depends="compile-func.test">
-        <junit haltonfailure="yes" reloading="false" fork="true" forkmode="perBatch" tempdir="${dir.build}">
+        <junitlauncher haltonfailure="yes">
             <classpath>
                 <path refid="classpath.with.func.test"/>
             </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest todir="${dir.build}">
+            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
+            <!-- <listener type="legacy-brief"/> -->
+            <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.api.func.test}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
+                <fork/>
+            </testclasses>
+        </junitlauncher>
     </target>
 
     <!-- build funcs.jar file -->
@@ -379,17 +394,20 @@
 
     <target name="run-acceptance" depends="compile-acceptance-tests, install-smooth"
             description="runs acceptance tests">
-        <junit haltonfailure="yes" reloading="false" fork="yes" forkmode="perBatch" tempdir="${dir.build}">
+        <junitlauncher haltonfailure="yes">
             <classpath>
                 <path refid="classpath.with.acceptance"/>
             </classpath>
-            <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
-            <env key="repository_dir" value="${basedir}"/>
-            <formatter type="brief" usefile="false"/>
-            <batchtest todir="${dir.build}">
+            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
+            <!-- <listener type="legacy-brief"/> -->
+            <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
-            </batchtest>
-        </junit>
+                <fork>
+                    <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+                    <env key="repository_dir" value="${basedir}"/>
+                </fork>
+            </testclasses>
+        </junitlauncher>
     </target>
 
     <target name="run-all.test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
