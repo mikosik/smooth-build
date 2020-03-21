@@ -1,47 +1,47 @@
 package org.smoothbuild.lang.object.base;
 
-import static org.hamcrest.Matchers.emptyIterable;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
+import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.testing.TestingContext;
 
 public class NothingArrayTest extends TestingContext {
-  private Array array;
-
   @Test
-  public void type_of_nothing_array_is_nothing_array() throws Exception {
-    given(array = arrayBuilder(nothingType()).build());
-    when(array.type());
-    thenReturned(arrayType(nothingType()));
+  public void type_of_nothing_array_is_nothing_array() {
+    Array array = emptyArrayOf(nothingType());
+    assertThat(array.type())
+        .isEqualTo(arrayType(nothingType()));
   }
 
   @Test
-  public void nothing_array_is_empty() throws Exception {
-    when(() -> arrayBuilder(nothingType()).build().asIterable(SObject.class));
-    thenReturned(emptyIterable());
+  public void nothing_array_is_empty() {
+    assertThat(emptyArrayOf(nothingType()).asIterable(SObject.class))
+        .isEmpty();
   }
 
   @Test
-  public void nothing_array_can_be_read_by_hash() throws Exception {
-    given(array = arrayBuilder(nothingType()).build());
-    when(() -> objectDbOther().get(array.hash()));
-    thenReturned(array);
+  public void nothing_array_can_be_read_by_hash() {
+    Array array = emptyArrayOf(nothingType());
+    assertThat(objectDbOther().get(array.hash()))
+        .isEqualTo(array);
   }
 
   @Test
-  public void nothing_array_read_by_hash_has_no_elements() throws Exception {
-    given(array = arrayBuilder(nothingType()).build());
-    when(() -> ((Array) objectDbOther().get(array.hash())).asIterable(SObject.class));
-    thenReturned(emptyIterable());
+  public void nothing_array_read_by_hash_is_empty() {
+    Array array = emptyArrayOf(nothingType());
+    assertThat(((Array) objectDbOther().get(array.hash())).asIterable(SObject.class))
+        .isEmpty();
   }
 
   @Test
-  public void nothing_array_to_string() throws Exception {
-    given(array = arrayBuilder(nothingType()).build());
-    when(() -> array.toString());
-    thenReturned("[Nothing](...):" + array.hash());
+  public void nothing_array_to_string() {
+    Array array = emptyArrayOf(nothingType());
+    assertThat(array.toString())
+        .isEqualTo("[Nothing](...):" + array.hash());
+  }
+
+  private Array emptyArrayOf(NothingType elemType) {
+    return arrayBuilder(elemType).build();
   }
 }
