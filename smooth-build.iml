@@ -14,7 +14,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="junit:junit:4.13" level="project" />
+    <orderEntry type="library" name="org.junit.vintage:junit-vintage-engine:5.6.0" level="project" />
+    <orderEntry type="library" name="org.junit.jupiter:junit-jupiter-engine:5.6.0" level="project" />
+    <orderEntry type="library" name="org.junit.platform:junit-platform-launcher:1.6.0" level="project" />
     <orderEntry type="library" name="com.google.guava:guava:28.1-jre" level="project" />
     <orderEntry type="library" name="com.google.guava:guava-testlib:28.1-jre" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio:2.4.0" level="project" />
