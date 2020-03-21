@@ -1,115 +1,100 @@
 package org.smoothbuild.lang.object.base;
 
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.Test;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.testing.TestingContext;
 
 public class StringTest extends TestingContext {
-  private SString sstring;
   private final String string = "my string";
   private final String otherString = "my string 2";
-  private Hash hash;
 
   @Test
-  public void type_of_sstring_is_sstring() throws Exception {
-    given(sstring = string(string));
-    when(sstring).type();
-    thenReturned(stringType());
+  public void type_of_sstring_is_sstring() {
+    assertThat(string(string).type())
+        .isEqualTo(stringType());
   }
 
   @Test
-  public void jvalue_returns_java_string() throws Exception {
-    given(sstring = string(string));
-    when(sstring).jValue();
-    thenReturned(string);
+  public void jvalue_returns_java_string() {
+    assertThat(string(string).jValue())
+        .isEqualTo(string);
   }
 
   @Test
-  public void jvalue_returns_empty_java_string_for_empty_sstring() throws Exception {
-    given(sstring = string(""));
-    when(sstring).jValue();
-    thenReturned("");
+  public void jvalue_returns_empty_java_string_for_empty_sstring() {
+    assertThat(string("").jValue())
+        .isEqualTo("");
   }
 
   @Test
-  public void sstrings_with_equal_values_are_equal() throws Exception {
-    when(string(string));
-    thenReturned(string(string));
+  public void sstrings_with_equal_values_are_equal() {
+    assertThat(string(string))
+        .isEqualTo(string(string));
   }
 
   @Test
-  public void sstrings_with_different_values_are_not_equal() throws Exception {
-    when(string(string));
-    thenReturned(not(string(otherString)));
+  public void sstrings_with_different_values_are_not_equal() {
+    assertThat(string(string))
+        .isNotEqualTo(string(otherString));
   }
 
   @Test
-  public void hash_of_sstrings_with_equal_values_is_the_same() throws Exception {
-    given(sstring = string(string));
-    when(sstring).hash();
-    thenReturned(string(string).hash());
+  public void hash_of_sstrings_with_equal_values_is_the_same() {
+    assertThat(string(string).hash())
+        .isEqualTo(string(string).hash());
   }
 
   @Test
-  public void hash_of_sstrings_with_different_values_is_not_the_same() throws Exception {
-    given(sstring = string(string));
-    when(sstring).hash();
-    thenReturned(not(string(string + "abc").hash()));
+  public void hash_of_sstrings_with_different_values_is_not_the_same() {
+    assertThat(string(string).hash())
+        .isNotEqualTo(string(otherString).hash());
   }
 
   @Test
-  public void hash_code_of_sstrings_with_equal_values_is_the_same() throws Exception {
-    given(sstring = string(string));
-    when(sstring).hashCode();
-    thenReturned(string(string).hashCode());
+  public void hash_code_of_sstrings_with_equal_values_is_the_same() {
+    assertThat(string(string).hashCode())
+        .isEqualTo(string(string).hashCode());
   }
 
   @Test
-  public void hash_code_of_sstrings_with_different_values_is_not_the_same() throws Exception {
-    given(sstring = string(string));
-    when(sstring).hashCode();
-    thenReturned(not(string(string + "abc").hashCode()));
+  public void hash_code_of_sstrings_with_different_values_is_not_the_same() {
+    assertThat(string(string).hashCode())
+        .isNotEqualTo(string(otherString).hashCode());
   }
 
   @Test
-  public void sstring_can_be_read_back_by_hash() throws Exception {
-    given(sstring = string(string));
-    given(hash = sstring.hash());
-    when(() -> objectDbOther().get(hash));
-    thenReturned(sstring);
+  public void sstring_can_be_read_back_by_hash() {
+    SString sstring = string(string);
+    assertThat(objectDbOther().get(sstring.hash()))
+        .isEqualTo(sstring);
   }
 
   @Test
-  public void sstring_read_back_by_hash_has_same_javlue() throws Exception {
-    given(sstring = string(string));
-    given(hash = sstring.hash());
-    when(() -> ((SString) objectDbOther().get(hash)).jValue());
-    thenReturned(string);
+  public void sstring_read_back_by_hash_has_same_javlue() {
+    SString sstring = string(string);
+    assertThat(((SString) objectDbOther().get(sstring.hash())).jValue())
+        .isEqualTo(string);
   }
 
   @Test
-  public void to_string_contains_string_value() throws Exception {
-    given(sstring = string(string));
-    when(() -> sstring.toString());
-    thenReturned("String(\"my string\"):" + sstring.hash());
+  public void to_string_contains_string_value() {
+    SString sstring = string(string);
+    assertThat(sstring.toString())
+        .isEqualTo("String(\"my string\"):" + sstring.hash());
   }
 
   @Test
-  public void to_string_contains_shortened_string_value_for_long_strings() throws Exception {
-    given(sstring = string("123456789012345678901234567890"));
-    when(() -> sstring.toString());
-    thenReturned("String(\"1234567890123456789012345\"...):" + sstring.hash());
+  public void to_string_contains_shortened_string_value_for_long_strings() {
+    SString sstring = string("123456789012345678901234567890");
+    assertThat(sstring.toString())
+        .isEqualTo("String(\"1234567890123456789012345\"...):" + sstring.hash());
   }
 
   @Test
-  public void to_string_contains_properly_escaped_special_characters() throws Exception {
-    given(sstring = string("\t \b \n \r \f \" \\"));
-    when(() -> sstring.toString());
-    thenReturned("String(\"\\t \\b \\n \\r \\f \\\" \\\\\"):" + sstring.hash());
+  public void to_string_contains_properly_escaped_special_characters() {
+    SString sstring = string("\t \b \n \r \f \" \\");
+    assertThat(sstring.toString())
+        .isEqualTo("String(\"\\t \\b \\n \\r \\f \\\" \\\\\"):" + sstring.hash());
   }
 }
