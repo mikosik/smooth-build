@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 

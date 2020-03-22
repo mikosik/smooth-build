@@ -3,7 +3,7 @@ package org.smoothbuild.lang.message;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.testing.TestingContext;
 

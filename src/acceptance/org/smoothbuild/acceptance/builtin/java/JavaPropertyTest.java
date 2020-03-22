@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance.builtin.java;
 
 import static org.testory.Testory.thenEqual;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class JavaPropertyTest extends AcceptanceTestCase {

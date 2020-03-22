@@ -6,7 +6,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 import static org.testory.common.Matchers.same;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;

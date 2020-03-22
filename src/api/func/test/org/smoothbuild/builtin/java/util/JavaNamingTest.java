@@ -6,7 +6,7 @@ import static org.smoothbuild.builtin.java.util.JavaNaming.toBinaryName;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class JavaNamingTest {
   @Test

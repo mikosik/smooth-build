@@ -39,18 +39,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.googlecode.junittoolbox.ParallelRunner;
 
 import okio.ByteString;
 
-@RunWith(ParallelRunner.class)
 public abstract class AcceptanceTestCase {
   private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
   private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
@@ -63,12 +60,12 @@ public abstract class AcceptanceTestCase {
   private String outputData;
   private String errorData;
 
-  @Before
+  @BeforeEach
   public void init() {
     projectDir = createTempDir();
   }
 
-  @After
+  @AfterEach
   public void destroy() throws IOException {
     deleteRecursively(projectDir().toPath());
   }

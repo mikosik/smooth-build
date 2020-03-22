@@ -3,7 +3,7 @@ package org.smoothbuild.acceptance.cmd;
 import static org.testory.Testory.given;
 import static org.testory.Testory.thenEqual;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class GenericCommandTest extends AcceptanceTestCase {

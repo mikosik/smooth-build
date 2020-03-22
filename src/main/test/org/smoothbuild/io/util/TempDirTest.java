@@ -6,8 +6,8 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
@@ -25,7 +25,7 @@ public class TempDirTest extends TestingContext {
   private TempDir tempDir;
   private Array array;
 
-  @Before
+  @BeforeEach
   public void before() {
     tempDir = new TempDir(container(), fullFileSystem(), rootPath);
   }

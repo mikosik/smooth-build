@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectDb;

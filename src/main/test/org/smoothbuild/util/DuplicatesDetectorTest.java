@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 
 import java.util.HashSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DuplicatesDetectorTest {
   private final String string1 = "string1";

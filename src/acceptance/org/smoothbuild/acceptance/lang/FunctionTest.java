@@ -5,7 +5,7 @@ import static org.testory.Testory.then;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.GenericResult;
 import org.smoothbuild.acceptance.testing.ReportError;

@@ -16,7 +16,7 @@ import static org.testory.Testory.when;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.quackery.Case;
 import org.quackery.Quackery;

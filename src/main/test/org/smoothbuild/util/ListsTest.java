@@ -17,7 +17,7 @@ import static org.testory.common.Matchers.same;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 

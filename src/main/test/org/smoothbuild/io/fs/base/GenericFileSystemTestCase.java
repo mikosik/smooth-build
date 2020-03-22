@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import okio.BufferedSink;
 import okio.ByteString;

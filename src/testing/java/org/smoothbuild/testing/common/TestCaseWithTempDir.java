@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 import com.google.common.io.Files;
 
@@ -25,7 +25,7 @@ public class TestCaseWithTempDir {
     return tempDir;
   }
 
-  @After
+  @AfterEach
   public void after() throws IOException {
     deleteRecursively(tempDir.toPath());
   }

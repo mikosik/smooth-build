@@ -12,7 +12,7 @@ import static org.testory.Testory.willReturn;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.AccessorCallComputation;
 import org.smoothbuild.exec.comp.ArrayComputation;

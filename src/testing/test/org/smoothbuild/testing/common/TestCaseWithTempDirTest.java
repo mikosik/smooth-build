@@ -8,7 +8,7 @@ import static org.testory.Testory.when;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestCaseWithTempDirTest {
   private TestCaseWithTempDir testCase;

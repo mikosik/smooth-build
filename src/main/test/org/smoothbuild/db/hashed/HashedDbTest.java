@@ -9,7 +9,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

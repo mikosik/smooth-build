@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ReferenceTest extends AcceptanceTestCase {

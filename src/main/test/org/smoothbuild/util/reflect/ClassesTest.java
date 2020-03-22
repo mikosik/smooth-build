@@ -1,9 +1,10 @@
 package org.smoothbuild.util.reflect;
 
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ClassesTest {
   @Test
@@ -30,8 +31,9 @@ public class ClassesTest {
     thenReturned("java.lang.Character$Subset");
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void binary_path_to_binary_name_fails_for_non_class_file_path() throws Exception {
-    Classes.binaryPathToBinaryName("java/lang/String.not-class");
+  @Test
+  public void binary_path_to_binary_name_fails_for_non_class_file_path() {
+    assertCall(() -> Classes.binaryPathToBinaryName("java/lang/String.not-class"))
+        .throwsException(IllegalArgumentException.class);
   }
 }

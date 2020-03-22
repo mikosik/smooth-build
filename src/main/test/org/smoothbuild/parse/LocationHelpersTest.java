@@ -11,8 +11,8 @@ import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
@@ -29,7 +29,7 @@ public class LocationHelpersTest {
   private ArgContext argContext;
   private NameContext nameContext;
 
-  @Before
+  @BeforeEach
   public void before() {
     givenTest(this);
     given(line = 13);

@@ -10,8 +10,8 @@ import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Function;
 
 public class FunctionsTest {
@@ -20,7 +20,7 @@ public class FunctionsTest {
   private Function function2;
   private String name;
 
-  @Before
+  @BeforeEach
   public void before() {
     givenTest(this);
   }

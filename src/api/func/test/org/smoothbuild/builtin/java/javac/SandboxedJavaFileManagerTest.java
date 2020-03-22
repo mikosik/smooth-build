@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class SandboxedJavaFileManagerTest extends TestingContext {

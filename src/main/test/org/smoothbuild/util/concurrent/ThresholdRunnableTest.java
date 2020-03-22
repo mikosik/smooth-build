@@ -6,7 +6,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.truth.Truth;
 

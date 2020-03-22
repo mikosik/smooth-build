@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 import okio.BufferedSink;

@@ -11,7 +11,7 @@ import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.quackery.Case;
 import org.quackery.Quackery;

@@ -7,7 +7,7 @@ import static org.testory.Testory.given;
 import static org.testory.Testory.mock;
 import static org.testory.Testory.willReturn;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 public class MemoryDirTest {

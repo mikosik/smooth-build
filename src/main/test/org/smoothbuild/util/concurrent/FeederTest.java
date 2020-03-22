@@ -10,13 +10,13 @@ import static org.smoothbuild.util.Strings.unlines;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class FeederTest {
   private Feeder<String> feeder;
 
-  @Before
+  @BeforeEach
   public void before() {
     this.feeder = new Feeder<>();
   }

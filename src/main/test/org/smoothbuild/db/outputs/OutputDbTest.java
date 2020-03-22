@@ -5,7 +5,7 @@ import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueExcepti
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.io.fs.base.Path;

@@ -3,7 +3,7 @@ package org.smoothbuild.acceptance.builtin.common;
 import static org.hamcrest.Matchers.equalTo;
 import static org.testory.Testory.then;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ThrowException;
 

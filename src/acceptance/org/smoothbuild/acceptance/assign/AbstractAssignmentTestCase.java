@@ -7,13 +7,9 @@ import static org.smoothbuild.util.Lists.list;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-import com.googlecode.junittoolbox.ParallelRunner;
-
-@RunWith(ParallelRunner.class)
 public abstract class AbstractAssignmentTestCase {
   @Test
   public void assignment_tests() throws IOException {

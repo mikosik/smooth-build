@@ -7,7 +7,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.testory.Testory.mock;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.parse.expr.Expression;
 
 public class SignatureTest {

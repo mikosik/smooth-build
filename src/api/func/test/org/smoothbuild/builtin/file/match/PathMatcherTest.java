@@ -6,7 +6,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.util.function.Predicate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 public class PathMatcherTest {

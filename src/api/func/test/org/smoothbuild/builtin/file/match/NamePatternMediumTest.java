@@ -2,7 +2,7 @@ package org.smoothbuild.builtin.file.match;
 
 import static org.smoothbuild.builtin.file.match.testing.NamePatternGenerator.generatePatterns;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NamePatternMediumTest {
   @Test

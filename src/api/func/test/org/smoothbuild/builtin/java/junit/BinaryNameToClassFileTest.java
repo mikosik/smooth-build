@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
