@@ -1,35 +1,33 @@
 package org.smoothbuild.lang.object.corrupt;
 
 import static com.google.common.collect.Streams.stream;
+import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.db.ObjectDbException;
-import org.smoothbuild.util.Lists;
 
 import okio.ByteString;
 
 public class CorruptedArrayTest extends AbstractCorruptedTestCase {
-  private Hash instanceHash;
-  private Hash notHashOfHashSequence;
-
   @Test
-  public void learning_test_create_array() {
+  public void learning_test_create_array() throws Exception {
     /*
      * This test makes sure that other tests in this class use proper scheme to save smooth array
      * in HashedDb.
      */
-    given(() -> instanceHash =
+    Hash instanceHash =
         hash(
             hash(arrayType(stringType())),
             hash(
@@ -41,39 +39,39 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash(stringType()),
                     hash("bbb")
                 )
-            )));
-    when(() -> stream(((Array) objectDb().get(instanceHash))
+            ));
+    List<String> strings = stream(((Array) objectDb().get(instanceHash))
         .asIterable(SString.class))
         .map(SString::jValue)
-        .collect(toList()));
-    thenReturned(Lists.list("aaa", "bbb"));
+        .collect(toList());
+    assertThat(strings)
+        .containsExactly("aaa", "bbb")
+        .inOrder();
   }
 
-  @Test
-  public void array_with_data_size_different_than_multiple_of_hash_size_is_corrupted() {
-    for (int i = 0; i <= Hash.hashesSize() * 3 + 1; i++) {
-      if (i % Hash.hashesSize() != 0) {
-        run_array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(i);
-      }
-    }
+  public static IntStream illegal_array_byte_sizes() {
+    return IntStream.rangeClosed(1, Hash.hashesSize() * 3 + 1)
+        .filter(i -> i % Hash.hashesSize() != 0);
   }
 
-  private void run_array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(
-      int byteCount) {
-    given(() -> notHashOfHashSequence = hash(ByteString.of(new byte[byteCount])));
-    given(() -> instanceHash =
+  @ParameterizedTest
+  @MethodSource("illegal_array_byte_sizes")
+  public void array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(
+      int byteCount) throws Exception {
+    Hash notHashOfHashSequence = hash(ByteString.of(new byte[byteCount]));
+    Hash instanceHash =
         hash(
             hash(arrayType(stringType())),
             notHashOfHashSequence
-        ));
-    when(() -> ((Array) objectDb().get(instanceHash)).asIterable(SObject.class));
-    thenThrown(exception(new ObjectDbException(instanceHash,
-        new DecodingHashSequenceException(notHashOfHashSequence))));
+        );
+    assertCall(() -> ((Array) objectDb().get(instanceHash)).asIterable(SObject.class))
+        .throwsException(new ObjectDbException(instanceHash))
+        .withCause(new DecodingHashSequenceException(notHashOfHashSequence));
   }
 
   @Test
-  public void array_with_one_element_of_wrong_type_is_corrupted() {
-    given(() -> instanceHash =
+  public void array_with_one_element_of_wrong_type_is_corrupted() throws Exception {
+    Hash instanceHash =
         hash(
             hash(arrayType(stringType())),
             hash(
@@ -85,9 +83,9 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash(boolType()),
                     hash(true)
                 )
-            )));
-    when(() -> ((Array) objectDb().get(instanceHash)).asIterable(SString.class));
-    thenThrown(exception(new ObjectDbException(instanceHash,
-        "It is array with type '[String]' but one of its elements has type 'Bool'")));
+            ));
+    assertCall(() -> ((Array) objectDb().get(instanceHash)).asIterable(SString.class))
+        .throwsException(new ObjectDbException(instanceHash,
+            "It is array with type '[String]' but one of its elements has type 'Bool'"));
   }
 }
