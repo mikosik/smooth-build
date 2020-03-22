@@ -7,8 +7,6 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -24,7 +22,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableMap;
 
 public class StringsTest {
   @Nested
@@ -32,29 +30,26 @@ public class StringsTest {
   class Unline {
     @Test
     public void zero_lines_gives_empty_string() {
-      when(unlines());
-      thenReturned("");
+      assertThat(unlines())
+          .isEqualTo("");
     }
 
     @Test
     public void one_line_gives_unchanged_line() {
-      when(unlines("abc"));
-      thenReturned("abc");
+      assertThat(unlines("abc"))
+          .isEqualTo("abc");
     }
 
     @Test
     public void more_lines() {
-      when(unlines(
-          "abc",
-          "def",
-          "ghi"));
-      thenReturned("abc\ndef\nghi");
+      assertThat(unlines("abc", "def", "ghi"))
+          .isEqualTo("abc\ndef\nghi");
     }
 
     @Test
     public void does_not_change_new_lines() {
-      when(unlines("abc\n123"));
-      thenReturned("abc\n123");
+      assertThat(unlines("abc\n123"))
+          .isEqualTo("abc\n123");
     }
   }
 
@@ -63,20 +58,20 @@ public class StringsTest {
   class EscapedAndLimitedWithEllipsis {
     @Test
     public void does_not_change_string_which_length_is_below_limit() {
-      when(escapedAndLimitedWithEllipsis("12345678", 10));
-      thenReturned("\"12345678\"");
+      assertThat(escapedAndLimitedWithEllipsis("12345678", 10))
+          .isEqualTo("\"12345678\"");
     }
 
     @Test
     public void adds_ellipsis_when_quoted_string_exceeds_limit() {
-      when(escapedAndLimitedWithEllipsis("123456789", 10));
-      thenReturned("\"12345\"...");
+      assertThat(escapedAndLimitedWithEllipsis("123456789", 10))
+          .isEqualTo("\"12345\"...");
     }
 
     @Test
     public void adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
-      when(escapedAndLimitedWithEllipsis("12345678\n", 10));
-      thenReturned("\"12345\"...");
+      assertThat(escapedAndLimitedWithEllipsis("12345678\n", 10))
+          .isEqualTo("\"12345\"...");
     }
   }
 
@@ -145,7 +140,7 @@ public class StringsTest {
     }
   }
 
-  private static HashMap<String, String> createTestData(ImmutableBiMap<String, String> mappings) {
+  private static HashMap<String, String> createTestData(ImmutableMap<String, String> mappings) {
     HashMap<String, String> conversionMap = new HashMap<>();
     for (Entry<String, String> entry1 : mappings.entrySet()) {
       for (Entry<String, String> entry2 : mappings.entrySet()) {
@@ -159,8 +154,8 @@ public class StringsTest {
     return conversionMap;
   }
 
-  private static ImmutableBiMap<String, String> escapeMapping() {
-    return ImmutableBiMap.<String, String>builder()
+  private static ImmutableMap<String, String> escapeMapping() {
+    return ImmutableMap.<String, String>builder()
         .put("\t", "\\t")
         .put("\b", "\\b")
         .put("\n", "\\n")
