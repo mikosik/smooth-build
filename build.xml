@@ -19,8 +19,8 @@
     <property name="dir.build.class" location="${dir.build}/class"/>
     <property name="dir.build.class.main.java" location="${dir.build.class}/main/java"/>
     <property name="dir.build.class.main.test" location="${dir.build.class}/main/test"/>
-    <property name="dir.build.class.api.func.java" location="${dir.build.class}/api/func/java"/>
-    <property name="dir.build.class.api.func.test" location="${dir.build.class}/api/func/test"/>
+    <property name="dir.build.class.api-func.java" location="${dir.build.class}/api/func/java"/>
+    <property name="dir.build.class.api-func.test" location="${dir.build.class}/api/func/test"/>
     <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java"/>
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
     <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
@@ -62,8 +62,8 @@
         <mkdir dir="${dir.build.java.parser}"/>
         <mkdir dir="${dir.build.class.main.java}"/>
         <mkdir dir="${dir.build.class.main.test}"/>
-        <mkdir dir="${dir.build.class.api.func.java}"/>
-        <mkdir dir="${dir.build.class.api.func.test}"/>
+        <mkdir dir="${dir.build.class.api-func.java}"/>
+        <mkdir dir="${dir.build.class.api-func.test}"/>
         <mkdir dir="${dir.build.class.testing.java}"/>
         <mkdir dir="${dir.build.class.testing.test}"/>
         <mkdir dir="${dir.build.class.acceptance}"/>
@@ -89,7 +89,7 @@
         </java>
     </target>
 
-    <path id="classpath.with.junit-platform">
+    <path id="classpath-with.junit-platform">
         <pathelement location="${dir.lib}/ivy/junit-platform-commons-1.6.0.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-platform-engine-1.6.0.jar"/>
         <pathelement location="${dir.lib}/ivy/junit-platform-launcher-1.6.0.jar"/>
@@ -104,7 +104,7 @@
 
     <!-- compile src/main/java -->
 
-    <path id="classpath.for.main.java">
+    <path id="classpath-for.main.java">
         <pathelement location="${lib.antlr4-runtime}"/>
         <pathelement location="${lib.aopalliance}"/>
         <pathelement location="${lib.failureaccess}"/>
@@ -116,7 +116,7 @@
         <pathelement location="${lib.okio}"/>
     </path>
 
-    <target name="compile-main.java" depends="generate-java-grammar">
+    <target name="compile.main.java" depends="generate-java-grammar">
         <javac destdir="${dir.build.class.main.java}"
                debug="true"
                includeantruntime="false"
@@ -124,64 +124,64 @@
             <src path="${dir.src.main.java}"/>
             <src path="${dir.build.java.parser}"/>
             <classpath>
-                <path refid="classpath.for.main.java"/>
+                <path refid="classpath-for.main.java"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.main.java">
-        <path refid="classpath.for.main.java"/>
+    <path id="classpath-with.main.java">
+        <path refid="classpath-for.main.java"/>
         <pathelement location="${dir.build.class.main.java}"/>
     </path>
 
     <!-- compile src/api/func/java -->
 
-    <path id="classpath.for.api.func.java">
-        <path refid="classpath.with.main.java"/>
+    <path id="classpath-for.api-func.java">
+        <path refid="classpath-with.main.java"/>
     </path>
 
-    <target name="compile-api.func.java" depends="compile-main.java">
-        <javac destdir="${dir.build.class.api.func.java}"
+    <target name="compile.api-func.java" depends="compile.main.java">
+        <javac destdir="${dir.build.class.api-func.java}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <compilerarg value="-parameters"/>
             <src path="${dir.src.api.func.java}"/>
             <classpath>
-                <path refid="classpath.for.api.func.java"/>
+                <path refid="classpath-for.api-func.java"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.api.func.java">
-        <path refid="classpath.for.api.func.java"/>
-        <pathelement location="${dir.build.class.api.func.java}"/>
+    <path id="classpath-with.api-func.java">
+        <path refid="classpath-for.api-func.java"/>
+        <pathelement location="${dir.build.class.api-func.java}"/>
     </path>
 
     <!-- compile src/testing/java -->
 
-    <path id="classpath.for.testing.java">
-        <path refid="classpath.with.main.java"/>
-        <path refid="classpath.with.junit-platform"/>
+    <path id="classpath-for.testing.java">
+        <path refid="classpath-with.main.java"/>
+        <path refid="classpath-with.junit-platform"/>
         <pathelement location="${lib.hamcrest}"/>
         <pathelement location="${lib.quackery}"/>
         <pathelement location="${lib.truth}"/>
     </path>
 
-    <target name="compile-testing.java" depends="compile-main.java">
+    <target name="compile.testing.java" depends="compile.main.java">
         <javac destdir="${dir.build.class.testing.java}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <src path="${dir.src.testing.java}"/>
             <classpath>
-                <path refid="classpath.for.testing.java"/>
+                <path refid="classpath-for.testing.java"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.testing.java">
-        <path refid="classpath.for.testing.java"/>
+    <path id="classpath-with.testing.java">
+        <path refid="classpath-for.testing.java"/>
         <pathelement location="${dir.build.class.testing.java}"/>
     </path>
 
@@ -201,12 +201,12 @@
 
     <!-- compile src/main/test -->
 
-    <path id="classpath.for.main.test">
-        <path refid="classpath.with.testing.java"/>
+    <path id="classpath-for.main.test">
+        <path refid="classpath-with.testing.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile-main.test" depends="compile-testing.java">
+    <target name="compile.main.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.main.test}"
                debug="true"
                includeantruntime="false"
@@ -214,74 +214,74 @@
             <compilerarg value="-parameters"/>
             <src path="${dir.src.main.test}"/>
             <classpath>
-                <path refid="classpath.for.main.test"/>
+                <path refid="classpath-for.main.test"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.main.test">
-        <path refid="classpath.for.main.test"/>
+    <path id="classpath-with.main.test">
+        <path refid="classpath-for.main.test"/>
         <pathelement location="${dir.build.class.main.test}"/>
     </path>
 
     <!-- compile src/func/test -->
 
-    <path id="classpath.for.func.test">
-        <path refid="classpath.with.testing.java"/>
-        <path refid="classpath.with.api.func.java"/>
+    <path id="classpath-for.api-func.test">
+        <path refid="classpath-with.testing.java"/>
+        <path refid="classpath-with.api-func.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile-func.test" depends="compile-api.func.java, compile-testing.java">
-        <javac destdir="${dir.build.class.api.func.test}"
+    <target name="compile.api-func.test" depends="compile.api-func.java, compile.testing.java">
+        <javac destdir="${dir.build.class.api-func.test}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <src path="${dir.src.api.func.test}"/>
             <classpath>
-                <path refid="classpath.for.func.test"/>
+                <path refid="classpath-for.api-func.test"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.func.test">
-        <path refid="classpath.for.func.test"/>
-        <pathelement location="${dir.build.class.api.func.test}"/>
+    <path id="classpath-with.api-func.test">
+        <path refid="classpath-for.api-func.test"/>
+        <pathelement location="${dir.build.class.api-func.test}"/>
     </path>
 
     <!-- compile src/testing/test -->
 
-    <path id="classpath.for.testing.test">
-        <path refid="classpath.with.testing.java"/>
+    <path id="classpath-for.testing.test">
+        <path refid="classpath-with.testing.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile-testing.test" depends="compile-testing.java">
+    <target name="compile.testing.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.testing.test}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
             <src path="${dir.src.testing.test}"/>
             <classpath>
-                <path refid="classpath.for.testing.test"/>
+                <path refid="classpath-for.testing.test"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath.with.testing.test">
-        <path refid="classpath.for.testing.test"/>
+    <path id="classpath-with.testing.test">
+        <path refid="classpath-for.testing.test"/>
         <pathelement location="${dir.build.class.testing.test}"/>
     </path>
 
     <!-- compile src/acceptance -->
 
     <path id="classpath.for.acceptance">
-        <path refid="classpath.with.testing.java"/>
-        <path refid="classpath.with.api.func.java"/>
+        <path refid="classpath-with.testing.java"/>
+        <path refid="classpath-with.api-func.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile-acceptance-tests" depends="compile-testing.java">
+    <target name="compile.acceptance.tests" depends="compile.testing.java">
         <javac destdir="${dir.build.class.acceptance}"
                debug="true"
                includeantruntime="false"
@@ -301,10 +301,10 @@
 
     <!-- run src/testing/test -->
 
-    <target name="run-testing.test" depends="compile-testing.test">
+    <target name="run.testing.test" depends="compile.testing.test">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath.with.testing.test"/>
+                <path refid="classpath-with.testing.test"/>
             </classpath>
             <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
             <!-- <listener type="legacy-brief"/> -->
@@ -317,10 +317,10 @@
 
     <!-- run src/main/test -->
 
-    <target name="run-main.test" depends="compile-main.test" description="runs main.test">
+    <target name="run.main.test" depends="compile.main.test" description="runs main.test">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath.with.main.test"/>
+                <path refid="classpath-with.main.test"/>
             </classpath>
             <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
             <!-- <listener type="legacy-brief"/> -->
@@ -333,15 +333,15 @@
 
     <!-- run src/func/test -->
 
-    <target name="run-func.test" depends="compile-func.test">
+    <target name="run.api-func.test" depends="compile.api-func.test">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath.with.func.test"/>
+                <path refid="classpath-with.api-func.test"/>
             </classpath>
             <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
             <!-- <listener type="legacy-brief"/> -->
             <testclasses outputdir="${dir.build}">
-                <fileset dir="${dir.build.class.api.func.test}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.api-func.test}" includes="**/*Test.class"/>
                 <fork/>
             </testclasses>
         </junitlauncher>
@@ -349,16 +349,16 @@
 
     <!-- build funcs.jar file -->
 
-    <target name="funcs-jar-file" depends="compile-api.func.java">
+    <target name="funcs.jar" depends="compile.api-func.java">
         <jar destfile="${dir.build.funcs.jar}">
-            <zipfileset dir="${dir.build.class.api.func.java}"/>
+            <zipfileset dir="${dir.build.class.api-func.java}"/>
             <zipfileset file="LICENSE"/>
         </jar>
     </target>
 
     <!-- build smooth.jar file -->
 
-    <target name="smooth-jar-file" depends="compile-main.java">
+    <target name="smooth.jar" depends="compile.main.java">
         <jar destfile="${dir.build.smooth.jar}">
             <zipfileset src="${lib.antlr4-runtime}" excludes="* META-INF/**"/>
             <zipfileset src="${lib.aopalliance}"  excludes="* META-INF/**"/>
@@ -377,7 +377,7 @@
 
     <!-- build smooth.zip release -->
 
-    <target name="release" depends="smooth-jar-file, funcs-jar-file">
+    <target name="release" depends="smooth.jar, funcs.jar">
         <zip destfile="${dir.build.release.file}" level="9">
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
             <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
@@ -392,7 +392,7 @@
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
     </target>
 
-    <target name="run-acceptance" depends="compile-acceptance-tests, install-smooth"
+    <target name="run.acceptance" depends="compile.acceptance.tests, install-smooth"
             description="runs acceptance tests">
         <junitlauncher haltonfailure="yes">
             <classpath>
@@ -410,9 +410,9 @@
         </junitlauncher>
     </target>
 
-    <target name="run-all.test" depends="run-testing.test, run-main.test, run-func.test, run-acceptance">
+    <target name="run.all.test" depends="run.testing.test, run.main.test, run.api-func.test, run.acceptance">
     </target>
 
-    <target name="all" depends="release, run-all.test"/>
+    <target name="all" depends="release, run.all.test"/>
 </project>
 
