@@ -9,7 +9,7 @@ import static org.testory.Testory.thenEqual;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import okio.Buffer;
 import okio.BufferedSource;

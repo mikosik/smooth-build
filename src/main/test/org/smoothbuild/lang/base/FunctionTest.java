@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.testing.TestingContext;

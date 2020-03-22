@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.testory.Testory.then;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.CacheableRandom;
 import org.smoothbuild.acceptance.testing.NotCacheableRandom;

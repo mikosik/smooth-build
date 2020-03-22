@@ -13,7 +13,7 @@ import static org.testory.Testory.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectDb;

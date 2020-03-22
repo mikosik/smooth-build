@@ -11,10 +11,11 @@ import static org.testory.Testory.when;
 
 import java.net.URI;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.testing.common.AssertCall;
 
 import okio.ByteString;
 
@@ -24,9 +25,10 @@ public class InputClassFileTest extends TestingContext {
   private final Path path = path("a/b/MyClass.class");
   private Struct file;
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void file_without_class_extension_is_forbidden() throws Exception {
-    inputClassFile("abc");
+    AssertCall.assertCall(() -> inputClassFile("abc"))
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Test

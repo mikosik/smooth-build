@@ -8,15 +8,15 @@ import static org.smoothbuild.io.fs.base.Path.path;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
  * This test is not automatically run by ant as it takes more than 1 hour to
  * complete.
  */
-@Ignore
+@Disabled
 public class PathMatcherTestLarge {
 
   @Test

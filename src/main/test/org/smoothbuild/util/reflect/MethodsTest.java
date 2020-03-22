@@ -8,7 +8,7 @@ import static org.smoothbuild.util.reflect.Methods.isStatic;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MethodsTest {
   @Test

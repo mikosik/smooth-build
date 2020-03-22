@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.fs.base.Path;
 

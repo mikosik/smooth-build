@@ -2,7 +2,7 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class StructArrayTest extends TestingContext {

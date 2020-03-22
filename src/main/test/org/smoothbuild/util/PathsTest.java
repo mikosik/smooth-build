@@ -6,7 +6,7 @@ import static org.testory.Testory.when;
 
 import java.nio.file.Path;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PathsTest {
   private Path path;

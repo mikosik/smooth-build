@@ -10,7 +10,7 @@ import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.thenThrown;
 import static org.testory.Testory.when;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;

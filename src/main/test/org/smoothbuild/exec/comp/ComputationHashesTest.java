@@ -15,7 +15,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;

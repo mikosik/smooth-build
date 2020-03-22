@@ -4,13 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractSoftTerminationExecutorTestCase {
   private SoftTerminationExecutor executor;
 
-  @Before
+  @BeforeEach
   public void before() {
     executor = createJobExecutor();
   }

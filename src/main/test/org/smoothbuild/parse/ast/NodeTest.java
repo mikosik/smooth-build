@@ -10,7 +10,7 @@ import static org.testory.Testory.when;
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class NodeTest {
   private Node node;

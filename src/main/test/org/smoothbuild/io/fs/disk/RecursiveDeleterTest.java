@@ -10,22 +10,22 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class RecursiveDeleterTest {
   private List<File> files;
   private File root;
 
-  @Before
+  @BeforeEach
   public void before() throws IOException {
     files = new ArrayList<>();
     root = com.google.common.io.Files.createTempDir();
     files.add(root);
   }
 
-  @After
+  @AfterEach
   public void after() {
     for (int i = files.size() - 1; 0 <= i; i--) {
       File file = files.get(i);

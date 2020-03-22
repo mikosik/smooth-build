@@ -5,7 +5,7 @@ import static org.smoothbuild.builtin.file.PathArgValidator.validatedProjectPath
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.testing.TestingContext;
 

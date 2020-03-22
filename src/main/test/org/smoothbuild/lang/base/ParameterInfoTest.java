@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Strings.unlines;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.testing.TestingContext;
 

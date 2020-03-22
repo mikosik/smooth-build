@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.smoothbuild.util.Strings.unlines;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class TreeCommandTest extends AcceptanceTestCase {

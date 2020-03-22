@@ -9,7 +9,7 @@ import static org.testory.Testory.when;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;

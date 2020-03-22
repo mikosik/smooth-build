@@ -3,7 +3,7 @@ package org.smoothbuild.acceptance.builtin.file;
 import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
 import static org.testory.Testory.then;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class AFileTest extends AcceptanceTestCase {

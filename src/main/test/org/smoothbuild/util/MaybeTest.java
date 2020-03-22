@@ -16,8 +16,8 @@ import static org.testory.Testory.when;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class MaybeTest {
   private Maybe<String> maybe;
@@ -30,7 +30,7 @@ public class MaybeTest {
   private final Object error3 = new Object();
   private StringBuilder builder;
 
-  @Before
+  @BeforeEach
   public void before() {}
 
   @Test

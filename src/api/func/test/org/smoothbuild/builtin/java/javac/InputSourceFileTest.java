@@ -7,7 +7,7 @@ import static org.testory.Testory.when;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;

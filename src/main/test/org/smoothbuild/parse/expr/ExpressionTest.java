@@ -9,8 +9,8 @@ import static org.testory.Testory.when;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -19,7 +19,7 @@ public class ExpressionTest {
   private Location location;
   private MyExpression expression;
 
-  @Before
+  @BeforeEach
   public void before() {
     givenTest(this);
   }

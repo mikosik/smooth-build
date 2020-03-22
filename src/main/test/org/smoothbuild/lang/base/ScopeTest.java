@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ScopeTest {
   private Scope<String> scope;

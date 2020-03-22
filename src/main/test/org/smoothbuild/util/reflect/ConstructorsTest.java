@@ -4,7 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.util.reflect.Constructors.isPublic;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest {
   @Test

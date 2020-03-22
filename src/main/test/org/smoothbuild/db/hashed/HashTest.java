@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.io.EOFException;
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.io.Files;
 

@@ -3,7 +3,7 @@ package org.smoothbuild.builtin.file.match;
 import static org.smoothbuild.builtin.file.match.PathPattern.pathPattern;
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PathPatternMediumTest {
   @Test

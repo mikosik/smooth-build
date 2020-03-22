@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.io.fs.base.GenericFileSystemTestCase;
 import org.smoothbuild.io.fs.base.Path;
 
@@ -20,13 +20,13 @@ import okio.ByteString;
 public class DiskFileSystemTest extends GenericFileSystemTestCase {
   private File tempDir;
 
-  @Before
+  @BeforeEach
   public void before() {
     tempDir = com.google.common.io.Files.createTempDir();
     fileSystem = new DiskFileSystem(Paths.get(tempDir.getAbsolutePath()));
   }
 
-  @After
+  @AfterEach
   public void after() throws IOException {
     java.nio.file.Path tempPath = tempDir.toPath();
     if (Files.isDirectory(tempPath)) {

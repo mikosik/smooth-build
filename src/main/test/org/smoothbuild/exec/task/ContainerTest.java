@@ -11,7 +11,7 @@ import static org.testory.Testory.when;
 import static org.testory.Testory.willReturn;
 import static org.testory.common.Matchers.same;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.object.base.SObject;

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.testing.TestingContext;

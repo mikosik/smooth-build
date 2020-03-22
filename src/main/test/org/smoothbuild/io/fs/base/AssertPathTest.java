@@ -13,7 +13,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class AssertPathTest {
   private final Path path = Path.path("some/path");

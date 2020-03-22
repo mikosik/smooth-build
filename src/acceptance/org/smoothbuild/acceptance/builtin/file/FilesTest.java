@@ -4,7 +4,7 @@ import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
 import static org.testory.Testory.given;
 import static org.testory.Testory.then;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 

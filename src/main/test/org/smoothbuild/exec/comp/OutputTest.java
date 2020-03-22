@@ -3,7 +3,7 @@ package org.smoothbuild.exec.comp;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.testing.TestingContext;

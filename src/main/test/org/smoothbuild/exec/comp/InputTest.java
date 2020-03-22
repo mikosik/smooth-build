@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.util.Lists.list;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.testing.TestingContext;
 

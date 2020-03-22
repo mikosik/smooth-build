@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.SandboxHashProvider.javaPlatformHash;
 
 import java.util.Properties;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SandboxHashProviderTest {
   private Properties properties;

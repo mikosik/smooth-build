@@ -2,7 +2,7 @@ package org.smoothbuild.acceptance.struct;
 
 import static org.testory.Testory.thenEqual;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class AccessorTest extends AcceptanceTestCase {
