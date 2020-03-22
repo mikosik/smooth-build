@@ -1,118 +1,148 @@
 package org.smoothbuild.util;
 
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
-import static org.quackery.run.Runners.expect;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.escaped;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 import static org.smoothbuild.util.Strings.unescaped;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
 import static org.testory.Testory.thenReturned;
 import static org.testory.Testory.when;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
-import org.quackery.junit.QuackeryRunner;
-import org.quackery.report.AssumeException;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.google.common.collect.ImmutableBiMap;
 
-@RunWith(QuackeryRunner.class)
 public class StringsTest {
-  @Test
-  public void unline_zero_lines_gives_empty_string() {
-    when(unlines());
-    thenReturned("");
+  @Nested
+  @DisplayName("unline()")
+  class Unline {
+    @Test
+    public void zero_lines_gives_empty_string() {
+      when(unlines());
+      thenReturned("");
+    }
+
+    @Test
+    public void one_line_gives_unchanged_line() {
+      when(unlines("abc"));
+      thenReturned("abc");
+    }
+
+    @Test
+    public void more_lines() {
+      when(unlines(
+          "abc",
+          "def",
+          "ghi"));
+      thenReturned("abc\ndef\nghi");
+    }
+
+    @Test
+    public void does_not_change_new_lines() {
+      when(unlines("abc\n123"));
+      thenReturned("abc\n123");
+    }
   }
 
-  @Test
-  public void unline_one_line_gives_unchanged_line() {
-    when(unlines("abc"));
-    thenReturned("abc");
+  @Nested
+  @DisplayName("escapedAndLimitedWithEllipsis()")
+  class EscapedAndLimitedWithEllipsis {
+    @Test
+    public void does_not_change_string_which_length_is_below_limit() {
+      when(escapedAndLimitedWithEllipsis("12345678", 10));
+      thenReturned("\"12345678\"");
+    }
+
+    @Test
+    public void adds_ellipsis_when_quoted_string_exceeds_limit() {
+      when(escapedAndLimitedWithEllipsis("123456789", 10));
+      thenReturned("\"12345\"...");
+    }
+
+    @Test
+    public void adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
+      when(escapedAndLimitedWithEllipsis("12345678\n", 10));
+      thenReturned("\"12345\"...");
+    }
   }
 
-  @Test
-  public void unline_more_lines() {
-    when(unlines(
-        "abc",
-        "def",
-        "ghi"));
-    thenReturned("abc\ndef\nghi");
+  @Nested
+  @DisplayName("escape()")
+  class Escape {
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "  ", "a", "ab", "abc", "abcd"})
+    public void does_not_change(String string) {
+      assertThat(escaped(string))
+          .isEqualTo(string);
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(EscapeArguments.class)
+    public void escapes(String unescaped, String escaped) {
+      assertThat(escaped(unescaped))
+          .isEqualTo(escaped);
+    }
   }
 
-  @Test
-  public void unline_doesnt_change_new_lines() {
-    when(unlines("abc\n123"));
-    thenReturned("abc\n123");
+  @Nested
+  @DisplayName("unescape()")
+  class Unescape {
+    @ParameterizedTest
+    @ValueSource(strings = {"", " ", "  ", "a", "ab", "abc", "abcd"})
+    public void does_not_change(String string) {
+      assertThat(unescaped(string))
+          .isEqualTo(string);
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(EscapeArguments.class)
+    public void unescapes(String unescaped, String escaped) {
+      assertThat(unescaped(escaped))
+          .isEqualTo(unescaped);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\\", "abc\\", "\\a", "\\ "})
+    public void fails_when_escape_code_is_missing(String string) {
+      assertCall(() -> unescaped(string))
+          .throwsException(UnescapingFailedException.class);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"\\x", "abc\\x"})
+    public void fails_when_escape_code_is_illegal(String string) {
+      assertCall(() -> unescaped(string))
+          .throwsException(UnescapingFailedException.class);
+    }
+
+    @Test
+    public void exception_points_to_illegal_escape_code() {
+      assertCall(() -> unescaped("abc\\x"))
+          .throwsException(illegalEscapeSequenceException(4));
+    }
   }
 
-  @Test
-  public void escaped_with_ellipsis_doesnt_change_string_which_length_is_below_limit() {
-    when(escapedAndLimitedWithEllipsis("12345678", 10));
-    thenReturned("\"12345678\"");
-  }
-
-  @Test
-  public void escaped_with_ellipsis_adds_ellipsis_when_quoted_string_exceeds_limit() {
-    when(escapedAndLimitedWithEllipsis("123456789", 10));
-    thenReturned("\"12345\"...");
-  }
-
-  @Test
-  public void escaped_with_ellipsis_adds_ellipsis_when_quoted_string_with_specials_exceeds_limit() {
-    when(escapedAndLimitedWithEllipsis("12345678\n", 10));
-    thenReturned("\"12345\"...");
-  }
-
-  @Quackery
-  public static Suite mainSuite() {
-    return suite("Test Strings")
-        .add(suite("unescapes escaped")
-            .addAll(createTestDataForUnescaping().entrySet().stream()
-                .map(e -> unescapes(e.getKey(), e.getValue()))
-                .collect(toList())))
-        .add(suite("preserves non escaped characters")
-            .add(unescapingDoesntChange(""))
-            .add(unescapingDoesntChange(" "))
-            .add(unescapingDoesntChange("  "))
-            .add(unescapingDoesntChange("a"))
-            .add(unescapingDoesntChange("ab"))
-            .add(unescapingDoesntChange("abc"))
-            .add(unescapingDoesntChange("abcd")))
-        .add(suite("fails when escaping")
-            .add(failsUnescaping("\\", 0))
-            .add(failsUnescaping("abc\\", 3))
-            .add(failsUnescaping("\\a", 1))
-            .add(failsUnescaping("\\ ", 1)))
-        .add(suite("escapes escaped")
-            .addAll(createTestDataForEscaping().entrySet().stream()
-                .map(e -> escapes(e.getKey(), e.getValue()))
-                .collect(toList())))
-        .add(suite("preserves non escaped characters")
-            .add(escapingDoesntChange(""))
-            .add(escapingDoesntChange(" "))
-            .add(escapingDoesntChange("  "))
-            .add(escapingDoesntChange("a"))
-            .add(escapingDoesntChange("ab"))
-            .add(escapingDoesntChange("abc"))
-            .add(escapingDoesntChange("abcd")));
-  }
-
-  private static HashMap<String, String> createTestDataForEscaping() {
-    return createTestData(escapeMapping());
-  }
-
-  private static HashMap<String, String> createTestDataForUnescaping() {
-    return createTestData(unescapeMapping());
+  static class EscapeArguments implements ArgumentsProvider {
+    @Override
+    public Stream<Arguments> provideArguments(ExtensionContext context) {
+      return createTestData(escapeMapping()).entrySet()
+          .stream()
+          .map(e -> Arguments.of(e.getKey(), e.getValue()));
+    }
   }
 
   private static HashMap<String, String> createTestData(ImmutableBiMap<String, String> mappings) {
@@ -129,10 +159,6 @@ public class StringsTest {
     return conversionMap;
   }
 
-  private static ImmutableBiMap<String, String> unescapeMapping() {
-    return escapeMapping().inverse();
-  }
-
   private static ImmutableBiMap<String, String> escapeMapping() {
     return ImmutableBiMap.<String, String>builder()
         .put("\t", "\\t")
@@ -144,47 +170,5 @@ public class StringsTest {
         .put("\\", "\\\\")
         .put("", "")
         .build();
-  }
-
-  private static Case escapingDoesntChange(String escaped) {
-    return escapes(escaped, escaped);
-  }
-
-  private static Case escapes(String string, String escaped) {
-    return newCase(format("[%s] should be escaped as [%s]", string, escaped),
-        () -> assertEquals(escaped, escaped(string)));
-  }
-
-  private static Case unescapingDoesntChange(String escaped) {
-    return unescapes(escaped, escaped);
-  }
-
-  private static Case unescapes(String escaped, String unescaped) {
-    return newCase(format("[%s] should be unescaped", escaped),
-        () -> assertEquals(unescaped, unescaped(escaped)));
-  }
-
-  private static org.quackery.Test failsUnescaping(String escaped, int index) {
-    return suite(escaped)
-        .add(failsWithException(escaped))
-        .add(failsAtIndex(escaped, index));
-  }
-
-  private static org.quackery.Test failsWithException(String escaped) {
-    return expect(UnescapingFailedException.class,
-        newCase(format("Unescaping [%s] should fail", escaped), () -> unescaped(escaped)));
-  }
-
-  private static org.quackery.Test failsAtIndex(String escaped, int index) {
-    return newCase(format("at index %d", index), () -> {
-      try {
-        unescaped(escaped);
-        throw new AssumeException();
-      } catch (UnescapingFailedException e) {
-        assertEquals(index, e.charIndex());
-      } catch (RuntimeException e) {
-        throw new AssumeException(e);
-      }
-    });
   }
 }

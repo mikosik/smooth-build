@@ -1,5 +1,8 @@
 package org.smoothbuild.util;
 
+import static org.smoothbuild.util.UnescapingFailedException.illegalEscapeSequenceException;
+import static org.smoothbuild.util.UnescapingFailedException.missingEscapeCodeException;
+
 public class Strings {
 
   private static final char TAB = '\t';
@@ -115,8 +118,7 @@ public class Strings {
       if (current == BACKSLASH) {
         stringIndex++;
         if (stringIndex == string.length()) {
-          throw new UnescapingFailedException(stringIndex - 1,
-              "Missing escape code after backslash \\");
+          throw missingEscapeCodeException(stringIndex - 1);
         }
         result[resultIndex] = convertEscapeCodeToChar(string.charAt(stringIndex), stringIndex);
       } else {
@@ -145,8 +147,7 @@ public class Strings {
       case '\\':
         return BACKSLASH;
       default:
-        throw new UnescapingFailedException(charIndex,
-            "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+        throw illegalEscapeSequenceException(charIndex);
     }
   }
 }
