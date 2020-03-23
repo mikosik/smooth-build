@@ -1,9 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -41,7 +39,8 @@ public class RecursivePathsIteratorTest {
   public void is_empty_when_dir_doesnt_exist() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
     Path path = path("my/file");
-    assertFalse(recursivePathsIterator(fileSystem, path).hasNext());
+    assertThat(recursivePathsIterator(fileSystem, path).hasNext())
+        .isFalse();
   }
 
   @Test
@@ -81,7 +80,8 @@ public class RecursivePathsIteratorTest {
     while (iterator.hasNext()) {
       created.add(iterator.next().value());
     }
-    assertThat(created, containsInAnyOrder(expectedNames));
+    assertThat(created)
+        .containsExactly(expectedNames);
   }
 
   private void createFiles(FileSystem fileSystem, String rootDir, String... names) throws
