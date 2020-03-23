@@ -22,9 +22,8 @@ import static org.smoothbuild.lang.object.type.TestingTypes.blob;
 import static org.smoothbuild.lang.object.type.TestingTypes.nothing;
 import static org.smoothbuild.lang.object.type.TestingTypes.person;
 import static org.smoothbuild.lang.object.type.TestingTypes.string;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import java.util.List;
 import java.util.Map;
@@ -309,8 +308,8 @@ public class GenericTypeMapTest {
     return newCase(
         "types=(" + typesString + "), actual=(" + actualStrings + ") fails with IAE",
         () -> {
-          when(() -> inferMapping(types, actualTypes));
-          thenThrown(IllegalArgumentException.class);
+          assertCall(() -> inferMapping(types, actualTypes))
+              .throwsException(IllegalArgumentException.class);
         });
   }
 
