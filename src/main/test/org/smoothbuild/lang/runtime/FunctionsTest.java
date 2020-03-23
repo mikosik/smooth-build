@@ -1,110 +1,103 @@
 package org.smoothbuild.lang.runtime;
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.smoothbuild.util.Sets.set;
-import static org.testory.Testory.given;
-import static org.testory.Testory.givenTest;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Collection;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.smoothbuild.lang.base.Function;
 
 public class FunctionsTest {
-  private Functions functions;
-  private Function function;
-  private Function function2;
-  private String name;
-
-  @BeforeEach
-  public void before() {
-    givenTest(this);
+  @Test
+  public void contains() {
+    Functions functions = new Functions();
+    functions.add(function("name"));
+    assertThat(functions.contains("name"))
+        .isTrue();
   }
 
   @Test
-  public void contains() throws Exception {
-    given(willReturn(name), function).name();
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(functions.contains(name));
-    thenReturned(true);
+  public void get() {
+    Functions functions = new Functions();
+    Function function = function("name");
+    functions.add(function);
+    assertThat(functions.get("name"))
+        .isSameInstanceAs(function);
   }
 
   @Test
-  public void get() throws Exception {
-    given(willReturn(name), function).name();
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(functions.get(name));
-    thenReturned(function);
+  public void getting_unknown_function_fails() {
+    Functions functions = new Functions();
+    functions.add(function("name"));
+    assertCall(() -> functions.get("missingFunction"))
+        .throwsException(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
+        + "Available functions: [name]"));
   }
 
   @Test
-  public void getting_unknown_function_fails() throws Exception {
-    given(willReturn("functionName"), function).name();
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(() -> functions.get("missingFunction"));
-    thenThrown(exception(new IllegalArgumentException("Cannot find function 'missingFunction'.\n"
-        + "Available functions: [functionName]")));
-  }
-
-  @Test
-  public void adding_function_with_same_name_twice_is_forbidden() throws Exception {
-    given(willReturn(name), function).name();
-    given(willReturn(name), function2).name();
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(() -> functions.add(function2));
-    thenThrown(IllegalArgumentException.class);
+  public void adding_function_with_same_name_twice_is_forbidden() {
+    Functions functions = new Functions();
+    functions.add(function("name"));
+    assertCall(() -> functions.add(function("name")))
+        .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void names_returns_collection_that_forbids_adding_elements() {
-    given(functions = new Functions());
-    when(functions.names()).remove("name");
-    thenThrown(UnsupportedOperationException.class);
+    Functions functions = new Functions();
+    Collection<String> names = functions.names();
+    assertCall(() -> names.remove("name"))
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
   public void all_returns_unmodifiable_collection() {
-    given(functions = new Functions());
-    when(functions.all()).remove(function);
-    thenThrown(UnsupportedOperationException.class);
+    Functions functions = new Functions();
+    Collection<Function> all = functions.all();
+    assertCall(() -> all.remove(function("name")))
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
   public void all_contains_added_function() {
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(functions.all());
-    thenReturned(hasItem(function));
+    Functions functions = new Functions();
+    Function function = function("name");
+    functions.add(function);
+    assertThat(functions.all())
+        .contains(function);
   }
 
   @Test
-  public void name_to_function_map_is_unmodifiable() throws Exception {
-    given(functions = new Functions());
-    when(() -> functions.nameToFunctionMap().remove("abc"));
-    thenThrown(UnsupportedOperationException.class);
+  public void name_to_function_map_is_unmodifiable() {
+    Functions functions = new Functions();
+    Map<String, Function> map = functions.nameToFunctionMap();
+    assertCall(() -> map.remove("abc"))
+        .throwsException(UnsupportedOperationException.class);
   }
 
   @Test
-  public void name_to_function_map_is_empty_initially() throws Exception {
-    given(functions = new Functions());
-    when(() -> functions.nameToFunctionMap().keySet());
-    thenReturned(set());
+  public void name_to_function_map_is_empty_initially() {
+    Functions functions = new Functions();
+    assertThat(functions.nameToFunctionMap().keySet())
+        .isEmpty();
   }
 
   @Test
-  public void names_to_function_map_contains_name_of_function_that_was_added()
-      throws Exception {
-    given(functions = new Functions());
-    given(functions).add(function);
-    when(() -> functions.nameToFunctionMap().get(function.name()));
-    thenReturned(function);
+  public void names_to_function_map_contains_name_of_function_that_was_added() {
+    Functions functions = new Functions();
+    Function function = function("name");
+    functions.add(function);
+    assertThat(functions.nameToFunctionMap().get(function.name()))
+        .isSameInstanceAs(function);
+  }
+
+  private static Function function(String name) {
+    Function function = mock(Function.class);
+    Mockito.when(function.name()).thenReturn(name);
+    return function;
   }
 }
