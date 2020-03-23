@@ -1,47 +1,42 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import org.junit.jupiter.api.Test;
 
 public class AstTest {
-  private Ast ast;
-  private FuncNode func;
-
   @Test
-  public void contains_function_passed_to_constructor() throws Exception {
-    given(func = function("name"));
-    given(ast = new Ast(list(), list(func)));
-    when(() -> ast.containsFunc("name"));
-    thenReturned(true);
+  public void contains_function_passed_to_constructor() {
+    FuncNode func = function("name");
+    Ast ast = new Ast(list(), list(func));
+    assertThat(ast.containsFunc("name"))
+        .isTrue();
   }
 
   @Test
-  public void does_not_contain_function_not_passed_to_constructor() throws Exception {
-    given(ast = new Ast(list(), list()));
-    when(() -> ast.containsFunc("name"));
-    thenReturned(false);
+  public void does_not_contain_function_not_passed_to_constructor() {
+    Ast ast = new Ast(list(), list());
+    assertThat(ast.containsFunc("name"))
+        .isFalse();
   }
 
   @Test
-  public void function_passed_to_constructor_can_be_retrieved() throws Exception {
-    given(func = function("name"));
-    given(ast = new Ast(list(), list(func)));
-    when(() -> ast.func("name"));
-    thenReturned(func);
+  public void function_passed_to_constructor_can_be_retrieved() {
+    FuncNode func = function("name");
+    Ast ast = new Ast(list(), list(func));
+    assertThat(ast.func("name"))
+        .isEqualTo(func);
   }
 
   @Test
-  public void retrieving_function_not_contained_causes_exception() throws Exception {
-    given(ast = new Ast(list(), list()));
-    when(() -> ast.func("name"));
-    thenThrown(IllegalStateException.class);
+  public void retrieving_function_not_contained_causes_exception() {
+    Ast ast = new Ast(list(), list());
+    assertCall(() -> ast.func("name"))
+        .throwsException(IllegalStateException.class);
   }
 
   private static FuncNode function(String name) {
