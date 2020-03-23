@@ -1,9 +1,8 @@
 package org.smoothbuild.lang.object.type;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -13,7 +12,7 @@ import org.smoothbuild.testing.TestingContext;
 
 public class TypeStableHashTest extends TestingContext {
   @Test
-  public void hashes_of_types_are_stable() throws Exception {
+  public void hashes_of_types_are_stable() {
     assertHash(typeType(), "7b5ffbdc620f77f806320ba5562ccfcafae2214b");
     assertHash(boolType(), "912e97481a6f232997c26729f48c14d33540c9e1");
     assertHash(stringType(), "7561a6b22d5fe8e18dec31904e0e9cdf6644ca96");
@@ -33,8 +32,8 @@ public class TypeStableHashTest extends TestingContext {
         new Field(objectDb.blobType(), "data", unknownLocation())));
   }
 
-  private void assertHash(ConcreteType type, String hash) {
-    when(() -> type.hash());
-    thenReturned(Hash.decode(hash));
+  private static void assertHash(ConcreteType type, String hash) {
+    assertThat(type.hash())
+        .isEqualTo(Hash.decode(hash));
   }
 }
