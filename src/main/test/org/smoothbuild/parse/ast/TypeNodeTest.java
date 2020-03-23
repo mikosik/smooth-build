@@ -1,13 +1,11 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
 import static org.smoothbuild.lang.base.Location.location;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 
@@ -22,10 +20,9 @@ import org.smoothbuild.lang.base.Location;
 @RunWith(QuackeryRunner.class)
 public class TypeNodeTest {
   private static final Location LOCATION = location(Paths.get("file.txt"), 3);
-  private TypeNode typeNode;
 
   @Quackery
-  public static Suite is_array() throws Exception {
+  public static Suite is_array() {
     return suite("isArray")
         .add(testIsNotArray(new TypeNode("MyType", LOCATION)))
         .add(testIsNotArray(new TypeNode("a", LOCATION)))
@@ -43,22 +40,22 @@ public class TypeNodeTest {
 
   @Test
   public void node_with_generic_name_is_generic() {
-    given(typeNode = new TypeNode("B", LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(true);
+    TypeNode typeNode = new TypeNode("B", LOCATION);
+    assertThat(typeNode.isGeneric())
+        .isTrue();
   }
 
   @Test
   public void node_with_non_generic_name_is_not_generic() {
-    given(typeNode = new TypeNode("MyType", LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(false);
+    TypeNode typeNode = new TypeNode("MyType", LOCATION);
+    assertThat(typeNode.isGeneric())
+        .isFalse();
   }
 
   @Test
   public void type_node_core_type_is_that_node() {
-    given(typeNode = new TypeNode("MyType", LOCATION));
-    when(() -> typeNode.coreType());
-    thenReturned(typeNode);
+    TypeNode typeNode = new TypeNode("MyType", LOCATION);
+    assertThat(typeNode.coreType())
+        .isEqualTo(typeNode);
   }
 }
