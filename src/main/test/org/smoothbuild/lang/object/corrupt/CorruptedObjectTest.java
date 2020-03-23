@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.object.corrupt;
 
-import static org.smoothbuild.testing.common.ExceptionMatcher.exception;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
@@ -19,59 +19,53 @@ import org.smoothbuild.lang.object.db.ObjectDbException;
 import okio.ByteString;
 
 public class CorruptedObjectTest extends AbstractCorruptedTestCase {
-  private Hash instanceHash;
-  private Hash typeHash;
-
   @Test
-  public void learning_test_create_any_value() {
+  public void learning_test_create_any_value() throws Exception {
     /*
      * This test makes sure that other tests in this class use proper scheme to save smooth value
      * in HashedDb.
      */
-    given(() -> instanceHash =
+    Hash instanceHash =
         hash(
             hash(stringType()),
-            hash("aaa")));
-    when(() -> ((SString) objectDb().get(instanceHash)).jValue());
-    thenReturned("aaa");
+            hash("aaa"));
+    assertThat(((SString) objectDb().get(instanceHash)).jValue())
+        .isEqualTo("aaa");
   }
 
-  @Test
-  public void object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted() throws
-      Exception {
-    for (int i = 0; i <= Hash.hashesSize() * 3 + 1; i++) {
-      if (i % Hash.hashesSize() != 0) {
-        run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(i);
-      }
-    }
+  public static IntStream illegal_array_byte_sizes() {
+    return IntStream.rangeClosed(1, Hash.hashesSize() * 3 + 1)
+        .filter(i -> i % Hash.hashesSize() != 0);
   }
 
-  private void run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(
+  @ParameterizedTest
+  @MethodSource("illegal_array_byte_sizes")
+  public void run_object_which_merkle_root_byte_count_is_not_multiple_of_hash_size_is_corrupted(
       int byteCount) throws IOException, HashedDbException {
-    given(instanceHash =
-        hash(ByteString.of(new byte[byteCount])));
-    when(() -> objectDb().get(instanceHash));
-    thenThrown(exception(new ObjectDbException(instanceHash,
-        new DecodingHashSequenceException(instanceHash))));
+    Hash instanceHash =
+        hash(ByteString.of(new byte[byteCount]));
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash))
+        .withCause(new DecodingHashSequenceException(instanceHash));
   }
 
   @Test
-  public void object_which_type_is_corrupted_is_corrupted() {
-    given(() -> typeHash = Hash.of("not a type"));
-    given(() -> instanceHash =
+  public void object_which_type_is_corrupted_is_corrupted() throws Exception {
+    Hash typeHash = Hash.of("not a type");
+    Hash instanceHash =
         hash(
             typeHash,
-            hash("aaa")));
-    when(() -> objectDb().get(instanceHash));
-    thenThrown(exception(new ObjectDbException(instanceHash,
-        new ObjectDbException(typeHash, (Exception) null))));
+            hash("aaa"));
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash))
+        .withCause(new ObjectDbException(typeHash));
   }
 
   @Test
   public void reading_elements_from_not_stored_object_throws_exception() {
-    given(instanceHash = Hash.of(33));
-    when(() -> objectDb().get(instanceHash));
-    thenThrown(exception(
-        new ObjectDbException(instanceHash, new NoSuchDataException(instanceHash))));
+    Hash instanceHash = Hash.of(33);
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash))
+        .withCause(new NoSuchDataException(instanceHash));
   }
 }
