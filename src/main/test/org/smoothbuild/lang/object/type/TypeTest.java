@@ -31,9 +31,8 @@ import static org.smoothbuild.lang.object.type.TestingTypes.nothing;
 import static org.smoothbuild.lang.object.type.TestingTypes.person;
 import static org.smoothbuild.lang.object.type.TestingTypes.string;
 import static org.smoothbuild.lang.object.type.TestingTypes.type;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import java.util.List;
 
@@ -1919,8 +1918,8 @@ public class TypeTest {
         "actualCoreTypeWhenAssignedFrom " + type.name() + ", " + assigned.name()
             + " fails with IAE",
         () -> {
-          when(() -> type.actualCoreTypeWhenAssignedFrom(assigned));
-          thenThrown(IllegalArgumentException.class);
+          assertCall(() -> type.actualCoreTypeWhenAssignedFrom(assigned))
+              .throwsException(IllegalArgumentException.class);
         });
   }
 
