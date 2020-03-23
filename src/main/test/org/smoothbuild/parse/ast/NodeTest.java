@@ -1,11 +1,9 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.location;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Paths;
 import java.util.NoSuchElementException;
@@ -13,27 +11,26 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 public class NodeTest {
-  private Node node;
-
   @Test
   public void set_attribute_can_be_retrieved() {
-    given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    when(() -> node.set(String.class, "abc"));
-    thenEqual(node.get(String.class), "abc");
+    Node node = new Node(location(Paths.get("script.smooth"), 1));
+    node.set(String.class, "abc");
+    assertThat(node.get(String.class))
+        .isEqualTo("abc");
   }
 
   @Test
-  public void setting_null_is_allowed() throws Exception {
-    given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    given(node).set(String.class, null);
-    when(() -> node.get(String.class));
-    thenReturned(null);
+  public void setting_null_is_allowed() {
+    Node node = new Node(unknownLocation());
+    node.set(String.class, null);
+    assertThat(node.get(String.class))
+        .isNull();
   }
 
   @Test
-  public void getting_nonexistent_attribute_fails() throws Exception {
-    given(node = new Node(location(Paths.get("script.smooth"), 1)));
-    when(() -> node.get(String.class));
-    thenThrown(NoSuchElementException.class);
+  public void getting_nonexistent_attribute_fails() {
+    Node node = new Node(unknownLocation());
+    assertCall(() -> node.get(String.class))
+        .throwsException(NoSuchElementException.class);
   }
 }
