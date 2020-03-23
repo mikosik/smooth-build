@@ -12,7 +12,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public abstract class Maybe<E> {
 
@@ -129,7 +128,9 @@ public abstract class Maybe<E> {
       if (param.hasValue()) {
         return appendErrorsIfExist(consumer.apply(value, param.value()));
       } else {
-        return (Maybe<E>) param;
+        @SuppressWarnings("unchecked")
+        Maybe<E> result = (Maybe<E>) param;
+        return result;
       }
     }
 
@@ -156,7 +157,9 @@ public abstract class Maybe<E> {
       if (param.hasValue()) {
         return function.apply(value, param.value());
       } else {
-        return (Maybe<R>) param;
+        @SuppressWarnings("unchecked")
+        Maybe<R> result = (Maybe<R>) param;
+        return result;
       }
     }
 
@@ -165,17 +168,18 @@ public abstract class Maybe<E> {
       if (param.hasValue()) {
         return value(function.apply(value, param.value()));
       } else {
-        return (Maybe<R>) param;
+        @SuppressWarnings("unchecked")
+        Maybe<R> result = (Maybe<R>) param;
+        return result;
       }
     }
 
     @Override
     public boolean equals(Object object) {
-      return object instanceof ValueMaybe && equals((ValueMaybe<E>) object);
-    }
-
-    public boolean equals(ValueMaybe<E> that) {
-      return Objects.equals(value, that.value);
+      @SuppressWarnings("unchecked")
+      boolean result = object instanceof ValueMaybe &&
+          Objects.equals(value, ((ValueMaybe<E>) object).value);
+      return result;
     }
 
     @Override
@@ -244,11 +248,13 @@ public abstract class Maybe<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <R> Maybe<R> map(Function<E, Maybe<R>> function) {
       return (Maybe<R>) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <R> Maybe<R> mapValue(Function<E, R> function) {
       return (Maybe<R>) this;
     }
@@ -265,11 +271,8 @@ public abstract class Maybe<E> {
 
     @Override
     public boolean equals(Object object) {
-      return object instanceof ErrorMaybe && equals((ErrorMaybe<?>) object);
-    }
-
-    public boolean equals(ErrorMaybe<?> that) {
-      return errors.equals(that.errors);
+      return object instanceof ErrorMaybe
+          && errors.equals(((ErrorMaybe<?>) object).errors);
     }
 
     @Override
@@ -284,7 +287,7 @@ public abstract class Maybe<E> {
   }
 
   private static ImmutableList<Object> concatErrors(List<?>... lists) {
-    Builder<Object> builder = ImmutableList.builder();
+    ImmutableList.Builder<Object> builder = ImmutableList.builder();
     for (List<?> list : lists) {
       builder.addAll(list);
     }

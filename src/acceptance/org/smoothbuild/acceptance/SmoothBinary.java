@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance;
 
 import static com.google.common.io.ByteStreams.toByteArray;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -28,8 +29,8 @@ public class SmoothBinary {
       Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
       Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
       int exitCode = process.waitFor();
-      String outputData = new String(inputStream.get());
-      String errorData = new String(errorStream.get());
+      String outputData = new String(inputStream.get(), UTF_8);
+      String errorData = new String(errorStream.get(), UTF_8);
       if (exitCode != 0) {
         throw new RuntimeException(
             "Running 'ant install-smooth' failed with following output\n"

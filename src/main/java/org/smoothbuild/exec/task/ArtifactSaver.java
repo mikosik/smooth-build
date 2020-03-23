@@ -87,11 +87,11 @@ public class ArtifactSaver {
 
     if (duplicatesDetector.hasDuplicates()) {
       Set<String> duplicates = duplicatesDetector.getDuplicateValues();
-      console.error(duplicatedPathsMessage(path, duplicates));
+      console.error(duplicatedPathsMessage(duplicates));
     }
   }
 
-  private String duplicatedPathsMessage(Path path, Set<String> duplicates) {
+  private String duplicatedPathsMessage(Set<String> duplicates) {
     String separator = "\n  ";
     String list = separator + join(separator, duplicates);
     return "Can't store array of Files as it contains files with duplicated paths:" + list;

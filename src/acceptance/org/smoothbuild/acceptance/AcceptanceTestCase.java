@@ -1,10 +1,10 @@
 package org.smoothbuild.acceptance;
 
-import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
 import static java.lang.String.join;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.Assert.fail;
@@ -44,7 +44,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 import okio.ByteString;
 
@@ -85,7 +84,7 @@ public abstract class AcceptanceTestCase {
   public void givenFile(String path, String content) throws IOException {
     File fullPath = file(path);
     fullPath.getParentFile().mkdirs();
-    try (FileWriter writer = new FileWriter(fullPath.toString())) {
+    try (FileWriter writer = new FileWriter(fullPath.toString(), UTF_8)) {
       content.getBytes(UTF_8);
       writer.write(content);
     }
@@ -149,8 +148,8 @@ public abstract class AcceptanceTestCase {
       Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
       Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
       exitCode = process.waitFor();
-      outputData = new String(inputStream.get());
-      errorData = new String(errorStream.get());
+      outputData = new String(inputStream.get(), UTF_8);
+      errorData = new String(errorStream.get(), UTF_8);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
@@ -162,7 +161,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public static ImmutableList<String> processArgs(String... params) {
-    Builder<String> builder = ImmutableList.builder();
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
     builder.add(SMOOTH_BINARY.toString());
     builder.addAll(list(params));
     return builder.build();

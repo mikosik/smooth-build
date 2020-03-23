@@ -36,7 +36,9 @@ public class Array extends SObjectImpl {
             + " but one of its elements has type " + object.type().q());
       }
     }
-    return (ImmutableList<T>) elements;
+    @SuppressWarnings("unchecked")
+    ImmutableList<T> result = (ImmutableList<T>) elements;
+    return result;
   }
 
   private <T extends SObject> void assertIsIterableAs(Class<T> clazz) {

@@ -31,7 +31,6 @@ import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class InferTypesAndParamAssignment {
   public static List<ParseError> inferTypesAndParamAssignment(SRuntime runtime, Ast ast) {
@@ -114,7 +113,7 @@ public class InferTypesAndParamAssignment {
       }
 
       private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
-        Builder<ParameterInfo> builder = ImmutableList.builder();
+        ImmutableList.Builder<ParameterInfo> builder = ImmutableList.builder();
         for (NamedNode param : params) {
           if (param.get(ParameterInfo.class) == null) {
             return null;
@@ -137,7 +136,7 @@ public class InferTypesAndParamAssignment {
               index, param.get(Type.class), param.name(), param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
           if (param.hasDefaultValue()) {
-            Type defaultValueType = param.defaultValue().get((Type.class));
+            Type defaultValueType = param.defaultValue().get(Type.class);
             if (defaultValueType != null && !type.isAssignableFrom(defaultValueType)) {
               errors.add(new ParseError(param, "Parameter '" + param.name()
                   + "' is of type " + type.q() + " so it cannot have default value of type "

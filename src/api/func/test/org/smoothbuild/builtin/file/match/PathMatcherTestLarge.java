@@ -1,5 +1,6 @@
 package org.smoothbuild.builtin.file.match;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.builtin.file.match.testing.MatchingPathsGenerator.generatePaths;
 import static org.smoothbuild.builtin.file.match.testing.PathPatternGenerator.generatePatterns;
@@ -20,12 +21,12 @@ import org.smoothbuild.io.fs.base.Path;
 public class PathMatcherTestLarge {
 
   @Test
-  public void test_generated_patterns() throws Exception {
+  public void test_generated_patterns() {
     generatePatterns(5, doTestPatternConsumer());
   }
 
   private static Consumer<String> doTestPatternConsumer() {
-    return new Consumer<String>() {
+    return new Consumer<>() {
       private int count = 0;
 
       @Override
@@ -39,6 +40,6 @@ public class PathMatcherTestLarge {
 
   private static Consumer<String> assertThatPathMatchesPatternConsumer(String pattern) {
     final Predicate<Path> matcher = pathMatcher(pattern);
-    return (path) -> matcher.test(path(path));
+    return (path) -> assertTrue(matcher.test(path(path)));
   }
 }

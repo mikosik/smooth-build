@@ -13,13 +13,11 @@ import org.smoothbuild.lang.object.db.ObjectDb;
  */
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
-  private final ObjectDb objectDb;
 
   public ConcreteArrayType(MerkleRoot merkleRoot, ConcreteArrayType superType,
       ConcreteType elemType, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, superType, "[" + elemType.name() + "]", Array.class, hashedDb, objectDb);
     this.elemType = checkNotNull(elemType);
-    this.objectDb = checkNotNull(objectDb);
   }
 
   @Override
@@ -40,7 +38,9 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
 
   @Override
   public <T extends Type> T replaceCoreType(T coreType) {
-    return (T) coreType.changeCoreDepthBy(coreDepth());
+    @SuppressWarnings("unchecked")
+    T result = (T) coreType.changeCoreDepthBy(coreDepth());
+    return result;
   }
 
   @Override

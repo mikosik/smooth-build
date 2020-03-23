@@ -32,50 +32,46 @@ public class SortByDependencies {
     Set<String> globalNames = new HashSet<>(functions.names());
     globalNames.addAll(map(ast.structs(), structNode -> structNode.constructor().name()));
     return sortByDependencies(
-        "Function call graph", funcs, funcToStackElem(), globalNames::contains);
+        "Function call graph", funcs, SortByDependencies::funcToStackElem, globalNames::contains);
   }
 
-  private static Function<FuncNode, StackElem> funcToStackElem() {
-    return func -> {
-      Set<Named> dependencies = new HashSet<>();
-      new AstVisitor() {
-        @Override
-        public void visitCall(CallNode call) {
-          super.visitCall(call);
-          dependencies.add(call);
-        }
-      }.visitFunc(func);
-      return new StackElem(func.name(), dependencies);
-    };
+  private static StackElem funcToStackElem(FuncNode func) {
+    Set<Named> dependencies = new HashSet<>();
+    new AstVisitor() {
+      @Override
+      public void visitCall(CallNode call) {
+        super.visitCall(call);
+        dependencies.add(call);
+      }
+    }.visitFunc(func);
+    return new StackElem(func.name(), dependencies);
   }
 
   public static Maybe<List<String>> sortByDependencies(ObjectFactory objectFactory, Ast ast) {
     List<StructNode> structs = ast.structs();
-    return sortByDependencies(
-        "Type hierarchy", structs, structToStackElem(), objectFactory::containsType);
+    return sortByDependencies("Type hierarchy", structs, SortByDependencies::structToStackElem,
+        objectFactory::containsType);
   }
 
-  private static Function<StructNode, StackElem> structToStackElem() {
-    return structNode -> {
-      Set<Named> dependencies = new HashSet<>();
-      new AstVisitor() {
-        @Override
-        public void visitField(int index, FieldNode field) {
-          super.visitField(index, field);
-          TypeNode type = field.type();
-          addToDependencies(type);
-        }
+  private static StackElem structToStackElem(StructNode structNode) {
+    Set<Named> dependencies = new HashSet<>();
+    new AstVisitor() {
+      @Override
+      public void visitField(int index, FieldNode field) {
+        super.visitField(index, field);
+        TypeNode type = field.type();
+        addToDependencies(type);
+      }
 
-        private void addToDependencies(TypeNode type) {
-          if (type.isArray()) {
-            addToDependencies(((ArrayTypeNode) type).elementType());
-          } else {
-            dependencies.add(type);
-          }
+      private void addToDependencies(TypeNode type) {
+        if (type.isArray()) {
+          addToDependencies(((ArrayTypeNode) type).elementType());
+        } else {
+          dependencies.add(type);
         }
-      }.visitStruct(structNode);
-      return new StackElem(structNode.name(), dependencies);
-    };
+      }
+    }.visitStruct(structNode);
+    return new StackElem(structNode.name(), dependencies);
   }
 
   private static <T extends Named> Maybe<List<String>> sortByDependencies(

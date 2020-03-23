@@ -60,7 +60,9 @@ public abstract class ConcreteType extends AbstractType implements SObject {
 
   @Override
   public List<ConcreteType> hierarchy() {
-    return (List<ConcreteType>) super.hierarchy();
+    @SuppressWarnings("unchecked")
+    List<ConcreteType> result = (List<ConcreteType>) super.hierarchy();
+    return result;
   }
 
   @Override
@@ -107,11 +109,8 @@ public abstract class ConcreteType extends AbstractType implements SObject {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof ConcreteType && equals((ConcreteType) object);
-  }
-
-  private boolean equals(ConcreteType type) {
-    return Objects.equals(hash(), type.hash());
+    return object instanceof ConcreteType
+        && Objects.equals(hash(), ((ConcreteType) object).hash());
   }
 
   @Override

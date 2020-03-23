@@ -45,11 +45,8 @@ public class InputClassFile extends SimpleJavaFileObject {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof InputClassFile && equals((InputClassFile) object);
-  }
-
-  private boolean equals(InputClassFile inputClassFile) {
-    return Objects.equals(file.get("path"), inputClassFile.file.get("path"));
+    return object instanceof InputClassFile
+        && Objects.equals(file.get("path"), ((InputClassFile) object).file.get("path"));
   }
 
   @Override

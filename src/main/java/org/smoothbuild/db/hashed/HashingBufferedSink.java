@@ -57,6 +57,7 @@ public class HashingBufferedSink implements BufferedSink {
     switch (pathState) {
       case NOTHING:
         fileSystem.move(tempPath, path);
+        return;
       case FILE:
         // nothing to do, we already stored data with such hash so its content must be equal
         return;
@@ -69,6 +70,7 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   @Override
+  @Deprecated
   public Buffer buffer() {
     return bufferedSink.getBuffer();
   }

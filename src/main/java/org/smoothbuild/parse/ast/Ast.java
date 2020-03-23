@@ -4,7 +4,6 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortByDependencies;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +11,8 @@ import java.util.stream.Collectors;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.util.Maybe;
+
+import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private List<StructNode> structs;
@@ -68,7 +69,7 @@ public class Ast {
           .stream()
           .map(nameToFuncMap::get)
           .collect(Collectors.toList());
-      return new ArrayList<>();
+      return ImmutableList.of();
     } else {
       return sortedNames.errors();
     }
@@ -82,7 +83,7 @@ public class Ast {
           .stream()
           .map(nameToStructMap::get)
           .collect(Collectors.toList());
-      return new ArrayList<>();
+      return ImmutableList.of();
     } else {
       return sortedNames.errors();
     }

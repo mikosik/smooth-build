@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ public class ThresholdRunnableTest {
     ThresholdRunnable thresholdRunnable = new ThresholdRunnable(3, runnable);
     invokeNTimes(2, thresholdRunnable);
 
-    verifyZeroInteractions(runnable);
+    verifyNoInteractions(runnable);
   }
 
   @Test

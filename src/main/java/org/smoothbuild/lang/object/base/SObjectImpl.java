@@ -37,11 +37,8 @@ public class SObjectImpl implements SObject {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof SObject && equals((SObject) object);
-  }
-
-  private boolean equals(SObject object) {
-    return Objects.equals(hash(), object.hash());
+    return object instanceof SObject
+        && Objects.equals(hash(), ((SObject) object).hash());
   }
 
   @Override

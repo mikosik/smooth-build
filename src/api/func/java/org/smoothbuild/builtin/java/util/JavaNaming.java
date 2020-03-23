@@ -6,8 +6,6 @@ import javax.tools.JavaFileObject.Kind;
 
 public class JavaNaming {
   private static final String CLASS_FILE_EXTENSION = Kind.CLASS.extension;
-  private static final Predicate<String> IS_CLASS_FILE = (string) -> string.endsWith(
-      CLASS_FILE_EXTENSION);
 
   public static String toBinaryName(String path) {
     int endIndex = path.length() - CLASS_FILE_EXTENSION.length();
@@ -25,6 +23,6 @@ public class JavaNaming {
   }
 
   public static Predicate<String> isClassFilePredicate() {
-    return IS_CLASS_FILE;
+    return (string) -> string.endsWith(CLASS_FILE_EXTENSION);
   }
 }

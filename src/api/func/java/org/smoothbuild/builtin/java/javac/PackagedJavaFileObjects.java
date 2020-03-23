@@ -18,7 +18,7 @@ public class PackagedJavaFileObjects {
       Iterable<Blob> libraryJars) throws IOException {
     Set<InputClassFile> result = new HashSet<>();
     for (Blob jarBlob : libraryJars) {
-      Array files = UnzipFunction.unzip(nativeApi, (jarBlob), isClassFilePredicate());
+      Array files = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
       for (Struct file : files.asIterable(Struct.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {

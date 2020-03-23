@@ -20,7 +20,7 @@ public class NamedNode extends Node implements Named {
     if (object == null) {
       return false;
     }
-    if (!(NamedNode.class.equals(object.getClass()))) {
+    if (!(object instanceof NamedNode)) {
       return false;
     }
     NamedNode that = (NamedNode) object;

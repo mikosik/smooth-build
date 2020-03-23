@@ -90,6 +90,7 @@ public class SetsTest {
     thenReturned(set("second"));
   }
 
+  @SafeVarargs
   private static <T> Set<T> set(T... elements) {
     return com.google.common.collect.Sets.newHashSet(elements);
   }

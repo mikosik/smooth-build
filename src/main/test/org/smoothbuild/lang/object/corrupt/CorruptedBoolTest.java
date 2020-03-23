@@ -58,6 +58,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         .withCause(new DecodingBooleanException(dataHash));
   }
 
+  @SuppressWarnings("unused")
   private static List<Byte> all_byte_values_except_zero_and_one() {
     return IntStream.rangeClosed(-128, 127)
         .filter(v -> v != 0 && v != 1)
@@ -70,7 +71,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   @MethodSource("all_byte_values_except_zero_and_one")
   public void bool_with_one_byte_data_not_equal_zero_nor_one_is_corrupted(byte value)
       throws Exception {
-    Hash dataHash = hash(ByteString.of((value)));
+    Hash dataHash = hash(ByteString.of(value));
     Hash instanceHash =
         hash(
             hash(boolType()),
