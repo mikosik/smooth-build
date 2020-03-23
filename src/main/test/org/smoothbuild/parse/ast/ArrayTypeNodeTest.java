@@ -1,69 +1,62 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.base.Location.location;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
-
-import java.nio.file.Paths;
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Location;
 
 public class ArrayTypeNodeTest {
-  private static final Location LOCATION = location(Paths.get("file.txt"), 3);
-  private TypeNode typeNode;
-  private TypeNode elementTypeNode;
-
   @Test
   public void array_node_with_generic_element_name_is_generic() {
-    given(typeNode = new ArrayTypeNode(new TypeNode("B", LOCATION), LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(true);
+    TypeNode typeNode = new ArrayTypeNode(new TypeNode("B", unknownLocation()), unknownLocation());
+    assertThat(typeNode.isGeneric())
+        .isTrue();
   }
 
   @Test
   public void array_node_with_non_generic_element_name_is_not_generic() {
-    given(typeNode = new ArrayTypeNode(new TypeNode("MyType", LOCATION), LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(false);
+    TypeNode typeNode = new ArrayTypeNode(new TypeNode("MyType", unknownLocation()),
+        unknownLocation());
+    assertThat(typeNode.isGeneric())
+        .isFalse();
   }
 
   @Test
   public void array_node_of_depth_2_with_generic_element_name_is_generic() {
-    given(typeNode = new ArrayTypeNode(
+    TypeNode typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
-            new TypeNode("B", LOCATION),
-            LOCATION),
-        LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(true);
+            new TypeNode("B", unknownLocation()),
+            unknownLocation()),
+        unknownLocation());
+    assertThat(typeNode.isGeneric())
+        .isTrue();
   }
 
   @Test
   public void array_node_of_depth_2_with_non_generic_element_name_is_not_generic() {
-    given(typeNode = new ArrayTypeNode(
+    TypeNode typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
-            new TypeNode("MyType", LOCATION),
-            LOCATION),
-        LOCATION));
-    when(() -> typeNode.isGeneric());
-    thenReturned(false);
+            new TypeNode("MyType", unknownLocation()),
+            unknownLocation()),
+        unknownLocation());
+    assertThat(typeNode.isGeneric())
+        .isFalse();
   }
 
   @Test
   public void array_type_node_core_type_is_element_node() {
-    given(elementTypeNode = new TypeNode("MyType", LOCATION));
-    given(typeNode = new ArrayTypeNode(elementTypeNode, LOCATION));
-    when(() -> typeNode.coreType());
-    thenReturned(elementTypeNode);
+    TypeNode elementTypeNode = new TypeNode("MyType", unknownLocation());
+    TypeNode typeNode = new ArrayTypeNode(elementTypeNode, unknownLocation());
+    assertThat(typeNode.coreType())
+        .isEqualTo(elementTypeNode);
   }
 
   @Test
   public void array_of_array_type_node_core_type_is_element_node() {
-    given(elementTypeNode = new TypeNode("MyType", LOCATION));
-    given(typeNode = new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, LOCATION), LOCATION));
-    when(() -> typeNode.coreType());
-    thenReturned(elementTypeNode);
+    TypeNode elementTypeNode = new TypeNode("MyType", unknownLocation());
+    TypeNode typeNode = new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, unknownLocation()),
+        unknownLocation());
+    assertThat(typeNode.coreType())
+        .isEqualTo(elementTypeNode);
   }
 }
