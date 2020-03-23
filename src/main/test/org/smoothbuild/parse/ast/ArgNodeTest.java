@@ -1,80 +1,70 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.base.Location.location;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
-
-import java.nio.file.Paths;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.testing.TestingContext;
 
 public class ArgNodeTest extends TestingContext {
-  private final Type string = stringType();
-  private final Location location = location(Paths.get("path"), 1);
-  private final String name = "arg-name";
-  private ArgNode arg;
-
   @Test
-  public void named_arg_has_name() throws Exception {
-    given(arg = new ArgNode(0, name, expr(string), location));
-    when(() -> arg.hasName());
-    thenReturned(true);
+  public void named_arg_has_name() {
+    ArgNode arg = new ArgNode(0, "name", expr(stringType()), unknownLocation());
+    assertThat(arg.hasName())
+        .isTrue();
   }
 
   @Test
-  public void nameless_arg_does_not_have_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(string), location));
-    when(() -> arg.hasName());
-    thenReturned(false);
+  public void nameless_arg_does_not_have_name() {
+    ArgNode arg = new ArgNode(0, null, expr(stringType()), unknownLocation());
+    assertThat(arg.hasName())
+        .isFalse();
   }
 
   @Test
-  public void nameless_arg_throws_exception_when_asked_for_name() throws Exception {
-    given(arg = new ArgNode(0, null, expr(string), location));
-    when(() -> arg.name());
-    thenThrown(IllegalStateException.class);
+  public void nameless_arg_throws_exception_when_asked_for_name() {
+    ArgNode arg = new ArgNode(0, null, expr(stringType()), unknownLocation());
+    assertCall(arg::name)
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
-  public void sanitized_name_of_named_argument_is_equal_its_name() throws Exception {
-    given(arg = new ArgNode(1, name, null, location));
-    when(arg).nameSanitized();
-    thenReturned(name.toString());
+  public void sanitized_name_of_named_argument_is_equal_its_name() {
+    ArgNode arg = new ArgNode(1, "name", null, unknownLocation());
+    assertThat(arg.nameSanitized())
+        .isEqualTo("name");
   }
 
   @Test
-  public void sanitized_name_of_nameless_argument_is_equal_to_nameless() throws Exception {
-    given(arg = new ArgNode(1, null, null, location));
-    when(arg).nameSanitized();
-    thenReturned("<nameless>");
+  public void sanitized_name_of_nameless_argument_is_equal_to_nameless() {
+    ArgNode arg = new ArgNode(1, null, null, unknownLocation());
+    assertThat(arg.nameSanitized())
+        .isEqualTo("<nameless>");
   }
 
   @Test
-  public void type_and_name_of_named_argument() throws Exception {
-    given(arg = new ArgNode(1, name, expr(string), location));
-    given(arg).set(Type.class, string);
-    when(arg).typeAndName();
-    thenReturned("String:" + name);
+  public void type_and_name_of_named_argument() {
+    ArgNode arg = new ArgNode(1, "name", expr(stringType()), unknownLocation());
+    arg.set(Type.class, stringType());
+    assertThat(arg.typeAndName())
+        .isEqualTo("String:" + "name");
   }
 
   @Test
-  public void nameless_argument_to_string() throws Exception {
-    given(arg = new ArgNode(1, null, expr(string), location));
-    given(arg).set(Type.class, string);
-    when(arg).typeAndName();
-    thenReturned("String:<nameless>");
+  public void nameless_argument_to_string() {
+    ArgNode arg = new ArgNode(1, null, expr(stringType()), unknownLocation());
+    arg.set(Type.class, stringType());
+    assertThat(arg.typeAndName())
+        .isEqualTo("String:<nameless>");
   }
 
   private static ExprNode expr(Type type) {
     ExprNode expr = mock(ExprNode.class);
-    given(willReturn(type), expr).get(Type.class);
+    when(expr.get(Type.class)).thenReturn(type);
     return expr;
   }
 }
