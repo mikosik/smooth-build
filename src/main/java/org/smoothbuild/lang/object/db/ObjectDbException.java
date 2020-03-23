@@ -4,6 +4,10 @@ import org.smoothbuild.db.hashed.Hash;
 
 public class ObjectDbException extends RuntimeException {
 
+  public ObjectDbException(Hash hash) {
+    this(hash, null, null);
+  }
+
   public ObjectDbException(Hash hash, Exception cause) {
     this(hash, null, cause);
   }
