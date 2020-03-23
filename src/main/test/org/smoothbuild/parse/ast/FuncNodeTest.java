@@ -1,36 +1,32 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Location;
 
 import com.google.common.testing.EqualsTester;
 
 public class FuncNodeTest {
-  private final Location location = location(Paths.get("script.smooth"), 1);
-  private FuncNode func;
 
   @Test
-  public void func_with_expression_is_not_native() throws Exception {
-    given(func = new FuncNode(mock(TypeNode.class), "name", list(), mock(ExprNode.class),
-        location));
-    when(() -> func.isNative());
-    thenReturned(false);
+  public void func_with_expression_is_not_native() {
+    FuncNode func = new FuncNode(typeNode(), "name", list(), exprNode(), unknownLocation());
+    assertThat(func.isNative())
+        .isFalse();
   }
 
   @Test
-  public void func_without_expression_is_native() throws Exception {
-    given(func = new FuncNode(new TypeNode("type", location), "name", list(), null, location));
-    when(() -> func.isNative());
-    thenReturned(true);
+  public void func_without_expression_is_native() {
+    FuncNode func = new FuncNode(new TypeNode("type", unknownLocation()), "name", list(), null,
+        unknownLocation());
+    assertThat(func.isNative())
+        .isTrue();
   }
 
   @Test
@@ -49,5 +45,13 @@ public class FuncNodeTest {
 
   private static FuncNode node(String name, int line) {
     return new FuncNode(null, name, list(), null, location(Paths.get("script.smooth"), line));
+  }
+
+  private static TypeNode typeNode() {
+    return mock(TypeNode.class);
+  }
+
+  private static ExprNode exprNode() {
+    return mock(ExprNode.class);
   }
 }
