@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Sets {
+  @SafeVarargs
   public static <E> Set<E> set(E... elements) {
     return Arrays.stream(elements).collect(toSet());
   }

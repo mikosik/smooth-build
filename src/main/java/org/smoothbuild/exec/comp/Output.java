@@ -35,12 +35,9 @@ public class Output {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof Output && equals((Output) object);
-  }
-
-  private boolean equals(Output output) {
-    return Objects.equals(value, output.value)
-        && Objects.equals(messages, output.messages);
+    return object instanceof Output
+        && Objects.equals(value, ((Output) object).value)
+        && Objects.equals(messages, ((Output) object).messages);
   }
 
   @Override

@@ -21,7 +21,9 @@ public class ReflectionUtil {
       String method, Object... args) {
     Object result = runReflexively(nativeApi, object, method, args);
     if (resultType.isInstance(result)) {
-      return (T) result;
+      @SuppressWarnings("unchecked")
+      T castResult = (T) result;
+      return castResult;
     }
     reportJunitError(nativeApi, "Call to " + fullMethodName(object, method)
         + " did not return instance of "

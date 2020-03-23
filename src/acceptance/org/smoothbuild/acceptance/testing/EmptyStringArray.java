@@ -7,6 +7,6 @@ import org.smoothbuild.lang.plugin.SmoothFunction;
 public class EmptyStringArray {
   @SmoothFunction("emptyStringArray")
   public static Array emptyStringArray(NativeApi nativeApi) {
-    return nativeApi.factory().arrayBuilder((nativeApi.factory()).stringType()).build();
+    return nativeApi.factory().arrayBuilder(nativeApi.factory().stringType()).build();
   }
 }

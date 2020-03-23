@@ -19,20 +19,23 @@ import okio.ByteString;
 public class RecursivePathsIteratorTest {
   @Test
   public void test() throws IOException {
-    doTestIterable("abc", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
-    doTestIterable("abc/xyz", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
-    doTestIterable("abc/xyz/prs", "1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt");
+    doTestIterable("abc",
+        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+    doTestIterable("abc/xyz",
+        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
+    doTestIterable("abc/xyz/prs",
+        List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"));
   }
 
-  private void doTestIterable(String rootDir, String... names) throws IOException {
+  private void doTestIterable(String rootDir, List<String> names) throws IOException {
     doTestIterable(rootDir, names, rootDir, names);
   }
 
   @Test
   public void iterates_subdirectory() throws Exception {
     doTestIterable(
-        "abc", new String[] {"1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"},
-        "abc/def", new String[] {"4.txt", "5.txt"});
+        "abc", List.of("1.txt", "2.txt", "3.txt", "def/4.txt", "def/5.txt", "ghi/6.txt"),
+        "abc/def", List.of("4.txt", "5.txt"));
   }
 
   @Test
@@ -60,7 +63,7 @@ public class RecursivePathsIteratorTest {
   @Test
   public void throws_exception_when_dir_disappears_during_iteration() throws Exception {
     FileSystem fileSystem = new MemoryFileSystem();
-    createFiles(fileSystem, "dir", "1.txt", "2.txt", "subdir/somefile");
+    createFiles(fileSystem, "dir", List.of("1.txt", "2.txt", "subdir/somefile"));
 
     PathIterator iterator = recursivePathsIterator(fileSystem, path("dir"));
     iterator.next();
@@ -70,8 +73,8 @@ public class RecursivePathsIteratorTest {
         "FileSystem changed when iterating tree of directory 'dir'. Cannot find 'dir/subdir'."));
   }
 
-  private void doTestIterable(String rootDir, String[] names, String expectedRootDir,
-      String[] expectedNames) throws IOException {
+  private void doTestIterable(String rootDir, List<String> names, String expectedRootDir,
+      List<String> expectedNames) throws IOException {
     FileSystem fileSystem = new MemoryFileSystem();
     createFiles(fileSystem, rootDir, names);
 
@@ -81,10 +84,10 @@ public class RecursivePathsIteratorTest {
       created.add(iterator.next().value());
     }
     assertThat(created)
-        .containsExactly(expectedNames);
+        .containsExactlyElementsIn(expectedNames);
   }
 
-  private void createFiles(FileSystem fileSystem, String rootDir, String... names) throws
+  private void createFiles(FileSystem fileSystem, String rootDir, List<String> names) throws
       IOException {
     for (String name : names) {
       Path path = path(rootDir).append(path(name));

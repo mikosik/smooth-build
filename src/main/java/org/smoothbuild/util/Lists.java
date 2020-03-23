@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Lists {
+  @SafeVarargs
   public static <E> List<E> list(E... elements) {
     return Arrays.asList(elements);
   }

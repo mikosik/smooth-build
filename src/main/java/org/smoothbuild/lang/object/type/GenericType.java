@@ -57,11 +57,8 @@ public class GenericType extends AbstractType {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof GenericType && equals((GenericType) object);
-  }
-
-  private boolean equals(GenericType that) {
-    return this.name().equals(that.name());
+    return object instanceof GenericType
+        && this.name().equals(((GenericType) object).name());
   }
 
   @Override

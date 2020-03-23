@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableMap;
  */
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
-  private final ObjectDb objectDb;
 
   public StructType(MerkleRoot merkleRoot, String name, Iterable<Field> fields,
       HashedDb hashedDb, ObjectDb objectDb) {
@@ -37,7 +36,6 @@ public class StructType extends ConcreteType {
       HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, calculateSuperType(fields), name, Struct.class, hashedDb, objectDb);
     this.fields = checkNotNull(fields);
-    this.objectDb = checkNotNull(objectDb);
   }
 
   private static ConcreteType calculateSuperType(ImmutableMap<String, Field> fields) {

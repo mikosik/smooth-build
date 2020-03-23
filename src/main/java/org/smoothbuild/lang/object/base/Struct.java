@@ -14,7 +14,6 @@ import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * This class is immutable.
@@ -50,7 +49,7 @@ public class Struct extends SObjectImpl {
         ImmutableMap<String, Field> fieldTypes = type().fields();
         List<Hash> hashes = hashedDb.readHashes(dataHash(), fieldTypes.size());
         int i = 0;
-        Builder<String, SObject> builder = ImmutableMap.builder();
+        ImmutableMap.Builder<String, SObject> builder = ImmutableMap.builder();
         for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
           SObject object = objectDb.get(hashes.get(i));
           if (!entry.getValue().type().equals(object.type())) {

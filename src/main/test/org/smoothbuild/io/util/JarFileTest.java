@@ -6,10 +6,8 @@ import java.io.File;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.io.fs.base.Path;
 
 import com.google.common.io.Files;
-import com.google.common.truth.Truth;
 
 import okio.ByteString;
 
@@ -31,7 +29,7 @@ public class JarFileTest {
   public void path_passed_during_construction_is_returned_by_path() throws Exception {
     file = File.createTempFile("temp", ".tmp");
     jarFile = JarFile.jarFile(file.toPath());
-    Truth.<Path>assertThat(jarFile.path())
+    assertThat((Object) jarFile.path())
         .isEqualTo(file.toPath());
   }
 }

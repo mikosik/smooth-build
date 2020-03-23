@@ -90,6 +90,7 @@ public class Hash extends ByteString {
     return function().bits() / 8;
   }
 
+  @SuppressWarnings("deprecation")
   private static HashFunction function() {
     return Hashing.sha1();
   }

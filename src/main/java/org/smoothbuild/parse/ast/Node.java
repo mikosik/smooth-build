@@ -22,7 +22,9 @@ public class Node {
     if (!map().containsKey(clazz)) {
       throw new NoSuchElementException(clazz.getName());
     }
-    return (T) map().get(clazz);
+    @SuppressWarnings("unchecked")
+    T result = (T) map().get(clazz);
+    return result;
   }
 
   public <T> void set(Class<T> clazz, T value) {

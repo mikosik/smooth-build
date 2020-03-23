@@ -24,7 +24,7 @@ public class FilterFunction {
       nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
       return null;
     }
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder((nativeApi.factory()).fileType());
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
 
     for (Struct file : files.asIterable(Struct.class)) {
       if (filter.test(path(((SString) file.get("path")).jValue()))) {

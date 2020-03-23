@@ -10,7 +10,6 @@ import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class PathArgValidatorTest extends TestingContext {
 
@@ -35,7 +34,7 @@ public class PathArgValidatorTest extends TestingContext {
   }
 
   private static List<String> listOfCorrectProjectPaths() {
-    Builder<String> builder = ImmutableList.builder();
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("//");
 
@@ -55,7 +54,7 @@ public class PathArgValidatorTest extends TestingContext {
   }
 
   private static ImmutableList<String> listOfInvalidProjectPaths() {
-    Builder<String> builder = ImmutableList.builder();
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("");
     builder.add(".");

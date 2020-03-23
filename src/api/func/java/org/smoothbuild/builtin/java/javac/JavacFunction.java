@@ -6,9 +6,6 @@ import static org.smoothbuild.builtin.java.javac.PackagedJavaFileObjects.classes
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -74,7 +71,7 @@ public class JavacFunction {
          */
         if (!inputSourceFiles.iterator().hasNext()) {
           nativeApi.log().warning("Param 'srcs' is empty list.");
-          return nativeApi.factory().arrayBuilder((nativeApi.factory()).fileType()).build();
+          return nativeApi.factory().arrayBuilder(nativeApi.factory().fileType()).build();
         }
 
         // run compilation task
@@ -118,11 +115,5 @@ public class JavacFunction {
       }
       return result;
     }
-  }
-
-  public static <T> Set<T> unmodifiableSet(T... elements) {
-    Set<T> set = new HashSet<>(elements.length);
-    Collections.addAll(set, elements);
-    return Collections.unmodifiableSet(set);
   }
 }

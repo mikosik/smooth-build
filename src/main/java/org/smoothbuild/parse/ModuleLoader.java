@@ -23,7 +23,6 @@ import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class ModuleLoader {
   public static List<?> loadModule(SRuntime runtime, Path script) {
@@ -49,7 +48,7 @@ public class ModuleLoader {
   }
 
   private static Constructor loadConstructor(StructNode struct) {
-    Builder<Parameter> builder = ImmutableList.builder();
+    ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
     List<FieldNode> fields = struct.fields();
     for (int i = 0; i < fields.size(); i++) {
       FieldNode field = fields.get(i);

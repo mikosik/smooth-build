@@ -249,7 +249,9 @@ public class ObjectDb {
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
-    return (T) requireNonNullElse(typeCache.putIfAbsent(type.hash(), type), type);
+    @SuppressWarnings("unchecked")
+    T result = (T) requireNonNullElse(typeCache.putIfAbsent(type.hash(), type), type);
+    return result;
   }
 
   // methods for creating type's SObjects

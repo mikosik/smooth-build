@@ -22,7 +22,6 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -56,7 +55,7 @@ public class DiskFileSystem implements FileSystem {
   public Iterable<Path> files(Path dir) throws IOException {
     assertPathIsDir(this, dir);
     try (DirectoryStream<java.nio.file.Path> stream = Files.newDirectoryStream(jdkPath(dir))) {
-      Builder<Path> builder = ImmutableList.builder();
+      ImmutableList.Builder<Path> builder = ImmutableList.builder();
       for (java.nio.file.Path path : stream) {
         builder.add(path(path.getFileName().toString()));
       }

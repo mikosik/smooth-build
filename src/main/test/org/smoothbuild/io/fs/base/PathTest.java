@@ -23,7 +23,6 @@ import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.testing.EqualsTester;
 
 @RunWith(QuackeryRunner.class)
@@ -252,7 +251,7 @@ public class PathTest {
   }
 
   public static List<String> listOfCorrectPaths() {
-    Builder<String> builder = ImmutableList.builder();
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("");
 
@@ -272,7 +271,7 @@ public class PathTest {
   }
 
   public static ImmutableList<String> listOfInvalidPaths() {
-    Builder<String> builder = ImmutableList.builder();
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("/");
     builder.add(".");
@@ -314,7 +313,7 @@ public class PathTest {
   }
 
   private static List<Path> listOfCorrectNonEqualPaths() {
-    Builder<Path> builder = ImmutableList.builder();
+    ImmutableList.Builder<Path> builder = ImmutableList.builder();
 
     builder.add(path(""));
     builder.add(path("abc"));

@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -60,7 +60,7 @@ public class FeederTest {
   public void added_consumer_is_not_called_when_no_value_is_set() {
     Consumer<String> consumer = consumerMock();
     feeder.addConsumer(consumer);
-    verifyZeroInteractions(consumer);
+    verifyNoInteractions(consumer);
   }
 
   @Test
@@ -102,6 +102,7 @@ public class FeederTest {
     });
   }
 
+  @SuppressWarnings("unchecked")
   private static Consumer<String> consumerMock() {
     return mock(Consumer.class);
   }

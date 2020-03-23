@@ -2,8 +2,6 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.Streams.stream;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 
 public class Messages {
@@ -13,7 +11,7 @@ public class Messages {
   public static final String INFO = "INFO";
   public static final String WARNING = "WARNING";
   public static final String ERROR = "ERROR";
-  private static final Set<String> SEVERITIES = ImmutableSet.of(ERROR, WARNING, INFO);
+  private static final ImmutableSet<String> SEVERITIES = ImmutableSet.of(ERROR, WARNING, INFO);
 
   public static boolean containsErrors(Array messages) {
     return stream(messages.asIterable(Struct.class))

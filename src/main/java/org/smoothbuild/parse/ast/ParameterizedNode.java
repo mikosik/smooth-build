@@ -11,7 +11,9 @@ public class ParameterizedNode extends NamedNode {
   }
 
   public List<? extends ParameterInfo> getParameterInfos() {
-    return get(List.class);
+    @SuppressWarnings("unchecked")
+    List<ParameterInfo> list = get(List.class);
+    return list;
   }
 
   public void setParameterInfos(List<? extends ParameterInfo> parameterInfos) {

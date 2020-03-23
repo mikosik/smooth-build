@@ -39,7 +39,7 @@ public class MatchingPathsGenerator {
       pattern = pattern + "/*";
     }
 
-    String[] parts = pattern.split("/");
+    String[] parts = pattern.split("/", -1);
     for (int i = 0; i < parts.length; i++) {
       if (i != 0) {
         result.add(list("/"));
