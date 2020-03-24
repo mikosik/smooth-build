@@ -1,59 +1,49 @@
 package org.smoothbuild.util;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class CollectionsTest {
-  private Collection<String> collection;
+  @Nested
+  class toMap {
+    @Test
+    public void non_empty_collection() {
+      assertThat(Collections.toMap(list("abc", "defg", "hijkl"), String::length))
+          .containsExactly(3, "abc", 4, "defg", 5, "hijkl");
+    }
 
-  @Test
-  public void to_map_with_key_function() {
-    given(collection = list("abc", "defg", "hijkl"));
-    when(() -> Collections.toMap(collection, String::length));
-    thenReturned(Map.of(3, "abc", 4, "defg", 5, "hijkl"));
+    @Test
+    public void empty_collection() {
+      assertThat(Collections.toMap(list(), String::length))
+          .isEmpty();
+    }
   }
 
-  @Test
-  public void empty_collection_to_map_with_key_function() {
-    given(collection = list());
-    when(() -> Collections.toMap(collection, String::length));
-    thenReturned(Map.of());
-  }
+  @Nested
+  class toMapWithValueMapper {
+    @Test
+    public void non_empty_collection() {
+      assertThat(Collections.toMap(list("abc", "defg", "hijkl"), String::toUpperCase, String::length))
+          .containsExactly("ABC", 3, "DEFG", 4, "HIJKL", 5);
+    }
 
-  @Test
-  public void to_map_with_key_and_value_function() {
-    given(collection = list("abc", "defg", "hijkl"));
-    when(() -> Collections.toMap(collection, String::toUpperCase, String::length));
-    thenReturned(Map.of("ABC", 3, "DEFG", 4, "HIJKL", 5));
-  }
+    @Test
+    public void value_mapper_allows_null_values() {
+      List<String> collection = list("abc", "defg", "hijkl");
+      assertThat(Collections.toMap(collection, x -> x, x -> null))
+          .containsExactly("abc", null, "defg", null, "hijkl", null);
+    }
 
-  @Test
-  public void to_map_with_key_and_value_function_allows_null_values() {
-    given(collection = list("abc", "defg", "hijkl"));
-    when(() -> Collections.toMap(collection, String::toUpperCase, (x) -> null));
-    thenReturned(expectedMapWithNulls());
-  }
-
-  private static HashMap<String, Object> expectedMapWithNulls() {
-    HashMap<String, Object> expected = new HashMap<>();
-    expected.put("ABC", null);
-    expected.put("DEFG", null);
-    expected.put("HIJKL", null);
-    return expected;
-  }
-
-  @Test
-  public void empty_collection_to_map_with_key_and_value_function() {
-    given(collection = list());
-    when(() -> Collections.toMap(collection, String::toUpperCase, String::length));
-    thenReturned(Map.of());
+    @Test
+    public void empty_collection() {
+      assertThat(Collections.toMap(list(), String::toUpperCase, String::length))
+          .isEmpty();
+    }
   }
 }
