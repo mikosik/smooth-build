@@ -1,46 +1,36 @@
 package org.smoothbuild.parse.expr;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.givenTest;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.thenThrown;
-import static org.testory.Testory.when;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.task.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 
 public class ExpressionTest {
-  private Location location;
-  private MyExpression expression;
-
-  @BeforeEach
-  public void before() {
-    givenTest(this);
-  }
-
   @Test
   public void null_code_location_is_forbidden() {
-    when(() -> new MyExpression(list(), null));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new MyExpression(list(), null))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_children_is_forbidden() {
-    when(() -> new MyExpression(null, location));
-    thenThrown(NullPointerException.class);
+    assertCall(() -> new MyExpression(null, unknownLocation()))
+        .throwsException(NullPointerException.class);
   }
 
   @Test
   public void code_location() {
-    given(expression = new MyExpression(list(), location));
-    when(expression.location());
-    thenReturned(location);
+    Location location = unknownLocation();
+    MyExpression expression = new MyExpression(list(), location);
+    assertThat(expression.location())
+        .isEqualTo(location);
   }
 
   public static class MyExpression extends Expression {
