@@ -1,13 +1,10 @@
 package org.smoothbuild.util;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.smoothbuild.util.Okios.copyAllAndClose;
 import static org.smoothbuild.util.Okios.readAndClose;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenCalled;
-import static org.testory.Testory.thenEqual;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,58 +14,63 @@ import okio.ByteString;
 import okio.Sink;
 
 public class OkiosTest {
-  private final ByteString bytes = ByteString.encodeUtf8("test string");
-  private BufferedSource source;
-  private Sink sink;
-  private final Buffer buffer = new Buffer();
+  private static final ByteString bytes = ByteString.encodeUtf8("test string");
 
   // copyAllAndClose()
 
   @Test
   public void copy_all_and_close_copies_bytes() throws Exception {
-    when(() -> copyAllAndClose(bufferWith(bytes), buffer));
-    thenEqual(buffer.readByteString(), bytes);
+    Buffer buffer = new Buffer();
+    copyAllAndClose(bufferWith(bytes), buffer);
+    assertThat(buffer.readByteString())
+        .isEqualTo(bytes);
   }
 
   @Test
   public void copy_all_and_close_works_for_empty_source() throws Exception {
-    when(() -> copyAllAndClose(bufferWith(ByteString.of()), buffer));
-    thenEqual(buffer.readByteString(), ByteString.of());
+    Buffer buffer = new Buffer();
+    copyAllAndClose(bufferWith(ByteString.of()), buffer);
+    assertThat(buffer.readByteString())
+        .isEqualTo(ByteString.of());
   }
 
   @Test
   public void copy_all_and_close_closes_source() throws Exception {
-    given(source = mock(BufferedSource.class));
-    when(() -> copyAllAndClose(source, buffer));
-    thenCalled(source).close();
+    Buffer buffer = new Buffer();
+    BufferedSource source = mock(BufferedSource.class);
+    copyAllAndClose(source, buffer);
+    verify(source).close();
   }
 
   @Test
   public void copy_all_and_close_closes_sink() throws Exception {
-    given(sink = mock(Sink.class));
-    when(() -> copyAllAndClose(bufferWith(ByteString.of()), sink));
-    thenCalled(sink).close();
+    Sink sink = mock(Sink.class);
+    copyAllAndClose(bufferWith(ByteString.of()), sink);
+    verify(sink).close();
   }
 
   // readAndClose()
 
   @Test
   public void read_and_close_copies_bytes() throws Exception {
-    when(() -> readAndClose(bufferWith(bytes), source -> source.readByteString()));
-    thenReturned(bytes);
+    ByteString byteString = readAndClose(bufferWith(bytes), BufferedSource::readByteString);
+    assertThat(byteString)
+        .isEqualTo(bytes);
   }
 
   @Test
   public void read_and_close_works_for_empty_source() throws Exception {
-    when(() -> readAndClose(bufferWith(ByteString.of()), source -> source.readByteString()));
-    thenReturned(ByteString.of());
+    ByteString byteString =
+        readAndClose(bufferWith(ByteString.of()), BufferedSource::readByteString);
+    assertThat(byteString)
+        .isEqualTo(ByteString.of());
   }
 
   @Test
   public void read_and_close_closes_source() throws Exception {
-    given(source = mock(BufferedSource.class));
-    when(() -> readAndClose(source, source -> ""));
-    thenCalled(source).close();
+    BufferedSource source = mock(BufferedSource.class);
+    readAndClose(source, s -> "");
+    verify(source).close();
   }
 
   private static Buffer bufferWith(ByteString bytes) {
