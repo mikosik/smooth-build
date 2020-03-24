@@ -1,5 +1,6 @@
 package org.smoothbuild.util.reflect;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.smoothbuild.util.reflect.Constructors.isPublic;
@@ -8,26 +9,42 @@ import org.junit.jupiter.api.Test;
 
 public class ConstructorsTest {
   @Test
-  public void is_public() throws Exception {
-    assertTrue(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor()));
-    assertFalse(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor()));
-    assertFalse(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor()));
-    assertFalse(isPublic(MyPrivateConstructorClass.class.getDeclaredConstructor()));
+  public void private_constructor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPrivateConstructorClass.class.getDeclaredConstructor()))
+        .isFalse();
   }
 
-  public static class MyPublicConstructorClass {
-    public MyPublicConstructorClass() {}
+  public static class MyPrivateConstructorClass {
+    private MyPrivateConstructorClass() {}
   }
 
-  public static class MyPackageConstructorClass {
-    MyPackageConstructorClass() {}
+  @Test
+  public void protected_constructor() throws NoSuchMethodException {
+    assertThat(isPublic(MyProtectedConstructorClass.class.getDeclaredConstructor()))
+        .isFalse();
   }
 
   public static class MyProtectedConstructorClass {
     protected MyProtectedConstructorClass() {}
   }
 
-  public static class MyPrivateConstructorClass {
-    private MyPrivateConstructorClass() {}
+  @Test
+  public void package_private_constructor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPackageConstructorClass.class.getDeclaredConstructor()))
+        .isFalse();
+  }
+
+  public static class MyPackageConstructorClass {
+    MyPackageConstructorClass() {}
+  }
+
+  @Test
+  public void public_constructor() throws NoSuchMethodException {
+    assertThat(isPublic(MyPublicConstructorClass.class.getDeclaredConstructor()))
+        .isTrue();
+  }
+
+  public static class MyPublicConstructorClass {
+    public MyPublicConstructorClass() {}
   }
 }
