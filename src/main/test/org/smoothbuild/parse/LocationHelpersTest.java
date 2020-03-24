@@ -1,74 +1,66 @@
 package org.smoothbuild.parse;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
-import static org.testory.Testory.given;
-import static org.testory.Testory.givenTest;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
 
 import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
-import org.smoothbuild.antlr.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.SmoothParser.NameContext;
 import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.lang.base.Location;
 
 public class LocationHelpersTest {
-  private int line;
-  private Token startToken;
-  private Location location;
-  private ParserRuleContext parserRuleContext;
-  private ExprContext expressionContext;
-  private PipeContext pipeContext;
-  private ArgContext argContext;
-  private NameContext nameContext;
-
-  @BeforeEach
-  public void before() {
-    givenTest(this);
-    given(line = 13);
-  }
-
   @Test
   public void location_of_arg_context_with_param_name() {
-    given(willReturn(nameContext), argContext).name();
-    given(willReturn(startToken), nameContext).getStart();
-    given(willReturn(line), startToken).getLine();
-    given(location = locationOf(Paths.get("script.smooth"), argContext));
-    when(location.line());
-    thenReturned(line);
+    Token token = token(13);
+    NameContext nameContext = mock(NameContext.class);
+    when(nameContext.getStart()).thenReturn(token);
+    ArgContext argContext = mock(ArgContext.class);
+    when(argContext.name()).thenReturn(nameContext);
+    Location location = locationOf(Paths.get("script.smooth"), argContext);
+    assertThat(location.line())
+        .isEqualTo(13);
   }
 
   @Test
-  public void locatin_of_arg_context_without_param_name() {
-    given(willReturn(pipeContext), argContext).pipe();
-    given(willReturn(startToken), pipeContext).getStart();
-    given(willReturn(line), startToken).getLine();
-    given(location = locationOf(Paths.get("script.smooth"), argContext));
-    when(location.line());
-    thenReturned(line);
+  public void location_of_arg_context_without_param_name() {
+    PipeContext pipeContext = mock(PipeContext.class);
+    Token token = token(13);
+    when(pipeContext.getStart()).thenReturn(token);
+    ArgContext argContext = mock(ArgContext.class);
+    when(argContext.pipe()).thenReturn(pipeContext);
+    Location location = locationOf(Paths.get("script.smooth"), argContext);
+    assertThat(location.line())
+        .isEqualTo(13);
   }
 
   @Test
   public void location_of_parser_rule_context() {
-    given(willReturn(startToken), parserRuleContext).getStart();
-    given(willReturn(line), startToken).getLine();
-    given(location = locationOf(Paths.get("script.smooth"), parserRuleContext));
-    when(location.line());
-    thenReturned(line);
+    ParserRuleContext parserRuleContext = mock(ParserRuleContext.class);
+    Token token = token(13);
+    when(parserRuleContext.getStart()).thenReturn(token);
+    Location location = locationOf(Paths.get("script.smooth"), parserRuleContext);
+    assertThat(location.line())
+        .isEqualTo(13);
   }
 
   @Test
   public void location_of_token() {
-    given(willReturn(line), startToken).getLine();
-    when(location = locationOf(Paths.get("script.smooth"), startToken));
-    when(location.line());
-    thenReturned(line);
+    Token token = token(13);
+    Location location = locationOf(Paths.get("script.smooth"), token);
+    assertThat(location.line())
+        .isEqualTo(13);
+  }
+
+  private static Token token(int l) {
+    Token token = mock(Token.class);
+    when(token.getLine()).thenReturn(l);
+    return token;
   }
 }
