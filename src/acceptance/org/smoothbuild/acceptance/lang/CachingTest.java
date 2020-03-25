@@ -1,8 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -21,7 +19,8 @@ public class CachingTest extends AcceptanceTestCase {
     String resultFromFirstCall = artifactContent("result");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo(resultFromFirstCall));
+    assertThat(artifactContent("result"))
+        .isEqualTo(resultFromFirstCall);
   }
 
   @Test
@@ -35,6 +34,7 @@ public class CachingTest extends AcceptanceTestCase {
     String resultFromFirstCall = artifactContent("result");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), not(equalTo(resultFromFirstCall)));
+    assertThat(artifactContent("result"))
+        .isNotEqualTo(resultFromFirstCall);
   }
 }
