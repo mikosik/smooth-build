@@ -1,11 +1,8 @@
 package org.smoothbuild.acceptance.cmd;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.given;
-import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
 
 import java.io.File;
 
@@ -14,8 +11,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.TempFilePath;
 
 public class BuildCommandTest extends AcceptanceTestCase {
-  private String path;
-
   @Test
   public void build_command_fails_when_script_file_is_missing() {
     whenSmoothBuild("result");
@@ -50,7 +45,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  String testStringIdentity(String value = 'default') = value;  ");
     whenSmoothBuild("testStringIdentity");
     thenFinishedWithSuccess();
-    then(artifact("testStringIdentity"), hasContent("default"));
+    assertThat(artifactContent("testStringIdentity"))
+        .isEqualTo("default");
   }
 
   @Test
@@ -72,7 +68,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = tempFilePath();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(new File(artifactContent("result")).exists(), false);
+    assertThat(new File(artifactContent("result")).exists())
+        .isFalse();
   }
 
   @Test
@@ -117,23 +114,25 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
   @Test
   public void build_command_clears_artifacts_dir() throws Exception {
-    given(path = ARTIFACTS_PATH.value() + "/file.txt");
+    String path = ARTIFACTS_PATH.value() + "/file.txt";
     givenFile(path, "content");
     givenScript(
         "  syntactically incorrect script  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(!file(path).exists());
+    assertThat(file(path).exists())
+        .isFalse();
   }
 
   @Test
   public void build_command_clears_temporary_dir() throws Exception {
-    given(path = TEMPORARY_PATH.value() + "/file.txt");
+    String path = TEMPORARY_PATH.value() + "/file.txt";
     givenFile(path, "content");
     givenScript(
         "  syntactically incorrect script  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    then(!file(path).exists());
+    assertThat(file(path).exists())
+        .isFalse();
   }
 }
