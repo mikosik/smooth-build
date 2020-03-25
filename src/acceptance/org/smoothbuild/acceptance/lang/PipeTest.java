@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -29,6 +28,7 @@ public class PipeTest extends AcceptanceTestCase {
         "  result = myIdentity('abc' | myIdentity);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 }
