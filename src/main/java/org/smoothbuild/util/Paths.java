@@ -9,6 +9,11 @@ public class Paths {
   }
 
   private static String removeExtension(String string) {
-    return string.substring(0, string.lastIndexOf('.'));
+    int dotIndex = string.lastIndexOf('.');
+    if (dotIndex == -1) {
+      return string;
+    } else {
+      return string.substring(0, dotIndex);
+    }
   }
 }
