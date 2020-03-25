@@ -1,8 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -29,7 +27,8 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                               ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -52,7 +51,8 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                   ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -62,7 +62,8 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                   ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -72,7 +73,8 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func('def');                            ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "def");
+    assertThat(artifactContent("result"))
+        .isEqualTo("def");
   }
 
   @Test
@@ -84,7 +86,8 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func('def');                                     ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "def");
+    assertThat(artifactContent("result"))
+        .isEqualTo("def");
   }
 
   @Test
