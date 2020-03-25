@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -186,7 +186,8 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('def');         ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -196,7 +197,8 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');          ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -208,7 +210,8 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func(throwException());        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -228,7 +231,8 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');    ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -239,6 +243,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func2('def');      ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "def");
+    assertThat(artifactContent("result"))
+        .isEqualTo("def");
   }
 }
