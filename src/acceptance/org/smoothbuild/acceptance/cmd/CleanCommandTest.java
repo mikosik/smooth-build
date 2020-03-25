@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.cmd;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.testory.Testory.thenEqual;
 
 import java.io.File;
 
@@ -17,7 +17,8 @@ public class CleanCommandTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
     whenSmoothClean();
     thenFinishedWithSuccess();
-    thenEqual(new File(projectDir(), SMOOTH_DIR.toString()).exists(), false);
+    assertThat(new File(projectDir(), SMOOTH_DIR.toString()).exists())
+        .isFalse();
   }
 
   @Test
