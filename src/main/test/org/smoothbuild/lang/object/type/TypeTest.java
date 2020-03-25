@@ -591,7 +591,7 @@ public class TypeTest {
   private static Case changeCoreDepthBy(Type type, int delta, Type expected) {
     return newCase(
         type.name() + ".changeCoreDepthBy(" + delta + ") == " + expected.name(),
-        () -> assertEquals(type.changeCoreDepthBy(delta), expected));
+        () -> assertEquals(expected, type.changeCoreDepthBy(delta)));
   }
 
   private static Case changeCoreDepthFailsFor(Type type, int delta) {
