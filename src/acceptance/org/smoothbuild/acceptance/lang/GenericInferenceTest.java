@@ -1,9 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.then;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -18,7 +16,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testIdentity(value='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -28,7 +27,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = myfunc(res = [], forcedType = [ [ 'abc' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list()));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list());
   }
 
   @Test
@@ -39,7 +39,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = pair(first = [], second = [ [ 'aaa' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list(list(), list(list("aaa")))));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list(list(), list(list("aaa"))));
   }
 
   // testConcat([A] first, [A] second)
@@ -52,7 +53,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [], second = []);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list()));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list());
   }
 
   @Test
@@ -63,7 +65,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [ 'aaa' ], second = [ 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aaa", "bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aaa", "bbb"));
   }
 
   @Test
@@ -74,7 +77,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [ 'aaa' ], second = []);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aaa")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aaa"));
   }
 
   @Test
@@ -85,7 +89,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [], second = [ 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("bbb"));
   }
 
   @Test
@@ -109,7 +114,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = wrapper(f = [], s = [ [ 'aaa' ] ]);                        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list(list("aaa"))));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list(list("aaa")));
   }
 
   @Test
@@ -122,7 +128,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = wrapper(f = [], s = [ [ 'aaa' ] ]);                        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list(list("aaa"))));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list(list("aaa")));
   }
 
   // testAppend([A] array, a element)
@@ -135,7 +142,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [], element = 'bbb');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("bbb"));
   }
 
   @Test
@@ -146,7 +154,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [ 'aaa' ], element = 'bbb');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aaa", "bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aaa", "bbb"));
   }
 
   @Test
@@ -160,7 +169,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [ 'aaa' ], element = stringStruct('bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aaa", "bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aaa", "bbb"));
   }
 
   @Test
@@ -175,7 +185,8 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = emptyStringArray, element = stringStruct('bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("bbb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("bbb"));
   }
 
   @Test
