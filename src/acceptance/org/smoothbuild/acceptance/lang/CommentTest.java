@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -16,7 +15,8 @@ public class CommentTest extends AcceptanceTestCase {
         "  result = '';               ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent(""));
+    assertThat(artifactContent("result"))
+        .isEqualTo("");
   }
 
   @Test
@@ -25,6 +25,7 @@ public class CommentTest extends AcceptanceTestCase {
         "  result = '' ;  # comment at the end of line  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent(""));
+    assertThat(artifactContent("result"))
+        .isEqualTo("");
   }
 }
