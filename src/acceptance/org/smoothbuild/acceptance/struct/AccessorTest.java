@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.struct;
 
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -15,7 +15,8 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = myStruct('abc').field;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -57,7 +58,8 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = s1(s2(s3('abc'))).f1.f2.f3;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "abc");
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
