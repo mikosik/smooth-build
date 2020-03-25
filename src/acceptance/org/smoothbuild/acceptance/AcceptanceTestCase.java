@@ -33,13 +33,16 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.smoothbuild.util.DataReader;
 
@@ -283,6 +286,23 @@ public abstract class AcceptanceTestCase {
   }
 
   public String artifactContent(String artifact) throws IOException {
-    return readAndClose(buffer(source(artifact(artifact))), s -> s.readString(CHARSET));
+    File file = artifact(artifact);
+    return fileContent(file);
+  }
+
+  public Map<String, String> artifactDir(String artifact) throws IOException {
+    File dir = artifact(artifact);
+    if (!dir.exists()) {
+      Assertions.fail("No such artifact: " + artifact);
+    }
+    HashMap<String, String> result = new HashMap<>();
+    for (String file : dir.list()) {
+      result.put(file, fileContent(new File(dir, file)));
+    }
+    return result;
+  }
+
+  private static String fileContent(File file) throws IOException {
+    return readAndClose(buffer(source(file)), s -> s.readString(CHARSET));
   }
 }
