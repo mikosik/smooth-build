@@ -1,8 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.hamcrest.Matchers.equalTo;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.then;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -17,7 +16,8 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = testFlatten(array = [ [ 'aa' ], [ 'bb', 'cc' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aa", "bb", "cc")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aa", "bb", "cc"));
   }
 
   @Test
@@ -28,7 +28,8 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = testFlatten(array = [ [ [ 'aa' ], [ 'bb', 'cc' ] ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list(list("aa"), list("bb", "cc"))));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list(list("aa"), list("bb", "cc")));
   }
 
   @Test
@@ -39,6 +40,7 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = pair(a1=testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("aa", "bb")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("aa", "bb"));
   }
 }
