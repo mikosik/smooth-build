@@ -1,25 +1,23 @@
 package org.smoothbuild.acceptance.cmd;
 
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class GenericCommandTest extends AcceptanceTestCase {
-  private String helpOutput;
-
   @Test
-  public void calling_smooth_without_command_defaults_to_help_command() throws Exception {
+  public void calling_smooth_without_command_defaults_to_help_command() {
     whenSmoothHelp();
-    given(helpOutput = output());
+    String helpOutput = output();
     whenSmooth();
     thenFinishedWithSuccess();
-    thenEqual(output(), helpOutput);
+    assertThat(output())
+        .isEqualTo(helpOutput);
   }
 
   @Test
-  public void unknown_command() throws Exception {
+  public void unknown_command() {
     whenSmoothHelp();
     whenSmooth("unknownCommand");
     thenFinishedWithError();
