@@ -177,6 +177,6 @@ public class PathMatcherTest {
 
   private static void assertMatchingResult(String pattern, String path, boolean expected) {
     Predicate<Path> matcher = pathMatcher(pattern);
-    assertEquals(matcher.test(path(path)), expected);
+    assertEquals(expected, matcher.test(path(path)));
   }
 }
