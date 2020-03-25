@@ -1,9 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
+import static com.google.common.truth.Truth.assertThat;
 import static java.util.regex.Pattern.DOTALL;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.testory.Testory.then;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +41,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter('token');      ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("token"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("token");
   }
 
   @Test
@@ -92,7 +91,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = annotationName();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -260,7 +260,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     String timestamp2 = fetchTimestamp(output());
-    then(timestamp1, not(equalTo(timestamp2)));
+    assertThat(timestamp1)
+        .isNotEqualTo(timestamp2);
   }
 
   private static String fetchTimestamp(String text) {
