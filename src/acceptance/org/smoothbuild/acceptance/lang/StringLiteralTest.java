@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -15,7 +14,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -40,7 +40,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent(""));
+    assertThat(artifactContent("result"))
+        .isEqualTo("");
   }
 
   @Test
@@ -49,7 +50,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = 'abcdefghijklmnopqrstuvwxyz';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abcdefghijklmnopqrstuvwxyz"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abcdefghijklmnopqrstuvwxyz");
   }
 
   @Test
@@ -58,7 +60,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   }
 
   @Test
@@ -67,7 +70,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '0123456789';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("0123456789"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("0123456789");
   }
 
   @Test
@@ -76,7 +80,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '#';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("#"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("#");
   }
 
   @Test
@@ -84,7 +89,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
     givenRawScript("result = \"'\";");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("'"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("'");
   }
 
   @Test
@@ -93,7 +99,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\\\';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\\"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\\");
   }
 
   @Test
@@ -102,7 +109,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\t';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\t"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\t");
   }
 
   @Test
@@ -111,7 +119,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\b';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\b"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\b");
   }
 
   @Test
@@ -120,7 +129,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\n';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\n"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\n");
   }
 
   @Test
@@ -129,7 +139,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\r';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\r"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\r");
   }
 
   @Test
@@ -138,7 +149,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\r';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\r"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\r");
   }
 
   @Test
@@ -147,7 +159,8 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\\"';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("\""));
+    assertThat(artifactContent("result"))
+        .isEqualTo("\"");
   }
 
   @Test
