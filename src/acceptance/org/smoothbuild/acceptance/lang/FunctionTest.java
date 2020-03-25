@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.lang;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -135,7 +134,8 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result    = function1;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -145,7 +145,8 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = 'abc' | stringIdentity;         ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
@@ -188,7 +189,8 @@ public class FunctionTest extends AcceptanceTestCase {
         "  String result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 
   @Test
