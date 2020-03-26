@@ -1,8 +1,6 @@
 package org.smoothbuild.acceptance.builtin.bool;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.testory.Testory.then;
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -17,7 +15,8 @@ public class AndTest extends AcceptanceTestCase {
         "  result = and(false(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), false);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -26,7 +25,8 @@ public class AndTest extends AcceptanceTestCase {
         "  result = and(false(), true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), false);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -35,7 +35,8 @@ public class AndTest extends AcceptanceTestCase {
         "  result = and(true(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), false);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -44,7 +45,8 @@ public class AndTest extends AcceptanceTestCase {
         "  result = and(true(), true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), true);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -55,6 +57,7 @@ public class AndTest extends AcceptanceTestCase {
         "  result = and(false(), throwException());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 }
