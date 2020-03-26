@@ -1,11 +1,8 @@
 package org.smoothbuild.builtin.java.javac;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.onInstance;
-import static org.testory.Testory.thenCalledTimes;
-import static org.testory.Testory.when;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import java.util.ArrayList;
 
@@ -16,15 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class SandboxedJavaFileManagerTest extends TestingContext {
-  private final StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
-  private final Iterable<InputClassFile> packagedJavaFileObjects = new ArrayList<>();
-  private SandboxedJavaFileManager manager;
-
   @Test
   public void getJavaFile_output_is_not_forwarded_to_standard_manager_for_class_output()
       throws Exception {
-    given(manager = new SandboxedJavaFileManager(sfm, nativeApi(), packagedJavaFileObjects));
-    when(manager).getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, null);
-    thenCalledTimes(0, onInstance(sfm));
+    Iterable<InputClassFile> objects = new ArrayList<>();
+    StandardJavaFileManager sfm = mock(StandardJavaFileManager.class);
+    SandboxedJavaFileManager manager = new SandboxedJavaFileManager(sfm, nativeApi(), objects);
+    manager.getJavaFileForOutput(CLASS_OUTPUT, "className", Kind.CLASS, null);
+    verifyNoInteractions(sfm);
   }
 }
