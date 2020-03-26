@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.string;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -16,6 +15,7 @@ public class ToBlobTest extends AcceptanceTestCase {
         "  result = toBlob('abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 }
