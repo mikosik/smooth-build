@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -16,7 +15,8 @@ public class JarUnjarTest extends AcceptanceTestCase {
         "    | jar | unjar;                                                                     ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file1.txt", "abc", "file2.txt", "def"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
