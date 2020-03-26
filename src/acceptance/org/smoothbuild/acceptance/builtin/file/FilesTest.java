@@ -1,16 +1,12 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
-import static org.testory.Testory.given;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FilesTest extends AcceptanceTestCase {
-  private String script;
-
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
     givenScript(
@@ -75,17 +71,19 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//dir');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file.txt", "abc", "subdir/file.txt", "def"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file.txt", "abc", "subdir/file.txt", "def");
   }
 
   @Test
   public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    given(script = "result = files(\"//\");");
+    String script = "result = files(\"//\");";
     givenScript(script);
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     String defaultScript = new SmoothPaths(null).defaultScript().toString();
-    then(artifact("result"), isFileArrayWith(defaultScript, script, "dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly(defaultScript, script, "dir/file.txt", "abc");
   }
 }
