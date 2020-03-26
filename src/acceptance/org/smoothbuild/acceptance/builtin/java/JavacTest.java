@@ -1,9 +1,9 @@
 package org.smoothbuild.acceptance.builtin.java;
 
+import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.util.Okios.readAndClose;
-import static org.testory.Testory.thenEqual;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,8 @@ public class JavacTest extends AcceptanceTestCase {
         "  result = [file(toBlob('" + classSource+ "'), 'MyClass.java')] | javac;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual("test-string", invoke(new File(artifact("result"), "MyClass.class"), "myMethod"));
+    assertThat(invoke(new File(artifact("result"), "MyClass.class"), "myMethod"))
+        .isEqualTo("test-string");
   }
 
   @Test
@@ -74,7 +75,8 @@ public class JavacTest extends AcceptanceTestCase {
     File classFile = new File(artifact("result"), "MyClass.class");
     MyClassLoader classLoader = new MyClassLoader();
     loadClass(classLoader, byteCode(libraryClassFile));
-    thenEqual("5", invoke(classLoader, classFile, "myMethod"));
+    assertThat(invoke(classLoader, classFile, "myMethod"))
+        .isEqualTo("5");
   }
 
   @Test
