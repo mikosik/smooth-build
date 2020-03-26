@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.smoothbuild.acceptance.FileContentMatcher.hasContent;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -73,6 +72,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//dir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), hasContent("abc"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc");
   }
 }
