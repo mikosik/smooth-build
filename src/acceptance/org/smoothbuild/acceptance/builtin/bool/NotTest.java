@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.builtin.bool;
 
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -15,7 +15,8 @@ public class NotTest extends AcceptanceTestCase {
         "  result = not(false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), true);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -24,7 +25,8 @@ public class NotTest extends AcceptanceTestCase {
         "  result = not(true());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactAsBoolean("result"), false);
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 }
 
