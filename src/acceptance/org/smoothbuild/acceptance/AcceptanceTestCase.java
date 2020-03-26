@@ -296,10 +296,20 @@ public abstract class AcceptanceTestCase {
       Assertions.fail("No such artifact: " + artifact);
     }
     HashMap<String, String> result = new HashMap<>();
-    for (String file : dir.list()) {
-      result.put(file, fileContent(new File(dir, file)));
-    }
+    addFilesToMap(dir, "", result);
     return result;
+  }
+
+  private void addFilesToMap(File dir, String prefix, HashMap<String, String> result)
+      throws IOException {
+    for (String fileName : dir.list()) {
+      File file = new File(dir, fileName);
+      if (file.isDirectory()) {
+        addFilesToMap(file, prefix + file.getName() + "/", result);
+      } else {
+        result.put(prefix + file.getName(), fileContent(file));
+      }
+    }
   }
 
   private static String fileContent(File file) throws IOException {
