@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.file;
 
-import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import java.io.IOException;
 
@@ -25,7 +24,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file') ] | filter('**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file", "abc");
   }
 
   @Test
@@ -34,7 +34,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file.txt", "abc");
   }
 
   @Test
@@ -43,7 +44,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -52,7 +54,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/subdir/file.txt", "abc");
   }
 
   @Test
@@ -61,7 +64,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -70,7 +74,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -79,7 +84,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/def/file.txt') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/def/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/def/file.txt", "abc");
   }
 
   @Test
@@ -88,7 +94,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'different/file.txt') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -98,7 +105,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -107,7 +115,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file.txt", "abc");
   }
 
   @Test
@@ -116,7 +125,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -126,7 +136,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('**/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/subdir/file.txt", "abc");
   }
 
   @Test
@@ -135,7 +146,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file2.txt') ] | filter('**/file1.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -145,7 +157,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**/dir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -156,7 +169,8 @@ public class FilterTest extends AcceptanceTestCase {
         "    | filter('**/subdir/file.txt');                        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/subdir/file.txt", "abc");
   }
 
   @Test
@@ -165,7 +179,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file.txt", "abc");
   }
 
   @Test
@@ -174,7 +189,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -183,7 +199,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -192,7 +209,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -202,7 +220,8 @@ public class FilterTest extends AcceptanceTestCase {
         "    | filter('*/subdir/file.txt');                         ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/subdir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/subdir/file.txt", "abc");
   }
 
   @Test
@@ -211,7 +230,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -220,7 +240,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('dir/*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -229,7 +250,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*/*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("dir/file.txt", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 
   @Test
@@ -238,7 +260,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*/*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -247,7 +270,8 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('*/*');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith());
+    assertThat(artifactDir("result"))
+        .isEmpty();
   }
 
   @Test
@@ -257,6 +281,7 @@ public class FilterTest extends AcceptanceTestCase {
         "   | filter('src/**/*.java');                                 ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("src/com/comp/Main.java", "abc"));
+    assertThat(artifactDir("result"))
+        .containsExactly("src/com/comp/Main.java", "abc");
   }
 }
