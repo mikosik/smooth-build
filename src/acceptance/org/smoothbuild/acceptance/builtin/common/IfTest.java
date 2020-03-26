@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.common;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -14,7 +13,8 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("then clause"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("then clause");
   }
 
   @Test
@@ -23,7 +23,8 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), 'then clause', 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("else clause"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("else clause");
   }
 
   @Test
@@ -34,7 +35,8 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), throwException(), 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("else clause"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("else clause");
   }
 
   @Test
@@ -45,6 +47,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', throwException());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactContent("result"), equalTo("then clause"));
+    assertThat(artifactContent("result"))
+        .isEqualTo("then clause");
   }
 }
