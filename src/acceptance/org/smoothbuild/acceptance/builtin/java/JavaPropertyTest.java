@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.builtin.java;
 
-import static org.testory.Testory.thenEqual;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -12,7 +12,8 @@ public class JavaPropertyTest extends AcceptanceTestCase {
         "  result = javaProperty('java.vm.info');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenEqual(artifactContent("result"), "mixed mode");
+    assertThat(artifactContent("result"))
+        .isEqualTo("mixed mode");
   }
 
   @Test
