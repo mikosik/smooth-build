@@ -1,11 +1,9 @@
 package org.smoothbuild.acceptance.builtin.common;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.smoothbuild.acceptance.FileArrayMatcher.isFileArrayWith;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.BooleanCreators.falseByteString;
 import static org.smoothbuild.testing.BooleanCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.then;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -17,7 +15,8 @@ public class ConcatenateTest extends AcceptanceTestCase {
         "  result = concatenate([true()], [false()]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsByteStrings("result"), equalTo(list(trueByteString(), falseByteString())));
+    assertThat(artifactAsByteStrings("result"))
+        .isEqualTo(list(trueByteString(), falseByteString()));
   }
 
   @Test
@@ -26,7 +25,8 @@ public class ConcatenateTest extends AcceptanceTestCase {
         "  result = concatenate(['abc'], ['def']);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("abc", "def")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("abc", "def"));
   }
 
   @Test
@@ -38,7 +38,8 @@ public class ConcatenateTest extends AcceptanceTestCase {
         "  );                                       ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifact("result"), isFileArrayWith("file1.txt", "abc", "file2.txt", "def"));
+    assertThat(artifactDir("result"))
+        .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
@@ -49,6 +50,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
         "  result = concatenate([ aFile('//0') ], [ aFile('//1') ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactArray("result"), equalTo(list("abc", "def")));
+    assertThat(artifactArray("result"))
+        .isEqualTo(list("abc", "def"));
   }
 }
