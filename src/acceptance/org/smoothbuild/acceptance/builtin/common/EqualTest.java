@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.builtin.common;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.testory.Testory.then;
+import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -13,7 +12,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal('aaa', 'aaa');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -22,7 +22,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal('aaa', 'bbb');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -31,7 +32,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal('aaa', '');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -40,7 +42,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal([ 'aaa', 'bbb' ], [ 'aaa', 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -49,7 +52,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(false(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -58,7 +62,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(true(), false());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -71,7 +76,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(person('aaa', 'bbb'), person('aaa', 'bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -84,7 +90,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(person('aaa', 'bbb'), person('aaa', 'ccc'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(false));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(false);
   }
 
   @Test
@@ -103,7 +110,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(person('aaa', 'bbb'), person2('aaa'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -132,7 +140,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal([ 'aaa', 'bbb' ], [ 'aaa', 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -141,7 +150,8 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal([], []);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 
   @Test
@@ -152,6 +162,7 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(nothingArray, stringArray);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    then(artifactAsBoolean("result"), equalTo(true));
+    assertThat(artifactAsBoolean("result"))
+        .isEqualTo(true);
   }
 }
