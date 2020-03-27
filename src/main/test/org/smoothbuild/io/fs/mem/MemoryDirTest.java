@@ -1,11 +1,10 @@
 package org.smoothbuild.io.fs.mem;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.willReturn;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
@@ -118,7 +117,7 @@ public class MemoryDirTest {
 
   private static MemoryElement createChild(Path name) {
     MemoryElement childMock = mock(MemoryElement.class);
-    given(willReturn(name), childMock).name();
+    when(childMock.name()).thenReturn(name);
     return childMock;
   }
 }
