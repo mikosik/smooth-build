@@ -1,9 +1,7 @@
 package org.smoothbuild.builtin.file.match.testing;
 
-import static org.hamcrest.Matchers.contains;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.builtin.file.match.testing.MatchingNamesGenerator.generateNames;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,33 +12,11 @@ import org.junit.jupiter.api.Test;
 public class MatchingNamesGeneratorTest {
   @Test
   public void test() {
-    List<String> expected = new ArrayList<>();
-    expected.add("xz");
-
-    expected.add("xaz");
-    expected.add("xbz");
-    expected.add("xcz");
-
-    expected.add("xaaz");
-    expected.add("xabz");
-    expected.add("xacz");
-
-    expected.add("xbaz");
-    expected.add("xbbz");
-    expected.add("xbcz");
-
-    expected.add("xcaz");
-    expected.add("xcbz");
-    expected.add("xccz");
-
-    String[] expectedNames = expected.toArray(new String[expected.size()]);
-
-    when(() -> {
-      CollectingConsumer collectingConsumer = new CollectingConsumer();
-      generateNames("x*z", collectingConsumer);
-      return collectingConsumer.generatedNames;
-    });
-    thenReturned(contains(expectedNames));
+    CollectingConsumer collectingConsumer = new CollectingConsumer();
+    generateNames("x*z", collectingConsumer);
+    assertThat(collectingConsumer.generatedNames)
+        .containsExactly("xz", "xaz", "xbz", "xcz", "xaaz", "xabz", "xacz", "xbaz", "xbbz", "xbcz",
+            "xcaz", "xcbz", "xccz");
   }
 
   private static class CollectingConsumer implements Consumer<String> {
