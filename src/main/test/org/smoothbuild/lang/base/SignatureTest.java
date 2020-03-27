@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.object.type.TestingTypes.blob;
 import static org.smoothbuild.lang.object.type.TestingTypes.string;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.mock;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.parse.expr.Expression;
