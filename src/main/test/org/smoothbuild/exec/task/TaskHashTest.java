@@ -1,14 +1,11 @@
 package org.smoothbuild.exec.task;
 
-import static org.hamcrest.Matchers.not;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
-import static org.testory.Testory.given;
-import static org.testory.Testory.mock;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
-import static org.testory.Testory.willReturn;
 
 import java.util.List;
 
@@ -33,146 +30,132 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
 public class TaskHashTest extends TestingContext {
-  private Computation computation;
-  private Computation computation2;
-  private Task task;
-  private Task task2;
-  private Input input;
-  private Input input2;
-  private NativeFunction nativeFunction;
-
   @Test
   public void hashes_of_tasks_with_same_computation_runtime_and_input_are_equal() {
-    given(computation = computation(Hash.of(1)));
-    given(task = task(computation, list()));
-    given(task2 = task(computation, list()));
-    given(input = input(list(string("input"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(TaskExecutor.taskHash(task, input, Hash.of(13)));
+    Computation computation = computation(Hash.of(1));
+    Task task = task(computation, list());
+    Task task2 = task(computation, list());
+    Input input = input(list(string("input")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(TaskExecutor.taskHash(task2, input, Hash.of(13)));
   }
 
   @Test
   public void hashes_of_tasks_with_different_computation_but_same_runtime_and_input_are_not_equal() {
-    given(computation = computation(Hash.of(1)));
-    given(computation2 = computation(Hash.of(2)));
-    given(task = task(computation, list()));
-    given(task2 = task(computation2, list()));
-    given(input = input(list(string("input"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(not(TaskExecutor.taskHash(task2, input, Hash.of(13))));
+    Computation computation = computation(Hash.of(1));
+    Computation computation2 = computation(Hash.of(2));
+    Task task = task(computation, list());
+    Task task2 = task(computation2, list());
+    Input input = input(list(string("input")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isNotEqualTo(TaskExecutor.taskHash(task2, input, Hash.of(13)));
   }
 
   @Test
   public void hashes_of_tasks_with_same_computation_and_input_but_different_runtime_are_not_equal() {
-    given(computation = computation(Hash.of(1)));
-    given(task = task(computation, list()));
-    given(input = input(list(string("input"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(not(TaskExecutor.taskHash(task, input, Hash.of(14))));
+    Computation computation = computation(Hash.of(1));
+    Task task = task(computation, list());
+    Input input = input(list(string("input")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isNotEqualTo(TaskExecutor.taskHash(task, input, Hash.of(14)));
   }
 
   @Test
   public void hashes_of_tasks_with_same_computation_runtime_but_different_input_are_not_equal() {
-    given(computation = computation(Hash.of(1)));
-    given(task = task(computation, list()));
-    given(input = input(list(string("input"))));
-    given(input2 = input(list(string("input2"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(not(TaskExecutor.taskHash(task, input2, Hash.of(13))));
+    Computation computation = computation(Hash.of(1));
+    Task task = task(computation, list());
+    Input input = input(list(string("input")));
+    Input input2 = input(list(string("input2")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isNotEqualTo(TaskExecutor.taskHash(task, input2, Hash.of(13)));
   }
 
   @Test
   public void hash_of_task_with_empty_string_value_computation_is_stable() {
-    given(task = task(new ValueComputation(string("")), list()));
-    given(input = input(list()));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
+    Task task = task(new ValueComputation(string("")), list());
+    Input input = input(list());
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
   }
 
   @Test
   public void hash_of_task_with_string_value_computation_is_stable() {
-    given(task = task(new ValueComputation(string("value")), list()));
-    given(input = input(list()));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
+    Task task = task(new ValueComputation(string("value")), list());
+    Input input = input(list());
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
   }
 
   @Test
   public void hash_of_task_with_array_computation_and_empty_input_is_stable() {
-    given(task = task(new ArrayComputation(arrayType(stringType())), list()));
-    given(input = input(list()));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("d20343333435effc353d96a8704cd929f7c39498"));
+    Task task = task(new ArrayComputation(arrayType(stringType())), list());
+    Input input = input(list());
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("d20343333435effc353d96a8704cd929f7c39498"));
   }
 
   @Test
   public void hash_of_task_with_array_computation_and_non_empty_input_is_stable() {
-    given(task = task(new ArrayComputation(arrayType(stringType())), list()));
-    given(input = input(list(string("abc"), string("def"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
+    Task task = task(new ArrayComputation(arrayType(stringType())), list());
+    Input input = input(list(string("abc"), string("def")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
   }
 
   @Test
   public void hash_of_task_with_native_call_computation_and_empty_input_is_stable() {
-    given(nativeFunction = mock(NativeFunction.class));
-    given(willReturn(Hash.of(33)), nativeFunction).hash();
-    given(willReturn("name"), nativeFunction).name();
-    given(task = task(new NativeCallComputation(stringType(), nativeFunction), list()));
-    given(input = input(list()));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("36cf27551327ed05f5c0122dcced61e86ce01e84"));
+    Task task = task(new NativeCallComputation(stringType(), mockNativeFunction()), list());
+    Input input = input(list());
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("36cf27551327ed05f5c0122dcced61e86ce01e84"));
   }
 
   @Test
   public void hash_of_task_with_native_call_computation_and_non_empty_input_is_stable() {
-    given(nativeFunction = mock(NativeFunction.class));
-    given(willReturn(Hash.of(33)), nativeFunction).hash();
-    given(willReturn("name"), nativeFunction).name();
-    given(task = task(new NativeCallComputation(stringType(), nativeFunction), list()));
-    given(input = input(list(string("abc"), string("def"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("e3b8532fb64253f571926e8e3cf459a57be34aa0"));
+    Task task = task(new NativeCallComputation(stringType(), mockNativeFunction()), list());
+    Input input = input(list(string("abc"), string("def")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("e3b8532fb64253f571926e8e3cf459a57be34aa0"));
   }
 
   @Test
   public void hash_of_task_with_identity_computation_and_one_element_input_is_stable() {
-    given(task = task(new IdentityComputation("name", stringType()), list()));
-    given(input = input(list(string("abc"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
+    Task task = task(new IdentityComputation("name", stringType()), list());
+    Input input = input(list(string("abc")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
   }
 
   @Test
   public void hash_of_task_with_convert_from_nothing_computation_and_one_element_input_is_stable() {
-    given(task = task(new ConvertComputation(stringType()), list()));
-    given(input = input(list(string("abc"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("2e18856c213531ddc9f883907e90eda84c8e3e20"));
+    Task task = task(new ConvertComputation(stringType()), list());
+    Input input = input(list(string("abc")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("2e18856c213531ddc9f883907e90eda84c8e3e20"));
   }
 
   @Test
   public void hash_of_task_with_constructor_call_computation_and_empty_input_is_stable() {
-    given(task = task(new ConstructorCallComputation(constructor()), list()));
-    given(input = input(list()));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("e14ca21fccb6631fd52809c4c4b409f2f66a077c"));
+    Task task = task(new ConstructorCallComputation(constructor()), list());
+    Input input = input(list());
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("e14ca21fccb6631fd52809c4c4b409f2f66a077c"));
   }
 
   @Test
   public void hash_of_task_with_constructor_call_computation_and_one_element_input_is_stable() {
-    given(task = task(new ConstructorCallComputation(constructor()), list()));
-    given(input = input(list(string("abc"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("68acb231ddf9eb8d878d1a68897aba09888b3b8e"));
+    Task task = task(new ConstructorCallComputation(constructor()), list());
+    Input input = input(list(string("abc")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("68acb231ddf9eb8d878d1a68897aba09888b3b8e"));
   }
 
   @Test
   public void hash_of_task_with_constructor_call_computation_and_two_elements_input_is_stable() {
-    given(task = task(new ConstructorCallComputation(constructor()), list()));
-    given(input = input(list(string("abc"), string("def"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("94296c0f10b807bb7f46c7196035c5e787dc03b2"));
+    Task task = task(new ConstructorCallComputation(constructor()), list());
+    Input input = input(list(string("abc"), string("def")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("94296c0f10b807bb7f46c7196035c5e787dc03b2"));
   }
 
   private Constructor constructor() {
@@ -182,10 +165,10 @@ public class TaskHashTest extends TestingContext {
 
   @Test
   public void hash_of_task_with_accessor_call_computation_and_one_element_input_is_stable() {
-    given(task = task(new AccessorCallComputation(accessor()), list()));
-    given(input = input(list(string("abc"))));
-    when(() -> TaskExecutor.taskHash(task, input, Hash.of(13)));
-    thenReturned(Hash.decode("0d0a4fd630fd9ffe0bfe5820a8b38c65b07dcbdc"));
+    Task task = task(new AccessorCallComputation(accessor()), list());
+    Input input = input(list(string("abc")));
+    assertThat(TaskExecutor.taskHash(task, input, Hash.of(13)))
+        .isEqualTo(Hash.decode("0d0a4fd630fd9ffe0bfe5820a8b38c65b07dcbdc"));
   }
 
   private Accessor accessor() {
@@ -219,5 +202,12 @@ public class TaskHashTest extends TestingContext {
 
   private static Task task(Computation computation, List<? extends Task> dependencies) {
     return new Task(computation, true, dependencies, unknownLocation());
+  }
+
+  private static NativeFunction mockNativeFunction() {
+    NativeFunction nativeFunction = mock(NativeFunction.class);
+    when(nativeFunction.hash()).thenReturn(Hash.of(33));
+    when(nativeFunction.name()).thenReturn("name");
+    return nativeFunction;
   }
 }
