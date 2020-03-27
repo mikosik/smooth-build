@@ -5,7 +5,6 @@ import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
@@ -15,7 +14,7 @@ public class BlobBuilder implements Closeable {
   private final ObjectDb objectDb;
   private final HashingBufferedSink sink;
 
-  public BlobBuilder(ObjectDb objectDb, HashingBufferedSink sink) throws HashedDbException {
+  public BlobBuilder(ObjectDb objectDb, HashingBufferedSink sink) {
     this.objectDb = objectDb;
     this.sink = sink;
   }
