@@ -1,53 +1,43 @@
 package org.smoothbuild.builtin.file.match;
 
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.fail;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.builtin.file.match.PathPattern.pathPattern;
-import static org.testory.Testory.given;
-import static org.testory.Testory.thenReturned;
-import static org.testory.Testory.when;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class PathPatternTest {
-  private PathPattern pattern;
-
   @Test
-  public void single_star_pattern_has_one_part() throws Exception {
-    given(pattern = pathPattern("**"));
-    when(pattern.parts());
-    thenReturned(contains("**"));
+  public void single_star_pattern_has_one_part() {
+    assertThat(pathPattern("*").parts())
+        .containsExactly("*");
   }
 
   @Test
-  public void double_star_pattern_has_one_part() throws Exception {
-    given(pattern = pathPattern("**"));
-    when(pattern.parts());
-    thenReturned(contains("**"));
+  public void double_star_pattern_has_one_part() {
+    assertThat(pathPattern("**").parts())
+        .containsExactly("**");
   }
 
   @Test
-  public void multi_part_patern_has_many_parts() throws Exception {
-    given(pattern = pathPattern("a/b/c"));
-    when(pattern.parts());
-    thenReturned(contains("a", "b", "c"));
+  public void multi_part_patern_has_many_parts() {
+    assertThat(pathPattern("a/b/c").parts())
+        .containsExactly("a", "b", "c");
   }
 
-  @Test
-  public void validationErrorReturnsMessageForInvalidPattern() {
-    for (String pattern : listOfInvalidPatterns()) {
-      try {
-        PathPattern.pathPattern(pattern);
-        fail("exception should be thrown");
-      } catch (IllegalPathPatternException e) {
-        // expected
-      }
-    }
+  @ParameterizedTest
+  @MethodSource("listOfInvalidPatterns")
+  public void validationErrorReturnsMessageForInvalidPattern(String invalidPatter) {
+      assertCall(() -> PathPattern.pathPattern(invalidPatter))
+          .throwsException(IllegalPathPatternException.class);
   }
 
+  @SuppressWarnings("unused")
   private static List<String> listOfInvalidPatterns() {
     List<String> result = new ArrayList<>();
 
