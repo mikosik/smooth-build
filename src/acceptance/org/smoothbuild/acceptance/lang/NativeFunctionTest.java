@@ -185,18 +185,6 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void native_with_different_parameter_name_causes_error() throws Exception {
-    givenNativeJar(OneStringParameter.class);
-    givenScript(
-        "  String oneStringParameter(String different);  ",
-        "  result = oneStringParameter('abc');           ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenOutputContains("Function 'oneStringParameter' has parameter named 'different'"
-        + " but its native implementation has parameter named 'string' at this position.\n");
-  }
-
-  @Test
   public void native_with_different_parameter_type_causes_error() throws Exception {
     givenNativeJar(OneStringParameter.class);
     givenScript(

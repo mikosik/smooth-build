@@ -4,9 +4,9 @@
     <option name="DEFAULT_COMPILER" value="error-prone" />
   </component>
   <component name="ErrorProneCompilerSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters -Xlint:unchecked" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:unchecked" />
   </component>
   <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters -Xlint:unchecked" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-Xlint:unchecked" />
   </component>
 </project>
