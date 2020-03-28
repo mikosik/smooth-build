@@ -63,14 +63,6 @@ public class Natives {
         for (int i = 0; i < params.size(); i++) {
           String declaredName = params.get(i).name();
           Parameter nativeParam = nativeParams[i + 1];
-          String nativeName = nativeParam.isNamePresent() ? nativeParam.getName() : "";
-          if (!declaredName.equals(nativeName)) {
-            errors.add(new ParseError(func, "Function '" + func.name()
-                + "' has parameter named '" + declaredName
-                + "' but its native implementation has parameter named '" + nativeName
-                + "' at this position."));
-            return;
-          }
           Type paramType = params.get(i).type().get(Type.class);
           Class<?> paramJType = nativeParam.getType();
           if (!paramType.jType().equals(paramJType)) {
