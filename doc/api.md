@@ -12,7 +12,6 @@ Core smooth functions
  * [if](api/if.md) Returns one of two values depending on bool condition.
  * [jar](api/jar.md) Jars (compresses) set of files.
  * [javac](api/javac.md) Compiles set of java files.
- * [javaProperty](api/javaProperty.md) Returns Java platform property.
  * [junit](api/junit.md) Runs junit tests.
  * [not](api/not.md) Returns negation of its argument.
  * [or](api/or.md) Returns `true` if any argument is `true`.
