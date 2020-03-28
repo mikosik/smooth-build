@@ -78,8 +78,6 @@ Blob jar(
   [String] options = [],
 );
 
-String javaProperty(String name);
-
 String junit(
   Blob tests,
   [Blob] deps = [],
