@@ -49,10 +49,10 @@ public class ObjectFactory {
 
   private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectDb objectDb) {
     ConcurrentHashMap<String, ConcreteType> map = new ConcurrentHashMap<>();
-    putType(map, objectDb.boolType());
-    putType(map, objectDb.stringType());
     putType(map, objectDb.blobType());
+    putType(map, objectDb.boolType());
     putType(map, objectDb.nothingType());
+    putType(map, objectDb.stringType());
     return map;
   }
 
