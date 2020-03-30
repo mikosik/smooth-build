@@ -61,7 +61,7 @@ public class ObjectDb {
 
   private void initialize() {
     try {
-      this.typeType = new TypeType(writeTypeTypeRoot(), this, hashedDb);
+      this.typeType = new TypeType(writeTypeTypeRoot(), hashedDb, this);
       this.blobType = new BlobType(writeBasicTypeRoot(typeType, BLOB), hashedDb, this);
       this.boolType = new BoolType(writeBasicTypeRoot(typeType, BOOL), hashedDb, this);
       this.nothingType = new NothingType(writeBasicTypeRoot(typeType, NOTHING), hashedDb, this);
