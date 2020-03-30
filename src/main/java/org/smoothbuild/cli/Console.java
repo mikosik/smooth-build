@@ -39,7 +39,8 @@ public class Console {
     this(System.out);
   }
 
-  public Console(PrintStream printStream) {
+  // visible for testing
+  Console(PrintStream printStream) {
     this.printStream = printStream;
     this.failureCount = new AtomicInteger();
     this.errorCount = new AtomicInteger();
