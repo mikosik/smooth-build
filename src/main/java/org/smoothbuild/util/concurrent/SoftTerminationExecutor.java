@@ -17,11 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor.DiscardPolicy;
 public class SoftTerminationExecutor {
   private final ThreadPoolExecutor executorService;
 
-  public SoftTerminationExecutor() {
-    this(Runtime.getRuntime().availableProcessors());
-  }
-
-  SoftTerminationExecutor(int threadCount) {
+  public SoftTerminationExecutor(int threadCount) {
     this.executorService = createThreadPoolExecutor(threadCount);
   }
 
