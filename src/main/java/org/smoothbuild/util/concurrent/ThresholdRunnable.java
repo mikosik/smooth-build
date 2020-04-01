@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class is thread-safe.
+ * Runnable is called without any lock held.
  */
 public class ThresholdRunnable implements Runnable {
   private final AtomicInteger count;
