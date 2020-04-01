@@ -36,6 +36,24 @@ You can consult
 [platform API documentation](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
 for a list of all platform functions.
 
+### Parallel execution
+
+By default, smooth build executes functions that do not depend on each other in parallel.
+We can take a look at it using slightly more complicated example below.
+Note that there's ugly duplicated code in this example.
+We make it clean further in this tutorial for now we just focus on parallelism. 
+
+```
+main_jar = files("//src-main") | javac | jar;
+deps_jar = files("//src-deps") | javac | jar;
+```
+
+As both functions (`release_jar` and `common_jar`) do not depend on each other
+then their bodies can be executed in parallel. 
+Smooth build will deduce it itself and run them in parallel.
+We do not need to do anything to make it happen.
+It is enough to ask smooth to build those jars with `smooth build release_jar common_jar`.
+
 ### Type system
 
 Smooth language is statically typed which means all types are known at compile time.

@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * added parallel execution
  * removed 'javaProperty' function from standard library (aka platform API)
  * extended parser errors with source code where problematic part is marked
  * renamed 'smooth dag' command to 'smooth tree'

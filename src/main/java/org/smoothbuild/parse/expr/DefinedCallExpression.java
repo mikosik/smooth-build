@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.expr;
 
-import static org.smoothbuild.exec.task.Task.taskTypes;
+import static org.smoothbuild.exec.task.base.Task.taskTypes;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.comp.IdentityComputation;
-import org.smoothbuild.exec.task.Task;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -38,7 +38,7 @@ public class DefinedCallExpression extends Expression {
 
     Computation computation = new IdentityComputation(function.name(), actualResultType);
     List<Task> dependencies = ImmutableList.of(task);
-    return new Task(computation, true, dependencies, location());
+    return new Task(computation, dependencies, location(), true);
   }
 
   private Scope<Task> functionScope(List<Task> arguments) {

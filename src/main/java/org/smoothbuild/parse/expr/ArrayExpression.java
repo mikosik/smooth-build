@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.ArrayComputation;
 import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.task.Task;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.type.ArrayType;
@@ -30,7 +30,7 @@ public class ArrayExpression extends Expression {
 
     Computation computation = new ArrayComputation(actualType);
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new Task(computation, true, convertedElements, location());
+    return new Task(computation, convertedElements, location(), true);
   }
 
   private static List<Task> convertedElements(ConcreteType type, List<Task> elements) {

@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.task.base;
 
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -10,7 +10,6 @@ import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.ConvertComputation;
 import org.smoothbuild.exec.comp.Input;
-import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.TreeNode;
@@ -26,8 +25,8 @@ public class Task implements TreeNode<Task> {
   private final Location location;
   private final boolean isComputationCacheable;
 
-  public Task(Computation computation, boolean isComputationCacheable,
-      List<? extends Task> dependencies, Location location) {
+  public Task(Computation computation, List<? extends Task> dependencies,
+      Location location, boolean isComputationCacheable) {
     this.computation = computation;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
@@ -51,8 +50,12 @@ public class Task implements TreeNode<Task> {
     return location;
   }
 
-  public Output execute(Container container, Input input) throws ComputationException {
-    return computation.execute(input, container);
+  public TaskResult execute(Container container, Input input) {
+    try {
+      return new TaskResult(computation.execute(input, container), false);
+    } catch (ComputationException e) {
+      return new TaskResult(e);
+    }
   }
 
   public boolean isComputationCacheable() {
@@ -69,7 +72,7 @@ public class Task implements TreeNode<Task> {
     } else {
       Computation computation = new ConvertComputation(type);
       List<Task> dependencies = list(this);
-      return new Task(computation, true, dependencies, location());
+      return new Task(computation, dependencies, location(), true);
     }
   }
 

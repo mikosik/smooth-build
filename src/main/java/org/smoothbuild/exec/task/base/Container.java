@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.task.base;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -16,6 +16,9 @@ import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 
+/**
+ * This class is NOT thread-safe.
+ */
 public class Container implements NativeApi, Closeable {
   private final FileSystem fileSystem;
   private final ObjectFactory objectFactory;

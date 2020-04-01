@@ -42,6 +42,12 @@ import org.smoothbuild.lang.object.type.TypeType;
 public class ObjectDb {
   private final HashedDb hashedDb;
   private final ConcurrentHashMap<Hash, ConcreteType> typeCache;
+
+  /**
+   * Following fields are effectively immutable - they are set only once in {@link #initialize()}
+   * which is invoked before instance of ObjectDb is returned from factory method.
+   */
+
   private BoolType boolType;
   private BlobType blobType;
   private NothingType nothingType;
@@ -117,6 +123,7 @@ public class ObjectDb {
   }
 
   // methods for returning type SObjects
+
   public ConcreteArrayType arrayType(ConcreteType elementType) {
     return cacheType(wrapException(() -> newArrayType(elementType)));
   }

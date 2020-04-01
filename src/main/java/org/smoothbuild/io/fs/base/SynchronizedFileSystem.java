@@ -6,6 +6,9 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Sink;
 
+/**
+ * This class is thread-safe.
+ */
 public class SynchronizedFileSystem implements FileSystem {
   private final FileSystem fileSystem;
 

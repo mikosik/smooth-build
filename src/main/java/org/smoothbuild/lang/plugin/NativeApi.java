@@ -7,6 +7,10 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.util.CommandExecutor;
 
+/**
+ * Implementation of NativeApi doesn't provide any thread safety and should be used
+ * from one thread by native functions.
+ */
 public interface NativeApi {
   public ObjectFactory factory();
 

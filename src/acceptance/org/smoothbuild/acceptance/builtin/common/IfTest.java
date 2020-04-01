@@ -2,6 +2,7 @@ package org.smoothbuild.acceptance.builtin.common;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ThrowException;
@@ -49,5 +50,33 @@ public class IfTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
     assertThat(artifactContent("result"))
         .isEqualTo("then clause");
+  }
+
+  @Nested
+  class in_if_nested_inside_other_if {
+    @Test
+    public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
+      givenNativeJar(ThrowException.class);
+      givenScript(
+          "  Nothing throwException();                                                      ",
+          "  result = if(true(), if(false(), throwException(), 'else clause'), 'ignored');  ");
+      whenSmoothBuild("result");
+      thenFinishedWithSuccess();
+      assertThat(artifactContent("result"))
+          .isEqualTo("else clause");
+    }
+
+    @Test
+    public void second_value_should_not_be_evaluated_when_condition_is_true()
+        throws Exception {
+      givenNativeJar(ThrowException.class);
+      givenScript(
+          "  Nothing throwException();                                                     ",
+          "  result = if(true(), if(true(), 'then clause', throwException()), 'ignored');  ");
+      whenSmoothBuild("result");
+      thenFinishedWithSuccess();
+      assertThat(artifactContent("result"))
+          .isEqualTo("then clause");
+    }
   }
 }

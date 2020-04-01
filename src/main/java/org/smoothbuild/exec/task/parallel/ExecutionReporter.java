@@ -1,10 +1,12 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.task.parallel;
 
 import static org.smoothbuild.lang.object.base.Messages.isEmpty;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.TaskResult;
 import org.smoothbuild.lang.object.base.Array;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -13,11 +15,11 @@ import com.google.common.base.Strings;
 /**
  * This class is thread-safe.
  */
-public class TaskReporter {
+public class ExecutionReporter {
   private final Console console;
 
   @Inject
-  public TaskReporter(Console console) {
+  public ExecutionReporter(Console console) {
     this.console = console;
   }
 
@@ -30,6 +32,10 @@ public class TaskReporter {
     } else {
       console.print(header(task, result), result.failure());
     }
+  }
+
+  public void report(Throwable throwable) {
+    console.print("Execution failed with:\n", throwable);
   }
 
   @VisibleForTesting

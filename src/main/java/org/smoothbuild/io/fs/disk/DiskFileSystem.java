@@ -28,6 +28,9 @@ import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
 
+/**
+ * This class is NOT thread-safe.
+ */
 public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
 

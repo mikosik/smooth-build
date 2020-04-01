@@ -1,4 +1,4 @@
-package org.smoothbuild.exec;
+package org.smoothbuild.exec.task;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

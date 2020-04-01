@@ -6,9 +6,11 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.outputs.OutputDb;
-import org.smoothbuild.exec.task.Container;
+import org.smoothbuild.exec.task.base.Container;
+import org.smoothbuild.exec.task.base.TaskExecutor;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
@@ -36,9 +38,12 @@ import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
+import com.google.inject.util.Providers;
+
 import okio.ByteString;
 
 public class TestingContext {
+  private TaskExecutor taskExecutor;
   private Container container;
   private ObjectFactory objectFactory;
   private ObjectFactory emptyCacheObjectFactory;
@@ -55,13 +60,23 @@ public class TestingContext {
     return container();
   }
 
+  public TaskExecutor taskExecutor() {
+    if (taskExecutor == null) {
+      taskExecutor = new TaskExecutor(outputDb(), Hash.of(123), Providers.of(newContainer()));
+    }
+    return taskExecutor;
+  }
+
   public Container container() {
     if (container == null) {
-      container = new Container(fullFileSystem(), objectFactory(), tempManager());
+      container = newContainer();
     }
     return container;
   }
 
+  private Container newContainer() {
+    return new Container(fullFileSystem(), objectFactory(), tempManager());
+  }
 
   /**
    * instance with File and Message types

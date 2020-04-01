@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.expr;
 
-import org.smoothbuild.exec.task.Task;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 
