@@ -11,6 +11,7 @@ import org.smoothbuild.db.outputs.OutputDb;
 import org.smoothbuild.exec.task.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.mem.MemoryFileSystem;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.base.Field;
@@ -46,7 +47,7 @@ public class TestingContext {
   private ObjectDb objectDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
-  private MemoryFileSystem fullFileSystem;
+  private FileSystem fullFileSystem;
   private TempManager tempManager;
   private FileSystem tempManagerFileSystem;
 
@@ -117,7 +118,7 @@ public class TestingContext {
 
   public FileSystem hashedDbFileSystem() {
     if (hashedDbFileSystem == null) {
-      hashedDbFileSystem = new MemoryFileSystem();
+      hashedDbFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
     }
     return hashedDbFileSystem;
   }
@@ -131,14 +132,14 @@ public class TestingContext {
 
   public FileSystem tempManagerFileSystem() {
     if (tempManagerFileSystem == null) {
-      tempManagerFileSystem = new MemoryFileSystem();
+      tempManagerFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
     }
     return tempManagerFileSystem;
   }
 
   public FileSystem fullFileSystem() {
     if (fullFileSystem == null) {
-      fullFileSystem = new MemoryFileSystem();
+      fullFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
     }
     return fullFileSystem;
   }
