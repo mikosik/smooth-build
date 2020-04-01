@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.run.artifact;
 
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;

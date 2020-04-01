@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.exec.task.Container;
+import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 
 /**
- * This class is thread safe.
+ * This class is thread-safe.
  */
 @Singleton
 public class TempManager {

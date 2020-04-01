@@ -1,11 +1,13 @@
 package org.smoothbuild.exec.run;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.exec.task.ArtifactBuilder;
+import org.smoothbuild.exec.run.artifact.ArtifactBuilder;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
@@ -22,6 +24,7 @@ public class BuildRunner {
 
   public void execute(SRuntime runtime, Set<String> names) {
     Functions functions = runtime.functions();
+    List<Function> functionsToRun = new ArrayList<>();
     for (String name : names) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.\n"
@@ -34,9 +37,9 @@ public class BuildRunner {
             + "' cannot be invoked from command line as it requires arguments.\n");
         return;
       }
-      artifactBuilder.addArtifact(function);
+      functionsToRun.add(function);
     }
 
-    artifactBuilder.runBuild();
+    artifactBuilder.buildArtifacts(functionsToRun);
   }
 }

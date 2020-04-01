@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.comp.ConstructorCallComputation;
-import org.smoothbuild.exec.task.Task;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -22,6 +22,6 @@ public class ConstructorCallExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     Computation computation = new ConstructorCallComputation(constructor);
     List<Task> dependencies = childrenTasks(scope);
-    return new Task(computation, true, dependencies, location());
+    return new Task(computation, dependencies, location(), true);
   }
 }

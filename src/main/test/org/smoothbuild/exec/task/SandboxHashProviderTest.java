@@ -1,7 +1,7 @@
-package org.smoothbuild.exec;
+package org.smoothbuild.exec.task;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.SandboxHashProvider.javaPlatformHash;
+import static org.smoothbuild.exec.task.SandboxHashProvider.javaPlatformHash;
 
 import java.util.Properties;
 

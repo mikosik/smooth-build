@@ -23,6 +23,7 @@ import okio.Sink;
 
 /**
  * In memory implementation of FileSystem.
+ * This class is NOT thread-safe.
  */
 public class MemoryFileSystem implements FileSystem {
   private final MemoryDir root = new MemoryDir(null, Path.root());

@@ -1,9 +1,9 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.run.artifact;
 
 import static java.lang.String.join;
-import static org.smoothbuild.exec.task.ArtifactPaths.artifactPath;
-import static org.smoothbuild.exec.task.ArtifactPaths.targetPath;
-import static org.smoothbuild.exec.task.ArtifactPaths.toFileName;
+import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
+import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
+import static org.smoothbuild.exec.run.artifact.ArtifactPaths.toFileName;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
@@ -23,6 +23,9 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.util.DuplicatesDetector;
 
+/**
+ * This class is NOT thread-safe.
+ */
 public class ArtifactSaver {
   private final FileSystem fileSystem;
   private final ObjectFactory objectFactory;

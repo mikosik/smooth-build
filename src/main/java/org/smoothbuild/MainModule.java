@@ -1,6 +1,6 @@
 package org.smoothbuild;
 
-import org.smoothbuild.exec.TaskModule;
+import org.smoothbuild.exec.task.TaskModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.lang.object.db.ObjectDbModule;
 

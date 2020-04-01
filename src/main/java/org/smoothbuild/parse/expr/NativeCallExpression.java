@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.expr;
 
-import static org.smoothbuild.exec.task.Task.taskTypes;
+import static org.smoothbuild.exec.task.base.Task.taskTypes;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.comp.NativeCallComputation;
-import org.smoothbuild.exec.task.Task;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Scope;
@@ -34,7 +34,7 @@ public class NativeCallExpression extends Expression {
 
     Computation computation = new NativeCallComputation(actualResultType, nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
-    return new Task(computation, nativeFunction.isCacheable(), dependencies, location());
+    return new Task(computation, dependencies, location(), nativeFunction.isCacheable());
   }
 
   private static List<Task> convertedArguments(

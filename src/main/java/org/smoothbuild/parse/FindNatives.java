@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-import org.smoothbuild.exec.task.Container;
+import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.plugin.NativeApi;

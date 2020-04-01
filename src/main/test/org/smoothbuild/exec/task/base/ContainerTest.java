@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.exec.task.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;

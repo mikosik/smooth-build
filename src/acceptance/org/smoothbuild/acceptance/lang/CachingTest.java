@@ -16,25 +16,43 @@ public class CachingTest extends AcceptanceTestCase {
         "  result = cacheableRandom;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    String resultFromFirstCall = artifactContent("result");
+    String resultFromFirstRun = artifactContent("result");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
-        .isEqualTo(resultFromFirstCall);
+    String resultFromSecondRun = artifactContent("result");
+
+    assertThat(resultFromSecondRun)
+        .isEqualTo(resultFromFirstRun);
   }
 
   @Test
-  public void result_from_not_cacheable_function_is_not_cached() throws Exception {
+  public void result_from_not_cacheable_function_is_cached_within_single_run() throws Exception {
+    givenNativeJar(NotCacheableRandom.class);
+    givenScript(
+        "  String notCacheableRandom();   ",
+        "  resultA = notCacheableRandom;  ",
+        "  resultB = notCacheableRandom;  ");
+    whenSmoothBuild("resultA resultB");
+    thenFinishedWithSuccess();
+
+    assertThat(artifactContent("resultA"))
+        .isEqualTo(artifactContent("resultB"));
+  }
+
+  @Test
+  public void result_from_not_cacheable_function_is_not_cached_between_runs() throws Exception {
     givenNativeJar(NotCacheableRandom.class);
     givenScript(
         "  String notCacheableRandom();  ",
         "  result = notCacheableRandom;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    String resultFromFirstCall = artifactContent("result");
+    String resultFromFirstRun = artifactContent("result");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
-        .isNotEqualTo(resultFromFirstCall);
+    String resultFromSecondRun = artifactContent("result");
+
+    assertThat(resultFromSecondRun)
+        .isNotEqualTo(resultFromFirstRun);
   }
 }

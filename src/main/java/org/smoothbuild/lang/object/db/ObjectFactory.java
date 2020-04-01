@@ -35,6 +35,7 @@ import org.smoothbuild.util.DataWriter;
 
 /**
  * This class is thread-safe.
+ * Builders returned by xxxBuilder() methods are not thread-safe.
  */
 @Singleton
 public class ObjectFactory {
