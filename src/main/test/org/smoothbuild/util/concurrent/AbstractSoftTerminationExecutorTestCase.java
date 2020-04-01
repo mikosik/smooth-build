@@ -12,10 +12,10 @@ public abstract class AbstractSoftTerminationExecutorTestCase {
 
   @BeforeEach
   public void before() {
-    executor = createJobExecutor();
+    executor = new SoftTerminationExecutor(threadCount());
   }
 
-  protected abstract SoftTerminationExecutor createJobExecutor();
+  protected abstract int threadCount();
 
   @Test
   public void submitted_runnable_gets_executed() throws Exception {
