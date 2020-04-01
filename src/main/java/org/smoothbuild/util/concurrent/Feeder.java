@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 /**
  * This class is thread-safe.
+ * Consumers registered with {@link #addConsumer(Consumer)} are called without any lock held.
  */
 public class Feeder<T> implements Consumer<T> {
   private final Object lock = new Object();
