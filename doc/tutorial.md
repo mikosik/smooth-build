@@ -30,10 +30,10 @@ as `release.jar` file (it's the same as function name except that
 `_jar` suffix has been automatically converted to `.jar`)
 in `.smooth/artifacts` directory.
 If you want to try examples yourself then
-[download and install smooth](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
+[download and install smooth](install.md)
 first.
 You can consult
-[standard library](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
+[standard library](api.md)
 for a list of all available functions.
 
 ### Parallel execution
@@ -111,9 +111,9 @@ Others (like Int) will be added before smooth reaches version 1.0.
 ##### _Bool_
 Boolean value that can be either `true` or `false`.
 The only instances of that type are returned by functions
-[true](https://github.com/mikosik/smooth-build/blob/master/doc/api/true.md)
+[true](api/true.md)
 and
-[false](https://github.com/mikosik/smooth-build/blob/master/doc/api/false.md).
+[false](api/false.md).
 
 ##### _String_
 String is a sequence of characters.
