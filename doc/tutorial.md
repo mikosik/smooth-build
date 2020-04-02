@@ -54,6 +54,47 @@ Smooth build will deduce it itself and run them in parallel.
 We do not need to do anything to make it happen.
 It is enough to ask smooth to build those jars with `smooth build release_jar common_jar`.
 
+### Caching
+
+If you run build command twice for our initial example
+
+```
+release_jar = files("//src") | javac | jar;
+```
+
+you will notice that second run completes almost instantly.
+That's because output from `release_jar` function has been cached
+by smooth.
+This is nothing extraordinary as most build tools reuse result
+from previous execution.
+However smooth is much smarter.
+Its cache system is much fine grained as it keeps results
+of each function call it has ever executed.
+When it has to execute given call (function plus its arguments) again
+it just takes result from cache.
+
+You can see how it works by running build for our initial example,
+then changing one of java files in `src` directory by adding empty
+spaces to the end of some line and then running build again.
+When you run build second time, you will notice that javac task
+is re-executed (as content of *.java files has changed)
+but because only formatting of the file changed,
+compilation will produced exactly the same *.class files as before.
+smooth won't execute `jar` function at all as it will realize
+that it has result of such execution already in its cache.
+Note that such optimization is not possible with incremental building
+as change to any file at the beginning of the build pipeline will always
+force rebuild of all tasks that depend on it.
+
+Now if you revert changes you introduced to mentioned java file
+and run build once again then result will be instantaneous.
+Except `files("///src")` call which reads files from disk and its result is never cached
+all other functions have been executed before with arguments they receive in that run so
+instead of running them smooth will read results from cache.
+Such solution is powerful as it gives you access to any build result you have ever executed.
+You just need to checkout relevant code version from your repository
+and run build command that will provide results instantly.
+
 ### Type system
 
 Smooth language is statically typed which means all types are known at compile time.
@@ -276,41 +317,6 @@ argument with parameter name and equal sign `=`. For example:
 ```
 File myFile = textFile("I love text files.", name="secret.txt");
 ```
-
-### Caching
-
-If you run build command twice for any example shown above,
-you will notice that second run completes almost instantly.
-That's because output from `release_jar` function has been cached
-by smooth.
-This is nothing extraordinary as most build tools reuse result
-from previous execution.
-However smooth is much smarter.
-Its cache system is much fine grained as it keeps results
-of each function call it has ever executed.
-When it has to execute given call (function plus its arguments) again
-it just takes result from cache.
-
-You can see how it works by running build for our initial example,
-then changing one of java files in `src` directory by adding empty
-spaces to the end of some line and then running build again.
-When you run build second time, you will notice that javac task
-is re-executed (as content of *.java files has changed)
-but because only formatting of the file changed,
-compilation will produced exactly the same *.class files as before.
-smooth won't execute `jar` function at all as it will realize
-that it has result of such execution already in its cache.
-Note that such optimization is not possible with incremental building
-as change to any file at the beginning of the build pipeline will always
-force rebuild of all tasks that depend on it.
-
-Now if you revert changes you introduced to mentioned java file
-and run build once again then result will be instantaneous as
-all function calls have been executed before so their results
-are taken from cache.
-Such solution gives you access to any build result you have ever executed.
-You just need to checkout relevant code version from your repository
-and run build command that will provide results instantly.
 
 ### Trailing commas
 
