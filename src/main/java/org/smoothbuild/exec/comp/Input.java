@@ -7,6 +7,9 @@ import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is immutable.
+ */
 public class Input {
   private final ImmutableList<SObject> objects;
   private final Hash hash;
