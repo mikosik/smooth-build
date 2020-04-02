@@ -8,4 +8,4 @@ no computation happens twice on the same machine
 
  * [tutorial](https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md)
  * [download / install](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
- * [builtin functions](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
+ * [standard library functions](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)

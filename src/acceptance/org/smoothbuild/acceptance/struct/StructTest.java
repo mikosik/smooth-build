@@ -85,7 +85,7 @@ public class StructTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void struct_with_same_name_as_struct_type_from_platform_api_causes_error()
+  public void struct_with_same_name_as_struct_type_from_standard_library_causes_error()
       throws Exception {
     givenScript(
         "  File {}          ",
