@@ -284,6 +284,15 @@ We can refactor our initial example by splitting it into two functions and addin
 File release_jar = jar(classes("//src"));
 ```
 
+This way we can build our own set of reusable functions.
+For example:
+
+```
+javaJar(String srcPath) = files(srcPath) | javac | jar;
+mainJar = javaJar("src/main");
+otherJar = javaJar("src/other"); 
+```
+
 #### Function parameter default value
 
 When we define function parameter we can provide default value for some of them.
@@ -294,8 +303,7 @@ after parameters without default values.
 Let's create function that creates text file:
 
 ```
-File textFile(String text, String name = "file.txt") =
-  File(toBlob(text), name);
+File textFile(String text, String name = "file.txt") = File(toBlob(text), name);
 ```
 
 We can call it without specifying `name` parameter as it has default value:
