@@ -33,8 +33,8 @@ If you want to try examples yourself then
 [download and install smooth](https://github.com/mikosik/smooth-build/blob/master/doc/install.md)
 first.
 You can consult
-[platform API documentation](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
-for a list of all platform functions.
+[standard library](https://github.com/mikosik/smooth-build/blob/master/doc/api.md)
+for a list of all available functions.
 
 ### Parallel execution
 
@@ -276,7 +276,7 @@ This version is less readable despite being more familiar to people
 coming from imperative languages.
 
 Functions declared in `build.smooth` (for example `release_jar`)
-can be used the same way as platform functions (like `javac`).
+can be used the same way as standard library functions (like `javac`).
 We can refactor our initial example by splitting it into two functions and adding result types:
 
 ```
