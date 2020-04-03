@@ -2,8 +2,8 @@ package org.smoothbuild.parse.expr;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.comp.ValueComputation;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.ValueAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -21,8 +21,8 @@ public class LiteralExpression extends Expression {
 
   @Override
   public Task createTask(Scope<Task> scope) {
-    Computation computation = new ValueComputation(object);
+    Algorithm algorithm = new ValueAlgorithm(object);
     List<Task> dependencies = ImmutableList.of();
-    return new Task(computation, dependencies, location(), true);
+    return new Task(algorithm, dependencies, location(), true);
   }
 }

@@ -1,16 +1,16 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.identityComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.identityAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class IdentityComputation implements Computation {
+public class IdentityAlgorithm implements Algorithm {
   private final String name;
   private final ConcreteType type;
 
-  public IdentityComputation(String name, ConcreteType type) {
+  public IdentityAlgorithm(String name, ConcreteType type) {
     this.name = name;
     this.type = type;
   }
@@ -22,7 +22,7 @@ public class IdentityComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return identityComputationHash();
+    return identityAlgorithmHash();
   }
 
   @Override
@@ -31,7 +31,7 @@ public class IdentityComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     return new Output(input.objects().get(0), nativeApi.messages());
   }
 }

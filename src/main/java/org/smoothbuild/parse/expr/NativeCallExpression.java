@@ -6,8 +6,8 @@ import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.comp.NativeCallComputation;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.NativeCallAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
@@ -32,9 +32,9 @@ public class NativeCallExpression extends Expression {
     GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
 
-    Computation computation = new NativeCallComputation(actualResultType, nativeFunction);
+    Algorithm algorithm = new NativeCallAlgorithm(actualResultType, nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
-    return new Task(computation, dependencies, location(), nativeFunction.isCacheable());
+    return new Task(algorithm, dependencies, location(), nativeFunction.isCacheable());
   }
 
   private static List<Task> convertedArguments(

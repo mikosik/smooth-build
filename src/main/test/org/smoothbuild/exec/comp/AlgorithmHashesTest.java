@@ -3,13 +3,13 @@ package org.smoothbuild.exec.comp;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.exec.comp.ComputationHashes.accessorCallComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.arrayComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.constructorCallComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.convertComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.identityComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.nativeCallComputationHash;
-import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.identityAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.valueAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -23,67 +23,67 @@ import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.testing.TestingContext;
 
-public class ComputationHashesTest extends TestingContext {
+public class AlgorithmHashesTest extends TestingContext {
   @Test
-  public void each_computation_has_different_hash() {
+  public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
     Constructor constructor = constructor("MyStruct2");
     Accessor accessor = accessor("myField");
     SObject object = object(Hash.of(0));
 
-    hashes.add(valueComputationHash(object));
-    hashes.add(arrayComputationHash());
-    hashes.add(identityComputationHash());
-    hashes.add(nativeCallComputationHash(function));
-    hashes.add(convertComputationHash(stringType()));
-    hashes.add(constructorCallComputationHash(constructor));
-    hashes.add(accessorCallComputationHash(accessor));
+    hashes.add(valueAlgorithmHash(object));
+    hashes.add(arrayAlgorithmHash());
+    hashes.add(identityAlgorithmHash());
+    hashes.add(nativeCallAlgorithmHash(function));
+    hashes.add(convertAlgorithmHash(stringType()));
+    hashes.add(constructorCallAlgorithmHash(constructor));
+    hashes.add(accessorCallAlgorithmHash(accessor));
 
     assertThat(hashes.size())
         .isEqualTo(7);
   }
 
   @Test
-  public void value_computation_has_different_hash_for_different_values() {
+  public void value_algorithm_has_different_hash_for_different_values() {
     SObject object = object(Hash.of(1));
     SObject object2 = object(Hash.of(2));
 
-    assertThat(valueComputationHash(object))
-        .isNotEqualTo(valueComputationHash(object2));
+    assertThat(valueAlgorithmHash(object))
+        .isNotEqualTo(valueAlgorithmHash(object2));
   }
 
   @Test
-  public void native_call_computation_has_different_hash_for_different_functions() {
+  public void native_call_algorithm_has_different_hash_for_different_functions() {
     NativeFunction function = nativeFunctionWithHash(Hash.of(1));
     NativeFunction function2 = nativeFunctionWithHash(Hash.of(2));
 
-    assertThat(nativeCallComputationHash(function))
-        .isNotEqualTo(nativeCallComputationHash(function2));
+    assertThat(nativeCallAlgorithmHash(function))
+        .isNotEqualTo(nativeCallAlgorithmHash(function2));
   }
 
   @Test
-  public void convert_computation_has_different_hash_for_different_types() {
-    assertThat(convertComputationHash(stringType()))
-        .isNotEqualTo(convertComputationHash(blobType()));
+  public void convert_algorithm_has_different_hash_for_different_types() {
+    assertThat(convertAlgorithmHash(stringType()))
+        .isNotEqualTo(convertAlgorithmHash(blobType()));
   }
 
   @Test
-  public void constructor_call_computation_has_different_hash_for_different_types() {
+  public void constructor_call_algorithm_has_different_hash_for_different_types() {
     Constructor constructor = constructor("MyStruct1");
     Constructor constructor2 = constructor("MyStruct2");
 
-    assertThat(constructorCallComputationHash(constructor))
-        .isNotEqualTo(constructorCallComputationHash(constructor2));
+    assertThat(constructorCallAlgorithmHash(constructor))
+        .isNotEqualTo(constructorCallAlgorithmHash(constructor2));
   }
 
   @Test
-  public void accessor_call_computation_has_different_hash_for_different_types() {
+  public void accessor_call_algorithm_has_different_hash_for_different_types() {
     Accessor accessor = accessor("myField");
     Accessor accessor2 = accessor("myField2");
 
-    assertThat(accessorCallComputationHash(accessor))
-        .isNotEqualTo(accessorCallComputationHash(accessor2));
+    assertThat(accessorCallAlgorithmHash(accessor))
+        .isNotEqualTo(accessorCallAlgorithmHash(accessor2));
   }
 
   private static Accessor accessor(String fieldName) {

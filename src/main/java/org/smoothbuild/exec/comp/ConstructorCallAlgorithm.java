@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.constructorCallComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Constructor;
@@ -11,10 +11,10 @@ import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class ConstructorCallComputation implements Computation {
+public class ConstructorCallAlgorithm implements Algorithm {
   private final Constructor constructor;
 
-  public ConstructorCallComputation(Constructor constructor) {
+  public ConstructorCallAlgorithm(Constructor constructor) {
     this.constructor = constructor;
   }
 
@@ -25,7 +25,7 @@ public class ConstructorCallComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return constructorCallComputationHash(constructor);
+    return constructorCallAlgorithmHash(constructor);
   }
 
   @Override
@@ -34,7 +34,7 @@ public class ConstructorCallComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     StructBuilder builder = nativeApi.factory().structBuilder(constructor.type());
     ImmutableList<Parameter> parameters = constructor.signature().parameters();
     for (int i = 0; i < parameters.size(); i++) {

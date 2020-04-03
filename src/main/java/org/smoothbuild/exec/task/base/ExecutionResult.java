@@ -8,24 +8,24 @@ import java.util.function.Consumer;
  * This class is immutable.
  */
 public class ExecutionResult {
-  private final TaskResult taskResult;
+  private final Result result;
   private final Throwable throwable;
 
-  public ExecutionResult(TaskResult taskResult) {
-    this.taskResult = checkNotNull(taskResult);
+  public ExecutionResult(Result result) {
+    this.result = checkNotNull(result);
     this.throwable = null;
   }
 
   public ExecutionResult(Throwable throwable) {
-    this.taskResult = null;
+    this.result = null;
     this.throwable = checkNotNull(throwable);
   }
 
   public void apply(
-      Consumer<TaskResult> taskResultConsumer,
+      Consumer<Result> taskResultConsumer,
       Consumer<Throwable> throwableConsumer) {
-    if (taskResult != null) {
-      taskResultConsumer.accept(taskResult);
+    if (result != null) {
+      taskResultConsumer.accept(result);
     } else {
       throwableConsumer.accept(throwable);
     }

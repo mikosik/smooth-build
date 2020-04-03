@@ -2,8 +2,8 @@ package org.smoothbuild.exec.task.parallel;
 
 import java.util.function.Consumer;
 
+import org.smoothbuild.exec.task.base.Result;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.exec.task.base.TaskResult;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
 
@@ -14,7 +14,7 @@ import org.smoothbuild.util.concurrent.Feeder;
  */
 public class Job {
   private final Task task;
-  private final Feeder<TaskResult> taskResultFeeder;
+  private final Feeder<Result> taskResultFeeder;
 
   public Job(Task task) {
     this.task = task;
@@ -25,7 +25,7 @@ public class Job {
     return task;
   }
 
-  public TaskResult taskResult() {
+  public Result taskResult() {
     return taskResultFeeder.value();
   }
 
@@ -34,14 +34,14 @@ public class Job {
   }
 
   public void addValueConsumer(Consumer<SObject> valueConsumer) {
-    taskResultFeeder.addConsumer((TaskResult taskResult) -> {
-      if (taskResult.hasOutputWithValue()) {
-        valueConsumer.accept(taskResult.output().value());
+    taskResultFeeder.addConsumer((Result result) -> {
+      if (result.hasOutputWithValue()) {
+        valueConsumer.accept(result.output().value());
       }
     });
   }
 
-  public void setTaskResult(TaskResult taskResult) {
-    taskResultFeeder.accept(taskResult);
+  public void setTaskResult(Result result) {
+    taskResultFeeder.accept(result);
   }
 }

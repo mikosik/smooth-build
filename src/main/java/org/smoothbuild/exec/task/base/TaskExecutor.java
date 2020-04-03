@@ -9,6 +9,8 @@ import javax.inject.Provider;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputDb;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.SandboxHash;
@@ -32,8 +34,9 @@ public class TaskExecutor {
     this.feeders = new ConcurrentHashMap<>();
   }
 
-  public void execute(Task task, Input input, Consumer<ExecutionResult> consumer) {
-    Hash hash = executionHash(task, input);
+  public void compute(Algorithm algorithm, Input input, Consumer<ExecutionResult> consumer,
+      boolean cacheable) {
+    Hash hash = computationHash(algorithm, input);
     Feeder<ExecutionResult> newFeeder = new Feeder<>();
     Feeder<ExecutionResult> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
@@ -42,16 +45,16 @@ public class TaskExecutor {
       newFeeder.addConsumer(consumer);
       try {
         if (outputDb.contains(hash)) {
-          Output output = outputDb.read(hash, task.type());
-          newFeeder.accept(new ExecutionResult(new TaskResult(output, true)));
+          Output output = outputDb.read(hash, algorithm.type());
+          newFeeder.accept(new ExecutionResult(new Result(output, true)));
           feeders.remove(hash);
         } else {
-          TaskResult taskResult = executeTask(task, input);
-          boolean cacheOnDisk = task.isComputationCacheable() && taskResult.hasOutput();
+          Result result = doCompute(algorithm, input);
+          boolean cacheOnDisk = cacheable && result.hasOutput();
           if (cacheOnDisk) {
-            outputDb.write(hash, taskResult.output());
+            outputDb.write(hash, result.output());
           }
-          newFeeder.accept(new ExecutionResult(taskResult));
+          newFeeder.accept(new ExecutionResult(result));
           if (cacheOnDisk) {
             feeders.remove(hash);
           }
@@ -62,17 +65,21 @@ public class TaskExecutor {
     }
   }
 
-  private TaskResult executeTask(Task task, Input input) throws IOException {
+  private Result doCompute(Algorithm algorithm, Input input) throws IOException {
     try (Container container = containerProvider.get()) {
-      return task.execute(container, input);
+      try {
+        return new Result(algorithm.run(input, container), false);
+      } catch (ComputationException e) {
+        return new Result(e);
+      }
     }
   }
 
-  private Hash executionHash(Task task, Input input) {
-    return executionHash(task, input, sandboxHash);
+  private Hash computationHash(Algorithm algorithm, Input input) {
+    return computationHash(algorithm, input, sandboxHash);
   }
 
-  public static Hash executionHash(Task task, Input input, Hash sandboxHash) {
-    return Hash.of(sandboxHash, task.hash(), input.hash());
+  public static Hash computationHash(Algorithm algorithm, Input input, Hash sandboxHash) {
+    return Hash.of(sandboxHash, algorithm.hash(), input.hash());
   }
 }

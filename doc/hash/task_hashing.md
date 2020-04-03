@@ -1,33 +1,33 @@
-Task is most atomic operation that can be executed by smooth build internally.
-Task is a computation done one some Input which produces some Output.
+Most atomic operation that can be executed by smooth build internally is called Computation.
+It applies Algorithm to some Input and produces Output or fails with ComputationException.
 Input is a sequence of smooth objects.
-Output is a
+Output consists of
  - result (single smooth object) - present only when there's no error messages 
  - sequence of messages (errors, warnings, infos)
-After each Task execution:
+
+After each computation:
  - its Output's result (if present) is stored in objects db
  - its Output messages are stored as Message array in objects db
  - hash of Message array plus (optionally) hash of result are stored in outputs db indexed by 
- Task hash
+ computation hash
  
 
-Task
-----
+### Computation
+
 
 ```
-taskHash =
+computationHash =
 hash(
-  runtimeHash,
+  sandboxHash,
   computationHash,
   inputHash,
 )
 ```
 
-runtime
--------
+### sandbox
 
 ```
-runtimeHash =
+sandboxHash =
 hash(
   javaPlatformHash,
   smoothReleaseJarHash,
@@ -37,8 +37,7 @@ hash(
 where `smoothReleaseJarHash` is hash of smooth build release jar.
 
 
-javaPlatform
-------------
+### javaPlatform
 
 ```
 javaPlatformHash =
@@ -52,8 +51,7 @@ hash(
 )
 ```
 
-Object Computation
------------------
+### Object Computation
 
 ```
 objectComputationHash =
@@ -63,8 +61,7 @@ hash(
 )
 ```
 
-Array computation
------------------
+### Array computation
 
 ```
 arrayComputationHash =
@@ -73,8 +70,7 @@ hash(
 )
 ```
 
-Identity computation
---------------------
+### Identity computation
 
 ```
 identityComputationHash =
@@ -83,8 +79,7 @@ hash(
 )
 ```
 
-Native Call Computation
------------------------
+### Native Call Computation
 
 ```
 nativeCallComputation =
@@ -94,8 +89,7 @@ hash(
 )
 ```
 
-Native Function
----------------
+### Native Function
 
 ```
 nativeFunctionHash =
@@ -105,8 +99,7 @@ hash(
 )
 ```
 
-Convert Computation
--------------------
+### Convert Computation
 
 ```
 convertComputationHash =
@@ -116,8 +109,7 @@ hash(
 )
 ```
 
-Constructor Call Computation
-----------------------------
+### Constructor Call Computation
 
 ```
 constructorCallComputationHash =
@@ -127,8 +119,7 @@ hash(
 )
 ```
 
-Accessor Call Computation
--------------------------
+### Accessor Call Computation
 
 ```
 accessorCallComputationHash =
@@ -138,8 +129,7 @@ hash(
 )
 ```
 
-Input
------
+### Input
 
 ```
 inputHash =

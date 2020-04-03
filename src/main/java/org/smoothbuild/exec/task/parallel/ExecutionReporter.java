@@ -5,8 +5,8 @@ import static org.smoothbuild.lang.object.base.Messages.isEmpty;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
+import org.smoothbuild.exec.task.base.Result;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.exec.task.base.TaskResult;
 import org.smoothbuild.lang.object.base.Array;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -23,7 +23,7 @@ public class ExecutionReporter {
     this.console = console;
   }
 
-  public void report(Task task, TaskResult result) {
+  public void report(Task task, Result result) {
     if (result.hasOutput()) {
       Array messages = result.output().messages();
       if (!isEmpty(messages)) {
@@ -39,7 +39,7 @@ public class ExecutionReporter {
   }
 
   @VisibleForTesting
-  static String header(Task task, TaskResult result) {
+  static String header(Task task, Result result) {
     String locationString = task.location().toString();
     int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');

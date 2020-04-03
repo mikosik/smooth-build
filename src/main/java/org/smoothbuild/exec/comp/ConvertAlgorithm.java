@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.convertComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
@@ -11,10 +11,10 @@ import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ConvertComputation implements Computation {
+public class ConvertAlgorithm implements Algorithm {
   private final ConcreteType type;
 
-  public ConvertComputation(ConcreteType type) {
+  public ConvertAlgorithm(ConcreteType type) {
     this.type = type;
   }
 
@@ -25,7 +25,7 @@ public class ConvertComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return convertComputationHash(type);
+    return convertAlgorithmHash(type);
   }
 
   @Override
@@ -34,7 +34,7 @@ public class ConvertComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
     SObject object = input.objects().get(0);
     assertThat(!type.equals(object.type()));

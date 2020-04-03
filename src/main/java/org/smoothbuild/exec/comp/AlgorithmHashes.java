@@ -8,33 +8,33 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 
-public class ComputationHashes {
-  public static Hash valueComputationHash(SObject object) {
+public class AlgorithmHashes {
+  public static Hash valueAlgorithmHash(SObject object) {
     return hash(0, object.hash());
   }
 
-  public static Hash arrayComputationHash() {
+  public static Hash arrayAlgorithmHash() {
     return hash(1);
   }
 
-  public static Hash identityComputationHash() {
+  public static Hash identityAlgorithmHash() {
     return hash(2);
   }
 
-  public static Hash nativeCallComputationHash(NativeFunction function) {
+  public static Hash nativeCallAlgorithmHash(NativeFunction function) {
     return hash(3, function.hash());
   }
 
-  public static Hash convertComputationHash(ConcreteType destinationType) {
+  public static Hash convertAlgorithmHash(ConcreteType destinationType) {
     return hash(4, destinationType.hash());
   }
 
-  public static Hash constructorCallComputationHash(Constructor constructor) {
+  public static Hash constructorCallAlgorithmHash(Constructor constructor) {
     StructType type = constructor.type();
     return hash(5, type.hash());
   }
 
-  public static Hash accessorCallComputationHash(Accessor accessor) {
+  public static Hash accessorCallAlgorithmHash(Accessor accessor) {
     return hash(6, Hash.of(accessor.fieldName()));
   }
 

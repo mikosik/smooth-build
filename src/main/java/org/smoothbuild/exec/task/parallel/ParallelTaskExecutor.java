@@ -13,9 +13,9 @@ import javax.inject.Inject;
 
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.task.base.ExecutionResult;
+import org.smoothbuild.exec.task.base.Result;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskExecutor;
-import org.smoothbuild.exec.task.base.TaskResult;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
@@ -45,7 +45,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Task, TaskResult> executeAll(List<Task> tasks) throws InterruptedException {
+  public Map<Task, Result> executeAll(List<Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(taskExecutor, reporter, executor).executeAll(tasks);
   }
@@ -63,7 +63,7 @@ public class ParallelTaskExecutor {
       this.reporter = reporter;
     }
 
-    public Map<Task, TaskResult> executeAll(List<Task> tasks) throws InterruptedException {
+    public Map<Task, Result> executeAll(List<Task> tasks) throws InterruptedException {
       List<Job> jobs = tasks.stream()
           .map(this::job)
           .collect(toList());
@@ -125,7 +125,9 @@ public class ParallelTaskExecutor {
     private void enqueueExecution(Job job, Input input) {
       jobExecutor.enqueue(() -> {
         try {
-          taskExecutor.execute(job.task(), input, executionResultHandler(job));
+          Task task = job.task();
+          taskExecutor.compute(task.algorithm(), input, executionResultHandler(job),
+              task.isComputationCacheable());
         } catch (Throwable e) {
           reporter.report(e);
           jobExecutor.terminate();
@@ -134,7 +136,7 @@ public class ParallelTaskExecutor {
     }
 
     private Consumer<ExecutionResult> executionResultHandler(Job job) {
-      Consumer<TaskResult> taskResultConsumer = (TaskResult taskResult) -> {
+      Consumer<Result> taskResultConsumer = (Result taskResult) -> {
         reporter.report(job.task(), taskResult);
         if (!taskResult.hasOutputWithValue()) {
           jobExecutor.terminate();
