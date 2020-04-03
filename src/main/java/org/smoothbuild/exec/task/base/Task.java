@@ -10,14 +10,13 @@ import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.util.TreeNode;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class Task implements TreeNode<Task> {
+public class Task {
   private final Algorithm algorithm;
   private final ImmutableList<Task> dependencies;
   private final Location location;
@@ -31,7 +30,6 @@ public class Task implements TreeNode<Task> {
     this.isComputationCacheable = isComputationCacheable;
   }
 
-  @Override
   public ImmutableList<Task> children() {
     return dependencies;
   }
