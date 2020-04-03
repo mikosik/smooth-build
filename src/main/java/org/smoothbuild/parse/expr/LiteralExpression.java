@@ -1,28 +1,28 @@
 package org.smoothbuild.parse.expr;
 
-import java.util.List;
+import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
-import org.smoothbuild.exec.comp.Algorithm;
-import org.smoothbuild.exec.comp.ValueAlgorithm;
+import org.smoothbuild.exec.task.base.FixedTask;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.lang.object.base.SString;
 
 public class LiteralExpression extends Expression {
   private final SObject object;
+  private final Array messages;
 
-  public LiteralExpression(SObject object, Location location) {
+  public LiteralExpression(SObject object, Array messages, Location location) {
     super(location);
     this.object = object;
+    this.messages = messages;
   }
 
   @Override
   public Task createTask(Scope<Task> scope) {
-    Algorithm algorithm = new ValueAlgorithm(object);
-    List<Task> dependencies = ImmutableList.of();
-    return new Task(algorithm, dependencies, location(), true);
+    String name = escapedAndLimitedWithEllipsis(((SString) this.object).jValue(), 20);
+    return new FixedTask(object, name, messages, location());
   }
 }

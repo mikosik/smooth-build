@@ -10,8 +10,8 @@ import javax.inject.Provider;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.outputs.OutputDb;
 import org.smoothbuild.exec.comp.Algorithm;
-import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Input;
+import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.SandboxHash;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -19,14 +19,14 @@ import org.smoothbuild.util.concurrent.Feeder;
 /**
  * This class is thread-safe.
  */
-public class TaskExecutor {
+public class Computer {
   private final OutputDb outputDb;
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
-  private final ConcurrentHashMap<Hash, Feeder<ExecutionResult>> feeders;
+  private final ConcurrentHashMap<Hash, Feeder<MaybeComputed>> feeders;
 
   @Inject
-  public TaskExecutor(OutputDb outputDb, @SandboxHash Hash sandboxHash,
+  public Computer(OutputDb outputDb, @SandboxHash Hash sandboxHash,
       Provider<Container> containerProvider) {
     this.outputDb = outputDb;
     this.sandboxHash = sandboxHash;
@@ -34,11 +34,11 @@ public class TaskExecutor {
     this.feeders = new ConcurrentHashMap<>();
   }
 
-  public void compute(Algorithm algorithm, Input input, Consumer<ExecutionResult> consumer,
-      boolean cacheable) {
+  public void compute(ComputableTask task, Input input, Consumer<MaybeComputed> consumer) {
+    Algorithm algorithm = task.algorithm();
     Hash hash = computationHash(algorithm, input);
-    Feeder<ExecutionResult> newFeeder = new Feeder<>();
-    Feeder<ExecutionResult> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
+    Feeder<MaybeComputed> newFeeder = new Feeder<>();
+    Feeder<MaybeComputed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
       prevFeeder.addConsumer(consumer);
     } else {
@@ -46,31 +46,31 @@ public class TaskExecutor {
       try {
         if (outputDb.contains(hash)) {
           Output output = outputDb.read(hash, algorithm.type());
-          newFeeder.accept(new ExecutionResult(new Result(output, true)));
+          newFeeder.accept(new MaybeComputed(new MaybeOutput(output), true));
           feeders.remove(hash);
         } else {
-          Result result = doCompute(algorithm, input);
-          boolean cacheOnDisk = cacheable && result.hasOutput();
+          MaybeOutput result = doCompute(algorithm, input);
+          boolean cacheOnDisk = task.cacheable() && result.hasOutput();
           if (cacheOnDisk) {
             outputDb.write(hash, result.output());
           }
-          newFeeder.accept(new ExecutionResult(result));
+          newFeeder.accept(new MaybeComputed(result, false));
           if (cacheOnDisk) {
             feeders.remove(hash);
           }
         }
       } catch (Throwable e) {
-        newFeeder.accept(new ExecutionResult(e));
+        newFeeder.accept(new MaybeComputed(e));
       }
     }
   }
 
-  private Result doCompute(Algorithm algorithm, Input input) throws IOException {
+  private MaybeOutput doCompute(Algorithm algorithm, Input input) throws IOException {
     try (Container container = containerProvider.get()) {
       try {
-        return new Result(algorithm.run(input, container), false);
-      } catch (ComputationException e) {
-        return new Result(e);
+        return new MaybeOutput(algorithm.run(input, container));
+      } catch (Exception e) {
+        return new MaybeOutput(e);
       }
     }
   }

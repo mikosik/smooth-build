@@ -6,15 +6,12 @@ import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Algorithm;
-import org.smoothbuild.exec.comp.IdentityAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.VirtualTask;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.type.ConcreteType;
-
-import com.google.common.collect.ImmutableList;
 
 public class DefinedCallExpression extends Expression {
   private final DefinedFunction function;
@@ -36,9 +33,7 @@ public class DefinedCallExpression extends Expression {
         .createTask(functionScope(arguments))
         .convertIfNeeded(actualResultType);
 
-    Algorithm algorithm = new IdentityAlgorithm(function.name(), actualResultType);
-    List<Task> dependencies = ImmutableList.of(task);
-    return new Task(algorithm, dependencies, location(), true);
+    return new VirtualTask(function.name(), actualResultType, task, location());
   }
 
   private Scope<Task> functionScope(List<Task> arguments) {

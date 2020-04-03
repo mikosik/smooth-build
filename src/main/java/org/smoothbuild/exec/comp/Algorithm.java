@@ -11,5 +11,5 @@ public interface Algorithm {
 
   public ConcreteType type();
 
-  public Output run(Input input, NativeApi nativeApi) throws ComputationException;
+  public Output run(Input input, NativeApi nativeApi) throws Exception;
 }

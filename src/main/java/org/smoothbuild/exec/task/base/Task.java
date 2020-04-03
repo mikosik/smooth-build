@@ -5,57 +5,34 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
+import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
+import org.smoothbuild.exec.task.parallel.ResultFeeder;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
 import com.google.common.collect.ImmutableList;
 
 /**
- * This class is immutable.
+ * Subclasses of this class must be immutable.
  */
-public class Task {
-  private final Algorithm algorithm;
-  private final ImmutableList<Task> dependencies;
-  private final Location location;
-  private final boolean isComputationCacheable;
+public abstract class Task {
+  protected final ImmutableList<Task> dependencies;
+  protected final Location location;
 
-  public Task(Algorithm algorithm, List<? extends Task> dependencies,
-      Location location, boolean isComputationCacheable) {
-    this.algorithm = algorithm;
+  public Task(
+      List<? extends Task> dependencies, Location location) {
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
-    this.isComputationCacheable = isComputationCacheable;
   }
 
   public ImmutableList<Task> children() {
     return dependencies;
   }
 
-  public String name() {
-    return algorithm.name();
-  }
-
-  public ConcreteType type() {
-    return algorithm.type();
-  }
-
   public Location location() {
     return location;
-  }
-
-  public Algorithm algorithm() {
-    return algorithm;
-  }
-
-  public boolean isComputationCacheable() {
-    return isComputationCacheable;
-  }
-
-  public Hash hash() {
-    return algorithm.hash();
   }
 
   public Task convertIfNeeded(ConcreteType type) {
@@ -64,16 +41,17 @@ public class Task {
     } else {
       Algorithm algorithm = new ConvertAlgorithm(type);
       List<Task> dependencies = list(this);
-      return new Task(algorithm, dependencies, location(), true);
+      return new NormalTask(algorithm, dependencies, location(), true);
     }
   }
 
+  public abstract String name();
+
+  public abstract ConcreteType type();
+
+  public abstract ResultFeeder startComputation(ParallelTaskExecutor.Worker worker);
+
   public static List<ConcreteType> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);
-  }
-
-  @Override
-  public String toString() {
-    return "Task(" + algorithm.name() + ")";
   }
 }

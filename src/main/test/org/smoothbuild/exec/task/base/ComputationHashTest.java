@@ -4,10 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.Input.input;
+import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -16,11 +15,9 @@ import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ArrayLiteralAlgorithm;
 import org.smoothbuild.exec.comp.ConstructorCallAlgorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
-import org.smoothbuild.exec.comp.IdentityAlgorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.NativeCallAlgorithm;
 import org.smoothbuild.exec.comp.Output;
-import org.smoothbuild.exec.comp.ValueAlgorithm;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
@@ -29,7 +26,7 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
-public class TaskHashTest extends TestingContext {
+public class ComputationHashTest extends TestingContext {
   @Test
   public void hashes_of_computations_with_same_algorithm_runtime_and_input_are_equal() {
     Algorithm algorithm = computation(Hash.of(1));
@@ -65,27 +62,11 @@ public class TaskHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_empty_string_value_algorithm_is_stable() {
-    Algorithm algorithm = new ValueAlgorithm(string(""));
-    Input input = input(list());
-    assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("fb03996d8c7b95104ec51115c5c275fe91f0a9ee"));
-  }
-
-  @Test
-  public void hash_of_execution_with_string_value_algorithm_is_stable() {
-    Algorithm algorithm = new ValueAlgorithm(string("value"));
-    Input input = input(list());
-    assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("db9ee08a5acecc6c6bdbecee8154489d6d5ef089"));
-  }
-
-  @Test
   public void hash_of_execution_with_array_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new ArrayLiteralAlgorithm(arrayType(stringType()));
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("d20343333435effc353d96a8704cd929f7c39498"));
+        .isEqualTo(Hash.decode("16457f3457ec260bb4be0161933c32010b162123"));
   }
 
   @Test
@@ -93,7 +74,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new ArrayLiteralAlgorithm(arrayType(stringType()));
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
+        .isEqualTo(Hash.decode("8dc297a86b455810ee2558f9e6eb8893c524f861"));
   }
 
   @Test
@@ -101,7 +82,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new NativeCallAlgorithm(stringType(), mockNativeFunction());
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("36cf27551327ed05f5c0122dcced61e86ce01e84"));
+        .isEqualTo(Hash.decode("d66663fdde3d70dda784d5b035578cbd7bd6c184"));
   }
 
   @Test
@@ -109,15 +90,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new NativeCallAlgorithm(stringType(), mockNativeFunction());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("e3b8532fb64253f571926e8e3cf459a57be34aa0"));
-  }
-
-  @Test
-  public void hash_of_execution_with_identity_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new IdentityAlgorithm("name", stringType());
-    Input input = input(list(string("abc")));
-    assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("68f494d78c566e029fa288f0aa36b33a2f383ba7"));
+        .isEqualTo(Hash.decode("425c7c9760d1e93908cc13c04bdb4092eee8561d"));
   }
 
   @Test
@@ -125,7 +98,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new ConvertAlgorithm(stringType());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("2e18856c213531ddc9f883907e90eda84c8e3e20"));
+        .isEqualTo(Hash.decode("1ec66039449159837c5e5e82ce3da7bbf89ed417"));
   }
 
   @Test
@@ -133,7 +106,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("e14ca21fccb6631fd52809c4c4b409f2f66a077c"));
+        .isEqualTo(Hash.decode("af8f490d36d092f1c660585e557ff988b1048c17"));
   }
 
   @Test
@@ -141,7 +114,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("68acb231ddf9eb8d878d1a68897aba09888b3b8e"));
+        .isEqualTo(Hash.decode("0df5916d25416379005a8e4700fca183b7ae86da"));
   }
 
   @Test
@@ -149,7 +122,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("94296c0f10b807bb7f46c7196035c5e787dc03b2"));
+        .isEqualTo(Hash.decode("55076a75491bc119310d29f3d4239ebeba07360f"));
   }
 
   private Constructor constructor() {
@@ -162,7 +135,7 @@ public class TaskHashTest extends TestingContext {
     Algorithm algorithm = new AccessorCallAlgorithm(accessor());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
-        .isEqualTo(Hash.decode("0d0a4fd630fd9ffe0bfe5820a8b38c65b07dcbdc"));
+        .isEqualTo(Hash.decode("d4ef1a2529ad47aca82b72dd736dccc1ea4c1f01"));
   }
 
   private Accessor accessor() {

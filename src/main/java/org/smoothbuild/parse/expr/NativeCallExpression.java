@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.NativeCallAlgorithm;
+import org.smoothbuild.exec.task.base.IfTask;
+import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.NativeFunction;
@@ -34,7 +36,11 @@ public class NativeCallExpression extends Expression {
 
     Algorithm algorithm = new NativeCallAlgorithm(actualResultType, nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
-    return new Task(algorithm, dependencies, location(), nativeFunction.isCacheable());
+    if (nativeFunction.name().equals("if")) {
+      return new IfTask(algorithm, dependencies, location(), nativeFunction.isCacheable());
+    } else {
+      return new NormalTask(algorithm, dependencies, location(), nativeFunction.isCacheable());
+    }
   }
 
   private static List<Task> convertedArguments(
