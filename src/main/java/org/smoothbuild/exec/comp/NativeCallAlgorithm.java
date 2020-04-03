@@ -38,7 +38,7 @@ public class NativeCallAlgorithm implements Algorithm {
   }
 
   @Override
-  public Output run(Input input, NativeApi nativeApi) throws ComputationException {
+  public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
       SObject result = (SObject) function.nativ().method()
           .invoke(null, createArguments(nativeApi, input.objects()));
@@ -59,7 +59,7 @@ public class NativeCallAlgorithm implements Algorithm {
       if (cause instanceof AbortException) {
         return nullOutput(nativeApi);
       } else {
-        throw new ComputationException(
+        throw new NativeCallException(
             "Function " + function.name() + " threw java exception from its native code.", cause);
       }
     }

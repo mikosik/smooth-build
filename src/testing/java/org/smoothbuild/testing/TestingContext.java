@@ -9,8 +9,8 @@ import java.io.IOException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.outputs.OutputDb;
+import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.Container;
-import org.smoothbuild.exec.task.base.TaskExecutor;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
@@ -43,7 +43,7 @@ import com.google.inject.util.Providers;
 import okio.ByteString;
 
 public class TestingContext {
-  private TaskExecutor taskExecutor;
+  private Computer computer;
   private Container container;
   private ObjectFactory objectFactory;
   private ObjectFactory emptyCacheObjectFactory;
@@ -60,11 +60,11 @@ public class TestingContext {
     return container();
   }
 
-  public TaskExecutor taskExecutor() {
-    if (taskExecutor == null) {
-      taskExecutor = new TaskExecutor(outputDb(), Hash.of(123), Providers.of(newContainer()));
+  public Computer computer() {
+    if (computer == null) {
+      computer = new Computer(outputDb(), Hash.of(123), Providers.of(newContainer()));
     }
-    return taskExecutor;
+    return computer;
   }
 
   public Container container() {

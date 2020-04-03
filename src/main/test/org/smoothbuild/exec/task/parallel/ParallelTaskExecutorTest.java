@@ -2,6 +2,7 @@ package org.smoothbuild.exec.task.parallel;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.joining;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
@@ -15,14 +16,16 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.cli.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
-import org.smoothbuild.exec.task.base.ExecutionResult;
-import org.smoothbuild.exec.task.base.Result;
+import org.smoothbuild.exec.task.base.ComputableTask;
+import org.smoothbuild.exec.task.base.Computer;
+import org.smoothbuild.exec.task.base.MaybeComputed;
+import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.exec.task.base.TaskExecutor;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -37,7 +40,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   @BeforeEach
   public void before() {
     reporter = mock(ExecutionReporter.class);
-    parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor(), reporter, 4);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
   }
 
   @Test
@@ -69,7 +72,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   @Test
   public void task_execution_waits_and_reuses_result_of_task_with_equal_hash_that_is_being_executed()
       throws Exception {
-    parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor(), reporter, 4);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
     AtomicInteger counter = new AtomicInteger();
     Task task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
@@ -84,7 +87,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   @Test
   public void waiting_for_result_of_other_task_with_equal_hash_doesnt_block_executor_thread()
       throws Exception {
-    parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor(), reporter, 2);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
     AtomicInteger counter = new AtomicInteger();
     Task task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
@@ -97,30 +100,34 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   @Test
   public void task_throwing_runtime_exception_causes_error() throws Exception {
+    Console console = mock(Console.class);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(console), 4);
     ArithmeticException exception = new ArithmeticException();
     Task task = task(throwingAlgorithm(exception));
+
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
-    verify(reporter).report(same(exception));
+    verify(console).print(
+        eq("runtimeException                                         unknown location"),
+        same(exception));
   }
 
   @Test
   public void task_executor_that_throws_exception_is_detected() throws InterruptedException {
     RuntimeException exception = new RuntimeException();
-    TaskExecutor taskExecutor = new TaskExecutor(null, null, null) {
+    Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(Algorithm algorithm, Input input, Consumer<ExecutionResult> consumer,
-          boolean cacheable) {
+      public void compute(ComputableTask task, Input input, Consumer<MaybeComputed> consumer) {
         throw exception;
       }
     };
-    parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor, reporter);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
     Task task = task(valueAlgorithm("A"));
 
-    Result result = parallelTaskExecutor.executeAll(list(task)).get(task);
+    Output output = parallelTaskExecutor.executeAll(list(task)).get(task);
 
     verify(reporter, only()).report(same(exception));
-    assertThat(result).isNull();
+    assertThat(output).isNull();
   }
 
   private Task concat(Task... dependencies) {
@@ -197,7 +204,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   private static Output executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
-    return parallelTaskExecutor.executeAll(list(task)).get(task).output();
+    return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
 
   private Task task(Algorithm algorithm) {
@@ -205,7 +212,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new Task(algorithm, dependencies, unknownLocation(), true);
+    return new NormalTask(algorithm, dependencies, unknownLocation(), true);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {

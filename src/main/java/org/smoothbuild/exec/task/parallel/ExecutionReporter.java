@@ -5,7 +5,8 @@ import static org.smoothbuild.lang.object.base.Messages.isEmpty;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.exec.task.base.Result;
+import org.smoothbuild.exec.comp.MaybeOutput;
+import org.smoothbuild.exec.task.base.MaybeComputed;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
 
@@ -23,14 +24,19 @@ public class ExecutionReporter {
     this.console = console;
   }
 
-  public void report(Task task, Result result) {
-    if (result.hasOutput()) {
-      Array messages = result.output().messages();
-      if (!isEmpty(messages)) {
-        console.print(header(task, result), messages);
+  public void report(Task task, MaybeComputed maybeComputed, boolean fromCache) {
+    if (maybeComputed.hasComputed()) {
+      MaybeOutput maybeOutput = maybeComputed.computed();
+      if (maybeOutput.hasOutput()) {
+        Array messages = maybeOutput.output().messages();
+        if (!isEmpty(messages)) {
+          console.print(header(task, fromCache), messages);
+        }
+      } else {
+        console.print(header(task, fromCache), maybeOutput.exception());
       }
     } else {
-      console.print(header(task, result), result.failure());
+      report(maybeComputed.throwable());
     }
   }
 
@@ -39,11 +45,10 @@ public class ExecutionReporter {
   }
 
   @VisibleForTesting
-  static String header(Task task, Result result) {
+  static String header(Task task, boolean fromCache) {
     String locationString = task.location().toString();
     int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
-    String cached = result.isFromCache() ? " CACHED" : "";
-    return name + locationString + cached;
+    return name + locationString + (fromCache ? " CACHED" : "");
   }
 }

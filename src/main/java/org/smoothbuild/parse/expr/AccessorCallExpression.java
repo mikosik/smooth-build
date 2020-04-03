@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.AccessorCallAlgorithm;
 import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
@@ -22,6 +23,6 @@ public class AccessorCallExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     Algorithm algorithm = new AccessorCallAlgorithm(accessor);
     List<Task> dependencies = childrenTasks(scope);
-    return new Task(algorithm, dependencies, location(), true);
+    return new NormalTask(algorithm, dependencies, location(), true);
   }
 }

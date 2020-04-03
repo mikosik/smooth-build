@@ -7,9 +7,7 @@ import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHas
 import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.identityAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.valueAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -20,7 +18,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.testing.TestingContext;
 
 public class AlgorithmHashesTest extends TestingContext {
@@ -30,27 +27,15 @@ public class AlgorithmHashesTest extends TestingContext {
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
     Constructor constructor = constructor("MyStruct2");
     Accessor accessor = accessor("myField");
-    SObject object = object(Hash.of(0));
 
-    hashes.add(valueAlgorithmHash(object));
     hashes.add(arrayAlgorithmHash());
-    hashes.add(identityAlgorithmHash());
     hashes.add(nativeCallAlgorithmHash(function));
     hashes.add(convertAlgorithmHash(stringType()));
     hashes.add(constructorCallAlgorithmHash(constructor));
     hashes.add(accessorCallAlgorithmHash(accessor));
 
     assertThat(hashes.size())
-        .isEqualTo(7);
-  }
-
-  @Test
-  public void value_algorithm_has_different_hash_for_different_values() {
-    SObject object = object(Hash.of(1));
-    SObject object2 = object(Hash.of(2));
-
-    assertThat(valueAlgorithmHash(object))
-        .isNotEqualTo(valueAlgorithmHash(object2));
+        .isEqualTo(5);
   }
 
   @Test
@@ -102,11 +87,5 @@ public class AlgorithmHashesTest extends TestingContext {
     Constructor constructor = mock(Constructor.class);
     when(constructor.type()).thenReturn(structType(typeName, list()));
     return constructor;
-  }
-
-  private static SObject object(Hash hash) {
-    SObject object = mock(SObject.class);
-    when(object.hash()).thenReturn(hash);
-    return object;
   }
 }
