@@ -16,13 +16,13 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.base.ExecutionResult;
+import org.smoothbuild.exec.task.base.Result;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskExecutor;
-import org.smoothbuild.exec.task.base.TaskResult;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -44,11 +44,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
   public void tasks_are_executed() throws Exception {
     Task task = concat(
         concat(
-            task(valueComputation("A")),
-            task(valueComputation("B"))),
+            task(valueAlgorithm("A")),
+            task(valueAlgorithm("B"))),
         concat(
-            task(valueComputation("C")),
-            task(valueComputation("D"))));
+            task(valueAlgorithm("C")),
+            task(valueAlgorithm("D"))));
 
     assertThat(executeSingleTask(task))
         .isEqualTo(toOutput("((A,B),(C,D))"));
@@ -59,8 +59,8 @@ public class ParallelTaskExecutorTest extends TestingContext {
     AtomicInteger counterA = new AtomicInteger(10);
     AtomicInteger counterB = new AtomicInteger(20);
     Task task = concat(
-        task(sleepyWriteReadComputation(Hash.of(102), counterB, counterA)),
-        task(sleepyWriteReadComputation(Hash.of(101), counterA, counterB)));
+        task(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
+        task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleTask(task))
         .isEqualTo(toOutput("(11,21)"));
@@ -72,10 +72,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor(), reporter, 4);
     AtomicInteger counter = new AtomicInteger();
     Task task = concat(
-        task(sleepGetIncrementComputation(counter)),
-        task(sleepGetIncrementComputation(counter)),
-        task(sleepGetIncrementComputation(counter)),
-        task(sleepGetIncrementComputation(counter)));
+        task(sleepGetIncrementAlgorithm(counter)),
+        task(sleepGetIncrementAlgorithm(counter)),
+        task(sleepGetIncrementAlgorithm(counter)),
+        task(sleepGetIncrementAlgorithm(counter)));
 
     assertThat(executeSingleTask(task))
         .isEqualTo(toOutput("(0,0,0,0)"));
@@ -87,9 +87,9 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor(), reporter, 2);
     AtomicInteger counter = new AtomicInteger();
     Task task = concat(
-        task(sleepGetIncrementComputation(counter)),
-        task(sleepGetIncrementComputation(counter)),
-        task(getIncrementComputation(counter)));
+        task(sleepGetIncrementAlgorithm(counter)),
+        task(sleepGetIncrementAlgorithm(counter)),
+        task(getIncrementAlgorithm(counter)));
 
     assertThat(executeSingleTask(task))
         .isEqualTo(toOutput("(1,1,0)"));
@@ -98,7 +98,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   @Test
   public void task_throwing_runtime_exception_causes_error() throws Exception {
     ArithmeticException exception = new ArithmeticException();
-    Task task = task(throwingComputation(exception));
+    Task task = task(throwingAlgorithm(exception));
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
     verify(reporter).report(same(exception));
@@ -109,27 +109,28 @@ public class ParallelTaskExecutorTest extends TestingContext {
     RuntimeException exception = new RuntimeException();
     TaskExecutor taskExecutor = new TaskExecutor(null, null, null) {
       @Override
-      public void execute(Task task, Input input, Consumer<ExecutionResult> consumer) {
+      public void compute(Algorithm algorithm, Input input, Consumer<ExecutionResult> consumer,
+          boolean cacheable) {
         throw exception;
       }
     };
     parallelTaskExecutor = new ParallelTaskExecutor(taskExecutor, reporter);
-    Task task = task(valueComputation("A"));
+    Task task = task(valueAlgorithm("A"));
 
-    TaskResult result = parallelTaskExecutor.executeAll(list(task)).get(task);
+    Result result = parallelTaskExecutor.executeAll(list(task)).get(task);
 
     verify(reporter, only()).report(same(exception));
     assertThat(result).isNull();
   }
 
   private Task concat(Task... dependencies) {
-    return task(concatComputation(), list(dependencies));
+    return task(concatAlgorithm(), list(dependencies));
   }
 
-  private Computation concatComputation() {
-    return new TestComputation("concat", Hash.of(1)) {
+  private Algorithm concatAlgorithm() {
+    return new TestAlgorithm("concat", Hash.of(1)) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         String joinedArgs = input.objects()
             .stream()
             .map(o -> ((SString) o).jValue())
@@ -140,49 +141,49 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private Computation valueComputation(String value) {
-    return new TestComputation("value", Hash.of(Hash.of(2), Hash.of(value))) {
+  private Algorithm valueAlgorithm(String value) {
+    return new TestAlgorithm("value", Hash.of(Hash.of(2), Hash.of(value))) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         SString result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
     };
   }
 
-  private Computation throwingComputation(ArithmeticException exception) {
-    return new TestComputation("runtimeException", Hash.of(3)) {
+  private Algorithm throwingAlgorithm(ArithmeticException exception) {
+    return new TestAlgorithm("runtimeException", Hash.of(3)) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         throw exception;
       }
     };
   }
 
-  private Computation sleepGetIncrementComputation(AtomicInteger counter) {
-    return new TestComputation("sleepyCounter", Hash.of(4)) {
+  private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter) {
+    return new TestAlgorithm("sleepyCounter", Hash.of(4)) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         sleep1000ms();
         return toSString(nativeApi, counter.getAndIncrement());
       }
     };
   }
 
-  private Computation getIncrementComputation(AtomicInteger counter) {
-    return new TestComputation("sleepyCounter", Hash.of(5)) {
+  private Algorithm getIncrementAlgorithm(AtomicInteger counter) {
+    return new TestAlgorithm("sleepyCounter", Hash.of(5)) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         return toSString(nativeApi, counter.getAndIncrement());
       }
     };
   }
 
-  private Computation sleepyWriteReadComputation(
+  private Algorithm sleepyWriteReadAlgorithm(
       Hash hash, AtomicInteger write, AtomicInteger read) {
-    return new TestComputation("sleepyWriteRead", hash) {
+    return new TestAlgorithm("sleepyWriteRead", hash) {
       @Override
-      public Output execute(Input input, NativeApi nativeApi) {
+      public Output run(Input input, NativeApi nativeApi) {
         write.incrementAndGet();
         sleep1000ms();
         return toSString(nativeApi, read.get());
@@ -199,12 +200,12 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return parallelTaskExecutor.executeAll(list(task)).get(task).output();
   }
 
-  private Task task(Computation computation) {
-    return task(computation, ImmutableList.of());
+  private Task task(Algorithm algorithm) {
+    return task(algorithm, ImmutableList.of());
   }
 
-  private static Task task(Computation computation, List<Task> dependencies) {
-    return new Task(computation, dependencies, unknownLocation(), true);
+  private static Task task(Algorithm algorithm, List<Task> dependencies) {
+    return new Task(algorithm, dependencies, unknownLocation(), true);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {
@@ -223,11 +224,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
   }
 
-  private abstract class TestComputation implements Computation {
+  private abstract class TestAlgorithm implements Algorithm {
     private final String name;
     private final Hash hash;
 
-    protected TestComputation(String name, Hash hash) {
+    protected TestAlgorithm(String name, Hash hash) {
       this.name = name;
       this.hash = hash;
     }

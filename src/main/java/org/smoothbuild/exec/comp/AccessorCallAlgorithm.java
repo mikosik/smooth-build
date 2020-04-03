@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.exec.comp.ComputationHashes.accessorCallComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
@@ -12,10 +12,10 @@ import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class AccessorCallComputation implements Computation {
+public class AccessorCallAlgorithm implements Algorithm {
   private final Accessor accessor;
 
-  public AccessorCallComputation(Accessor accessor) {
+  public AccessorCallAlgorithm(Accessor accessor) {
     this.accessor = accessor;
   }
 
@@ -26,7 +26,7 @@ public class AccessorCallComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return accessorCallComputationHash(accessor);
+    return accessorCallAlgorithmHash(accessor);
   }
 
   @Override
@@ -35,7 +35,7 @@ public class AccessorCallComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     ImmutableList<SObject> objects = input.objects();
     checkArgument(objects.size() == 1);
     Struct struct = (Struct) objects.get(0);

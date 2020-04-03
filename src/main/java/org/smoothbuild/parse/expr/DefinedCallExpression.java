@@ -6,8 +6,8 @@ import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.comp.IdentityComputation;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.IdentityAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
@@ -36,9 +36,9 @@ public class DefinedCallExpression extends Expression {
         .createTask(functionScope(arguments))
         .convertIfNeeded(actualResultType);
 
-    Computation computation = new IdentityComputation(function.name(), actualResultType);
+    Algorithm algorithm = new IdentityAlgorithm(function.name(), actualResultType);
     List<Task> dependencies = ImmutableList.of(task);
-    return new Task(computation, dependencies, location(), true);
+    return new Task(algorithm, dependencies, location(), true);
   }
 
   private Scope<Task> functionScope(List<Task> arguments) {

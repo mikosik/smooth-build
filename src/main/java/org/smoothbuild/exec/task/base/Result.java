@@ -6,18 +6,18 @@ import org.smoothbuild.exec.comp.Output;
 /**
  * This class is immutable.
  */
-public class TaskResult {
+public class Result {
   private final Output output;
   private final ComputationException throwable;
   private final boolean isFromCache;
 
-  public TaskResult(Output output, boolean isFromCache) {
+  public Result(Output output, boolean isFromCache) {
     this.output = output;
     this.isFromCache = isFromCache;
     this.throwable = null;
   }
 
-  public TaskResult(ComputationException failure) {
+  public Result(ComputationException failure) {
     this.throwable = failure;
     this.output = null;
     this.isFromCache = false;

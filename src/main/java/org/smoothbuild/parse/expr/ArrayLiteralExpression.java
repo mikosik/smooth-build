@@ -4,8 +4,8 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.ArrayLiteralComputation;
-import org.smoothbuild.exec.comp.Computation;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.ArrayLiteralAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
@@ -28,9 +28,9 @@ public class ArrayLiteralExpression extends Expression {
     List<Task> elements = childrenTasks(scope);
     ConcreteArrayType actualType = arrayType(elements);
 
-    Computation computation = new ArrayLiteralComputation(actualType);
+    Algorithm algorithm = new ArrayLiteralAlgorithm(actualType);
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new Task(computation, convertedElements, location(), true);
+    return new Task(algorithm, convertedElements, location(), true);
   }
 
   private static List<Task> convertedElements(ConcreteType type, List<Task> elements) {

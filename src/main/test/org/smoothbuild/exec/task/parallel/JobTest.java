@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.comp.ComputationException;
 import org.smoothbuild.exec.comp.Output;
-import org.smoothbuild.exec.task.base.TaskResult;
+import org.smoothbuild.exec.task.base.Result;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 
@@ -27,11 +27,11 @@ public class JobTest {
   @Test
   public void task_result_returns_value_set_by_set_task_result() {
     Job job = new Job(null);
-    TaskResult taskResult = mock(TaskResult.class);
-    job.setTaskResult(taskResult);
+    Result result = mock(Result.class);
+    job.setTaskResult(result);
 
     assertThat(job.taskResult())
-        .isSameInstanceAs(taskResult);
+        .isSameInstanceAs(result);
   }
 
   @Test
@@ -65,7 +65,7 @@ public class JobTest {
     Consumer<SObject> consumer = mock(Consumer.class);
     job.addValueConsumer(consumer);
 
-    job.setTaskResult(new TaskResult(new ComputationException(null)));
+    job.setTaskResult(new Result(new ComputationException(null)));
 
     verifyNoInteractions(consumer);
   }
@@ -76,12 +76,12 @@ public class JobTest {
     Runnable runnable = mock(Runnable.class);
     job.addValueAvailableListener(runnable);
 
-    job.setTaskResult(new TaskResult(new ComputationException(null)));
+    job.setTaskResult(new Result(new ComputationException(null)));
 
     verifyNoInteractions(runnable);
   }
 
-  private static TaskResult taskResult(SObject sObject) {
-    return new TaskResult(new Output(sObject, mock(Array.class)), false);
+  private static Result taskResult(SObject sObject) {
+    return new Result(new Output(sObject, mock(Array.class)), false);
   }
 }

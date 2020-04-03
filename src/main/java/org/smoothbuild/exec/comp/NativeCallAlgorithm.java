@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.nativeCallComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -13,11 +13,11 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class NativeCallComputation implements Computation {
+public class NativeCallAlgorithm implements Algorithm {
   private final ConcreteType type;
   private final NativeFunction function;
 
-  public NativeCallComputation(ConcreteType type, NativeFunction function) {
+  public NativeCallAlgorithm(ConcreteType type, NativeFunction function) {
     this.type = type;
     this.function = function;
   }
@@ -29,7 +29,7 @@ public class NativeCallComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return nativeCallComputationHash(function);
+    return nativeCallAlgorithmHash(function);
   }
 
   @Override
@@ -38,7 +38,7 @@ public class NativeCallComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) throws ComputationException {
+  public Output run(Input input, NativeApi nativeApi) throws ComputationException {
     try {
       SObject result = (SObject) function.nativ().method()
           .invoke(null, createArguments(nativeApi, input.objects()));

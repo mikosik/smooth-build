@@ -6,10 +6,8 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.comp.ComputationException;
-import org.smoothbuild.exec.comp.ConvertComputation;
-import org.smoothbuild.exec.comp.Input;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.TreeNode;
@@ -20,14 +18,14 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Task implements TreeNode<Task> {
-  private final Computation computation;
+  private final Algorithm algorithm;
   private final ImmutableList<Task> dependencies;
   private final Location location;
   private final boolean isComputationCacheable;
 
-  public Task(Computation computation, List<? extends Task> dependencies,
+  public Task(Algorithm algorithm, List<? extends Task> dependencies,
       Location location, boolean isComputationCacheable) {
-    this.computation = computation;
+    this.algorithm = algorithm;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
     this.isComputationCacheable = isComputationCacheable;
@@ -39,23 +37,19 @@ public class Task implements TreeNode<Task> {
   }
 
   public String name() {
-    return computation.name();
+    return algorithm.name();
   }
 
   public ConcreteType type() {
-    return computation.type();
+    return algorithm.type();
   }
 
   public Location location() {
     return location;
   }
 
-  public TaskResult execute(Container container, Input input) {
-    try {
-      return new TaskResult(computation.execute(input, container), false);
-    } catch (ComputationException e) {
-      return new TaskResult(e);
-    }
+  public Algorithm algorithm() {
+    return algorithm;
   }
 
   public boolean isComputationCacheable() {
@@ -63,16 +57,16 @@ public class Task implements TreeNode<Task> {
   }
 
   public Hash hash() {
-    return computation.hash();
+    return algorithm.hash();
   }
 
   public Task convertIfNeeded(ConcreteType type) {
     if (type().equals(type)) {
       return this;
     } else {
-      Computation computation = new ConvertComputation(type);
+      Algorithm algorithm = new ConvertAlgorithm(type);
       List<Task> dependencies = list(this);
-      return new Task(computation, dependencies, location(), true);
+      return new Task(algorithm, dependencies, location(), true);
     }
   }
 
@@ -82,6 +76,6 @@ public class Task implements TreeNode<Task> {
 
   @Override
   public String toString() {
-    return "Task(" + computation.name() + ")";
+    return "Task(" + algorithm.name() + ")";
   }
 }

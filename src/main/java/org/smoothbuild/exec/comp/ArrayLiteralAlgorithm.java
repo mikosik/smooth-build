@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.arrayComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Array;
@@ -8,10 +8,10 @@ import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ArrayLiteralComputation implements Computation {
+public class ArrayLiteralAlgorithm implements Algorithm {
   private final ConcreteArrayType arrayType;
 
-  public ArrayLiteralComputation(ConcreteArrayType arrayType) {
+  public ArrayLiteralAlgorithm(ConcreteArrayType arrayType) {
     this.arrayType = arrayType;
   }
 
@@ -22,7 +22,7 @@ public class ArrayLiteralComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return arrayComputationHash();
+    return arrayAlgorithmHash();
   }
 
   @Override
@@ -31,7 +31,7 @@ public class ArrayLiteralComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     Array array = nativeApi
         .factory()
         .arrayBuilder(arrayType.elemType())

@@ -2,8 +2,8 @@ package org.smoothbuild.parse.expr;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Computation;
-import org.smoothbuild.exec.comp.ConstructorCallComputation;
+import org.smoothbuild.exec.comp.Algorithm;
+import org.smoothbuild.exec.comp.ConstructorCallAlgorithm;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Location;
@@ -20,8 +20,8 @@ public class ConstructorCallExpression extends Expression {
 
   @Override
   public Task createTask(Scope<Task> scope) {
-    Computation computation = new ConstructorCallComputation(constructor);
+    Algorithm algorithm = new ConstructorCallAlgorithm(constructor);
     List<Task> dependencies = childrenTasks(scope);
-    return new Task(computation, dependencies, location(), true);
+    return new Task(algorithm, dependencies, location(), true);
   }
 }

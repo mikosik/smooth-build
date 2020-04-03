@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.ComputationHashes.valueComputationHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.valueAlgorithmHash;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -9,10 +9,10 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ValueComputation implements Computation {
+public class ValueAlgorithm implements Algorithm {
   private final SObject object;
 
-  public ValueComputation(SObject object) {
+  public ValueAlgorithm(SObject object) {
     this.object = object;
   }
 
@@ -23,7 +23,7 @@ public class ValueComputation implements Computation {
 
   @Override
   public Hash hash() {
-    return valueComputationHash(object);
+    return valueAlgorithmHash(object);
   }
 
   @Override
@@ -32,7 +32,7 @@ public class ValueComputation implements Computation {
   }
 
   @Override
-  public Output execute(Input input, NativeApi nativeApi) {
+  public Output run(Input input, NativeApi nativeApi) {
     return new Output(object, nativeApi.messages());
   }
 }
