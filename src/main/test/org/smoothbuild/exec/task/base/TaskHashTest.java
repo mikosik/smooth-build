@@ -13,7 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.AccessorCallComputation;
-import org.smoothbuild.exec.comp.ArrayComputation;
+import org.smoothbuild.exec.comp.ArrayLiteralComputation;
 import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.comp.ConstructorCallComputation;
 import org.smoothbuild.exec.comp.ConvertComputation;
@@ -89,7 +89,7 @@ public class TaskHashTest extends TestingContext {
 
   @Test
   public void hash_of_execution_with_array_computation_and_empty_input_is_stable() {
-    Task task = task(new ArrayComputation(arrayType(stringType())), list());
+    Task task = task(new ArrayLiteralComputation(arrayType(stringType())), list());
     Input input = input(list());
     assertThat(executionHash(task, input, Hash.of(13)))
         .isEqualTo(Hash.decode("d20343333435effc353d96a8704cd929f7c39498"));
@@ -97,7 +97,7 @@ public class TaskHashTest extends TestingContext {
 
   @Test
   public void hash_of_execution_with_array_computation_and_non_empty_input_is_stable() {
-    Task task = task(new ArrayComputation(arrayType(stringType())), list());
+    Task task = task(new ArrayLiteralComputation(arrayType(stringType())), list());
     Input input = input(list(string("abc"), string("def")));
     assertThat(executionHash(task, input, Hash.of(13)))
         .isEqualTo(Hash.decode("ed225677d4183c156bde26a8a4b5f6184e53b2d1"));
