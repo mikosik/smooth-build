@@ -4,7 +4,7 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.ArrayComputation;
+import org.smoothbuild.exec.comp.ArrayLiteralComputation;
 import org.smoothbuild.exec.comp.Computation;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
@@ -14,10 +14,10 @@ import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Type;
 
-public class ArrayExpression extends Expression {
+public class ArrayLiteralExpression extends Expression {
   private final ArrayType arrayType;
 
-  public ArrayExpression(ArrayType arrayType, List<? extends Expression> elements,
+  public ArrayLiteralExpression(ArrayType arrayType, List<? extends Expression> elements,
       Location location) {
     super(elements, location);
     this.arrayType = arrayType;
@@ -28,7 +28,7 @@ public class ArrayExpression extends Expression {
     List<Task> elements = childrenTasks(scope);
     ConcreteArrayType actualType = arrayType(elements);
 
-    Computation computation = new ArrayComputation(actualType);
+    Computation computation = new ArrayLiteralComputation(actualType);
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new Task(computation, convertedElements, location(), true);
   }

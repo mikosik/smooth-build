@@ -8,10 +8,10 @@ import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ArrayComputation implements Computation {
+public class ArrayLiteralComputation implements Computation {
   private final ConcreteArrayType arrayType;
 
-  public ArrayComputation(ConcreteArrayType arrayType) {
+  public ArrayLiteralComputation(ConcreteArrayType arrayType) {
     this.arrayType = arrayType;
   }
 

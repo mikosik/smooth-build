@@ -29,7 +29,7 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.parse.expr.ArrayExpression;
+import org.smoothbuild.parse.expr.ArrayLiteralExpression;
 import org.smoothbuild.parse.expr.BoundValueExpression;
 import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.parse.expr.LiteralExpression;
@@ -125,7 +125,7 @@ public class FunctionLoader {
       private Expression createArray(ArrayNode array) {
         ArrayType type = (ArrayType) array.get(Type.class);
         List<Expression> elements = map(array.elements(), this::createExpression);
-        return new ArrayExpression(type, elements, array.location());
+        return new ArrayLiteralExpression(type, elements, array.location());
       }
     }.get();
   }
