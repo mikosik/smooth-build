@@ -64,4 +64,9 @@ public class Feeder<T> implements Consumer<T> {
   boolean isCurrentThreadHoldingALock() {
     return Thread.holdsLock(lock);
   }
+
+  public static <T> void runWhenAllAvailable(List<Feeder<T>> feeders, Runnable runnable) {
+    ThresholdRunnable latch = new ThresholdRunnable(feeders.size(), runnable);
+    feeders.forEach(child -> child.addConsumer(v -> latch.run()));
+  }
 }
