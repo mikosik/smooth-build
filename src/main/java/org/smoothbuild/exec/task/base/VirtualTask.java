@@ -1,10 +1,10 @@
 package org.smoothbuild.exec.task.base;
 
-import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.task.parallel.ResultFeeder;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
 
@@ -17,10 +17,7 @@ public class VirtualTask extends NonComputableTask {
   }
 
   @Override
-  public ResultFeeder startComputation(Worker worker) {
-    ResultFeeder resultFeeder = new ResultFeeder();
-    task.startComputation(worker)
-        .addOutputConsumer((v) -> resultFeeder.setResult(new MaybeOutput(v)));
-    return resultFeeder;
+  public Feeder<SObject> startComputation(Worker worker) {
+    return task.startComputation(worker);
   }
 }

@@ -14,7 +14,6 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.Console;
-import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
@@ -40,14 +39,14 @@ public class ArtifactBuilder {
         .map(f -> f.createAgrlessCallExpression().createTask(null))
         .collect(toImmutableList());
     try {
-      Map<Task, Output> artifacts = parallelExecutor.executeAll(tasks);
-      if (allTasksCompletedSuccessfully(artifacts)) {
+      Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
+      if (!artifacts.containsValue(null)) {
         console.println("\nbuilt artifact(s):");
-        List<Entry<Task, Output>> sortedArtifacts = artifacts.entrySet()
+        List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
             .collect(toList());
-        for (Entry<Task, Output> artifact : sortedArtifacts) {
+        for (Entry<Task, SObject> artifact : sortedArtifacts) {
           save(artifact.getKey().name(), artifact.getValue());
         }
       }
@@ -56,17 +55,9 @@ public class ArtifactBuilder {
     }
   }
 
-  private boolean allTasksCompletedSuccessfully(Map<Task, Output> artifacts) {
-    return artifacts
-        .values()
-        .stream()
-        .allMatch(output -> output != null && output.hasValue());
-  }
-
-  private void save(String name, Output output) {
-    SObject object = output.value();
+  private void save(String name, SObject sObject) {
     try {
-      artifactSaver.save(name, object);
+      artifactSaver.save(name, sObject);
       console.println(name + " -> " + artifactPath(name));
     } catch (IOException e) {
       console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"

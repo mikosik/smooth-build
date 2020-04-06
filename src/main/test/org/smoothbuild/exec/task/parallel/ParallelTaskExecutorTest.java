@@ -26,6 +26,7 @@ import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.MaybeComputed;
 import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -54,7 +55,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
             task(valueAlgorithm("D"))));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(toOutput("((A,B),(C,D))"));
+        .isEqualTo(string("((A,B),(C,D))"));
   }
 
   @Test
@@ -66,7 +67,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(toOutput("(11,21)"));
+        .isEqualTo(string("(11,21)"));
   }
 
   @Test
@@ -81,7 +82,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         task(sleepGetIncrementAlgorithm(counter)));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(toOutput("(0,0,0,0)"));
+        .isEqualTo(string("(0,0,0,0)"));
   }
 
   @Test
@@ -95,7 +96,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         task(getIncrementAlgorithm(counter)));
 
     assertThat(executeSingleTask(task))
-        .isEqualTo(toOutput("(1,1,0)"));
+        .isEqualTo(string("(1,1,0)"));
   }
 
   @Test
@@ -124,10 +125,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
     Task task = task(valueAlgorithm("A"));
 
-    Output output = parallelTaskExecutor.executeAll(list(task)).get(task);
+    SObject sObject = parallelTaskExecutor.executeAll(list(task)).get(task);
 
     verify(reporter, only()).report(same(exception));
-    assertThat(output).isNull();
+    assertThat(sObject).isNull();
   }
 
   private Task concat(Task... dependencies) {
@@ -198,11 +199,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private Output executeSingleTask(Task task) throws InterruptedException {
+  private SObject executeSingleTask(Task task) throws InterruptedException {
     return executeSingleTask(parallelTaskExecutor, task);
   }
 
-  private static Output executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
+  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
@@ -217,10 +218,6 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   private static Output toSString(NativeApi nativeApi, int i) {
     return new Output(nativeApi.factory().string(Integer.toString(i)), nativeApi.messages());
-  }
-
-  private Output toOutput(String string) {
-    return new Output(string(string), emptyMessageArray());
   }
 
   private static void sleep1000ms() {

@@ -8,9 +8,10 @@ import java.util.List;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
-import org.smoothbuild.exec.task.parallel.ResultFeeder;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
 
@@ -49,7 +50,7 @@ public abstract class Task {
 
   public abstract ConcreteType type();
 
-  public abstract ResultFeeder startComputation(ParallelTaskExecutor.Worker worker);
+  public abstract Feeder<SObject> startComputation(ParallelTaskExecutor.Worker worker);
 
   public static List<ConcreteType> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);
