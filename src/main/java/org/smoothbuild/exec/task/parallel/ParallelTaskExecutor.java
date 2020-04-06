@@ -1,24 +1,22 @@
 package org.smoothbuild.exec.task.parallel;
 
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.util.concurrent.Feeder.runWhenAllAvailable;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.exec.comp.Input;
-import org.smoothbuild.exec.comp.MaybeOutput;
-import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computer;
-import org.smoothbuild.exec.task.base.MaybeComputed;
 import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
-import org.smoothbuild.util.concurrent.ThresholdRunnable;
 
 /**
  * Executes tasks in parallel.
@@ -42,7 +40,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Task, Output> executeAll(List<Task> tasks) throws InterruptedException {
+  public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(tasks);
   }
@@ -60,57 +58,34 @@ public class ParallelTaskExecutor {
       this.reporter = reporter;
     }
 
-    public Map<Task, Output> executeAll(List<Task> tasks) throws InterruptedException {
-      List<ResultFeeder> results = tasks.stream()
+    public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
+      List<Feeder<SObject>> results = tasks.stream()
           .map(t -> t.startComputation(this))
           .collect(toList());
-      createRootTasksListener(tasks, results);
+      runWhenAllAvailable(results, jobExecutor::terminate);
 
       jobExecutor.awaitTermination();
       return toMap(tasks, results);
     }
 
-    private static Map<Task, Output> toMap(List<Task> tasks, List<ResultFeeder> results) {
-      HashMap<Task, Output> result = new HashMap<>();
-      Iterator<ResultFeeder> it = results.iterator();
+    private static HashMap<Task, SObject> toMap(List<Task> tasks, List<Feeder<SObject>> results) {
+      HashMap<Task, SObject> result = new HashMap<>();
+      Iterator<Feeder<SObject>> it = results.iterator();
       for (Task task : tasks) {
-        result.put(task, it.next().output());
+        result.put(task, it.next().value());
       }
       return result;
     }
 
-    private void createRootTasksListener(List<Task> tasks, List<ResultFeeder> results) {
-      ThresholdRunnable terminator = new ThresholdRunnable(tasks.size(), jobExecutor::terminate);
-      results.forEach(job -> job.addValueAvailableListener(terminator));
-    }
-
-    public void enqueueComputation(ComputableTask task, Input input, ResultFeeder result) {
+    public void enqueueComputation(ComputableTask task, Input input, Feeder<SObject> result) {
       jobExecutor.enqueue(() -> {
+        ResultHandler resultHandler = new ResultHandler(task, result, reporter, jobExecutor);
         try {
-          computer.compute(task, input, executionResultHandler(result, task));
+          computer.compute(task, input, resultHandler);
         } catch (Throwable e) {
-          reporter.report(e);
-          jobExecutor.terminate();
+          resultHandler.handleComputerException(e);
         }
       });
-    }
-
-    private Consumer<MaybeComputed> executionResultHandler(
-        ResultFeeder resultFeeder, Task task) {
-      return (MaybeComputed maybeComputed) -> {
-        if (maybeComputed.hasComputed()) {
-          MaybeOutput result = maybeComputed.computed();
-          reporter.report(task, maybeComputed, maybeComputed.isFromCache());
-          if (!result.hasOutputWithValue()) {
-            jobExecutor.terminate();
-          }
-          resultFeeder.setResult(result);
-        } else {
-          Throwable throwable = maybeComputed.throwable();
-          reporter.report(throwable);
-          jobExecutor.terminate();
-        }
-      };
     }
   }
 }

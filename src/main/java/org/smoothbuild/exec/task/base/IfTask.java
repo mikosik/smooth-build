@@ -8,10 +8,10 @@ import java.util.function.Consumer;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.task.parallel.ResultFeeder;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
 
@@ -22,10 +22,10 @@ public class IfTask extends ComputableTask {
   }
 
   @Override
-  public ResultFeeder startComputation(Worker worker) {
-    ResultFeeder ifResult = new ResultFeeder();
-    ResultFeeder conditionResult = conditionChild().startComputation(worker);
-    conditionResult.addValueConsumer(
+  public Feeder<SObject> startComputation(Worker worker) {
+    Feeder<SObject> ifResult = new Feeder<>();
+    Feeder<SObject> conditionResult = conditionChild().startComputation(worker);
+    conditionResult.addConsumer(
         thenOrElseEnqueuer(worker, ifJobEnqueuer(worker, ifResult, conditionResult)));
     return ifResult;
   }
@@ -34,14 +34,14 @@ public class IfTask extends ComputableTask {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
       Task thenOrElseTask = condition ? thenChild() : elseChild();
-      thenOrElseTask.startComputation(worker).addValueConsumer(ifJobEnqueuer);
+      thenOrElseTask.startComputation(worker).addConsumer(ifJobEnqueuer);
     };
   }
 
-  private Consumer<SObject> ifJobEnqueuer(Worker worker, ResultFeeder ifResult,
-      ResultFeeder conditionResult) {
+  private Consumer<SObject> ifJobEnqueuer(Worker worker, Feeder<SObject> ifResult,
+      Feeder<SObject> conditionResult) {
     return thenOrElseValue -> {
-      SObject conditionValue = conditionResult.output().value();
+      SObject conditionValue = conditionResult.value();
 
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.

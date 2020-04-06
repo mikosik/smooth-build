@@ -1,27 +1,25 @@
 package org.smoothbuild.exec.task.base;
 
-import org.smoothbuild.exec.comp.MaybeOutput;
-import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.exec.task.parallel.ResultFeeder;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
 
 public class FixedTask extends NonComputableTask {
-  private final MaybeOutput result;
+  private final SObject sObject;
 
-  public FixedTask(SObject object, String name, Array messages, Location location) {
-    super(name, object.type(), ImmutableList.of(), location);
-    this.result = new MaybeOutput(new Output(object, messages));
+  public FixedTask(SObject sObject, String name, Array messages, Location location) {
+    super(name, sObject.type(), ImmutableList.of(), location);
+    this.sObject = sObject;
   }
 
   @Override
-  public ResultFeeder startComputation(Worker worker) {
-    ResultFeeder result = new ResultFeeder();
-    result.setResult(this.result);
+  public Feeder<SObject> startComputation(Worker worker) {
+    Feeder<SObject> result = new Feeder<>();
+    result.accept(sObject);
     return result;
   }
 }
