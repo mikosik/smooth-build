@@ -5,7 +5,10 @@ import java.nio.file.Paths;
 
 public class SmoothPaths {
   private static final String LIB_DIR_NAME = "lib";
-  private static final String FUNCS_MODULE = "funcs.smooth";
+  private static final String FUNCS_MODULE_FILE = "funcs.smooth";
+  private static final String USER_MODULE_FILE = "build.smooth";
+  private static final ModulePath USER_MODULE =
+      new ModulePath(Paths.get(USER_MODULE_FILE), USER_MODULE_FILE);
 
   private final Path home;
 
@@ -13,15 +16,15 @@ public class SmoothPaths {
     this.home = home;
   }
 
-  public Path funcsModule() {
-    return libDir().resolve(FUNCS_MODULE);
+  public ModulePath funcsModule() {
+    return new ModulePath(libDir().resolve(FUNCS_MODULE_FILE), "{SL}/" + FUNCS_MODULE_FILE);
   }
 
-  public Path libDir() {
+  private Path libDir() {
     return home.resolve(LIB_DIR_NAME);
   }
 
-  public Path defaultScript() {
-    return Paths.get("build.smooth");
+  public ModulePath userModule() {
+    return USER_MODULE;
   }
 }

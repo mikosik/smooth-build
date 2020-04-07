@@ -29,6 +29,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.smoothbuild.ModulePath;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
@@ -38,15 +39,15 @@ import org.smoothbuild.util.Maybe;
 import okio.BufferedSource;
 
 public class ScriptParser {
-  public static Maybe<ModuleContext> parseScript(Path scriptFile) {
+  public static Maybe<ModuleContext> parseScript(ModulePath path) {
     CharStream charStream;
     try {
-      charStream = charStream(scriptFile);
+      charStream = charStream(path.fullPath());
     } catch (IOException e) {
-      return error("error: Cannot read build script file '" + scriptFile + "'.");
+      return error("error: Cannot read build script file '" + path.fullPath() + "'.");
     }
 
-    ErrorListener errorListener = new ErrorListener(scriptFile);
+    ErrorListener errorListener = new ErrorListener(path);
     SmoothLexer lexer = new SmoothLexer(charStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -66,10 +67,10 @@ public class ScriptParser {
 
   public static class ErrorListener implements ANTLRErrorListener {
     private final List<ParseError> errors = new ArrayList<>();
-    private final Path file;
+    private final ModulePath path;
 
-    public ErrorListener(Path file) {
-      this.file = file;
+    public ErrorListener(ModulePath path) {
+      this.path = path;
     }
 
     public List<ParseError> foundErrors() {
@@ -115,9 +116,9 @@ public class ScriptParser {
 
     private Location createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return location(file, line);
+        return location(path, line);
       } else {
-        return locationOf(file, (Token) offendingSymbol);
+        return locationOf(path, (Token) offendingSymbol);
       }
     }
 
@@ -126,7 +127,7 @@ public class ScriptParser {
         int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
       String message = join("\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with file: " + file + ", details:",
+          "Report this as a bug together with file: " + path + ", details:",
           "startIndex=" + startIndex,
           "stopiIndex=" + stopIndex,
           "exact=" + exact,
@@ -150,7 +151,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      errors.add(new ParseError(locationOf(file, token), message));
+      errors.add(new ParseError(locationOf(path, token), message));
     }
   }
 }

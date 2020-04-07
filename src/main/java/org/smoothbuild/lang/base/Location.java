@@ -2,29 +2,30 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import java.nio.file.Path;
 import java.util.Objects;
 
+import org.smoothbuild.ModulePath;
+
 public class Location {
-  private final Path file;
+  private final ModulePath path;
   private final int line;
 
   public static Location unknownLocation() {
     return new Location(null, 1);
   }
 
-  public static Location location(Path file, int line) {
+  public static Location location(ModulePath file, int line) {
     return new Location(file, line);
   }
 
-  private Location(Path file, int line) {
+  private Location(ModulePath path, int line) {
     checkArgument(0 < line);
-    this.file = file;
+    this.path = path;
     this.line = line;
   }
 
-  public Path file() {
-    return file;
+  public ModulePath path() {
+    return path;
   }
 
   /**
@@ -38,22 +39,22 @@ public class Location {
   public final boolean equals(Object object) {
     if (object instanceof Location) {
       Location that = (Location) object;
-      return Objects.equals(this.file, that.file) && this.line == that.line;
+      return Objects.equals(this.path, that.path) && this.line == that.line;
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return Objects.hash(file, line);
+    return Objects.hash(path, line);
   }
 
   @Override
   public String toString() {
-    if (file == null) {
+    if (path == null) {
       return "unknown location";
     } else {
-      return file + ":" + line;
+      return path.shortPath() + ":" + line;
     }
   }
 }

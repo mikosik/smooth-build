@@ -8,28 +8,27 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.ModulePath;
 
 import com.google.common.testing.EqualsTester;
 
 public class LocationTest {
-  private Location location;
-
   @Test
   public void line_returns_value_passed_during_construction() {
-    location = location(Paths.get("abc"), 13);
+    Location location = location(modulePath("abc"), 13);
     assertThat(location.line())
         .isEqualTo(13);
   }
 
   @Test
   public void zero_line_is_forbidden() {
-    assertCall(() -> location(Paths.get("abc"), 0))
+    assertCall(() -> location(modulePath("abc"), 0))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void negative_line_is_forbidden() {
-    assertCall(() -> location(Paths.get("abc"), -1))
+    assertCall(() -> location(modulePath("abc"), -1))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -38,24 +37,28 @@ public class LocationTest {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(unknownLocation(), unknownLocation());
-    tester.addEqualityGroup(location(Paths.get("abc"), 7), location(Paths.get("abc"), 7));
-    tester.addEqualityGroup(location(Paths.get("abc"), 11), location(Paths.get("abc"), 11));
-    tester.addEqualityGroup(location(Paths.get("def"), 11), location(Paths.get("def"), 11));
+    tester.addEqualityGroup(location(modulePath("abc"), 7), location(modulePath("abc"), 7));
+    tester.addEqualityGroup(location(modulePath("abc"), 11), location(modulePath("abc"), 11));
+    tester.addEqualityGroup(location(modulePath("def"), 11), location(modulePath("def"), 11));
 
     tester.testEquals();
   }
 
   @Test
   public void file_code_location_to_string() {
-    location = location(Paths.get("abc"), 2);
+    Location location = location(new ModulePath(Paths.get("abc"), "shortPath"), 2);
     assertThat(location.toString())
-        .isEqualTo("abc:2");
+        .isEqualTo("shortPath:2");
   }
 
   @Test
   public void command_line_code_location_to_string() {
-    location = unknownLocation();
+    Location location = unknownLocation();
     assertThat(location.toString())
         .isEqualTo("unknown location");
+  }
+
+  private static ModulePath modulePath(String name) {
+    return new ModulePath(Paths.get(name), "{SL}/" + name);
   }
 }

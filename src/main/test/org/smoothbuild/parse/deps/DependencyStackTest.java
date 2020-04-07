@@ -1,10 +1,9 @@
 package org.smoothbuild.parse.deps;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
-import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
@@ -124,7 +123,7 @@ public class DependencyStackTest {
     dependencyStack.push(elem("name3", "name4", 3));
     dependencyStack.push(elem("name4", "name2", 4));
     assertThat(dependencyStack.createCycleError().toString())
-        .isEqualTo(new ParseError(location(Paths.get("script.smooth"), 2),
+        .isEqualTo(new ParseError(loc(2),
         "my stack contains cycle:\n"
             + "script.smooth:2: name2 -> name3\n"
             + "script.smooth:3: name3 -> name4\n"
@@ -137,14 +136,14 @@ public class DependencyStackTest {
     dependencyStack.push(elem("name1", "name2", 1));
     dependencyStack.push(elem("name2", "name2", 2));
     assertThat(dependencyStack.createCycleError().toString())
-        .isEqualTo(new ParseError(location(Paths.get("script.smooth"), 2),
+        .isEqualTo(new ParseError(loc(2),
         "my stack contains cycle:\n"
             + "script.smooth:2: name2 -> name2\n").toString());
   }
 
-  private StackElem elem(String from, String to, int location) {
+  private StackElem elem(String from, String to, int lineNumber) {
     StackElem elem = new StackElem(from, ImmutableSet.of());
-    elem.setMissing(new NamedNode(to, location(Paths.get("script.smooth"), location)));
+    elem.setMissing(new NamedNode(to, loc(lineNumber)));
     return elem;
   }
 

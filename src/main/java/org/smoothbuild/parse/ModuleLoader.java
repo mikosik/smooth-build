@@ -7,9 +7,9 @@ import static org.smoothbuild.parse.InferTypesAndParamAssignment.inferTypesAndPa
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.util.Paths.changeExtension;
 
-import java.nio.file.Path;
 import java.util.List;
 
+import org.smoothbuild.ModulePath;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
@@ -25,10 +25,10 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
-  public static List<?> loadModule(SRuntime runtime, Path script) {
-    Maybe<Natives> natives = findNatives(changeExtension(script, "jar"));
-    return parseScript(script)
-        .mapValue(moduleContext -> AstCreator.fromParseTree(script, moduleContext))
+  public static List<?> loadModule(SRuntime runtime, ModulePath path) {
+    Maybe<Natives> natives = findNatives(changeExtension(path.fullPath(), "jar"));
+    return parseScript(path)
+        .mapValue(moduleContext -> AstCreator.fromParseTree(path, moduleContext))
         .invoke(ast -> findSemanticErrors(runtime, ast))
         .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
         .invoke(ast -> ast.sortTypesByDependencies(runtime.objectFactory()))
