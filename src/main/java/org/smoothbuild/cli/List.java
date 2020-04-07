@@ -24,7 +24,7 @@ public class List implements Command {
         .functions()
         .all()
         .stream()
-        .filter(f -> f.location().file().equals(paths.defaultScript()))
+        .filter(f -> f.location().path().equals(paths.userModule()))
         .filter(f -> f.parameters().size() == 0)
         .map(Function::name)
         .sorted()

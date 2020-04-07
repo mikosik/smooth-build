@@ -5,9 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.quackery.Case.newCase;
 import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.base.Location.location;
-
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,10 +13,11 @@ import org.quackery.Quackery;
 import org.quackery.Suite;
 import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.testing.common.TestingLocation;
 
 @RunWith(QuackeryRunner.class)
 public class TypeNodeTest {
-  private static final Location LOCATION = location(Paths.get("file.txt"), 3);
+  private static final Location LOCATION = TestingLocation.loc();
 
   @Quackery
   public static Suite is_array() {

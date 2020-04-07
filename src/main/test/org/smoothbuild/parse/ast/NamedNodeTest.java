@@ -1,8 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.base.Location.location;
-
-import java.nio.file.Paths;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +19,6 @@ public class NamedNodeTest {
   }
 
   private static NamedNode namedNode(int line, String name) {
-    return new NamedNode(name, location(Paths.get("script.smooth"), line));
+    return new NamedNode(name, loc(line));
   }
 }

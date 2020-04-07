@@ -1,11 +1,10 @@
 package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
-import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class NodeTest {
   @Test
   public void set_attribute_can_be_retrieved() {
-    Node node = new Node(location(Paths.get("script.smooth"), 1));
+    Node node = new Node(loc());
     node.set(String.class, "abc");
     assertThat(node.get(String.class))
         .isEqualTo("abc");

@@ -29,7 +29,7 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
     List<?> errors = value(null)
         .invoke((v) -> loadModule(runtime, paths.funcsModule()))
-        .invoke((v) -> loadModule(runtime, paths.defaultScript()))
+        .invoke((v) -> loadModule(runtime, paths.userModule()))
         .invokeConsumer(ml -> runner.accept(runtime))
         .errors();
     console.errors(errors);

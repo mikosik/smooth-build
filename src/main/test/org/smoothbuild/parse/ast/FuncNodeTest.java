@@ -2,11 +2,9 @@ package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
-
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +42,7 @@ public class FuncNodeTest {
   }
 
   private static FuncNode node(String name, int line) {
-    return new FuncNode(null, name, list(), null, location(Paths.get("script.smooth"), line));
+    return new FuncNode(null, name, list(), null, loc(line));
   }
 
   private static TypeNode typeNode() {
