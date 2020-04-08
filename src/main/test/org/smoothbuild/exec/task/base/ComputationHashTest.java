@@ -62,7 +62,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_array_algorithm_and_empty_input_is_stable() {
+  public void hash_of_computation_with_array_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new ArrayLiteralAlgorithm(arrayType(stringType()));
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -70,7 +70,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_array_algorithm_and_non_empty_input_is_stable() {
+  public void hash_of_computation_with_array_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new ArrayLiteralAlgorithm(arrayType(stringType()));
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -78,7 +78,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_native_call_algorithm_and_empty_input_is_stable() {
+  public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new NativeCallAlgorithm(stringType(), mockNativeFunction());
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -86,7 +86,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_native_call_algorithm_and_non_empty_input_is_stable() {
+  public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
     Algorithm algorithm = new NativeCallAlgorithm(stringType(), mockNativeFunction());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -94,7 +94,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new ConvertAlgorithm(stringType(), stringType());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -102,7 +102,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_constructor_call_algorithm_and_empty_input_is_stable() {
+  public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list());
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -110,7 +110,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_constructor_call_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -118,7 +118,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
+  public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
@@ -131,7 +131,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_execution_with_accessor_call_algorithm_and_one_element_input_is_stable() {
+  public void hash_of_computation_with_accessor_call_algorithm_and_one_element_input_is_stable() {
     Algorithm algorithm = new AccessorCallAlgorithm(accessor());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
