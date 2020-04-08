@@ -3,6 +3,7 @@ package org.smoothbuild.acceptance;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
+import static com.google.common.truth.Truth.assertThat;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
@@ -196,12 +197,8 @@ public abstract class AcceptanceTestCase {
 
   public void thenOutputContains(String... lines) {
     String text = unlines(lines);
-    if (!outputData.contains(text)) {
-      fail("Expected output to contain:\n"
-          + text + "\n"
-          + "but output was:\n"
-          + outputData);
-    }
+    assertThat(outputData)
+        .contains(text);
   }
 
   public String output() {
