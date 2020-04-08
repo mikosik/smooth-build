@@ -20,4 +20,11 @@ public class ListCommandTest extends AcceptanceTestCase {
         "dFunction",
         "");
   }
+
+  @Test
+  public void fails_when_script_file_is_missing() {
+    whenSmoothList();
+    thenFinishedWithError();
+    thenOutputContains("error: 'build.smooth' doesn't exist.\n");
+  }
 }
