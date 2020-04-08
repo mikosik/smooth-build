@@ -21,6 +21,11 @@ public class ArrayLiteralAlgorithm implements Algorithm {
   }
 
   @Override
+  public String description() {
+    return arrayType.name();
+  }
+
+  @Override
   public Hash hash() {
     return arrayAlgorithmHash();
   }

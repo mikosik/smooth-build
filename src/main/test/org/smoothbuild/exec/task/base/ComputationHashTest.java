@@ -95,7 +95,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_execution_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConvertAlgorithm(stringType());
+    Algorithm algorithm = new ConvertAlgorithm(stringType(), stringType());
     Input input = input(list(string("abc")));
     assertThat(computationHash(algorithm, input, Hash.of(13)))
         .isEqualTo(Hash.decode("1ec66039449159837c5e5e82ce3da7bbf89ed417"));
