@@ -53,7 +53,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   public void fails_when_script_file_is_missing() {
     whenSmoothTree("result");
     thenFinishedWithError();
-    thenOutputContains("error: Cannot read build script file 'build.smooth'.\n");
+    thenOutputContains("error: 'build.smooth' doesn't exist.\n");
   }
 
   @Test

@@ -13,6 +13,7 @@ import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -43,6 +44,8 @@ public class ScriptParser {
     CharStream charStream;
     try {
       charStream = charStream(path.fullPath());
+    } catch (NoSuchFileException e) {
+      return error("error: '" + path.fullPath() + "' doesn't exist.");
     } catch (IOException e) {
       return error("error: Cannot read build script file '" + path.fullPath() + "'.");
     }
