@@ -13,7 +13,7 @@ public class SandboxHashProvider {
     return Hash.of(javaPlatformHash(), smoothJarHash());
   }
 
-  private static Hash javaPlatformHash() {
+  public static Hash javaPlatformHash() {
     return javaPlatformHash(System.getProperties());
   }
 
@@ -32,7 +32,7 @@ public class SandboxHashProvider {
     return Hash.of(properties.getProperty(name));
   }
 
-  private static Hash smoothJarHash() {
+  public static Hash smoothJarHash() {
     String resourcePath = SandboxHashProvider.class
         .getClassLoader()
         .getResource(Classes.binaryPath(SandboxHashProvider.class))
