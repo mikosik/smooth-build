@@ -12,38 +12,45 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class ConvertAlgorithm implements Algorithm {
-  private final ConcreteType type;
+  private final ConcreteType destinationType;
+  private final String name;
 
-  public ConvertAlgorithm(ConcreteType type) {
-    this.type = type;
+  public ConvertAlgorithm(ConcreteType destinationType, ConcreteType sourceType) {
+    this.destinationType = destinationType;
+    this.name = destinationType.name() + " <- " + sourceType.name();
   }
 
   @Override
   public String name() {
-    return "~conversion";
+    return name;
+  }
+
+  @Override
+  public String description() {
+    return name;
   }
 
   @Override
   public Hash hash() {
-    return convertAlgorithmHash(type);
+    return convertAlgorithmHash(destinationType);
   }
 
   @Override
   public ConcreteType type() {
-    return type;
+    return destinationType;
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
     SObject object = input.objects().get(0);
-    assertThat(!type.equals(object.type()));
-    assertThat(type.isAssignableFrom(object.type()));
+    assertThat(!destinationType.equals(object.type()));
+    assertThat(destinationType.isAssignableFrom(object.type()));
     if (object instanceof Array) {
-      return new Output(convertArray(nativeApi, (Array) object, type), nativeApi.messages());
+      return new Output(convertArray(nativeApi, (Array) object, destinationType), nativeApi.messages());
     }
     assertThat(!object.type().isNothing());
-    return new Output(convertStruct((Struct) object, type), nativeApi.messages());
+    return new Output(convertStruct((Struct) object, destinationType), nativeApi.messages());
   }
 
   private static SObject convertArray(NativeApi nativeApi, Array array,

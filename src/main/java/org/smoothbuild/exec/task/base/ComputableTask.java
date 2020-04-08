@@ -23,6 +23,11 @@ public abstract class ComputableTask extends Task {
   }
 
   @Override
+  public String description() {
+    return algorithm.description();
+  }
+
+  @Override
   public ConcreteType type() {
     return algorithm.type();
   }

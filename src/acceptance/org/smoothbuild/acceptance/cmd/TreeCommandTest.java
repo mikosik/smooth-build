@@ -17,7 +17,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
     thenOutputContains(quotesX2(unlines(
         "[String] result",
         "  [String] mySingleton",
-        "    [String] [String]",
+        "    [String]",
         "      String 'abc'",
         "      String 'def'")));
   }
@@ -42,7 +42,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
     thenOutputContains(quotesX2(unlines(
         "Blob result",
-        "  Blob ~conversion",
+        "  Blob <- File",
         "    File file",
         "      Blob toBlob",
         "        String 'abc'",

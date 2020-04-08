@@ -22,6 +22,11 @@ public abstract class NonComputableTask extends Task {
   }
 
   @Override
+  public String description() {
+    return type.name() + " " + name;
+  }
+
+  @Override
   public ConcreteType type() {
     return type;
   }

@@ -40,13 +40,15 @@ public abstract class Task {
     if (type().equals(type)) {
       return this;
     } else {
-      Algorithm algorithm = new ConvertAlgorithm(type);
+      Algorithm algorithm = new ConvertAlgorithm(type, type());
       List<Task> dependencies = list(this);
       return new NormalTask(algorithm, dependencies, location(), true);
     }
   }
 
   public abstract String name();
+
+  public abstract String description();
 
   public abstract ConcreteType type();
 
