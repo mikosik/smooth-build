@@ -15,15 +15,24 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   private static String expectedGeneralHelp() {
     return unlines(
-        "usage: smooth <command> <arg>...",
+        "Usage:",
+        "smooth COMMAND",
         "",
-        "All available commands are:",
-        "  build   Build artifact(s) by running specified function(s)",
-        "  clean   Remove all cached objects and artifacts calculated during previous builds",
-        "  help    Print help about given command",
-        "  list    Print arg-less user defined functions",
-        "  tree    Prints execution tree for specified function(s)",
-        "  version Print smooth build version number");
+        "Description:",
+        "smooth-build is a build tool with strongly and statically typed, purely",
+        "functional language. It features fine-grained, aggressive caching that will",
+        "make sure no computation happens twice on the same machine, decreasing build",
+        "times significantly.",
+        "More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md",
+        "",
+        "Commands:",
+        "  build    Build artifact(s) by running specified function(s)",
+        "  clean    Remove all cached objects and artifacts calculated during all",
+        "             previous builds",
+        "  help     Displays help information about the specified command",
+        "  list     Print arg-less user defined functions",
+        "  tree     Print execution tree for specified function(s)",
+        "  version  Print version information and exit");
   }
 
   @Test
@@ -35,11 +44,15 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   private static String expectedBuildCommandHelp() {
     return unlines(
-        "usage: smooth build <function>...",
+        "Usage:",
+        "smooth build <function>...",
         "",
+        "Description:",
         "Build artifact(s) by running specified function(s)",
         "",
-        "  <function>  function which execution result is saved as artifact");
+        "Parameters:",
+        "      <function>...   function(s) which results are saved as artifacts",
+        "");
   }
 
   @Test
@@ -51,8 +64,11 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   private static String expectedCleanCommandHelp() {
     return unlines(
-        "usage: smooth clean",
+        "Usage:",
+        "smooth clean",
         "",
-        "Remove all cached objects and artifacts calculated during previous builds");
+        "Description:",
+        "Remove all cached objects and artifacts calculated during all previous builds",
+        "");
   }
 }

@@ -2,8 +2,6 @@ package org.smoothbuild.acceptance.builtin.file;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import java.nio.file.Path;
-
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.acceptance.AcceptanceTestCase;

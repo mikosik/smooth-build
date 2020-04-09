@@ -27,6 +27,12 @@ public class CleanCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
-    thenOutputContains("error: Unknown arguments: [some, arguments]\n");
+    thenErrorContains(
+        "Unmatched arguments from index 1: 'some', 'arguments'",
+        "",
+        "Usage:",
+        "smooth clean",
+        "Try 'smooth help clean' for more information.",
+        "");
   }
 }

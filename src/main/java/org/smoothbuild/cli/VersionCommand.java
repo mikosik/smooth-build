@@ -1,0 +1,20 @@
+package org.smoothbuild.cli;
+
+import static org.smoothbuild.cli.CommandHelper.runCommand;
+
+import java.util.concurrent.Callable;
+
+import picocli.CommandLine.Command;
+
+@Command(
+    name = VersionCommand.NAME,
+    description = "Print version information and exit"
+)
+public class VersionCommand extends StandardOptions implements Callable<Integer> {
+  public static final String NAME = "version";
+
+  @Override
+  public Integer call() {
+    return runCommand(injector -> injector.getInstance(Version.class).run());
+  }
+}

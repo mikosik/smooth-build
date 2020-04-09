@@ -15,11 +15,6 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
-import static org.smoothbuild.cli.Commands.CLEAN;
-import static org.smoothbuild.cli.Commands.HELP;
-import static org.smoothbuild.cli.Commands.LIST;
-import static org.smoothbuild.cli.Commands.TREE;
-import static org.smoothbuild.cli.Commands.VERSION;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Okios.readAndClose;
@@ -44,6 +39,11 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.cli.BuildCommand;
+import org.smoothbuild.cli.CleanCommand;
+import org.smoothbuild.cli.ListCommand;
+import org.smoothbuild.cli.TreeCommand;
+import org.smoothbuild.cli.VersionCommand;
 import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;
@@ -119,27 +119,27 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(concat("build", args));
+    whenSmooth(concat(BuildCommand.NAME, args));
   }
 
   public void whenSmoothClean(String... args) {
-    whenSmooth(concat(CLEAN.name(), args));
+    whenSmooth(concat(CleanCommand.NAME, args));
   }
 
   public void whenSmoothTree(String... args) {
-    whenSmooth(concat(TREE.name(), args));
+    whenSmooth(concat(TreeCommand.NAME, args));
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(concat(HELP.name(), args));
+    whenSmooth(concat("help", args));
   }
 
   public void whenSmoothList(String... args) {
-    whenSmooth(concat(LIST.name(), args));
+    whenSmooth(concat(ListCommand.NAME, args));
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(concat(VERSION.name(), args));
+    whenSmooth(concat(VersionCommand.NAME, args));
   }
 
   public void whenSmooth(String... smoothCommandArgs) {
