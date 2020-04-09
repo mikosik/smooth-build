@@ -27,5 +27,6 @@
     <orderEntry type="library" name="com.google.truth:truth:1.0.1" level="project" />
     <orderEntry type="library" name="org.mockito:mockito-core:3.3.0" level="project" />
     <orderEntry type="library" name="com.googlecode.junit-toolbox:junit-toolbox:2.4" level="project" />
+    <orderEntry type="library" name="info.picocli:picocli:4.2.0" level="project" />
   </component>
 </module>
