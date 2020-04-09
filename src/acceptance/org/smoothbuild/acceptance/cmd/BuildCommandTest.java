@@ -24,9 +24,13 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenOutputContains(
-        "error: Specify at least one function to be executed.",
-        "Use 'smooth list' to see all available functions.");
+    thenErrorContains(
+        "Missing required parameter: <function>",
+        "",
+        "Usage:",
+        "smooth build <function>...",
+        "Try 'smooth help build' for more information.",
+        "");
   }
 
   @Test

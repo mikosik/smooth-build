@@ -6,7 +6,7 @@ import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.parse.RuntimeController;
 
-public class List implements Command {
+public class List {
   private final SmoothPaths paths;
   private final Console console;
   private final RuntimeController runtimeController;
@@ -18,8 +18,7 @@ public class List implements Command {
     this.runtimeController = runtimeController;
   }
 
-  @Override
-  public int run(String... args) {
+  public int run() {
     return runtimeController.setUpRuntimeAndRun(runtime -> runtime
         .functions()
         .all()

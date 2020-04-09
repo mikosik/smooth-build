@@ -1,9 +1,9 @@
 package org.smoothbuild;
 
-import org.smoothbuild.cli.Commands;
+import static org.smoothbuild.cli.CommandExecutor.executeCommand;
 
 public class Main {
   public static void main(String[] args) {
-    System.exit(Commands.execute(args));
+    System.exit(executeCommand(args));
   }
 }

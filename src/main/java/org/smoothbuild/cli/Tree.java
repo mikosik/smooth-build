@@ -12,9 +12,7 @@ import org.smoothbuild.exec.run.TreeRunner;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.util.Maybe;
 
-import com.google.common.collect.ImmutableList;
-
-public class Tree implements Command {
+public class Tree {
   private final Console console;
   private final RuntimeController runtimeController;
   private final TreeRunner treeRunner;
@@ -26,10 +24,8 @@ public class Tree implements Command {
     this.treeRunner = treeRunner;
   }
 
-  @Override
-  public int run(String... args) {
-    List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
-    Maybe<Set<String>> functionNames = validateFunctionNames(argsWithoutFirst);
+  public int run(List<String> args) {
+    Maybe<Set<String>> functionNames = validateFunctionNames(args);
     if (!functionNames.hasValue()) {
       console.errors(functionNames.errors());
       return EXIT_CODE_ERROR;

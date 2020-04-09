@@ -18,9 +18,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.util.Maybe;
 
-import com.google.common.collect.ImmutableList;
-
-public class Build implements Command {
+public class Build {
   private final Console console;
   private final RuntimeController runtimeController;
   private final BuildRunner buildRunner;
@@ -35,10 +33,8 @@ public class Build implements Command {
     this.fileSystem = fileSystem;
   }
 
-  @Override
-  public int run(String... args) {
-    List<String> argsWithoutFirst = ImmutableList.copyOf(args).subList(1, args.length);
-    Maybe<Set<String>> functionNames = validateFunctionNames(argsWithoutFirst);
+  public int run(List<String> names) {
+    Maybe<Set<String>> functionNames = validateFunctionNames(names);
     if (!functionNames.hasValue()) {
       console.errors(functionNames.errors());
       return EXIT_CODE_ERROR;

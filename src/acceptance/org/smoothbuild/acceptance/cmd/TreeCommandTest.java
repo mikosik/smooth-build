@@ -62,9 +62,12 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree();
     thenFinishedWithError();
-    thenOutputContains(
-        "error: Specify at least one function to be executed.",
-        "Use 'smooth list' to see all available functions.",
+    thenErrorContains(
+        "Missing required parameter: <function>",
+        "",
+        "Usage:",
+        "smooth tree <function>...",
+        "Try 'smooth help tree' for more information.",
         "");
   }
 
