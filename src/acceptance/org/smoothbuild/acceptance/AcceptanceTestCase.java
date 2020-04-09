@@ -15,7 +15,6 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
-import static org.smoothbuild.cli.Commands.BUILD;
 import static org.smoothbuild.cli.Commands.CLEAN;
 import static org.smoothbuild.cli.Commands.HELP;
 import static org.smoothbuild.cli.Commands.LIST;
@@ -120,7 +119,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(concat(BUILD.name(), args));
+    whenSmooth(concat("build", args));
   }
 
   public void whenSmoothClean(String... args) {
@@ -198,6 +197,12 @@ public abstract class AcceptanceTestCase {
   public void thenOutputContains(String... lines) {
     String text = unlines(lines);
     assertThat(outputData)
+        .contains(text);
+  }
+
+  public void thenErrorContains(String... lines) {
+    String text = unlines(lines);
+    assertThat(errorData)
         .contains(text);
   }
 
