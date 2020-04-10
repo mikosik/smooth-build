@@ -23,7 +23,7 @@ public class TreeRunner {
     for (String name : functionNames) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.\n"
-            + "Use 'smooth list' to see all available functions.\n");
+            + "Try 'smooth list' to see all available functions.\n");
         return;
       }
       Function function = functions.get(name);

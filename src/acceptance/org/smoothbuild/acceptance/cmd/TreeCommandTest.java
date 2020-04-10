@@ -97,7 +97,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenOutputContains(
         "error: Unknown function 'nonexistentFunction'.",
-        "Use 'smooth list' to see all available functions.",
+        "Try 'smooth list' to see all available functions.",
         "");
   }
 
