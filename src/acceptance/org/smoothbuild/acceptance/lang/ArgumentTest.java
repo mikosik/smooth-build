@@ -24,7 +24,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc', 'def');           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Too many positional arguments.\n");
+    thenSysOutContainsError(2, "Too many positional arguments.\n");
   }
 
   @Test
@@ -34,7 +34,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc');                                      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Parameter 'myArgument2' must be specified.\n");
+    thenSysOutContainsError(2, "Parameter 'myArgument2' must be specified.\n");
   }
 
   @Test
@@ -44,7 +44,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity(wrongName='abc');        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Function 'myIdentity' has no parameter 'wrongName'.\n");
+    thenSysOutContainsError(2, "Function 'myIdentity' has no parameter 'wrongName'.\n");
   }
 
   @Test
@@ -76,7 +76,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = returnFirst(b='def', 'abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Positional arguments must be placed before named arguments.\n");
+    thenSysOutContainsError(2, "Positional arguments must be placed before named arguments.\n");
   }
 
   @Test
@@ -86,7 +86,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity(myArgument='abc', myArgument='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Argument 'myArgument' is already assigned.\n");
+    thenSysOutContainsError(2, "Argument 'myArgument' is already assigned.\n");
   }
 
   @Test
@@ -97,7 +97,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc', myArgument='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Argument 'myArgument' is already assigned.\n");
+    thenSysOutContainsError(2, "Argument 'myArgument' is already assigned.\n");
   }
 
   @Test

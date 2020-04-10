@@ -130,7 +130,7 @@ public class EqualTest extends AcceptanceTestCase {
         "  result = equal(person('aaa', 'bbb'), person2(true, 'bbb'));   ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(
+    thenSysOutContainsError(
         10, "Cannot infer actual type(s) for generic parameter(s) in call to 'equal'.");
   }
 

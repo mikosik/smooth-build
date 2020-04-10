@@ -17,7 +17,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = 'abc';     ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "token recognition error at: '^'");
+    thenSysOutContainsError(1, "token recognition error at: '^'");
   }
 
   @Test
@@ -27,7 +27,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = 'abc';        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "no viable alternative at input 'FunctionName='");
+    thenSysOutContainsError(1, "no viable alternative at input 'FunctionName='");
   }
 
   @Test
@@ -37,7 +37,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "no viable alternative at input 'F='");
+    thenSysOutContainsError(1, "no viable alternative at input 'F='");
   }
 
   @Test
@@ -47,7 +47,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function1 = 'def';  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContainsError(2, "'function1' is already defined at build.smooth:1.\n");
+    thenSysOutContainsError(2, "'function1' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -57,7 +57,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  myStruct = 'def';  ");
     whenSmoothBuild("myStruct");
     thenFinishedWithError();
-    thenOutputContainsError(2, "'myStruct' is already defined at build.smooth:1.\n");
+    thenSysOutContainsError(2, "'myStruct' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -66,7 +66,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  aFile = 'abc';  ");
     whenSmoothBuild("aFile");
     thenFinishedWithError();
-    thenOutputContainsError(1, "'aFile' is already defined at");
+    thenSysOutContainsError(1, "'aFile' is already defined at");
   }
 
   @Test
@@ -75,7 +75,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function1 = function1;  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("Function call graph contains cycle");
+    thenSysOutContains("Function call graph contains cycle");
   }
 
   @Test
@@ -85,7 +85,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function2 = function1;  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("Function call graph contains cycle");
+    thenSysOutContains("Function call graph contains cycle");
   }
 
   @Test
@@ -95,7 +95,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  String myIdentity(String s) = s;             ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("Function call graph contains cycle");
+    thenSysOutContains("Function call graph contains cycle");
   }
 
   @Test
@@ -106,7 +106,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function3 = function1;  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("Function call graph contains cycle");
+    thenSysOutContains("Function call graph contains cycle");
   }
 
   @Test
@@ -115,7 +115,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function1 = undefinedFunction();  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
+    thenSysOutContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
   }
 
   @Test
@@ -124,7 +124,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  function1 = undefinedFunction(abc='a');  ");
     whenSmoothBuild("function1");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
+    thenSysOutContains("build.smooth:1: error: 'undefinedFunction' is undefined.\n");
   }
 
   @Test
@@ -156,7 +156,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = function1('abc');      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "build.smooth:1: error: Parameter 'zip' cannot be called as it is not a function.\n");
   }
 
@@ -168,7 +168,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = function2('def');                  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "build.smooth:2: error: Parameter 'function1' cannot be called as it is not a function.\n");
   }
 
@@ -179,7 +179,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  String result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Function 'result' has body which type is '[Nothing]' and it is " +
+    thenSysOutContainsError(1, "Function 'result' has body which type is '[Nothing]' and it is " +
         "not convertible to function's declared result type 'String'.");
   }
 
@@ -199,7 +199,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  Undefined result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
+    thenSysOutContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -247,7 +247,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  A genericResult([B] array);  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined generic type 'A'. "
+    thenSysOutContainsError(1, "Undefined generic type 'A'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
@@ -258,7 +258,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  [A] result = [];  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined generic type 'A'. "
+    thenSysOutContainsError(1, "Undefined generic type 'A'. "
         + "Only generic types used in declaration of function parameters can be used here.");
   }
 
@@ -298,7 +298,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  File result = func;                           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Function 'result' has body which type is 'Blob' and it is not " +
+    thenSysOutContainsError(2, "Function 'result' has body which type is 'Blob' and it is not " +
         "convertible to function's declared result type 'File'.");
   }
 }

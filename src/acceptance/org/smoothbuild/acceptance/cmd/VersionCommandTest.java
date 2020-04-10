@@ -11,7 +11,7 @@ public class VersionCommandTest extends AcceptanceTestCase {
   public void version_command_prints_tool_version() {
     whenSmoothVersion();
     thenFinishedWithSuccess();
-    thenOutputContains("smooth build version " + SmoothConstants.VERSION + "\n");
+    thenSysOutContains("smooth build version " + SmoothConstants.VERSION + "\n");
   }
 
   @Test
@@ -19,10 +19,10 @@ public class VersionCommandTest extends AcceptanceTestCase {
     whenSmoothVersion();
     thenFinishedWithSuccess();
     String hexNumberPattern = "[a-f0-9]+";
-    assertThat(output()).containsMatch("sandbox *" + hexNumberPattern);
-    assertThat(output()).containsMatch("  smooth.jar *" + hexNumberPattern);
-    assertThat(output()).containsMatch("  java platform *" + hexNumberPattern);
-    assertThat(output()).containsMatch("funcs.jar *" + hexNumberPattern);
-    thenOutputContains("smooth build version " + SmoothConstants.VERSION + "\n");
+    assertThat(sysOut()).containsMatch("sandbox *" + hexNumberPattern);
+    assertThat(sysOut()).containsMatch("  smooth.jar *" + hexNumberPattern);
+    assertThat(sysOut()).containsMatch("  java platform *" + hexNumberPattern);
+    assertThat(sysOut()).containsMatch("funcs.jar *" + hexNumberPattern);
+    thenSysOutContains("smooth build version " + SmoothConstants.VERSION + "\n");
   }
 }

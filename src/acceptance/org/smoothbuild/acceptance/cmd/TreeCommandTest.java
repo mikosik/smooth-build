@@ -14,7 +14,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = mySingleton('abc');                     ");
     whenSmoothTree("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(unlines(
+    thenSysOutContains(quotesX2(unlines(
         "[String] result",
         "  [String] mySingleton",
         "    [String]",
@@ -28,7 +28,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = '012345678901234567890123456789';  ");
     whenSmoothTree("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(unlines(
+    thenSysOutContains(quotesX2(unlines(
         "String result",
         "  String '012345678901234'...",
         "")));
@@ -40,7 +40,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  Blob result = file(toBlob('abc'), 'name.txt');  ");
     whenSmoothTree("result");
     thenFinishedWithSuccess();
-    thenOutputContains(quotesX2(unlines(
+    thenSysOutContains(quotesX2(unlines(
         "Blob result",
         "  Blob <- File",
         "    File file",
@@ -53,7 +53,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
   public void fails_when_script_file_is_missing() {
     whenSmoothTree("result");
     thenFinishedWithError();
-    thenOutputContains("error: 'build.smooth' doesn't exist.\n");
+    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
   }
 
   @Test
@@ -62,7 +62,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree();
     thenFinishedWithError();
-    thenErrorContains(
+    thenSysErrContains(
         "Missing required parameter: <function>",
         "",
         "Usage:",
@@ -77,7 +77,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  withArguments(String element) = element;  ");
     whenSmoothTree("withArguments");
     thenFinishedWithError();
-    thenOutputContains("error: Cannot print execution tree for 'withArguments' function as " +
+    thenSysOutContains("error: Cannot print execution tree for 'withArguments' function as " +
         "it requires arguments.");
   }
 
@@ -95,7 +95,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree("nonexistentFunction");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "error: Unknown function 'nonexistentFunction'.",
         "Try 'smooth list' to see all available functions.",
         "");
@@ -107,7 +107,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree("illegal^name");
     thenFinishedWithError();
-    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
   }
 
   @Test
@@ -117,8 +117,8 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree("illegal^name other^name");
     thenFinishedWithError();
-    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
-    thenOutputContains("error: Illegal function name 'other^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'other^name' passed in command line.\n");
   }
 
   @Test
@@ -127,7 +127,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree("result", "result");
     thenFinishedWithError();
-    thenOutputContains("error: Function 'result' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
   }
 
   @Test
@@ -137,7 +137,7 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothTree("result", "result", "other", "other");
     thenFinishedWithError();
-    thenOutputContains("error: Function 'result' has been specified more than once.\n");
-    thenOutputContains("error: Function 'other' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'other' has been specified more than once.\n");
   }
 }

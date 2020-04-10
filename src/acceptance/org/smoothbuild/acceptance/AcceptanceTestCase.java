@@ -59,8 +59,8 @@ public abstract class AcceptanceTestCase {
 
   private File projectDir;
   private Integer exitCode;
-  private String outputData;
-  private String errorData;
+  private String sysOut;
+  private String sysErr;
 
   @BeforeEach
   public void init() {
@@ -151,8 +151,8 @@ public abstract class AcceptanceTestCase {
       Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
       Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
       exitCode = process.waitFor();
-      outputData = new String(inputStream.get(), UTF_8);
-      errorData = new String(errorStream.get(), UTF_8);
+      sysOut = new String(inputStream.get(), UTF_8);
+      sysErr = new String(errorStream.get(), UTF_8);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
@@ -185,33 +185,33 @@ public abstract class AcceptanceTestCase {
   private void thenReturnedCode(int expected) {
     if (expected != exitCode.intValue()) {
       fail("Expected return code " + expected + " but was " + exitCode.intValue() + ".\n"
-          + "standard out:\n" + outputData + "\n"
-          + "standard err:\n" + errorData + "\n");
+          + "standard out:\n" + sysOut + "\n"
+          + "standard err:\n" + sysErr + "\n");
     }
   }
 
-  public void thenOutputContainsError(int lineNumber, String text) {
-    thenOutputContains("build.smooth:" + lineNumber + ": error: " + text);
+  public void thenSysOutContainsError(int lineNumber, String text) {
+    thenSysOutContains("build.smooth:" + lineNumber + ": error: " + text);
   }
 
-  public void thenOutputContains(String... lines) {
+  public void thenSysOutContains(String... lines) {
     String text = unlines(lines);
-    assertThat(outputData)
+    assertThat(sysOut)
         .contains(text);
   }
 
-  public void thenErrorContains(String... lines) {
+  public void thenSysErrContains(String... lines) {
     String text = unlines(lines);
-    assertThat(errorData)
+    assertThat(sysErr)
         .contains(text);
   }
 
-  public String output() {
-    return outputData;
+  public String sysOut() {
+    return sysOut;
   }
 
-  public String error() {
-    return errorData;
+  public String sysErr() {
+    return sysErr;
   }
 
   public File artifact(String name) {

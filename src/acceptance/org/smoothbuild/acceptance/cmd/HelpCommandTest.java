@@ -10,7 +10,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_command_prints_general_help() {
     whenSmoothHelp();
     thenFinishedWithSuccess();
-    thenOutputContains(expectedGeneralHelp());
+    thenSysOutContains(expectedGeneralHelp());
   }
 
   private static String expectedGeneralHelp() {
@@ -39,7 +39,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_build_command_prints_help_for_build() {
     whenSmoothHelp("build");
     thenFinishedWithSuccess();
-    thenOutputContains(expectedBuildCommandHelp());
+    thenSysOutContains(expectedBuildCommandHelp());
   }
 
   private static String expectedBuildCommandHelp() {
@@ -59,7 +59,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   public void help_clean_command_prints_help_for_clean() {
     whenSmoothHelp("clean");
     thenFinishedWithSuccess();
-    thenOutputContains(expectedCleanCommandHelp());
+    thenSysOutContains(expectedCleanCommandHelp());
   }
 
   private static String expectedCleanCommandHelp() {

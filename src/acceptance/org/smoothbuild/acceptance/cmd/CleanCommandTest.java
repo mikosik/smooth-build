@@ -27,7 +27,7 @@ public class CleanCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothClean("some arguments");
     thenFinishedWithError();
-    thenErrorContains(
+    thenSysErrContains(
         "Unmatched arguments from index 1: 'some', 'arguments'",
         "",
         "Usage:",

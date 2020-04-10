@@ -101,7 +101,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [ [] ], second = [ 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2,
+    thenSysOutContainsError(2,
         "Cannot infer actual type(s) for generic parameter(s) in call to 'testConcat'.");
   }
 
@@ -200,7 +200,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [ [] ], element = stringStruct('bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(5,
+    thenSysOutContainsError(5,
         "Cannot infer actual type(s) for generic parameter(s) in call to 'testAppend'.");
   }
 }

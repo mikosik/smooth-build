@@ -15,7 +15,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
   public void build_command_fails_when_script_file_is_missing() {
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("error: 'build.smooth' doesn't exist.\n");
+    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
   }
 
   @Test
@@ -24,7 +24,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild();
     thenFinishedWithError();
-    thenErrorContains(
+    thenSysErrContains(
         "Missing required parameter: <function>",
         "",
         "Usage:",
@@ -39,7 +39,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  String testStringIdentity(String value) = value;  ");
     whenSmoothBuild("testStringIdentity");
     thenFinishedWithError();
-    thenOutputContains("error: Function 'testStringIdentity' cannot be invoked from command line "
+    thenSysOutContains("error: Function 'testStringIdentity' cannot be invoked from command line "
         + "as it requires arguments.\n");
   }
 
@@ -59,7 +59,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("nonexistentFunction");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "error: Unknown function 'nonexistentFunction'.",
         "Try 'smooth list' to see all available functions.\n");
   }
@@ -82,7 +82,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("illegal^name");
     thenFinishedWithError();
-    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
   }
 
   @Test
@@ -92,8 +92,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("illegal^name other^name");
     thenFinishedWithError();
-    thenOutputContains("error: Illegal function name 'illegal^name' passed in command line.\n");
-    thenOutputContains("error: Illegal function name 'other^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
+    thenSysOutContains("error: Illegal function name 'other^name' passed in command line.\n");
   }
 
   @Test
@@ -102,7 +102,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result", "result");
     thenFinishedWithError();
-    thenOutputContains("error: Function 'result' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
   }
 
   @Test
@@ -112,8 +112,8 @@ public class BuildCommandTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result", "result", "other", "other");
     thenFinishedWithError();
-    thenOutputContains("error: Function 'result' has been specified more than once.\n");
-    thenOutputContains("error: Function 'other' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
+    thenSysOutContains("error: Function 'other' has been specified more than once.\n");
   }
 
   @Test

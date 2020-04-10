@@ -17,7 +17,7 @@ public class PipeTest extends AcceptanceTestCase {
         "  result = 'abc' | myIdentity(function1(unknown=''));  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'function1' has no parameter 'unknown'.");
+    thenSysOutContains("Function 'function1' has no parameter 'unknown'.");
   }
 
   @Test

@@ -54,7 +54,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = function;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'function' is native but does not have native implementation.\n");
+    thenSysOutContains("Function 'function' is native but does not have native implementation.\n");
   }
 
   @Test
@@ -64,7 +64,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Invalid function native implementation in build.jar provided by "
             + SameName2.class.getCanonicalName() + ".sameName: "
             + "Function with the same name is also provided by "
@@ -78,7 +78,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Invalid function native implementation in build.jar provided by "
+    thenSysOutContains("Invalid function native implementation in build.jar provided by "
         + IllegalName.class.getCanonicalName()
         + ".illegalName$: Name 'illegalName$' is illegal.\n");
   }
@@ -103,7 +103,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Invalid function native implementation in build.jar provided by "
+    thenSysOutContains("Invalid function native implementation in build.jar provided by "
         + NonPublicMethod.class.getCanonicalName()
         + ".function: Providing method must be public.\n");
   }
@@ -115,7 +115,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Invalid function native implementation in build.jar provided by "
+    thenSysOutContains("Invalid function native implementation in build.jar provided by "
         + NonStaticMethod.class.getCanonicalName()
         + ".function: Providing method must be static.\n");
   }
@@ -128,7 +128,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Function 'oneStringParameter' is native so should have declared result type.\n");
   }
 
@@ -140,7 +140,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter('abc');      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'oneStringParameter' has result type 'File' "
+    thenSysOutContains("Function 'oneStringParameter' has result type 'File' "
         + "so its native implementation result type must be " + Struct.class.getCanonicalName() +
         " but it is " + SString.class.getCanonicalName() + ".\n");
   }
@@ -152,7 +152,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Invalid function native implementation in build.jar provided by "
+    thenSysOutContains("Invalid function native implementation in build.jar provided by "
         + WithoutContainer.class.getCanonicalName()
         + ".function: Providing method should have first parameter of type "
         + NativeApi.class.getCanonicalName() + ".\n");
@@ -166,7 +166,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Function 'oneStringParameter' has 0 parameter(s) but its native implementation "
             + "has 1 parameter(s).\n");
   }
@@ -179,7 +179,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter(a='abc', b='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Function 'oneStringParameter' has 2 parameter(s) but its native implementation "
             + "has 1 parameter(s).\n");
   }
@@ -192,7 +192,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter([]);             ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'oneStringParameter' parameter 'string' has type [String] "
+    thenSysOutContains("Function 'oneStringParameter' parameter 'string' has type [String] "
         + "so its native implementation type must be " + Array.class.getCanonicalName()
         + " but it is " + SString.class.getCanonicalName() + ".\n");
   }
@@ -206,7 +206,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = fileParameter(file(toBlob('abc'), 'file.txt'));  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'fileParameter' parameter 'file' has type Blob "
+    thenSysOutContains("Function 'fileParameter' parameter 'file' has type Blob "
         + "so its native implementation type must be " + Blob.class.getCanonicalName()
         + " but it is " + Struct.class.getCanonicalName() + ".\n");
   }
@@ -219,8 +219,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = throwException;   ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function throwException threw java exception from its native code.");
-    thenOutputContains("java.lang.UnsupportedOperationException");
+    thenSysOutContains("Function throwException threw java exception from its native code.");
+    thenSysOutContains("java.lang.UnsupportedOperationException");
   }
 
   @Test
@@ -232,8 +232,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = reportTwoErrors(message1='first error', message2='second error');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("first error\n");
-    thenOutputContains("second error\n");
+    thenSysOutContains("first error\n");
+    thenSysOutContains("second error\n");
   }
 
   @Test
@@ -244,10 +244,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = throwRandomException;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    String timestamp1 = fetchTimestamp(output());
+    String timestamp1 = fetchTimestamp(sysOut());
     whenSmoothBuild("result");
     thenFinishedWithError();
-    String timestamp2 = fetchTimestamp(output());
+    String timestamp2 = fetchTimestamp(sysOut());
     assertThat(timestamp1)
         .isNotEqualTo(timestamp2);
   }
@@ -268,7 +268,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = reportError('error_reported_is_logged');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("error_reported_is_logged");
+    thenSysOutContains("error_reported_is_logged");
   }
 
   @Test
@@ -279,7 +279,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = returnNull();  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function returnNull has faulty native implementation: "
+    thenSysOutContains("Function returnNull has faulty native implementation: "
         + "it returned 'null' but logged no error.");
   }
 
@@ -291,7 +291,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = reportWarning('test message');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function reportWarning has faulty native implementation: "
+    thenSysOutContains("Function reportWarning has faulty native implementation: "
         + "it returned 'null' but logged no error.");
   }
 
@@ -303,9 +303,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = addElementOfWrongTypeToArray;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Function addElementOfWrongTypeToArray threw java exception from its native code.");
-    thenOutputContains("Element type must be Blob but was String.");
+    thenSysOutContains("Element type must be Blob but was String.");
   }
 
   @Test
@@ -316,7 +316,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = emptyStringArray;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function emptyStringArray has faulty native implementation: "
+    thenSysOutContains("Function emptyStringArray has faulty native implementation: "
         + "Its actual result type is [Blob] but it returned object of type [String].");
   }
 
@@ -328,7 +328,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = brokenIdentity(value=[]);  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function brokenIdentity has faulty native implementation: "
+    thenSysOutContains("Function brokenIdentity has faulty native implementation: "
         + "Its actual result type is [Nothing] but it returned object of type String.");
   }
 }

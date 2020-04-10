@@ -11,7 +11,7 @@ public class PositionalParameterAssignmentTest extends AbstractAssignmentTestCas
 
   @Override
   protected void thenAssignmentError(AcceptanceTestCase test, String type, String valueType) {
-    test.thenOutputContainsError(2, "Cannot assign argument of type '" + valueType +
+    test.thenSysOutContainsError(2, "Cannot assign argument of type '" + valueType +
         "' to parameter 'param' of type '" + type + "'.");
   }
 }

@@ -15,7 +15,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "result = func;");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: Parameter 'withDefault' is of type '[String]' so"
+    thenSysOutContains("build.smooth:1: error: Parameter 'withDefault' is of type '[String]' so"
         + " it cannot have default value of type 'String'.");
   }
 
@@ -38,7 +38,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  A testIdentity(A value = 'aaa') = value;  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(
+    thenSysOutContainsError(
         1, "Parameter 'value' is of type 'A' so it cannot have default value of type 'String'.");
   }
 
@@ -97,6 +97,6 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = 'abc';                                          ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("build.smooth:1: error: ");
+    thenSysOutContains("build.smooth:1: error: ");
   }
 }
