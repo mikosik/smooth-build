@@ -1,12 +1,12 @@
 package org.smoothbuild.exec.task;
 
+import static org.smoothbuild.SmoothPaths.smoothJarPath;
+
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.util.reflect.Classes;
 
 public class SandboxHashProvider {
   public static Hash get() {
@@ -33,14 +33,7 @@ public class SandboxHashProvider {
   }
 
   public static Hash smoothJarHash() {
-    String resourcePath = SandboxHashProvider.class
-        .getClassLoader()
-        .getResource(Classes.binaryPath(SandboxHashProvider.class))
-        .getPath();
-    String smoothJarPath = resourcePath
-        .substring(0, resourcePath.lastIndexOf('!'))
-        .substring("file:".length());
-    return calculateHash(Paths.get(smoothJarPath));
+    return calculateHash(smoothJarPath());
   }
 
   private static Hash calculateHash(Path smoothJarFile) {
