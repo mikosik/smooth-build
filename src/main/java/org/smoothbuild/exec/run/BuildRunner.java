@@ -28,7 +28,7 @@ public class BuildRunner {
     for (String name : names) {
       if (!functions.contains(name)) {
         console.error("Unknown function '" + name + "'.\n"
-            + "Use 'smooth list' to see all available functions.\n");
+            + "Try 'smooth list' to see all available functions.\n");
         return;
       }
       Function function = functions.get(name);

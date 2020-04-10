@@ -22,7 +22,7 @@ public class ArgumentValidator {
 
     if (uniques.isEmpty()) {
       return error("error: Specify at least one function to be executed.\n"
-          + "Use 'smooth list' to see all available functions.");
+          + "Try 'smooth list' to see all available functions.");
     }
 
     return value(uniques)

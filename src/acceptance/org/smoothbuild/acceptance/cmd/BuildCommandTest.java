@@ -61,7 +61,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenOutputContains(
         "error: Unknown function 'nonexistentFunction'.",
-        "Use 'smooth list' to see all available functions.\n");
+        "Try 'smooth list' to see all available functions.\n");
   }
 
   @Test
