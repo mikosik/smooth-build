@@ -1,9 +1,9 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.SmoothPaths.USER_MODULE;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class FilesTest extends AcceptanceTestCase {
@@ -82,7 +82,7 @@ public class FilesTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    String userModule = new SmoothPaths(null).userModule().shortPath();
+    String userModule = USER_MODULE.fullPath().toString();
     assertThat(artifactDir("result"))
         .containsExactly(userModule, script, "dir/file.txt", "abc");
   }
