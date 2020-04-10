@@ -25,6 +25,6 @@ public class JarUnjarTest extends AcceptanceTestCase {
         "  result = toBlob('random junk') | unjar;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Cannot read archive. Corrupted data?");
+    thenSysOutContains("Cannot read archive. Corrupted data?");
   }
 }

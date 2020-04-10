@@ -36,6 +36,6 @@ public class ConstructorTest extends AcceptanceTestCase {
         "  result = takeStruct(myStruct());             ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Parameter 'field' must be specified.");
+    thenSysOutContains("Parameter 'field' must be specified.");
   }
 }

@@ -13,7 +13,7 @@ public class ListCommandTest extends AcceptanceTestCase {
         "  cFunction = 'abc';  ");
     whenSmoothList();
     thenFinishedWithSuccess();
-    thenOutputContains(
+    thenSysOutContains(
         "aFunction",
         "bFunction",
         "cFunction",
@@ -25,6 +25,6 @@ public class ListCommandTest extends AcceptanceTestCase {
   public void fails_when_script_file_is_missing() {
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContains("error: 'build.smooth' doesn't exist.\n");
+    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
   }
 }

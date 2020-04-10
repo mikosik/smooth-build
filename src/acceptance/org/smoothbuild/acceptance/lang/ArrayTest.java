@@ -209,7 +209,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ myFile, myFile ];                 ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Can't store array of Files as it contains files with duplicated paths:",
         "  file.txt",
         "");
@@ -278,7 +278,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc', toBlob('abc') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Array cannot contain elements of incompatible types.\n"
+    thenSysOutContainsError(1, "Array cannot contain elements of incompatible types.\n"
         + "First element has type 'String' while element at index 1 has type 'Blob'.\n");
   }
 
@@ -290,7 +290,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ function1(unknown1=''), function1(unknown2='') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Function 'function1' has no parameter 'unknown1'.");
-    thenOutputContains("Function 'function1' has no parameter 'unknown2'.");
+    thenSysOutContains("Function 'function1' has no parameter 'unknown1'.");
+    thenSysOutContains("Function 'function1' has no parameter 'unknown2'.");
   }
 }

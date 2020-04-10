@@ -11,6 +11,6 @@ public class ReferenceTest extends AcceptanceTestCase {
         "  result = 'def';                        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "'unknown' is undefined.\n");
+    thenSysOutContainsError(1, "'unknown' is undefined.\n");
   }
 }

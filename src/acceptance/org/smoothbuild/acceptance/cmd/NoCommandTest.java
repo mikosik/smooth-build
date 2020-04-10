@@ -9,10 +9,10 @@ public class NoCommandTest extends AcceptanceTestCase {
   @Test
   public void calling_smooth_without_command_defaults_to_help_command() {
     whenSmoothHelp();
-    String helpOutput = output();
+    String helpOutput = sysOut();
     whenSmooth();
     thenFinishedWithSuccess();
-    assertThat(output())
+    assertThat(sysOut())
         .isEqualTo(helpOutput);
   }
 
@@ -20,7 +20,7 @@ public class NoCommandTest extends AcceptanceTestCase {
   public void unknown_command() {
     whenSmoothHelp();
     whenSmooth("unknownCommand");
-    thenErrorContains(
+    thenSysErrContains(
         "Unmatched argument at index 0: 'unknownCommand'",
         "",
         "Did you mean: clean?",

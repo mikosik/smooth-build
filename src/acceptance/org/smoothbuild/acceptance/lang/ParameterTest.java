@@ -61,7 +61,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  oneParameter(Value value) = 'abc';  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined type 'Value'.\n");
+    thenSysOutContainsError(1, "Undefined type 'Value'.\n");
   }
 
   @Test
@@ -78,7 +78,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  oneParameter(Undefined undefined) = 'abc';  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
+    thenSysOutContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -135,7 +135,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  oneParameter([Undefined] param) = 'abc';  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "Undefined type 'Undefined'.\n");
+    thenSysOutContainsError(1, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -163,7 +163,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  ) = 'abc';         ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(3, "'name1' is already defined at build.smooth:2.\n");
+    thenSysOutContainsError(3, "'name1' is already defined at build.smooth:2.\n");
   }
 
   @Test
@@ -175,7 +175,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  ) = 'abc';                     ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(3, "parameter with default value must be placed after all parameters " +
+    thenSysOutContainsError(3, "parameter with default value must be placed after all parameters " +
         "which don't have default value.\n");
   }
 
@@ -221,7 +221,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');          ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "Parameter 'param' cannot be called as it is not a function.\n");
+    thenSysOutContainsError(1, "Parameter 'param' cannot be called as it is not a function.\n");
   }
 
   @Test

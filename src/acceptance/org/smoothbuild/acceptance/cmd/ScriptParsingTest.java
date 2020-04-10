@@ -10,7 +10,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
         "  result =  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "mismatched input '<EOF>' expecting ");
+    thenSysOutContainsError(1, "mismatched input '<EOF>' expecting ");
   }
 
   @Test
@@ -19,7 +19,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
         "  result(String a, String BadName) = 'abc';");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "build.smooth:1: error: mismatched input 'BadName' expecting IDENTIFIER",
         "  result(String a, String BadName) = \"abc\";",
         "                          ^^^^^^^",
@@ -33,7 +33,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
         "  result = 'abc';     ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "build.smooth:1: error: token recognition error at: '*'",
         "  function* = \"abc\";  ",
         "          ^",

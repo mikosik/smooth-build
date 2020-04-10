@@ -28,7 +28,7 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = MyStruct.field(myStruct('abc'));  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(4, "mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING}");
+    thenSysOutContainsError(4, "mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING}");
   }
 
   @Test
@@ -40,7 +40,7 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = myStruct('abc').field();  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(4, "mismatched input '(' expecting ");
+    thenSysOutContainsError(4, "mismatched input '(' expecting ");
   }
 
   @Test
@@ -69,7 +69,7 @@ public class AccessorTest extends AcceptanceTestCase {
         "  result = value.accessedField;  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "Type 'String' doesn't have field 'accessedField'.");
+    thenSysOutContainsError(2, "Type 'String' doesn't have field 'accessedField'.");
   }
 
   @Test
@@ -81,6 +81,6 @@ public class AccessorTest extends AcceptanceTestCase {
         "  result = myStruct('abc').otherField;  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(4, "Type 'MyStruct' doesn't have field 'otherField'.");
+    thenSysOutContainsError(4, "Type 'MyStruct' doesn't have field 'otherField'.");
   }
 }

@@ -17,7 +17,7 @@ public class JunitTest extends AcceptanceTestCase {
         "  result = junit(tests=srcJar, deps=[]);                  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
+    thenSysOutContains("Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
   }
 
   @Test
@@ -42,7 +42,7 @@ public class JunitTest extends AcceptanceTestCase {
         "  result = junit(tests=srcJar, deps=junitJars);           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("test failed");
+    thenSysOutContains("test failed");
   }
 
   @Test
@@ -55,7 +55,7 @@ public class JunitTest extends AcceptanceTestCase {
         "  result = junit(tests=srcJar, deps=junitJars);           ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenOutputContains("No junit tests found.");
+    thenSysOutContains("No junit tests found.");
   }
 
   @Test

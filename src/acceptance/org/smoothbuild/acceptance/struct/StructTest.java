@@ -10,7 +10,7 @@ public class StructTest extends AcceptanceTestCase {
         "  myStruct {}  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
+    thenSysOutContainsError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
   }
 
   @Test
@@ -19,7 +19,7 @@ public class StructTest extends AcceptanceTestCase {
         "  A {}  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(
+    thenSysOutContainsError(
         1, "'A' is illegal struct name. It must have at least two characters.\n");
   }
 
@@ -60,7 +60,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';   ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(3, "'field1' is already defined at build.smooth:2.\n");
+    thenSysOutContainsError(3, "'field1' is already defined at build.smooth:2.\n");
   }
 
   @Test
@@ -71,7 +71,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
+    thenSysOutContainsError(2, "'MyStruct' is already defined at build.smooth:1.\n");
   }
 
   @Test
@@ -81,7 +81,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "'String' is already defined.\n");
+    thenSysOutContainsError(1, "'String' is already defined.\n");
   }
 
   @Test
@@ -92,7 +92,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1, "'File' is already defined");
+    thenSysOutContainsError(1, "'File' is already defined");
   }
 
   @Test
@@ -104,7 +104,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "Undefined type 'Undefined'.\n");
+    thenSysOutContainsError(2, "Undefined type 'Undefined'.\n");
   }
 
   @Test
@@ -115,7 +115,7 @@ public class StructTest extends AcceptanceTestCase {
         "  }                   ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "First field of struct cannot have array type.\n");
+    thenSysOutContainsError(2, "First field of struct cannot have array type.\n");
   }
 
   @Test
@@ -126,7 +126,7 @@ public class StructTest extends AcceptanceTestCase {
         "  }                  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "Struct field cannot have 'Nothing' type.\n");
+    thenSysOutContainsError(2, "Struct field cannot have 'Nothing' type.\n");
   }
 
   @Test
@@ -138,7 +138,7 @@ public class StructTest extends AcceptanceTestCase {
         "  }                        ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(3, "Struct field cannot have 'Nothing' type.\n");
+    thenSysOutContainsError(3, "Struct field cannot have 'Nothing' type.\n");
   }
 
   @Test
@@ -149,7 +149,7 @@ public class StructTest extends AcceptanceTestCase {
         "  }            ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(2, "Struct field cannot have a generic type.\n");
+    thenSysOutContainsError(2, "Struct field cannot have a generic type.\n");
   }
 
   @Test
@@ -161,7 +161,7 @@ public class StructTest extends AcceptanceTestCase {
         "  }                  ");
     whenSmoothList();
     thenFinishedWithError();
-    thenOutputContainsError(3, "Struct field cannot have a generic type.\n");
+    thenSysOutContainsError(3, "Struct field cannot have a generic type.\n");
   }
 
   @Test
@@ -226,7 +226,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';     ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "build.smooth:2: error: Type hierarchy contains cycle:",
         "build.smooth:2: MyStruct -> MyStruct",
         "");
@@ -242,7 +242,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';       ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(2, "First field of struct cannot have array type.");
+    thenSysOutContainsError(2, "First field of struct cannot have array type.");
   }
 
   @Test
@@ -258,7 +258,7 @@ public class StructTest extends AcceptanceTestCase {
         "  result = 'abc';        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Type hierarchy contains cycle:",
         "build.smooth:2: MyStruct -> OtherStruct",
         "build.smooth:5: OtherStruct -> MyStruct",

@@ -169,7 +169,7 @@ public class StringLiteralTest extends AcceptanceTestCase {
         "  result = '\\A';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContainsError(1,
+    thenSysOutContainsError(1,
         "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.\n");
   }
 }

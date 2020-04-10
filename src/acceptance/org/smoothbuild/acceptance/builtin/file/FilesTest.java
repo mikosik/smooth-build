@@ -13,7 +13,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//.smooth');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Listing files from '.smooth' dir is not allowed.");
+    thenSysOutContains("Listing files from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -22,7 +22,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//.smooth/subdir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Listing files from '.smooth' dir is not allowed.");
+    thenSysOutContains("Listing files from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -31,7 +31,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//..');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Param 'dir' has illegal value. Path cannot contain '..' element.");
+    thenSysOutContains("Param 'dir' has illegal value. Path cannot contain '..' element.");
   }
 
   @Test
@@ -40,7 +40,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//nonexistent/path.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Dir 'nonexistent/path.txt' doesn't exist.");
+    thenSysOutContains("Dir 'nonexistent/path.txt' doesn't exist.");
   }
 
   @Test
@@ -50,7 +50,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('//file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Dir 'file.txt' doesn't exist. It is a file.");
+    thenSysOutContains("Dir 'file.txt' doesn't exist. It is a file.");
   }
 
   @Test
@@ -59,7 +59,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('dir');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Param 'dir' has illegal value. "
+    thenSysOutContains("Param 'dir' has illegal value. "
         + "It should start with \"//\" which represents project's root dir.");
   }
 

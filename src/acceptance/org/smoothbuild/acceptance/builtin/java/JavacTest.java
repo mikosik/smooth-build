@@ -20,7 +20,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  | javac;                                                                      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("modifier private not allowed here");
+    thenSysOutContains("modifier private not allowed here");
   }
 
   @Test
@@ -29,7 +29,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  result = [] | javac;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenOutputContains("Param 'srcs' is empty list.");
+    thenSysOutContains("Param 'srcs' is empty list.");
   }
 
   @Test
@@ -86,7 +86,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  result = [ classFile, classFile ] | javac;                            ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("duplicate class: MyClass");
+    thenSysOutContains("duplicate class: MyClass");
   }
 
   @Test
@@ -96,7 +96,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  | javac(source='0.9');                                                ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("invalid source release: 0.9");
+    thenSysOutContains("invalid source release: 0.9");
   }
 
   @Test
@@ -106,7 +106,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  | javac(target='0.9');                                                ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("invalid target release: 0.9");
+    thenSysOutContains("invalid target release: 0.9");
   }
 
   @Test
@@ -117,7 +117,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  | javac(source='1.4', target='1.4');                                        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Source option 1.4 is no longer supported.");
+    thenSysOutContains("Source option 1.4 is no longer supported.");
   }
 
   private Object invoke(File appClassFile, String method) throws IOException,

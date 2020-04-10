@@ -13,7 +13,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//.smooth/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Reading file from '.smooth' dir is not allowed.");
+    thenSysOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -23,7 +23,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//.smooth/subdir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Reading file from '.smooth' dir is not allowed.");
+    thenSysOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
@@ -32,7 +32,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//..');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Param 'path' has illegal value. Path cannot contain '..' element.");
+    thenSysOutContains("Param 'path' has illegal value. Path cannot contain '..' element.");
   }
 
   @Test
@@ -41,7 +41,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//nonexistent/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("File 'nonexistent/file.txt' doesn't exist.");
+    thenSysOutContains("File 'nonexistent/file.txt' doesn't exist.");
   }
 
   @Test
@@ -51,7 +51,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//some/dir');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("File 'some/dir' doesn't exist. It is a dir.");
+    thenSysOutContains("File 'some/dir' doesn't exist. It is a dir.");
   }
 
   @Test
@@ -61,7 +61,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains("Param 'path' has illegal value. "
+    thenSysOutContains("Param 'path' has illegal value. "
         + "It should start with \"//\" which represents project's root dir.");
   }
 

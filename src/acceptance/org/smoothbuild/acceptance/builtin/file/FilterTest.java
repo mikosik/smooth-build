@@ -14,7 +14,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [] | filter('/');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenOutputContains(
+    thenSysOutContains(
         "Parameter 'include' has illegal value. Pattern can't start with slash character '/'.");
   }
 
