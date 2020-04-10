@@ -11,7 +11,6 @@ import static okio.Okio.source;
 import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.EXIT_CODE_JAVA_EXCEPTION;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
@@ -48,6 +47,7 @@ import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;
 
+import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class AcceptanceTestCase {
@@ -88,7 +88,6 @@ public abstract class AcceptanceTestCase {
     File fullPath = file(path);
     fullPath.getParentFile().mkdirs();
     try (FileWriter writer = new FileWriter(fullPath.toString(), UTF_8)) {
-      content.getBytes(UTF_8);
       writer.write(content);
     }
   }
@@ -156,9 +155,7 @@ public abstract class AcceptanceTestCase {
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (ExecutionException e) {
+    } catch (IOException | ExecutionException e) {
       throw new RuntimeException(e);
     }
   }
@@ -174,17 +171,13 @@ public abstract class AcceptanceTestCase {
     thenReturnedCode(EXIT_CODE_SUCCESS);
   }
 
-  public void thenFinishedWithException() {
-    thenReturnedCode(EXIT_CODE_JAVA_EXCEPTION);
-  }
-
   public void thenFinishedWithError() {
     thenReturnedCode(EXIT_CODE_ERROR);
   }
 
   private void thenReturnedCode(int expected) {
-    if (expected != exitCode.intValue()) {
-      fail("Expected return code " + expected + " but was " + exitCode.intValue() + ".\n"
+    if (expected != exitCode) {
+      fail("Expected return code " + expected + " but was " + exitCode + ".\n"
           + "standard out:\n" + sysOut + "\n"
           + "standard err:\n" + sysErr + "\n");
     }
@@ -224,7 +217,7 @@ public abstract class AcceptanceTestCase {
    */
   public Object artifactAsByteStrings(String name) {
     try {
-      return actual(artifact(name), s -> s.readByteString());
+      return actual(artifact(name), BufferedSource::readByteString);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
