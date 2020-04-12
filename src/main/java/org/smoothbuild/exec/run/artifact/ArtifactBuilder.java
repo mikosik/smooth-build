@@ -41,7 +41,7 @@ public class ArtifactBuilder {
     try {
       Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
       if (!artifacts.containsValue(null)) {
-        console.println("\nbuilt artifact(s):");
+        console.println("\nBuilt artifact(s):");
         List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
@@ -58,7 +58,7 @@ public class ArtifactBuilder {
   private void save(String name, SObject sObject) {
     try {
       artifactSaver.save(name, sObject);
-      console.println(name + " -> " + artifactPath(name));
+      console.println("  " + name + " -> " + artifactPath(name));
     } catch (IOException e) {
       console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
