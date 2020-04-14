@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.parse.ast.StructNode.constructorNameToTypeName;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import org.smoothbuild.parse.ast.CallNode;
 
 public class InferCallTypeAndParamAssignment {
   public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime, Ast ast,
-      List<ParseError> errors) {
+      List<String> errors) {
     new Runnable() {
       @Override
       public void run() {
@@ -55,21 +56,21 @@ public class InferCallTypeAndParamAssignment {
             inNamedArgsSection = true;
             ParameterInfo param = parametersMap.get(arg.name());
             if (param == null) {
-              errors.add(new ParseError(arg,
+              errors.add(parseError(arg,
                   "Function '" + call.name() + "' has no parameter '" + arg.name() + "'."));
             } else if (assignedArgs.get(param.index()) != null) {
-              errors.add(new ParseError(arg, "Argument '" + arg.name() + "' is already assigned."));
+              errors.add(parseError(arg, "Argument '" + arg.name() + "' is already assigned."));
             } else {
               assignedArgs.set(param.index(), arg);
             }
           } else {
             if (inNamedArgsSection) {
-              errors.add(new ParseError(
+              errors.add(parseError(
                   arg, "Positional arguments must be placed before named arguments."));
             } else if (i < parameters.size()) {
               assignedArgs.set(i, arg);
             } else {
-              errors.add(new ParseError(arg, "Too many positional arguments."));
+              errors.add(parseError(arg, "Too many positional arguments."));
             }
           }
         }
@@ -82,13 +83,12 @@ public class InferCallTypeAndParamAssignment {
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
             if (!param.hasDefaultValue()) {
-              errors.add(
-                  new ParseError(call, "Parameter " + param.q() + " must be specified."));
+              errors.add(parseError(call, "Parameter " + param.q() + " must be specified."));
             }
           } else {
             Type argType = arg.get(Type.class);
             if (!param.type().isParamAssignableFrom(argType)) {
-              errors.add(new ParseError(arg,
+              errors.add(parseError(arg,
                   "Cannot assign argument of type " + argType.q() + " to parameter '" +
                       param.name() + "' of type " + param.type().q() + "."));
             }
@@ -129,7 +129,7 @@ public class InferCallTypeAndParamAssignment {
         try {
           return inferMapping(genericTypes, actualTypes);
         } catch (IllegalArgumentException e) {
-          errors.add(new ParseError(call,
+          errors.add(parseError(call,
               "Cannot infer actual type(s) for generic parameter(s) in call to '" + call.name() +
                   "'."));
           return null;

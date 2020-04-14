@@ -1,10 +1,11 @@
 package org.smoothbuild.parse.deps;
 
+import static org.smoothbuild.parse.ParseError.parseError;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.Named;
 
 public class DependencyStack {
@@ -31,7 +32,7 @@ public class DependencyStack {
     return stack.getLast();
   }
 
-  public ParseError createCycleError() {
+  public String createCycleError() {
     String lastMissing = peek().missing().name();
     int first = -1;
     StackElem[] array = stack.toArray(new StackElem[0]);
@@ -56,6 +57,6 @@ public class DependencyStack {
       builder.append("\n");
     }
     Location location = array[first].missing().location();
-    return new ParseError(location, name + " contains cycle:\n" + builder.toString());
+    return parseError(location, name + " contains cycle:\n" + builder.toString());
   }
 }
