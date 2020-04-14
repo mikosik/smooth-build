@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.cli.Console;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;

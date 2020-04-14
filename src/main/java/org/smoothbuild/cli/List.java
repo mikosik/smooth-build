@@ -3,6 +3,7 @@ package org.smoothbuild.cli;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.parse.RuntimeController;
 

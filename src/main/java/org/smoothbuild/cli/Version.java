@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.SmoothPaths;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.SandboxHashProvider;
 

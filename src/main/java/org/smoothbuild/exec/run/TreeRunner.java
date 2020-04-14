@@ -4,7 +4,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.Console;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;

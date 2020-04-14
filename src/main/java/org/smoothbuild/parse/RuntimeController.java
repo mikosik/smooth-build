@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothPaths;
-import org.smoothbuild.cli.Console;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
@@ -27,7 +27,7 @@ public class RuntimeController {
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
-    List<?> errors = value(null)
+    List<String> errors = value(null)
         .invoke((v) -> loadModule(runtime, paths.funcsModule()))
         .invoke((v) -> loadModule(runtime, paths.userModule()))
         .invokeConsumer(ml -> runner.accept(runtime))

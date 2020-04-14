@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.exec.run.TreeRunner;
 import org.smoothbuild.parse.RuntimeController;
 import org.smoothbuild.util.Maybe;
