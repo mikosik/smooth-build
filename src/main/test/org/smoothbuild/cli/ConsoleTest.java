@@ -26,7 +26,7 @@ public class ConsoleTest extends TestingContext {
   public void printing_messages_containing_error_message() {
     console.print(name, array(errorMessage("message string")));
     assertThat(outputStream.toString()).isEqualTo(unlines(
-        " + GROUP NAME",
+        "  GROUP NAME",
         "   + ERROR: message string",
         ""));
   }
@@ -35,7 +35,7 @@ public class ConsoleTest extends TestingContext {
   public void printing_messages_without_error_message() {
     console.print(name, array(warningMessage("message string\nsecond line")));
     assertThat(outputStream.toString()).isEqualTo(unlines(
-        " + GROUP NAME",
+        "  GROUP NAME",
         "   + WARNING: message string",
         "     second line",
         ""));
@@ -81,7 +81,7 @@ public class ConsoleTest extends TestingContext {
     console.printFinalSummary();
 
     assertThat(outputStream.toString()).isEqualTo(unlines(
-        " + GROUP NAME",
+        "  GROUP NAME",
         "   + ERROR: message string",
         "   + 1 error(s)",
         ""));
@@ -106,9 +106,9 @@ public class ConsoleTest extends TestingContext {
     console.printFinalSummary();
 
     StringBuilder builder = new StringBuilder();
-    builder.append(" + GROUP NAME\n");
+    builder.append("  GROUP NAME\n");
     builder.append(Throwables.getStackTraceAsString(exception));
-    builder.append(" + GROUP NAME\n");
+    builder.append("  GROUP NAME\n");
     builder.append("   + ERROR: error string\n".repeat(2));
     builder.append("   + WARNING: warning string\n".repeat(3));
     builder.append("   + INFO: info string\n".repeat(4));
