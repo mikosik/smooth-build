@@ -25,7 +25,7 @@ import org.smoothbuild.util.Maybe;
 import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
-  public static List<?> loadModule(SRuntime runtime, ModulePath path) {
+  public static List<String> loadModule(SRuntime runtime, ModulePath path) {
     Maybe<Natives> natives = findNatives(changeExtension(path.fullPath(), "jar"));
     return parseScript(path)
         .mapValue(moduleContext -> AstCreator.fromParseTree(path, moduleContext))

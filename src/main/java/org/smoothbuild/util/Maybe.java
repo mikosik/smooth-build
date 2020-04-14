@@ -19,15 +19,15 @@ public abstract class Maybe<E> {
     return new ValueMaybe<>(value);
   }
 
-  public static <E> Maybe<E> error(Object error) {
+  public static <E> Maybe<E> error(String error) {
     return new ErrorMaybe<>(ImmutableList.of(error));
   }
 
-  public static <E> Maybe<E> errors(List<?> errors) {
+  public static <E> Maybe<E> errors(List<String> errors) {
     return new ErrorMaybe<>(errors);
   }
 
-  public static <E> Maybe<E> maybe(E value, List<?> errors) {
+  public static <E> Maybe<E> maybe(E value, List<String> errors) {
     if (errors.isEmpty()) {
       return new ValueMaybe<>(value);
     } else {
@@ -43,24 +43,23 @@ public abstract class Maybe<E> {
     return result;
   }
 
-  public abstract Maybe<E> addError(Object error);
+  public abstract Maybe<E> addError(String error);
 
-  public abstract Maybe<E> addErrors(List<?> errors);
+  public abstract Maybe<E> addErrors(List<String> errors);
 
   public abstract boolean hasValue();
 
   public abstract E value();
 
-  public abstract ImmutableList<Object> errors();
+  public abstract ImmutableList<String> errors();
 
   public abstract Maybe<E> invokeConsumer(Consumer<E> consumer);
 
-  public abstract Maybe<E> invoke(Supplier<List<?>> consumer);
+  public abstract Maybe<E> invoke(Supplier<List<String>> consumer);
 
-  public abstract Maybe<E> invoke(Function<E, List<?>> consumer);
+  public abstract Maybe<E> invoke(Function<E, List<String>> consumer);
 
-  public abstract <F> Maybe<E> invoke(Maybe<F> param,
-      BiFunction<E, F, List<?>> consumer);
+  public abstract <F> Maybe<E> invoke(Maybe<F> param, BiFunction<E, F, List<String>> consumer);
 
   public abstract <R> Maybe<R> map(Function<E, Maybe<R>> function);
 
@@ -78,12 +77,12 @@ public abstract class Maybe<E> {
     }
 
     @Override
-    public Maybe<E> addError(Object error) {
+    public Maybe<E> addError(String error) {
       return error(error);
     }
 
     @Override
-    public Maybe<E> addErrors(List<?> errors) {
+    public Maybe<E> addErrors(List<String> errors) {
       if (errors.isEmpty()) {
         return this;
       } else {
@@ -102,7 +101,7 @@ public abstract class Maybe<E> {
     }
 
     @Override
-    public ImmutableList<Object> errors() {
+    public ImmutableList<String> errors() {
       return ImmutableList.of();
     }
 
@@ -113,18 +112,18 @@ public abstract class Maybe<E> {
     }
 
     @Override
-    public Maybe<E> invoke(Supplier<List<?>> supplier) {
+    public Maybe<E> invoke(Supplier<List<String>> supplier) {
       return appendErrorsIfExist(supplier.get());
     }
 
     @Override
-    public Maybe<E> invoke(Function<E, List<?>> consumer) {
+    public Maybe<E> invoke(Function<E, List<String>> consumer) {
       return appendErrorsIfExist(consumer.apply(value));
     }
 
     @Override
     public <F> Maybe<E> invoke(Maybe<F> param,
-        BiFunction<E, F, List<?>> consumer) {
+        BiFunction<E, F, List<String>> consumer) {
       if (param.hasValue()) {
         return appendErrorsIfExist(consumer.apply(value, param.value()));
       } else {
@@ -134,7 +133,7 @@ public abstract class Maybe<E> {
       }
     }
 
-    private Maybe<E> appendErrorsIfExist(List<?> newErrors) {
+    private Maybe<E> appendErrorsIfExist(List<String> newErrors) {
       if (newErrors.isEmpty()) {
         return this;
       } else {
@@ -194,20 +193,20 @@ public abstract class Maybe<E> {
   }
 
   public static class ErrorMaybe<E> extends Maybe<E> {
-    private final ImmutableList<Object> errors;
+    private final ImmutableList<String> errors;
 
-    public ErrorMaybe(List<?> errors) {
+    public ErrorMaybe(List<String> errors) {
       checkArgument(!errors.isEmpty(), "'errors' argument shouldn't be empty");
       this.errors = ImmutableList.copyOf(errors);
     }
 
     @Override
-    public Maybe<E> addError(Object error) {
+    public Maybe<E> addError(String error) {
       return new ErrorMaybe<>(concatErrors(errors, ImmutableList.of(error)));
     }
 
     @Override
-    public Maybe<E> addErrors(List<?> errors) {
+    public Maybe<E> addErrors(List<String> errors) {
       return new ErrorMaybe<>(concatErrors(this.errors, errors));
     }
 
@@ -222,7 +221,7 @@ public abstract class Maybe<E> {
     }
 
     @Override
-    public ImmutableList<Object> errors() {
+    public ImmutableList<String> errors() {
       return errors;
     }
 
@@ -232,18 +231,17 @@ public abstract class Maybe<E> {
     }
 
     @Override
-    public Maybe<E> invoke(Supplier<List<?>> supplier) {
+    public Maybe<E> invoke(Supplier<List<String>> supplier) {
       return this;
     }
 
     @Override
-    public Maybe<E> invoke(Function<E, List<?>> consumer) {
+    public Maybe<E> invoke(Function<E, List<String>> consumer) {
       return this;
     }
 
     @Override
-    public <F> Maybe<E> invoke(Maybe<F> param,
-        BiFunction<E, F, List<?>> consumer) {
+    public <F> Maybe<E> invoke(Maybe<F> param, BiFunction<E, F, List<String>> consumer) {
       return errors(concatErrors(errors, param.errors()));
     }
 
@@ -286,9 +284,10 @@ public abstract class Maybe<E> {
     }
   }
 
-  private static ImmutableList<Object> concatErrors(List<?>... lists) {
-    ImmutableList.Builder<Object> builder = ImmutableList.builder();
-    for (List<?> list : lists) {
+  @SafeVarargs
+  private static ImmutableList<String> concatErrors(List<String>... lists) {
+    ImmutableList.Builder<String> builder = ImmutableList.builder();
+    for (List<String> list : lists) {
       builder.addAll(list);
     }
     return builder.build();
