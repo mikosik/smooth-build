@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 
 public class Clean {

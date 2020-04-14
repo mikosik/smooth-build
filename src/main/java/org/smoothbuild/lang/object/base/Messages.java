@@ -2,6 +2,8 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.Streams.stream;
 
+import org.smoothbuild.cli.console.Level;
+
 import com.google.common.collect.ImmutableSet;
 
 public class Messages {
@@ -24,6 +26,10 @@ public class Messages {
 
   public static boolean isEmpty(Array messages) {
     return !messages.asIterable(Struct.class).iterator().hasNext();
+  }
+
+  public static Level level(SObject message) {
+    return Level.valueOf(severity(message));
   }
 
   public static String severity(SObject message) {

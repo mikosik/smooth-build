@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
@@ -29,16 +28,14 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class ArtifactSaver {
   private final FileSystem fileSystem;
   private final ObjectFactory objectFactory;
-  private final Console console;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory, Console console) {
+  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
     this.objectFactory = objectFactory;
-    this.console = console;
   }
 
-  public void save(String name, SObject object) throws IOException {
+  public void save(String name, SObject object) throws IOException, DuplicatedPathsException {
     Path path = path(toFileName(name));
     if (object instanceof Array) {
       saveArray(path, (Array) object);
@@ -49,7 +46,7 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveArray(Path path, Array array) throws IOException {
+  private void saveArray(Path path, Array array) throws IOException, DuplicatedPathsException {
     ConcreteType elemType = array.type().elemType();
     fileSystem.createDir(artifactPath(path));
     if (elemType.isArray()) {
@@ -77,7 +74,8 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path path, Array fileArray) throws IOException {
+  private void saveFileArray(Path path, Array fileArray) throws IOException,
+      DuplicatedPathsException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Path artifactPath = artifactPath(path);
     for (Struct file : fileArray.asIterable(Struct.class)) {
@@ -89,15 +87,15 @@ public class ArtifactSaver {
     }
 
     if (duplicatesDetector.hasDuplicates()) {
-      Set<String> duplicates = duplicatesDetector.getDuplicateValues();
-      console.error(duplicatedPathsMessage(duplicates));
+      throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
 
-  private String duplicatedPathsMessage(Set<String> duplicates) {
+  private DuplicatedPathsException duplicatedPathsMessage(Set<String> duplicates) {
     String separator = "\n  ";
     String list = separator + join(separator, duplicates);
-    return "Can't store array of Files as it contains files with duplicated paths:" + list;
+    return new DuplicatedPathsException(
+        "Can't store array of Files as it contains files with duplicated paths:" + list);
   }
 
   private void saveBasicObject(Path path, SObject object) throws IOException {

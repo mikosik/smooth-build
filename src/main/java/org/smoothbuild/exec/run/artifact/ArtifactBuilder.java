@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.Console;
+import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
@@ -41,27 +41,40 @@ public class ArtifactBuilder {
     try {
       Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
       if (!artifacts.containsValue(null)) {
-        console.println("\nBuilt artifact(s):");
         List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
             .collect(toList());
-        for (Entry<Task, SObject> artifact : sortedArtifacts) {
-          save(artifact.getKey().name(), artifact.getValue());
-        }
+        List<String> savingStatus = sortedArtifacts.stream()
+            .map(this::save)
+            .collect(toList());
+        console.println("\nBuilt artifact(s):");
+        savingStatus.forEach(console::println);
       }
     } catch (InterruptedException e) {
       console.println("Build process has been interrupted.");
     }
   }
 
-  private void save(String name, SObject sObject) {
+  private String save(Entry<Task, SObject> artifact) {
+    return save(artifact.getKey().name(), artifact.getValue());
+  }
+
+  private String save(String name, SObject sObject) {
     try {
       artifactSaver.save(name, sObject);
-      console.println("  " + name + " -> " + artifactPath(name));
+      return savingMessage(name, artifactPath(name).toString());
     } catch (IOException e) {
       console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
           + getStackTraceAsString(e));
+      return savingMessage(name, "error, see above");
+    } catch (DuplicatedPathsException e) {
+      console.error(e.getMessage());
+      return savingMessage(name, "error, see above");
     }
+  }
+
+  private static String savingMessage(String name, String status) {
+    return "  " + name + " -> " + status;
   }
 }

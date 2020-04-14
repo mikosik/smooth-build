@@ -1,17 +1,25 @@
 package org.smoothbuild.exec.task.parallel;
 
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.object.base.Messages.isEmpty;
+import static org.smoothbuild.lang.object.base.Messages.level;
+import static org.smoothbuild.lang.object.base.Messages.text;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.Console;
+import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.task.base.MaybeComputed;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.Struct;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.collect.Streams;
 
 /**
  * This class is thread-safe.
@@ -30,7 +38,7 @@ public class ExecutionReporter {
       if (maybeOutput.hasOutput()) {
         Array messages = maybeOutput.output().messages();
         if (!isEmpty(messages)) {
-          console.print(header(task, fromCache), messages);
+          print(task, fromCache, messages);
         }
       } else {
         console.print(header(task, fromCache), maybeOutput.exception());
@@ -38,6 +46,13 @@ public class ExecutionReporter {
     } else {
       report(maybeComputed.throwable());
     }
+  }
+
+  private void print(Task task, boolean fromCache, Array messages) {
+    List<Log> logs = Streams.stream(messages.asIterable(Struct.class))
+        .map(m -> new Log(level(m), text(m)))
+        .collect(toList());
+    console.print(header(task, fromCache), logs);
   }
 
   public void report(Throwable throwable) {
