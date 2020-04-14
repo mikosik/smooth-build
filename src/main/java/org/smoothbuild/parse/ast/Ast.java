@@ -61,7 +61,7 @@ public class Ast {
     return nameToStructMap.get(name);
   }
 
-  public List<Object> sortFuncsByDependencies(Functions functions) {
+  public List<String> sortFuncsByDependencies(Functions functions) {
     Maybe<List<String>> sortedNames = sortByDependencies(functions, this);
     if (sortedNames.hasValue()) {
       this.funcs = sortedNames
@@ -75,7 +75,7 @@ public class Ast {
     }
   }
 
-  public List<Object> sortTypesByDependencies(ObjectFactory objectFactory) {
+  public List<String> sortTypesByDependencies(ObjectFactory objectFactory) {
     Maybe<List<String>> sortedNames = sortByDependencies(objectFactory, this);
     if (sortedNames.hasValue()) {
       this.structs = sortedNames
