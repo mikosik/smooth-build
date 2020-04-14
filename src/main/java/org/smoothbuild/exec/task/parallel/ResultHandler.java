@@ -10,14 +10,14 @@ import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandler implements Consumer<MaybeComputed> {
   private final Task task;
-  private final Consumer<SObject> sObjectConsumer;
+  private final Consumer<SObject> consumer;
   private final ExecutionReporter reporter;
   private final SoftTerminationExecutor jobExecutor;
 
-  public ResultHandler(Task task, Consumer<SObject> sObjectConsumer,
+  public ResultHandler(Task task, Consumer<SObject> consumer,
       ExecutionReporter reporter, SoftTerminationExecutor jobExecutor) {
     this.task = task;
-    this.sObjectConsumer = sObjectConsumer;
+    this.consumer = consumer;
     this.reporter = reporter;
     this.jobExecutor = jobExecutor;
   }
@@ -30,7 +30,7 @@ public class ResultHandler implements Consumer<MaybeComputed> {
       if (!result.hasOutputWithValue()) {
         jobExecutor.terminate();
       } else {
-        sObjectConsumer.accept(result.output().value());
+        consumer.accept(result.output().value());
       }
     } else {
       Throwable throwable = maybeComputed.throwable();
