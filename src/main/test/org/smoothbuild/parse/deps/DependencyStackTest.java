@@ -1,13 +1,13 @@
 package org.smoothbuild.parse.deps;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.parse.ParseError;
 import org.smoothbuild.parse.ast.NamedNode;
 
 import com.google.common.collect.ImmutableSet;
@@ -122,12 +122,12 @@ public class DependencyStackTest {
     dependencyStack.push(elem("name2", "name3", 2));
     dependencyStack.push(elem("name3", "name4", 3));
     dependencyStack.push(elem("name4", "name2", 4));
-    assertThat(dependencyStack.createCycleError().toString())
-        .isEqualTo(new ParseError(loc(2),
+    assertThat(dependencyStack.createCycleError())
+        .isEqualTo(parseError(loc(2),
         "my stack contains cycle:\n"
             + "script.smooth:2: name2 -> name3\n"
             + "script.smooth:3: name3 -> name4\n"
-            + "script.smooth:4: name4 -> name2\n").toString());
+            + "script.smooth:4: name4 -> name2\n"));
   }
 
   @Test
@@ -135,10 +135,10 @@ public class DependencyStackTest {
     DependencyStack dependencyStack = new DependencyStack("my stack");
     dependencyStack.push(elem("name1", "name2", 1));
     dependencyStack.push(elem("name2", "name2", 2));
-    assertThat(dependencyStack.createCycleError().toString())
-        .isEqualTo(new ParseError(loc(2),
+    assertThat(dependencyStack.createCycleError())
+        .isEqualTo(parseError(loc(2),
         "my stack contains cycle:\n"
-            + "script.smooth:2: name2 -> name2\n").toString());
+            + "script.smooth:2: name2 -> name2\n"));
   }
 
   private StackElem elem(String from, String to, int lineNumber) {

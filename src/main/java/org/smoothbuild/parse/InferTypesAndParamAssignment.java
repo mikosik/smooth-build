@@ -2,6 +2,7 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
+import static org.smoothbuild.parse.ParseError.parseError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +34,9 @@ import org.smoothbuild.parse.ast.TypeNode;
 import com.google.common.collect.ImmutableList;
 
 public class InferTypesAndParamAssignment {
-  public static List<ParseError> inferTypesAndParamAssignment(SRuntime runtime, Ast ast) {
+  public static List<String> inferTypesAndParamAssignment(SRuntime runtime, Ast ast) {
     ObjectFactory objectFactory = runtime.objectFactory();
-    List<ParseError> errors = new ArrayList<>();
+    List<String> errors = new ArrayList<>();
     new AstVisitor() {
       Scope<Type> scope;
 
@@ -91,7 +92,7 @@ public class InferTypesAndParamAssignment {
           if (func.hasType()) {
             return createType(func.type());
           } else {
-            errors.add(new ParseError(func, "Function '" + func.name()
+            errors.add(parseError(func, "Function '" + func.name()
                 + "' is native so should have declared result type."));
             return null;
           }
@@ -100,7 +101,7 @@ public class InferTypesAndParamAssignment {
           if (func.hasType()) {
             Type type = createType(func.type());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
-              errors.add(new ParseError(func, "Function '" + func.name()
+              errors.add(parseError(func, "Function '" + func.name()
                   + "' has body which type is " + exprType.q()
                   + " and it is not convertible to function's declared result type " + type.q()
                   + "."));
@@ -138,7 +139,7 @@ public class InferTypesAndParamAssignment {
           if (param.hasDefaultValue()) {
             Type defaultValueType = param.defaultValue().get(Type.class);
             if (defaultValueType != null && !type.isAssignableFrom(defaultValueType)) {
-              errors.add(new ParseError(param, "Parameter '" + param.name()
+              errors.add(parseError(param, "Parameter '" + param.name()
                   + "' is of type " + type.q() + " so it cannot have default value of type "
                   + defaultValueType.q() + "."));
             }
@@ -173,7 +174,7 @@ public class InferTypesAndParamAssignment {
                 ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
             expr.set(Type.class, null);
-            errors.add(new ParseError(expr.location(), "Type " + exprType.q()
+            errors.add(parseError(expr.location(), "Type " + exprType.q()
                 + " doesn't have field '" + expr.fieldName() + "'."));
           }
         }
@@ -203,7 +204,7 @@ public class InferTypesAndParamAssignment {
           elemType = elemType.commonSuperType(type);
 
           if (elemType == null) {
-            errors.add(new ParseError(array,
+            errors.add(parseError(array,
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type " + firstType.q()
                     + " while element at index " + i + " has type " + type.q() + "."));

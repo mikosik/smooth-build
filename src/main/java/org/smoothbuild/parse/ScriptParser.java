@@ -8,6 +8,7 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
+import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Maybe.error;
 import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Strings.unlines;
@@ -69,14 +70,14 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final List<ParseError> errors = new ArrayList<>();
+    private final List<String> errors = new ArrayList<>();
     private final ModulePath path;
 
     public ErrorListener(ModulePath path) {
       this.path = path;
     }
 
-    public List<ParseError> foundErrors() {
+    public List<String> foundErrors() {
       return errors;
     }
 
@@ -88,7 +89,7 @@ public class ScriptParser {
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      errors.add(new ParseError(location, text));
+      errors.add(parseError(location, text));
     }
 
     private static String markingLine(Token offendingSymbol, int charNumber) {
@@ -154,7 +155,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      errors.add(new ParseError(locationOf(path, token), message));
+      errors.add(parseError(locationOf(path, token), message));
     }
   }
 }
