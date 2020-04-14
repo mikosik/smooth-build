@@ -24,8 +24,8 @@ import org.smoothbuild.lang.object.base.Struct;
 public class Console {
   public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
 
-  private static final String GROUP_PREFIX = " + ";
-  private static final String MESSAGE_FIRST_LINE_PREFIX = "  " + GROUP_PREFIX;
+  private static final String TASK_HEADER_PREFIX = "  ";
+  private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
   private final PrintStream printStream;
@@ -67,7 +67,7 @@ public class Console {
   }
 
   private String toTextAndIncreaseCounts(String header, Array messages) {
-    StringBuilder text = new StringBuilder(GROUP_PREFIX + header + "\n");
+    StringBuilder text = new StringBuilder(TASK_HEADER_PREFIX + header + "\n");
     for (Struct message : messages.asIterable(Struct.class)) {
       String severity = severity(message);
       text.append(prefixMultiline(severity + ": " + text(message)));
@@ -77,7 +77,7 @@ public class Console {
   }
 
   public void print(String header, Throwable failure) {
-    print(GROUP_PREFIX + header + "\n" + getStackTraceAsString(failure));
+    print(TASK_HEADER_PREFIX + header + "\n" + getStackTraceAsString(failure));
     failureCount.incrementAndGet();
   }
 
