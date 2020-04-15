@@ -210,8 +210,10 @@ public class ArrayTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains(
-        "Can't store array of Files as it contains files with duplicated paths:",
-        "  file.txt",
+        "Saving artifact(s)",
+        "  result -> '.smooth/artifacts/result'",
+        "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
+        "       file.txt",
         "");
   }
 
