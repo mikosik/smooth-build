@@ -91,7 +91,8 @@ public class ConsoleTest extends TestingContext {
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  GROUP NAME",
           "   + ERROR: message string",
-          "   + 1 error",
+          "Summary",
+          "  1 error",
           ""));
     }
 
@@ -121,10 +122,11 @@ public class ConsoleTest extends TestingContext {
       builder.append("   + WARNING: warning string\n".repeat(3));
       builder.append("   + INFO: info string\n".repeat(4));
 
-      builder.append("   + 1 fatal\n");
-      builder.append("   + 2 errors\n");
-      builder.append("   + 3 warnings\n");
-      builder.append("   + 4 infos\n");
+      builder.append("Summary\n");
+      builder.append("  1 fatal\n");
+      builder.append("  2 errors\n");
+      builder.append("  3 warnings\n");
+      builder.append("  4 infos\n");
 
       assertEquals(builder.toString(), outputStream.toString());
     }
