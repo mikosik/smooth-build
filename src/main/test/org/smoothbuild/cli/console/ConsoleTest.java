@@ -31,7 +31,7 @@ public class ConsoleTest extends TestingContext {
   class print {
     @Test
     public void logs_containing_error() {
-      console.print(name, List.of(error("message string")));
+      console.show(name, List.of(error("message string")));
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  GROUP NAME",
           "   + ERROR: message string",
@@ -40,7 +40,7 @@ public class ConsoleTest extends TestingContext {
 
     @Test
     public void logs_without_error() {
-      console.print(name, List.of(warning("message string\nsecond line")));
+      console.show(name, List.of(warning("message string\nsecond line")));
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  GROUP NAME",
           "   + WARNING: message string",
@@ -58,25 +58,25 @@ public class ConsoleTest extends TestingContext {
 
     @Test
     public void returns_false_when_only_info_was_logged() {
-      console.print(name, List.of(info("message string")));
+      console.show(name, List.of(info("message string")));
       assertFalse(console.isProblemReported());
     }
 
     @Test
     public void returns_false_when_only_warning_was_logged() {
-      console.print(name, List.of(warning("message string")));
+      console.show(name, List.of(warning("message string")));
       assertFalse(console.isProblemReported());
     }
 
     @Test
     public void returns_true_when_error_was_logged() {
-      console.print(name, List.of(error("message string")));
+      console.show(name, List.of(error("message string")));
       assertTrue(console.isProblemReported());
     }
 
     @Test
     public void returns_true_when_fatal_was_logged() {
-      console.print(name, new RuntimeException("message string"));
+      console.show(name, new RuntimeException("message string"));
       assertTrue(console.isProblemReported());
     }
   }
@@ -85,7 +85,7 @@ public class ConsoleTest extends TestingContext {
   class printFinalSummary {
     @Test
     public void when_error_was_logged() {
-      console.print(name, List.of(error("message string")));
+      console.show(name, List.of(error("message string")));
       console.printFinalSummary();
 
       assertThat(outputStream.toString()).isEqualTo(unlines(
@@ -99,7 +99,7 @@ public class ConsoleTest extends TestingContext {
     public void contains_all_stats() {
       List<Log> logs = new ArrayList<>();
       RuntimeException exception = new RuntimeException("fatal message");
-      console.print(name, exception);
+      console.show(name, exception);
       for (int i = 0; i < 2; i++) {
         logs.add(error("error string"));
       }
@@ -110,7 +110,7 @@ public class ConsoleTest extends TestingContext {
         logs.add(info("info string"));
       }
 
-      console.print(name, logs);
+      console.show(name, logs);
       console.printFinalSummary();
 
       StringBuilder builder = new StringBuilder();

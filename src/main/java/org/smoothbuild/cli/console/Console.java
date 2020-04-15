@@ -52,7 +52,7 @@ public class Console {
     counts.get(ERROR).incrementAndGet();
   }
 
-  public void print(String header, List<Log> logs) {
+  public void show(String header, List<Log> logs) {
     print(toTextAndIncreaseCounts(header, logs));
   }
 
@@ -69,7 +69,7 @@ public class Console {
     counts.get(level).incrementAndGet();
   }
 
-  public void print(String header, Throwable failure) {
+  public void show(String header, Throwable failure) {
     print(TASK_HEADER_PREFIX + header + "\n" + getStackTraceAsString(failure));
     counts.get(FATAL).incrementAndGet();
   }
