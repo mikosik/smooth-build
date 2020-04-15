@@ -4,6 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.Map.Entry;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
@@ -35,6 +37,7 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(List<Function> functions) {
+    console.println("Saving artifact(s)");
     ImmutableList<Task> tasks = functions.stream()
         .map(f -> f.createAgrlessCallExpression().createTask(null))
         .collect(toImmutableList());
@@ -45,36 +48,44 @@ public class ArtifactBuilder {
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
             .collect(toList());
-        List<String> savingStatus = sortedArtifacts.stream()
-            .map(this::save)
-            .collect(toList());
-        console.println("\nBuilt artifact(s):");
-        savingStatus.forEach(console::println);
+        sortedArtifacts.forEach(this::save);
       }
     } catch (InterruptedException e) {
       console.println("Build process has been interrupted.");
     }
   }
 
-  private String save(Entry<Task, SObject> artifact) {
-    return save(artifact.getKey().name(), artifact.getValue());
+  private void save(Entry<Task, SObject> artifact) {
+    save(artifact.getKey().name(), artifact.getValue());
   }
 
-  private String save(String name, SObject sObject) {
+  private void save(String name, SObject sObject) {
     try {
       artifactSaver.save(name, sObject);
-      return savingMessage(name, artifactPath(name).toString());
+      reportArtifact(name);
     } catch (IOException e) {
-      console.error("Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
-          + getStackTraceAsString(e));
-      return savingMessage(name, "error, see above");
+      reportArtifact(name,
+          "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
+              + getStackTraceAsString(e));
     } catch (DuplicatedPathsException e) {
-      console.error(e.getMessage());
-      return savingMessage(name, "error, see above");
+      reportArtifact(name, e.getMessage());
     }
   }
 
+  private void reportArtifact(String name) {
+    reportArtifact(name, List.of());
+  }
+
+  private void reportArtifact(String name, String errorMessage) {
+    reportArtifact(name, List.of(error(errorMessage)));
+  }
+
+  private void reportArtifact(String name, List<Log> logs) {
+    String header = savingMessage(name, artifactPath(name).toString());
+    console.show(header, logs);
+  }
+
   private static String savingMessage(String name, String status) {
-    return "  " + name + " -> " + status;
+    return name + " -> " + status;
   }
 }
