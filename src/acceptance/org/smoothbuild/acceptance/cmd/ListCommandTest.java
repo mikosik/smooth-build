@@ -1,8 +1,11 @@
 package org.smoothbuild.acceptance.cmd;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.cli.ListCommand;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class ListCommandTest extends AcceptanceTestCase {
   @Test
   public void list_command_lists_all_available_functions() throws Exception {
@@ -21,10 +24,11 @@ public class ListCommandTest extends AcceptanceTestCase {
         "");
   }
 
-  @Test
-  public void fails_when_script_file_is_missing() {
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
+  @Nested
+  class DefaultModule extends DefaultModuleTestCase {
+    @Override
+    protected String[] commandNameWithArgument() {
+      return new String[] { ListCommand.NAME };
+    }
   }
 }

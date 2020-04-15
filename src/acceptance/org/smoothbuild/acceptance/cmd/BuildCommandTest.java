@@ -15,13 +15,6 @@ import org.smoothbuild.cli.BuildCommand;
 @SuppressWarnings("ClassCanBeStatic")
 public class BuildCommandTest extends AcceptanceTestCase {
   @Test
-  public void build_command_fails_when_script_file_is_missing() {
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
-  }
-
-  @Test
   public void temp_file_is_deleted_after_build_execution() throws Exception {
     givenNativeJar(TempFilePath.class);
     givenScript(
@@ -55,6 +48,14 @@ public class BuildCommandTest extends AcceptanceTestCase {
     thenFinishedWithError();
     assertThat(file(path).exists())
         .isFalse();
+  }
+
+  @Nested
+  class DefaultModule extends DefaultModuleTestCase {
+    @Override
+    protected String[] commandNameWithArgument() {
+      return new String[] { BuildCommand.NAME, "result" };
+    }
   }
 
   @Nested
