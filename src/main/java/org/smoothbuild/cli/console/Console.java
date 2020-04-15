@@ -5,8 +5,6 @@ import static com.google.common.collect.Maps.toImmutableEnumMap;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
-import static org.smoothbuild.cli.console.Level.INFO;
-import static org.smoothbuild.cli.console.Level.WARNING;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.PrintStream;
@@ -52,6 +50,10 @@ public class Console {
     counts.get(ERROR).incrementAndGet();
   }
 
+  public void show(String header) {
+    print(toTextAndIncreaseCounts(header, List.of()));
+  }
+
   public void show(String header, List<Log> logs) {
     print(toTextAndIncreaseCounts(header, logs));
   }
@@ -79,24 +81,27 @@ public class Console {
   }
 
   public void printFinalSummary() {
-    print(
-        statText(FATAL) +
-        statText(ERROR) +
-        statText(WARNING) +
-        statText(INFO));
+    println("Summary");
+    int total = 0;
+    for (Level level : Level.values()) {
+      int count = counts.get(level).get();
+      if (count != 0) {
+        show(statText(level));
+      }
+      total += count;
+    }
+    if (total == 0) {
+      show("No logs reported.");
+    }
   }
 
   private String statText(Level level) {
     int value = counts.get(level).get();
-    if (value != 0) {
-      String name = level.name().toLowerCase(Locale.ROOT);
-      if (1 < value) {
-        name = name + "s";
-      }
-      return MESSAGE_FIRST_LINE_PREFIX + value + " " + name + "\n";
-    } else {
-      return "";
+    String name = level.name().toLowerCase(Locale.ROOT);
+    if (1 < value) {
+      name = name + "s";
     }
+    return value + " " + name;
   }
 
   private int fatalCount() {
