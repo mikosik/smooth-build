@@ -59,6 +59,14 @@ public class TreeCommandTest extends AcceptanceTestCase {
   }
 
   @Nested
+  class DefaultModule extends DefaultModuleTestCase {
+    @Override
+    protected String[] commandNameWithArgument() {
+      return new String[] { TreeCommand.NAME, "result" };
+    }
+  }
+
+  @Nested
   class FunctionArgs extends FunctionsArgTestCase {
     @Override
     protected String commandName() {
