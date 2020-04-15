@@ -28,8 +28,8 @@ public class TreeRunner {
       }
       Function function = functions.get(name);
       if (!function.canBeCalledArgless()) {
-        console.error(
-            "Cannot print execution tree for '" + name + "' function as it requires arguments.");
+        console.error("Function '" + name
+            + "' cannot be invoked from command line as it requires arguments.\n");
         return;
       }
     }
