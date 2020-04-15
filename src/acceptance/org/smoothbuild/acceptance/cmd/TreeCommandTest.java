@@ -51,13 +51,6 @@ public class TreeCommandTest extends AcceptanceTestCase {
         "      String 'name.txt'")));
   }
 
-  @Test
-  public void fails_when_script_file_is_missing() {
-    whenSmoothTree("result");
-    thenFinishedWithError();
-    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
-  }
-
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
