@@ -72,5 +72,10 @@ public class TreeCommandTest extends AcceptanceTestCase {
     protected String commandName() {
       return TreeCommand.NAME;
     }
+
+    @Override
+    protected String sectionName() {
+      return "Generating tree";
+    }
   }
 }

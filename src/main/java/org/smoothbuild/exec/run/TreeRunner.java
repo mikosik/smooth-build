@@ -1,5 +1,8 @@
 package org.smoothbuild.exec.run;
 
+import static org.smoothbuild.exec.run.ValidateFunctionArguments.validateFunctionArguments;
+
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -7,7 +10,6 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class TreeRunner {
@@ -18,22 +20,12 @@ public class TreeRunner {
     this.console = console;
   }
 
-  public void execute(SRuntime runtime, Set<String> functionNames) {
-    Functions functions = runtime.functions();
-    for (String name : functionNames) {
-      if (!functions.contains(name)) {
-        console.error("Unknown function '" + name + "'.\n"
-            + "Try 'smooth list' to see all available functions.\n");
-        return;
-      }
-      Function function = functions.get(name);
-      if (!function.canBeCalledArgless()) {
-        console.error("Function '" + name
-            + "' cannot be invoked from command line as it requires arguments.\n");
-        return;
-      }
+  public void execute(SRuntime runtime, Set<String> names) {
+    console.println("Generating tree");
+    List<Function> functionsToRun = validateFunctionArguments(console, runtime, names);
+    if (!console.isProblemReported()) {
+      functionsToRun.forEach(f -> print(treeOf(f)));
     }
-    functionNames.forEach(n -> print(treeOf(runtime.functions().get(n))));
   }
 
   private Task treeOf(Function function) {

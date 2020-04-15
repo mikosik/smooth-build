@@ -26,8 +26,11 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
     whenSmooth(commandName(), "nonexistentFunction");
     thenFinishedWithError();
     thenSysOutContains(
-        "error: Unknown function 'nonexistentFunction'.",
-        "Try 'smooth list' to see all available functions.\n");
+        sectionName(),
+        "  Validating arguments",
+        "   + ERROR: Unknown function 'nonexistentFunction'.",
+        "     Try 'smooth list' to see all available functions.",
+        "");
   }
 
   @Test
@@ -76,8 +79,13 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
         "  String testStringIdentity(String value) = value;  ");
     whenSmooth(commandName(), "testStringIdentity");
     thenFinishedWithError();
-    thenSysOutContains("error: Function 'testStringIdentity' cannot be invoked from command line "
-        + "as it requires arguments.\n");
+    thenSysOutContains(
+        sectionName(),
+        "  Validating arguments",
+        "   + ERROR: Function 'testStringIdentity' cannot be invoked from command line as it requires arguments.",
+        "Summary",
+        "  1 error",
+        "");
   }
 
   @Test
@@ -90,4 +98,6 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   protected abstract String commandName();
+
+  protected abstract String sectionName();
 }
