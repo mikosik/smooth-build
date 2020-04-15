@@ -2,11 +2,13 @@ package org.smoothbuild.acceptance.cmd;
 
 import static org.smoothbuild.util.Strings.unlines;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.cli.TreeCommand;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class TreeCommandTest extends AcceptanceTestCase {
-
   @Test
   public void with_parameter_and_array() throws Exception {
     givenScript(
@@ -56,88 +58,11 @@ public class TreeCommandTest extends AcceptanceTestCase {
     thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
   }
 
-  @Test
-  public void fails_when_no_function_is_specified() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree();
-    thenFinishedWithError();
-    thenSysErrContains(
-        "Missing required parameter: <function>",
-        "",
-        "Usage:",
-        "smooth tree <function>...",
-        "Try 'smooth help tree' for more information.",
-        "");
-  }
-
-  @Test
-  public void fails_when_specified_function_requires_argument() throws Exception {
-    givenScript(
-        "  withArguments(String element) = element;  ");
-    whenSmoothTree("withArguments");
-    thenFinishedWithError();
-    thenSysOutContains("error: Cannot print execution tree for 'withArguments' function as " +
-        "it requires arguments.");
-  }
-
-  @Test
-  public void works_when_function_has_all_params_optional() throws Exception {
-    givenScript(
-        "  String testStringIdentity(String value = 'default') = value;  ");
-    whenSmoothTree("testStringIdentity");
-    thenFinishedWithSuccess();
-  }
-
-  @Test
-  public void fails_when_function_doesnt_exist() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree("nonexistentFunction");
-    thenFinishedWithError();
-    thenSysOutContains(
-        "error: Unknown function 'nonexistentFunction'.",
-        "Try 'smooth list' to see all available functions.",
-        "");
-  }
-
-  @Test
-  public void fails_when_function_name_is_illegal() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree("illegal^name");
-    thenFinishedWithError();
-    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
-  }
-
-  @Test
-  public void fails_when_more_function_names_are_illegal()
-      throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree("illegal^name other^name");
-    thenFinishedWithError();
-    thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
-    thenSysOutContains("error: Illegal function name 'other^name' passed in command line.\n");
-  }
-
-  @Test
-  public void fails_when_function_is_specified_more_than_once() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree("result", "result");
-    thenFinishedWithError();
-    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
-  }
-
-  @Test
-  public void prints_error_for_every_function_that_is_specified_more_than_once()
-      throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothTree("result", "result", "other", "other");
-    thenFinishedWithError();
-    thenSysOutContains("error: Function 'result' has been specified more than once.\n");
-    thenSysOutContains("error: Function 'other' has been specified more than once.\n");
+  @Nested
+  class FunctionArgs extends FunctionsArgTestCase {
+    @Override
+    protected String commandName() {
+      return TreeCommand.NAME;
+    }
   }
 }
