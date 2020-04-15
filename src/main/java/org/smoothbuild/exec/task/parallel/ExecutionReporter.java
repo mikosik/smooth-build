@@ -41,7 +41,7 @@ public class ExecutionReporter {
           print(task, fromCache, messages);
         }
       } else {
-        console.print(header(task, fromCache), maybeOutput.exception());
+        console.show(header(task, fromCache), maybeOutput.exception());
       }
     } else {
       report(maybeComputed.throwable());
@@ -52,11 +52,11 @@ public class ExecutionReporter {
     List<Log> logs = Streams.stream(messages.asIterable(Struct.class))
         .map(m -> new Log(level(m), text(m)))
         .collect(toList());
-    console.print(header(task, fromCache), logs);
+    console.show(header(task, fromCache), logs);
   }
 
   public void report(Throwable throwable) {
-    console.print("Execution failed with:\n", throwable);
+    console.show("Execution failed with:\n", throwable);
   }
 
   @VisibleForTesting

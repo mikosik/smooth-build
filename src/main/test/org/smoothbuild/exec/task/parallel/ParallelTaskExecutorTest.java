@@ -108,7 +108,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
-    verify(console).print(
+    verify(console).show(
         eq("runtimeException                                         unknown location"),
         same(exception));
   }
