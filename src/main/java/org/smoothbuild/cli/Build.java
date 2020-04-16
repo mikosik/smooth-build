@@ -8,7 +8,6 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -17,7 +16,6 @@ import org.smoothbuild.exec.run.BuildRunner;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.parse.RuntimeController;
-import org.smoothbuild.util.Maybe;
 
 public class Build {
   private final Console console;
@@ -35,9 +33,9 @@ public class Build {
   }
 
   public int run(List<String> names) {
-    Maybe<Set<String>> functionNames = validateFunctionNames(names);
-    if (!functionNames.hasValue()) {
-      console.errors(functionNames.errors());
+    List<String> errors = validateFunctionNames(names);
+    if (!errors.isEmpty()) {
+      console.errors(errors);
       return EXIT_CODE_ERROR;
     }
 
@@ -51,6 +49,6 @@ public class Build {
     }
 
     return runtimeController.setUpRuntimeAndRun(
-        (runtime) -> buildRunner.execute(runtime, functionNames.value()));
+        (runtime) -> buildRunner.execute(runtime, names));
   }
 }
