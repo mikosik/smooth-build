@@ -65,7 +65,7 @@ public class DependencyStackTest {
   @Test
   public void popping_from_empty_stack_throws_exception() {
     DependencyStack dependencyStack = new DependencyStack("my stack");
-    assertCall(() -> dependencyStack.pop())
+    assertCall(dependencyStack::pop)
         .throwsException(NoSuchElementException.class);
   }
 
@@ -74,7 +74,7 @@ public class DependencyStackTest {
     DependencyStack dependencyStack = new DependencyStack("my stack");
     dependencyStack.push(elem());
     dependencyStack.pop();
-    assertCall(() -> dependencyStack.pop())
+    assertCall(dependencyStack::pop)
         .throwsException(NoSuchElementException.class);
   }
 
