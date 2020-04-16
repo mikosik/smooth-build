@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.struct;
+package org.smoothbuild.acceptance.lang.struct;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;

@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.struct;
+package org.smoothbuild.acceptance.lang.struct;
 
 import static com.google.common.truth.Truth.assertThat;
 
