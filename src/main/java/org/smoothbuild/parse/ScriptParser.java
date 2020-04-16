@@ -9,14 +9,11 @@ import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.ParseError.parseError;
-import static org.smoothbuild.util.Maybe.error;
-import static org.smoothbuild.util.Maybe.maybe;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
@@ -35,23 +32,25 @@ import org.smoothbuild.ModulePath;
 import org.smoothbuild.antlr.SmoothLexer;
 import org.smoothbuild.antlr.SmoothParser;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.util.Maybe;
 
 import okio.BufferedSource;
 
 public class ScriptParser {
-  public static Maybe<ModuleContext> parseScript(ModulePath path) {
+  public static ModuleContext parseScript(ModulePath path, Logger logger) {
     CharStream charStream;
     try {
       charStream = charStream(path.fullPath());
     } catch (NoSuchFileException e) {
-      return error("error: '" + path.fullPath() + "' doesn't exist.");
+      logger.error("'" + path.fullPath() + "' doesn't exist.");
+      return null;
     } catch (IOException e) {
-      return error("error: Cannot read build script file '" + path.fullPath() + "'.");
+      logger.error("Cannot read build script file '" + path.fullPath() + "'.");
+      return null;
     }
 
-    ErrorListener errorListener = new ErrorListener(path);
+    ErrorListener errorListener = new ErrorListener(path, logger);
     SmoothLexer lexer = new SmoothLexer(charStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -59,8 +58,7 @@ public class ScriptParser {
     SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
-
-    return maybe(parser.module(), errorListener.foundErrors());
+    return parser.module();
   }
 
   private static CharStream charStream(Path scriptFile) throws IOException {
@@ -70,15 +68,12 @@ public class ScriptParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final List<String> errors = new ArrayList<>();
     private final ModulePath path;
+    private final Logger logger;
 
-    public ErrorListener(ModulePath path) {
+    public ErrorListener(ModulePath path, Logger logger) {
       this.path = path;
-    }
-
-    public List<String> foundErrors() {
-      return errors;
+      this.logger = logger;
     }
 
     @Override
@@ -89,7 +84,7 @@ public class ScriptParser {
           message,
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
-      errors.add(parseError(location, text));
+      logger.log(parseError(location, text));
     }
 
     private static String markingLine(Token offendingSymbol, int charNumber) {
@@ -155,7 +150,7 @@ public class ScriptParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      errors.add(parseError(locationOf(path, token), message));
+      logger.log(parseError(locationOf(path, token), message));
     }
   }
 }

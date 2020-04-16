@@ -114,11 +114,16 @@ public class Console {
 
   private static String prefixMultiline(String text) {
     String[] lines = text.lines().toArray(String[]::new);
+    return prefixMultiline(lines) + "\n";
+  }
+
+  // visible for testing
+  public static String prefixMultiline(String[] lines) {
     lines[0] = MESSAGE_FIRST_LINE_PREFIX + lines[0];
     for (int i = 1; i < lines.length; i++) {
       lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
     }
-    return unlines(lines) + "\n";
+    return unlines(lines);
   }
 
   public void println(String line) {

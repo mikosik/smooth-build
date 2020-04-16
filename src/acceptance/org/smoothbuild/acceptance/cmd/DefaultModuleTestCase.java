@@ -8,7 +8,7 @@ public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
   public void missing_default_module_causes_error() {
     whenSmooth(commandNameWithArgument());
     thenFinishedWithError();
-    thenSysOutContains("error: 'build.smooth' doesn't exist.\n");
+    thenSysOutContainsParseError("'build.smooth' doesn't exist.");
   }
 
   protected abstract String[] commandNameWithArgument();

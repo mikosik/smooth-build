@@ -79,7 +79,7 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
   private static Case illegalAssignment(String targetType, String sourceType, String... structs) {
     return newCase("can't assign " + sourceType + " to param with type " + targetType, () -> {
       Consumer<AcceptanceTestCase> asserter = (test) -> {
-        test.thenSysOutContainsError(structs.length + 3,
+        test.thenSysOutContainsParseError(structs.length + 3,
             "Cannot assign argument of type '" + sourceType + "' to " +
                 "parameter 'target' of type '" + targetType + "'.");
       };

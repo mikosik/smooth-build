@@ -12,8 +12,10 @@ import static org.junit.Assert.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothPaths.USER_MODULE;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
+import static org.smoothbuild.cli.console.Console.prefixMultiline;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Okios.readAndClose;
@@ -38,6 +40,7 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.BuildCommand;
 import org.smoothbuild.cli.CleanCommand;
 import org.smoothbuild.cli.ListCommand;
@@ -183,8 +186,20 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public void thenSysOutContainsError(int lineNumber, String text) {
-    thenSysOutContains("build.smooth:" + lineNumber + ": error: " + text);
+  public void thenSysOutContainsParseError(int lineNumber, String... errorLines) {
+    errorLines[0] = USER_MODULE.fullPath() + ":" + lineNumber + ": " + errorLines[0];
+    thenSysOutContainsParseError(errorLines);
+  }
+
+  public void thenSysOutContainsParseError(String... errorLines) {
+    thenSysOutContainsError(USER_MODULE.fullPath().toString(), errorLines);
+  }
+
+  public void thenSysOutContainsError(String header, String... errorLines) {
+    errorLines[0] = "ERROR: " + errorLines[0];
+    thenSysOutContains(
+        "  " + header,
+        prefixMultiline(errorLines));
   }
 
   public void thenSysOutContains(String... lines) {

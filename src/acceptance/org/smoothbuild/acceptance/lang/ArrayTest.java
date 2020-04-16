@@ -280,8 +280,9 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc', toBlob('abc') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsError(1, "Array cannot contain elements of incompatible types.\n"
-        + "First element has type 'String' while element at index 1 has type 'Blob'.\n");
+    thenSysOutContainsParseError(1,
+        "Array cannot contain elements of incompatible types.",
+        "First element has type 'String' while element at index 1 has type 'Blob'.");
   }
 
   @Test
