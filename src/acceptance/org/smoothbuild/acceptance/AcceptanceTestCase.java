@@ -40,7 +40,6 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.BuildCommand;
 import org.smoothbuild.cli.CleanCommand;
 import org.smoothbuild.cli.ListCommand;

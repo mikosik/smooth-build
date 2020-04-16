@@ -3,7 +3,6 @@ package org.smoothbuild.exec.run;
 import static org.smoothbuild.exec.run.ValidateFunctionArguments.validateFunctionArguments;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -20,7 +19,7 @@ public class TreeRunner {
     this.console = console;
   }
 
-  public void execute(SRuntime runtime, Set<String> names) {
+  public void execute(SRuntime runtime, List<String> names) {
     console.println("Generating tree");
     List<Function> functionsToRun = validateFunctionArguments(console, runtime, names);
     if (!console.isProblemReported()) {
