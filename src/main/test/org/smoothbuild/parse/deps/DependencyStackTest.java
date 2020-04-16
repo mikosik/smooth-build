@@ -63,14 +63,14 @@ public class DependencyStackTest {
   }
 
   @Test
-  public void poping_from_empty_stack_throws_exception() {
+  public void popping_from_empty_stack_throws_exception() {
     DependencyStack dependencyStack = new DependencyStack("my stack");
     assertCall(() -> dependencyStack.pop())
         .throwsException(NoSuchElementException.class);
   }
 
   @Test
-  public void poping_after_all_elements_has_been_removed_throws_exception() {
+  public void popping_after_all_elements_has_been_removed_throws_exception() {
     DependencyStack dependencyStack = new DependencyStack("my stack");
     dependencyStack.push(elem());
     dependencyStack.pop();
