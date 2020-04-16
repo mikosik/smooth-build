@@ -10,8 +10,8 @@ public class ResultAssignmentTest extends AbstractAssignmentTestCase {
 
   @Override
   protected void thenAssignmentError(AcceptanceTestCase test, String type, String valueType) {
-    test.thenSysOutContainsError(1,
+    test.thenSysOutContainsParseError(1,
         "Function 'result' has body which type is '" + valueType +
-            "' and it is not convertible to function's declared result type '" + type + "'.\n");
+            "' and it is not convertible to function's declared result type '" + type + "'.");
   }
 }

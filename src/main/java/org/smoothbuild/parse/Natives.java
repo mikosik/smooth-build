@@ -4,10 +4,10 @@ import static org.smoothbuild.parse.ParseError.parseError;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
@@ -21,8 +21,7 @@ public class Natives {
     this.map = map;
   }
 
-  public List<String> assignNatives(Ast ast) {
-    List<String> errors = new ArrayList<>();
+  public void assignNatives(Ast ast, Logger logger) {
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {
@@ -32,12 +31,12 @@ public class Natives {
           if (func.isNative()) {
             assign(func, nativ);
           } else {
-            errors.add(parseError(func, "Function '" + func.name()
+            logger.log(parseError(func, "Function '" + func.name()
                 + "' has both definition and native implementation in " + nativ.jarFile() + "."));
           }
         } else {
           if (func.isNative()) {
-            errors.add(parseError(func, "Function '" + func.name()
+            logger.log(parseError(func, "Function '" + func.name()
                 + "' is native but does not have native implementation."));
           }
         }
@@ -48,7 +47,7 @@ public class Natives {
         Type resultType = func.get(Type.class);
         Class<?> resultJType = method.getReturnType();
         if (!resultType.jType().equals(resultJType)) {
-          errors.add(parseError(func, "Function '" + func.name() + "' has result type "
+          logger.log(parseError(func, "Function '" + func.name() + "' has result type "
                   + resultType.q() + " so its native implementation result type must be "
                   + resultType.jType().getCanonicalName() + " but it is "
                   + resultJType.getCanonicalName() + "."));
@@ -57,7 +56,7 @@ public class Natives {
         Parameter[] nativeParams = method.getParameters();
         List<ParamNode> params = func.params();
         if (params.size() != nativeParams.length - 1) {
-          errors.add(parseError(func, "Function '" + func.name() + "' has "
+          logger.log(parseError(func, "Function '" + func.name() + "' has "
               + params.size() + " parameter(s) but its native implementation has "
               + (nativeParams.length - 1) + " parameter(s)."));
           return;
@@ -68,7 +67,7 @@ public class Natives {
           Type paramType = params.get(i).type().get(Type.class);
           Class<?> paramJType = nativeParam.getType();
           if (!paramType.jType().equals(paramJType)) {
-            errors.add(parseError(func, "Function '" + func.name()
+            logger.log(parseError(func, "Function '" + func.name()
                 + "' parameter '" + declaredName + "' has type "
                 + paramType.name() + " so its native implementation type must be "
                 + paramType.jType().getCanonicalName() + " but it is "
@@ -79,6 +78,5 @@ public class Natives {
         func.set(Native.class, nativ);
       }
     }.visitAst(ast);
-    return errors;
   }
 }

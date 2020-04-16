@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.util.Maybe;
-
-import com.google.common.collect.ImmutableList;
 
 public class Ast {
   private List<StructNode> structs;
@@ -61,31 +60,23 @@ public class Ast {
     return nameToStructMap.get(name);
   }
 
-  public List<String> sortFuncsByDependencies(Functions functions) {
-    Maybe<List<String>> sortedNames = sortByDependencies(functions, this);
-    if (sortedNames.hasValue()) {
+  public void sortFuncsByDependencies(Functions functions, Logger logger) {
+    List<String> sortedNames = sortByDependencies(functions, this, logger);
+    if (sortedNames != null) {
       this.funcs = sortedNames
-          .value()
           .stream()
           .map(nameToFuncMap::get)
           .collect(Collectors.toList());
-      return ImmutableList.of();
-    } else {
-      return sortedNames.errors();
     }
   }
 
-  public List<String> sortTypesByDependencies(ObjectFactory objectFactory) {
-    Maybe<List<String>> sortedNames = sortByDependencies(objectFactory, this);
-    if (sortedNames.hasValue()) {
+  public void sortTypesByDependencies(ObjectFactory objectFactory, LoggerImpl logger) {
+    List<String> sortedNames = sortByDependencies(objectFactory, this, logger);
+    if (sortedNames != null) {
       this.structs = sortedNames
-          .value()
           .stream()
           .map(nameToStructMap::get)
           .collect(Collectors.toList());
-      return ImmutableList.of();
-    } else {
-      return sortedNames.errors();
     }
   }
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
@@ -21,7 +22,7 @@ import org.smoothbuild.parse.ast.CallNode;
 
 public class InferCallTypeAndParamAssignment {
   public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime, Ast ast,
-      List<String> errors) {
+      LoggerImpl logger) {
     new Runnable() {
       @Override
       public void run() {
@@ -30,7 +31,7 @@ public class InferCallTypeAndParamAssignment {
 
         List<? extends ParameterInfo> parameters = functionParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
-        if (!errors.isEmpty()) {
+        if (logger.hasProblems()) {
           return;
         }
 
@@ -56,25 +57,25 @@ public class InferCallTypeAndParamAssignment {
             inNamedArgsSection = true;
             ParameterInfo param = parametersMap.get(arg.name());
             if (param == null) {
-              errors.add(parseError(arg,
+              logger.log(parseError(arg,
                   "Function '" + call.name() + "' has no parameter '" + arg.name() + "'."));
             } else if (assignedArgs.get(param.index()) != null) {
-              errors.add(parseError(arg, "Argument '" + arg.name() + "' is already assigned."));
+              logger.log(parseError(arg, "Argument '" + arg.name() + "' is already assigned."));
             } else {
               assignedArgs.set(param.index(), arg);
             }
           } else {
             if (inNamedArgsSection) {
-              errors.add(parseError(
+              logger.log(parseError(
                   arg, "Positional arguments must be placed before named arguments."));
             } else if (i < parameters.size()) {
               assignedArgs.set(i, arg);
             } else {
-              errors.add(parseError(arg, "Too many positional arguments."));
+              logger.log(parseError(arg, "Too many positional arguments."));
             }
           }
         }
-        if (!errors.isEmpty()) {
+        if (logger.hasProblems()) {
           return null;
         }
 
@@ -83,12 +84,12 @@ public class InferCallTypeAndParamAssignment {
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
             if (!param.hasDefaultValue()) {
-              errors.add(parseError(call, "Parameter " + param.q() + " must be specified."));
+              logger.log(parseError(call, "Parameter " + param.q() + " must be specified."));
             }
           } else {
             Type argType = arg.get(Type.class);
             if (!param.type().isParamAssignableFrom(argType)) {
-              errors.add(parseError(arg,
+              logger.log(parseError(arg,
                   "Cannot assign argument of type " + argType.q() + " to parameter '" +
                       param.name() + "' of type " + param.type().q() + "."));
             }
@@ -129,7 +130,7 @@ public class InferCallTypeAndParamAssignment {
         try {
           return inferMapping(genericTypes, actualTypes);
         } catch (IllegalArgumentException e) {
-          errors.add(parseError(call,
+          logger.log(parseError(call,
               "Cannot infer actual type(s) for generic parameter(s) in call to '" + call.name() +
                   "'."));
           return null;

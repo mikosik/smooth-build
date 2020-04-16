@@ -5,37 +5,58 @@ import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.InferTypesAndParamAssignment.inferTypesAndParamAssignment;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.util.List;
 
 import org.smoothbuild.ModulePath;
+import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.AstCreator;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.StructNode;
-import org.smoothbuild.util.Maybe;
 
 import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
-  public static List<String> loadModule(SRuntime runtime, ModulePath path) {
-    Maybe<Natives> natives = findNatives(changeExtension(path.fullPath(), "jar"));
-    return parseScript(path)
-        .mapValue(moduleContext -> AstCreator.fromParseTree(path, moduleContext))
-        .invoke(ast -> findSemanticErrors(runtime, ast))
-        .invoke(ast -> ast.sortFuncsByDependencies(runtime.functions()))
-        .invoke(ast -> ast.sortTypesByDependencies(runtime.objectFactory()))
-        .invoke(ast -> inferTypesAndParamAssignment(runtime, ast))
-        .invoke(natives, (ast, n) -> n.assignNatives(ast))
-        .invokeConsumer(ast -> loadFunctions(runtime, ast))
-        .errors();
+  public static void loadModule(SRuntime runtime, ModulePath path, LoggerImpl logger) {
+    Natives natives = findNatives(changeExtension(path.fullPath(), "jar"), logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    ModuleContext moduleContext = parseScript(path, logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    Ast ast = fromParseTree(path, moduleContext);
+    findSemanticErrors(runtime, ast, logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    ast.sortFuncsByDependencies(runtime.functions(), logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    ast.sortTypesByDependencies(runtime.objectFactory(), logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    inferTypesAndParamAssignment(runtime, ast, logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    natives.assignNatives(ast, logger);
+    if (logger.hasProblems()) {
+      return;
+    }
+    loadFunctions(runtime, ast);
   }
 
   private static void loadFunctions(SRuntime runtime, Ast ast) {
