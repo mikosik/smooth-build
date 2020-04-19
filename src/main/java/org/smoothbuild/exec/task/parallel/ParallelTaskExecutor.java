@@ -79,11 +79,12 @@ public class ParallelTaskExecutor {
 
     public void enqueueComputation(ComputableTask task, Input input, Feeder<SObject> result) {
       jobExecutor.enqueue(() -> {
-        ResultHandler resultHandler = new ResultHandler(task, result, reporter, jobExecutor);
         try {
+          ResultHandler resultHandler = new ResultHandler(task, result, reporter, jobExecutor);
           computer.compute(task, input, resultHandler);
         } catch (Throwable e) {
-          resultHandler.handleComputerException(e);
+          reporter.reportComputerException(task, e);
+          jobExecutor.terminate();
         }
       });
     }

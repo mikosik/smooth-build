@@ -18,13 +18,13 @@ import org.junit.jupiter.api.Test;
 public class LoggerImplTest {
   private static final String HEADER = "header";
 
-  private Console console;
+  private Reporter reporter;
   private LoggerImpl logger;
 
   @BeforeEach
   public void before() {
-    console = mock(Console.class);
-    logger = new LoggerImpl(HEADER, console);
+    reporter = mock(Reporter.class);
+    logger = new LoggerImpl(HEADER, reporter);
   }
 
   @Nested
@@ -65,7 +65,7 @@ public class LoggerImplTest {
   }
 
   @Test
-  void close_passes_all_logs_to_console() {
+  void close_passes_all_logs_to_reporter() {
     Log fatal = fatal("fatal");
     Log error = error("error");
     Log warning = warning("warning");
@@ -78,8 +78,8 @@ public class LoggerImplTest {
 
     logger.close();
 
-    verify(console, only())
-        .show(HEADER, List.of(fatal, error, warning, info));
+    verify(reporter, only())
+        .report(HEADER, List.of(fatal, error, warning, info));
   }
 }
 

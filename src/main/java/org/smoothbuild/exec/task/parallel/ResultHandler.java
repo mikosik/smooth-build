@@ -3,12 +3,12 @@ package org.smoothbuild.exec.task.parallel;
 import java.util.function.Consumer;
 
 import org.smoothbuild.exec.comp.MaybeOutput;
-import org.smoothbuild.exec.task.base.MaybeComputed;
+import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
-public class ResultHandler implements Consumer<MaybeComputed> {
+public class ResultHandler implements Consumer<Computed> {
   private final Task task;
   private final Consumer<SObject> consumer;
   private final ExecutionReporter reporter;
@@ -23,24 +23,13 @@ public class ResultHandler implements Consumer<MaybeComputed> {
   }
 
   @Override
-  public void accept(MaybeComputed maybeComputed) {
-    if (maybeComputed.hasComputed()) {
-      MaybeOutput result = maybeComputed.computed();
-      reporter.report(task, maybeComputed, maybeComputed.isFromCache());
-      if (!result.hasOutputWithValue()) {
-        jobExecutor.terminate();
-      } else {
-        consumer.accept(result.output().value());
-      }
+  public void accept(Computed computed) {
+    reporter.report(task, computed);
+    MaybeOutput result = computed.computed();
+    if (result.hasOutputWithValue()) {
+      consumer.accept(result.output().value());
     } else {
-      Throwable throwable = maybeComputed.throwable();
-      reporter.report(throwable);
       jobExecutor.terminate();
     }
-  }
-
-  public void handleComputerException(Throwable e) {
-    reporter.report(e);
-    jobExecutor.terminate();
   }
 }

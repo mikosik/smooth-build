@@ -10,13 +10,13 @@ import java.util.List;
 
 public class LoggerImpl implements Logger, AutoCloseable {
   private final String header;
-  private final Console console;
+  private final Reporter reporter;
   private final List<Log> logs;
   private boolean hasProblems;
 
-  public LoggerImpl(String header, Console console) {
+  public LoggerImpl(String header, Reporter reporter) {
     this.header = header;
-    this.console = console;
+    this.reporter = reporter;
     this.logs = new ArrayList<>();
     this.hasProblems = false;
   }
@@ -55,6 +55,6 @@ public class LoggerImpl implements Logger, AutoCloseable {
 
   @Override
   public void close() {
-    console.show(header, logs);
+    reporter.report(header, logs);
   }
 }

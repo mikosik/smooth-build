@@ -14,8 +14,8 @@ import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
@@ -26,18 +26,18 @@ import com.google.common.collect.ImmutableList;
 public class ArtifactBuilder {
   private final ParallelTaskExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
-  private final Console console;
+  private final Reporter reporter;
 
   @Inject
   public ArtifactBuilder(ParallelTaskExecutor parallelExecutor, ArtifactSaver artifactSaver,
-      Console console) {
+      Reporter reporter) {
     this.parallelExecutor = parallelExecutor;
     this.artifactSaver = artifactSaver;
-    this.console = console;
+    this.reporter = reporter;
   }
 
   public void buildArtifacts(List<Function> functions) {
-    console.println("Saving artifact(s)");
+    reporter.newSection("Saving artifact(s)");
     ImmutableList<Task> tasks = functions.stream()
         .map(f -> f.createAgrlessCallExpression().createTask(null))
         .collect(toImmutableList());
@@ -51,7 +51,7 @@ public class ArtifactBuilder {
         sortedArtifacts.forEach(this::save);
       }
     } catch (InterruptedException e) {
-      console.println("Build process has been interrupted.");
+      reporter.printlnRaw("Build process has been interrupted.");
     }
   }
 
@@ -82,7 +82,7 @@ public class ArtifactBuilder {
 
   private void reportArtifact(String name, List<Log> logs) {
     String header = savingMessage(name, artifactPath(name).toString());
-    console.show(header, logs);
+    reporter.report(header, logs);
   }
 
   private static String savingMessage(String name, String status) {
