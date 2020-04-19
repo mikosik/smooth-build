@@ -1,6 +1,9 @@
 package org.smoothbuild.exec.task.parallel;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.lang.object.base.Messages.isEmpty;
 import static org.smoothbuild.lang.object.base.Messages.level;
 import static org.smoothbuild.lang.object.base.Messages.text;
@@ -11,8 +14,9 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.comp.MaybeOutput;
-import org.smoothbuild.exec.task.base.MaybeComputed;
+import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Struct;
@@ -25,45 +29,50 @@ import com.google.common.collect.Streams;
  * This class is thread-safe.
  */
 public class ExecutionReporter {
-  private final Console console;
+  private final Reporter reporter;
 
   @Inject
-  public ExecutionReporter(Console console) {
-    this.console = console;
+  public ExecutionReporter(Reporter reporter) {
+    this.reporter = reporter;
   }
 
-  public void report(Task task, MaybeComputed maybeComputed, boolean fromCache) {
-    if (maybeComputed.hasComputed()) {
-      MaybeOutput maybeOutput = maybeComputed.computed();
-      if (maybeOutput.hasOutput()) {
-        Array messages = maybeOutput.output().messages();
-        if (!isEmpty(messages)) {
-          print(task, fromCache, messages);
-        }
-      } else {
-        console.show(header(task, fromCache), maybeOutput.exception());
+  public void report(Task task, Computed computed) {
+    MaybeOutput maybeOutput = computed.computed();
+    boolean fromCache = computed.isFromCache();
+    if (maybeOutput.hasOutput()) {
+      Array messages = maybeOutput.output().messages();
+      if (!isEmpty(messages)) {
+        print(task, fromCache, messages);
       }
     } else {
-      report(maybeComputed.throwable());
+      Log error = error(
+          "Execution failed with:\n" + getStackTraceAsString(maybeOutput.exception()));
+      reporter.report(header(task, fromCache), List.of(error));
     }
+  }
+
+  public void reportComputerException(Task task, Throwable throwable) {
+    Log fatal = fatal(
+        "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
+    reporter.report(header(task, ""), List.of(fatal));
   }
 
   private void print(Task task, boolean fromCache, Array messages) {
     List<Log> logs = Streams.stream(messages.asIterable(Struct.class))
         .map(m -> new Log(level(m), text(m)))
         .collect(toList());
-    console.show(header(task, fromCache), logs);
-  }
-
-  public void report(Throwable throwable) {
-    console.show("Execution failed with:\n", throwable);
+    reporter.report(header(task, fromCache), logs);
   }
 
   @VisibleForTesting
   static String header(Task task, boolean fromCache) {
+    return header(task, fromCache ? " CACHED" : "");
+  }
+
+  private static String header(Task task, String cacheStatus) {
     String locationString = task.location().toString();
     int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
-    return name + locationString + (fromCache ? " CACHED" : "");
+    return name + locationString + cacheStatus;
   }
 }

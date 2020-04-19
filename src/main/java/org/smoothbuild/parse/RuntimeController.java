@@ -11,36 +11,36 @@ import javax.inject.Inject;
 
 import org.smoothbuild.ModulePath;
 import org.smoothbuild.SmoothPaths;
-import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.LoggerImpl;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
   private final SRuntime runtime;
   private final SmoothPaths paths;
-  private final Console console;
+  private final Reporter reporter;
 
   @Inject
-  public RuntimeController(SRuntime runtime, SmoothPaths paths, Console console) {
+  public RuntimeController(SRuntime runtime, SmoothPaths paths, Reporter reporter) {
     this.runtime = runtime;
     this.paths = paths;
-    this.console = console;
+    this.reporter = reporter;
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
-    console.println("Parsing");
+    reporter.newSection("Parsing");
 
     for (ModulePath module : List.of(paths.funcsModule(), paths.userModule())) {
-      try (LoggerImpl logger = new LoggerImpl(module.shortPath(), console)) {
+      try (LoggerImpl logger = new LoggerImpl(module.shortPath(), reporter)) {
         loadModule(runtime, module, logger);
       }
-      if (console.isProblemReported()) {
-        console.printFinalSummary();
+      if (reporter.isProblemReported()) {
+        reporter.printFinalSummary();
         return EXIT_CODE_ERROR;
       }
     }
     runner.accept(runtime);
-    console.printFinalSummary();
-    return console.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
+    reporter.printFinalSummary();
+    return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

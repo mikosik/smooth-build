@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.task.parallel;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.joining;
 import static org.mockito.ArgumentMatchers.eq;
@@ -7,6 +8,7 @@ import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
+import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
@@ -16,14 +18,14 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.base.ComputableTask;
+import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Computer;
-import org.smoothbuild.exec.task.base.MaybeComputed;
 import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.SObject;
@@ -101,24 +103,24 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   @Test
   public void task_throwing_runtime_exception_causes_error() throws Exception {
-    Console console = mock(Console.class);
-    parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(console), 4);
+    Reporter reporter = mock(Reporter.class);
+    parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
     Task task = task(throwingAlgorithm(exception));
 
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
-    verify(console).show(
+    verify(reporter).report(
         eq("runtimeException                                         unknown location"),
-        same(exception));
+        eq(List.of(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
   @Test
-  public void task_executor_that_throws_exception_is_detected() throws InterruptedException {
+  public void computer_that_throws_exception_is_detected() throws InterruptedException {
     RuntimeException exception = new RuntimeException();
     Computer computer = new Computer(null, null, null) {
       @Override
-      public void compute(ComputableTask task, Input input, Consumer<MaybeComputed> consumer) {
+      public void compute(ComputableTask task, Input input, Consumer<Computed> consumer) {
         throw exception;
       }
     };
@@ -127,7 +129,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     SObject sObject = parallelTaskExecutor.executeAll(list(task)).get(task);
 
-    verify(reporter, only()).report(same(exception));
+    verify(reporter, only()).reportComputerException(same(task), same(exception));
     assertThat(sObject).isNull();
   }
 

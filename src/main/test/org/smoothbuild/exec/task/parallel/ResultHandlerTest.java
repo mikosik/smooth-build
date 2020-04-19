@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.comp.Output;
-import org.smoothbuild.exec.task.base.MaybeComputed;
+import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
@@ -72,47 +72,20 @@ public class ResultHandlerTest {
     @Test
     public void object_is_not_forwarded_to_consumer() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new MaybeComputed(new MaybeOutput(new ArithmeticException()), true));
+      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), true));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new MaybeComputed(new MaybeOutput(new ArithmeticException()), true));
+      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), true));
       verify(executor, only()).terminate();
     }
   }
 
-  @Nested
-  class when_maybe_computed_with_exception_is_passed {
-    @Test
-    public void object_is_not_forwarded_to_consumer() {
-      ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new MaybeComputed(new ArithmeticException()));
-      verifyNoInteractions(consumer);
-    }
-
-    @Test
-    public void executor_is_stopped() {
-      ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new MaybeComputed(new ArithmeticException()));
-      verify(executor, only()).terminate();
-    }
-  }
-
-  @Nested
-  class when_handle_computer_exception_is_called {
-    @Test
-    public void executor_is_stopped() {
-      ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.handleComputerException(new ArithmeticException());
-      verify(executor, only()).terminate();
-    }
-  }
-
-  private MaybeComputed maybeComputed(SObject sObject) {
-    return new MaybeComputed(new MaybeOutput(output(sObject)), true);
+  private Computed maybeComputed(SObject sObject) {
+    return new Computed(new MaybeOutput(output(sObject)), true);
   }
 
   private static Output output(SObject sObject) {

@@ -6,23 +6,23 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Console;
+import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class TreeRunner {
-  private final Console console;
+  private final Reporter reporter;
 
   @Inject
-  public TreeRunner(Console console) {
-    this.console = console;
+  public TreeRunner(Reporter reporter) {
+    this.reporter = reporter;
   }
 
   public void execute(SRuntime runtime, List<String> names) {
-    console.println("Generating tree");
-    List<Function> functionsToRun = validateFunctionArguments(console, runtime, names);
-    if (!console.isProblemReported()) {
+    reporter.newSection("Generating tree");
+    List<Function> functionsToRun = validateFunctionArguments(reporter, runtime, names);
+    if (!reporter.isProblemReported()) {
       functionsToRun.forEach(f -> print(treeOf(f)));
     }
   }
@@ -38,7 +38,7 @@ public class TreeRunner {
   }
 
   private void print(String indent, Task task) {
-    console.println(indent + task.description());
+    reporter.printlnRaw(indent + task.description());
     task.children().forEach(ch -> print(indent + "  ", ch));
   }
 }
