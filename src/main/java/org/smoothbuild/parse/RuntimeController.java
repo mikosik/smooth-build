@@ -35,12 +35,12 @@ public class RuntimeController {
         loadModule(runtime, module, logger);
       }
       if (reporter.isProblemReported()) {
-        reporter.printFinalSummary();
+        reporter.printSummary();
         return EXIT_CODE_ERROR;
       }
     }
     runner.accept(runtime);
-    reporter.printFinalSummary();
+    reporter.printSummary();
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 }

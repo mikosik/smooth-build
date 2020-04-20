@@ -6,7 +6,6 @@ import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Level.FATAL;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
@@ -32,9 +31,9 @@ public class Reporter {
     console.println(name);
   }
 
-  public void report(String header, List<Log> logs) {
+  public void report(String task, List<Log> logs) {
     increaseCounts(logs);
-    console.print(header, logs);
+    console.print(task, logs);
   }
 
   private void increaseCounts(List<Log> logs) {
@@ -51,28 +50,8 @@ public class Reporter {
     return fatalCount() != 0 || errorCount() != 0;
   }
 
-  public void printFinalSummary() {
-    console.println("Summary");
-    int total = 0;
-    for (Level level : Level.values()) {
-      int count = counts.get(level).get();
-      if (count != 0) {
-        console.print(statText(level), List.of());
-      }
-      total += count;
-    }
-    if (total == 0) {
-      console.print("No logs reported.", List.of());
-    }
-  }
-
-  private String statText(Level level) {
-    int value = counts.get(level).get();
-    String name = level.name().toLowerCase(Locale.ROOT);
-    if (1 < value) {
-      name = name + "s";
-    }
-    return value + " " + name;
+  public void printSummary() {
+    console.printSummary(counts);
   }
 
   private int fatalCount() {
