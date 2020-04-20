@@ -1,51 +1,52 @@
 package org.smoothbuild.cli.console;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
+import static org.smoothbuild.cli.console.Level.ERROR;
+import static org.smoothbuild.cli.console.Level.FATAL;
+import static org.smoothbuild.cli.console.Level.INFO;
+import static org.smoothbuild.cli.console.Level.WARNING;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.cli.console.Log.info;
 import static org.smoothbuild.cli.console.Log.warning;
-import static org.smoothbuild.util.Strings.unlines;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.util.Strings;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class ReporterTest extends TestingContext {
-  private final String name = "TASK NAME";
-  private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-  private final PrintStream printStream = new PrintStream(outputStream);
-  private final Reporter reporter = new Reporter(new Console(printStream));
+  private static final String TASK = "TASK NAME";
+  private final Console console = mock(Console.class);
+  private final Reporter reporter = new Reporter(console);
 
   @Nested
   class print {
     @Test
     public void logs_containing_error() {
-      reporter.report(name, List.of(error("message string")));
-      assertThat(outputStream.toString()).isEqualTo(unlines(
-          "  TASK NAME",
-          "   + ERROR: message string",
-          ""));
+      List<Log> logs = List.of(error("message"));
+      reporter.report(TASK, logs);
+      verify(console, only())
+          .print(TASK, logs);
     }
 
     @Test
     public void logs_without_error() {
-      reporter.report(name, List.of(warning("message string\nsecond line")));
-      assertThat(outputStream.toString()).isEqualTo(unlines(
-          "  TASK NAME",
-          "   + WARNING: message string",
-          "     second line",
-          ""));
+      List<Log> logs = List.of(warning("message"));
+      reporter.report(TASK, logs);
+      verify(console, only())
+          .print(TASK, logs);
     }
   }
 
@@ -58,48 +59,35 @@ public class ReporterTest extends TestingContext {
 
     @Test
     public void returns_false_when_only_info_was_logged() {
-      reporter.report(name, List.of(info("message string")));
+      reporter.report(TASK, List.of(info("message string")));
       assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_false_when_only_warning_was_logged() {
-      reporter.report(name, List.of(warning("message string")));
+      reporter.report(TASK, List.of(warning("message string")));
       assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_error_was_logged() {
-      reporter.report(name, List.of(error("message string")));
+      reporter.report(TASK, List.of(error("message string")));
       assertTrue(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_fatal_was_logged() {
-      reporter.report(name, List.of(fatal("message string")));
+      reporter.report(TASK, List.of(fatal("message string")));
       assertTrue(reporter.isProblemReported());
     }
   }
 
   @Nested
-  class printFinalSummary {
-    @Test
-    public void when_error_was_logged() {
-      reporter.report(name, List.of(error("message string")));
-      reporter.printFinalSummary();
-
-      assertThat(outputStream.toString()).isEqualTo(unlines(
-          "  TASK NAME",
-          "   + ERROR: message string",
-          "Summary",
-          "  1 error",
-          ""));
-    }
-
+  class printSummary {
     @Test
     public void contains_all_stats() {
       List<Log> logs = new ArrayList<>();
-      logs.add(Log.fatal("fatal string"));
+      logs.add(fatal("fatal string"));
       for (int i = 0; i < 2; i++) {
         logs.add(error("error string"));
       }
@@ -110,28 +98,17 @@ public class ReporterTest extends TestingContext {
         logs.add(info("info string"));
       }
 
-      reporter.report(name, logs);
-      reporter.printFinalSummary();
+      reporter.report(TASK, logs);
+      reporter.printSummary();
 
-
-      String builder = Strings.unlines(
-          "  TASK NAME",
-          "   + FATAL: fatal string",
-          "   + ERROR: error string",
-          "   + ERROR: error string",
-          "   + WARNING: warning string",
-          "   + WARNING: warning string",
-          "   + WARNING: warning string",
-          "   + INFO: info string",
-          "   + INFO: info string",
-          "   + INFO: info string",
-          "   + INFO: info string",
-          "Summary",
-          "  1 fatal",
-          "  2 errors",
-          "  3 warnings",
-          "  4 infos\n");
-      assertEquals(builder, outputStream.toString());
+      @SuppressWarnings("unchecked")
+      ArgumentCaptor<Map<Level, AtomicInteger>> captor = ArgumentCaptor.forClass(Map.class);
+      verify(console).printSummary(captor.capture());
+      Map<Level, AtomicInteger> captured = captor.getValue();
+      assertThat(captured.get(FATAL).get()).isEqualTo(1);
+      assertThat(captured.get(ERROR).get()).isEqualTo(2);
+      assertThat(captured.get(WARNING).get()).isEqualTo(3);
+      assertThat(captured.get(INFO).get()).isEqualTo(4);
     }
   }
 }

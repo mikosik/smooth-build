@@ -4,6 +4,9 @@ import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,14 +45,17 @@ public class Console {
     print(toText(header, logs));
   }
 
-  private String toText(String header, List<Log> logs) {
-    StringBuilder text = new StringBuilder(TASK_HEADER_PREFIX + header + "\n");
+  private static String toText(String header, List<Log> logs) {
+    StringBuilder text = new StringBuilder(taskLine(header));
     for (Log log : logs) {
       text.append(prefixMultiline(log.level() + ": " + log.message()));
     }
     return text.toString();
   }
 
+  private static String taskLine(String header) {
+    return TASK_HEADER_PREFIX + header + "\n";
+  }
 
   private static String prefixMultiline(String text) {
     String[] lines = text.lines().toArray(String[]::new);
@@ -63,6 +69,30 @@ public class Console {
       lines[i] = MESSAGE_OTHER_LINES_PREFIX + lines[i];
     }
     return unlines(lines);
+  }
+
+  public void printSummary(Map<Level, AtomicInteger> counts) {
+    println("Summary");
+    int total = 0;
+    for (Level level : Level.values()) {
+      int count = counts.get(level).get();
+      if (count != 0) {
+        int value = counts.get(level).get();
+        print(taskLine(statText(level, value)));
+      }
+      total += count;
+    }
+    if (total == 0) {
+      print("No logs reported.", List.of());
+    }
+  }
+
+  private String statText(Level level, int value) {
+    String name = level.name().toLowerCase(Locale.ROOT);
+    if (1 < value) {
+      name = name + "s";
+    }
+    return value + " " + name;
   }
 
   public void println(String line) {
