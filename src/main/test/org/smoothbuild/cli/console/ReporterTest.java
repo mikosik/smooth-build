@@ -25,13 +25,13 @@ public class ReporterTest extends TestingContext {
   private final String name = "TASK NAME";
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
   private final PrintStream printStream = new PrintStream(outputStream);
-  private final Reporter console = new Reporter(new Console(printStream));
+  private final Reporter reporter = new Reporter(new Console(printStream));
 
   @Nested
   class print {
     @Test
     public void logs_containing_error() {
-      console.report(name, List.of(error("message string")));
+      reporter.report(name, List.of(error("message string")));
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  TASK NAME",
           "   + ERROR: message string",
@@ -40,7 +40,7 @@ public class ReporterTest extends TestingContext {
 
     @Test
     public void logs_without_error() {
-      console.report(name, List.of(warning("message string\nsecond line")));
+      reporter.report(name, List.of(warning("message string\nsecond line")));
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  TASK NAME",
           "   + WARNING: message string",
@@ -53,31 +53,31 @@ public class ReporterTest extends TestingContext {
   class isProblemReported {
     @Test
     public void returns_false_when_nothing_was_logged() {
-      assertFalse(console.isProblemReported());
+      assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_false_when_only_info_was_logged() {
-      console.report(name, List.of(info("message string")));
-      assertFalse(console.isProblemReported());
+      reporter.report(name, List.of(info("message string")));
+      assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_false_when_only_warning_was_logged() {
-      console.report(name, List.of(warning("message string")));
-      assertFalse(console.isProblemReported());
+      reporter.report(name, List.of(warning("message string")));
+      assertFalse(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_error_was_logged() {
-      console.report(name, List.of(error("message string")));
-      assertTrue(console.isProblemReported());
+      reporter.report(name, List.of(error("message string")));
+      assertTrue(reporter.isProblemReported());
     }
 
     @Test
     public void returns_true_when_fatal_was_logged() {
-      console.report(name, List.of(fatal("message string")));
-      assertTrue(console.isProblemReported());
+      reporter.report(name, List.of(fatal("message string")));
+      assertTrue(reporter.isProblemReported());
     }
   }
 
@@ -85,8 +85,8 @@ public class ReporterTest extends TestingContext {
   class printFinalSummary {
     @Test
     public void when_error_was_logged() {
-      console.report(name, List.of(error("message string")));
-      console.printFinalSummary();
+      reporter.report(name, List.of(error("message string")));
+      reporter.printFinalSummary();
 
       assertThat(outputStream.toString()).isEqualTo(unlines(
           "  TASK NAME",
@@ -110,8 +110,8 @@ public class ReporterTest extends TestingContext {
         logs.add(info("info string"));
       }
 
-      console.report(name, logs);
-      console.printFinalSummary();
+      reporter.report(name, logs);
+      reporter.printFinalSummary();
 
 
       String builder = Strings.unlines(
