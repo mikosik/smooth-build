@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.base.SObject;
@@ -38,13 +38,13 @@ public class ArtifactBuilder {
 
   public void buildArtifacts(List<Function> functions) {
     reporter.newSection("Saving artifact(s)");
-    ImmutableList<Task> tasks = functions.stream()
+    ImmutableList<BuildTask> tasks = functions.stream()
         .map(f -> f.createAgrlessCallExpression().createTask(null))
         .collect(toImmutableList());
     try {
-      Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
+      Map<BuildTask, SObject> artifacts = parallelExecutor.executeAll(tasks);
       if (!artifacts.containsValue(null)) {
-        List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
+        List<Entry<BuildTask, SObject>> sortedArtifacts = artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
             .collect(toList());
@@ -55,7 +55,7 @@ public class ArtifactBuilder {
     }
   }
 
-  private void save(Entry<Task, SObject> artifact) {
+  private void save(Entry<BuildTask, SObject> artifact) {
     save(artifact.getKey().name(), artifact.getValue());
   }
 

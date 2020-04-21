@@ -5,11 +5,11 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
-public abstract class NonComputableTask extends Task {
+public abstract class NonComputableTask extends BuildTask {
   private final String name;
   private final ConcreteType type;
 
-  public NonComputableTask(String name, ConcreteType type, List<? extends Task> dependencies,
+  public NonComputableTask(String name, ConcreteType type, List<? extends BuildTask> dependencies,
       Location location) {
     super(dependencies, location);
     this.name = name;

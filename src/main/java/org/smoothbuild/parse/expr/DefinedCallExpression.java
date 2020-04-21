@@ -1,12 +1,12 @@
 package org.smoothbuild.parse.expr;
 
-import static org.smoothbuild.exec.task.base.Task.taskTypes;
+import static org.smoothbuild.exec.task.base.BuildTask.taskTypes;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 
 import java.util.List;
 
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.base.VirtualTask;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.Location;
@@ -23,12 +23,12 @@ public class DefinedCallExpression extends Expression {
   }
 
   @Override
-  public Task createTask(Scope<Task> scope) {
-    List<Task> arguments = childrenTasks(scope);
+  public BuildTask createTask(Scope<BuildTask> scope) {
+    List<BuildTask> arguments = childrenTasks(scope);
     ConcreteType actualResultType =
         inferMapping(function.parameterTypes(), taskTypes(arguments))
             .applyTo(function.signature().type());
-    Task task = function
+    BuildTask task = function
         .body()
         .createTask(functionScope(arguments))
         .convertIfNeeded(actualResultType);
@@ -36,8 +36,8 @@ public class DefinedCallExpression extends Expression {
     return new VirtualTask(function.name(), actualResultType, task, location());
   }
 
-  private Scope<Task> functionScope(List<Task> arguments) {
-    Scope<Task> functionScope = scope();
+  private Scope<BuildTask> functionScope(List<BuildTask> arguments) {
+    Scope<BuildTask> functionScope = scope();
     for (int i = 0; i < arguments.size(); i++) {
       functionScope.add(function.parameters().get(i).name(), arguments.get(i));
     }

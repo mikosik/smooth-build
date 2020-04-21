@@ -9,9 +9,9 @@ import org.smoothbuild.util.concurrent.Feeder;
 import com.google.common.collect.ImmutableList;
 
 public class VirtualTask extends NonComputableTask {
-  private final Task task;
+  private final BuildTask task;
 
-  public VirtualTask(String name, ConcreteType type, Task task, Location location) {
+  public VirtualTask(String name, ConcreteType type, BuildTask task, Location location) {
     super(name, type, ImmutableList.of(task), location);
     this.task = task;
   }
