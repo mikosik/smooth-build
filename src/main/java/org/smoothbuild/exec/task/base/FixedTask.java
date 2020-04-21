@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.task.base;
 
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_LITERAL;
+
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.Array;
@@ -21,5 +23,10 @@ public class FixedTask extends NonComputableTask {
     Feeder<SObject> result = new Feeder<>();
     result.accept(sObject);
     return result;
+  }
+
+  @Override
+  public TaskKind kind() {
+    return BUILDING_LITERAL;
   }
 }

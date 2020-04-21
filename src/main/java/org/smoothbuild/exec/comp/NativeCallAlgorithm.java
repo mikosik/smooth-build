@@ -1,12 +1,14 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -63,6 +65,11 @@ public class NativeCallAlgorithm implements Algorithm {
             "Function " + function.name() + " threw java exception from its native code.", cause);
       }
     }
+  }
+
+  @Override
+  public TaskKind kind() {
+    return BUILDING_NATIVE_CALL;
   }
 
   private Output nullOutput(NativeApi nativeApi) {

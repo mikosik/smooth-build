@@ -1,15 +1,15 @@
 package org.smoothbuild.exec.task.base;
 
 public class TaskAttributes {
-  private final TaskType type;
+  private final TaskKind type;
   private final TaskSpace space;
 
-  public TaskAttributes(TaskType type, TaskSpace space) {
+  public TaskAttributes(TaskKind type, TaskSpace space) {
     this.type = type;
     this.space = space;
   }
 
-  public TaskType type() {
+  public TaskKind type() {
     return type;
   }
 

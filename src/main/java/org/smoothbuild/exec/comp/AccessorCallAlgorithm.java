@@ -2,8 +2,10 @@ package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
@@ -40,5 +42,10 @@ public class AccessorCallAlgorithm implements Algorithm {
     checkArgument(objects.size() == 1);
     Struct struct = (Struct) objects.get(0);
     return new Output(struct.get(accessor.fieldName()), nativeApi.messages());
+  }
+
+  @Override
+  public TaskKind kind() {
+    return BUILDING_NATIVE_CALL;
   }
 }

@@ -9,6 +9,7 @@ import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -18,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Subclasses of this class must be immutable.
  */
-public abstract class BuildTask {
+public abstract class BuildTask implements Task {
   protected final ImmutableList<BuildTask> dependencies;
   protected final Location location;
 
@@ -33,6 +34,11 @@ public abstract class BuildTask {
 
   public Location location() {
     return location;
+  }
+
+  @Override
+  public Space space() {
+    return location.path().space();
   }
 
   public BuildTask convertIfNeeded(ConcreteType type) {

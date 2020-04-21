@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
@@ -28,6 +29,7 @@ import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.NormalTask;
+import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -242,6 +244,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
     @Override
     public String name() {
       return name;
+    }
+
+    @Override
+    public TaskKind kind() {
+      return BUILDING_NATIVE_CALL;
     }
 
     @Override

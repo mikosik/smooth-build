@@ -28,6 +28,11 @@ public abstract class ComputableTask extends BuildTask {
   }
 
   @Override
+  public TaskKind kind() {
+    return algorithm.kind();
+  }
+
+  @Override
   public ConcreteType type() {
     return algorithm.type();
   }
