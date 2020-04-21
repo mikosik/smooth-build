@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Paths;
@@ -46,7 +47,7 @@ public class LocationTest {
 
   @Test
   public void file_code_location_to_string() {
-    Location location = location(new ModulePath(Paths.get("abc"), "shortPath"), 2);
+    Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
     assertThat(location.toString())
         .isEqualTo("shortPath:2");
   }
@@ -59,6 +60,6 @@ public class LocationTest {
   }
 
   private static ModulePath modulePath(String name) {
-    return new ModulePath(Paths.get(name), "{SL}/" + name);
+    return new ModulePath(USER, Paths.get(name), "{SL}/" + name);
   }
 }

@@ -3,13 +3,21 @@ package org.smoothbuild;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import org.smoothbuild.lang.base.Space;
+
 public class ModulePath {
+  private final Space space;
   private final Path fullPath;
   private final String shortPath;
 
-  public ModulePath(Path fullPath, String shortPath) {
+  public ModulePath(Space space, Path fullPath, String shortPath) {
+    this.space = space;
     this.fullPath = fullPath;
     this.shortPath = shortPath;
+  }
+
+  public Space space() {
+    return space;
   }
 
   public Path fullPath() {
