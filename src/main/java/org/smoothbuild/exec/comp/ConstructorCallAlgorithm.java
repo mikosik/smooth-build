@@ -1,8 +1,10 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.object.base.StructBuilder;
@@ -41,5 +43,10 @@ public class ConstructorCallAlgorithm implements Algorithm {
       builder.set(parameters.get(i).name(), input.objects().get(i));
     }
     return new Output(builder.build(), nativeApi.messages());
+  }
+
+  @Override
+  public TaskKind kind() {
+    return BUILDING_NATIVE_CALL;
   }
 }

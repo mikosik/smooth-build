@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.task.base;
 
+import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NORMAL_CALL;
+
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
@@ -19,5 +21,10 @@ public class VirtualTask extends NonComputableTask {
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
     return task.startComputation(worker);
+  }
+
+  @Override
+  public TaskKind kind() {
+    return BUILDING_NORMAL_CALL;
   }
 }
