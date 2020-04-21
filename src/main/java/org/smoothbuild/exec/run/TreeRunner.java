@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.SRuntime;
 
@@ -27,17 +27,17 @@ public class TreeRunner {
     }
   }
 
-  private Task treeOf(Function function) {
+  private BuildTask treeOf(Function function) {
     return function
         .createAgrlessCallExpression()
         .createTask(null);
   }
 
-  private void print(Task task) {
+  private void print(BuildTask task) {
     print("", task);
   }
 
-  private void print(String indent, Task task) {
+  private void print(String indent, BuildTask task) {
     reporter.printlnRaw(indent + task.description());
     task.children().forEach(ch -> print(indent + "  ", ch));
   }

@@ -16,7 +16,7 @@ import org.smoothbuild.util.concurrent.Feeder;
 import com.google.common.collect.ImmutableList;
 
 public class NormalTask extends ComputableTask {
-  public NormalTask(Algorithm algorithm, List<? extends Task> dependencies, Location location,
+  public NormalTask(Algorithm algorithm, List<? extends BuildTask> dependencies, Location location,
       boolean cacheable) {
     super(algorithm, dependencies, location, cacheable);
   }

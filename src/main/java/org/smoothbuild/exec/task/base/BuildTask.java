@@ -18,17 +18,16 @@ import com.google.common.collect.ImmutableList;
 /**
  * Subclasses of this class must be immutable.
  */
-public abstract class Task {
-  protected final ImmutableList<Task> dependencies;
+public abstract class BuildTask {
+  protected final ImmutableList<BuildTask> dependencies;
   protected final Location location;
 
-  public Task(
-      List<? extends Task> dependencies, Location location) {
+  public BuildTask(List<? extends BuildTask> dependencies, Location location) {
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
   }
 
-  public ImmutableList<Task> children() {
+  public ImmutableList<BuildTask> children() {
     return dependencies;
   }
 
@@ -36,12 +35,12 @@ public abstract class Task {
     return location;
   }
 
-  public Task convertIfNeeded(ConcreteType type) {
+  public BuildTask convertIfNeeded(ConcreteType type) {
     if (type().equals(type)) {
       return this;
     } else {
       Algorithm algorithm = new ConvertAlgorithm(type, type());
-      List<Task> dependencies = list(this);
+      List<BuildTask> dependencies = list(this);
       return new NormalTask(algorithm, dependencies, location(), true);
     }
   }
@@ -54,7 +53,7 @@ public abstract class Task {
 
   public abstract Feeder<SObject> startComputation(ParallelTaskExecutor.Worker worker);
 
-  public static List<ConcreteType> taskTypes(List<Task> tasks) {
-    return map(tasks, Task::type);
+  public static List<ConcreteType> taskTypes(List<BuildTask> tasks) {
+    return map(tasks, BuildTask::type);
   }
 }

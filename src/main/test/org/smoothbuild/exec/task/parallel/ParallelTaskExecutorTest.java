@@ -23,11 +23,11 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
+import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.NormalTask;
-import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -48,7 +48,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   @Test
   public void tasks_are_executed() throws Exception {
-    Task task = concat(
+    BuildTask task = concat(
         concat(
             task(valueAlgorithm("A")),
             task(valueAlgorithm("B"))),
@@ -64,7 +64,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   public void tasks_are_executed_in_parallel() throws Exception {
     AtomicInteger counterA = new AtomicInteger(10);
     AtomicInteger counterB = new AtomicInteger(20);
-    Task task = concat(
+    BuildTask task = concat(
         task(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
         task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
@@ -77,7 +77,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       throws Exception {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
     AtomicInteger counter = new AtomicInteger();
-    Task task = concat(
+    BuildTask task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
@@ -92,7 +92,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       throws Exception {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
     AtomicInteger counter = new AtomicInteger();
-    Task task = concat(
+    BuildTask task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
         task(getIncrementAlgorithm(counter)));
@@ -106,7 +106,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     Reporter reporter = mock(Reporter.class);
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
-    Task task = task(throwingAlgorithm(exception));
+    BuildTask task = task(throwingAlgorithm(exception));
 
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
@@ -125,7 +125,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       }
     };
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
-    Task task = task(valueAlgorithm("A"));
+    BuildTask task = task(valueAlgorithm("A"));
 
     SObject sObject = parallelTaskExecutor.executeAll(list(task)).get(task);
 
@@ -133,7 +133,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     assertThat(sObject).isNull();
   }
 
-  private Task concat(Task... dependencies) {
+  private BuildTask concat(BuildTask... dependencies) {
     return task(concatAlgorithm(), list(dependencies));
   }
 
@@ -201,20 +201,20 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private SObject executeSingleTask(Task task) throws InterruptedException {
+  private SObject executeSingleTask(BuildTask task) throws InterruptedException {
     return executeSingleTask(parallelTaskExecutor, task);
   }
 
-  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
+  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, BuildTask task)
       throws InterruptedException {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
 
-  private Task task(Algorithm algorithm) {
+  private BuildTask task(Algorithm algorithm) {
     return task(algorithm, ImmutableList.of());
   }
 
-  private static Task task(Algorithm algorithm, List<Task> dependencies) {
+  private static BuildTask task(Algorithm algorithm, List<BuildTask> dependencies) {
     return new NormalTask(algorithm, dependencies, unknownLocation(), true);
   }
 

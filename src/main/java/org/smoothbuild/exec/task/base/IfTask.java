@@ -16,7 +16,7 @@ import org.smoothbuild.util.concurrent.Feeder;
 import com.google.common.collect.ImmutableList;
 
 public class IfTask extends ComputableTask {
-  public IfTask(Algorithm algorithm, List<? extends Task> dependencies, Location location,
+  public IfTask(Algorithm algorithm, List<? extends BuildTask> dependencies, Location location,
       boolean cacheable) {
     super(algorithm, dependencies, location, cacheable);
   }
@@ -33,7 +33,7 @@ public class IfTask extends ComputableTask {
   private Consumer<SObject> thenOrElseEnqueuer(Worker worker, Consumer<SObject> ifJobEnqueuer) {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
-      Task thenOrElseTask = condition ? thenChild() : elseChild();
+      BuildTask thenOrElseTask = condition ? thenChild() : elseChild();
       thenOrElseTask.startComputation(worker).addConsumer(ifJobEnqueuer);
     };
   }
@@ -50,15 +50,15 @@ public class IfTask extends ComputableTask {
     };
   }
 
-  private Task conditionChild() {
+  private BuildTask conditionChild() {
     return children().get(0);
   }
 
-  private Task thenChild() {
+  private BuildTask thenChild() {
     return children().get(1);
   }
 
-  private Task elseChild() {
+  private BuildTask elseChild() {
     return children().get(2);
   }
 }

@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.expr;
 
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 
@@ -13,7 +13,7 @@ public class BoundValueExpression extends Expression {
   }
 
   @Override
-  public Task createTask(Scope<Task> scope) {
+  public BuildTask createTask(Scope<BuildTask> scope) {
     return scope.get(name);
   }
 }
