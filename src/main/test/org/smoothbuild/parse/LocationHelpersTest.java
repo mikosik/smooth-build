@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
 import java.nio.file.Paths;
@@ -39,6 +40,6 @@ public class LocationHelpersTest {
   }
 
   private static ModulePath modulePath() {
-    return new ModulePath(Paths.get("script.smooth"), "{u}/script.smooth");
+    return new ModulePath(USER, Paths.get("script.smooth"), "{u}/script.smooth");
   }
 }

@@ -1,6 +1,7 @@
 package org.smoothbuild.testing.common;
 
 import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.Space.USER;
 
 import java.nio.file.Paths;
 
@@ -14,6 +15,6 @@ public class TestingLocation {
 
   public static Location loc(int line) {
     String path = "script.smooth";
-    return location(new ModulePath(Paths.get(path), path), line);
+    return location(new ModulePath(USER, Paths.get(path), path), line);
   }
 }
