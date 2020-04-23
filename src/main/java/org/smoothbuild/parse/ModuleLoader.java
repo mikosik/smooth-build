@@ -6,7 +6,6 @@ import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.InferTypesAndParamAssignment.inferTypesAndParamAssignment;
 import static org.smoothbuild.parse.ScriptParser.parseScript;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
-import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.util.List;
 
@@ -26,16 +25,16 @@ import org.smoothbuild.parse.ast.StructNode;
 import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
-  public static void loadModule(SRuntime runtime, ModulePath path, LoggerImpl logger) {
-    Natives natives = findNatives(changeExtension(path.fullPath(), "jar"), logger);
+  public static void loadModule(SRuntime runtime, ModulePath modulePath, LoggerImpl logger) {
+    Natives natives = findNatives(modulePath.nativeJarPath(), logger);
     if (logger.hasProblems()) {
       return;
     }
-    ModuleContext moduleContext = parseScript(path, logger);
+    ModuleContext moduleContext = parseScript(modulePath, logger);
     if (logger.hasProblems()) {
       return;
     }
-    Ast ast = fromParseTree(path, moduleContext);
+    Ast ast = fromParseTree(modulePath, moduleContext);
     findSemanticErrors(runtime, ast, logger);
     if (logger.hasProblems()) {
       return;
