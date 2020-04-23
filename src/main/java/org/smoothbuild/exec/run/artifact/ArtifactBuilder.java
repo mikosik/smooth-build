@@ -6,6 +6,7 @@ import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
+import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ArtifactBuilder {
   public void buildArtifacts(List<Function> functions) {
     reporter.newSection("Saving artifact(s)");
     ImmutableList<BuildTask> tasks = functions.stream()
-        .map(f -> f.createAgrlessCallExpression().createTask(null))
+        .map(f -> f.createAgrlessCallExpression(commandLineLocation()).createTask(null))
         .collect(toImmutableList());
     try {
       Map<BuildTask, SObject> artifacts = parallelExecutor.executeAll(tasks);

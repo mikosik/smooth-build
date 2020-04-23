@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
 
 import java.util.List;
 
@@ -52,13 +51,13 @@ public abstract class Function implements Named {
         .allMatch(ParameterInfo::hasDefaultValue);
   }
 
-  public Expression createAgrlessCallExpression() {
+  public Expression createAgrlessCallExpression(Location location) {
     ImmutableList<Expression> defaultArguments = signature
         .parameters()
         .stream()
         .map(Parameter::defaultValueExpression)
         .collect(toImmutableList());
-    return createCallExpression(defaultArguments, unknownLocation());
+    return createCallExpression(defaultArguments, location);
   }
 
   public abstract Expression createCallExpression(List<? extends Expression> arguments,
