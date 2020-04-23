@@ -27,7 +27,7 @@ public class Reporter {
     this.console = console;
   }
 
-  public void newSection(String name) {
+  public void startNewPhase(String name) {
     console.println(name);
   }
 

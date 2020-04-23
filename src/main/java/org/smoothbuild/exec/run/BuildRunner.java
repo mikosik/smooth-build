@@ -22,7 +22,7 @@ public class BuildRunner {
   }
 
   public void execute(SRuntime runtime, List<String> names) {
-    reporter.newSection("Building");
+    reporter.startNewPhase("Building");
     List<Function> functionsToRun = validateFunctionArguments(reporter, runtime, names);
     if (!reporter.isProblemReported()) {
       artifactBuilder.buildArtifacts(functionsToRun);
