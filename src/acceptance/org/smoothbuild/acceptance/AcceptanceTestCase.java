@@ -3,7 +3,7 @@ package org.smoothbuild.acceptance;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
-import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
@@ -203,14 +203,29 @@ public abstract class AcceptanceTestCase {
 
   public void thenSysOutContains(String... lines) {
     String text = unlines(lines);
-    assertThat(sysOut)
-        .contains(text);
+    if (!sysOut.contains(text)) {
+      failWithFullOutputs(text, "SysOut");
+    }
   }
 
   public void thenSysErrContains(String... lines) {
     String text = unlines(lines);
-    assertThat(sysErr)
-        .contains(text);
+    if (!sysErr.contains(text)) {
+      failWithFullOutputs(text, "SysErr");
+    }
+  }
+
+  private void failWithFullOutputs(String text, String streamName) {
+    // We use isEqualTo() instead of contains() so generated failure text will contain
+    // as much data as possible and intellij is able to display it via visual diff.
+    assertWithMessage(streamName + " doesn't contain expected substring")
+        .that(unlines(
+            "================= SYS-OUT ====================",
+            sysOut,
+            "================= SYS-ERR ====================",
+            sysErr
+        ))
+        .isEqualTo(text);
   }
 
   public String sysOut() {
