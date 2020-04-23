@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 
 import javax.inject.Singleton;
 
+import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.util.reflect.Classes;
 
 @Singleton

@@ -1,9 +1,7 @@
-package org.smoothbuild;
+package org.smoothbuild.lang.base;
 
 import java.nio.file.Path;
 import java.util.Objects;
-
-import org.smoothbuild.lang.base.Space;
 
 public class ModulePath {
   private final Space space;

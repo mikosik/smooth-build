@@ -4,8 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.Objects;
 
-import org.smoothbuild.ModulePath;
-
 public class Location {
   private final ModulePath path;
   private final int line;

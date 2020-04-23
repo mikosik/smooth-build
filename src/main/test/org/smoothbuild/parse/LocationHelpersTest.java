@@ -11,8 +11,8 @@ import java.nio.file.Paths;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.ModulePath;
 
 public class LocationHelpersTest {
   @Test

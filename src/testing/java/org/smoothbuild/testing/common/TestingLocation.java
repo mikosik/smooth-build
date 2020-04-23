@@ -5,8 +5,8 @@ import static org.smoothbuild.lang.base.Space.USER;
 
 import java.nio.file.Paths;
 
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.ModulePath;
 
 public class TestingLocation {
   public static Location loc() {

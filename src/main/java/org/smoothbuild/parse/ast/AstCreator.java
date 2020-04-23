@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.antlr.SmoothBaseVisitor;
 import org.smoothbuild.antlr.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.SmoothParser.ArgContext;
@@ -30,6 +29,7 @@ import org.smoothbuild.antlr.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.SmoothParser.StructContext;
 import org.smoothbuild.antlr.SmoothParser.TypeContext;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.ModulePath;
 
 public class AstCreator {
   public static Ast fromParseTree(ModulePath path, ModuleContext module) {

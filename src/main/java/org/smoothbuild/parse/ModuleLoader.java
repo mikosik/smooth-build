@@ -10,10 +10,10 @@ import static org.smoothbuild.util.Paths.changeExtension;
 
 import java.util.List;
 
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.antlr.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.type.Type;

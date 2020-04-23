@@ -4,8 +4,8 @@ import static org.smoothbuild.lang.base.Location.location;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.ModulePath;
 
 public class LocationHelpers {
   public static Location locationOf(ModulePath path, ParserRuleContext parserRuleContext) {
