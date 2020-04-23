@@ -6,9 +6,9 @@
     <property name="dir.src" location="src"/>
     <property name="dir.src.main.java" location="${dir.src}/main/java"/>
     <property name="dir.src.main.test" location="${dir.src}/main/test"/>
-    <property name="dir.src.api.func.java" location="${dir.src}/api/func/java"/>
-    <property name="dir.src.api.func.smooth" location="${dir.src}/api/func/smooth"/>
-    <property name="dir.src.api.func.test" location="${dir.src}/api/func/test"/>
+    <property name="dir.src.slib.java" location="${dir.src}/slib/java"/>
+    <property name="dir.src.slib.smooth" location="${dir.src}/slib/smooth"/>
+    <property name="dir.src.slib.test" location="${dir.src}/slib/test"/>
     <property name="dir.src.testing.java" location="${dir.src}/testing/java"/>
     <property name="dir.src.testing.test" location="${dir.src}/testing/test"/>
     <property name="dir.src.acceptance" location="${dir.src}/acceptance"/>
@@ -19,14 +19,14 @@
     <property name="dir.build.class" location="${dir.build}/class"/>
     <property name="dir.build.class.main.java" location="${dir.build.class}/main/java"/>
     <property name="dir.build.class.main.test" location="${dir.build.class}/main/test"/>
-    <property name="dir.build.class.api-func.java" location="${dir.build.class}/api/func/java"/>
-    <property name="dir.build.class.api-func.test" location="${dir.build.class}/api/func/test"/>
+    <property name="dir.build.class.slib.java" location="${dir.build.class}/slib/java"/>
+    <property name="dir.build.class.slib.test" location="${dir.build.class}/slib/test"/>
     <property name="dir.build.class.testing.java" location="${dir.build.class}/testing/java"/>
     <property name="dir.build.class.testing.test" location="${dir.build.class}/testing/test"/>
     <property name="dir.build.class.acceptance" location="${dir.build.class}/acceptance"/>
     <property name="dir.build.jar" location="${dir.build}/jar"/>
     <property name="dir.build.smooth.jar" location="${dir.build.jar}/smooth.jar"/>
-    <property name="dir.build.funcs.jar" location="${dir.build.jar}/funcs.jar"/>
+    <property name="dir.build.slib.jar" location="${dir.build.jar}/slib.jar"/>
     <property name="dir.build.release" location="${dir.build}/release"/>
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
     <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
@@ -62,8 +62,8 @@
         <mkdir dir="${dir.build.java.parser}"/>
         <mkdir dir="${dir.build.class.main.java}"/>
         <mkdir dir="${dir.build.class.main.test}"/>
-        <mkdir dir="${dir.build.class.api-func.java}"/>
-        <mkdir dir="${dir.build.class.api-func.test}"/>
+        <mkdir dir="${dir.build.class.slib.java}"/>
+        <mkdir dir="${dir.build.class.slib.test}"/>
         <mkdir dir="${dir.build.class.testing.java}"/>
         <mkdir dir="${dir.build.class.testing.test}"/>
         <mkdir dir="${dir.build.class.acceptance}"/>
@@ -136,27 +136,27 @@
         <pathelement location="${dir.build.class.main.java}"/>
     </path>
 
-    <!-- compile src/api/func/java -->
+    <!-- compile src/slib/java -->
 
-    <path id="classpath-for.api-func.java">
+    <path id="classpath-for.slib.java">
         <path refid="classpath-with.main.java"/>
     </path>
 
-    <target name="compile.api-func.java" depends="compile.main.java">
-        <javac destdir="${dir.build.class.api-func.java}"
+    <target name="compile.slib.java" depends="compile.main.java">
+        <javac destdir="${dir.build.class.slib.java}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <src path="${dir.src.api.func.java}"/>
+            <src path="${dir.src.slib.java}"/>
             <classpath>
-                <path refid="classpath-for.api-func.java"/>
+                <path refid="classpath-for.slib.java"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath-with.api-func.java">
-        <path refid="classpath-for.api-func.java"/>
-        <pathelement location="${dir.build.class.api-func.java}"/>
+    <path id="classpath-with.slib.java">
+        <path refid="classpath-for.slib.java"/>
+        <pathelement location="${dir.build.class.slib.java}"/>
     </path>
 
     <!-- compile src/testing/java -->
@@ -223,29 +223,29 @@
         <pathelement location="${dir.build.class.main.test}"/>
     </path>
 
-    <!-- compile src/func/test -->
+    <!-- compile src/slib/test -->
 
-    <path id="classpath-for.api-func.test">
+    <path id="classpath-for.slib.test">
         <path refid="classpath-with.testing.java"/>
-        <path refid="classpath-with.api-func.java"/>
+        <path refid="classpath-with.slib.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
-    <target name="compile.api-func.test" depends="compile.api-func.java, compile.testing.java">
-        <javac destdir="${dir.build.class.api-func.test}"
+    <target name="compile.slib.test" depends="compile.slib.java, compile.testing.java">
+        <javac destdir="${dir.build.class.slib.test}"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
-            <src path="${dir.src.api.func.test}"/>
+            <src path="${dir.src.slib.test}"/>
             <classpath>
-                <path refid="classpath-for.api-func.test"/>
+                <path refid="classpath-for.slib.test"/>
             </classpath>
         </javac>
     </target>
 
-    <path id="classpath-with.api-func.test">
-        <path refid="classpath-for.api-func.test"/>
-        <pathelement location="${dir.build.class.api-func.test}"/>
+    <path id="classpath-with.slib.test">
+        <path refid="classpath-for.slib.test"/>
+        <pathelement location="${dir.build.class.slib.test}"/>
     </path>
 
     <!-- compile src/testing/test -->
@@ -276,7 +276,7 @@
 
     <path id="classpath.for.acceptance">
         <path refid="classpath-with.testing.java"/>
-        <path refid="classpath-with.api-func.java"/>
+        <path refid="classpath-with.slib.java"/>
         <path refid="classpath.testing.libs"/>
     </path>
 
@@ -329,27 +329,27 @@
         </junitlauncher>
     </target>
 
-    <!-- run src/func/test -->
+    <!-- run src/slib/test -->
 
-    <target name="run.api-func.test" depends="compile.api-func.test">
+    <target name="run.slib.test" depends="compile.slib.test">
         <junitlauncher haltonfailure="yes">
             <classpath>
-                <path refid="classpath-with.api-func.test"/>
+                <path refid="classpath-with.slib.test"/>
             </classpath>
             <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
             <!-- <listener type="legacy-brief"/> -->
             <testclasses outputdir="${dir.build}">
-                <fileset dir="${dir.build.class.api-func.test}" includes="**/*Test.class"/>
+                <fileset dir="${dir.build.class.slib.test}" includes="**/*Test.class"/>
                 <fork/>
             </testclasses>
         </junitlauncher>
     </target>
 
-    <!-- build funcs.jar file -->
+    <!-- build slib.jar file -->
 
-    <target name="funcs.jar" depends="compile.api-func.java">
-        <jar destfile="${dir.build.funcs.jar}">
-            <zipfileset dir="${dir.build.class.api-func.java}"/>
+    <target name="slib.jar" depends="compile.slib.java">
+        <jar destfile="${dir.build.slib.jar}">
+            <zipfileset dir="${dir.build.class.slib.java}"/>
             <zipfileset file="LICENSE"/>
         </jar>
     </target>
@@ -376,11 +376,11 @@
 
     <!-- build smooth.zip release -->
 
-    <target name="release" depends="smooth.jar, funcs.jar">
+    <target name="release" depends="smooth.jar, slib.jar">
         <zip destfile="${dir.build.release.file}" level="9">
             <zipfileset prefix="${zipped.dir}" file="${dir.build.smooth.jar}"/>
-            <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.funcs.jar}"/>
-            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.api.func.smooth}/funcs.smooth"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.build.slib.jar}"/>
+            <zipfileset prefix="${zipped.dir}/lib" file="${dir.src.slib.smooth}/slib.smooth"/>
             <zipfileset prefix="${zipped.dir}" file="${dir.src.script}/smooth" filemode="755"/>
         </zip>
     </target>
@@ -409,7 +409,7 @@
         </junitlauncher>
     </target>
 
-    <target name="run.all.test" depends="run.testing.test, run.main.test, run.api-func.test, run.acceptance">
+    <target name="run.all.test" depends="run.testing.test, run.main.test, run.slib.test, run.acceptance">
     </target>
 
     <target name="all" depends="release, run.all.test"/>

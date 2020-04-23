@@ -14,7 +14,7 @@ import org.smoothbuild.util.reflect.Classes;
 @Singleton
 public class SmoothPaths {
   private static final String LIB_DIR_NAME = "lib";
-  private static final String FUNCS_MODULE_FILE = "funcs.smooth";
+  private static final String SLIB_MODULE_FILE = "slib.smooth";
   private static final String USER_MODULE_FILE = "build.smooth";
   public static final ModulePath USER_MODULE =
       new ModulePath(USER, Paths.get(USER_MODULE_FILE), USER_MODULE_FILE);
@@ -29,9 +29,9 @@ public class SmoothPaths {
     this.installationDir = installationDir;
   }
 
-  public ModulePath funcsModule() {
+  public ModulePath slibModule() {
     return new ModulePath(
-        STANDARD_LIBRARY, libDir().resolve(FUNCS_MODULE_FILE), "{SL}/" + FUNCS_MODULE_FILE);
+        STANDARD_LIBRARY, libDir().resolve(SLIB_MODULE_FILE), "{SL}/" + SLIB_MODULE_FILE);
   }
 
   private Path libDir() {

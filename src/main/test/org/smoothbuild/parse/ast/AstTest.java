@@ -2,7 +2,7 @@ package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -41,6 +41,6 @@ public class AstTest {
 
   private static FuncNode function(String name) {
     return new FuncNode(mock(TypeNode.class), name, list(),
-        mock(ExprNode.class), location(null, 1));
+        mock(ExprNode.class), unknownLocation());
   }
 }
