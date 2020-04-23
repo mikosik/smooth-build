@@ -1,24 +1,34 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.lang.base.Space.UNKNOWN;
+import static org.smoothbuild.lang.base.Space.USER;
 
 import java.util.Objects;
 
+/**
+ * This class is immutable.
+ */
 public class Location {
   private final ModulePath modulePath;
   private final int line;
 
+  public static Location commandLineLocation() {
+    return new Location(new ModulePath(USER, null, null), 1);
+  }
+
   public static Location unknownLocation() {
-    return new Location(null, 1);
+    return new Location(new ModulePath(UNKNOWN, null, null), -1);
   }
 
   public static Location location(ModulePath modulePath, int line) {
+    checkArgument(0 < line);
     return new Location(modulePath, line);
   }
 
   private Location(ModulePath modulePath, int line) {
-    checkArgument(0 < line);
-    this.modulePath = modulePath;
+    this.modulePath = requireNonNull(modulePath);
     this.line = line;
   }
 
@@ -49,8 +59,10 @@ public class Location {
 
   @Override
   public String toString() {
-    if (modulePath == null) {
+    if (modulePath.space() == UNKNOWN) {
       return "unknown location";
+    } else if (modulePath.fullPath() == null) {
+      return "command line";
     } else {
       return modulePath.shortPath() + ":" + line;
     }

@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.run;
 
 import static org.smoothbuild.exec.run.ValidateFunctionArguments.validateFunctionArguments;
+import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class TreeRunner {
 
   private BuildTask treeOf(Function function) {
     return function
-        .createAgrlessCallExpression()
+        .createAgrlessCallExpression(commandLineLocation())
         .createTask(null);
   }
 

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.base.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.base.Space.USER;
@@ -37,6 +38,7 @@ public class LocationTest {
     EqualsTester tester = new EqualsTester();
 
     tester.addEqualityGroup(unknownLocation(), unknownLocation());
+    tester.addEqualityGroup(commandLineLocation(), commandLineLocation());
     tester.addEqualityGroup(location(modulePath("abc"), 7), location(modulePath("abc"), 7));
     tester.addEqualityGroup(location(modulePath("abc"), 11), location(modulePath("abc"), 11));
     tester.addEqualityGroup(location(modulePath("def"), 11), location(modulePath("def"), 11));
@@ -53,6 +55,12 @@ public class LocationTest {
 
   @Test
   public void command_line_code_location_to_string() {
+    assertThat(commandLineLocation().toString())
+        .isEqualTo("command line");
+  }
+
+  @Test
+  public void unknown_code_location_to_string() {
     Location location = unknownLocation();
     assertThat(location.toString())
         .isEqualTo("unknown location");
