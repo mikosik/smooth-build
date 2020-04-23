@@ -4,7 +4,6 @@ import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothPaths.smoothPaths;
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.util.Paths.changeExtension;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class Version {
   }
 
   public Integer run() {
-    Path slibJarPath = changeExtension(smoothPaths().slibModule().fullPath(), "jar");
+    Path slibJarPath = smoothPaths().slibModule().nativeJarPath();
     console.println(unlines(
         "smooth build version " + SmoothConstants.VERSION,
         "",

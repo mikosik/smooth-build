@@ -26,6 +26,13 @@ public class ModulePathTest {
   }
 
   @Test
+  void native_jar_path() {
+    ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
+    assertThat((Object) modulePath.nativeJarPath())
+        .isEqualTo(Paths.get("full/path.jar"));
+  }
+
+  @Test
   public void file_code_location_to_string() {
     ModulePath location = new ModulePath(USER, Paths.get("abc"), "shortPath");
     assertThat(location.toString())

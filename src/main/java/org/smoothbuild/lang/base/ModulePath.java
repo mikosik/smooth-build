@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base;
 
+import static org.smoothbuild.util.Paths.changeExtension;
+
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -27,6 +29,10 @@ public class ModulePath {
 
   public String shortPath() {
     return shortPath;
+  }
+
+  public Path nativeJarPath() {
+    return changeExtension(fullPath, "jar");
   }
 
   @Override
