@@ -2,6 +2,7 @@ package org.smoothbuild.cli;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothPaths.smoothPaths;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.util.Paths.changeExtension;
 import static org.smoothbuild.util.Strings.unlines;
@@ -12,7 +13,6 @@ import java.nio.file.Path;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothConstants;
-import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.SandboxHashProvider;
@@ -26,21 +26,21 @@ public class Version {
   }
 
   public Integer run() {
+    Path slibJarPath = changeExtension(smoothPaths().slibModule().fullPath(), "jar");
     console.println(unlines(
         "smooth build version " + SmoothConstants.VERSION,
         "",
         padded("sandbox", SandboxHashProvider.get()),
         padded("  smooth.jar", SandboxHashProvider.smoothJarHash()),
         padded("  java platform", SandboxHashProvider.javaPlatformHash()),
-        padded("funcs.jar", funcsJarHash(SmoothPaths.smoothPaths()))
+        padded("slib.jar", jarHash(slibJarPath))
     ));
     return EXIT_CODE_SUCCESS;
   }
 
-  private String funcsJarHash(SmoothPaths smoothPaths) {
+  private String jarHash(Path jar) {
     try {
-      Path path = smoothPaths.funcsModule().fullPath();
-      return jarFile(changeExtension(path, "jar")).hash().toString();
+      return jarFile(jar).hash().toString();
     } catch (IOException e) {
       return "IO error when reading file";
     }
