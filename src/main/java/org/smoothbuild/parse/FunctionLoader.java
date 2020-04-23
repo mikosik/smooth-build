@@ -15,9 +15,7 @@ import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
@@ -120,13 +118,8 @@ public class FunctionLoader {
       }
 
       private Expression createStringLiteral(StringNode string) {
-        ObjectFactory objectFactory = runtime.objectFactory();
-        SObject object = objectFactory.string(string.get(String.class));
-        return new LiteralExpression(object, emptyMessageArray(objectFactory), string.location());
-      }
-
-      private Array emptyMessageArray(ObjectFactory objectFactory) {
-        return objectFactory.arrayBuilder(objectFactory.messageType()).build();
+        SObject object = runtime.objectFactory().string(string.get(String.class));
+        return new LiteralExpression(object, string.location());
       }
 
       private Expression createArray(ArrayNode array) {
