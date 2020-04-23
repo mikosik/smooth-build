@@ -38,7 +38,7 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(List<Function> functions) {
-    reporter.newSection("Saving artifact(s)");
+    reporter.startNewPhase("Saving artifact(s)");
     ImmutableList<BuildTask> tasks = functions.stream()
         .map(f -> f.createAgrlessCallExpression(commandLineLocation()).createTask(null))
         .collect(toImmutableList());

@@ -28,7 +28,7 @@ public class RuntimeController {
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
-    reporter.newSection("Parsing");
+    reporter.startNewPhase("Parsing");
 
     for (ModulePath module : List.of(paths.funcsModule(), paths.userModule())) {
       try (LoggerImpl logger = new LoggerImpl(module.shortPath(), reporter)) {

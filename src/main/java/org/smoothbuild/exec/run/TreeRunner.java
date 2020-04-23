@@ -21,7 +21,7 @@ public class TreeRunner {
   }
 
   public void execute(SRuntime runtime, List<String> names) {
-    reporter.newSection("Generating tree");
+    reporter.startNewPhase("Generating tree");
     List<Function> functionsToRun = validateFunctionArguments(reporter, runtime, names);
     if (!reporter.isProblemReported()) {
       functionsToRun.forEach(f -> print(treeOf(f)));
