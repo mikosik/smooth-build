@@ -7,6 +7,7 @@ import static org.smoothbuild.lang.base.Space.USER;
 import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.ModulePath;
 
 import com.google.common.testing.EqualsTester;
 

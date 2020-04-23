@@ -9,10 +9,10 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.ModulePath;
 import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
