@@ -3,6 +3,9 @@ package org.smoothbuild.lang.base;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * This class is immutable.
+ */
 public class ModulePath {
   private final Space space;
   private final Path fullPath;
