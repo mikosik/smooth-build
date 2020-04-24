@@ -1,5 +1,7 @@
 package org.smoothbuild.cli.console;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.cli.console.Level.ERROR;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.cli.console.Log.info;
@@ -22,5 +24,11 @@ public class LogTest {
         .addEqualityGroup(info("message"), info("message"))
         .addEqualityGroup(info("message2"), info("message2"))
         .testEquals();
+  }
+
+  @Test
+  void to_string() {
+    assertThat(new Log(ERROR, "my message").toString())
+        .isEqualTo("Log{ERROR, 'my message'}");
   }
 }

@@ -68,4 +68,9 @@ public final class Log {
   public int hashCode() {
     return Objects.hash(level, message);
   }
+
+  @Override
+  public String toString() {
+    return "Log{" + level + ", '" + message + "'}";
+  }
 }
