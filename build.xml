@@ -15,7 +15,7 @@
     <property name="dir.src.script" location="${dir.src}/script"/>
     <property name="dir.build" location="build"/>
     <property name="dir.build.java" location="${dir.build}/java"/>
-    <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr"/>
+    <property name="dir.build.java.parser" location="${dir.build.java}/org/smoothbuild/antlr/lang"/>
     <property name="dir.build.class" location="${dir.build}/class"/>
     <property name="dir.build.class.main.java" location="${dir.build.class}/main/java"/>
     <property name="dir.build.class.main.test" location="${dir.build.class}/main/test"/>
@@ -77,7 +77,7 @@
     <target name="generate-java-grammar" depends="init">
         <java classname="org.antlr.v4.Tool" fork="true" dir="src/main/antlr" failonerror="true">
             <arg line="-o ${dir.build.java.parser}"/>
-            <arg line="-package org.smoothbuild.antlr"/>
+            <arg line="-package org.smoothbuild.antlr.lang"/>
             <arg line="-visitor"/>
             <arg line="Smooth.g4"/>
             <classpath>
