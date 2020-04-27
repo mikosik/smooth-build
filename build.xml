@@ -75,7 +75,7 @@
     </target>
 
     <target name="generate-java-grammar" depends="init">
-        <java classname="org.antlr.v4.Tool" fork="true" failonerror="true">
+        <java classname="org.antlr.v4.Tool" fork="true" dir="src/main/antlr" failonerror="true">
             <arg line="-o ${dir.build.java.parser}"/>
             <arg line="-package org.smoothbuild.antlr"/>
             <arg line="-visitor"/>
