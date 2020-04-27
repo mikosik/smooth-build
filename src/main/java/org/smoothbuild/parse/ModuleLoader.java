@@ -9,7 +9,7 @@ import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 
 import java.util.List;
 
-import org.smoothbuild.antlr.SmoothParser.ModuleContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.ModulePath;
