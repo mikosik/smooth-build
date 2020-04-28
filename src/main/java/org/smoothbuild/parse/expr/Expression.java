@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.exec.task.base.BuildTask;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 
@@ -27,7 +27,7 @@ public abstract class Expression {
     this.location = checkNotNull(location);
   }
 
-  public List<BuildTask> childrenTasks(Scope<BuildTask> scope) {
+  public List<Task> childrenTasks(Scope<Task> scope) {
     return map(children, ch -> ch.createTask(scope));
   }
 
@@ -35,5 +35,5 @@ public abstract class Expression {
     return location;
   }
 
-  public abstract BuildTask createTask(Scope<BuildTask> scope);
+  public abstract Task createTask(Scope<Task> scope);
 }

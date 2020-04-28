@@ -6,11 +6,11 @@ import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.ConcreteType;
 
-public abstract class ComputableTask extends BuildTask {
+public abstract class ComputableTask extends Task {
   public final Algorithm algorithm;
   public final boolean cacheable;
 
-  public ComputableTask(Algorithm algorithm, List<? extends BuildTask> dependencies, Location location,
+  public ComputableTask(Algorithm algorithm, List<? extends Task> dependencies, Location location,
       boolean cacheable) {
     super(dependencies, location);
     this.algorithm = algorithm;

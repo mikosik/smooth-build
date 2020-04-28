@@ -1,27 +1,24 @@
 package org.smoothbuild.parse;
 
-import static com.google.common.base.Strings.repeat;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.lang.Math.max;
 import static java.lang.String.join;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.parse.ParseError.parseError;
+import static org.smoothbuild.util.Antlr.errorLine;
+import static org.smoothbuild.util.Antlr.markingLine;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.BitSet;
-import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.IntStream;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -85,32 +82,6 @@ public class ScriptParser {
           errorLine(recognizer, lineNumber),
           markingLine((Token) offendingSymbol, charNumber));
       logger.log(parseError(location, text));
-    }
-
-    private static String markingLine(Token offendingSymbol, int charNumber) {
-      String spaces = repeat(" ", charNumber);
-      if (offendingSymbol == null) {
-        return spaces + "^";
-      } else {
-        int start = offendingSymbol.getStartIndex();
-        int stop = offendingSymbol.getStopIndex();
-        return spaces + repeat("^", max(1, stop - start + 1));
-      }
-    }
-
-    private static String errorLine(Recognizer<?, ?> recognizer, int lineNumber) {
-      List<String> lines = extractSourceCode(recognizer).lines().collect(toImmutableList());
-      return lines.get(lineNumber - 1);
-    }
-
-    private static String extractSourceCode(Recognizer<?, ?> recognizer) {
-      IntStream inputStream = recognizer.getInputStream();
-      if (inputStream instanceof CharStream) {
-        return inputStream.toString();
-      } else {
-        CommonTokenStream tokens = (CommonTokenStream) inputStream;
-        return tokens.getTokenSource().getInputStream().toString();
-      }
     }
 
     private Location createLocation(Object offendingSymbol, int line) {

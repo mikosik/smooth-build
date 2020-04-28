@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
@@ -47,6 +47,6 @@ public class ConstructorCallAlgorithm implements Algorithm {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_NATIVE_CALL;
+    return CALL;
   }
 }

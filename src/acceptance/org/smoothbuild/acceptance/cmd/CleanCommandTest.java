@@ -5,9 +5,11 @@ import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 
 import java.io.File;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class CleanCommandTest extends AcceptanceTestCase {
   @Test
   public void clean_command_deletes_smooth_dir() throws Exception {
@@ -31,8 +33,16 @@ public class CleanCommandTest extends AcceptanceTestCase {
         "Unmatched arguments from index 1: 'some', 'arguments'",
         "",
         "Usage:",
-        "smooth clean",
+        "smooth clean [-l=<level>]",
         "Try 'smooth help clean' for more information.",
         "");
+  }
+
+  @Nested
+  class LogLevelOption extends LogLevelOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("clean", option);
+    }
   }
 }

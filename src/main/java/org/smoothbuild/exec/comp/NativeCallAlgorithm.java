@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -69,7 +69,7 @@ public class NativeCallAlgorithm implements Algorithm {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_NATIVE_CALL;
+    return CALL;
   }
 
   private Output nullOutput(NativeApi nativeApi) {

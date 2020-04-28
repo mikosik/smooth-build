@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
@@ -24,11 +24,11 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.Output;
-import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.NormalTask;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
@@ -50,7 +50,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   @Test
   public void tasks_are_executed() throws Exception {
-    BuildTask task = concat(
+    Task task = concat(
         concat(
             task(valueAlgorithm("A")),
             task(valueAlgorithm("B"))),
@@ -66,7 +66,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   public void tasks_are_executed_in_parallel() throws Exception {
     AtomicInteger counterA = new AtomicInteger(10);
     AtomicInteger counterB = new AtomicInteger(20);
-    BuildTask task = concat(
+    Task task = concat(
         task(sleepyWriteReadAlgorithm(Hash.of(102), counterB, counterA)),
         task(sleepyWriteReadAlgorithm(Hash.of(101), counterA, counterB)));
 
@@ -79,7 +79,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       throws Exception {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
     AtomicInteger counter = new AtomicInteger();
-    BuildTask task = concat(
+    Task task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
@@ -94,7 +94,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       throws Exception {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
     AtomicInteger counter = new AtomicInteger();
-    BuildTask task = concat(
+    Task task = concat(
         task(sleepGetIncrementAlgorithm(counter)),
         task(sleepGetIncrementAlgorithm(counter)),
         task(getIncrementAlgorithm(counter)));
@@ -108,11 +108,12 @@ public class ParallelTaskExecutorTest extends TestingContext {
     Reporter reporter = mock(Reporter.class);
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), new ExecutionReporter(reporter), 4);
     ArithmeticException exception = new ArithmeticException();
-    BuildTask task = task(throwingAlgorithm(exception));
+    Task task = task(throwingAlgorithm(exception));
 
     assertThat(parallelTaskExecutor.executeAll(list(task)).get(task))
         .isNull();
     verify(reporter).report(
+        eq(task),
         eq("runtimeException                                         unknown location"),
         eq(List.of(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
@@ -127,7 +128,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       }
     };
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
-    BuildTask task = task(valueAlgorithm("A"));
+    Task task = task(valueAlgorithm("A"));
 
     SObject sObject = parallelTaskExecutor.executeAll(list(task)).get(task);
 
@@ -135,7 +136,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     assertThat(sObject).isNull();
   }
 
-  private BuildTask concat(BuildTask... dependencies) {
+  private Task concat(Task... dependencies) {
     return task(concatAlgorithm(), list(dependencies));
   }
 
@@ -203,20 +204,20 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private SObject executeSingleTask(BuildTask task) throws InterruptedException {
+  private SObject executeSingleTask(Task task) throws InterruptedException {
     return executeSingleTask(parallelTaskExecutor, task);
   }
 
-  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, BuildTask task)
+  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
 
-  private BuildTask task(Algorithm algorithm) {
+  private Task task(Algorithm algorithm) {
     return task(algorithm, ImmutableList.of());
   }
 
-  private static BuildTask task(Algorithm algorithm, List<BuildTask> dependencies) {
+  private static Task task(Algorithm algorithm, List<Task> dependencies) {
     return new NormalTask(algorithm, dependencies, unknownLocation(), true);
   }
 
@@ -248,7 +249,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     @Override
     public TaskKind kind() {
-      return BUILDING_NATIVE_CALL;
+      return CALL;
     }
 
     @Override

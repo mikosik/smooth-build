@@ -71,4 +71,12 @@ public class TreeCommandTest extends AcceptanceTestCase {
       return "Generating tree";
     }
   }
+
+  @Nested
+  class LogLevelOption extends LogLevelOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("tree", option, "result");
+    }
+  }
 }

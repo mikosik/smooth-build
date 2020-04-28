@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.exec.task.base.Computer.computationHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
 
@@ -168,7 +168,7 @@ public class ComputationHashTest extends TestingContext {
 
       @Override
       public TaskKind kind() {
-        return BUILDING_NATIVE_CALL;
+        return CALL;
       }
     };
   }

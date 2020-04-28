@@ -31,4 +31,12 @@ public class ListCommandTest extends AcceptanceTestCase {
       return new String[] { ListCommand.NAME };
     }
   }
+
+  @Nested
+  class LogLevelOption extends LogLevelOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("list", option, "result");
+    }
+  }
 }

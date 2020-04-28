@@ -82,4 +82,3 @@ public class LoggerImplTest {
         .report(HEADER, List.of(fatal, error, warning, info));
   }
 }
-

@@ -11,9 +11,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.smoothbuild.exec.comp.Input;
-import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computer;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
@@ -40,7 +40,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<BuildTask, SObject> executeAll(List<BuildTask> tasks) throws InterruptedException {
+  public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(tasks);
   }
@@ -58,7 +58,11 @@ public class ParallelTaskExecutor {
       this.reporter = reporter;
     }
 
-    public Map<BuildTask, SObject> executeAll(List<BuildTask> tasks) throws InterruptedException {
+    public ExecutionReporter reporter() {
+      return reporter;
+    }
+
+    public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
       List<Feeder<SObject>> results = tasks.stream()
           .map(t -> t.startComputation(this))
           .collect(toList());
@@ -68,10 +72,10 @@ public class ParallelTaskExecutor {
       return toMap(tasks, results);
     }
 
-    private static HashMap<BuildTask, SObject> toMap(List<BuildTask> tasks, List<Feeder<SObject>> results) {
-      HashMap<BuildTask, SObject> result = new HashMap<>();
+    private static HashMap<Task, SObject> toMap(List<Task> tasks, List<Feeder<SObject>> results) {
+      HashMap<Task, SObject> result = new HashMap<>();
       Iterator<Feeder<SObject>> it = results.iterator();
-      for (BuildTask task : tasks) {
+      for (Task task : tasks) {
         result.put(task, it.next().value());
       }
       return result;

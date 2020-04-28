@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.exec.task.base.BuildTask;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.base.SObject;
@@ -25,6 +25,8 @@ import org.smoothbuild.lang.object.base.SObject;
 import com.google.common.collect.ImmutableList;
 
 public class ArtifactBuilder {
+  private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
+
   private final ParallelTaskExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
   private final Reporter reporter;
@@ -38,25 +40,26 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(List<Function> functions) {
-    reporter.startNewPhase("Saving artifact(s)");
-    ImmutableList<BuildTask> tasks = functions.stream()
+    ImmutableList<Task> tasks = functions.stream()
         .map(f -> f.createAgrlessCallExpression(commandLineLocation()).createTask(null))
         .collect(toImmutableList());
     try {
-      Map<BuildTask, SObject> artifacts = parallelExecutor.executeAll(tasks);
+      Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
       if (!artifacts.containsValue(null)) {
-        List<Entry<BuildTask, SObject>> sortedArtifacts = artifacts.entrySet()
+        reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
+        List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
             .stream()
             .sorted(comparing(e -> e.getKey().name()))
             .collect(toList());
         sortedArtifacts.forEach(this::save);
       }
     } catch (InterruptedException e) {
+      reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
       reporter.printlnRaw("Build process has been interrupted.");
     }
   }
 
-  private void save(Entry<BuildTask, SObject> artifact) {
+  private void save(Entry<Task, SObject> artifact) {
     save(artifact.getKey().name(), artifact.getValue());
   }
 
