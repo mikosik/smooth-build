@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.task.base;
 
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_LITERAL;
+import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
@@ -26,6 +26,6 @@ public class FixedTask extends NonComputableTask {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_LITERAL;
+    return LITERAL;
   }
 }

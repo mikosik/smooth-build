@@ -21,7 +21,7 @@ import picocli.CommandLine.HelpCommand;
     },
     synopsisSubcommandLabel = "COMMAND" // to avoid default [COMMAND] because COMMAND is mandatory
 )
-public class SmoothCommand extends StandardOptions implements Runnable  {
+public class SmoothCommand extends FormattedHeadings implements Runnable  {
   @Override
   public void run() {
     new CommandLine(this).usage(System.out);

@@ -2,7 +2,7 @@ package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_NATIVE_CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
@@ -46,6 +46,6 @@ public class AccessorCallAlgorithm implements Algorithm {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_NATIVE_CALL;
+    return CALL;
   }
 }

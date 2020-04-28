@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_LITERAL;
+import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
@@ -29,7 +29,7 @@ public class ArrayLiteralAlgorithm implements Algorithm {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_LITERAL;
+    return LITERAL;
   }
 
   @Override

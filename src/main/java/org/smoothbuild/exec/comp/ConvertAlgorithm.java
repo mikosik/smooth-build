@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.BUILDING_CONVERSION;
+import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
@@ -34,7 +34,7 @@ public class ConvertAlgorithm implements Algorithm {
 
   @Override
   public TaskKind kind() {
-    return BUILDING_CONVERSION;
+    return CONVERSION;
   }
 
   @Override

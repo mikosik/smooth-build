@@ -12,6 +12,8 @@ Version 0.19.0 (????.??.??)
  * changed generic type names from one small letter to one large letter
  * changed default constructor name to be equal to struct name with lowercased first letter
  * renamed 'file' function to 'aFile' in platform API
+ * added --log-level option to most commands
+ * added --show-tasks option to build command
 
 Version 0.18.0 (2019.03.22)
 ---------------------------

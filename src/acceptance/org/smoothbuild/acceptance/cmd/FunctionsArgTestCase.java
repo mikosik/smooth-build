@@ -12,10 +12,6 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
     thenFinishedWithError();
     thenSysErrContains(
         "Missing required parameter: <function>",
-        "",
-        "Usage:",
-        "smooth " + commandName() + " <function>...",
-        "Try 'smooth help " + commandName() + "' for more information.",
         "");
   }
 

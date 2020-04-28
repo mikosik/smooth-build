@@ -10,7 +10,11 @@ import com.google.inject.Injector;
 
 public class CommandHelper {
   public static Integer runCommand(Function<Injector, Integer> invoker) {
-    Injector injector = createInjector(new MainModule());
+    return runCommand(new ReportModule(), invoker);
+  }
+
+  public static Integer runCommand(ReportModule reportModule, Function<Injector, Integer> invoker) {
+    Injector injector = createInjector(new MainModule(), reportModule);
     return invoker.apply(injector);
   }
 }

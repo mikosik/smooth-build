@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ArrayLiteralAlgorithm;
-import org.smoothbuild.exec.task.base.BuildTask;
 import org.smoothbuild.exec.task.base.NormalTask;
+import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.type.ArrayType;
@@ -25,20 +25,20 @@ public class ArrayLiteralExpression extends Expression {
   }
 
   @Override
-  public BuildTask createTask(Scope<BuildTask> scope) {
-    List<BuildTask> elements = childrenTasks(scope);
+  public Task createTask(Scope<Task> scope) {
+    List<Task> elements = childrenTasks(scope);
     ConcreteArrayType actualType = arrayType(elements);
 
     Algorithm algorithm = new ArrayLiteralAlgorithm(actualType);
-    List<BuildTask> convertedElements = convertedElements(actualType.elemType(), elements);
+    List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(algorithm, convertedElements, location(), true);
   }
 
-  private static List<BuildTask> convertedElements(ConcreteType type, List<BuildTask> elements) {
+  private static List<Task> convertedElements(ConcreteType type, List<Task> elements) {
     return map(elements, t -> t.convertIfNeeded(type));
   }
 
-  private ConcreteArrayType arrayType(List<BuildTask> elements) {
+  private ConcreteArrayType arrayType(List<Task> elements) {
     return (ConcreteArrayType) elements
         .stream()
         .map(t -> (Type) t.type())

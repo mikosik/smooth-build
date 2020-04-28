@@ -1,11 +1,16 @@
 package org.smoothbuild.cli;
 
 import static org.smoothbuild.cli.CommandHelper.runCommand;
+import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+
 import picocli.CommandLine.Command;
+import picocli.CommandLine.ITypeConverter;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 @Command(
@@ -15,6 +20,52 @@ import picocli.CommandLine.Parameters;
 public class BuildCommand extends StandardOptions implements Callable<Integer> {
   public static final String NAME = "build";
 
+  @Option(
+      names = {"--show-tasks", "-s"},
+      defaultValue = "default",
+      paramLabel = "<filter>",
+      converter = ShowTasksConverter.class,
+      description = {
+          "Show executed build tasks that match filter.",
+          "",
+          "Filter is a boolean expression built using built-in matchers (listed below), " +
+              "boolean operators '&', '|', brackets '(', ')'.",
+          "Default value is '(user&call)|info'",
+          "",
+          "For each matched tasks its name and properties are printed together with logs that " +
+              "match filter specified with --log-level option. " +
+              "Note that you can filter tasks by one log level and its logs by other level. " +
+              "For example setting '--show-tasks=error --log-level=warning' prints tasks that " +
+              "have at least one error log and for each such task all logs with at least " +
+              "warning level.",
+          "",
+          "Available task matchers:",
+          "  all              - all tasks",
+          "  default          - shortcut for '(user&call)|info'",
+          "  none             - no tasks",
+          "",
+          "  f, fatal         - contains a log with fatal level",
+          "  e, error         - contains a log with at least error level",
+          "  w, warning       - contains a log with at least warning level",
+          "  i, info          - contains any log",
+          "",
+          "  u, user          - evaluates expression from user module",
+          "  s, slib          - evaluates expression from smooth standard library module",
+          "",
+          "  c, call          - evaluates function call",
+          "  conv, conversion - evaluates automatic conversion",
+          "  l, literal       - evaluates compile time literal"
+      }
+  )
+  TaskMatcher showTasks;
+
+  public static class ShowTasksConverter implements ITypeConverter<TaskMatcher> {
+    @Override
+    public TaskMatcher convert(String value) {
+      return createMatcher(value);
+    }
+  }
+
   @Parameters(
       paramLabel = "<function>",
       arity = "1..*",
@@ -23,6 +74,7 @@ public class BuildCommand extends StandardOptions implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(Build.class).run(functions));
+    ReportModule reportModule = new ReportModule(showTasks, logLevel);
+    return runCommand(reportModule, injector -> injector.getInstance(Build.class).run(functions));
   }
 }

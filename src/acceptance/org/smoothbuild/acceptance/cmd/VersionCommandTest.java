@@ -2,10 +2,12 @@ package org.smoothbuild.acceptance.cmd;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class VersionCommandTest extends AcceptanceTestCase {
   @Test
   public void version_command_prints_tool_version() {
@@ -24,5 +26,13 @@ public class VersionCommandTest extends AcceptanceTestCase {
     assertThat(sysOut()).containsMatch("  java platform *" + hexNumberPattern);
     assertThat(sysOut()).containsMatch("slib.jar *" + hexNumberPattern);
     thenSysOutContains("smooth build version " + SmoothConstants.VERSION + "\n");
+  }
+
+  @Nested
+  class LogLevelOption extends LogLevelOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("version", option);
+    }
   }
 }

@@ -70,4 +70,20 @@ public class BuildCommandTest extends AcceptanceTestCase {
       return "Building";
     }
   }
+
+  @Nested
+  class LogLevelOption extends LogLevelOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("build", option, "result");
+    }
+  }
+
+  @Nested
+  class ShowTasksOption extends ShowTasksOptionTestCase {
+    @Override
+    protected void whenSmoothCommandWithOption(String option) {
+      whenSmooth("build", option, "result");
+    }
+  }
 }
