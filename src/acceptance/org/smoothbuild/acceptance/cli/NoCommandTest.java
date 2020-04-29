@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.cmd;
+package org.smoothbuild.acceptance.cli;
 
 import static com.google.common.truth.Truth.assertThat;
 
