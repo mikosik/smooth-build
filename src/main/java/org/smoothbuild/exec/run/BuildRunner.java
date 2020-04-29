@@ -3,8 +3,8 @@ package org.smoothbuild.exec.run;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.exec.run.ArgumentValidator.validateFunctionNames;
-import static org.smoothbuild.exec.run.ValidateFunctionArguments.validateFunctionArguments;
+import static org.smoothbuild.exec.run.FindFunctions.findFunctions;
+import static org.smoothbuild.exec.run.ValidateFunctionNames.validateFunctionNames;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -17,7 +17,6 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.run.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.RuntimeController;
 
@@ -67,10 +66,8 @@ public class BuildRunner {
 
     public void execute(SRuntime runtime, List<String> names) {
       reporter.startNewPhase("Building");
-      List<Function> functionsToRun = validateFunctionArguments(reporter, runtime, names);
-      if (!reporter.isProblemReported()) {
-        artifactBuilder.buildArtifacts(functionsToRun);
-      }
+      findFunctions(reporter, runtime, names)
+          .ifPresent(artifactBuilder::buildArtifacts);
     }
   }
 }

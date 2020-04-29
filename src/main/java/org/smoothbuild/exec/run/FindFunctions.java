@@ -4,6 +4,7 @@ import static org.smoothbuild.cli.console.Log.error;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
@@ -11,8 +12,8 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 
-public class ValidateFunctionArguments {
-  public static List<Function> validateFunctionArguments(Reporter reporter, SRuntime runtime,
+public class FindFunctions {
+  public static Optional<List<Function>> findFunctions(Reporter reporter, SRuntime runtime,
       List<String> names) {
     Functions functions = runtime.functions();
     List<Function> functionsToRun = new ArrayList<>();
@@ -32,6 +33,10 @@ public class ValidateFunctionArguments {
       }
     }
     reporter.report("Validating arguments", logs);
-    return functionsToRun;
+    if (logs.isEmpty()) {
+      return Optional.of(functionsToRun);
+    } else {
+      return Optional.empty();
+    }
   }
 }

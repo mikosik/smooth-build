@@ -9,7 +9,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
 
-public class ArgumentValidator {
+public class ValidateFunctionNames {
   public static List<String> validateFunctionNames(List<String> args) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     args.forEach(duplicatesDetector::addValue);
