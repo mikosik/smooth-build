@@ -4,7 +4,7 @@ import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.FunctionLoader.loadFunction;
 import static org.smoothbuild.parse.InferTypesAndParamAssignment.inferTypesAndParamAssignment;
-import static org.smoothbuild.parse.ScriptParser.parseScript;
+import static org.smoothbuild.parse.ModuleParser.parseModule;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return;
     }
-    ModuleContext moduleContext = parseScript(modulePath, logger);
+    ModuleContext moduleContext = parseModule(modulePath, logger);
     if (logger.hasProblems()) {
       return;
     }
