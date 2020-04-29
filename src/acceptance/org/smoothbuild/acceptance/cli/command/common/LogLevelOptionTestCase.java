@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.cmd;
+package org.smoothbuild.acceptance.cli.command.common;
 
 import static org.smoothbuild.util.Strings.unlines;
 

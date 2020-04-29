@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.cmd;
+package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
@@ -9,6 +9,10 @@ import java.io.File;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
+import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
+import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.acceptance.cli.command.common.ShowTasksOptionTestCase;
 import org.smoothbuild.acceptance.testing.TempFilePath;
 import org.smoothbuild.cli.BuildCommand;
 

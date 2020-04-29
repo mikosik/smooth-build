@@ -1,10 +1,13 @@
-package org.smoothbuild.acceptance.cmd;
+package org.smoothbuild.acceptance.cli.command;
 
 import static org.smoothbuild.util.Strings.unlines;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
+import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
+import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.cli.TreeCommand;
 
 @SuppressWarnings("ClassCanBeStatic")

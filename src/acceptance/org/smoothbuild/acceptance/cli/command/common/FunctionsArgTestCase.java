@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.cmd;
+package org.smoothbuild.acceptance.cli.command.common;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
