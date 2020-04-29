@@ -5,6 +5,8 @@ import static org.smoothbuild.cli.CommandHelper.runCommand;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.exec.run.TreeRunner;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -23,6 +25,6 @@ public class TreeCommand extends StandardOptions implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(Tree.class).run(functions));
+    return runCommand(injector -> injector.getInstance(TreeRunner.class).run(functions));
   }
 }

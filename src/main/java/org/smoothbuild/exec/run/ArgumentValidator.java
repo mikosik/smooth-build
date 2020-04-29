@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.exec.run;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.base.Name.isLegalName;

@@ -4,6 +4,8 @@ import static org.smoothbuild.cli.CommandHelper.runCommand;
 
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.exec.run.VersionRunner;
+
 import picocli.CommandLine.Command;
 
 @Command(
@@ -15,6 +17,6 @@ public class VersionCommand extends StandardOptions implements Callable<Integer>
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(Version.class).run());
+    return runCommand(injector -> injector.getInstance(VersionRunner.class).run());
   }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+import org.smoothbuild.exec.run.BuildRunner;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;
@@ -75,6 +76,6 @@ public class BuildCommand extends StandardOptions implements Callable<Integer> {
   @Override
   public Integer call() {
     ReportModule reportModule = new ReportModule(showTasks, logLevel);
-    return runCommand(reportModule, injector -> injector.getInstance(Build.class).run(functions));
+    return runCommand(reportModule, injector -> injector.getInstance(BuildRunner.class).run(functions));
   }
 }
