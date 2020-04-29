@@ -33,7 +33,7 @@ public class Console {
   Console(PrintStream printStream) {
     this.printStream = printStream;
   }
-  public void errors(java.util.List<?> errors) {
+  public void errors(List<?> errors) {
     errors.forEach(this::error);
   }
 
