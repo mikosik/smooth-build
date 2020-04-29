@@ -8,5 +8,5 @@
  - __concrete type__ - Type that is not generic.
  - __default value__ - Value assigned to function parameter upon its declaration. Function can be called without specifying such parameter in which case default value will be assigned to it.
  - __shadowing__ - Making some function inaccessible inside other function body by declaring latter with a parameter that has name equal to former function name.
- - __standard library__ - Set of builtin functions provided by default by smooth installation.
+ - __standard library__ - modules with types and functions provided by default by smooth installation.
  - __struct type__ - Type that is constructed by combining other types which are called its fields.
