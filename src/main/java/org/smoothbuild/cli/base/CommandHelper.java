@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.base;
 
 import static com.google.inject.Guice.createInjector;
 

@@ -40,11 +40,11 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.cli.BuildCommand;
-import org.smoothbuild.cli.CleanCommand;
-import org.smoothbuild.cli.ListCommand;
-import org.smoothbuild.cli.TreeCommand;
-import org.smoothbuild.cli.VersionCommand;
+import org.smoothbuild.cli.command.BuildCommand;
+import org.smoothbuild.cli.command.CleanCommand;
+import org.smoothbuild.cli.command.ListCommand;
+import org.smoothbuild.cli.command.TreeCommand;
+import org.smoothbuild.cli.command.VersionCommand;
 import org.smoothbuild.util.DataReader;
 
 import com.google.common.collect.ImmutableList;

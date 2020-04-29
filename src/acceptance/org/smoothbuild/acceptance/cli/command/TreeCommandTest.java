@@ -8,7 +8,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.cli.TreeCommand;
+import org.smoothbuild.cli.command.TreeCommand;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class TreeCommandTest extends AcceptanceTestCase {

@@ -1,4 +1,6 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.command;
+
+import org.smoothbuild.cli.base.FormattedHeadings;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;

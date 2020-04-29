@@ -14,7 +14,7 @@ import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ShowTasksOptionTestCase;
 import org.smoothbuild.acceptance.testing.TempFilePath;
-import org.smoothbuild.cli.BuildCommand;
+import org.smoothbuild.cli.command.BuildCommand;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class BuildCommandTest extends AcceptanceTestCase {

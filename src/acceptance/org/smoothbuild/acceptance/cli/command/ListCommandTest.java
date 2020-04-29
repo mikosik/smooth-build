@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.cli.ListCommand;
+import org.smoothbuild.cli.command.ListCommand;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class ListCommandTest extends AcceptanceTestCase {
