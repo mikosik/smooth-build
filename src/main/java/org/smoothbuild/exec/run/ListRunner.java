@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.exec.run;
 
 import javax.inject.Inject;
 
@@ -7,13 +7,13 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.parse.RuntimeController;
 
-public class List {
+public class ListRunner {
   private final SmoothPaths paths;
   private final Console console;
   private final RuntimeController runtimeController;
 
   @Inject
-  public List(SmoothPaths paths, Console console, RuntimeController runtimeController) {
+  public ListRunner(SmoothPaths paths, Console console, RuntimeController runtimeController) {
     this.paths = paths;
     this.console = console;
     this.runtimeController = runtimeController;

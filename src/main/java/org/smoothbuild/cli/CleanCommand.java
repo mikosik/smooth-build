@@ -4,6 +4,8 @@ import static org.smoothbuild.cli.CommandHelper.runCommand;
 
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.exec.run.CleanRunner;
+
 import picocli.CommandLine.Command;
 
 @Command(
@@ -15,6 +17,6 @@ public class CleanCommand extends StandardOptions implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(Clean.class).run());
+    return runCommand(injector -> injector.getInstance(CleanRunner.class).run());
   }
 }

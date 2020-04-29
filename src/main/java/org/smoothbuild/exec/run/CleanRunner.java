@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.exec.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
@@ -11,12 +11,12 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.io.fs.base.FileSystem;
 
-public class Clean {
+public class CleanRunner {
   private final FileSystem fileSystem;
   private final Console console;
 
   @Inject
-  public Clean(FileSystem fileSystem, Console console) {
+  public CleanRunner(FileSystem fileSystem, Console console) {
     this.fileSystem = fileSystem;
     this.console = console;
   }

@@ -4,6 +4,8 @@ import static org.smoothbuild.cli.CommandHelper.runCommand;
 
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.exec.run.ListRunner;
+
 import picocli.CommandLine.Command;
 
 @Command(
@@ -15,6 +17,6 @@ public class ListCommand extends StandardOptions implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(List.class).run());
+    return runCommand(injector -> injector.getInstance(ListRunner.class).run());
   }
 }

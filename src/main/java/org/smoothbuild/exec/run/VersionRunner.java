@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.exec.run;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
@@ -16,11 +16,11 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.SandboxHashProvider;
 
-public class Version {
+public class VersionRunner {
   private final Console console;
 
   @Inject
-  public Version(Console console) {
+  public VersionRunner(Console console) {
     this.console = console;
   }
 
