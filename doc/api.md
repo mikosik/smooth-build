@@ -7,11 +7,11 @@ Core smooth functions
  * [equal](api/equal.md) Returns `true` when arguments are equal.
  * [false](api/false.md) Returns `false` value of type Bool
  * [File](api/File.md) Creates File from path and content.
- * [files](api/files.md) Reads set of files from project filesystem.
+ * [files](api/files.md) Reads files from project filesystem.
  * [filter](api/filter.md) Filters files according to glob pattern.
  * [if](api/if.md) Returns one of two values depending on bool condition.
- * [jar](api/jar.md) Jars (compresses) set of files.
- * [javac](api/javac.md) Compiles set of java files.
+ * [jar](api/jar.md) Jars (compresses) files.
+ * [javac](api/javac.md) Compiles java files.
  * [junit](api/junit.md) Runs junit tests.
  * [not](api/not.md) Returns negation of its argument.
  * [or](api/or.md) Returns `true` if any argument is `true`.
@@ -20,4 +20,4 @@ Core smooth functions
  * [true](api/true.md) Returns `true` value of type Bool
  * [unjar](api/unjar.md) Unjars (uncompresses) files from given jar file.
  * [unzip](api/unzip.md) Unzips files from zip file.
- * [zip](api/zip.md) Zips (compresses) set of files.
+ * [zip](api/zip.md) Zips (compresses) files.
