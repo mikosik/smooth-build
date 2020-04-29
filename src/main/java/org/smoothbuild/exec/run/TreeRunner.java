@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.exec.run.ArgumentValidator.validateFunctionNames;
-import static org.smoothbuild.exec.run.ValidateFunctionArguments.validateFunctionArguments;
+import static org.smoothbuild.exec.run.FindFunctions.findFunctions;
+import static org.smoothbuild.exec.run.ValidateFunctionNames.validateFunctionNames;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
 import java.util.List;
@@ -48,10 +48,8 @@ public class TreeRunner {
 
     public void execute(SRuntime runtime, List<String> names) {
       reporter.startNewPhase("Generating tree");
-      List<Function> functionsToRun = validateFunctionArguments(reporter, runtime, names);
-      if (!reporter.isProblemReported()) {
-        functionsToRun.forEach(f -> print(treeOf(f)));
-      }
+      findFunctions(reporter, runtime, names)
+          .ifPresent(functions -> functions.forEach(f -> print(treeOf(f))));
     }
 
     private Task treeOf(Function function) {
