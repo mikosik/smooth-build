@@ -34,8 +34,8 @@ import org.smoothbuild.lang.base.ModulePath;
 
 import okio.BufferedSource;
 
-public class ScriptParser {
-  public static ModuleContext parseScript(ModulePath path, Logger logger) {
+public class ModuleParser {
+  public static ModuleContext parseModule(ModulePath path, Logger logger) {
     CharStream charStream;
     try {
       charStream = charStream(path.fullPath());
