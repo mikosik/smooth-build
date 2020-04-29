@@ -1,11 +1,13 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.CommandHelper.runCommand;
+import static org.smoothbuild.cli.base.CommandHelper.runCommand;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.cli.base.LoggingCommand;
+import org.smoothbuild.cli.base.ReportModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.exec.run.BuildRunner;
 
@@ -18,7 +20,7 @@ import picocli.CommandLine.Parameters;
     name = BuildCommand.NAME,
     description = "Build artifact(s) by running specified function(s)"
 )
-public class BuildCommand extends StandardOptions implements Callable<Integer> {
+public class BuildCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "build";
 
   @Option(

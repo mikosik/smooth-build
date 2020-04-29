@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.base;
 
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
@@ -6,7 +6,7 @@ import org.smoothbuild.cli.taskmatcher.TaskMatchers;
 
 import com.google.inject.AbstractModule;
 
-class ReportModule extends AbstractModule {
+public class ReportModule extends AbstractModule {
   private final TaskMatcher taskMatcher;
   private final Level logLevel;
 

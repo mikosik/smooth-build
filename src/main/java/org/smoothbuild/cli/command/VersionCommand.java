@@ -1,9 +1,10 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.CommandHelper.runCommand;
+import static org.smoothbuild.cli.base.CommandHelper.runCommand;
 
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.cli.base.LoggingCommand;
 import org.smoothbuild.exec.run.VersionRunner;
 
 import picocli.CommandLine.Command;
@@ -12,7 +13,7 @@ import picocli.CommandLine.Command;
     name = VersionCommand.NAME,
     description = "Print version information and exit"
 )
-public class VersionCommand extends StandardOptions implements Callable<Integer> {
+public class VersionCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "version";
 
   @Override

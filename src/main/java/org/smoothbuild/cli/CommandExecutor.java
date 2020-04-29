@@ -2,6 +2,8 @@ package org.smoothbuild.cli;
 
 import java.io.PrintWriter;
 
+import org.smoothbuild.cli.command.SmoothCommand;
+
 import picocli.CommandLine;
 import picocli.CommandLine.IParameterExceptionHandler;
 import picocli.CommandLine.Model.CommandSpec;

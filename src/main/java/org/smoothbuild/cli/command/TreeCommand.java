@@ -1,10 +1,11 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.CommandHelper.runCommand;
+import static org.smoothbuild.cli.base.CommandHelper.runCommand;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.cli.base.LoggingCommand;
 import org.smoothbuild.exec.run.TreeRunner;
 
 import picocli.CommandLine.Command;
@@ -14,7 +15,7 @@ import picocli.CommandLine.Parameters;
     name = TreeCommand.NAME,
     description = "Print execution tree for specified function(s)"
 )
-public class TreeCommand extends StandardOptions implements Callable<Integer> {
+public class TreeCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "tree";
 
   @Parameters(

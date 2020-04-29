@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.base;
 
 import picocli.CommandLine.Command;
 

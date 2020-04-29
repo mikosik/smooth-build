@@ -1,4 +1,4 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.base;
 
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.LogLevelConverter;
@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command
-public class StandardOptions extends FormattedHeadings {
+public class LoggingCommand extends FormattedHeadings {
   @Option(
       names = { "--log-level", "-l" },
       defaultValue = "info",
@@ -22,5 +22,5 @@ public class StandardOptions extends FormattedHeadings {
           "  w, warning - show FATAL, ERROR, WARNING logs\n" +
           "  i, info    - show FATAL, ERROR, WARNING, INFO logs\n"
   )
-  Level logLevel;
+  public Level logLevel;
 }

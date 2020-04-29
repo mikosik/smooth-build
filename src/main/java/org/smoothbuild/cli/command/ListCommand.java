@@ -1,9 +1,10 @@
-package org.smoothbuild.cli;
+package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.CommandHelper.runCommand;
+import static org.smoothbuild.cli.base.CommandHelper.runCommand;
 
 import java.util.concurrent.Callable;
 
+import org.smoothbuild.cli.base.LoggingCommand;
 import org.smoothbuild.exec.run.ListRunner;
 
 import picocli.CommandLine.Command;
@@ -12,7 +13,7 @@ import picocli.CommandLine.Command;
     name = ListCommand.NAME,
     description = "Print arg-less user defined functions"
 )
-public class ListCommand extends StandardOptions implements Callable<Integer> {
+public class ListCommand extends LoggingCommand implements Callable<Integer> {
   public static final String NAME = "list";
 
   @Override
