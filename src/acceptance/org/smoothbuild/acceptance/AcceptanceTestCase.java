@@ -204,21 +204,28 @@ public abstract class AcceptanceTestCase {
   public void thenSysOutContains(String... lines) {
     String text = unlines(lines);
     if (!sysOut.contains(text)) {
-      failWithFullOutputs(text, "SysOut");
+      failWithFullOutputs(text, "SysOut doesn't contain expected substring");
+    }
+  }
+
+  public void thenSysOutDoesNotContain(String... lines) {
+    String text = unlines(lines);
+    if (sysOut.contains(text)) {
+      failWithFullOutputs(text, "SysOut contains forbidden substring");
     }
   }
 
   public void thenSysErrContains(String... lines) {
     String text = unlines(lines);
     if (!sysErr.contains(text)) {
-      failWithFullOutputs(text, "SysErr");
+      failWithFullOutputs(text, "SysErr doesn't contain expected substring");
     }
   }
 
-  private void failWithFullOutputs(String text, String streamName) {
+  private void failWithFullOutputs(String text, String message) {
     // We use isEqualTo() instead of contains() so generated failure text will contain
     // as much data as possible and intellij is able to display it via visual diff.
-    assertWithMessage(streamName + " doesn't contain expected substring")
+    assertWithMessage(message)
         .that(unlines(
             "================= SYS-OUT ====================",
             sysOut,
