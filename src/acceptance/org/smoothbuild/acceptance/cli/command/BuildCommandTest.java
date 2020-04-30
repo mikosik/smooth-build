@@ -3,8 +3,10 @@ package org.smoothbuild.acceptance.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,7 +14,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.acceptance.cli.command.common.ShowTasksOptionTestCase;
 import org.smoothbuild.acceptance.testing.TempFilePath;
 import org.smoothbuild.cli.command.BuildCommand;
 
@@ -84,10 +85,42 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class ShowTasksOption extends ShowTasksOptionTestCase {
-    @Override
-    protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("build", option, "result");
+  class show_tasks_option extends AcceptanceTestCase {
+    @Test
+    public void illegal_value_causes_error() throws IOException {
+      givenScript("result = 'abc';");
+      whenSmooth("build", "--show-tasks=ILLEGAL", "result");
+      thenFinishedWithError();
+      thenSysErrContains(unlines(
+          "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
+          "",
+          "Usage:"
+      ));
+    }
+
+    @Nested
+    class literal_matcher extends AcceptanceTestCase {
+      @Test
+      public void shows_literals_when_enabled() throws IOException {
+        givenScript("result = 'myLiteral';");
+        whenSmooth("build", "--show-tasks=literal", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains(quotesX2(unlines(
+            "'myLiteral'                                                build.smooth:1",
+            ""
+        )));
+      }
+
+      @Test
+      public void hides_literals_when_not_enabled() throws IOException {
+        givenScript("result = 'myLiteral';");
+        whenSmooth("build", "--show-tasks=none", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain(quotesX2(unlines(
+            "'myLiteral'                                                build.smooth:1",
+            ""
+        )));
+      }
     }
   }
 }
