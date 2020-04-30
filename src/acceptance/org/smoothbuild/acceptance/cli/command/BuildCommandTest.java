@@ -14,6 +14,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.acceptance.testing.ReportInfo;
+import org.smoothbuild.acceptance.testing.ReportWarning;
 import org.smoothbuild.acceptance.testing.TempFilePath;
 import org.smoothbuild.cli.command.BuildCommand;
 
@@ -179,6 +182,153 @@ public class BuildCommandTest extends AcceptanceTestCase {
         whenSmooth("build", "--show-tasks=none", "result");
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(CONVERSION_TASK_HEADER);
+      }
+    }
+  }
+
+  @Nested
+  class when_log_level_option {
+    @Nested
+    class is_fatal extends AcceptanceTestCase {
+      @Test
+      public void then_error_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportError.class);
+        givenScript(
+            "  Nothing reportError(String message);         ",
+            "  result = reportError('my-error-message');    ");
+        whenSmooth("build", "--log-level=fatal", "result");
+        thenFinishedWithError();
+        thenSysOutDoesNotContain("my-error-message");
+      }
+
+      @Test
+      public void then_warning_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportWarning.class);
+        givenScript(
+            "  String reportWarning(String message);            ",
+            "  result = reportWarning('my-warning-message');    ");
+        whenSmooth("build", "--log-level=fatal", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain("WARNING: my-warning-message");
+      }
+
+      @Test
+      public void then_info_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportInfo.class);
+        givenScript(
+            "  String reportInfo(String message);         ",
+            "  result = reportInfo('my-info-message');    ");
+        whenSmooth("build", "--log-level=fatal", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain("INFO: my-info-message");
+      }
+    }
+
+    @Nested
+    class is_error extends AcceptanceTestCase {
+      @Test
+      public void then_error_log_is_shown() throws IOException {
+        givenNativeJar(ReportError.class);
+        givenScript(
+            "  Nothing reportError(String message);         ",
+            "  result = reportError('my-error-message');    ");
+        whenSmooth("build", "--log-level=error", "result");
+        thenFinishedWithError();
+        thenSysOutContains("ERROR: my-error-message");
+      }
+
+      @Test
+      public void then_warning_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportWarning.class);
+        givenScript(
+            "  String reportWarning(String message);            ",
+            "  result = reportWarning('my-warning-message');    ");
+        whenSmooth("build", "--log-level=error", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain("my-warning-message");
+      }
+
+      @Test
+      public void then_info_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportInfo.class);
+        givenScript(
+            "  String reportInfo(String message);         ",
+            "  result = reportInfo('my-info-message');    ");
+        whenSmooth("build", "--log-level=error", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain("my-info-message");
+      }
+    }
+
+    @Nested
+    class is_warning extends AcceptanceTestCase {
+      @Test
+      public void then_error_log_is_shown() throws IOException {
+        givenNativeJar(ReportError.class);
+        givenScript(
+            "  Nothing reportError(String message);         ",
+            "  result = reportError('my-error-message');    ");
+        whenSmooth("build", "--log-level=warning", "result");
+        thenFinishedWithError();
+        thenSysOutContains("ERROR: my-error-message");
+      }
+
+      @Test
+      public void then_warning_log_is_shown() throws IOException {
+        givenNativeJar(ReportWarning.class);
+        givenScript(
+            "  String reportWarning(String message);            ",
+            "  result = reportWarning('my-warning-message');    ");
+        whenSmooth("build", "--log-level=warning", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains("WARNING: my-warning-message");
+      }
+
+      @Test
+      public void then_info_log_is_not_shown() throws IOException {
+        givenNativeJar(ReportInfo.class);
+        givenScript(
+            "  String reportInfo(String message);         ",
+            "  result = reportInfo('my-info-message');    ");
+        whenSmooth("build", "--log-level=warning", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain("my-info-message");
+      }
+    }
+
+    @Nested
+    class is_info extends AcceptanceTestCase {
+      @Test
+      public void then_error_log_is_shown() throws IOException {
+        givenNativeJar(ReportError.class);
+        givenScript(
+            "  Nothing reportError(String message);         ",
+            "  result = reportError('my-error-message');    ");
+        whenSmooth("build", "--log-level=info", "result");
+        thenFinishedWithError();
+        thenSysOutContains("ERROR: my-error-message");
+      }
+
+      @Test
+      public void then_warning_log_is_shown() throws IOException {
+        givenNativeJar(ReportWarning.class);
+        givenScript(
+            "  String reportWarning(String message);            ",
+            "  result = reportWarning('my-warning-message');    ");
+        whenSmooth("build", "--log-level=info", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains("WARNING: my-warning-message");
+      }
+
+      @Test
+      public void then_info_log_is_shown() throws IOException {
+        givenNativeJar(ReportInfo.class);
+        givenScript(
+            "  String reportInfo(String message);         ",
+            "  result = reportInfo('my-info-message');    ");
+        whenSmooth("build", "--log-level=info", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains("INFO: my-info-message");
       }
     }
   }
