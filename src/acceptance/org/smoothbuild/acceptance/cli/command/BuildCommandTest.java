@@ -100,15 +100,15 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
     @Nested
     class literal_matcher extends AcceptanceTestCase {
+      private static final String LITERAL_TASK_HEADER =
+          ("'myLiteral'                                                build.smooth:1");
+
       @Test
       public void shows_literals_when_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
         whenSmooth("build", "--show-tasks=literal", "result");
         thenFinishedWithSuccess();
-        thenSysOutContains(quotesX2(unlines(
-            "'myLiteral'                                                build.smooth:1",
-            ""
-        )));
+        thenSysOutContains(quotesX2(LITERAL_TASK_HEADER));
       }
 
       @Test
@@ -116,10 +116,69 @@ public class BuildCommandTest extends AcceptanceTestCase {
         givenScript("result = 'myLiteral';");
         whenSmooth("build", "--show-tasks=none", "result");
         thenFinishedWithSuccess();
-        thenSysOutDoesNotContain(quotesX2(unlines(
-            "'myLiteral'                                                build.smooth:1",
-            ""
-        )));
+        thenSysOutDoesNotContain(quotesX2(LITERAL_TASK_HEADER));
+      }
+    }
+
+    @Nested
+    class call_matcher extends AcceptanceTestCase {
+      private static final String CALL_TASK_HEADER =
+          "result                                                       command line";
+      private static final String NATIVE_CALL_TASK_HEADER =
+          "concatenate                                                build.smooth:1";
+
+      @Test
+      public void shows_call_when_enabled() throws IOException {
+        givenScript("result = 'myLiteral';");
+        whenSmooth("build", "--show-tasks=call", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains(CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_calls_when_not_enabled() throws IOException {
+        givenScript("result = 'myLiteral';");
+        whenSmooth("build", "--show-tasks=none", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain(CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void shows_native_call_when_enabled() throws IOException {
+        givenScript("result = concatenate(['a'], ['b']);");
+        whenSmooth("build", "--show-tasks=call", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains(NATIVE_CALL_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_native_calls_when_not_enabled() throws IOException {
+        givenScript("result = concatenate(['a'], ['b']);");
+        whenSmooth("build", "--show-tasks=none", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
+      }
+    }
+
+    @Nested
+    class conversion_matcher extends AcceptanceTestCase {
+      private static final String CONVERSION_TASK_HEADER =
+          "[String] <- [Nothing]                                      build.smooth:1";
+
+      @Test
+      public void shows_conversion_when_enabled() throws IOException {
+        givenScript("[String] result = [];");
+        whenSmooth("build", "--show-tasks=conversion", "result");
+        thenFinishedWithSuccess();
+        thenSysOutContains(CONVERSION_TASK_HEADER);
+      }
+
+      @Test
+      public void hides_conversion_when_not_enabled() throws IOException {
+        givenScript("result = 'myLiteral';");
+        whenSmooth("build", "--show-tasks=none", "result");
+        thenFinishedWithSuccess();
+        thenSysOutDoesNotContain(CONVERSION_TASK_HEADER);
       }
     }
   }
