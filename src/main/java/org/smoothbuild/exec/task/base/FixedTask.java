@@ -2,6 +2,8 @@ package org.smoothbuild.exec.task.base;
 
 import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
+import java.util.List;
+
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
@@ -19,6 +21,7 @@ public class FixedTask extends NonComputableTask {
 
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
+    worker.reporter().print(this, false, List.of());
     Feeder<SObject> result = new Feeder<>();
     result.accept(sObject);
     return result;
