@@ -1,6 +1,6 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.install;
 
-import static org.smoothbuild.SmoothPaths.smoothJarPath;
+import static org.smoothbuild.install.InstallationPaths.smoothJarPath;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -8,8 +8,8 @@ import java.util.Properties;
 
 import org.smoothbuild.db.hashed.Hash;
 
-public class SandboxHashProvider {
-  public static Hash get() {
+public class InstallationHashes {
+  public static Hash sandboxHash() {
     return Hash.of(javaPlatformHash(), smoothJarHash());
   }
 

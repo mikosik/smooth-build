@@ -2,7 +2,7 @@ package org.smoothbuild.exec.run;
 
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.SmoothPaths.smoothPaths;
+import static org.smoothbuild.install.InstallationPaths.installationPaths;
 import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -14,7 +14,7 @@ import javax.inject.Inject;
 import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.SandboxHashProvider;
+import org.smoothbuild.install.InstallationHashes;
 
 public class VersionRunner {
   private final Console console;
@@ -25,13 +25,13 @@ public class VersionRunner {
   }
 
   public Integer run() {
-    Path slibJarPath = smoothPaths().slibModule().nativeJarPath();
+    Path slibJarPath = installationPaths().slibModule().nativeJarPath();
     console.println(unlines(
         "smooth build version " + SmoothConstants.VERSION,
         "",
-        padded("sandbox", SandboxHashProvider.get()),
-        padded("  smooth.jar", SandboxHashProvider.smoothJarHash()),
-        padded("  java platform", SandboxHashProvider.javaPlatformHash()),
+        padded("sandbox", InstallationHashes.sandboxHash()),
+        padded("  smooth.jar", InstallationHashes.smoothJarHash()),
+        padded("  java platform", InstallationHashes.javaPlatformHash()),
         padded("slib.jar", jarHash(slibJarPath))
     ));
     return EXIT_CODE_SUCCESS;

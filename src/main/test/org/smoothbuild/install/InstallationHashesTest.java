@@ -1,19 +1,18 @@
-package org.smoothbuild.exec.task;
+package org.smoothbuild.install;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.exec.task.SandboxHashProvider.javaPlatformHash;
 
 import java.util.Properties;
 
 import org.junit.jupiter.api.Test;
 
-public class SandboxHashProviderTest {
+public class InstallationHashesTest {
   private Properties properties;
 
   @Test
   public void java_platforms_with_same_properties_have_same_hash() {
-    assertThat(javaPlatformHash(properties()))
-        .isEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties()))
+        .isEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -21,8 +20,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.vendor", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -30,8 +29,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.version", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -39,8 +38,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.runtime.name", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -48,8 +47,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.runtime.version", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -57,8 +56,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.vm.name", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -66,8 +65,8 @@ public class SandboxHashProviderTest {
     properties = properties();
     properties.setProperty("java.vm.version", "different");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties()));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
   }
 
   @Test
@@ -79,8 +78,8 @@ public class SandboxHashProviderTest {
     properties2.setProperty("java.vendor", "");
     properties2.setProperty("java.version", "A");
 
-    assertThat(javaPlatformHash(properties))
-        .isNotEqualTo(javaPlatformHash(properties2));
+    assertThat(InstallationHashes.javaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties2));
   }
 
   private static Properties properties() {
