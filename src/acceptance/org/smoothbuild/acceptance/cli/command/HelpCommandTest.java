@@ -32,7 +32,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
         "  help     Displays help information about the specified command",
         "  list     Print arg-less user defined functions",
         "  tree     Print execution tree for specified function(s)",
-        "  version  Print version information and exit");
+        "  version  Print version information");
   }
 
   @Test
