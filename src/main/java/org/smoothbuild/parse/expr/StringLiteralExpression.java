@@ -7,20 +7,19 @@ import org.smoothbuild.exec.task.base.FixedTask;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 
-public class LiteralExpression extends Expression {
-  private final SObject object;
+public class StringLiteralExpression extends Expression {
+  private final SString sstring;
 
-  public LiteralExpression(SObject object, Location location) {
+  public StringLiteralExpression(SString sstring, Location location) {
     super(location);
-    this.object = object;
+    this.sstring = sstring;
   }
 
   @Override
   public Task createTask(Scope<Task> scope) {
-    String name = escapedAndLimitedWithEllipsis(((SString) object).jValue(), NAME_LENGTH_LIMIT);
-    return new FixedTask(object, name, location());
+    String name = escapedAndLimitedWithEllipsis(sstring.jValue(), NAME_LENGTH_LIMIT);
+    return new FixedTask(sstring, name, location());
   }
 }
