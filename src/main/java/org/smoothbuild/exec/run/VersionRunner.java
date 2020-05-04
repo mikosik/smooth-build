@@ -11,9 +11,9 @@ import java.nio.file.Path;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.install.BuildVersion;
 import org.smoothbuild.install.InstallationHashes;
 
 public class VersionRunner {
@@ -27,7 +27,7 @@ public class VersionRunner {
   public Integer run() {
     Path slibJarPath = installationPaths().slibModule().nativeJarPath();
     console.println(unlines(
-        "smooth build version " + SmoothConstants.VERSION,
+        "smooth build version " + BuildVersion.VERSION,
         "",
         padded("sandbox", InstallationHashes.sandboxHash()),
         padded("  smooth.jar", InstallationHashes.smoothJarHash()),
