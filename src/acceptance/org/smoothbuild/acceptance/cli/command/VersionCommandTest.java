@@ -4,9 +4,9 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.install.BuildVersion;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class VersionCommandTest extends AcceptanceTestCase {
@@ -14,7 +14,7 @@ public class VersionCommandTest extends AcceptanceTestCase {
   public void version_command_prints_tool_version() {
     whenSmoothVersion();
     thenFinishedWithSuccess();
-    thenSysOutContains("smooth build version " + SmoothConstants.VERSION + "\n");
+    thenSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
   }
 
   @Test
@@ -26,7 +26,7 @@ public class VersionCommandTest extends AcceptanceTestCase {
     assertThat(sysOut()).containsMatch("  smooth.jar *" + hexNumberPattern);
     assertThat(sysOut()).containsMatch("  java platform *" + hexNumberPattern);
     assertThat(sysOut()).containsMatch("slib.jar *" + hexNumberPattern);
-    thenSysOutContains("smooth build version " + SmoothConstants.VERSION + "\n");
+    thenSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
   }
 
   @Nested
