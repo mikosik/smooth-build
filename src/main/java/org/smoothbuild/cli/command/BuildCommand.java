@@ -31,16 +31,16 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
       description = {
           "Show executed build tasks that match filter.",
           "",
-          "Filter is a boolean expression built using built-in matchers (listed below), " +
-              "boolean operators '&', '|', brackets '(', ')'.",
+          "Filter is a boolean expression made up of matchers (listed below), " +
+              "boolean operators '&', '|', grouping brackets '(', ')'.",
           "Default value is '(user&call)|info'",
           "",
           "For each matched tasks its name and properties are printed together with logs that " +
               "match filter specified with --log-level option. " +
               "Note that you can filter tasks by one log level and its logs by other level. " +
               "For example setting '--show-tasks=error --log-level=warning' prints tasks that " +
-              "have at least one error log and for each such task all logs with at least " +
-              "warning level.",
+              "have a log with at least error level and for each such a task all logs with at " +
+              "least warning level.",
           "",
           "Available task matchers:",
           "  all              - all tasks",
