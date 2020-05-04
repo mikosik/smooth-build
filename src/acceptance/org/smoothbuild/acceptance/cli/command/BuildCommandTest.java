@@ -104,7 +104,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     @Nested
     class literal_matcher extends AcceptanceTestCase {
       private static final String LITERAL_TASK_HEADER =
-          ("'myLiteral'                                                build.smooth:1");
+          "'myLiteral'                              build.smooth                 1 const";
 
       @Test
       public void shows_literals_when_enabled() throws IOException {
@@ -126,9 +126,9 @@ public class BuildCommandTest extends AcceptanceTestCase {
     @Nested
     class call_matcher extends AcceptanceTestCase {
       private static final String CALL_TASK_HEADER =
-          "result                                                       command line";
+          "result                                   command line                   group";
       private static final String NATIVE_CALL_TASK_HEADER =
-          "concatenate                                                build.smooth:1";
+          "concatenate                              build.smooth                 1";
 
       @Test
       public void shows_call_when_enabled() throws IOException {
@@ -166,7 +166,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
     @Nested
     class conversion_matcher extends AcceptanceTestCase {
       private static final String CONVERSION_TASK_HEADER =
-          "[String] <- [Nothing]                                      build.smooth:1";
+          "[String] <- [Nothing]                    build.smooth                 1";
 
       @Test
       public void shows_conversion_when_enabled() throws IOException {

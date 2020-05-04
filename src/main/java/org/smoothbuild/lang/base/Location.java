@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Strings.padEnd;
+import static com.google.common.base.Strings.padStart;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Space.UNKNOWN;
 import static org.smoothbuild.lang.base.Space.USER;
@@ -55,6 +57,17 @@ public class Location {
   @Override
   public final int hashCode() {
     return Objects.hash(modulePath, line);
+  }
+
+  public String toPaddedString() {
+    if (modulePath.space() == UNKNOWN) {
+      return padEnd("unknown location", 30, ' ');
+    } else if (modulePath.fullPath() == null) {
+      return padEnd("command line", 30, ' ');
+    } else {
+      return padEnd(modulePath.shortPath(), 25, ' ')
+          + " " + padStart(Integer.toString(line), 4, ' ');
+    }
   }
 
   @Override
