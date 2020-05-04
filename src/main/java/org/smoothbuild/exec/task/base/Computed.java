@@ -9,18 +9,18 @@ import org.smoothbuild.exec.comp.MaybeOutput;
  */
 public class Computed {
   private final MaybeOutput maybeOutput;
-  private final boolean isFromCache;
+  private final ResultSource resultSource;
 
-  public Computed(MaybeOutput mabyeOutput, boolean isFromCache) {
+  public Computed(MaybeOutput mabyeOutput, ResultSource resultSource) {
     this.maybeOutput = checkNotNull(mabyeOutput);
-    this.isFromCache = isFromCache;
+    this.resultSource = resultSource;
   }
 
   public MaybeOutput computed() {
     return maybeOutput;
   }
 
-  public boolean isFromCache() {
-    return isFromCache;
+  public ResultSource resultSource() {
+    return resultSource;
   }
 }

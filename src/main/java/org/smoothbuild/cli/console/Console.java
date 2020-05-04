@@ -16,8 +16,6 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class Console {
-  public static final int MESSAGE_GROUP_NAME_HEADER_LENGTH = 73;
-
   private static final String TASK_HEADER_PREFIX = "  ";
   private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";

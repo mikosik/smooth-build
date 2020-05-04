@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.task.base;
 
+import static org.smoothbuild.exec.task.base.ResultSource.CONST;
 import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class FixedTask extends NonComputableTask {
 
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
-    worker.reporter().print(this, false, List.of());
+    worker.reporter().print(this, CONST, List.of());
     Feeder<SObject> result = new Feeder<>();
     result.accept(sObject);
     return result;
