@@ -1,10 +1,12 @@
 package org.smoothbuild.exec.task.parallel;
 
+import static com.google.common.base.Strings.padEnd;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.exec.task.base.ResultSource.EXECUTION;
+import static org.smoothbuild.exec.task.base.Task.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.lang.object.base.Messages.level;
 import static org.smoothbuild.lang.object.base.Messages.text;
 
@@ -21,14 +23,12 @@ import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Struct;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Streams;
 
 /**
  * This class is thread-safe.
  */
 public class ExecutionReporter {
-  private static final int HEADER_LENGTH = 73;
   private final Reporter reporter;
 
   @Inject
@@ -66,9 +66,8 @@ public class ExecutionReporter {
   }
 
   private static String header(Task task, ResultSource resultSource) {
-    String location = task.location().toString();
-    int paddedLength = HEADER_LENGTH - location.length();
-    String name = Strings.padEnd(task.name(), paddedLength, ' ');
+    String name = padEnd(task.name(), NAME_LENGTH_LIMIT + 1, ' ');
+    String location = task.location().toPaddedString();
     String source = resultSource.toString();
     return name + location + (source.isEmpty() ? "" : " ") + source;
   }

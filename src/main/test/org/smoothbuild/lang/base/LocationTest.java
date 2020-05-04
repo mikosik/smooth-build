@@ -9,10 +9,12 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
+@SuppressWarnings("ClassCanBeStatic")
 public class LocationTest {
   @Test
   public void line_returns_value_passed_during_construction() {
@@ -46,24 +48,50 @@ public class LocationTest {
     tester.testEquals();
   }
 
-  @Test
-  public void file_code_location_to_string() {
-    Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
-    assertThat(location.toString())
-        .isEqualTo("shortPath:2");
+  @Nested
+  class to_string {
+    @Test
+    public void file() {
+      Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
+      assertThat(location.toString())
+          .isEqualTo("shortPath:2");
+    }
+
+    @Test
+    public void command_line() {
+      assertThat(commandLineLocation().toString())
+          .isEqualTo("command line");
+    }
+
+    @Test
+    public void unknown() {
+      Location location = unknownLocation();
+      assertThat(location.toString())
+          .isEqualTo("unknown location");
+    }
   }
 
-  @Test
-  public void command_line_code_location_to_string() {
-    assertThat(commandLineLocation().toString())
-        .isEqualTo("command line");
-  }
+  @Nested
+  class to_padded_string {
+    @Test
+    public void file() {
+      Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
+      assertThat(location.toPaddedString())
+          .isEqualTo("shortPath                    2");
+    }
 
-  @Test
-  public void unknown_code_location_to_string() {
-    Location location = unknownLocation();
-    assertThat(location.toString())
-        .isEqualTo("unknown location");
+    @Test
+    public void command_line() {
+      assertThat(commandLineLocation().toPaddedString())
+          .isEqualTo("command line                  ");
+    }
+
+    @Test
+    public void unknown() {
+      Location location = unknownLocation();
+      assertThat(location.toPaddedString())
+          .isEqualTo("unknown location              ");
+    }
   }
 
   private static ModulePath modulePath(String name) {
