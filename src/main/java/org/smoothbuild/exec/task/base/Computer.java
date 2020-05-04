@@ -1,5 +1,8 @@
 package org.smoothbuild.exec.task.base;
 
+import static org.smoothbuild.exec.task.base.ResultSource.CACHE;
+import static org.smoothbuild.exec.task.base.ResultSource.EXECUTION;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -47,7 +50,7 @@ public class Computer {
       newFeeder.addConsumer(consumer);
       if (outputDb.contains(hash)) {
         Output output = outputDb.read(hash, algorithm.type());
-        newFeeder.accept(new Computed(new MaybeOutput(output), true));
+        newFeeder.accept(new Computed(new MaybeOutput(output), CACHE));
         feeders.remove(hash);
       } else {
         MaybeOutput result = doCompute(algorithm, input);
@@ -55,7 +58,7 @@ public class Computer {
         if (cacheOnDisk) {
           outputDb.write(hash, result.output());
         }
-        newFeeder.accept(new Computed(result, false));
+        newFeeder.accept(new Computed(result, EXECUTION));
         if (cacheOnDisk) {
           feeders.remove(hash);
         }

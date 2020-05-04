@@ -4,6 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
+import static org.smoothbuild.exec.task.base.ResultSource.EXECUTION;
 import static org.smoothbuild.lang.object.base.Messages.level;
 import static org.smoothbuild.lang.object.base.Messages.text;
 
@@ -11,16 +12,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.task.base.Computed;
+import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Struct;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Streams;
 
@@ -28,6 +28,7 @@ import com.google.common.collect.Streams;
  * This class is thread-safe.
  */
 public class ExecutionReporter {
+  private static final int HEADER_LENGTH = 73;
   private final Reporter reporter;
 
   @Inject
@@ -37,42 +38,38 @@ public class ExecutionReporter {
 
   public void report(Task task, Computed computed) {
     MaybeOutput maybeOutput = computed.computed();
-    boolean fromCache = computed.isFromCache();
+    ResultSource resultSource = computed.resultSource();
     if (maybeOutput.hasOutput()) {
-      print(task, fromCache, maybeOutput.output().messages());
+      print(task, resultSource, maybeOutput.output().messages());
     } else {
       Log error = error(
           "Execution failed with:\n" + getStackTraceAsString(maybeOutput.exception()));
-      print(task, fromCache, List.of(error));
+      print(task, resultSource, List.of(error));
     }
   }
 
   public void reportComputerException(Task task, Throwable throwable) {
     Log fatal = fatal(
         "Internal smooth error, computation failed with:" + getStackTraceAsString(throwable));
-    reporter.report(task, header(task, ""), List.of(fatal));
+    reporter.report(task, header(task, EXECUTION), List.of(fatal));
   }
 
-  private void print(Task task, boolean fromCache, Array messages) {
+  private void print(Task task, ResultSource resultSource, Array messages) {
     List<Log> logs = Streams.stream(messages.asIterable(Struct.class))
         .map(m -> new Log(level(m), text(m)))
         .collect(toList());
-    print(task, fromCache, logs);
+    print(task, resultSource, logs);
   }
 
-  public void print(Task task, boolean fromCache, List<Log> logs) {
-    reporter.report(task, header(task, fromCache), logs);
+  public void print(Task task, ResultSource resultSource, List<Log> logs) {
+    reporter.report(task, header(task, resultSource), logs);
   }
 
-  @VisibleForTesting
-  static String header(Task task, boolean fromCache) {
-    return header(task, fromCache ? " CACHED" : "");
-  }
-
-  private static String header(Task task, String cacheStatus) {
-    String locationString = task.location().toString();
-    int paddedLength = Console.MESSAGE_GROUP_NAME_HEADER_LENGTH - locationString.length();
+  private static String header(Task task, ResultSource resultSource) {
+    String location = task.location().toString();
+    int paddedLength = HEADER_LENGTH - location.length();
     String name = Strings.padEnd(task.name(), paddedLength, ' ');
-    return name + locationString + cacheStatus;
+    String source = resultSource.toString();
+    return name + location + (source.isEmpty() ? "" : " ") + source;
   }
 }

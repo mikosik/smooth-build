@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.smoothbuild.exec.task.base.ResultSource.CACHE;
 
 import java.util.function.Consumer;
 
@@ -72,20 +73,20 @@ public class ResultHandlerTest {
     @Test
     public void object_is_not_forwarded_to_consumer() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), true));
+      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), CACHE));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), true));
+      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), CACHE));
       verify(executor, only()).terminate();
     }
   }
 
   private Computed maybeComputed(SObject sObject) {
-    return new Computed(new MaybeOutput(output(sObject)), true);
+    return new Computed(new MaybeOutput(output(sObject)), CACHE);
   }
 
   private static Output output(SObject sObject) {

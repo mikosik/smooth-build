@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.task.base;
 
+import static org.smoothbuild.exec.task.base.ResultSource.GROUP;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class VirtualTask extends NonComputableTask {
     Feeder<SObject> result = new Feeder<>();
     task.startComputation(worker).addConsumer(
         sObject -> {
-          worker.reporter().print(this, false, List.of());
+          worker.reporter().print(this, GROUP, List.of());
           result.accept(sObject);
         });
     return result;
