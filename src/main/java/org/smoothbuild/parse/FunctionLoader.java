@@ -15,7 +15,7 @@ import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
@@ -32,7 +32,7 @@ import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.expr.ArrayLiteralExpression;
 import org.smoothbuild.parse.expr.BoundValueExpression;
 import org.smoothbuild.parse.expr.Expression;
-import org.smoothbuild.parse.expr.LiteralExpression;
+import org.smoothbuild.parse.expr.StringLiteralExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -118,8 +118,8 @@ public class FunctionLoader {
       }
 
       private Expression createStringLiteral(StringNode string) {
-        SObject object = runtime.objectFactory().string(string.get(String.class));
-        return new LiteralExpression(object, string.location());
+        SString object = runtime.objectFactory().string(string.get(String.class));
+        return new StringLiteralExpression(object, string.location());
       }
 
       private Expression createArray(ArrayNode array) {
