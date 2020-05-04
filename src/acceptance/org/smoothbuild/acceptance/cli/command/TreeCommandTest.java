@@ -30,12 +30,12 @@ public class TreeCommandTest extends AcceptanceTestCase {
   @Test
   public void with_long_string_literal() throws Exception {
     givenScript(
-        "  result = '012345678901234567890123456789';  ");
+        "  result = '01234567890123456789012345678901234567890123456789';  ");
     whenSmoothTree("result");
     thenFinishedWithSuccess();
     thenSysOutContains(quotesX2(unlines(
         "String result",
-        "  String '012345678901234'...",
+        "  String '01234567890123456789012345678901234'...",
         "")));
   }
 

@@ -20,6 +20,8 @@ import com.google.common.collect.ImmutableList;
  * Subclasses of this class must be immutable.
  */
 public abstract class Task {
+  public static final int NAME_LENGTH_LIMIT = 40;
+
   protected final ImmutableList<Task> dependencies;
   protected final Location location;
 
