@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.builtin.file;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.SmoothPaths.USER_MODULE;
+import static org.smoothbuild.install.InstallationPaths.USER_MODULE;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;

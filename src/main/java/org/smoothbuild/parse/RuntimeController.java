@@ -9,19 +9,19 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.SmoothPaths;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
   private final SRuntime runtime;
-  private final SmoothPaths paths;
+  private final InstallationPaths paths;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(SRuntime runtime, SmoothPaths paths, Reporter reporter) {
+  public RuntimeController(SRuntime runtime, InstallationPaths paths, Reporter reporter) {
     this.runtime = runtime;
     this.paths = paths;
     this.reporter = reporter;
