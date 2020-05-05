@@ -26,6 +26,13 @@ public class ModulePathTest {
   }
 
   @Test
+  void name() {
+    ModulePath modulePath = modulePath("full/module.smooth", "shortPath");
+    assertThat(modulePath.name())
+        .isEqualTo("module");
+  }
+
+  @Test
   void smooth_path() {
     ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
     assertThat((Object) modulePath.smooth().path())

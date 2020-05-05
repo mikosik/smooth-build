@@ -5,6 +5,8 @@ import static org.smoothbuild.util.Paths.changeExtension;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import org.smoothbuild.util.Paths;
+
 /**
  * This class is immutable.
  */
@@ -19,6 +21,10 @@ public class ModulePath {
     this.nativ = new ShortablePath(
         fullPath == null ? null : changeExtension(fullPath, "jar"),
         shortPath == null ? null : changeExtension(shortPath, "jar"));
+  }
+
+  public String name() {
+    return Paths.removeExtension(smooth.path().getFileName().toString());
   }
 
   public Space space() {
@@ -47,7 +53,6 @@ public class ModulePath {
   public final int hashCode() {
     return Objects.hash(smooth, nativ);
   }
-
   @Override
   public String toString() {
     return smooth.shorted() + "(" + smooth.path() + ")";
