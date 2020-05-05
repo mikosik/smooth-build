@@ -1,19 +1,16 @@
 package org.smoothbuild.exec.run;
 
 import static com.google.common.base.Strings.padStart;
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.install.InstallationPaths.installationPaths;
-import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.install.BuildVersion;
+import org.smoothbuild.install.HashNode;
 import org.smoothbuild.install.InstallationHashes;
 
 public class VersionRunner {
@@ -25,31 +22,21 @@ public class VersionRunner {
   }
 
   public Integer run() {
-    Path slibJarPath = installationPaths().slibModule().nativ().path();
-    console.println(unlines(
-        "smooth build version " + BuildVersion.VERSION,
-        "",
-        padded("sandbox", InstallationHashes.sandboxHash()),
-        padded("  smooth.jar", InstallationHashes.smoothJarHash()),
-        padded("  java platform", InstallationHashes.javaPlatformHash()),
-        padded("slib.jar", jarHash(slibJarPath))
-    ));
-    return EXIT_CODE_SUCCESS;
-  }
-
-  private String jarHash(Path jar) {
     try {
-      return jarFile(jar).hash().toString();
+      HashNode hashNode = InstallationHashes.installationNode();
+      console.print("smooth build version " + BuildVersion.VERSION + "\n\n");
+      printHashNode("", hashNode);
+      return EXIT_CODE_SUCCESS;
     } catch (IOException e) {
-      return "IO error when reading file";
+      console.println("ERROR: IO error when calculating installation hash: " + e.getMessage());
+      return EXIT_CODE_ERROR;
     }
   }
 
-  private String padded(String name, Hash hash) {
-    return padded(name, hash.toString());
-  }
-
-  private String padded(String name, String hashValueOrError) {
-    return name + padStart(hashValueOrError, 80 - name.length(), ' ');
+  private void printHashNode(String indent, HashNode hashNode) {
+    String name = indent + hashNode.name();
+    String hash = hashNode.hash().toString();
+    console.println(name + padStart(hash, 80 - name.length(), ' '));
+    hashNode.children().forEach(ch -> printHashNode(indent + "  ", ch));
   }
 }

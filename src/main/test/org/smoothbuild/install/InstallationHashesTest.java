@@ -11,8 +11,8 @@ public class InstallationHashesTest {
 
   @Test
   public void java_platforms_with_same_properties_have_same_hash() {
-    assertThat(InstallationHashes.javaPlatformHash(properties()))
-        .isEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties()))
+        .isEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -20,8 +20,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.vendor", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -29,8 +29,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.version", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -38,8 +38,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.runtime.name", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -47,8 +47,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.runtime.version", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -56,8 +56,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.vm.name", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -65,8 +65,8 @@ public class InstallationHashesTest {
     properties = properties();
     properties.setProperty("java.vm.version", "different");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties()));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties()));
   }
 
   @Test
@@ -78,8 +78,8 @@ public class InstallationHashesTest {
     properties2.setProperty("java.vendor", "");
     properties2.setProperty("java.version", "A");
 
-    assertThat(InstallationHashes.javaPlatformHash(properties))
-        .isNotEqualTo(InstallationHashes.javaPlatformHash(properties2));
+    assertThat(InstallationHashes.calculateJavaPlatformHash(properties))
+        .isNotEqualTo(InstallationHashes.calculateJavaPlatformHash(properties2));
   }
 
   private static Properties properties() {

@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.task;
 
+import java.io.IOException;
+
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -15,7 +17,7 @@ public class TaskModule extends AbstractModule {
   @Provides
   @Singleton
   @SandboxHash
-  public Hash provideSandboxHash() {
-    return InstallationHashes.sandboxHash();
+  public Hash provideSandboxHash() throws IOException {
+    return InstallationHashes.sandboxNode().hash();
   }
 }
