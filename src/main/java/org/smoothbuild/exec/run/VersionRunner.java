@@ -25,7 +25,7 @@ public class VersionRunner {
   }
 
   public Integer run() {
-    Path slibJarPath = installationPaths().slibModule().nativeJarPath();
+    Path slibJarPath = installationPaths().slibModule().nativ().path();
     console.println(unlines(
         "smooth build version " + BuildVersion.VERSION,
         "",

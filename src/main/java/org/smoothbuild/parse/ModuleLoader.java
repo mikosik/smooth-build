@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableList;
 
 public class ModuleLoader {
   public static void loadModule(SRuntime runtime, ModulePath modulePath, LoggerImpl logger) {
-    Natives natives = findNatives(modulePath.nativeJarPath(), logger);
+    Natives natives = findNatives(modulePath.nativ().path(), logger);
     if (logger.hasProblems()) {
       return;
     }

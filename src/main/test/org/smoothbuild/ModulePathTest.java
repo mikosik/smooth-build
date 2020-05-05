@@ -26,10 +26,31 @@ public class ModulePathTest {
   }
 
   @Test
-  void native_jar_path() {
+  void smooth_path() {
     ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
-    assertThat((Object) modulePath.nativeJarPath())
+    assertThat((Object) modulePath.smooth().path())
+        .isEqualTo(Paths.get("full/path.smooth"));
+  }
+
+  @Test
+  void smooth_shorted() {
+    ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
+    assertThat((Object) modulePath.smooth().shorted())
+        .isEqualTo("shortPath");
+  }
+
+  @Test
+  void native_path() {
+    ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
+    assertThat((Object) modulePath.nativ().path())
         .isEqualTo(Paths.get("full/path.jar"));
+  }
+
+  @Test
+  void native_shorted() {
+    ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
+    assertThat((Object) modulePath.nativ().shorted())
+        .isEqualTo("shortPath.jar");
   }
 
   @Test

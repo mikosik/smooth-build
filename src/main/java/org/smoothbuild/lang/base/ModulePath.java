@@ -10,48 +10,46 @@ import java.util.Objects;
  */
 public class ModulePath {
   private final Space space;
-  private final Path fullPath;
-  private final String shortPath;
+  private final ShortablePath smooth;
+  private final ShortablePath nativ;
 
   public ModulePath(Space space, Path fullPath, String shortPath) {
     this.space = space;
-    this.fullPath = fullPath;
-    this.shortPath = shortPath;
+    this.smooth = new ShortablePath(fullPath, shortPath);
+    this.nativ = new ShortablePath(
+        fullPath == null ? null : changeExtension(fullPath, "jar"),
+        shortPath == null ? null : changeExtension(shortPath, "jar"));
   }
 
   public Space space() {
     return space;
   }
 
-  public Path fullPath() {
-    return fullPath;
+  public ShortablePath smooth() {
+    return smooth;
   }
 
-  public String shortPath() {
-    return shortPath;
-  }
-
-  public Path nativeJarPath() {
-    return changeExtension(fullPath, "jar");
+  public ShortablePath nativ() {
+    return nativ;
   }
 
   @Override
   public final boolean equals(Object object) {
     if (object instanceof ModulePath) {
       ModulePath that = (ModulePath) object;
-      return Objects.equals(this.fullPath, that.fullPath) &&
-          Objects.equals(this.shortPath, that.shortPath);
+      return Objects.equals(this.smooth, that.smooth) &&
+          Objects.equals(this.nativ, that.nativ);
     }
     return false;
   }
 
   @Override
   public final int hashCode() {
-    return Objects.hash(fullPath, shortPath);
+    return Objects.hash(smooth, nativ);
   }
 
   @Override
   public String toString() {
-    return shortPath + "(" + fullPath + ")";
+    return smooth.shorted() + "(" + smooth.path() + ")";
   }
 }

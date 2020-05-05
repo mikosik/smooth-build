@@ -31,7 +31,7 @@ public class RuntimeController {
     reporter.startNewPhase("Parsing");
 
     for (ModulePath module : List.of(paths.slibModule(), paths.userModule())) {
-      try (LoggerImpl logger = new LoggerImpl(module.shortPath(), reporter)) {
+      try (LoggerImpl logger = new LoggerImpl(module.smooth().shorted(), reporter)) {
         loadModule(runtime, module, logger);
       }
       if (reporter.isProblemReported()) {

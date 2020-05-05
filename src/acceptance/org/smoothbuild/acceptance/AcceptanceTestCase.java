@@ -186,12 +186,12 @@ public abstract class AcceptanceTestCase {
   }
 
   public void thenSysOutContainsParseError(int lineNumber, String... errorLines) {
-    errorLines[0] = USER_MODULE.fullPath() + ":" + lineNumber + ": " + errorLines[0];
+    errorLines[0] = USER_MODULE.smooth().path() + ":" + lineNumber + ": " + errorLines[0];
     thenSysOutContainsParseError(errorLines);
   }
 
   public void thenSysOutContainsParseError(String... errorLines) {
-    thenSysOutContainsError(USER_MODULE.fullPath().toString(), errorLines);
+    thenSysOutContainsError(USER_MODULE.smooth().path().toString(), errorLines);
   }
 
   public void thenSysOutContainsError(String header, String... errorLines) {
