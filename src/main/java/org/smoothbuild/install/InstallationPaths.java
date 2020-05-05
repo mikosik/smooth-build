@@ -31,12 +31,8 @@ public class InstallationPaths {
   }
 
   public List<ModulePath> slibModules() {
-    return List.of(slibModule());
-  }
-
-  public ModulePath slibModule() {
-    return new ModulePath(
-        STANDARD_LIBRARY, libDir().resolve(SLIB_MODULE_FILE), "{SL}/" + SLIB_MODULE_FILE);
+    String file = SLIB_MODULE_FILE;
+    return List.of(new ModulePath(STANDARD_LIBRARY, libDir().resolve(file), "{SL}/" + file));
   }
 
   private Path libDir() {
