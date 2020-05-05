@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.base.Space.USER;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import javax.inject.Singleton;
 
@@ -27,6 +28,10 @@ public class InstallationPaths {
 
   private InstallationPaths(Path installationDir) {
     this.installationDir = installationDir;
+  }
+
+  public List<ModulePath> slibModules() {
+    return List.of(slibModule());
   }
 
   public ModulePath slibModule() {

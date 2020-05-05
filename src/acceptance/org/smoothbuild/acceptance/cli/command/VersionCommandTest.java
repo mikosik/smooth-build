@@ -25,7 +25,8 @@ public class VersionCommandTest extends AcceptanceTestCase {
     assertThat(sysOut()).containsMatch("sandbox *" + hexNumberPattern);
     assertThat(sysOut()).containsMatch("  smooth.jar *" + hexNumberPattern);
     assertThat(sysOut()).containsMatch("  java platform *" + hexNumberPattern);
-    assertThat(sysOut()).containsMatch("slib.jar *" + hexNumberPattern);
+    assertThat(sysOut()).containsMatch("standard libraries *" + hexNumberPattern);
+    assertThat(sysOut()).containsMatch("\\{SL}/slib.smooth *" + hexNumberPattern);
     thenSysOutContains("smooth build version " + BuildVersion.VERSION + "\n");
   }
 
