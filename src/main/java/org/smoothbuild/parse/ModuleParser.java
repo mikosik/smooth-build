@@ -37,13 +37,14 @@ import okio.BufferedSource;
 public class ModuleParser {
   public static ModuleContext parseModule(ModulePath path, Logger logger) {
     CharStream charStream;
+    Path filePath = path.smooth().path();
     try {
-      charStream = charStream(path.fullPath());
+      charStream = charStream(filePath);
     } catch (NoSuchFileException e) {
-      logger.error("'" + path.fullPath() + "' doesn't exist.");
+      logger.error("'" + filePath + "' doesn't exist.");
       return null;
     } catch (IOException e) {
-      logger.error("Cannot read build script file '" + path.fullPath() + "'.");
+      logger.error("Cannot read build script file '" + filePath + "'.");
       return null;
     }
 
@@ -97,7 +98,7 @@ public class ModuleParser {
         int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
       String message = join("\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with file: " + path + ", details:",
+          "Report this as a bug together with file: " + path.smooth().path() + ", details:",
           "startIndex=" + startIndex,
           "stopiIndex=" + stopIndex,
           "exact=" + exact,

@@ -62,10 +62,10 @@ public class Location {
   public String toPaddedString() {
     if (modulePath.space() == UNKNOWN) {
       return padEnd("unknown location", 30, ' ');
-    } else if (modulePath.fullPath() == null) {
+    } else if (modulePath.smooth().path() == null) {
       return padEnd("command line", 30, ' ');
     } else {
-      return padEnd(modulePath.shortPath(), 25, ' ')
+      return padEnd(modulePath.smooth().shorted(), 25, ' ')
           + " " + padStart(Integer.toString(line), 4, ' ');
     }
   }
@@ -74,10 +74,10 @@ public class Location {
   public String toString() {
     if (modulePath.space() == UNKNOWN) {
       return "unknown location";
-    } else if (modulePath.fullPath() == null) {
+    } else if (modulePath.smooth().path() == null) {
       return "command line";
     } else {
-      return modulePath.shortPath() + ":" + line;
+      return modulePath.smooth().shorted() + ":" + line;
     }
   }
 }

@@ -82,7 +82,7 @@ public class FilesTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    String userModule = USER_MODULE.fullPath().toString();
+    String userModule = USER_MODULE.smooth().path().toString();
     assertThat(artifactDir("result"))
         .containsExactly(userModule, script, "dir/file.txt", "abc");
   }
