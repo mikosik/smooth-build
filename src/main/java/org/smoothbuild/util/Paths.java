@@ -12,7 +12,7 @@ public class Paths {
     return removeExtension(stringPath) + "." + extension;
   }
 
-  private static String removeExtension(String string) {
+  public static String removeExtension(String string) {
     int dotIndex = string.lastIndexOf('.');
     if (dotIndex == -1) {
       return string;
