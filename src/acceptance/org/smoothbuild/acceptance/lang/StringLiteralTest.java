@@ -75,6 +75,16 @@ public class StringLiteralTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void with_unicode_in_utf8() throws IOException {
+    givenScript(
+        "  result = 'abc←';  ");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertThat(artifactContent("result"))
+        .isEqualTo("abc←");
+  }
+
+  @Test
   public void with_smooth_lang_comment_character() throws IOException {
     givenScript(
         "  result = '#';  ");
