@@ -80,7 +80,7 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
     return newCase("can't assign " + sourceType + " to param with type " + targetType, () -> {
       Consumer<AcceptanceTestCase> asserter = (test) -> {
         test.thenSysOutContainsParseError(structs.length + 3,
-            "Cannot assign argument of type '" + sourceType + "' to " +
+            "In call to `innerFunction`: Cannot assign argument of type '" + sourceType + "' to " +
                 "parameter 'target' of type '" + targetType + "'.");
       };
       executeTest(targetType, sourceType, asserter, structs);

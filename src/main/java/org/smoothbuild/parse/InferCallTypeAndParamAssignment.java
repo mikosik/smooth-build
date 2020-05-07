@@ -57,21 +57,23 @@ public class InferCallTypeAndParamAssignment {
             inNamedArgsSection = true;
             ParameterInfo param = parametersMap.get(arg.name());
             if (param == null) {
-              logger.log(parseError(arg,
-                  "Function '" + call.name() + "' has no parameter '" + arg.name() + "'."));
+              logger.log(parseError(arg, inCallToPrefix(call)
+                  + "Unknown parameter '" + arg.name() + "'."));
             } else if (assignedArgs.get(param.index()) != null) {
-              logger.log(parseError(arg, "Argument '" + arg.name() + "' is already assigned."));
+              logger.log(parseError(arg,
+                  inCallToPrefix(call) + "Argument '" + arg.name() + "' is already assigned."));
             } else {
               assignedArgs.set(param.index(), arg);
             }
           } else {
             if (inNamedArgsSection) {
-              logger.log(parseError(
-                  arg, "Positional arguments must be placed before named arguments."));
+              logger.log(parseError(arg, inCallToPrefix(call)
+                  + "Positional arguments must be placed before named arguments."));
             } else if (i < parameters.size()) {
               assignedArgs.set(i, arg);
             } else {
-              logger.log(parseError(arg, "Too many positional arguments."));
+              logger.log(parseError(arg,
+                  inCallToPrefix(call) + "Too many positional arguments."));
             }
           }
         }
@@ -84,18 +86,23 @@ public class InferCallTypeAndParamAssignment {
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
             if (!param.hasDefaultValue()) {
-              logger.log(parseError(call, "Parameter " + param.q() + " must be specified."));
+              logger.log(parseError(call,
+                  inCallToPrefix(call) + "Parameter " + param.q() + " must be specified."));
             }
           } else {
             Type argType = arg.get(Type.class);
             if (!param.type().isParamAssignableFrom(argType)) {
-              logger.log(parseError(arg,
-                  "Cannot assign argument of type " + argType.q() + " to parameter '" +
-                      param.name() + "' of type " + param.type().q() + "."));
+              logger.log(parseError(arg, inCallToPrefix(call)
+                  + "Cannot assign argument of type " + argType.q() + " to parameter '"
+                  + param.name() + "' of type " + param.type().q() + "."));
             }
           }
         }
         return assignedArgs;
+      }
+
+      private String inCallToPrefix(CallNode call) {
+        return "In call to `" + call.name() + "`: ";
       }
 
       private List<? extends ParameterInfo> functionParameters() {

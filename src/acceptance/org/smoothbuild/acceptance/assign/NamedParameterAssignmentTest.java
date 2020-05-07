@@ -11,7 +11,8 @@ public class NamedParameterAssignmentTest extends AbstractAssignmentTestCase {
 
   @Override
   protected void thenAssignmentError(AcceptanceTestCase test, String type, String valueType) {
-    test.thenSysOutContainsParseError(2, "Cannot assign argument of type '" + valueType +
+    test.thenSysOutContainsParseError(2,
+        "In call to `testFunction`: Cannot assign argument of type '" + valueType +
         "' to parameter 'param' of type '" + type + "'.");
   }
 }

@@ -24,17 +24,19 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc', 'def');           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Too many positional arguments.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `myIdentity`: Too many positional arguments.\n");
   }
 
   @Test
   public void passing_less_positional_arguments_than_parameters_causes_error() throws Exception {
     givenScript(
-        "  myIdentity(String myArgument, String myArgument2) = myArgument;  ",
-        "  result = myIdentity('abc');                                      ");
+        "  returnFirst(String myArgument, String myArgument2) = myArgument;  ",
+        "  result = returnFirst('abc');                                      ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Parameter 'myArgument2' must be specified.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `returnFirst`: Parameter 'myArgument2' must be specified.\n");
   }
 
   @Test
@@ -44,7 +46,8 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity(wrongName='abc');        ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Function 'myIdentity' has no parameter 'wrongName'.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `myIdentity`: Unknown parameter 'wrongName'.\n");
   }
 
   @Test
@@ -76,7 +79,8 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = returnFirst(b='def', 'abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Positional arguments must be placed before named arguments.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `returnFirst`: Positional arguments must be placed before named arguments.\n");
   }
 
   @Test
@@ -86,7 +90,8 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity(myArgument='abc', myArgument='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Argument 'myArgument' is already assigned.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `myIdentity`: Argument 'myArgument' is already assigned.\n");
   }
 
   @Test
@@ -97,7 +102,8 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc', myArgument='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Argument 'myArgument' is already assigned.\n");
+    thenSysOutContainsParseError(2,
+        "In call to `myIdentity`: Argument 'myArgument' is already assigned.\n");
   }
 
   @Test
