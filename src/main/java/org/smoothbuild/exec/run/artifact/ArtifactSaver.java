@@ -87,6 +87,7 @@ public class ArtifactSaver {
     }
 
     if (duplicatesDetector.hasDuplicates()) {
+      fileSystem.delete(artifactPath);
       throw duplicatedPathsMessage(duplicatesDetector.getDuplicateValues());
     }
   }
