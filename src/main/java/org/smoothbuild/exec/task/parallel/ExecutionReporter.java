@@ -67,7 +67,7 @@ public class ExecutionReporter {
 
   private static String header(Task task, ResultSource resultSource) {
     String name = padEnd(task.name(), NAME_LENGTH_LIMIT + 1, ' ');
-    String location = task.location().toPaddedString();
+    String location = padEnd(task.location().toString(), 30, ' ');
     String source = resultSource.toString();
     return name + location + (source.isEmpty() ? "" : " ") + source;
   }

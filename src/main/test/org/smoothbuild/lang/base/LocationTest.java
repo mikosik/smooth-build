@@ -71,29 +71,6 @@ public class LocationTest {
     }
   }
 
-  @Nested
-  class to_padded_string {
-    @Test
-    public void file() {
-      Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
-      assertThat(location.toPaddedString())
-          .isEqualTo("shortPath                    2");
-    }
-
-    @Test
-    public void command_line() {
-      assertThat(commandLineLocation().toPaddedString())
-          .isEqualTo("command line                  ");
-    }
-
-    @Test
-    public void unknown() {
-      Location location = unknownLocation();
-      assertThat(location.toPaddedString())
-          .isEqualTo("unknown location              ");
-    }
-  }
-
   private static ModulePath modulePath(String name) {
     return new ModulePath(USER, Paths.get(name), "{SL}/" + name);
   }
