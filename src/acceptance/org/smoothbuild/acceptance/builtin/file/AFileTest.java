@@ -72,7 +72,7 @@ public class AFileTest extends AcceptanceTestCase {
         "  result = aFile('//dir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
-        .isEqualTo("abc");
+    assertThat(artifactDir("result"))
+        .containsExactly("dir/file.txt", "abc");
   }
 }

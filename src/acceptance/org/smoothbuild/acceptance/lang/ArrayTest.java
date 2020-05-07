@@ -211,9 +211,9 @@ public class ArrayTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenSysOutContains(
         "Saving artifact(s)",
-        "  result -> '.smooth/artifacts/result'",
+        "  result -> ???",
         "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
-        "       file.txt",
+        "       'file.txt'",
         "");
   }
 

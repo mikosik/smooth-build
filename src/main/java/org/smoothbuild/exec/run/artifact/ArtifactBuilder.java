@@ -19,6 +19,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.base.SObject;
 
@@ -65,31 +66,27 @@ public class ArtifactBuilder {
 
   private void save(String name, SObject sObject) {
     try {
-      artifactSaver.save(name, sObject);
-      reportArtifact(name);
+      Path path = artifactSaver.save(name, sObject);
+      reportSuccess(name, path);
     } catch (IOException e) {
-      reportArtifact(name,
+      reportFailure(name,
           "Couldn't store artifact at " + artifactPath(name) + ". Caught exception:\n"
               + getStackTraceAsString(e));
     } catch (DuplicatedPathsException e) {
-      reportArtifact(name, e.getMessage());
+      reportFailure(name, e.getMessage());
     }
   }
 
-  private void reportArtifact(String name) {
-    reportArtifact(name, List.of());
+  private void reportSuccess(String name, Path path) {
+    report(name, path.toString(), List.of());
   }
 
-  private void reportArtifact(String name, String errorMessage) {
-    reportArtifact(name, List.of(error(errorMessage)));
+  private void reportFailure(String name, String errorMessage) {
+    report(name, "???", List.of(error(errorMessage)));
   }
 
-  private void reportArtifact(String name, List<Log> logs) {
-    String header = savingMessage(name, artifactPath(name).toString());
+  private void report(String name, String pathOrError, List<Log> logs) {
+    String header = name + " -> " + pathOrError;
     reporter.report(header, logs);
-  }
-
-  private static String savingMessage(String name, String status) {
-    return name + " -> " + status;
   }
 }

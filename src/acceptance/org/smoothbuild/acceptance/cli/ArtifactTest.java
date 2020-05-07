@@ -48,20 +48,9 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = file(toBlob('abc'), 'file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactContent("result"))
-        .isEqualTo("abc");
-  }
-
-  @Test
-  public void storing_function_with_underscore_in_name_converts_last_underscore_to_dot()
-      throws Exception {
-    givenScript(
-        "  my_result_file_txt = toBlob('abc');  ");
-    whenSmoothBuild("my_result_file_txt");
-    thenFinishedWithSuccess();
-    assertThat(artifactContent("my_result_file.txt"))
-        .isEqualTo("abc");
+    thenSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
+    assertThat(artifactDir("result"))
+        .containsExactly("file.txt", "abc");
   }
 
   @Test
@@ -172,9 +161,9 @@ public class ArtifactTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenSysOutContains(
         "Saving artifact(s)",
-        "  result -> '.smooth/artifacts/result'",
+        "  result -> ???",
         "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
-        "       file.txt",
+        "       'file.txt'",
         "");
     assertThat(artifact("result").exists())
         .isFalse();

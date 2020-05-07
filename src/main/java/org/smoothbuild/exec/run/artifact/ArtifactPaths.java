@@ -14,19 +14,10 @@ public class ArtifactPaths {
   }
 
   public static Path artifactPath(String name) {
-    return artifactPath(path(toFileName(name)));
+    return artifactPath(path(name));
   }
 
   public static Path artifactPath(Path path) {
     return ARTIFACTS_PATH.append(path);
-  }
-
-  public static String toFileName(String name) {
-    int index = name.lastIndexOf('_');
-    if (index == -1) {
-      return name;
-    } else {
-      return new StringBuilder(name).replace(index, index + 1, ".").toString();
-    }
   }
 }

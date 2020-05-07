@@ -6,10 +6,10 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release_jar = files("//src") | javac | jar;
+release = files("//src") | javac | jar;
 ```
 
-This script defines `release_jar` function that does not have any parameters
+This script defines `release` function that does not have any parameters
 and performs following tasks:
 
  * Invokes `files` function that takes all files (recursively)
@@ -17,25 +17,44 @@ and performs following tasks:
  root directory of your project (directory in which given build.smooth file
  is located).
  * Passes them to `javac` function that compiles those files.
- * Passes compiled files to `jar` function that packs them into jar file.
+ * Passes compiled files to `jar` function that packs them into jar binary.
 
-You can invoke execution of `release_jar` function from command line by running:
+You can invoke evaluation of `release` function from command line by running:
 
 ```
-smooth build release_jar
+smooth build release
 ```
 
-Above command executes `release_jar` function and stores its result
-as `release.jar` file (it's the same as function name except that
-`_jar` suffix has been automatically converted to `.jar`)
-in `.smooth/artifacts` directory.
+Above command evaluates `release` function and stores its result 
+in `.smooth/artifacts/` directory as `release` file.
+That location is printed to console at the end of build process:
+
+```
+Saving artifact(s)
+  release -> '.smooth/artifacts/release'
+```
+
+If you want to choose a different name for produced artifact file than default (= function name), 
+you can do the following.
+
+```
+release = files("//src") | javac | jar | file("myApp.jar");
+```
+
+and it will produce following output during build:
+
+```
+Saving artifact(s)
+  release -> '.smooth/artifacts/release/myApp.jar'
+```
+
 If you want to try examples yourself then
 [download and install smooth](install.md)
 first.
 You can consult
 [standard library](api.md)
 for a list of all available functions.
-Currently it contains functions related to building java projects but in the future
+Currently, it contains functions related to building java projects but in the future
 it can be easily extended to support other languages.
 
 ### Parallel execution
@@ -46,31 +65,30 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-main_jar = files("//src-main") | javac | jar;
-deps_jar = files("//src-deps") | javac | jar;
+main = files("//src-main") | javac | jar;
+deps = files("//src-deps") | javac | jar;
 ```
 
-As both functions (`release_jar` and `common_jar`) do not depend on each other
-then their bodies can be executed in parallel. 
-Smooth build will deduce it itself and run them in parallel.
+As both functions (`main` and `deps`) do not depend on each other
+then their bodies are executed in parallel. 
 We do not need to do anything to make it happen.
-It is enough to ask smooth to build those jars with `smooth build release_jar common_jar`.
+It is enough to ask smooth to build those jars with `smooth build main deps`.
 
 ### Caching
 
 If you run build command twice for our initial example
 
 ```
-release_jar = files("//src") | javac | jar;
+release = files("//src") | javac | jar;
 ```
 
 you will notice that second run completes almost instantly.
-That's because output from `release_jar` function has been cached
+That's because output from `release` function has been cached
 by smooth.
 This is nothing extraordinary as most build tools reuse result
 from previous execution.
 However smooth is much smarter.
-Its cache system is much fine grained as it keeps results
+Its cache system is much fine-grained as it keeps results
 of each function call it has ever executed.
 When it has to execute given call (function plus its arguments) again
 it just takes result from cache.
@@ -82,8 +100,10 @@ When you run build second time, you will notice that javac task
 is re-executed (as content of *.java files has changed)
 but because only formatting of the file changed,
 compilation will produced exactly the same *.class files as before.
-smooth won't execute `jar` function at all as it will realize
-that it has result of such execution already in its cache.
+Smooth won't execute `jar` function at all as result of such execution
+is already in its cache.
+Console output will contain "cache" word at the end of the line
+representing `jar` function execution.
 Note that such optimization is not possible with incremental building
 as change to any file at the beginning of the build pipeline will always
 force rebuild of all tasks that depend on it.
@@ -107,7 +127,7 @@ First let's discuss all types available in smooth language.
 
 #### Basic types
 Basic types are predefined by the language (cannot be defined by user).
-Currently we have three basic types: String, Bool, Blob, Nothing.
+Currently, we have three basic types: String, Bool, Blob, Nothing.
 Others (like Int) will be added before smooth reaches version 1.0.
 
 ##### _Bool_
@@ -233,11 +253,11 @@ then empty array is assignable to any other array.
 #### Generic types
 
 Smooth allows declaring function with generic parameters. To define generic
-parameter simply use a name starting with lowercase. Below declaration of `identity`
-function that returns its only parameter.
+parameter simply use single upper case letter as its name.
+Below declaration of `identity` function that returns its only parameter.
 
 ```
-a identity(a value) = value;
+A identity(A value) = value;
 ```
 
 #### Type inference
@@ -259,10 +279,10 @@ strings = [ "dog", "cat", "donkey" ];
 
 ### Functions
 
-Let's look once again at `release_jar` function we defined at the beginning of this tutorial.
+Let's look once again at `release` function we defined at the beginning of this tutorial.
 
 ```
-release_jar = files("//src") | javac | jar;
+release = files("//src") | javac | jar;
 ```
 
 It uses function chaining (represented by pipe symbol `|`) to pass function call result as
@@ -271,19 +291,19 @@ In fact function chaining is just syntactic sugar for more standard function cal
 We can refactor above function definition to:
 
 ```
-release_jar = jar(javac(files("//src")));
+release = jar(javac(files("//src")));
 ```
 
 This version is less readable despite being more familiar to people
 coming from imperative languages.
 
-Functions declared in `build.smooth` (for example `release_jar`)
+Functions declared in `build.smooth` (for example `release`)
 can be used the same way as standard library functions (like `javac`).
 We can refactor our initial example by splitting it into two functions and adding result types:
 
 ```
 [File] classes(String sourcePath) = files(sourcePath) | javac;
-File release_jar = jar(classes("//src"));
+File release = jar(classes("//src"));
 ```
 
 This way we can build our own set of reusable functions.
@@ -291,8 +311,8 @@ For example:
 
 ```
 javaJar(String srcPath) = files(srcPath) | javac | jar;
-mainJar = javaJar("src/main");
-otherJar = javaJar("src/other"); 
+main = javaJar("src/main");
+other = javaJar("src/other"); 
 ```
 
 #### Function parameter default value
