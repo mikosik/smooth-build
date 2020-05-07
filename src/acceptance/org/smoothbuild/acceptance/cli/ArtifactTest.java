@@ -163,6 +163,8 @@ public class ArtifactTest extends AcceptanceTestCase {
         "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
         "       file.txt",
         "");
+    assertThat(artifact("result").exists())
+        .isFalse();
   }
 
   @Test
