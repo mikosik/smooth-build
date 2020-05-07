@@ -35,6 +35,8 @@ first.
 You can consult
 [standard library](api.md)
 for a list of all available functions.
+Currently it contains functions related to building java projects but in the future
+it can be easily extended to support other languages.
 
 ### Parallel execution
 
