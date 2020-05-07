@@ -88,7 +88,7 @@ force rebuild of all tasks that depend on it.
 
 Now if you revert changes you introduced to mentioned java file
 and run build once again then result will be instantaneous.
-Except `files("///src")` call which reads files from disk and its result is never cached
+Except `files("//src")` call which reads files from disk and its result is never cached
 all other functions have been executed before with arguments they receive in that run so
 instead of running them smooth will read results from cache.
 Such solution is powerful as it gives you access to any build result you have ever executed.
@@ -128,7 +128,7 @@ String welcomeString = "Hello World";
 Blob is a sequence of bytes.
 There's no literal for creating Blobs (yet).
 
-##### Nothing
+##### _Nothing_
 Nothing is a type that is convertible to any type.
 It is not possible to create value of such type.
 This sounds strange but reasons for such type are explain below when discussing array types.
