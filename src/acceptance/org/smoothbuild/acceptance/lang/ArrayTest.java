@@ -293,7 +293,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ function1(unknown1=''), function1(unknown2='') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains("Function 'function1' has no parameter 'unknown1'.");
-    thenSysOutContains("Function 'function1' has no parameter 'unknown2'.");
+    thenSysOutContains("In call to `function1`: Unknown parameter 'unknown1'.");
+    thenSysOutContains("In call to `function1`: Unknown parameter 'unknown2'.");
   }
 }
