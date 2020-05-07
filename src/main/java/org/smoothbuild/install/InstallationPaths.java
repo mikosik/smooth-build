@@ -32,7 +32,7 @@ public class InstallationPaths {
 
   public List<ModulePath> slibModules() {
     String file = SLIB_MODULE_FILE;
-    return List.of(new ModulePath(STANDARD_LIBRARY, libDir().resolve(file), "{SL}/" + file));
+    return List.of(new ModulePath(STANDARD_LIBRARY, libDir().resolve(file), "{slib}/" + file));
   }
 
   private Path libDir() {
