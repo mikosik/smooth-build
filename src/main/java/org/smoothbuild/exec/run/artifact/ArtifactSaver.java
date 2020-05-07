@@ -1,12 +1,12 @@
 package org.smoothbuild.exec.run.artifact;
 
-import static java.lang.String.join;
+import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
-import static org.smoothbuild.exec.run.artifact.ArtifactPaths.toFileName;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -35,35 +35,40 @@ public class ArtifactSaver {
     this.objectFactory = objectFactory;
   }
 
-  public void save(String name, SObject object) throws IOException, DuplicatedPathsException {
-    Path path = path(toFileName(name));
+  public Path save(String name, SObject object) throws IOException, DuplicatedPathsException {
+    Path artifactPath = artifactPath(name);
     if (object instanceof Array) {
-      saveArray(path, (Array) object);
+      return saveArray(artifactPath, (Array) object);
     } else if (object.type().equals(objectFactory.getType(TypeNames.FILE))) {
-      saveBasicObject(path, ((Struct) object).get("content"));
+      return saveFile(artifactPath, (Struct) object);
     } else {
-      saveBasicObject(path, object);
+      return saveBasicObject(artifactPath, object);
     }
   }
 
-  private void saveArray(Path path, Array array) throws IOException, DuplicatedPathsException {
+  private Path saveFile(Path artifactPath, Struct file) throws IOException, DuplicatedPathsException {
+    saveFileArray(artifactPath, List.of(file));
+    return artifactPath.append(fileObjectPath(file));
+  }
+
+  private Path saveArray(Path artifactPath, Array array) throws IOException, DuplicatedPathsException {
     ConcreteType elemType = array.type().elemType();
-    fileSystem.createDir(artifactPath(path));
+    fileSystem.createDir(artifactPath);
     if (elemType.isArray()) {
       int i = 0;
       for (Array element : array.asIterable(Array.class)) {
-        saveArray(path.append(path(Integer.toString(i))), element);
+        saveArray(artifactPath.append(path(Integer.toString(i))), element);
         i++;
       }
     } else if (elemType.equals(objectFactory.getType(TypeNames.FILE))) {
-      saveFileArray(path, array);
+      saveFileArray(artifactPath, array.asIterable(Struct.class));
     } else {
-      saveObjectArray(path, array);
+      saveObjectArray(artifactPath, array);
     }
+    return artifactPath;
   }
 
-  private void saveObjectArray(Path path, Array array) throws IOException {
-    Path artifactPath = artifactPath(path);
+  private void saveObjectArray(Path artifactPath, Array array) throws IOException {
     int i = 0;
     for (SObject object : array.asIterable(SObject.class)) {
       Path filePath = path(Integer.valueOf(i).toString());
@@ -74,13 +79,13 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path path, Array fileArray) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<Struct> files) throws IOException,
       DuplicatedPathsException {
-    DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    Path artifactPath = artifactPath(path);
-    for (Struct file : fileArray.asIterable(Struct.class)) {
-      Path sourcePath = artifactPath.append(path(((SString) file.get("path")).jValue()));
-      if (!duplicatesDetector.addValue(((SString) file.get("path")).jValue())) {
+    DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
+    for (Struct file : files) {
+      Path filePath = fileObjectPath(file);
+      Path sourcePath = artifactPath.append(filePath);
+      if (!duplicatesDetector.addValue(filePath)) {
         Path targetPath = targetPath(file.get("content"));
         fileSystem.createLink(sourcePath, targetPath);
       }
@@ -92,17 +97,24 @@ public class ArtifactSaver {
     }
   }
 
-  private DuplicatedPathsException duplicatedPathsMessage(Set<String> duplicates) {
-    String separator = "\n  ";
-    String list = separator + join(separator, duplicates);
+  private DuplicatedPathsException duplicatedPathsMessage(Set<Path> duplicates) {
+    String delimiter = "\n  ";
+    String list = duplicates.stream()
+        .map(Path::toString)
+        .collect(joining(delimiter));
     return new DuplicatedPathsException(
-        "Can't store array of Files as it contains files with duplicated paths:" + list);
+        "Can't store array of Files as it contains files with duplicated paths:"
+            + delimiter + list);
   }
 
-  private void saveBasicObject(Path path, SObject object) throws IOException {
-    Path artifactPath = artifactPath(path);
+  private Path saveBasicObject(Path artifactPath, SObject object) throws IOException {
     Path targetPath = targetPath(object);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
+    return artifactPath;
+  }
+
+  private static Path fileObjectPath(Struct file) {
+    return path(((SString) file.get("path")).jValue());
   }
 }
