@@ -15,6 +15,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = true();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(trueByteString());
   }
@@ -25,6 +26,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactContent("result"))
         .isEqualTo("abc");
   }
@@ -35,6 +37,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = toBlob('abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactContent("result"))
         .isEqualTo("abc");
   }
@@ -45,6 +48,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = file(toBlob('abc'), 'file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactContent("result"))
         .isEqualTo("abc");
   }
@@ -58,7 +62,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     thenFinishedWithSuccess();
     assertThat(artifactContent("my_result_file.txt"))
         .isEqualTo("abc");
-}
+  }
 
   @Test
   public void store_empty_array_of_bools_artifact() throws Exception {
@@ -66,6 +70,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  [Bool] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list());
   }
@@ -76,6 +81,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = [ true(), false() ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(list(trueByteString(), falseByteString()));
   }
@@ -86,6 +92,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  [String] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list());
   }
@@ -96,16 +103,18 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = [ 'abc', 'def' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list("abc", "def"));
   }
 
   @Test
-  public void store_array_of_nothings_artifact() throws Exception {
+  public void store_empty_array_of_nothings_artifact() throws Exception {
     givenScript(
         "  result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list());
   }
@@ -116,6 +125,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  [Blob] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list());
   }
@@ -126,6 +136,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = [ toBlob('abc'), toBlob('def') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list("abc", "def"));
   }
@@ -136,6 +147,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  [File] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactArray("result"))
         .isEqualTo(list());
   }
@@ -146,6 +158,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
+    thenSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactDir("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
