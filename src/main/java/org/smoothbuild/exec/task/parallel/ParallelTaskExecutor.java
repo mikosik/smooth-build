@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.task.parallel;
 
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.util.concurrent.FeedingConsumer.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.HashMap;
 import java.util.Iterator;
