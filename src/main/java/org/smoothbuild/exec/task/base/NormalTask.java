@@ -2,7 +2,7 @@ package org.smoothbuild.exec.task.base;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.exec.comp.Input.input;
-import static org.smoothbuild.util.concurrent.FeedingConsumer.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
 
