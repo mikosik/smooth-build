@@ -13,7 +13,7 @@ public class Computed {
 
   public Computed(MaybeOutput mabyeOutput, ResultSource resultSource) {
     this.maybeOutput = checkNotNull(mabyeOutput);
-    this.resultSource = resultSource;
+    this.resultSource = checkNotNull(resultSource);
   }
 
   public MaybeOutput computed() {
@@ -22,5 +22,13 @@ public class Computed {
 
   public ResultSource resultSource() {
     return resultSource;
+  }
+
+  @Override
+  public String toString() {
+    return "Computed{" +
+        "maybeOutput=" + maybeOutput +
+        ", resultSource=" + resultSource +
+        '}';
   }
 }
