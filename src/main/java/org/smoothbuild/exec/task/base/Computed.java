@@ -11,8 +11,8 @@ public class Computed {
   private final MaybeOutput maybeOutput;
   private final ResultSource resultSource;
 
-  public Computed(MaybeOutput mabyeOutput, ResultSource resultSource) {
-    this.maybeOutput = checkNotNull(mabyeOutput);
+  public Computed(MaybeOutput maybeOutput, ResultSource resultSource) {
+    this.maybeOutput = checkNotNull(maybeOutput);
     this.resultSource = checkNotNull(resultSource);
   }
 
