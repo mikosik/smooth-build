@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.util.Strings.unlines;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class FeedingConsumerTest {
-  private FeedingConsumer<String> feedingConsumer;
+  private FeedingConsumer<String> feedingConsumer = new FeedingConsumer<>();
 
   @BeforeEach
   public void before() {
@@ -85,23 +84,16 @@ public class FeedingConsumerTest {
 
   @Test
   public void accept_does_not_call_consumers_with_lock_held() {
-    AtomicReference<Boolean> hadLock = new AtomicReference<>();
-    feedingConsumer.addConsumer((value) -> {
-      hadLock.set(feedingConsumer.isCurrentThreadHoldingALock());
-    });
+    feedingConsumer.addConsumer(
+        (value) -> assertThat(feedingConsumer.isCurrentThreadHoldingALock()).isFalse());
     feedingConsumer.accept("abc");
-
-    assertThat(hadLock.get())
-        .isFalse();
   }
 
   @Test
   public void add_consumer_does_not_call_consumer_with_lock_held() {
     feedingConsumer.accept("abc");
-    feedingConsumer.addConsumer((value) -> {
-      assertThat(feedingConsumer.isCurrentThreadHoldingALock())
-          .isFalse();
-    });
+    feedingConsumer.addConsumer(
+        (value) -> assertThat(feedingConsumer.isCurrentThreadHoldingALock()).isFalse());
   }
 
   @Nested
@@ -157,14 +149,8 @@ public class FeedingConsumerTest {
     public void accept_does_not_call_consumers_with_lock_held() {
       FeedingConsumer<Integer> chained =
           (FeedingConsumer<Integer>) feedingConsumer.chain(String::length);
-      AtomicReference<Boolean> hadLock = new AtomicReference<>();
-      chained.addConsumer((value) -> {
-        hadLock.set(chained.isCurrentThreadHoldingALock());
-      });
+      chained.addConsumer((value) -> assertThat(chained.isCurrentThreadHoldingALock()).isFalse());
       feedingConsumer.accept("abc");
-
-      assertThat(hadLock.get())
-          .isFalse();
     }
 
     @Test
@@ -172,10 +158,7 @@ public class FeedingConsumerTest {
       FeedingConsumer<Integer> chained =
           (FeedingConsumer<Integer>) feedingConsumer.chain(String::length);
       feedingConsumer.accept("abc");
-      chained.addConsumer((value) -> {
-        assertThat(chained.isCurrentThreadHoldingALock())
-            .isFalse();
-      });
+      chained.addConsumer((value) -> assertThat(chained.isCurrentThreadHoldingALock()).isFalse());
     }
   }
 
