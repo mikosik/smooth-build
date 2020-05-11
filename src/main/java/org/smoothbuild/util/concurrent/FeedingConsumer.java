@@ -6,6 +6,7 @@ import static org.smoothbuild.util.Strings.unlines;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This class is thread-safe.
@@ -65,5 +66,12 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
   // visible for testing
   boolean isCurrentThreadHoldingALock() {
     return Thread.holdsLock(lock);
+  }
+
+  @Override
+  public <U> Feeder<U> chain(Function<T, U> function) {
+    FeedingConsumer<U> chained = new FeedingConsumer<>();
+    this.addConsumer(v -> chained.accept(function.apply(v)));
+    return chained;
   }
 }
