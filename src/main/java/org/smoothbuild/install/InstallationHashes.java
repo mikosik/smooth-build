@@ -49,7 +49,7 @@ public class InstallationHashes {
 
   private static HashNode standardLibsNode() throws IOException {
     List<ModulePath> modules = installationPaths().slibModules();
-    Builder<HashNode> builder = ImmutableList.builder();
+    ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
     for (ModulePath module : modules) {
       builder.add(moduleNode(module));
     }
