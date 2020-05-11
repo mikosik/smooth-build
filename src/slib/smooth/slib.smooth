@@ -38,7 +38,7 @@ A if(
   A elseValue,
 );
 
-[A] concatenate(
+[A] concat(
   [A] array1,
   [A] array2,
 );
@@ -70,7 +70,7 @@ Blob jar(
 ) = javac_(
     srcs = srcs,
     libs = libs,
-    options = concatenate(["-source", source, "-target", target], options));
+    options = concat(["-source", source, "-target", target], options));
 
 [File] javac_(
   [File] srcs,

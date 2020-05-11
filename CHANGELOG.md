@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * renamed 'concatenate' function to 'concat'
  * added parallel execution
  * removed 'javaProperty' function from standard library (aka platform API)
  * extended parser errors with source code where problematic part is marked

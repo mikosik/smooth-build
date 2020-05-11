@@ -8,11 +8,11 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class ConcatenateTest extends AcceptanceTestCase {
+public class ConcatTest extends AcceptanceTestCase {
   @Test
   public void concatenate_bool_arrays_function() throws Exception {
     givenScript(
-        "  result = concatenate([true()], [false()]);  ");
+        "  result = concat([true()], [false()]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactAsByteStrings("result"))
@@ -22,7 +22,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
   @Test
   public void concatenate_string_arrays_function() throws Exception {
     givenScript(
-        "  result = concatenate(['abc'], ['def']);  ");
+        "  result = concat(['abc'], ['def']);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactArray("result"))
@@ -32,7 +32,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
   @Test
   public void concatenate_file_arrays() throws Exception {
     givenScript(
-        "  result = concatenate(                    ",
+        "  result = concat(                    ",
         "    [ file(toBlob('abc'), 'file1.txt') ],  ",
         "    [ file(toBlob('def'), 'file2.txt') ],  ",
         "  );                                       ");
@@ -47,7 +47,7 @@ public class ConcatenateTest extends AcceptanceTestCase {
     givenFile("0", "abc");
     givenFile("1", "def");
     givenScript(
-        "  result = concatenate([ aFile('//0') ], [ aFile('//1') ]);  ");
+        "  result = concat([ aFile('//0') ], [ aFile('//1') ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactArray("result"))
