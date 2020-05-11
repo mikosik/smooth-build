@@ -4,6 +4,7 @@ import static org.smoothbuild.exec.comp.Input.input;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
@@ -12,6 +13,7 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,30 +25,31 @@ public class IfTask extends ComputableTask {
 
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
-    Feeder<SObject> ifResult = new Feeder<>();
+    FeedingConsumer<SObject> ifResult = new FeedingConsumer<>();
     Feeder<SObject> conditionResult = conditionChild().startComputation(worker);
-    conditionResult.addConsumer(
-        thenOrElseEnqueuer(worker, ifJobEnqueuer(worker, ifResult, conditionResult)));
+    Consumer<SObject> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
+    Consumer<SObject> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
+    conditionResult.addConsumer(thenOrElseEnqueuer);
     return ifResult;
   }
 
-  private Consumer<SObject> thenOrElseEnqueuer(Worker worker, Consumer<SObject> ifJobEnqueuer) {
+  private Consumer<SObject> thenOrElseEnqueuer(Worker worker, Consumer<SObject> ifEnqueuer) {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
       Task thenOrElseTask = condition ? thenChild() : elseChild();
-      thenOrElseTask.startComputation(worker).addConsumer(ifJobEnqueuer);
+      thenOrElseTask.startComputation(worker).addConsumer(ifEnqueuer);
     };
   }
 
-  private Consumer<SObject> ifJobEnqueuer(Worker worker, Feeder<SObject> ifResult,
-      Feeder<SObject> conditionResult) {
-    return thenOrElseValue -> {
-      SObject conditionValue = conditionResult.value();
+  private Consumer<SObject> ifEnqueuer(Worker worker, Consumer<SObject> ifResultConsumer,
+      Supplier<SObject> conditionResult) {
+    return thenOrElseResult -> {
+      SObject conditionValue = conditionResult.get();
 
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.
-      Input input = input(ImmutableList.of(conditionValue, thenOrElseValue, thenOrElseValue));
-      worker.enqueueComputation(this, input, ifResult);
+      Input input = input(ImmutableList.of(conditionValue, thenOrElseResult, thenOrElseResult));
+      worker.enqueueComputation(this, input, ifResultConsumer);
     };
   }
 

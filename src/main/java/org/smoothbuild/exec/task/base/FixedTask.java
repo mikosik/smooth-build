@@ -9,6 +9,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,7 +24,7 @@ public class FixedTask extends NonComputableTask {
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
     worker.reporter().print(this, CONST, List.of());
-    Feeder<SObject> result = new Feeder<>();
+    FeedingConsumer<SObject> result = new FeedingConsumer<>();
     result.accept(sObject);
     return result;
   }

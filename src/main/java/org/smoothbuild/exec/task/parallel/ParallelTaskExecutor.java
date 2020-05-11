@@ -1,12 +1,13 @@
 package org.smoothbuild.exec.task.parallel;
 
 import static java.util.stream.Collectors.toList;
-import static org.smoothbuild.util.concurrent.Feeder.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.FeedingConsumer.runWhenAllAvailable;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
@@ -76,15 +77,15 @@ public class ParallelTaskExecutor {
       HashMap<Task, SObject> result = new HashMap<>();
       Iterator<Feeder<SObject>> it = results.iterator();
       for (Task task : tasks) {
-        result.put(task, it.next().value());
+        result.put(task, it.next().get());
       }
       return result;
     }
 
-    public void enqueueComputation(ComputableTask task, Input input, Feeder<SObject> result) {
+    public void enqueueComputation(ComputableTask task, Input input, Consumer<SObject> consumer) {
       jobExecutor.enqueue(() -> {
         try {
-          ResultHandler resultHandler = new ResultHandler(task, result, reporter, jobExecutor);
+          ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);
           computer.compute(task, input, resultHandler);
         } catch (Throwable e) {
           reporter.reportComputerException(task, e);

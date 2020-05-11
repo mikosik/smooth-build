@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
-import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
+import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.object.base.SObject;
@@ -58,7 +58,7 @@ public abstract class Task {
 
   public abstract ConcreteType type();
 
-  public abstract Feeder<SObject> startComputation(ParallelTaskExecutor.Worker worker);
+  public abstract Feeder<SObject> startComputation(Worker worker);
 
   public static List<ConcreteType> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);

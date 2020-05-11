@@ -18,7 +18,7 @@ import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.SandboxHash;
-import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 /**
  * This class is thread-safe.
@@ -27,7 +27,7 @@ public class Computer {
   private final OutputDb outputDb;
   private final Hash sandboxHash;
   private final Provider<Container> containerProvider;
-  private final ConcurrentHashMap<Hash, Feeder<Computed>> feeders;
+  private final ConcurrentHashMap<Hash, FeedingConsumer<Computed>> feeders;
 
   @Inject
   public Computer(OutputDb outputDb, @SandboxHash Hash sandboxHash,
@@ -42,8 +42,8 @@ public class Computer {
       OutputDbException, IOException {
     Algorithm algorithm = task.algorithm();
     Hash hash = computationHash(algorithm, input);
-    Feeder<Computed> newFeeder = new Feeder<>();
-    Feeder<Computed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
+    FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();
+    FeedingConsumer<Computed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
       prevFeeder.addConsumer(consumer);
     } else {
