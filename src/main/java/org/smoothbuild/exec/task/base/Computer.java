@@ -45,7 +45,9 @@ public class Computer {
     FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();
     FeedingConsumer<Computed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
-      prevFeeder.addConsumer(consumer);
+      prevFeeder
+          .chain((computed) -> new Computed(computed.computed(), CACHE))
+          .addConsumer(consumer);
     } else {
       newFeeder.addConsumer(consumer);
       if (outputDb.contains(hash)) {

@@ -3,10 +3,12 @@ package org.smoothbuild.exec.task.parallel;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.joining;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
@@ -19,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatcher;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
@@ -28,6 +31,7 @@ import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.NormalTask;
+import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.SObject;
@@ -79,14 +83,33 @@ public class ParallelTaskExecutorTest extends TestingContext {
       throws Exception {
     parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 4);
     AtomicInteger counter = new AtomicInteger();
-    Task task = concat(
-        task(sleepGetIncrementAlgorithm(counter)),
-        task(sleepGetIncrementAlgorithm(counter)),
-        task(sleepGetIncrementAlgorithm(counter)),
-        task(sleepGetIncrementAlgorithm(counter)));
+    Task task1 = task(sleepGetIncrementAlgorithm(counter));
+    Task task2 = task(sleepGetIncrementAlgorithm(counter));
+    Task task3 = task(sleepGetIncrementAlgorithm(counter));
+    Task task4 = task(sleepGetIncrementAlgorithm(counter));
+    Task task = concat(task1, task2, task3, task4);
 
     assertThat(executeSingleTask(task))
         .isEqualTo(string("(0,0,0,0)"));
+
+    verify(reporter, times(1)).report(eq(task2), isCachedComputed());
+    verify(reporter, times(1)).report(eq(task3), isCachedComputed());
+    verify(reporter, times(1)).report(eq(task4), isCachedComputed());
+  }
+
+  private Computed isCachedComputed() {
+    ArgumentMatcher<Computed> matcher = new ArgumentMatcher<Computed>() {
+      @Override
+      public boolean matches(Computed computed) {
+        return computed.resultSource() == ResultSource.CACHE;
+      }
+
+      @Override
+      public String toString() {
+        return "isCachedComputed()";
+      }
+    };
+    return argThat(matcher);
   }
 
   @Test
