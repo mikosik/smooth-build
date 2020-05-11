@@ -128,7 +128,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
       private static final String CALL_TASK_HEADER =
           "result                                   command line                   group";
       private static final String NATIVE_CALL_TASK_HEADER =
-          "concatenate                              build.smooth:1";
+          "concat                                   build.smooth:1";
 
       @Test
       public void shows_call_when_enabled() throws IOException {
@@ -148,7 +148,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
       @Test
       public void shows_native_call_when_enabled() throws IOException {
-        givenScript("result = concatenate(['a'], ['b']);");
+        givenScript("result = concat(['a'], ['b']);");
         whenSmooth("build", "--show-tasks=call", "result");
         thenFinishedWithSuccess();
         thenSysOutContains(NATIVE_CALL_TASK_HEADER);
@@ -156,7 +156,7 @@ public class BuildCommandTest extends AcceptanceTestCase {
 
       @Test
       public void hides_native_calls_when_not_enabled() throws IOException {
-        givenScript("result = concatenate(['a'], ['b']);");
+        givenScript("result = concat(['a'], ['b']);");
         whenSmooth("build", "--show-tasks=none", "result");
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);

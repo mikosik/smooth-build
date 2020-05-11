@@ -15,5 +15,5 @@ Returns array of all files from 'src/common' and 'src/main' directory.
 ```
 [File] commonSource = files("//src/common");
 [File] mainSource = files("//src/main");
-[File] allSource = concatenate(commonSource, mainSource);
+[File] allSource = concat(commonSource, mainSource);
 ```
