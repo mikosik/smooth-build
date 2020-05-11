@@ -7,7 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.smoothbuild.util.Strings.unlines;
-import static org.smoothbuild.util.concurrent.Feeder.runWhenAllAvailable;
+import static org.smoothbuild.util.concurrent.FeedingConsumer.runWhenAllAvailable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -18,17 +18,17 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("ClassCanBeStatic")
-public class FeederTest {
-  private Feeder<String> feeder;
+public class FeedingConsumerTest {
+  private FeedingConsumer<String> feeder;
 
   @BeforeEach
   public void before() {
-    this.feeder = new Feeder<>();
+    this.feeder = new FeedingConsumer<>();
   }
 
   @Test
   public void initially_value_is_null() {
-    assertThat(feeder.value())
+    assertThat(feeder.get())
         .isNull();
   }
 
@@ -46,7 +46,7 @@ public class FeederTest {
   public void value_returns_instance_passed_to_consume() {
     String value = "abc";
     feeder.accept(value);
-    assertThat(feeder.value())
+    assertThat(feeder.get())
         .isSameInstanceAs(value);
   }
 
@@ -112,9 +112,9 @@ public class FeederTest {
     @Test
     void calls_runnable_when_all_children_become_available() {
       Runnable parent = mock(Runnable.class);
-      List<Feeder<String>> feeders = List.of(new Feeder<>(), new Feeder<>(), new Feeder<>());
+      List<FeedingConsumer<String>> feeders = List.of(new FeedingConsumer<>(), new FeedingConsumer<>(), new FeedingConsumer<>());
       runWhenAllAvailable(feeders, parent);
-      for (Feeder<String> child : feeders) {
+      for (FeedingConsumer<String> child : feeders) {
         child.accept("abc");
       }
 
@@ -124,8 +124,8 @@ public class FeederTest {
     @Test
     void calls_runnable_immediately_when_all_children_were_available_before_call() {
       Runnable parent = mock(Runnable.class);
-      List<Feeder<String>> feeders = List.of(new Feeder<>(), new Feeder<>(), new Feeder<>());
-      for (Feeder<String> child : feeders) {
+      List<FeedingConsumer<String>> feeders = List.of(new FeedingConsumer<>(), new FeedingConsumer<>(), new FeedingConsumer<>());
+      for (FeedingConsumer<String> child : feeders) {
         child.accept("abc");
       }
       runWhenAllAvailable(feeders, parent);
@@ -136,7 +136,7 @@ public class FeederTest {
     @Test
     void is_not_run_when_not_all_children_are_available() {
       Runnable parent = mock(Runnable.class);
-      List<Feeder<String>> feeders = List.of(new Feeder<>(), new Feeder<>(), new Feeder<>());
+      List<FeedingConsumer<String>> feeders = List.of(new FeedingConsumer<>(), new FeedingConsumer<>(), new FeedingConsumer<>());
       runWhenAllAvailable(feeders, parent);
       for (int i = 1; i < feeders.size(); i++) {
         feeders.get(i).accept("abc");

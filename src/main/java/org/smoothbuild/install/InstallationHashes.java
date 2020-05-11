@@ -13,7 +13,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.ModulePath;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class InstallationHashes {
   public static HashNode installationNode() throws IOException {

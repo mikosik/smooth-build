@@ -10,6 +10,7 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
@@ -23,7 +24,7 @@ public class VirtualTask extends NonComputableTask {
 
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
-    Feeder<SObject> result = new Feeder<>();
+    FeedingConsumer<SObject> result = new FeedingConsumer<>();
     task.startComputation(worker).addConsumer(
         sObject -> {
           worker.reporter().print(this, GROUP, List.of());
