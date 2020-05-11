@@ -108,7 +108,7 @@ public class FeederTest {
   }
 
   @Nested
-  class run_when_children_available {
+  class run_when_all_available {
     @Test
     void calls_runnable_when_all_children_become_available() {
       Runnable parent = mock(Runnable.class);
