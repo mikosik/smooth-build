@@ -15,7 +15,7 @@ public class FilterTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains(
-        "Parameter 'include' has illegal value. Pattern can't start with slash character '/'.");
+        "Parameter 'pattern' has illegal value. Pattern can't start with slash character '/'.");
   }
 
   @Test
@@ -112,7 +112,7 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void leading_double_star_with_file_matches_that_file() throws Exception {
     givenScript(
-        "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**/file.txt');  ");
+        "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactDir("result"))
@@ -154,7 +154,7 @@ public class FilterTest extends AcceptanceTestCase {
   public void leading_double_star_with_file_inside_dir_matches_such_file_inside_dir()
       throws Exception {
     givenScript(
-        "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**/dir/file.txt');  ");
+        "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**dir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactDir("result"))

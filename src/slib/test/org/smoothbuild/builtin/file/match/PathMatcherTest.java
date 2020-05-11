@@ -1,182 +1,356 @@
 package org.smoothbuild.builtin.file.match;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.builtin.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.io.fs.base.Path;
 
 public class PathMatcherTest {
-  @Test
-  public void one_part_pattern_without_wildcards() throws Exception {
-    assertPatternMatches("abc", "abc");
-
-    assertPatternDoesNotMatch("abc", "abcabc");
-    assertPatternDoesNotMatch("abc", "abbc");
-    assertPatternDoesNotMatch("abc", "abc/abc");
+  @ParameterizedTest
+  @MethodSource("data_set")
+  public void test_matching(String pattern, Path path, boolean expected) {
+    assertThat(pathMatcher(pattern).test(path))
+        .isEqualTo(expected);
   }
 
-  @Test
-  public void pattern_without_wildcards() throws Exception {
-    assertPatternMatches("abc/def/ghi", "abc/def/ghi");
+  public static Stream<Arguments> data_set() {
+    return Stream.of(
+        // without wildcards
+        arguments("abc", path("abc"), true),
+        arguments("abc", path("abcabc"), false),
+        arguments("abc", path("abbc"), false),
+        arguments("abc", path("abc/abc"), false),
 
-    assertPatternDoesNotMatch("abc/def/ghi", "abcdefghi");
-    assertPatternDoesNotMatch("abc/def/ghi", "abcdef/ghi");
-    assertPatternDoesNotMatch("abc/def/ghi", "bc/def/ghi");
-    assertPatternDoesNotMatch("abc/def/ghi", "abc/def/gh");
-    assertPatternDoesNotMatch("abc/def/ghi", "abc/ghi");
+        arguments("abc/def/ghi", path("abc/def/ghi"), true),
+        arguments("abc/def/ghi", path("abcdefghi"), false),
+        arguments("abc/def/ghi", path("abcdef/ghi"), false),
+        arguments("abc/def/ghi", path("bc/def/ghi"), false),
+        arguments("abc/def/ghi", path("abc/def/gh"), false),
+        arguments("abc/def/ghi", path("abc/ghi"), false),
+        arguments("abc/def/ghi", path("abc/def/ghi/ghi"), false),
+        arguments("abc/def/ghi", path("abc/abc/def/ghi"), false),
+        arguments("abc/def/ghi", path("abc/def/def/ghi"), false),
 
-    assertPatternDoesNotMatch("abc/def/ghi", "abc/def/ghi/ghi");
-    assertPatternDoesNotMatch("abc/def/ghi", "abc/abc/def/ghi");
+        // ?
+        arguments("?", path("a"), true),
+        arguments("?", path("b"), true),
+        arguments("?", path("ab"), false),
+        arguments("a?c", path("ac"), false),
+        arguments("a?c", path("abc"), true),
+        arguments("a?c", path("axc"), true),
+        arguments("a?c", path("a/c"), false),
+        arguments("??", path("a"), false),
+        arguments("??", path("ab"), true),
+        arguments("??", path("abc"), false),
+        arguments("??c", path("c"), false),
+        arguments("??c", path("bc"), false),
+        arguments("??c", path("abc"), true),
+        arguments("??c", path("xabc"), false),
+        arguments("a??c", path("ac"), false),
+        arguments("a??c", path("axc"), false),
+        arguments("a??c", path("axxc"), true),
+        arguments("a??c", path("axxxc"), false),
 
-    assertPatternDoesNotMatch("abc/def/ghi", "abc/def/def/ghi");
+        // [abc]
+        arguments("[a]", path("a"), true),
+        arguments("[a]", path("b"), false),
+        arguments("[a]", path("aa"), false),
+
+        arguments("[ab]", path("a"), true),
+        arguments("[ab]", path("b"), true),
+        arguments("[ab]", path("c"), false),
+        arguments("[ab]", path("ab"), false),
+        arguments("[ab]", path("aa"), false),
+        arguments("[ab]", path("bb"), false),
+        arguments("[ab][ab]", path("aa"), true),
+        arguments("[ab][ab]", path("ab"), true),
+        arguments("[ab][ab]", path("ba"), true),
+        arguments("[ab][ab]", path("bb"), true),
+
+        // [!abc]
+        arguments("[!a]", path("a"), false),
+        arguments("[!a]", path("b"), true),
+        arguments("[!a]", path("aa"), false),
+
+        arguments("[!ab]", path("a"), false),
+        arguments("[!ab]", path("b"), false),
+        arguments("[!ab]", path("c"), true),
+        arguments("[!ab]", path("ab"), false),
+        arguments("[!ab]", path("aa"), false),
+        arguments("[!ab]", path("bb"), false),
+        arguments("[!ab][!ab]", path("aa"), false),
+        arguments("[!ab][!ab]", path("ab"), false),
+        arguments("[!ab][!ab]", path("ba"), false),
+        arguments("[!ab][!ab]", path("bb"), false),
+        arguments("[!ab][!ab]", path("ac"), false),
+        arguments("[!ab][!ab]", path("ca"), false),
+        arguments("[!ab][!ab]", path("cc"), true),
+        arguments("a[!x]b", path("a/b"), false),
+
+        // [a-c]
+        arguments("[a-c]", path("a"), true),
+        arguments("[a-c]", path("b"), true),
+        arguments("[a-c]", path("c"), true),
+        arguments("[a-c]", path("d"), false),
+        arguments("[a-c]", path("aa"), false),
+        arguments("[a-c]", path("ab"), false),
+        arguments("[a-c]", path("ac"), false),
+        arguments("[a-c]", path("abc"), false),
+
+        // [!a-c]
+        arguments("[!a-c]", path("a"), false),
+        arguments("[!a-c]", path("b"), false),
+        arguments("[!a-c]", path("c"), false),
+        arguments("[!a-c]", path("d"), true),
+        arguments("[!a-c]", path("aa"), false),
+        arguments("[!a-c]", path("ab"), false),
+        arguments("[!a-c]", path("ac"), false),
+        arguments("[!a-c]", path("abc"), false),
+
+        // [a-cxyz]
+        arguments("[a-cxyz]", path("a"), true),
+        arguments("[a-cxyz]", path("b"), true),
+        arguments("[a-cxyz]", path("c"), true),
+        arguments("[a-cxyz]", path("x"), true),
+        arguments("[a-cxyz]", path("y"), true),
+        arguments("[a-cxyz]", path("z"), true),
+        arguments("[a-cxyz]", path("d"), false),
+        arguments("[a-cxyz]", path("aa"), false),
+        arguments("[a-cxyz]", path("ab"), false),
+        arguments("[a-cxyz]", path("ac"), false),
+        arguments("[a-cxyz]", path("ax"), false),
+        arguments("[a-cxyz]", path("ay"), false),
+        arguments("[a-cxyz]", path("az"), false),
+        arguments("[a-cxyz]", path("xy"), false),
+
+        // [-]
+        arguments("[-]", path("-"), true),
+        arguments("[-]", path("a"), false),
+        arguments("[-]a", path("-a"), true),
+        arguments("[-]a", path("-"), false),
+        arguments("[-]a", path("a"), false),
+        arguments("[!-]", path("-"), false),
+        arguments("[!-]", path("a"), true),
+
+        // [?], [*], [\], [!]
+        arguments("[?]", path("?"), true),
+        arguments("[?]", path("a"), false),
+        arguments("[*]", path("*"), true),
+        arguments("[*]", path("a"), false),
+        arguments("[\\]", path("\\"), true),
+        arguments("[\\]", path("a"), false),
+        arguments("[a!]", path("!"), true),
+        arguments("[a!]", path("a"), true),
+        arguments("[a!]", path("b"), false),
+
+        // {abc,def}
+        arguments("{abc}", path("abc"), true),
+        arguments("{abc}", path("a"), false),
+        arguments("{abc,def}", path("abc"), true),
+        arguments("{abc,def}", path("def"), true),
+        arguments("{abc,def}", path("a"), false),
+        arguments("{abc,def}", path("abc,def"), false),
+        arguments("{abc}xyz", path("abcxyz"), true),
+        arguments("{abc/}xyz", path("abc/xyz"), true),
+        arguments("{abc[xyz]}", path("abc"), false),
+        arguments("{abc[xyz]}", path("abcx"), true),
+
+        // *
+        arguments("*", path("abc"), true),
+        arguments("*", path("abcghi"), true),
+
+        arguments("*", path("abc/def"), false),
+        arguments("*", path("abc/def/ghi"), false),
+
+        arguments("*/abc/def", path("xxx/abc/def"), true),
+
+        arguments("abc/def/*", path("abc/def/xxx"), true),
+
+        arguments("*/abc/*", path("xxx/abc/yyy"), true),
+
+        arguments("abc/*/def", path("abc/xxx/def"), true),
+
+        arguments("*/*", path("abc/def"), true),
+
+        arguments("abc*def", path("abcdef"), true),
+        arguments("abc*def", path("abcxxxdef"), true),
+
+        arguments("abc*def*ghi", path("abcdefghi"), true),
+        arguments("abc*def*ghi", path("abcxxxdefghi"), true),
+        arguments("abc*def*ghi", path("abcdefyyyghi"), true),
+        arguments("abc*def*ghi", path("abcxxxdefyyyghi"), true),
+
+        // **
+        arguments("**", path("abc"), true),
+        arguments("**", path("abc/def"), true),
+        arguments("**", path("abc/def/ghi"), true),
+
+        arguments("**/abc", path("xxx/abc"), true),
+        arguments("**/abc", path("xxx/yyy/abc"), true),
+
+        arguments("**abc", path("abc"), true),
+
+        arguments("abc/**", path("abc/xxx"), true),
+        arguments("abc/**", path("abc/xxx/yyy"), true),
+
+        arguments("**abc**", path("abc"), true),
+        arguments("**abc**", path("xxxabc"), true),
+        arguments("**abc**", path("xxx/abc"), true),
+        arguments("**abc**", path("abcyyy"), true),
+        arguments("**abc**", path("abc/yyy"), true),
+        arguments("**abc**", path("xxxabcyyy"), true),
+        arguments("**abc**", path("xxx/abcyyy"), true),
+        arguments("**abc**", path("xxxabc/yyy"), true),
+        arguments("**abc**", path("xxx/abc/yyy"), true),
+
+        arguments("**/abc/**", path("xxx/abc/yyy"), true),
+        arguments("**/abc/**", path("xxx/zzz/abc/yyy"), true),
+
+        arguments("abc**def", path("abcdef"), true),
+        arguments("abc**def", path("abcxxxdef"), true),
+        arguments("abc**def", path("abc/def"), true),
+        arguments("abc**def", path("abc/xxx/def"), true),
+        arguments("abc**def", path("abc/xxx/yyy/def"), true),
+
+        arguments("abc/**/def", path("abc/xxx/def"), true),
+        arguments("abc/**/def", path("abc/xxx/yyy/def"), true),
+        arguments("abc/**/def", path("abc/xxx/yyy/zzz/def"), true),
+
+        arguments("abc/**/def", path("abc/abc/def"), true),
+        arguments("abc/**/def", path("abc/def/def"), true),
+        arguments("abc/**/def", path("abc/abc/def/def"), true),
+        arguments("abc/**/def", path("abc/def/abc/def"), true),
+
+
+        arguments("*/abc/def", path("abc/def"), false),
+        arguments("*/abc/def", path("xxx/yyy/abc/def"), false),
+        arguments("*/abc/def", path("abc/xxx/def"), false),
+
+        arguments("abc/def/*", path("abc/def"), false),
+        arguments("abc/def/*", path("abc/def/xxx/yyy"), false),
+        arguments("abc/def/*", path("abc/xxx/def"), false),
+
+        arguments("*/abc/*", path("abc"), false),
+        arguments("*/abc/*", path("abc/yyy"), false),
+        arguments("*/abc/*", path("xxx/abc"), false),
+
+        arguments("*/abc/*", path("xxx/zzz/abc/yyy"), false),
+        arguments("*/abc/*", path("xxx/abc/yyy/zzz"), false),
+
+        arguments("*/abc/*", path("xxx/abcabc/yyy"), false),
+        arguments("*/abc/*", path("xxx/abc/abc/yyy"), false),
+
+        arguments("abc/*/def", path("abcdef"), false),
+        arguments("abc/*/def", path("abc/def"), false),
+        arguments("abc/*/def", path("abc/xxx/yyy/def"), false),
+
+        arguments("*/*", path("abc"), false),
+        arguments("*/*", path("abc/def/ghi"), false),
+
+        arguments("abc*def", path("abc/def"), false),
+        arguments("abc*def", path("abdef"), false),
+        arguments("abc/xxx/def", path("abc/def"), false),
+
+        arguments("abc*def*ghi", path("abc/def/ghi"), false),
+        arguments("abc*def*ghi", path("abcdefgh"), false),
+
+        arguments("**/abc", path("xxx/yyyabc"), false),
+        arguments("**/abc", path("xxx/abc/xxx"), false),
+
+        arguments("abc/**", path("abc"), false),
+        arguments("abc/**", path("abcxxx/yyy"), false),
+        arguments("abc/**", path("xxx/abc/xxx"), false),
+
+        arguments("**/abc/**", path("abc/xxx"), false),
+        arguments("**/abc/**", path("xxx/abc"), false),
+        arguments("**/abc/**", path("xxx/yyy/abc"), false),
+        arguments("**/abc/**", path("abc"), false),
+
+        arguments("abc/**/def", path("abcdef"), false),
+        arguments("abc/**/def", path("abc/def"), false),
+        arguments("abc/**/def", path("abc/xxx/zzz"), false),
+        arguments("abc/**/def", path("xxx/zzz/def"), false),
+        arguments("abc/**/def", path("abc"), false),
+        arguments("abc/**/def", path("def"), false));
   }
 
-  @Test
-  public void single_star_alone() throws Exception {
-    assertPatternMatches("*", "abc");
-    assertPatternMatches("*", "abcghi");
-
-    assertPatternDoesNotMatch("*", "abc/def");
-    assertPatternDoesNotMatch("*", "abc/def/ghi");
+  @ParameterizedTest
+  @MethodSource("illegal_pattern_data_set")
+  @SuppressWarnings("ReturnValueIgnored")
+  public void illegal_pattern(String pattern) {
+    assertCall(() -> pathMatcher(pattern).test(path("abc")))
+        .throwsException(IllegalPathPatternException.class);
   }
 
-  @Test
-  public void single_star_as_whole_part_prefix() throws Exception {
-    assertPatternMatches("*/abc/def", "xxx/abc/def");
+  public static Stream<Arguments> illegal_pattern_data_set() {
+    return Stream.of(
+        // path separator cannot be inside brackets
+        arguments("a[/]b"),
+        // groups cannot be nested
+        arguments("{abc{d,f,g}}"),
 
-    assertPatternDoesNotMatch("*/abc/def", "abc/def");
-    assertPatternDoesNotMatch("*/abc/def", "xxx/yyy/abc/def");
-    assertPatternDoesNotMatch("*/abc/def", "abc/xxx/def");
-  }
+        arguments(""),
 
-  @Test
-  public void single_star_as_whole_part_suffix() throws Exception {
-    assertPatternMatches("abc/def/*", "abc/def/xxx");
+        arguments("."),
+        arguments("./"),
+        arguments("/."),
+        arguments("./."),
+        arguments("././"),
 
-    assertPatternDoesNotMatch("abc/def/*", "abc/def");
-    assertPatternDoesNotMatch("abc/def/*", "abc/def/xxx/yyy");
-    assertPatternDoesNotMatch("abc/def/*", "abc/xxx/def");
-  }
+        arguments("abc/"),
+        arguments("abc/def/"),
+        arguments("abc/def/ghi/"),
 
-  @Test
-  public void single_star_as_whole_part_prefix_and_suffix() throws Exception {
-    assertPatternMatches("*/abc/*", "xxx/abc/yyy");
+        arguments("./abc"),
+        arguments("./abc/def"),
+        arguments("./abc/def/ghi"),
+        arguments("./abc/def/ghi/ijk"),
 
-    assertPatternDoesNotMatch("*/abc/*", "abc");
-    assertPatternDoesNotMatch("*/abc/*", "abc/yyy");
-    assertPatternDoesNotMatch("*/abc/*", "xxx/abc");
+        arguments("abc/."),
+        arguments("abc/def/."),
+        arguments("abc/def/ghi/."),
+        arguments("abc/def/ghi/ijk/."),
 
-    assertPatternDoesNotMatch("*/abc/*", "xxx/zzz/abc/yyy");
-    assertPatternDoesNotMatch("*/abc/*", "xxx/abc/yyy/zzz");
+        arguments(".."),
+        arguments("../"),
+        arguments("./../"),
+        arguments("../abc"),
+        arguments("abc/.."),
+        arguments("abc/../def"),
+        arguments("../.."),
 
-    assertPatternDoesNotMatch("*/abc/*", "xxx/abcabc/yyy");
-    assertPatternDoesNotMatch("*/abc/*", "xxx/abc/abc/yyy");
-  }
+        arguments("/"),
+        arguments("//"),
+        arguments("///"),
 
-  @Test
-  public void single_star_in_the_middle_as_whole_part() throws Exception {
-    assertPatternMatches("abc/*/def", "abc/xxx/def");
+        arguments("/abc"),
+        arguments("//abc"),
+        arguments("///abc"),
 
-    assertPatternDoesNotMatch("abc/*/def", "abcdef");
-    assertPatternDoesNotMatch("abc/*/def", "abc/def");
-    assertPatternDoesNotMatch("abc/*/def", "abc/xxx/yyy/def");
-  }
+        arguments("abc//"),
+        arguments("abc///"),
 
-  @Test
-  public void single_star_twice() throws Exception {
-    assertPatternMatches("*/*", "abc/def");
+        arguments("abc//def"),
+        arguments("abc///def"),
 
-    assertPatternDoesNotMatch("*/*", "abc");
-    assertPatternDoesNotMatch("*/*", "abc/def/ghi");
-  }
+        arguments("*/"),
+        arguments("/*"),
 
-  @Test
-  public void single_star_in_the_middle_of_only_part() throws Exception {
-    assertPatternMatches("abc*def", "abcdef");
-    assertPatternMatches("abc*def", "abcxxxdef");
+        arguments("**/"),
+        arguments("/**"));
 
-    assertPatternDoesNotMatch("abc*def", "abc/def");
-    assertPatternDoesNotMatch("abc*def", "abdef");
-    assertPatternDoesNotMatch("abc/xxx/def", "abc/def");
-  }
-
-  @Test
-  public void single_star_twice_in_the_middle_of_only_part() throws Exception {
-    assertPatternMatches("abc*def*ghi", "abcdefghi");
-    assertPatternMatches("abc*def*ghi", "abcxxxdefghi");
-    assertPatternMatches("abc*def*ghi", "abcdefyyyghi");
-    assertPatternMatches("abc*def*ghi", "abcxxxdefyyyghi");
-
-    assertPatternDoesNotMatch("abc*def*ghi", "abc/def/ghi");
-    assertPatternDoesNotMatch("abc*def*ghi", "abcdefgh");
-  }
-
-  @Test
-  public void double_star_as_prefix() throws Exception {
-    assertPatternMatches("**/abc", "abc");
-    assertPatternMatches("**/abc", "xxx/abc");
-    assertPatternMatches("**/abc", "xxx/yyy/abc");
-
-    assertPatternDoesNotMatch("**/abc", "xxx/yyyabc");
-    assertPatternDoesNotMatch("**/abc", "xxx/abc/xxx");
-  }
-
-  @Test
-  public void double_star_as_suffix() throws Exception {
-    assertPatternMatches("abc/**", "abc/xxx");
-    assertPatternMatches("abc/**", "abc/xxx/yyy");
-
-    assertPatternDoesNotMatch("abc/**", "abc");
-    assertPatternDoesNotMatch("abc/**", "abcxxx/yyy");
-    assertPatternDoesNotMatch("abc/**", "xxx/abc/xxx");
-  }
-
-  @Test
-  public void double_star_as_prefix_and_suffix() throws Exception {
-    assertPatternMatches("**/abc/**", "abc/xxx");
-    assertPatternMatches("**/abc/**", "abc/xxx/yyy");
-    assertPatternMatches("**/abc/**", "xxx/abc/yyy");
-    assertPatternMatches("**/abc/**", "xxx/zzz/abc/yyy");
-
-    assertPatternDoesNotMatch("**/abc/**", "xxx/abc");
-    assertPatternDoesNotMatch("**/abc/**", "xxx/yyy/abc");
-    assertPatternDoesNotMatch("**/abc/**", "abc");
-  }
-
-  @Test
-  public void double_star_in_the_middle() throws Exception {
-    assertPatternMatches("abc/**/def", "abc/def");
-
-    assertPatternMatches("abc/**/def", "abc/xxx/def");
-    assertPatternMatches("abc/**/def", "abc/xxx/yyy/def");
-    assertPatternMatches("abc/**/def", "abc/xxx/yyy/zzz/def");
-
-    assertPatternMatches("abc/**/def", "abc/abc/def");
-    assertPatternMatches("abc/**/def", "abc/def/def");
-    assertPatternMatches("abc/**/def", "abc/abc/def/def");
-    assertPatternMatches("abc/**/def", "abc/def/abc/def");
-
-    assertPatternDoesNotMatch("abc/**/def", "abcdef");
-    assertPatternDoesNotMatch("abc/**/def", "abc/xxx/zzz");
-    assertPatternDoesNotMatch("abc/**/def", "xxx/zzz/def");
-    assertPatternDoesNotMatch("abc/**/def", "abc");
-    assertPatternDoesNotMatch("abc/**/def", "def");
-  }
-
-  private static void assertPatternMatches(String pattern, String path) {
-    assertMatchingResult(pattern, path, true);
-  }
-
-  private static void assertPatternDoesNotMatch(String pattern, String path) {
-    assertMatchingResult(pattern, path, false);
-  }
-
-  private static void assertMatchingResult(String pattern, String path, boolean expected) {
-    Predicate<Path> matcher = pathMatcher(pattern);
-    assertEquals(expected, matcher.test(path(path)));
+        // should be illegal but JDK implementation allows them
+        // double -
+        // arguments("a--b"),
+        // trailing -
+        // arguments("a-"),
   }
 }
