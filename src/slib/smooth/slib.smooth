@@ -53,7 +53,7 @@ File aFile(
 
 [File] filter(
   [File] files,
-  String include,
+  String pattern,
 );
 
 Blob jar(
@@ -81,7 +81,7 @@ Blob jar(
 String junit(
   Blob tests,
   [Blob] deps = [],
-  String include = "**/*Test.class",
+  String include = "**Test.class",
 );
 
 Blob toBlob(

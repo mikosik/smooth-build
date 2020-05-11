@@ -6,7 +6,7 @@ Executes junit tests and fails if any of the test fail.
  | ---- | ---- | ------- | ----------- |
  | tests | Blob |   | Jar file containing test classes. |
  | deps | [Blob] |   | Array of jars containing junit implementation and other dependencies needed to run tests. |
- | include | String | "**/*Test.class" | Pattern matching java class files from which tests should be run. Works the same way as 'include' param in [filter](filter.md) function. |
+ | include | String | "**Test.class" | Pattern matching java class files from which tests should be run. Works the same way as 'include' param in [filter](filter.md) function. |
 
 Returns __String__ equal to 'SUCCESS'.
 
@@ -24,5 +24,5 @@ Takes all files from "src" directory, compiles them and executes only tests from
 
 ```
 File testJar = files("//src") | javac | jar;
-String test = [ testJar ]  | junit(include="org/smoothbuild/**/*Test.class");
+String test = [ testJar ]  | junit(include="org/smoothbuild/**Test.class");
 ```
