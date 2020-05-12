@@ -4,7 +4,8 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
- * improved `filter` function to support more glob wildcards
+ * redesigned format of path parameter in 'files' and 'aFile' functions to not contain leading '//'
+ * improved 'filter' function to support more glob wildcards
  * renamed 'concatenate' function to 'concat'
  * added parallel execution
  * removed 'javaProperty' function from standard library (aka platform API)

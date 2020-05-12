@@ -9,24 +9,24 @@ import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class PathArgValidator {
-  private static final String PROJECT_ROOT = "//";
-
-  public static Path validatedProjectPath(NativeApi nativeApi, String name, SString stringValue) {
-    String value = stringValue.jValue();
-    if (!value.startsWith(PROJECT_ROOT)) {
-      nativeApi.log().error("Param '" + name + "' has illegal value. It should start with \""
-          + PROJECT_ROOT + "\" which represents project's root dir.");
-      throw new AbortException();
+  public static Path validatedProjectPath(NativeApi nativeApi, String name, SString path) {
+    try {
+      String value = path.jValue();
+      switch (value) {
+        case "**":
+          return Path.root();
+        case "":
+          return fail(nativeApi, name, "Path cannot be empty.");
+        default:
+          return path(value);
+      }
+    } catch (IllegalPathException e) {
+      return fail(nativeApi, name, e.getMessage());
     }
-    return validatedPath(nativeApi, name, stringValue.jValue().substring(PROJECT_ROOT.length()));
   }
 
-  private static Path validatedPath(NativeApi nativeApi, String name, String value) {
-    try {
-      return path(value);
-    } catch (IllegalPathException e) {
-      nativeApi.log().error("Param '" + name + "' has illegal value. " + e.getMessage());
-      throw new AbortException();
-    }
+  private static Path fail(NativeApi nativeApi, String name, String message) {
+    nativeApi.log().error("Param '" + name + "' has illegal value. " + message);
+    throw new AbortException();
   }
 }

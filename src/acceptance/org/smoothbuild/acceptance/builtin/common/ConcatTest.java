@@ -47,7 +47,7 @@ public class ConcatTest extends AcceptanceTestCase {
     givenFile("0", "abc");
     givenFile("1", "def");
     givenScript(
-        "  result = concat([ aFile('//0') ], [ aFile('//1') ]);  ");
+        "  result = concat([ aFile('0') ], [ aFile('1') ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactArray("result"))
