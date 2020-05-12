@@ -12,8 +12,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenJunitCopied();
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     givenScript(
-        "  junitJars = files('//junit') ;                          ",
-        "  srcJar = files('//src') | javac(libs=junitJars) | jar;  ",
+        "  junitJars = files('junit') ;                          ",
+        "  srcJar = files('src') | javac(libs=junitJars) | jar;  ",
         "  result = junit(tests=srcJar, deps=[]);                  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
@@ -25,8 +25,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenJunitCopied();
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     givenScript(
-        "  junitJars = files('//junit') ;                          ",
-        "  srcJar = files('//src') | javac(libs=junitJars) | jar;  ",
+        "  junitJars = files('junit') ;                          ",
+        "  srcJar = files('src') | javac(libs=junitJars) | jar;  ",
         "  result = junit(tests=srcJar, deps=junitJars);           ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -37,8 +37,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenJunitCopied();
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     givenScript(
-        "  junitJars = files('//junit') ;                          ",
-        "  srcJar = files('//src') | javac(libs=junitJars) | jar;  ",
+        "  junitJars = files('junit') ;                          ",
+        "  srcJar = files('src') | javac(libs=junitJars) | jar;  ",
         "  result = junit(tests=srcJar, deps=junitJars);           ");
     whenSmoothBuild("result");
     thenFinishedWithError();
@@ -50,8 +50,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenJunitCopied();
     givenDir("src");
     givenScript(
-        "  junitJars = files('//junit') ;                          ",
-        "  srcJar = files('//src') | javac(libs=junitJars) | jar;  ",
+        "  junitJars = files('junit') ;                          ",
+        "  srcJar = files('src') | javac(libs=junitJars) | jar;  ",
         "  result = junit(tests=srcJar, deps=junitJars);           ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
@@ -64,8 +64,8 @@ public class JunitTest extends AcceptanceTestCase {
     givenFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     givenFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     givenScript(
-        "  junitJars = files('//junit') ;                           ",
-        "  srcJar = files('//src') | javac(libs=junitJars) | jar;   ",
+        "  junitJars = files('junit') ;                           ",
+        "  srcJar = files('src') | javac(libs=junitJars) | jar;   ",
         "  result = junit(include='" + SUCCESSFUL_TEST_CLASS + "',  ",
         "    tests=srcJar, deps=junitJars);                         ");
     whenSmoothBuild("result");

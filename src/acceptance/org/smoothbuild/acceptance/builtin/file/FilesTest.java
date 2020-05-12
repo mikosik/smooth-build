@@ -10,7 +10,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
     givenScript(
-        "  result = files('//.smooth');  ");
+        "  result = files('.smooth');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Listing files from '.smooth' dir is not allowed.");
@@ -19,7 +19,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_subdir_causes_error() throws Exception {
     givenScript(
-        "  result = files('//.smooth/subdir/file.txt');  ");
+        "  result = files('.smooth/subdir/file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Listing files from '.smooth' dir is not allowed.");
@@ -28,7 +28,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void illegal_path_causes_error() throws Exception {
     givenScript(
-        "  result = files('//..');  ");
+        "  result = files('..');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Param 'dir' has illegal value. Path cannot contain '..' element.");
@@ -37,7 +37,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void nonexistent_path_causes_error() throws Exception {
     givenScript(
-        "  result = files('//nonexistent/path.txt');  ");
+        "  result = files('nonexistent/path.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Dir 'nonexistent/path.txt' doesn't exist.");
@@ -47,20 +47,10 @@ public class FilesTest extends AcceptanceTestCase {
   public void non_dir_path_causes_error() throws Exception {
     givenFile("file.txt", "abc");
     givenScript(
-        "  result = files('//file.txt');  ");
+        "  result = files('file.txt');  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Dir 'file.txt' doesn't exist. It is a file.");
-  }
-
-  @Test
-  public void path_not_prefixed_with_double_slash_causes_error() throws Exception {
-    givenScript(
-        "  result = files('dir');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Param 'dir' has illegal value. "
-        + "It should start with \"//\" which represents project's root dir.");
   }
 
   @Test
@@ -68,7 +58,7 @@ public class FilesTest extends AcceptanceTestCase {
     givenFile("dir/file.txt", "abc");
     givenFile("dir/subdir/file.txt", "def");
     givenScript(
-        "  result = files('//dir');  ");
+        "  result = files('dir');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactDir("result"))
@@ -77,7 +67,7 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    String script = "result = files(\"//\");";
+    String script = "result = files(\"**\");";
     givenScript(script);
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");

@@ -6,16 +6,15 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release = files("//src") | javac | jar;
+release = files("src") | javac | jar;
 ```
 
 This script defines `release` function that does not have any parameters
 and performs following tasks:
 
  * Invokes `files` function that takes all files (recursively)
- from `src` directory located at project's root. Double slashes `//` denote
- root directory of your project (directory in which given build.smooth file
- is located).
+ from `src` directory located at project's root.
+ Project root is a directory in which given build .smooth file is located.
  * Passes them to `javac` function that compiles those files.
  * Passes compiled files to `jar` function that packs them into jar binary.
 
@@ -38,7 +37,7 @@ If you want to choose a different name for produced artifact file than default (
 you can do the following.
 
 ```
-release = files("//src") | javac | jar | file("myApp.jar");
+release = files("src") | javac | jar | file("myApp.jar");
 ```
 
 and it will produce following output during build:
@@ -65,8 +64,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-main = files("//src-main") | javac | jar;
-deps = files("//src-deps") | javac | jar;
+main = files("src-main") | javac | jar;
+deps = files("src-deps") | javac | jar;
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -79,7 +78,7 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-release = files("//src") | javac | jar;
+release = files("src") | javac | jar;
 ```
 
 you will notice that second run completes almost instantly.
@@ -110,7 +109,7 @@ force rebuild of all tasks that depend on it.
 
 Now if you revert changes you introduced to mentioned java file
 and run build once again then result will be instantaneous.
-Except `files("//src")` call which reads files from disk and its result is never cached
+Except `files("src")` call which reads files from disk and its result is never cached
 all other functions have been executed before with arguments they receive in that run so
 instead of running them smooth will read results from cache.
 Such solution is powerful as it gives you access to any build result you have ever executed.
@@ -282,7 +281,7 @@ strings = [ "dog", "cat", "donkey" ];
 Let's look once again at `release` function we defined at the beginning of this tutorial.
 
 ```
-release = files("//src") | javac | jar;
+release = files("src") | javac | jar;
 ```
 
 It uses function chaining (represented by pipe symbol `|`) to pass function call result as
@@ -291,7 +290,7 @@ In fact function chaining is just syntactic sugar for more standard function cal
 We can refactor above function definition to:
 
 ```
-release = jar(javac(files("//src")));
+release = jar(javac(files("src")));
 ```
 
 This version is less readable despite being more familiar to people
@@ -303,7 +302,7 @@ We can refactor our initial example by splitting it into two functions and addin
 
 ```
 [File] classes(String sourcePath) = files(sourcePath) | javac;
-File release = jar(classes("//src"));
+File release = jar(classes("src"));
 ```
 
 This way we can build our own set of reusable functions.

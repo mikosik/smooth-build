@@ -13,7 +13,7 @@ public class ZipUnzipTest extends AcceptanceTestCase {
     givenFile("dir/file1.txt", "abc");
     givenFile("file2.txt", "def");
     givenScript(
-        "  result = [ aFile('//dir/file1.txt'), aFile('//file2.txt') ] | zip | unzip;  ");
+        "  result = [ aFile('dir/file1.txt'), aFile('file2.txt') ] | zip | unzip;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactDir("result"))
