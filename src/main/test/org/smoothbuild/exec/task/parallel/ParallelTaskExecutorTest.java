@@ -3,7 +3,7 @@ package org.smoothbuild.exec.task.parallel;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.joining;
-import static org.mockito.ArgumentMatchers.argThat;
+import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
@@ -11,6 +11,8 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
+import static org.smoothbuild.exec.task.base.ResultSource.CACHE;
+import static org.smoothbuild.exec.task.base.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.util.Lists.list;
@@ -21,7 +23,7 @@ import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.comp.Algorithm;
@@ -92,24 +94,18 @@ public class ParallelTaskExecutorTest extends TestingContext {
     assertThat(executeSingleTask(task))
         .isEqualTo(string("(0,0,0,0)"));
 
-    verify(reporter, times(1)).report(eq(task2), isCachedComputed());
-    verify(reporter, times(1)).report(eq(task3), isCachedComputed());
-    verify(reporter, times(1)).report(eq(task4), isCachedComputed());
-  }
+    ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+    verify(reporter, times(1)).report(eq(task1), captor.capture());
+    verify(reporter, times(1)).report(eq(task2), captor.capture());
+    verify(reporter, times(1)).report(eq(task3), captor.capture());
+    verify(reporter, times(1)).report(eq(task4), captor.capture());
+    List<ResultSource> reportedSources = captor.getAllValues()
+        .stream()
+        .map(Computed::resultSource)
+        .collect(toList());
 
-  private Computed isCachedComputed() {
-    ArgumentMatcher<Computed> matcher = new ArgumentMatcher<Computed>() {
-      @Override
-      public boolean matches(Computed computed) {
-        return computed.resultSource() == ResultSource.CACHE;
-      }
-
-      @Override
-      public String toString() {
-        return "isCachedComputed()";
-      }
-    };
-    return argThat(matcher);
+    assertThat(reportedSources)
+        .containsExactly(CACHE, CACHE, CACHE, EXECUTION);
   }
 
   @Test
