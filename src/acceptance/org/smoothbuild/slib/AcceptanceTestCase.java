@@ -1,5 +1,6 @@
 package org.smoothbuild.slib;
 
+import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.io.Files.createTempDir;
@@ -66,7 +67,12 @@ public abstract class AcceptanceTestCase {
 
   @BeforeEach
   public void init() {
-    projectDir = createTempDir();
+    init(createTempDir());
+  }
+
+  public void init(File projectDir) {
+    checkState(this.projectDir == null, "init was already called");
+    this.projectDir = projectDir;
   }
 
   @AfterEach
