@@ -67,7 +67,7 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    String script = "result = files(\"**\");";
+    String script = "result = files(\".\");";
     givenScript(script);
     givenFile("dir/file.txt", "abc");
     whenSmoothBuild("result");
