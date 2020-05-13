@@ -11,47 +11,50 @@ import org.smoothbuild.slib.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.slib.cli.command.common.LogLevelOptionTestCase;
 
 @SuppressWarnings("ClassCanBeStatic")
-public class TreeCommandTest extends AcceptanceTestCase {
-  @Test
-  public void with_parameter_and_array() throws Exception {
-    givenScript(
-        "  mySingleton(String element) = [element, 'def'];  ",
-        "  result = mySingleton('abc');                     ");
-    whenSmoothTree("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains(quotesX2(unlines(
-        "[String] result",
-        "  [String] mySingleton",
-        "    [String]",
-        "      String 'abc'",
-        "      String 'def'")));
-  }
+public class TreeCommandTest {
+  @Nested
+  class basic extends AcceptanceTestCase {
+    @Test
+    public void with_parameter_and_array () throws Exception {
+      givenScript(
+          "  mySingleton(String element) = [element, 'def'];  ",
+          "  result = mySingleton('abc');                     ");
+      whenSmoothTree("result");
+      thenFinishedWithSuccess();
+      thenSysOutContains(quotesX2(unlines(
+          "[String] result",
+          "  [String] mySingleton",
+          "    [String]",
+          "      String 'abc'",
+          "      String 'def'")));
+    }
 
-  @Test
-  public void with_long_string_literal() throws Exception {
-    givenScript(
-        "  result = '01234567890123456789012345678901234567890123456789';  ");
-    whenSmoothTree("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains(quotesX2(unlines(
-        "String result",
-        "  String '01234567890123456789012345678901234'...",
-        "")));
-  }
+    @Test
+    public void with_long_string_literal () throws Exception {
+      givenScript(
+          "  result = '01234567890123456789012345678901234567890123456789';  ");
+      whenSmoothTree("result");
+      thenFinishedWithSuccess();
+      thenSysOutContains(quotesX2(unlines(
+          "String result",
+          "  String '01234567890123456789012345678901234'...",
+          "")));
+    }
 
-  @Test
-  public void with_convert_computation() throws Exception {
-    givenScript(
-        "  Blob result = file(toBlob('abc'), 'name.txt');  ");
-    whenSmoothTree("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains(quotesX2(unlines(
-        "Blob result",
-        "  Blob <- File",
-        "    File file",
-        "      Blob toBlob",
-        "        String 'abc'",
-        "      String 'name.txt'")));
+    @Test
+    public void with_convert_computation () throws Exception {
+      givenScript(
+          "  Blob result = file(toBlob('abc'), 'name.txt');  ");
+      whenSmoothTree("result");
+      thenFinishedWithSuccess();
+      thenSysOutContains(quotesX2(unlines(
+          "Blob result",
+          "  Blob <- File",
+          "    File file",
+          "      Blob toBlob",
+          "        String 'abc'",
+          "      String 'name.txt'")));
+    }
   }
 
   @Nested

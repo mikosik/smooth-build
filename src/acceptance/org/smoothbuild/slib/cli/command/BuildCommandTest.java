@@ -14,6 +14,7 @@ import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.slib.AcceptanceTestCase;
 import org.smoothbuild.slib.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.slib.cli.command.common.FunctionsArgTestCase;
+import org.smoothbuild.slib.cli.command.common.LockFileTestCase;
 import org.smoothbuild.slib.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.slib.testing.ReportError;
 import org.smoothbuild.slib.testing.ReportInfo;
@@ -21,41 +22,44 @@ import org.smoothbuild.slib.testing.ReportWarning;
 import org.smoothbuild.slib.testing.TempFilePath;
 
 @SuppressWarnings("ClassCanBeStatic")
-public class BuildCommandTest extends AcceptanceTestCase {
-  @Test
-  public void temp_file_is_deleted_after_build_execution() throws Exception {
-    givenNativeJar(TempFilePath.class);
-    givenScript(
-        "  String tempFilePath();    ",
-        "  result = tempFilePath();  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    assertThat(new File(artifactContent("result")).exists())
-        .isFalse();
-  }
+public class BuildCommandTest {
+  @Nested
+  class basic extends AcceptanceTestCase {
+    @Test
+    public void temp_file_is_deleted_after_build_execution() throws Exception {
+      givenNativeJar(TempFilePath.class);
+      givenScript(
+          "  String tempFilePath();    ",
+          "  result = tempFilePath();  ");
+      whenSmoothBuild("result");
+      thenFinishedWithSuccess();
+      assertThat(new File(artifactContent("result")).exists())
+          .isFalse();
+    }
 
-  @Test
-  public void build_command_clears_artifacts_dir() throws Exception {
-    String path = ARTIFACTS_PATH.value() + "/file.txt";
-    givenFile(path, "content");
-    givenScript(
-        "  syntactically incorrect script  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    assertThat(file(path).exists())
-        .isFalse();
-  }
+    @Test
+    public void build_command_clears_artifacts_dir() throws Exception {
+      String path = ARTIFACTS_PATH.value() + "/file.txt";
+      givenFile(path, "content");
+      givenScript(
+          "  syntactically incorrect script  ");
+      whenSmoothBuild("result");
+      thenFinishedWithError();
+      assertThat(file(path).exists())
+          .isFalse();
+    }
 
-  @Test
-  public void build_command_clears_temporary_dir() throws Exception {
-    String path = TEMPORARY_PATH.value() + "/file.txt";
-    givenFile(path, "content");
-    givenScript(
-        "  syntactically incorrect script  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    assertThat(file(path).exists())
-        .isFalse();
+    @Test
+    public void build_command_clears_temporary_dir() throws Exception {
+      String path = TEMPORARY_PATH.value() + "/file.txt";
+      givenFile(path, "content");
+      givenScript(
+          "  syntactically incorrect script  ");
+      whenSmoothBuild("result");
+      thenFinishedWithError();
+      assertThat(file(path).exists())
+          .isFalse();
+    }
   }
 
   @Nested
@@ -88,17 +92,20 @@ public class BuildCommandTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class show_tasks_option extends AcceptanceTestCase {
-    @Test
-    public void illegal_value_causes_error() throws IOException {
-      givenScript("result = 'abc';");
-      whenSmooth("build", "--show-tasks=ILLEGAL", "result");
-      thenFinishedWithError();
-      thenSysErrContains(unlines(
-          "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
-          "",
-          "Usage:"
-      ));
+  class show_tasks_option {
+    @Nested
+    class basic extends AcceptanceTestCase {
+      @Test
+      public void illegal_value_causes_error() throws IOException {
+        givenScript("result = 'abc';");
+        whenSmooth("build", "--show-tasks=ILLEGAL", "result");
+        thenFinishedWithError();
+        thenSysErrContains(unlines(
+            "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
+            "",
+            "Usage:"
+        ));
+      }
     }
 
     @Nested

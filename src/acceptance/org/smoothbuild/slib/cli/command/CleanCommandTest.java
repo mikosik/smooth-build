@@ -11,32 +11,35 @@ import org.smoothbuild.slib.AcceptanceTestCase;
 import org.smoothbuild.slib.cli.command.common.LogLevelOptionTestCase;
 
 @SuppressWarnings("ClassCanBeStatic")
-public class CleanCommandTest extends AcceptanceTestCase {
-  @Test
-  public void clean_command_deletes_smooth_dir() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    whenSmoothClean();
-    thenFinishedWithSuccess();
-    assertThat(new File(projectDir(), SMOOTH_DIR.toString()).exists())
-        .isFalse();
-  }
+public class CleanCommandTest {
+  @Nested
+  class basic extends AcceptanceTestCase {
+    @Test
+    public void clean_command_deletes_smooth_dir() throws Exception {
+      givenScript(
+          "  result = 'abc';  ");
+      whenSmoothBuild("result");
+      thenFinishedWithSuccess();
+      whenSmoothClean();
+      thenFinishedWithSuccess();
+      assertThat(new File(projectDir(), SMOOTH_DIR.toString()).exists())
+          .isFalse();
+    }
 
-  @Test
-  public void clean_command_with_arguments_prints_error() throws Exception {
-    givenScript(
-        "  result = 'abc';  ");
-    whenSmoothClean("some arguments");
-    thenFinishedWithError();
-    thenSysErrContains(
-        "Unmatched arguments from index 1: 'some', 'arguments'",
-        "",
-        "Usage:",
-        "smooth clean [-l=<level>]",
-        "Try 'smooth help clean' for more information.",
-        "");
+    @Test
+    public void clean_command_with_arguments_prints_error() throws Exception {
+      givenScript(
+          "  result = 'abc';  ");
+      whenSmoothClean("some arguments");
+      thenFinishedWithError();
+      thenSysErrContains(
+          "Unmatched arguments from index 1: 'some', 'arguments'",
+          "",
+          "Usage:",
+          "smooth clean [-l=<level>]",
+          "Try 'smooth help clean' for more information.",
+          "");
+    }
   }
 
   @Nested
