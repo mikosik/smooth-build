@@ -22,7 +22,7 @@ public class PathArgValidatorTest extends TestingContext {
   public static List<String> listOfCorrectProjectPaths() {
     ImmutableList.Builder<String> builder = ImmutableList.builder();
 
-    builder.add("**");
+    builder.add(".");
 
     builder.add("abc");
     builder.add("abc/def");
@@ -31,6 +31,7 @@ public class PathArgValidatorTest extends TestingContext {
 
     // These paths look really strange but Linux allows creating them.
     // I cannot see any good reason for forbidding them.
+    builder.add("**");
     builder.add("...");
     builder.add(".../abc");
     builder.add("abc/...");
@@ -50,7 +51,6 @@ public class PathArgValidatorTest extends TestingContext {
     ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("");
-    builder.add(".");
 
     builder.add("./");
     builder.add("./.");

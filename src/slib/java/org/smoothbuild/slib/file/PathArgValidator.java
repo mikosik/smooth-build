@@ -13,7 +13,7 @@ public class PathArgValidator {
     try {
       String value = path.jValue();
       switch (value) {
-        case "**":
+        case ".":
           return Path.root();
         case "":
           return fail(nativeApi, name, "Path cannot be empty.");
