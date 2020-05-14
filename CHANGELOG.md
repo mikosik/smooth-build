@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * only one smooth process can be run at the same time for given project (synchronized via ./smooth/lock)
  * redesigned format of path parameter in 'files' and 'aFile' functions to not contain leading '//'
  * improved 'filter' function to support more glob wildcards
  * renamed 'concatenate' function to 'concat'

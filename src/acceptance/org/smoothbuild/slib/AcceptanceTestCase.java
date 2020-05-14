@@ -14,6 +14,7 @@ import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.cli.console.Console.prefixMultiline;
 import static org.smoothbuild.install.InstallationPaths.USER_MODULE;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
@@ -189,6 +190,10 @@ public abstract class AcceptanceTestCase {
     }
   }
 
+  public int exitCode() {
+    return exitCode;
+  }
+
   public void thenSysOutContainsParseError(int lineNumber, String... errorLines) {
     errorLines[0] = USER_MODULE.smooth().path() + ":" + lineNumber + ": " + errorLines[0];
     thenSysOutContainsParseError(errorLines);
@@ -314,6 +319,10 @@ public abstract class AcceptanceTestCase {
 
   public File projectDir() {
     return projectDir;
+  }
+
+  public File smoothDir() {
+    return new File(projectDir(), SMOOTH_DIR.value());
   }
 
   public String artifactContent(String artifact) throws IOException {

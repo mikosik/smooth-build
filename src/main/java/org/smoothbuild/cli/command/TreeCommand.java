@@ -1,6 +1,8 @@
 package org.smoothbuild.cli.command;
 
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.base.CommandHelper.runCommand;
+import static org.smoothbuild.exec.run.Locker.tryAcquireLock;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,6 +28,9 @@ public class TreeCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
+    if (!tryAcquireLock()) {
+      return EXIT_CODE_ERROR;
+    }
     return runCommand(injector -> injector.getInstance(TreeRunner.class).run(functions));
   }
 }

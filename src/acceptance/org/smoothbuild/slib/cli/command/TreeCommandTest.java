@@ -8,6 +8,7 @@ import org.smoothbuild.cli.command.TreeCommand;
 import org.smoothbuild.slib.AcceptanceTestCase;
 import org.smoothbuild.slib.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.slib.cli.command.common.FunctionsArgTestCase;
+import org.smoothbuild.slib.cli.command.common.LockFileTestCase;
 import org.smoothbuild.slib.cli.command.common.LogLevelOptionTestCase;
 
 @SuppressWarnings("ClassCanBeStatic")
@@ -59,6 +60,14 @@ public class TreeCommandTest {
 
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
+    @Override
+    protected String[] commandNameWithArgument() {
+      return new String[] { TreeCommand.NAME, "result" };
+    }
+  }
+
+  @Nested
+  class LockFile extends LockFileTestCase {
     @Override
     protected String[] commandNameWithArgument() {
       return new String[] { TreeCommand.NAME, "result" };

@@ -1,7 +1,9 @@
 package org.smoothbuild.cli.command;
 
+import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.cli.base.CommandHelper.runCommand;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
+import static org.smoothbuild.exec.run.Locker.tryAcquireLock;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -77,6 +79,9 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
+    if (!tryAcquireLock()) {
+      return EXIT_CODE_ERROR;
+    }
     ReportModule reportModule = new ReportModule(showTasks, logLevel);
     return runCommand(reportModule, injector -> injector.getInstance(BuildRunner.class).run(functions));
   }

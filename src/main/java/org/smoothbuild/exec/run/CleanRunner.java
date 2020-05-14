@@ -1,8 +1,12 @@
 package org.smoothbuild.exec.run;
 
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
+import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
+import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 
 import java.io.IOException;
 
@@ -23,7 +27,10 @@ public class CleanRunner {
 
   public int run() {
     try {
-      fileSystem.delete(SMOOTH_DIR);
+      fileSystem.delete(HASHED_DB_PATH);
+      fileSystem.delete(OUTPUTS_DB_PATH);
+      fileSystem.delete(ARTIFACTS_PATH);
+      fileSystem.delete(TEMPORARY_PATH);
     } catch (IOException e) {
       console.error("Unable to delete " + SMOOTH_DIR + ".");
       return EXIT_CODE_ERROR;

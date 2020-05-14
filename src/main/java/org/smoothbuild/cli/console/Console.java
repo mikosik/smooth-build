@@ -36,7 +36,7 @@ public class Console {
   }
 
   public void error(Object error) {
-    println("error: " + error.toString());
+    println("smooth: error: " + error.toString());
   }
 
   public void print(String header, List<Log> logs) {
