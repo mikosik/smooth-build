@@ -10,6 +10,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.Assert.fail;
+import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
@@ -54,9 +55,6 @@ import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class AcceptanceTestCase {
-  private static final String DEFAULT_BUILD_SCRIPT_FILE = "build.smooth";
-  private static final String DEFAULT_NATIVE_JAR_FILE = "build.jar";
-  private static final String ARTIFACTS_DIR_PATH = ".smooth/artifacts/";
   private static final Path GIT_REPO_ROOT = gitRepoRoot();
   private static final Path SMOOTH_BINARY = smoothBinary(GIT_REPO_ROOT);
 
@@ -89,7 +87,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenRawScript(String buildScript) throws IOException {
-    givenFile(DEFAULT_BUILD_SCRIPT_FILE, buildScript);
+    givenFile(USER_MODULE.smooth().path().toString(), buildScript);
   }
 
   public void givenFile(String path, String content) throws IOException {
@@ -101,7 +99,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenNativeJar(Class<?>... classes) throws IOException {
-    saveBytecodeInJar(file(DEFAULT_NATIVE_JAR_FILE), classes);
+    saveBytecodeInJar(file("build.jar"), classes);
   }
 
   public void givenDir(String path) throws IOException {
@@ -197,13 +195,9 @@ public abstract class AcceptanceTestCase {
   }
 
   public void thenSysOutContainsParseError(String... errorLines) {
-    thenSysOutContainsError(USER_MODULE.smooth().path().toString(), errorLines);
-  }
-
-  public void thenSysOutContainsError(String header, String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     thenSysOutContains(
-        "  " + header,
+        "  " + USER_MODULE.smooth().path().toString(),
         prefixMultiline(errorLines));
   }
 
@@ -250,7 +244,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public File artifact(String name) {
-    return file(ARTIFACTS_DIR_PATH + name);
+    return file(ARTIFACTS_PATH.value() + "/" + name);
   }
 
   /**
