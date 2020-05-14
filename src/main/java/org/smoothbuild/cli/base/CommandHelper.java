@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.base;
 
 import static com.google.inject.Guice.createInjector;
+import static com.google.inject.Stage.PRODUCTION;
 
 import java.util.function.Function;
 
@@ -14,7 +15,7 @@ public class CommandHelper {
   }
 
   public static Integer runCommand(ReportModule reportModule, Function<Injector, Integer> invoker) {
-    Injector injector = createInjector(new MainModule(), reportModule);
+    Injector injector = createInjector(PRODUCTION, new MainModule(), reportModule);
     return invoker.apply(injector);
   }
 }
