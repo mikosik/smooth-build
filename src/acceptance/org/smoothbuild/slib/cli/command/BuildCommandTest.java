@@ -71,6 +71,14 @@ public class BuildCommandTest {
   }
 
   @Nested
+  class LockFile extends LockFileTestCase {
+    @Override
+    protected String[] commandNameWithArgument() {
+      return new String[] { BuildCommand.NAME, "result" };
+    }
+  }
+
+  @Nested
   class FunctionArgs extends FunctionsArgTestCase {
     @Override
     protected String commandName() {

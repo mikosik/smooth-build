@@ -1,14 +1,19 @@
 package org.smoothbuild.slib.cli.command.common;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.slib.AcceptanceTestCase;
 
 public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
   @Test
-  public void missing_default_module_causes_error() {
+  public void missing_default_module_causes_error_without_creating_smooth_dir() {
     whenSmooth(commandNameWithArgument());
     thenFinishedWithError();
-    thenSysOutContainsParseError("'build.smooth' doesn't exist.");
+    thenSysOutContains("smooth: error: Current dir doesn't have 'build.smooth'. " +
+        "Is it really smooth enabled project?");
+    assertThat(smoothDir().exists())
+        .isFalse();
   }
 
   protected abstract String[] commandNameWithArgument();
