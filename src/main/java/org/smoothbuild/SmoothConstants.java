@@ -1,11 +1,13 @@
 package org.smoothbuild;
 
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.base.Space.USER;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.ModulePath;
 
 public class SmoothConstants {
   public static final int EXIT_CODE_SUCCESS = 0;
@@ -24,4 +26,8 @@ public class SmoothConstants {
   public static final Path ARTIFACTS_PATH = SMOOTH_DIR.append(ARTIFACTS_DIR);
   public static final Path TEMPORARY_DIR = path("temporary");
   public static final Path TEMPORARY_PATH = SMOOTH_DIR.append(TEMPORARY_DIR);
+  public static final Path USER_MODULE_FILE = path("build.smooth");
+  public static final ModulePath USER_MODULE =
+      new ModulePath(USER, USER_MODULE_FILE.toJPath(), USER_MODULE_FILE.value());
+
 }

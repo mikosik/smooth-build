@@ -6,7 +6,7 @@ import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
 import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.SmoothConstants.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.install.InstallationPaths.USER_MODULE;
+import static org.smoothbuild.SmoothConstants.USER_MODULE;
 
 import java.io.File;
 import java.io.IOException;
