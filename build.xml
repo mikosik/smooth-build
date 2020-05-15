@@ -324,7 +324,10 @@
             <!-- <listener type="legacy-brief"/> -->
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
-                <fork/>
+                <fork>
+                    <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
+                    <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
+                </fork>
             </testclasses>
         </junitlauncher>
     </target>
@@ -340,7 +343,10 @@
             <!-- <listener type="legacy-brief"/> -->
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
-                <fork/>
+                <fork>
+                    <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
+                    <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
+                </fork>
             </testclasses>
         </junitlauncher>
     </target>
@@ -356,7 +362,10 @@
             <!-- <listener type="legacy-brief"/> -->
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.slib.test}" includes="**/*Test.class"/>
-                <fork/>
+                <fork>
+                    <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
+                    <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
+                </fork>
             </testclasses>
         </junitlauncher>
     </target>
@@ -418,6 +427,8 @@
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
                 <fork>
+                    <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
+                    <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
                     <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
                     <env key="repository_dir" value="${basedir}"/>
                 </fork>
