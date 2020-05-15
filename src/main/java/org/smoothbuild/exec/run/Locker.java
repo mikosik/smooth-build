@@ -4,7 +4,7 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
 import static org.smoothbuild.SmoothConstants.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.install.InstallationPaths.USER_MODULE;
+import static org.smoothbuild.SmoothConstants.USER_MODULE;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
