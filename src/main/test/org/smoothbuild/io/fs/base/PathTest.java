@@ -1,12 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.text.MessageFormat.format;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
-import static org.quackery.report.AssertException.assertEquals;
-import static org.quackery.report.AssertException.assertTrue;
-import static org.quackery.report.AssertException.fail;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -14,40 +9,28 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
-import org.quackery.junit.QuackeryRunner;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-@RunWith(QuackeryRunner.class)
 public class PathTest {
-  @Quackery
-  public static Suite path_value_is_validated() {
-    return suite("path value is validated")
-        .add(suite("path can be created for valid name")
-            .addAll(map(listOfCorrectPaths(), PathTest::pathCanBeCreatedForValidName)))
-        .add(suite("cannot create path with invalid value")
-            .addAll(map(listOfInvalidPaths(), PathTest::cannotCreatePathWithInvalidValue)));
+  @ParameterizedTest
+  @MethodSource("validPaths")
+  public void path_with_valid_value_can_be_created(String value) {
+    path(value);
   }
 
-  private static Case pathCanBeCreatedForValidName(String path) {
-    return newCase(format("path [{0}]", path), () -> path(path));
-  }
-
-  private static Case cannotCreatePathWithInvalidValue(String path) {
-    return newCase(format("path [{0}]", path), () -> {
-      try {
-        path(path);
-        fail();
-      } catch (IllegalPathException e) {
-      }
-    });
+  @ParameterizedTest
+  @MethodSource("invalidPaths")
+  public void path_with_invalid_value_cannot_be_created(String value) {
+    assertCall(() -> path(value))
+        .throwsException(IllegalPathException.class);
   }
 
   @Test
@@ -62,32 +45,23 @@ public class PathTest {
         .isFalse();
   }
 
-  @Quackery
-  public static Suite implements_value() {
-    return suite("implements value")
-        .add(testValue("", ""))
-        .add(testValue("abc", "abc"))
-        .add(testValue("abc/def", "abc/def"))
-        .add(testValue("abc/def/ghi", "abc/def/ghi"));
+  @ParameterizedTest
+  @MethodSource("validPaths")
+  public void value(String value) {
+    assertThat(path(value).value())
+        .isEqualTo(value);
   }
 
-  private static Case testValue(String path, String value) {
-    return newCase(format("path [{0}] has value [{1}]", path, value),
-        () -> assertEquals(path(path).value(), value));
-  }
-
-  @Quackery
-  public static Suite implements_toJPath() {
-    return suite("implements toJPath")
-        .add(testToJPath("", Paths.get(".")))
-        .add(testToJPath("abc", Paths.get("abc")))
-        .add(testToJPath("abc/def", Paths.get("abc/def")))
-        .add(testToJPath("abc/def/ghi", Paths.get("abc/def/ghi")));
-  }
-
-  private static Case testToJPath(String path, java.nio.file.Path jPath) {
-    return newCase(format("path [{0}] converted to JPath equals [{1}]", path, jPath),
-        () -> assertEquals(path(path).toJPath(), jPath));
+  @ParameterizedTest
+  @MethodSource("validPaths")
+  public void toJPath(String value) {
+    if (value.equals("")) {
+      assertThat((Object) path(value).toJPath())
+          .isEqualTo(Paths.get("."));
+    } else {
+      assertThat((Object) path(value).toJPath())
+          .isEqualTo(Paths.get(value));
+    }
   }
 
   @Test
@@ -96,71 +70,70 @@ public class PathTest {
         .throwsException(IllegalArgumentException.class);
   }
 
-  @Quackery
-  public static Suite implements_parent() {
-    return suite("implements parent")
-        .add(testParent("abc", ""))
-        .add(testParent("abc/def", "abc"))
-        .add(testParent("abc/def/ghi", "abc/def"))
-        .add(testParent(" ", ""));
+  @ParameterizedTest
+  @MethodSource("parentArguments")
+  public void parent_of_normal_path(Path path, Path expectedParent) {
+    assertThat(path.parent())
+        .isEqualTo(expectedParent);
   }
 
-  private static Case testParent(String path, String parent) {
-    return newCase(format("parent of [{0}] is [{1}]", path, parent),
-        () -> assertEquals(path(path).parent(), path(parent)));
+  public static Stream<Arguments> parentArguments() {
+    return Stream.of(
+        arguments(path("abc"), Path.root()),
+        arguments(path(" "), Path.root()),
+        arguments(path("abc/def"), path("abc")),
+        arguments(path("abc/def/ghi"), path("abc/def")),
+        arguments(path("abc/def/ghi/ijk"), path("abc/def/ghi")));
   }
 
-  @Quackery
-  public static Suite implements_appending() {
-    return suite("implements appending")
-        .add(testAppending("", "", ""))
-        .add(testAppending("abc", "", "abc"))
-        .add(testAppending("abc/def", "", "abc/def"))
-        .add(testAppending("abc/def/ghi", "", "abc/def/ghi"))
-        .add(testAppending("", "abc", "abc"))
-        .add(testAppending("", "abc/def", "abc/def"))
-        .add(testAppending("", "abc/def/ghi", "abc/def/ghi"))
-        .add(testAppending("abc", "xyz", "abc/xyz"))
-        .add(testAppending("abc", "xyz/uvw", "abc/xyz/uvw"))
-        .add(testAppending("abc", "xyz/uvw/rst", "abc/xyz/uvw/rst"))
-        .add(testAppending("abc/def", "xyz", "abc/def/xyz"))
-        .add(testAppending("abc/def", "xyz/uvw", "abc/def/xyz/uvw"))
-        .add(testAppending("abc/def", "xyz/uvw/rst", "abc/def/xyz/uvw/rst"))
-        .add(testAppending("abc/def/ghi", "xyz", "abc/def/ghi/xyz"))
-        .add(testAppending("abc/def/ghi", "xyz/uvw", "abc/def/ghi/xyz/uvw"))
-        .add(testAppending("abc/def/ghi", "xyz/uvw/rst", "abc/def/ghi/xyz/uvw/rst"))
-        .add(testAppending(" ", " ", " / "))
-        .add(testAppending(" ", " / ", " / / "))
-        .add(testAppending(" / ", " ", " / / "))
-        .add(testAppending(" / ", " / ", " / / / "));
+  @ParameterizedTest
+  @MethodSource("appendArguments")
+  public void append(String path, String appendedPath, String expected) {
+    assertThat(path(path).append(path(appendedPath)))
+        .isEqualTo(path(expected));
   }
 
-  private static Case testAppending(String first, String second, String expected) {
-    return newCase(format("appending [{0}] to [{1}] returns [{2}]", first, second, expected),
-        () -> {
-          String actual = path(first).append(path(second)).value();
-          assertEquals(actual, expected);
-        });
+  public static Stream<Arguments> appendArguments() {
+    return Stream.of(
+        arguments("", "", ""),
+        arguments("abc", "", "abc"),
+        arguments("abc/def", "", "abc/def"),
+        arguments("abc/def/ghi", "", "abc/def/ghi"),
+        arguments("", "abc", "abc"),
+        arguments("", "abc/def", "abc/def"),
+        arguments("", "abc/def/ghi", "abc/def/ghi"),
+        arguments("abc", "xyz", "abc/xyz"),
+        arguments("abc", "xyz/uvw", "abc/xyz/uvw"),
+        arguments("abc", "xyz/uvw/rst", "abc/xyz/uvw/rst"),
+        arguments("abc/def", "xyz", "abc/def/xyz"),
+        arguments("abc/def", "xyz/uvw", "abc/def/xyz/uvw"),
+        arguments("abc/def", "xyz/uvw/rst", "abc/def/xyz/uvw/rst"),
+        arguments("abc/def/ghi", "xyz", "abc/def/ghi/xyz"),
+        arguments("abc/def/ghi", "xyz/uvw", "abc/def/ghi/xyz/uvw"),
+        arguments("abc/def/ghi", "xyz/uvw/rst", "abc/def/ghi/xyz/uvw/rst"),
+        arguments(" ", " ", " / "),
+        arguments(" ", " / ", " / / "),
+        arguments(" / ", " ", " / / "),
+        arguments(" / ", " / ", " / / / "));
   }
 
-  @Quackery
-  public static Suite implements_parts() {
-    return suite("implements parts")
-        .add(testParts("", list()))
-        .add(testParts("abc", list("abc")))
-        .add(testParts("abc/def", list("abc", "def")))
-        .add(testParts("abc/def/ghi", list("abc", "def", "ghi")))
-        .add(testParts(" ", list(" ")))
-        .add(testParts(" / ", list(" ", " ")))
-        .add(testParts(" / / ", list(" ", " ", " ")));
+  @ParameterizedTest
+  @MethodSource("partsArguments")
+  public void parts(String path, List<String> expectedParts) {
+    List<Path> actualParts = path(path).parts();
+    assertThat(map(actualParts, Path::value))
+        .isEqualTo(expectedParts);
   }
 
-  private static Case testParts(String path, List<String> parts) {
-    return newCase(format("[{0}] has parts: {1}", path, parts),
-        () -> {
-          List<String> actualParts = map(path(path).parts(), Path::value);
-          assertEquals(actualParts, parts);
-        });
+  public static Stream<Arguments> partsArguments() {
+    return Stream.of(
+        arguments("", list()),
+        arguments("abc", list("abc")),
+        arguments("abc/def", list("abc", "def")),
+        arguments("abc/def/ghi", list("abc", "def", "ghi")),
+        arguments(" ", list(" ")),
+        arguments(" / ", list(" ", " ")),
+        arguments(" / / ", list(" ", " ", " ")));
   }
 
   @Test
@@ -169,19 +142,20 @@ public class PathTest {
         .throwsException(IllegalArgumentException.class);
   }
 
-  @Quackery
-  public static Suite implements_last_part() {
-    return suite("implements lastPart")
-        .add(testLastPart(" ", " "))
-        .add(testLastPart(" / ", " "))
-        .add(testLastPart("abc", "abc"))
-        .add(testLastPart("abc/def", "def"))
-        .add(testLastPart("abc/def/ghi", "ghi"));
+  @ParameterizedTest
+  @MethodSource("lastPartArguments")
+  public void lastPart(String path, String expectedLastPart) {
+    assertThat(path(path).lastPart())
+        .isEqualTo(path(expectedLastPart));
   }
 
-  private static Case testLastPart(String path, String lastPart) {
-    return newCase(format("last part of [{0}] is [{1}]", path, lastPart),
-        () -> assertEquals(path(path).lastPart(), path(lastPart)));
+  public static Stream<Arguments> lastPartArguments() {
+    return Stream.of(
+        arguments(" ", " "),
+        arguments(" / ", " "),
+        arguments("abc", "abc"),
+        arguments("abc/def", "def"),
+        arguments("abc/def/ghi", "ghi"));
   }
 
   @Test
@@ -190,46 +164,43 @@ public class PathTest {
         .throwsException(IllegalArgumentException.class);
   }
 
-  @Quackery
-  public static Suite implements_first_part() {
-    return suite("implements firstPart")
-        .add(testFirstPart(" ", " "))
-        .add(testFirstPart(" / ", " "))
-        .add(testFirstPart("abc", "abc"))
-        .add(testFirstPart("abc/def", "abc"))
-        .add(testFirstPart("abc/def/ghi", "abc"));
+  @ParameterizedTest
+  @MethodSource("firstPartArguments")
+  public void firstPart(String path, String expectedfirstPart) {
+    assertThat(path(path).firstPart())
+        .isEqualTo(path(expectedfirstPart));
   }
 
-  private static Case testFirstPart(String path, String firstPart) {
-    return newCase(format("first part of [{0}] is [{1}]", path, firstPart),
-        () -> assertEquals(path(path).firstPart(), path(firstPart)));
+  public static Stream<Arguments> firstPartArguments() {
+    return Stream.of(
+        arguments(" ", " "),
+        arguments(" / ", " "),
+        arguments("abc", "abc"),
+        arguments("abc/def", "abc"),
+        arguments("abc/def/ghi", "abc"));
   }
 
-  @Quackery
-  public static Suite implements_start_with() {
-    return suite("implements startsWith")
-        .add(testStartsWith(Path.root(), Path.root()))
-        .add(testStartsWith(Path.path("abc"), Path.root()))
-        .add(testStartsWith(Path.path("abc/def"), Path.root()))
-        .add(testStartsWith(Path.path("abc/def/ghi"), Path.root()))
-        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc")))
-        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc/def")))
-        .add(testStartsWith(Path.path("abc/def/ghi"), Path.path("abc/def/ghi")))
-        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("ab")))
-        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("abc/d")))
-        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("def")))
-        .add(testNotStartsWith(Path.path("abc/def/ghi"), Path.path("ghi")))
-        .add(testNotStartsWith(Path.root(), Path.path("abc")));
+  @ParameterizedTest
+  @MethodSource("startWithArguments")
+  public void startsWith(Path path, Path head, boolean expected) {
+    assertThat(path.startsWith(head))
+        .isEqualTo(expected);
   }
 
-  private static Case testStartsWith(Path path, Path head) {
-    return newCase(format("{0} starts with {1}", path, head),
-        () -> assertTrue(path.startsWith(head)));
-  }
-
-  private static Case testNotStartsWith(Path path, Path notHead) {
-    return newCase(format("{0} not starts with {1}", path, notHead),
-        () -> assertTrue(!path.startsWith(notHead)));
+  public static Stream<Arguments> startWithArguments() {
+    return Stream.of(
+        arguments(Path.root(), Path.root(), true),
+        arguments(path("abc"), Path.root(), true),
+        arguments(path("abc/def"), Path.root(), true),
+        arguments(path("abc/def/ghi"), Path.root(), true),
+        arguments(path("abc/def/ghi"), path("abc"), true),
+        arguments(path("abc/def/ghi"), path("abc/def"), true),
+        arguments(path("abc/def/ghi"), path("abc/def/ghi"), true),
+        arguments(path("abc/def/ghi"), path("ab"), false),
+        arguments(path("abc/def/ghi"), path("abc/d"), false),
+        arguments(path("abc/def/ghi"), path("def"), false),
+        arguments(path("abc/def/ghi"), path("ghi"), false),
+        arguments(Path.root(), path("abc"), false));
   }
 
   @Test
@@ -250,7 +221,7 @@ public class PathTest {
         .isEqualTo("'abc/def'");
   }
 
-  public static List<String> listOfCorrectPaths() {
+  public static List<String> validPaths() {
     ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("");
@@ -270,7 +241,7 @@ public class PathTest {
     return builder.build();
   }
 
-  public static ImmutableList<String> listOfInvalidPaths() {
+  public static ImmutableList<String> invalidPaths() {
     ImmutableList.Builder<String> builder = ImmutableList.builder();
 
     builder.add("/");
