@@ -122,7 +122,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void source_throws_exception_when_path_is_root_dir() {
     assertCall(() -> fileSystem.source(Path.root()))
-        .throwsException(new IOException("File '' doesn't exist. It is a dir."));
+        .throwsException(new IOException("File '.' doesn't exist. It is a dir."));
   }
 
   // sink()

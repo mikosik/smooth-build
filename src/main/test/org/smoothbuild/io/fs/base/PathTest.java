@@ -1,6 +1,7 @@
 package org.smoothbuild.io.fs.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -16,26 +17,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
 public class PathTest {
   @ParameterizedTest
-  @MethodSource("validPaths")
-  public void path_with_valid_value_can_be_created(String value) {
-    path(value);
-  }
-
-  @ParameterizedTest
-  @MethodSource("invalidPaths")
-  public void path_with_invalid_value_cannot_be_created(String value) {
-    assertCall(() -> path(value))
-        .throwsException(IllegalPathException.class);
+  @MethodSource("paths")
+  public void path_creation(String value, boolean isValid) {
+    if (isValid) {
+      path(value);
+    } else {
+      assertCall(() -> path(value))
+          .throwsException(IllegalPathException.class);
+    }
   }
 
   @Test
-  public void empty_string_path_is_root() {
-    assertThat(path("").isRoot())
+  public void single_dot_string_path_is_root() {
+    assertThat(path(".").isRoot())
         .isTrue();
   }
 
@@ -48,13 +46,8 @@ public class PathTest {
   @ParameterizedTest
   @MethodSource("validPaths")
   public void toJPath(String value) {
-    if (value.equals("")) {
-      assertThat((Object) path(value).toJPath())
-          .isEqualTo(Paths.get("."));
-    } else {
-      assertThat((Object) path(value).toJPath())
-          .isEqualTo(Paths.get(value));
-    }
+    assertThat((Object) path(value).toJPath())
+        .isEqualTo(Paths.get(value));
   }
 
   @Test
@@ -88,13 +81,13 @@ public class PathTest {
 
   public static Stream<Arguments> appendArguments() {
     return Stream.of(
-        arguments("", "", ""),
-        arguments("abc", "", "abc"),
-        arguments("abc/def", "", "abc/def"),
-        arguments("abc/def/ghi", "", "abc/def/ghi"),
-        arguments("", "abc", "abc"),
-        arguments("", "abc/def", "abc/def"),
-        arguments("", "abc/def/ghi", "abc/def/ghi"),
+        arguments(".", ".", "."),
+        arguments("abc", ".", "abc"),
+        arguments("abc/def", ".", "abc/def"),
+        arguments("abc/def/ghi", ".", "abc/def/ghi"),
+        arguments(".", "abc", "abc"),
+        arguments(".", "abc/def", "abc/def"),
+        arguments(".", "abc/def/ghi", "abc/def/ghi"),
         arguments("abc", "xyz", "abc/xyz"),
         arguments("abc", "xyz/uvw", "abc/xyz/uvw"),
         arguments("abc", "xyz/uvw/rst", "abc/xyz/uvw/rst"),
@@ -119,7 +112,7 @@ public class PathTest {
 
   public static Stream<Arguments> appendPartArguments() {
     return Stream.of(
-        arguments("", "abc", "abc"),
+        arguments(".", "abc", "abc"),
         arguments("abc", "xyz", "abc/xyz"),
         arguments("abc/def", "xyz", "abc/def/xyz"),
         arguments("abc/def/ghi", "xyz", "abc/def/ghi/xyz"),
@@ -137,26 +130,38 @@ public class PathTest {
 
   public static Stream<Arguments> appendPartIllegalArguments() {
     return Stream.of(
-        arguments("", "", ""),
-        arguments("", "abc/def"),
-        arguments("", " / "),
-        arguments("", "abc/def/ghi"),
+        arguments(".", ""),
+        arguments(".", "."),
+        arguments(".", ".."),
+        arguments(".", "abc/def"),
+        arguments(".", " / "),
+        arguments(".", "abc/def/ghi"),
         arguments(" ", ""),
+        arguments(" ", "."),
+        arguments(" ", ".."),
         arguments(" ", " / "),
         arguments(" ", "abc/def"),
-        arguments("abc", "", "abc"),
+        arguments("abc", ""),
+        arguments("abc", "."),
+        arguments("abc", ".."),
         arguments("abc", "xyz/uvw"),
         arguments("abc", " / "),
         arguments("abc", "xyz/uvw/rst"),
-        arguments("abc/def", "", "abc/def"),
+        arguments("abc/def", ""),
+        arguments("abc/def", "."),
+        arguments("abc/def", ".."),
         arguments("abc/def", "xyz/uvw"),
         arguments("abc/def", " / "),
         arguments("abc/def", "xyz/uvw/rst"),
-        arguments("abc/def/ghi", "", "abc/def/ghi"),
+        arguments("abc/def/ghi", ""),
+        arguments("abc/def/ghi", "."),
+        arguments("abc/def/ghi", ".."),
         arguments("abc/def/ghi", "xyz/uvw"),
         arguments("abc/def/ghi", " / "),
         arguments("abc/def/ghi", "xyz/uvw/rst"),
         arguments(" / ", ""),
+        arguments(" / ", "."),
+        arguments(" / ", ".."),
         arguments(" / ", " / "),
         arguments(" / ", "abc/def")
     );
@@ -172,13 +177,14 @@ public class PathTest {
 
   public static Stream<Arguments> partsArguments() {
     return Stream.of(
-        arguments("", list()),
+        arguments(".", list()),
         arguments("abc", list("abc")),
         arguments("abc/def", list("abc", "def")),
         arguments("abc/def/ghi", list("abc", "def", "ghi")),
         arguments(" ", list(" ")),
         arguments(" / ", list(" ", " ")),
-        arguments(" / / ", list(" ", " ", " ")));
+        arguments(" / / ", list(" ", " ", " "))
+    );
   }
 
   @Test
@@ -227,125 +233,241 @@ public class PathTest {
 
   @ParameterizedTest
   @MethodSource("startWithArguments")
-  public void startsWith(Path path, Path head, boolean expected) {
-    assertThat(path.startsWith(head))
+  public void startsWith(String path, String head, boolean expected) {
+    assertThat(path(path).startsWith(path(head)))
         .isEqualTo(expected);
   }
 
   public static Stream<Arguments> startWithArguments() {
     return Stream.of(
-        arguments(Path.root(), Path.root(), true),
-        arguments(path("abc"), Path.root(), true),
-        arguments(path("abc/def"), Path.root(), true),
-        arguments(path("abc/def/ghi"), Path.root(), true),
-        arguments(path("abc/def/ghi"), path("abc"), true),
-        arguments(path("abc/def/ghi"), path("abc/def"), true),
-        arguments(path("abc/def/ghi"), path("abc/def/ghi"), true),
-        arguments(path("abc/def/ghi"), path("ab"), false),
-        arguments(path("abc/def/ghi"), path("abc/d"), false),
-        arguments(path("abc/def/ghi"), path("def"), false),
-        arguments(path("abc/def/ghi"), path("ghi"), false),
-        arguments(Path.root(), path("abc"), false));
+        arguments(".", ".", true),
+        arguments("abc", ".", true),
+        arguments("abc/def", ".", true),
+        arguments("abc/def/ghi", ".", true),
+        arguments("abc/def/ghi", "abc", true),
+        arguments("abc/def/ghi", "abc/def", true),
+        arguments("abc/def/ghi", "abc/def/ghi", true),
+        arguments("abc/def/ghi", "ab", false),
+        arguments("abc/def/ghi", "abc/d", false),
+        arguments("abc/def/ghi", "def", false),
+        arguments("abc/def/ghi", "ghi", false),
+        arguments(".", "abc", false));
   }
 
   @Test
   public void test_equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(path("equal/path"), path("equal/path"));
-    for (Path path : listOfCorrectNonEqualPaths()) {
-      tester.addEqualityGroup(path);
-    }
+    tester.addEqualityGroup(path("."));
+    tester.addEqualityGroup(path("abc"));
+    tester.addEqualityGroup(path("abc/def"), path("abc/def"));
+    tester.addEqualityGroup(path("abc/def/ghi"));
+    tester.addEqualityGroup(path("abc/def/ghi/ijk"));
+
+    // These paths look really strange but Linux allows creating them.
+    // I cannot see any good reason for forbidding them.
+    tester.addEqualityGroup(path("..."));
+    tester.addEqualityGroup(path(".../abc"));
+    tester.addEqualityGroup(path("abc/..."));
+    tester.addEqualityGroup(path("abc/.../def"));
 
     tester.testEquals();
   }
 
-
   @ParameterizedTest
-  @MethodSource("validPaths")
-  public void test_to_string(String value) {
-    assertThat(path(value).toString())
-        .isEqualTo(value);
+  @MethodSource("paths")
+  public void test_to_string(String value, boolean isValid) {
+    if (isValid) {
+      assertThat(path(value).toString())
+          .isEqualTo(value);
+    }
   }
 
-  public static List<String> validPaths() {
-    ImmutableList.Builder<String> builder = ImmutableList.builder();
-
-    builder.add("");
-
-    builder.add("abc");
-    builder.add("abc/def");
-    builder.add("abc/def/ghi");
-    builder.add("abc/def/ghi/ijk");
-
-    // These paths look really strange but Linux allows creating them.
-    // I cannot see any good reason for forbidding them.
-    builder.add("...");
-    builder.add(".../abc");
-    builder.add("abc/...");
-    builder.add("abc/.../def");
-
-    return builder.build();
+  public static List<Arguments> validPaths() {
+    return paths().stream()
+        .filter(a -> a.get()[1].equals(Boolean.TRUE))
+        .collect(toList());
   }
 
-  public static ImmutableList<String> invalidPaths() {
-    ImmutableList.Builder<String> builder = ImmutableList.builder();
+  public static List<Arguments> paths() {
+    return List.of(
 
-    builder.add("/");
-    builder.add(".");
+        // zero characters long
+        arguments("", false),
 
-    builder.add("./");
-    builder.add("./.");
-    builder.add("././");
+        // one character long
+        arguments("/", false),
+        arguments(".", true),
+        arguments("a", true),
 
-    builder.add("abc/");
-    builder.add("abc/def/");
-    builder.add("abc/def/ghi/");
+        // two characters long
+        arguments("..", false),
+        arguments("./", false),
+        arguments(".a", true),
+        arguments("/.", false),
+        arguments("//", false),
+        arguments("/a", false),
+        arguments("a.", true),
+        arguments("a/", false),
+        arguments("aa", true),
 
-    builder.add("./abc");
-    builder.add("./abc/def");
-    builder.add("./abc/def/ghi");
+        // three characters long
+        arguments("...", true),
+        arguments("../", false),
+        arguments("..a", true),
 
-    builder.add("..");
-    builder.add("../");
-    builder.add("./../");
-    builder.add("../abc");
-    builder.add("abc/..");
-    builder.add("abc/../def");
-    builder.add("../..");
+        arguments("./.", false),
+        arguments(".//", false),
+        arguments("./a", false),
 
-    builder.add("//");
-    builder.add("///");
+        arguments(".a.", true),
+        arguments(".a/", false),
+        arguments(".aa", true),
 
-    builder.add("/abc");
-    builder.add("//abc");
-    builder.add("///abc");
+        arguments("/..", false),
+        arguments("/./", false),
+        arguments("/.a", false),
 
-    builder.add("abc//");
-    builder.add("abc///");
+        arguments("//.", false),
+        arguments("///", false),
+        arguments("//a", false),
 
-    builder.add("abc//def");
-    builder.add("abc///def");
+        arguments("/a.", false),
+        arguments("/a/", false),
+        arguments("/aa", false),
 
-    return builder.build();
-  }
+        arguments("a..", true),
+        arguments("a./", false),
+        arguments("a.a", true),
 
-  private static List<Path> listOfCorrectNonEqualPaths() {
-    ImmutableList.Builder<Path> builder = ImmutableList.builder();
+        arguments("a/.", false),
+        arguments("a//", false),
+        arguments("a/a", true),
 
-    builder.add(path(""));
-    builder.add(path("abc"));
-    builder.add(path("abc/def"));
-    builder.add(path("abc/def/ghi"));
-    builder.add(path("abc/def/ghi/ijk"));
+        arguments("aa.", true),
+        arguments("aa/", false),
+        arguments("aaa", true),
 
-    // These paths look really strange but Linux allows creating them.
-    // I cannot see any good reason for forbidding them.
-    builder.add(path("..."));
-    builder.add(path(".../abc"));
-    builder.add(path("abc/..."));
-    builder.add(path("abc/.../def"));
+//     four characters long
+        arguments("....", true),
+        arguments(".../", false),
+        arguments("...a", true),
 
-    return builder.build();
+        arguments("../.", false),
+        arguments("..//", false),
+        arguments("../a", false),
+
+        arguments("..a.", true),
+        arguments("..a/", false),
+        arguments("..aa", true),
+
+        arguments("./..", false),
+        arguments("././", false),
+        arguments("./.a", false),
+
+        arguments(".//.", false),
+        arguments(".///", false),
+        arguments(".//a", false),
+
+        arguments("./a.", false),
+        arguments("./a/", false),
+        arguments("./aa", false),
+
+        arguments(".a..", true),
+        arguments(".a./", false),
+        arguments(".a.a", true),
+
+        arguments(".a/.", false),
+        arguments(".a//", false),
+        arguments(".a/a", true),
+
+        arguments(".aa.", true),
+        arguments(".aa/", false),
+        arguments(".aaa", true),
+
+        arguments("/...", false),
+        arguments("/../", false),
+        arguments("/..a", false),
+
+        arguments("/./.", false),
+        arguments("/.//", false),
+        arguments("/./a", false),
+
+        arguments("/.a.", false),
+        arguments("/.a/", false),
+        arguments("/.aa", false),
+
+        arguments("//./", false),
+        arguments("//./", false),
+        arguments("//.a", false),
+
+        arguments("///.", false),
+        arguments("////", false),
+        arguments("///a", false),
+
+        arguments("//a.", false),
+        arguments("//a/", false),
+        arguments("//aa", false),
+
+        arguments("/a..", false),
+        arguments("/a./", false),
+        arguments("/a.a", false),
+
+        arguments("/a/.", false),
+        arguments("/a//", false),
+        arguments("/a/a", false),
+
+        arguments("/aa.", false),
+        arguments("/aa/", false),
+        arguments("/aaa", false),
+
+        arguments("a...", true),
+        arguments("a../", false),
+        arguments("a..a", true),
+
+        arguments("a./.", false),
+        arguments("a.//", false),
+        arguments("a./a", true),
+
+        arguments("a.a.", true),
+        arguments("a.a/", false),
+        arguments("a.aa", true),
+
+        arguments("a/..", false),
+        arguments("a/./", false),
+        arguments("a/.a", true),
+
+        arguments("a//.", false),
+        arguments("a///", false),
+        arguments("a//a", false),
+
+        arguments("a/a.", true),
+        arguments("a/a/", false),
+        arguments("a/aa", true),
+
+        arguments("aa..", true),
+        arguments("aa./", false),
+        arguments("aa.a", true),
+
+        arguments("aa/.", false),
+        arguments("aa//", false),
+        arguments("aa/a", true),
+
+        arguments("aaa.", true),
+        arguments("aaa/", false),
+        arguments("aaaa", true),
+
+        // rest
+        arguments("abc", true),
+        arguments("abc/def", true),
+        arguments("abc/def/ghi", true),
+        arguments("abc/def/ghi/ijk", true),
+
+        // These paths look really strange but Linux allows creating them.
+        // I cannot see any good reason for forbidding them.
+        arguments(".../abc", true),
+        arguments("abc/...", true),
+        arguments("abc/.../def", true)
+    );
   }
 }
