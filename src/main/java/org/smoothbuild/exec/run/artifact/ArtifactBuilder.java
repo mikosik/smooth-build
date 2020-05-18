@@ -78,7 +78,7 @@ public class ArtifactBuilder {
   }
 
   private void reportSuccess(String name, Path path) {
-    report(name, path.toString(), List.of());
+    report(name, path.q(), List.of());
   }
 
   private void reportFailure(String name, String errorMessage) {

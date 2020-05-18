@@ -36,11 +36,11 @@ public class CleanCommandTest {
       whenSmoothClean();
       thenFinishedWithSuccess();
       assertThat(smoothDir().list())
-          .asList().containsExactly(SMOOTH_LOCK_PATH.lastPart().value());
+          .asList().containsExactly(SMOOTH_LOCK_PATH.lastPart().toString());
     }
 
     private void createDirInProject(Path projectPath) {
-      assertThat(new File(projectDir(), projectPath.value()).mkdirs()).isTrue();
+      assertThat(new File(projectDir(), projectPath.toString()).mkdirs()).isTrue();
     }
 
     @Test

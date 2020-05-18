@@ -143,7 +143,7 @@ public class HashedDb {
         return true;
       case DIR:
         throw new CorruptedHashedDbException(
-            "Corrupted HashedDb. " + path + " is a directory not a data file.");
+            "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
       case NOTHING:
         return false;
       default:
@@ -163,7 +163,7 @@ public class HashedDb {
         }
       case DIR:
         throw new CorruptedHashedDbException(
-            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path));
+            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
       case NOTHING:
         throw new NoSuchDataException(hash);
       default:

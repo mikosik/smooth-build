@@ -23,7 +23,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
   private final NativeApi nativeApi;
 
   public OutputClassFile(ArrayBuilder fileArrayBuilder, Path path, NativeApi nativeApi) {
-    super(URI.create("class:///" + path.value()), Kind.CLASS);
+    super(URI.create("class:///" + path.toString()), Kind.CLASS);
     this.fileArrayBuilder = fileArrayBuilder;
     this.path = path;
     this.nativeApi = nativeApi;
@@ -36,7 +36,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         super.close();
-        SString pathString = nativeApi.factory().string(path.value());
+        SString pathString = nativeApi.factory().string(path.toString());
         Struct file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }

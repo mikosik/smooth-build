@@ -264,11 +264,11 @@ public class TestingContext {
   }
 
   public Struct file(Path path) {
-    return file(path, ByteString.encodeString(path.value(), CHARSET));
+    return file(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
   public Struct file(Path path, ByteString content) {
-    SString string = objectFactory().string(path.value());
+    SString string = objectFactory().string(path.toString());
     Blob blob = blob(content);
     return objectFactory().file(string, blob);
   }

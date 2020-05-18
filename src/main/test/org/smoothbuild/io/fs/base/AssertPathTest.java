@@ -28,14 +28,14 @@ public class AssertPathTest {
   public void assert_path_is_dir_throws_exception_for_file_path() {
     FileSystem fileSystem = fileSystemWith(path, FILE);
     assertCall(() -> assertPathIsDir(fileSystem, path))
-        .throwsException(new IOException("Dir " + path + " doesn't exist. It is a file."));
+        .throwsException(new IOException("Dir " + path.q() + " doesn't exist. It is a file."));
   }
 
   @Test
   public void assert_path_is_dir_throws_exception_when_path_does_not_exist() {
     FileSystem fileSystem = fileSystemWith(path, NOTHING);
     assertCall(() -> assertPathIsDir(fileSystem, path))
-        .throwsException(new IOException("Dir " + path + " doesn't exist."));
+        .throwsException(new IOException("Dir " + path.q() + " doesn't exist."));
   }
 
   @Test
@@ -48,14 +48,14 @@ public class AssertPathTest {
   public void assert_path_is_file_throws_exception_for_dir_path() {
     FileSystem fileSystem = fileSystemWith(path, DIR);
     assertCall(() -> assertPathIsFile(fileSystem, path))
-        .throwsException(new IOException("File " + path + " doesn't exist. It is a dir."));
+        .throwsException(new IOException("File " + path.q() + " doesn't exist. It is a dir."));
   }
 
   @Test
   public void assert_path_is_file_throws_exception_when_path_does_not_exist() {
     FileSystem fileSystem = fileSystemWith(path, NOTHING);
     assertCall(() -> assertPathIsFile(fileSystem, path))
-        .throwsException(new IOException("File " + path + " doesn't exist."));
+        .throwsException(new IOException("File " + path.q() + " doesn't exist."));
   }
 
   @Test
@@ -74,7 +74,7 @@ public class AssertPathTest {
   public void assert_path_exists_throws_exception_when_path_does_not_exist() {
     FileSystem fileSystem = fileSystemWith(path, NOTHING);
     assertCall(() -> assertPathExists(fileSystem, path))
-        .throwsException(new IOException("Path " + path + " doesn't exist."));
+        .throwsException(new IOException("Path " + path.q() + " doesn't exist."));
   }
 
   @Test

@@ -249,7 +249,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public File artifact(String name) {
-    return file(ARTIFACTS_PATH.value() + "/" + name);
+    return file(ARTIFACTS_PATH.appendPart(name).toString());
   }
 
   /**
@@ -322,7 +322,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public File smoothDir() {
-    return new File(projectDir(), SMOOTH_DIR.value());
+    return new File(projectDir(), SMOOTH_DIR.toString());
   }
 
   public String artifactContent(String artifact) throws IOException {

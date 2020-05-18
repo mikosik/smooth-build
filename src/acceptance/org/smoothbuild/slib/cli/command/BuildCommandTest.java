@@ -39,7 +39,7 @@ public class BuildCommandTest {
 
     @Test
     public void build_command_clears_artifacts_dir() throws Exception {
-      String path = ARTIFACTS_PATH.value() + "/file.txt";
+      String path = ARTIFACTS_PATH.appendPart("file.txt").toString();
       givenFile(path, "content");
       givenScript(
           "  syntactically incorrect script  ");
@@ -51,7 +51,7 @@ public class BuildCommandTest {
 
     @Test
     public void build_command_clears_temporary_dir() throws Exception {
-      String path = TEMPORARY_PATH.value() + "/file.txt";
+      String path = TEMPORARY_PATH.appendPart("file.txt").toString();
       givenFile(path, "content");
       givenScript(
           "  syntactically incorrect script  ");

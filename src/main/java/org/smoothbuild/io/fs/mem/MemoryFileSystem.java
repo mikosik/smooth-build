@@ -48,13 +48,13 @@ public class MemoryFileSystem implements FileSystem {
   @Override
   public void move(Path source, Path target) throws IOException {
     if (pathState(source) == NOTHING) {
-      throw new IOException("Cannot move " + source + ". It doesn't exist.");
+      throw new IOException("Cannot move " + source.q() + ". It doesn't exist.");
     }
     if (pathState(source) == DIR) {
-      throw new IOException("Cannot move " + source + ". It is directory.");
+      throw new IOException("Cannot move " + source.q() + ". It is directory.");
     }
     if (pathState(target) == DIR) {
-      throw new IOException("Cannot move to " + target + ". It is directory.");
+      throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
     copyAllAndClose(source(source), sink(target));
     delete(source);
@@ -144,12 +144,12 @@ public class MemoryFileSystem implements FileSystem {
   private MemoryElement getFile(Path path) throws IOException {
     MemoryElement found = findElement(path);
     if (found == null) {
-      throw new IOException("File " + path + " doesn't exist.");
+      throw new IOException("File " + path.q() + " doesn't exist.");
     } else {
       if (found.isFile()) {
         return found;
       } else {
-        throw new IOException("File " + path + " doesn't exist. It is a dir.");
+        throw new IOException("File " + path.q() + " doesn't exist. It is a dir.");
       }
     }
   }
@@ -157,12 +157,12 @@ public class MemoryFileSystem implements FileSystem {
   private MemoryElement getDir(Path path) throws IOException {
     MemoryElement found = findElement(path);
     if (found == null) {
-      throw new IOException("Dir " + path + " doesn't exist.");
+      throw new IOException("Dir " + path.q() + " doesn't exist.");
     } else {
       if (found.isDir()) {
         return found;
       } else {
-        throw new IOException("Dir " + path + " doesn't exist. It is a file.");
+        throw new IOException("Dir " + path.q() + " doesn't exist. It is a file.");
       }
     }
   }

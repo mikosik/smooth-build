@@ -24,6 +24,6 @@ public class InputSourceFileTest extends TestingContext {
     Path path = path("my/path");
     Struct file = file(path);
     assertThat(new InputSourceFile(file).getName())
-        .isEqualTo("/" + path.value());
+        .isEqualTo("/" + path.toString());
   }
 }

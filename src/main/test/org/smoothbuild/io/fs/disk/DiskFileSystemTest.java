@@ -36,7 +36,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
 
   @Override
   protected void createFile(Path path, ByteString content) throws IOException {
-    File file = stringPathToFile(path.value());
+    File file = stringPathToFile(path.toString());
     file.getParentFile().mkdirs();
     try (BufferedSink sink = buffer(sink(file))) {
       sink.write(content);

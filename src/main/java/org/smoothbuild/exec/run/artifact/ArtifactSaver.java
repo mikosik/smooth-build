@@ -99,7 +99,7 @@ public class ArtifactSaver {
   private DuplicatedPathsException duplicatedPathsMessage(Set<Path> duplicates) {
     String delimiter = "\n  ";
     String list = duplicates.stream()
-        .map(Path::toString)
+        .map(Path::q)
         .collect(joining(delimiter));
     return new DuplicatedPathsException(
         "Can't store array of Files as it contains files with duplicated paths:"

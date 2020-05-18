@@ -132,6 +132,10 @@ public class Path {
     }
   }
 
+  public String q() {
+    return "'" + value +"'";
+  }
+
   @Override
   public final boolean equals(Object object) {
     if (this == object) {
@@ -151,7 +155,7 @@ public class Path {
 
   @Override
   public String toString() {
-    return "'" + value + "'";
+    return value;
   }
 
   public java.nio.file.Path toJPath() {
