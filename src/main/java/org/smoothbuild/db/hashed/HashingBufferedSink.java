@@ -63,7 +63,7 @@ public class HashingBufferedSink implements BufferedSink {
         return;
       case DIR:
         throw new IOException(
-            "Corrupted HashedDb. Cannot store data at " + path + " as it is a directory.");
+            "Corrupted HashedDb. Cannot store data at " + path.q() + " as it is a directory.");
       default:
         throw newUnknownPathState(pathState);
     }

@@ -69,13 +69,13 @@ public class DiskFileSystem implements FileSystem {
   @Override
   public void move(Path source, Path target) throws IOException {
     if (pathState(source) == NOTHING) {
-      throw new IOException("Cannot move " + source + ". It doesn't exist.");
+      throw new IOException("Cannot move " + source.q() + ". It doesn't exist.");
     }
     if (pathState(source) == DIR) {
-      throw new IOException("Cannot move " + source + ". It is directory.");
+      throw new IOException("Cannot move " + source.q() + ". It is directory.");
     }
     if (pathState(target) == DIR) {
-      throw new IOException("Cannot move to " + target + ". It is directory.");
+      throw new IOException("Cannot move to " + target.q() + ". It is directory.");
     }
     Path targetParent = target.parent();
     if (pathState(targetParent) == NOTHING) {
@@ -125,7 +125,7 @@ public class DiskFileSystem implements FileSystem {
     createDir(link.parent());
 
     String escape = escapeString(link.parts().size() - 1);
-    java.nio.file.Path targetJdkPath = Paths.get(escape, target.value());
+    java.nio.file.Path targetJdkPath = Paths.get(escape, target.toString());
     Files.createSymbolicLink(jdkPath(link), targetJdkPath);
   }
 
@@ -137,7 +137,7 @@ public class DiskFileSystem implements FileSystem {
     if (path.isRoot()) {
       return rootDir;
     } else {
-      return rootDir.resolve(path.value());
+      return rootDir.resolve(path.toString());
     }
   }
 }

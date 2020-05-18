@@ -81,7 +81,7 @@ public class RecursivePathsIteratorTest {
     PathIterator iterator = recursivePathsIterator(fileSystem, path(expectedRootDir));
     List<String> created = new ArrayList<>();
     while (iterator.hasNext()) {
-      created.add(iterator.next().value());
+      created.add(iterator.next().toString());
     }
     assertThat(created)
         .containsExactlyElementsIn(expectedNames);

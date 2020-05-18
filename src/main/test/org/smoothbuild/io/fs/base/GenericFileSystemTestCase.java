@@ -72,14 +72,14 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void files_throws_exception_when_dir_does_not_exist() {
     assertCall(() -> fileSystem.files(path("abc")))
-        .throwsException(new IOException("Dir " + path("abc") + " doesn't exist."));
+        .throwsException(new IOException("Dir 'abc' doesn't exist."));
   }
 
   @Test
   public void files_throws_exception_when_path_is_a_file() throws Exception {
     createEmptyFile(path);
     assertCall(() -> fileSystem.files(path))
-        .throwsException(new IOException("Dir " + path + " doesn't exist. It is a file."));
+        .throwsException(new IOException("Dir " + path.q() + " doesn't exist. It is a file."));
   }
 
   @Test
@@ -109,7 +109,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void source_throws_exception_when_file_does_not_exist() {
     assertCall(() -> fileSystem.source(path("dir/file")))
-        .throwsException(new IOException("File " + path("dir/file") + " doesn't exist."));
+        .throwsException(new IOException("File 'dir/file' doesn't exist."));
   }
 
   @Test
@@ -160,14 +160,14 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void moving_nonexistent_file_fails() {
     assertCall(() -> fileSystem.move(path("source"), path("target")))
-        .throwsException(new IOException("Cannot move " + path("source") + ". It doesn't exist."));
+        .throwsException(new IOException("Cannot move 'source'. It doesn't exist."));
   }
 
   @Test
   public void moving_directory_fails() throws Exception {
     createEmptyFile(path("source/file"));
     assertCall(() -> fileSystem.move(path("source"), path("target")))
-        .throwsException(new IOException("Cannot move " + path("source") + ". It is directory."));
+        .throwsException(new IOException("Cannot move 'source'. It is directory."));
   }
 
   @Test
@@ -176,7 +176,7 @@ public abstract class GenericFileSystemTestCase {
     createEmptyFile(path("target/file"));
     assertCall(() -> fileSystem.move(path("source"), path("target")))
         .throwsException(new IOException(
-            "Cannot move to " + path("target") + ". It is directory."));
+            "Cannot move to 'target'. It is directory."));
   }
 
   @Test

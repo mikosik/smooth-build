@@ -47,13 +47,6 @@ public class PathTest {
 
   @ParameterizedTest
   @MethodSource("validPaths")
-  public void value(String value) {
-    assertThat(path(value).value())
-        .isEqualTo(value);
-  }
-
-  @ParameterizedTest
-  @MethodSource("validPaths")
   public void toJPath(String value) {
     if (value.equals("")) {
       assertThat((Object) path(value).toJPath())
@@ -173,7 +166,7 @@ public class PathTest {
   @MethodSource("partsArguments")
   public void parts(String path, List<String> expectedParts) {
     List<Path> actualParts = path(path).parts();
-    assertThat(map(actualParts, Path::value))
+    assertThat(map(actualParts, Path::toString))
         .isEqualTo(expectedParts);
   }
 
@@ -267,10 +260,12 @@ public class PathTest {
     tester.testEquals();
   }
 
-  @Test
-  public void test_to_string() {
-    assertThat(path("abc/def").toString())
-        .isEqualTo("'abc/def'");
+
+  @ParameterizedTest
+  @MethodSource("validPaths")
+  public void test_to_string(String value) {
+    assertThat(path(value).toString())
+        .isEqualTo(value);
   }
 
   public static List<String> validPaths() {

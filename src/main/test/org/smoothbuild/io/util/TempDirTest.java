@@ -39,7 +39,7 @@ public class TempDirTest extends TestingContext {
   @Test
   public void root_os_path() {
     assertThat(tempDir.rootOsPath())
-        .isEqualTo(rootPath.value());
+        .isEqualTo(rootPath.toString());
   }
 
   @Test

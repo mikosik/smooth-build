@@ -81,7 +81,7 @@ public class RecursivePathsIterator implements PathIterator {
           case NOTHING:
             throw new IOException(format(
                 "FileSystem changed when iterating tree of directory %s. Cannot find %s.",
-                baseDir, baseDir.append(file)));
+                baseDir.q(), baseDir.append(file).q()));
           default:
             throw new RuntimeException("Unexpected case: " + state);
         }

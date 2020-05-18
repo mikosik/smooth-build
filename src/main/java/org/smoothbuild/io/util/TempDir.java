@@ -77,7 +77,7 @@ public class TempDir {
     for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext(); ) {
       Path path = it.next();
       Blob content = readContentImpl(path);
-      Struct file = container.factory().file(container.factory().string(path.value()), content);
+      Struct file = container.factory().file(container.factory().string(path.toString()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();

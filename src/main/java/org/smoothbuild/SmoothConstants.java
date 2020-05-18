@@ -24,6 +24,6 @@ public class SmoothConstants {
   public static final Path TEMPORARY_PATH = SMOOTH_DIR.appendPart("temporary");
   public static final Path USER_MODULE_FILE = path("build.smooth");
   public static final ModulePath USER_MODULE =
-      new ModulePath(USER, USER_MODULE_FILE.toJPath(), USER_MODULE_FILE.value());
+      new ModulePath(USER, USER_MODULE_FILE.toJPath(), USER_MODULE_FILE.toString());
 
 }

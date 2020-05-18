@@ -35,6 +35,6 @@ public class OutputClassFileTest extends TestingContext {
     OutputClassFile outputClassFile =
         new OutputClassFile(arrayBuilder(fileType()), path, nativeApi());
     assertThat(outputClassFile.getName())
-        .isEqualTo("/" + path.value());
+        .isEqualTo("/" + path.toString());
   }
 }

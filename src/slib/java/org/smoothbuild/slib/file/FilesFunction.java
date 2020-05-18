@@ -23,7 +23,7 @@ public class FilesFunction {
     FileSystem fileSystem = container.fileSystem();
 
     if (path.startsWith(SMOOTH_DIR)) {
-      container.log().error("Listing files from " + SMOOTH_DIR + " dir is not allowed.");
+      container.log().error("Listing files from " + SMOOTH_DIR.q() + " dir is not allowed.");
       return null;
     }
 
@@ -31,10 +31,10 @@ public class FilesFunction {
       case DIR:
         return readFiles(container, fileSystem, path);
       case FILE:
-        container.log().error("Dir " + path + " doesn't exist. It is a file.");
+        container.log().error("Dir " + path.q() + " doesn't exist. It is a file.");
         return null;
       case NOTHING:
-        container.log().error("Dir " + path + " doesn't exist.");
+        container.log().error("Dir " + path.q() + " doesn't exist.");
         return null;
       default:
         throw new RuntimeException("Broken 'files' function implementation: unreachable case");

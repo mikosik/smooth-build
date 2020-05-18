@@ -27,10 +27,10 @@ public class AFileFunction {
         FileReader reader = new FileReader(container);
         return reader.createFile(validatedPath, validatedPath);
       case DIR:
-        container.log().error("File " + validatedPath + " doesn't exist. It is a dir.");
+        container.log().error("File " + validatedPath.q() + " doesn't exist. It is a dir.");
         return null;
       case NOTHING:
-        container.log().error("File " + validatedPath + " doesn't exist.");
+        container.log().error("File " + validatedPath.q() + " doesn't exist.");
         return null;
       default:
         throw new RuntimeException("Broken 'file' function implementation: unreachable case");

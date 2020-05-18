@@ -22,7 +22,7 @@ public class FileReader {
   }
 
   private SString createPath(Path path) {
-    return container.factory().string(path.value());
+    return container.factory().string(path.toString());
   }
 
   private Blob createContent(Path path) throws IOException {
