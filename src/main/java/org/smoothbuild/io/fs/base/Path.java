@@ -11,18 +11,22 @@ import java.util.List;
 
 public class Path {
   public static final String SEPARATOR = "/";
-  private static final String ROOT = "";
+  private static final String ROOT = ".";
 
   private final String value;
 
   public static Path path(String value) {
+    if (value.equals(ROOT)) {
+      return root();
+    }
+    failIf(value.isEmpty(), "Path cannot be empty string.");
+    failIf(value.contains("//"), "Path cannot contain two slashes '//' in a row.");
     failIf(value.startsWith("/"), "Path cannot start with slash character '/'.");
     failIf(value.endsWith("/"), "Path cannot end with slash character '/'.");
-    failIf(value.contains("//"), "Path cannot contain two slashes (//) in a row");
     failIf(list(value.split(quote(SEPARATOR))).contains("."),
-        "Path cannot contain '.' element.");
+        "Path cannot contain '.' part unless it is path denoting root dir ('.').");
     failIf(list(value.split(quote(SEPARATOR))).contains(".."),
-        "Path cannot contain '..' element.");
+        "Path cannot contain '..'.");
     return new Path(value);
   }
 
@@ -45,11 +49,7 @@ public class Path {
   }
 
   public boolean isRoot() {
-    return isRootString(value);
-  }
-
-  private static boolean isRootString(String path) {
-    return path.equals(ROOT);
+    return value.equals(ROOT);
   }
 
   public Path parent() {
@@ -89,9 +89,13 @@ public class Path {
   }
 
   public Path appendPart(String part) {
-    if (part.contains(SEPARATOR) || part.equals("")) {
+    if (part.contains(SEPARATOR) ) {
       throw new IllegalArgumentException(
-          "Part cannot contain '" + part + "' (part='" + part + "').");
+          "Part cannot contain '" + SEPARATOR + "' (part='" + part + "').");
+    }
+    if (part.equals("") || part.equals(".") || part.equals("..")) {
+      throw new IllegalArgumentException(
+          "Part cannot be equal to '" + part + "'.");
     }
     if (isRoot()) {
       return new Path(part);
@@ -159,10 +163,6 @@ public class Path {
   }
 
   public java.nio.file.Path toJPath() {
-    if (isRoot()) {
-      return Paths.get(".");
-    } else {
-      return Paths.get(value);
-    }
+    return Paths.get(value);
   }
 }
