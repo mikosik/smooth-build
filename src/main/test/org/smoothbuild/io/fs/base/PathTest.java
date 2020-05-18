@@ -118,6 +118,58 @@ public class PathTest {
   }
 
   @ParameterizedTest
+  @MethodSource("appendPartArguments")
+  public void appendPart(String path, String part, String expected) {
+    assertThat(path(path).appendPart(part))
+        .isEqualTo(path(expected));
+  }
+
+  public static Stream<Arguments> appendPartArguments() {
+    return Stream.of(
+        arguments("", "abc", "abc"),
+        arguments("abc", "xyz", "abc/xyz"),
+        arguments("abc/def", "xyz", "abc/def/xyz"),
+        arguments("abc/def/ghi", "xyz", "abc/def/ghi/xyz"),
+        arguments(" ", " ", " / "),
+        arguments(" / ", " ", " / / ")
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("appendPartIllegalArguments")
+  public void appendPart_fails_for(String path, String part) {
+    assertCall(() -> path(path).appendPart(part))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  public static Stream<Arguments> appendPartIllegalArguments() {
+    return Stream.of(
+        arguments("", "", ""),
+        arguments("", "abc/def"),
+        arguments("", " / "),
+        arguments("", "abc/def/ghi"),
+        arguments(" ", ""),
+        arguments(" ", " / "),
+        arguments(" ", "abc/def"),
+        arguments("abc", "", "abc"),
+        arguments("abc", "xyz/uvw"),
+        arguments("abc", " / "),
+        arguments("abc", "xyz/uvw/rst"),
+        arguments("abc/def", "", "abc/def"),
+        arguments("abc/def", "xyz/uvw"),
+        arguments("abc/def", " / "),
+        arguments("abc/def", "xyz/uvw/rst"),
+        arguments("abc/def/ghi", "", "abc/def/ghi"),
+        arguments("abc/def/ghi", "xyz/uvw"),
+        arguments("abc/def/ghi", " / "),
+        arguments("abc/def/ghi", "xyz/uvw/rst"),
+        arguments(" / ", ""),
+        arguments(" / ", " / "),
+        arguments(" / ", "abc/def")
+    );
+  }
+
+  @ParameterizedTest
   @MethodSource("partsArguments")
   public void parts(String path, List<String> expectedParts) {
     List<Path> actualParts = path(path).parts();

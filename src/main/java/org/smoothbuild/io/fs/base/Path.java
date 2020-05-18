@@ -88,6 +88,18 @@ public class Path {
     }
   }
 
+  public Path appendPart(String part) {
+    if (part.contains(SEPARATOR) || part.equals("")) {
+      throw new IllegalArgumentException(
+          "Part cannot contain '" + part + "' (part='" + part + "').");
+    }
+    if (isRoot()) {
+      return new Path(part);
+    } else {
+      return new Path(this.value + SEPARATOR + part);
+    }
+  }
+
   public List<Path> parts() {
     if (isRoot()) {
       return new ArrayList<>();
