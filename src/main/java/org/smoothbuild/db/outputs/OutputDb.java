@@ -3,7 +3,6 @@ package org.smoothbuild.db.outputs;
 import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
 import static org.smoothbuild.db.outputs.OutputDbException.outputDbException;
-import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 import static org.smoothbuild.lang.object.base.Messages.isValidSeverity;
 import static org.smoothbuild.lang.object.base.Messages.severity;
@@ -105,6 +104,6 @@ public class OutputDb {
   }
 
   static Path toPath(Hash taskHash) {
-    return OUTPUTS_DB_PATH.append(path(taskHash.hex()));
+    return OUTPUTS_DB_PATH.appendPart(taskHash.hex());
   }
 }

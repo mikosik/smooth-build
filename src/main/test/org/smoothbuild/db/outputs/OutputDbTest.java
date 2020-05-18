@@ -48,7 +48,7 @@ public class OutputDbTest extends TestingContext {
   @Test
   public void outputdb_is_corrupted_when_task_hash_points_to_directory() throws Exception {
     path = OutputDb.toPath(hash);
-    outputDbFileSystem().sink(path.append(path("file")));
+    outputDbFileSystem().sink(path.appendPart("file"));
 
     assertCall(() -> outputDb().contains(hash))
         .throwsException(corruptedValueException(hash, path + " is directory not a file."));
