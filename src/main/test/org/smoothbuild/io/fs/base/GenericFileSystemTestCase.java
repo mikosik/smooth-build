@@ -55,7 +55,7 @@ public abstract class GenericFileSystemTestCase {
   @Test
   public void path_state_is_nothing_even_when_its_first_part_is_a_file() throws Exception {
     createEmptyFile(path);
-    assertThat(fileSystem.pathState(path.append(path("something"))))
+    assertThat(fileSystem.pathState(path.appendPart("something")))
         .isEqualTo(NOTHING);
   }
 
@@ -298,7 +298,7 @@ public abstract class GenericFileSystemTestCase {
 
   @Test
   public void deleting_link_to_dir_does_not_delete_target() throws Exception {
-    createEmptyFile(dir.append(path("ignore")));
+    createEmptyFile(dir.appendPart("ignore"));
     fileSystem.createLink(path, dir);
     fileSystem.delete(path);
     assertThat(fileSystem.pathState(path))

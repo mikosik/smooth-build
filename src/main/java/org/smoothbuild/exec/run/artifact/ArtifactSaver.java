@@ -57,7 +57,7 @@ public class ArtifactSaver {
     if (elemType.isArray()) {
       int i = 0;
       for (Array element : array.asIterable(Array.class)) {
-        saveArray(artifactPath.append(path(Integer.toString(i))), element);
+        saveArray(artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
     } else if (elemType.equals(objectFactory.getType(TypeNames.FILE))) {
@@ -71,8 +71,7 @@ public class ArtifactSaver {
   private void saveObjectArray(Path artifactPath, Array array) throws IOException {
     int i = 0;
     for (SObject object : array.asIterable(SObject.class)) {
-      Path filePath = path(Integer.valueOf(i).toString());
-      Path sourcePath = artifactPath.append(filePath);
+      Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
       Path targetPath = targetPath(object);
       fileSystem.createLink(sourcePath, targetPath);
       i++;

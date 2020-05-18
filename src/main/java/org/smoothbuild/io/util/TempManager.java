@@ -1,7 +1,6 @@
 package org.smoothbuild.io.util;
 
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +26,7 @@ public class TempManager {
   }
 
   public Path tempPath() {
-    return TEMPORARY_PATH.append(path(Integer.toString(id.getAndIncrement())));
+    return TEMPORARY_PATH.appendPart(Integer.toString(id.getAndIncrement()));
   }
 
   public TempDir tempDir(Container container) throws IOException {
