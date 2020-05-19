@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.run;
 
+import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
@@ -46,7 +47,8 @@ public class BuildRunner {
       try {
         fileSystem.delete(path);
       } catch (IOException e) {
-        console.error("Unable to delete " + path + ".");
+        console.error(
+            "Unable to delete " + path + ". Caught exception:\n" + getStackTraceAsString(e));
         return EXIT_CODE_ERROR;
       }
     }
