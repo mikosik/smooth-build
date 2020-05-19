@@ -1,11 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.joining;
-import static org.junit.Assert.assertEquals;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
-import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.object.type.TestingTypes.a;
 import static org.smoothbuild.lang.object.type.TestingTypes.array2A;
 import static org.smoothbuild.lang.object.type.TestingTypes.array2B;
@@ -26,301 +22,285 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
-import java.util.Map;
 
-import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
-import org.quackery.junit.QuackeryRunner;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.util.Lists;
 
-import com.google.common.collect.ImmutableMap;
-
-@RunWith(QuackeryRunner.class)
 public class GenericTypeMapTest {
-  @Quackery
-  public static Suite infer_actual_core_types() {
-    return suite("infer_from").addAll(asList(
+  @ParameterizedTest
+  @MethodSource("inferMapping_test_data")
+  public void inferMapping(List<Type> types, List<Type> actualTypes, Type type, Type expected) {
+    if (type == null) {
+      assertCall(() -> GenericTypeMap.inferMapping(types, actualTypes))
+          .throwsException(IllegalArgumentException.class);
+    } else {
+      assertThat(GenericTypeMap.inferMapping(types, actualTypes).applyTo(type))
+          .isEqualTo(expected);
+    }
+  }
+
+  public static List<Arguments> inferMapping_test_data() {
+    return List.of(
         // concrete types
-        assertInferFrom(
+        arguments(
             list(string),
             list(string),
             blob, blob),
 
         // a <- string
-        assertInferFrom(
+        arguments(
             list(a),
             list(string),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a),
             list(arrayString),
             a, arrayString),
-        assertInferFrom(
+        arguments(
             list(a),
             list(array2String),
             a, array2String),
 
-        failsInferFrom(
-            list(arrayA),
-            list(string)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(arrayA),
+            Lists.<Type>list(string),
+            null, null),
+        arguments(
             list(arrayA),
             list(arrayString),
             a, string),
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(array2String),
             a, arrayString),
 
-        failsInferFrom(
-            list(array2A),
-            list(string)),
-        failsInferFrom(
-            list(array2A),
-            list(arrayString)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(string),
+            null, null),
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(arrayString),
+            null, null),
+        arguments(
             list(array2A),
             list(array2String),
             a, string),
 
         // a <- struct (Person)
-        assertInferFrom(
+        arguments(
             list(a),
             list(person),
             a, person),
-        assertInferFrom(
+        arguments(
             list(a),
             list(arrayPerson),
             a, arrayPerson),
-        assertInferFrom(
+        arguments(
             list(a),
             list(array2Person),
             a, array2Person),
 
-        failsInferFrom(
-            list(arrayA),
-            list(person)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(arrayA),
+            Lists.<Type>list(person),
+            null, null),
+        arguments(
             list(arrayA),
             list(arrayPerson),
             a, person),
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(array2Person),
             a, arrayPerson),
 
-        failsInferFrom(
-            list(array2A),
-            list(person)),
-        failsInferFrom(
-            list(array2A),
-            list(arrayPerson)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(person),
+            null, null),
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(arrayPerson),
+            null, null),
+        arguments(
             list(array2A),
             list(array2Person),
             a, person),
 
         // a <- Nothing
 
-        assertInferFrom(
+        arguments(
             list(a),
             list(nothing),
             a, nothing),
-        assertInferFrom(
+        arguments(
             list(a),
             list(arrayNothing),
             a, arrayNothing),
-        assertInferFrom(
+        arguments(
             list(a),
             list(array2Nothing),
             a, array2Nothing),
 
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(nothing),
             a, nothing),
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(arrayNothing),
             a, nothing),
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(array2Nothing),
             a, arrayNothing),
 
-        assertInferFrom(
+        arguments(
             list(array2A),
             list(nothing),
             a, nothing),
-        assertInferFrom(
+        arguments(
             list(array2A),
             list(arrayNothing),
             a, nothing),
-        assertInferFrom(
+        arguments(
             list(array2A),
             list(array2Nothing),
             a, nothing),
 
         // a <- b
 
-        assertInferFrom(
+        arguments(
             list(a),
             list(b),
             a, b),
-        assertInferFrom(
+        arguments(
             list(a),
             list(arrayB),
             a, arrayB),
-        assertInferFrom(
+        arguments(
             list(a),
             list(array2B),
             a, array2B),
 
-        failsInferFrom(
-            list(arrayA),
-            list(b)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(arrayA),
+            Lists.<Type>list(b),
+            null, null),
+        arguments(
             list(arrayA),
             list(arrayB),
             a, b),
-        assertInferFrom(
+        arguments(
             list(arrayA),
             list(array2B),
             a, arrayB),
 
-        failsInferFrom(
-            list(array2A),
-            list(b)),
-        failsInferFrom(
-            list(array2A),
-            list(arrayB)),
-        assertInferFrom(
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(b),
+            null, null),
+        arguments(
+            Lists.<Type>list(array2A),
+            Lists.<Type>list(arrayB),
+            null, null),
+        arguments(
             list(array2A),
             list(array2B),
             a, b),
 
         // a <- String, struct (Person); with conversions
 
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(person, string),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(person, arrayString),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(string, arrayPerson),
             a, string),
 
         // a <- Nothing, String; with conversions
 
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(nothing, string),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(string, arrayNothing),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(nothing, arrayString),
             a, string),
-        assertInferFrom(
+        arguments(
             list(arrayA, arrayA),
             list(arrayString, arrayNothing),
             a, string),
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(arrayString, nothing),
             a, arrayString),
 
         // a <- Nothing, String; with conversions
 
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(nothing, person),
             a, person),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(person, arrayNothing),
             a, person),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(nothing, arrayPerson),
             a, person),
-        assertInferFrom(
+        arguments(
             list(arrayA, arrayA),
             list(arrayPerson, arrayNothing),
             a, person),
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(arrayPerson, nothing),
             a, arrayPerson),
-        assertInferFrom(
+        arguments(
             list(arrayA, arrayA),
             list(arrayNothing, array2String),
             a, arrayString),
 
         // a <- Nothing, a; with conversions
 
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(nothing, a),
             a, a),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(a, arrayNothing),
             a, a),
-        assertInferFrom(
+        arguments(
             list(a, arrayA),
             list(nothing, arrayA),
             a, a),
-        assertInferFrom(
+        arguments(
             list(arrayA, arrayA),
             list(arrayA, arrayNothing),
             a, a),
-        assertInferFrom(
+        arguments(
             list(a, a),
             list(arrayA, nothing),
             a, arrayA),
-        assertInferFrom(
+        arguments(
             list(arrayA, arrayA),
             list(arrayNothing, array2A),
-            a, arrayA)));
-  }
-
-  private static Case assertInferFrom(List<Type> types, List<Type> actualTypes,
-      Type type, Type expected) {
-    String typesString = commaSeparatedList(types);
-    String actualStrings = commaSeparatedList(actualTypes);
-    return newCase(
-        "types=(" + typesString + "), actual=(" + actualStrings + ") " + expected,
-        () -> assertEquals(expected, inferMapping(types, actualTypes).applyTo(type)));
-  }
-
-  private static Case failsInferFrom(List<Type> types, List<Type> actualTypes) {
-    String typesString = commaSeparatedList(types);
-    String actualStrings = commaSeparatedList(actualTypes);
-    return newCase(
-        "types=(" + typesString + "), actual=(" + actualStrings + ") fails with IAE",
-        () -> {
-          assertCall(() -> inferMapping(types, actualTypes))
-              .throwsException(IllegalArgumentException.class);
-        });
-  }
-
-  private static String commaSeparatedList(List<? extends Type> params) {
-    return params
-        .stream()
-        .map(Type::name)
-        .collect(joining(","));
-  }
-
-  public static Map<GenericType, Type> map(GenericType type, Type actual) {
-    return ImmutableMap.of(type, actual);
+            a, arrayA));
   }
 }
