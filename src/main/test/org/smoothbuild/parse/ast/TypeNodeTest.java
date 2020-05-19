@@ -1,39 +1,40 @@
 package org.smoothbuild.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
-import org.quackery.junit.QuackeryRunner;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.testing.common.TestingLocation;
 
-@RunWith(QuackeryRunner.class)
 public class TypeNodeTest {
   private static final Location LOCATION = TestingLocation.loc();
 
-  @Quackery
-  public static Suite is_array() {
-    return suite("isArray")
-        .add(testIsNotArray(new TypeNode("MyType", LOCATION)))
-        .add(testIsNotArray(new TypeNode("a", LOCATION)))
-        .add(testIsArray(new ArrayTypeNode(new TypeNode("MyType", LOCATION), LOCATION)))
-        .add(testIsArray(new ArrayTypeNode(new TypeNode("a", LOCATION), LOCATION)));
+  @Test
+  public void normal_type_node_is_not_array() {
+    TypeNode typeNode = new TypeNode("MyType", LOCATION);
+    assertThat(typeNode.isArray())
+        .isFalse();
   }
 
-  private static Case testIsArray(TypeNode type) {
-    return newCase(type.name() + " is array type", () -> assertTrue(type.isArray()));
+  @Test
+  public void generic_type_node_is_not_array() {
+    TypeNode typeNode = new TypeNode("A", LOCATION);
+    assertThat(typeNode.isArray())
+        .isFalse();
   }
 
-  private static Case testIsNotArray(TypeNode type) {
-    return newCase(type.name() + " is NOT array type", () -> assertFalse(type.isArray()));
+  @Test
+  public void normal_array_type_node_is_array() {
+    ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("MyType", LOCATION), LOCATION);
+    assertThat(typeNode.isArray())
+        .isTrue();
+  }
+
+  @Test
+  public void generic_array_type_node_is_array() {
+    ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("A", LOCATION), LOCATION);
+    assertThat(typeNode.isArray())
+        .isTrue();
   }
 
   @Test
