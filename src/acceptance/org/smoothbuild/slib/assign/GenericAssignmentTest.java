@@ -1,107 +1,86 @@
 package org.smoothbuild.slib.assign;
 
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static org.quackery.Case.newCase;
-import static org.quackery.Suite.suite;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.IOException;
-import java.util.function.Consumer;
+import java.util.List;
 
-import org.junit.runner.RunWith;
-import org.quackery.Case;
-import org.quackery.Quackery;
-import org.quackery.Suite;
-import org.quackery.junit.QuackeryRunner;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.slib.AcceptanceTestCase;
 
-@RunWith(QuackeryRunner.class)
 public class GenericAssignmentTest extends AcceptanceTestCase {
-  @Quackery
-  public static Suite generic_param_assignment() throws Exception {
-    return suite("generic param assignment").addAll(asList(
-        allowedAssignment("A", "String"),
-        allowedAssignment("A", "MyStruct", "MyStruct"),
-        allowedAssignment("A", "Nothing"),
-        allowedAssignment("A", "A"),
-        allowedAssignment("A", "B"),
-        allowedAssignment("A", "[String]"),
-        allowedAssignment("A", "[MyStruct]", "MyStruct"),
-        allowedAssignment("A", "[Nothing]"),
-        allowedAssignment("A", "[A]"),
-        allowedAssignment("A", "[B]"),
-        allowedAssignment("A", "[[String]]"),
-        allowedAssignment("A", "[[MyStruct]]", "MyStruct"),
-        allowedAssignment("A", "[[Nothing]]"),
-        allowedAssignment("A", "[[A]]"),
-        allowedAssignment("A", "[[B]]"),
-
-        illegalAssignment("[A]", "String"),
-        illegalAssignment("[A]", "MyStruct", "MyStruct"),
-        allowedAssignment("[A]", "Nothing"),
-        illegalAssignment("[A]", "A"),
-        illegalAssignment("[A]", "B"),
-        allowedAssignment("[A]", "[String]"),
-        allowedAssignment("[A]", "[MyStruct]", "MyStruct"),
-        allowedAssignment("[A]", "[Nothing]"),
-        allowedAssignment("[A]", "[A]"),
-        allowedAssignment("[A]", "[B]"),
-        allowedAssignment("[A]", "[[String]]"),
-        allowedAssignment("[A]", "[[MyStruct]]", "MyStruct"),
-        allowedAssignment("[A]", "[[Nothing]]"),
-        allowedAssignment("[A]", "[[A]]"),
-        allowedAssignment("[A]", "[[B]]"),
-
-        illegalAssignment("[[A]]", "String"),
-        illegalAssignment("[[A]]", "MyStruct", "MyStruct"),
-        allowedAssignment("[[A]]", "Nothing"),
-        illegalAssignment("[[A]]", "A"),
-        illegalAssignment("[[A]]", "B"),
-        illegalAssignment("[[A]]", "[String]"),
-        illegalAssignment("[[A]]", "[MyStruct]", "MyStruct"),
-        allowedAssignment("[[A]]", "[Nothing]"),
-        illegalAssignment("[[A]]", "[A]"),
-        illegalAssignment("[[A]]", "[B]"),
-        allowedAssignment("[[A]]", "[[String]]"),
-        allowedAssignment("[[A]]", "[[MyStruct]]", "MyStruct"),
-        allowedAssignment("[[A]]", "[[Nothing]]"),
-        allowedAssignment("[[A]]", "[[A]]"),
-        allowedAssignment("[[A]]", "[[B]]")));
-  }
-
-  private static Case allowedAssignment(String targetType, String sourceType, String... structs) {
-    return newCase("can assign " + sourceType + " to param with type " + targetType, () -> {
-      executeTest(targetType, sourceType, (test) -> test.thenFinishedWithSuccess(), structs);
-    });
-  }
-
-  private static Case illegalAssignment(String targetType, String sourceType, String... structs) {
-    return newCase("can't assign " + sourceType + " to param with type " + targetType, () -> {
-      Consumer<AcceptanceTestCase> asserter = (test) -> {
-        test.thenSysOutContainsParseError(structs.length + 3,
-            "In call to `innerFunction`: Cannot assign argument of type '" + sourceType + "' to " +
-                "parameter 'target' of type '" + targetType + "'.");
-      };
-      executeTest(targetType, sourceType, asserter, structs);
-    });
-  }
-
-  private static void executeTest(String targetType, String sourceType,
-      Consumer<AcceptanceTestCase> asserter, String... structs) throws IOException {
-    AcceptanceTestCase test = new AcceptanceTestCase() {};
-    test.init();
-    String declarations = stream(structs)
+  @ParameterizedTest
+  @MethodSource("generic_parameter_assignment_test_data")
+  public void generic_parameter_assignment(
+      boolean allowed, String targetType, String sourceType, List<String> structs)
+      throws IOException {
+    String declarations = structs.stream()
         .map(s -> s.concat("{}\n"))
         .collect(joining());
-    try {
-      test.givenScript(declarations,
-          "String innerFunction(" + targetType + " target) = 'abc';                  ",
-          "outerFunction(" + sourceType + " source) = innerFunction(target=source);  ");
-      test.whenSmoothList();
-      asserter.accept(test);
-    } finally {
-      test.destroy();
+    givenScript(declarations,
+        "String innerFunction(" + targetType + " target) = 'abc';                  ",
+        "outerFunction(" + sourceType + " source) = innerFunction(target=source);  ");
+    whenSmoothList();
+    if (allowed) {
+      thenFinishedWithSuccess();
+    } else {
+      thenSysOutContainsParseError(structs.size() + 3,
+          "In call to `innerFunction`: Cannot assign argument of type '" + sourceType + "' to " +
+              "parameter 'target' of type '" + targetType + "'.");
     }
+  }
+
+  public static List<Arguments> generic_parameter_assignment_test_data() {
+    return List.of(
+        arguments(true, "A", "String", List.of()),
+        arguments(true, "A", "MyStruct", List.of("MyStruct")),
+        arguments(true, "A", "Nothing", List.of()),
+        arguments(true, "A", "A", List.of()),
+        arguments(true, "A", "B", List.of()),
+        arguments(true, "A", "[String]", List.of()),
+        arguments(true, "A", "[MyStruct]", List.of("MyStruct")),
+        arguments(true, "A", "[Nothing]", List.of()),
+        arguments(true, "A", "[A]", List.of()),
+        arguments(true, "A", "[B]", List.of()),
+        arguments(true, "A", "[[String]]", List.of()),
+        arguments(true, "A", "[[MyStruct]]", List.of("MyStruct")),
+        arguments(true, "A", "[[Nothing]]", List.of()),
+        arguments(true, "A", "[[A]]", List.of()),
+        arguments(true, "A", "[[B]]", List.of()),
+
+        arguments(false, "[A]", "String", List.of()),
+        arguments(false, "[A]", "MyStruct", List.of("MyStruct")),
+        arguments(true, "[A]", "Nothing", List.of()),
+        arguments(false, "[A]", "A", List.of()),
+        arguments(false, "[A]", "B", List.of()),
+        arguments(true, "[A]", "[String]", List.of()),
+        arguments(true, "[A]", "[MyStruct]", List.of("MyStruct")),
+        arguments(true, "[A]", "[Nothing]", List.of()),
+        arguments(true, "[A]", "[A]", List.of()),
+        arguments(true, "[A]", "[B]", List.of()),
+        arguments(true, "[A]", "[[String]]", List.of()),
+        arguments(true, "[A]", "[[MyStruct]]", List.of("MyStruct")),
+        arguments(true, "[A]", "[[Nothing]]", List.of()),
+        arguments(true, "[A]", "[[A]]", List.of()),
+        arguments(true, "[A]", "[[B]]", List.of()),
+
+        arguments(false, "[[A]]", "String", List.of()),
+        arguments(false, "[[A]]", "MyStruct", List.of("MyStruct")),
+        arguments(true, "[[A]]", "Nothing", List.of()),
+        arguments(false, "[[A]]", "A", List.of()),
+        arguments(false, "[[A]]", "B", List.of()),
+        arguments(false, "[[A]]", "[String]", List.of()),
+        arguments(false, "[[A]]", "[MyStruct]", List.of("MyStruct")),
+        arguments(true, "[[A]]", "[Nothing]", List.of()),
+        arguments(false, "[[A]]", "[A]", List.of()),
+        arguments(false, "[[A]]", "[B]", List.of()),
+        arguments(true, "[[A]]", "[[String]]", List.of()),
+        arguments(true, "[[A]]", "[[MyStruct]]", List.of("MyStruct")),
+        arguments(true, "[[A]]", "[[Nothing]]", List.of()),
+        arguments(true, "[[A]]", "[[A]]", List.of()),
+        arguments(true, "[[A]]", "[[B]]", List.of()));
   }
 }
