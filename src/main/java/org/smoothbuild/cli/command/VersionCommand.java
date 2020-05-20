@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.base.CommandHelper.runCommand;
+import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 
 import java.util.concurrent.Callable;
 
@@ -18,6 +18,6 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
 
   @Override
   public Integer call() {
-    return runCommand(injector -> injector.getInstance(VersionRunner.class).run());
+    return createInjector().getInstance(VersionRunner.class).run();
   }
 }

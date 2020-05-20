@@ -1,6 +1,7 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.base.CommandHelper.runCommandExclusively;
+import static org.smoothbuild.cli.base.CreateInjector.createInjector;
+import static org.smoothbuild.cli.base.RunExclusively.runExclusively;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -26,6 +27,10 @@ public class TreeCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommandExclusively(injector -> injector.getInstance(TreeRunner.class).run(functions));
+    return runExclusively(this::treeCommand);
+  }
+
+  private int treeCommand() {
+    return createInjector().getInstance(TreeRunner.class).run(functions);
   }
 }

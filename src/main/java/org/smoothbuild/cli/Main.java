@@ -10,11 +10,11 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.UnmatchedArgumentException;
 
-public class CommandExecutor {
-  public static int executeCommand(String[] args) {
+public class Main {
+  public static void main(String[] args) {
     CommandLine commandLine = new CommandLine(new SmoothCommand())
         .setParameterExceptionHandler(new ShortErrorMessageHandler());
-    return commandLine.execute(args);
+    System.exit(commandLine.execute(args));
   }
 
   private static class ShortErrorMessageHandler implements IParameterExceptionHandler {

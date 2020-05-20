@@ -1,13 +1,13 @@
 package org.smoothbuild.cli.command;
 
-import static org.smoothbuild.cli.base.CommandHelper.runCommandExclusively;
+import static org.smoothbuild.cli.base.CreateInjector.createInjector;
+import static org.smoothbuild.cli.base.RunExclusively.runExclusively;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.smoothbuild.cli.base.LoggingCommand;
-import org.smoothbuild.cli.base.ReportModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.exec.run.BuildRunner;
 
@@ -77,8 +77,10 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runCommandExclusively(
-        new ReportModule(showTasks, logLevel),
-        injector -> injector.getInstance(BuildRunner.class).run(functions));
+    return runExclusively(this::buildCommand);
+  }
+
+  private int buildCommand() {
+    return createInjector(showTasks, logLevel).getInstance(BuildRunner.class).run(functions);
   }
 }

@@ -2,5 +2,5 @@
 
 SMOOTH_HOME=$(dirname "$(readlink -f "${0}")")
 java --add-opens java.base/java.lang=ALL-UNNAMED \
-     -cp "${SMOOTH_HOME}"/smooth.jar org.smoothbuild.Main ${*}
+     -cp "${SMOOTH_HOME}"/smooth.jar org.smoothbuild.cli.Main ${*}
 
