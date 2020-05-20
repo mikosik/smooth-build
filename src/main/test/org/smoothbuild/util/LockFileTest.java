@@ -1,9 +1,9 @@
-package org.smoothbuild.exec.run;
+package org.smoothbuild.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.file.Files.createFile;
-import static org.smoothbuild.exec.run.Locker.acquireFileLock;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.util.LockFile.lockFile;
 
 import java.io.IOException;
 import java.nio.channels.OverlappingFileLockException;
@@ -14,40 +14,39 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("ClassCanBeStatic")
-public class LockerTest {
+public class LockFileTest {
   @Nested
-  class lock_can_be_acquired {
+  class file_can_be_locked {
     @Test
     public void when_it_exists(@TempDir Path tempDir) throws IOException {
       Path lockFile = tempDir.resolve("lockFile");
       createFile(lockFile);
-      assertThat(acquireFileLock(lockFile))
-          .isNull();
+      assertThat(lockFile(lockFile))
+          .isNotNull();
     }
 
     @Test
     public void when_it_doesnt_exist(@TempDir Path tempDir) {
-      assertThat(acquireFileLock(tempDir.resolve("lockFile")))
-          .isNull();
+      assertThat(lockFile(tempDir.resolve("lockFile")))
+          .isNotNull();
     }
 
     @Test
     public void when_parent_directory_doesnt_exist(@TempDir Path tempDir) {
-      assertThat(acquireFileLock(tempDir.resolve("subdir/lockFile")))
-          .isNull();
+      assertThat(lockFile(tempDir.resolve("subdir/lockFile")))
+          .isNotNull();
     }
   }
 
   @Nested
-  class lock_can_not_be_acquired {
+  class file_cannot_be_locked {
     @Test
     public void when_it_is_already_acquired_by_our_jvm(@TempDir Path tempDir) {
       Path lockFile = tempDir.resolve("lockFile");
-      assertThat(acquireFileLock(lockFile))
-          .isNull();
-      assertCall(() -> acquireFileLock(lockFile))
+      assertThat(lockFile(lockFile))
+          .isNotNull();
+      assertCall(() -> lockFile(lockFile))
           .throwsException(OverlappingFileLockException.class);
     }
-
   }
 }
