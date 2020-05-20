@@ -1,7 +1,8 @@
 package org.smoothbuild.io.fs;
 
+import java.nio.file.Paths;
+
 import org.smoothbuild.io.fs.base.FileSystem;
-import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;
 import org.smoothbuild.io.fs.disk.DiskFileSystem;
 
@@ -16,6 +17,6 @@ public class FileSystemModule extends AbstractModule {
   @Provides
   @Singleton
   public FileSystem provideFileSystem() {
-    return new SynchronizedFileSystem(new DiskFileSystem(Path.root()));
+    return new SynchronizedFileSystem(new DiskFileSystem(Paths.get("")));
   }
 }

@@ -34,11 +34,7 @@ import okio.Sink;
 public class DiskFileSystem implements FileSystem {
   private final java.nio.file.Path rootDir;
 
-  public DiskFileSystem(Path path) {
-    this(path.toJPath());
-  }
-
-  DiskFileSystem(java.nio.file.Path path) {
+  public DiskFileSystem(java.nio.file.Path path) {
     this.rootDir = path;
   }
 
