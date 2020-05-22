@@ -1,0 +1,147 @@
+package org.smoothbuild.acceptance.builtin.java;
+
+import static com.google.common.truth.Truth.assertThat;
+import static okio.Okio.buffer;
+import static okio.Okio.source;
+import static org.smoothbuild.util.Okios.readAndClose;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
+import org.junit.jupiter.api.Test;
+import org.smoothbuild.acceptance.AcceptanceTestCase;
+
+public class JavacTest extends AcceptanceTestCase {
+  @Test
+  public void error_is_logged_when_compilation_error_occurs() throws Exception {
+    givenScript(
+        "  result = [ file(toBlob('public private class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac;                                                                      ");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenSysOutContains("modifier private not allowed here");
+  }
+
+  @Test
+  public void zero_files_can_be_compiled() throws Exception {
+    givenScript(
+        "  result = [] | javac;  ");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    thenSysOutContains("Param 'srcs' is empty list.");
+  }
+
+  @Test
+  public void one_file_can_be_compiled() throws Exception {
+    String classSource = "public class MyClass { "
+        + "public static String myMethod() {return \\\"test-string\\\";}}";
+    givenScript(
+        "  result = [file(toBlob('" + classSource+ "'), 'MyClass.java')] | javac;  ");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+    assertThat(invoke(new File(artifact("result"), "MyClass.class"), "myMethod"))
+        .isEqualTo("test-string");
+  }
+
+  @Test
+  public void one_file_with_library_dependency_can_be_compiled() throws Exception {
+    StringBuilder classSource = new StringBuilder();
+    classSource.append("import library.LibraryClass;");
+    classSource.append("public class MyClass {");
+    classSource.append("  public static String myMethod() {");
+    classSource.append("    return Integer.toString(LibraryClass.add(2, 3));");
+    classSource.append("  }");
+    classSource.append("}");
+
+    StringBuilder librarySource = new StringBuilder();
+    librarySource.append("package library;");
+    librarySource.append("public class LibraryClass {");
+    librarySource.append("  public static int add(int a, int b) {");
+    librarySource.append("    return a + b;");
+    librarySource.append("  }");
+    librarySource.append("}");
+
+    givenFile("src/MyClass.java", classSource.toString());
+    givenFile("srclib/library/LibraryClass.java", librarySource.toString());
+    givenScript(
+        "  libraryJar = files('srclib') | javac | jar;           ",
+        "  result = files('src') | javac(libs = [ libraryJar ])  ",
+        "  | concat(array2 = javac(files('srclib')));       ");
+    whenSmoothBuild("result");
+    thenFinishedWithSuccess();
+
+    File libraryClassFile = new File(artifact("result"), "library/LibraryClass.class");
+    File classFile = new File(artifact("result"), "MyClass.class");
+    MyClassLoader classLoader = new MyClassLoader();
+    loadClass(classLoader, byteCode(libraryClassFile));
+    assertThat(invoke(classLoader, classFile, "myMethod"))
+        .isEqualTo("5");
+  }
+
+  @Test
+  public void duplicate_java_files_cause_error() throws Exception {
+    givenScript(
+        "  classFile = file(toBlob('public class MyClass {}'), 'MyClass.java');  ",
+        "  result = [ classFile, classFile ] | javac;                            ");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenSysOutContains("duplicate class: MyClass");
+  }
+
+  @Test
+  public void illegal_source_parameter_causes_error() throws Exception {
+    givenScript(
+        "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac(source='0.9');                                                ");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenSysOutContains("invalid source release: 0.9");
+  }
+
+  @Test
+  public void illegal_target_parameter_causes_error() throws Exception {
+    givenScript(
+        "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
+        "  | javac(target='0.9');                                                ");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenSysOutContains("invalid target release: 0.9");
+  }
+
+  @Test
+  public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
+      throws Exception {
+    givenScript(
+        "  result = [ file(toBlob('public enum MyClass { VALUE }'), 'MyClass.java') ]  ",
+        "  | javac(source='1.4', target='1.4');                                        ");
+    whenSmoothBuild("result");
+    thenFinishedWithError();
+    thenSysOutContains("Source option 1.4 is no longer supported.");
+  }
+
+  private Object invoke(File appClassFile, String method) throws IOException,
+      IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    return invoke(new MyClassLoader(), appClassFile, method);
+  }
+
+  private Object invoke(MyClassLoader classLoader, File appClassFile, String method)
+      throws IOException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    Class<?> klass = loadClass(classLoader, byteCode(appClassFile));
+    return klass.getMethod(method).invoke(null);
+  }
+
+  private byte[] byteCode(File classFilePath) throws IOException {
+    return readAndClose(buffer(source(classFilePath)), s -> s.readByteArray());
+  }
+
+  private Class<?> loadClass(MyClassLoader classLoader, byte[] bytes) {
+    return classLoader.defineClass(null, bytes);
+  }
+
+  private static class MyClassLoader extends ClassLoader {
+    public Class<?> defineClass(String name, byte[] bytes) {
+      return super.defineClass(name, bytes, 0, bytes.length);
+    }
+  }
+}
