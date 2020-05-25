@@ -24,7 +24,8 @@ public class VersionRunner {
   public Integer run() {
     try {
       HashNode hashNode = InstallationHashes.installationNode();
-      console.print("smooth build version " + BuildVersion.VERSION + "\n\n");
+      console.println("smooth build version " + BuildVersion.VERSION);
+      console.println("");
       printHashNode("", hashNode);
       return EXIT_CODE_SUCCESS;
     } catch (IOException e) {
