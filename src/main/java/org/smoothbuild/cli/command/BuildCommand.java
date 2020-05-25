@@ -81,6 +81,8 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
   }
 
   private int buildCommand() {
-    return createInjector(showTasks, logLevel).getInstance(BuildRunner.class).run(functions);
+    return createInjector(logLevel, showTasks)
+        .getInstance(BuildRunner.class)
+        .run(functions);
   }
 }

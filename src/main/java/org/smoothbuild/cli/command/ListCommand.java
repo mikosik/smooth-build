@@ -23,6 +23,8 @@ public class ListCommand extends LoggingCommand implements Callable<Integer> {
   }
 
   private int listCommand() {
-    return createInjector().getInstance(ListRunner.class).run();
+    return createInjector(logLevel)
+        .getInstance(ListRunner.class)
+        .run();
   }
 }

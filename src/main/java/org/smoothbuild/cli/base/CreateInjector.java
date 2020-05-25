@@ -4,6 +4,7 @@ import static com.google.inject.Stage.PRODUCTION;
 
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
+import org.smoothbuild.cli.taskmatcher.TaskMatchers;
 import org.smoothbuild.exec.task.TaskModule;
 import org.smoothbuild.install.InstallationPathsModule;
 import org.smoothbuild.io.fs.FileSystemModule;
@@ -13,11 +14,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class CreateInjector {
-  public static Injector createInjector() {
-    return createInjector(new ReportModule());
+  public static Injector createInjector(Level logLevel) {
+    return createInjector(logLevel, TaskMatchers.ALL);
   }
 
-  public static Injector createInjector(TaskMatcher taskMatcher, Level logLevel) {
+  public static Injector createInjector(Level logLevel, TaskMatcher taskMatcher) {
     return createInjector(new ReportModule(taskMatcher, logLevel));
   }
 
