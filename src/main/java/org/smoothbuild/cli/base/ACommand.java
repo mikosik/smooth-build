@@ -1,9 +1,13 @@
 package org.smoothbuild.cli.base;
 
+import static org.smoothbuild.install.DetectInstallationDir.detectInstallationDir;
+
 import java.io.PrintWriter;
+import java.nio.file.Path;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
 @Command(
@@ -17,6 +21,16 @@ import picocli.CommandLine.Spec;
 public class ACommand {
   @Spec
   protected CommandSpec spec;
+
+  @Option(
+      names = { "--INTERNAL-installation-dir" },
+      hidden = true
+  )
+  Path installationDir = null;
+
+  protected Path installationDir() {
+    return installationDir == null ? detectInstallationDir() : installationDir;
+  }
 
   protected PrintWriter out() {
     return spec.commandLine().getOut();

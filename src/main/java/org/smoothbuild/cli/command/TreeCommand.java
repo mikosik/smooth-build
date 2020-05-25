@@ -25,7 +25,7 @@ public class TreeCommand extends ExclusiveCommand {
 
   @Override
   protected Integer invokeCall() {
-    return createInjector(out(), logLevel)
+    return createInjector(installationDir(), out(), logLevel)
         .getInstance(TreeRunner.class)
         .run(functions);
   }
