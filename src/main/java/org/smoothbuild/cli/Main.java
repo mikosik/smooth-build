@@ -1,5 +1,8 @@
 package org.smoothbuild.cli;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import org.smoothbuild.cli.command.SmoothCommand;
@@ -12,9 +15,22 @@ import picocli.CommandLine.UnmatchedArgumentException;
 
 public class Main {
   public static void main(String[] args) {
+    PrintWriter out = printWriter(System.out);
+    PrintWriter err = printWriter(System.err);
+    int exitCode = runSmooth(args, out, err);
+    System.exit(exitCode);
+  }
+
+  public static int runSmooth(String[] args, PrintWriter out, PrintWriter err) {
     CommandLine commandLine = new CommandLine(new SmoothCommand())
+        .setOut(out)
+        .setErr(err)
         .setParameterExceptionHandler(new ShortErrorMessageHandler());
-    System.exit(commandLine.execute(args));
+    return commandLine.execute(args);
+  }
+
+  private static PrintWriter printWriter(PrintStream printStream) {
+    return new PrintWriter(printStream, true, UTF_8);
   }
 
   private static class ShortErrorMessageHandler implements IParameterExceptionHandler {

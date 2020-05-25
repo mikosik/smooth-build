@@ -27,11 +27,11 @@ public class TreeCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runExclusively(this::treeCommand);
+    return runExclusively(out(), this::treeCommand);
   }
 
   private int treeCommand() {
-    return createInjector(logLevel)
+    return createInjector(out(), logLevel)
         .getInstance(TreeRunner.class)
         .run(functions);
   }

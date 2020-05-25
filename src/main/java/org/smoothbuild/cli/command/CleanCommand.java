@@ -19,11 +19,11 @@ public class CleanCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runExclusively(this::cleanCommand);
+    return runExclusively(out(), this::cleanCommand);
   }
 
   private int cleanCommand() {
-    return createInjector(logLevel)
+    return createInjector(out(), logLevel)
         .getInstance(CleanRunner.class)
         .run();
   }
