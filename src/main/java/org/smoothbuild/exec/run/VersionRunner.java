@@ -3,6 +3,7 @@ package org.smoothbuild.exec.run;
 import static com.google.common.base.Strings.padStart;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.install.DetectInstallationDir.detectInstallationDir;
 
 import java.io.IOException;
 
@@ -12,6 +13,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.install.BuildVersion;
 import org.smoothbuild.install.HashNode;
 import org.smoothbuild.install.InstallationHashes;
+import org.smoothbuild.install.InstallationPaths;
 
 public class VersionRunner {
   private final Console console;
@@ -23,7 +25,9 @@ public class VersionRunner {
 
   public Integer run() {
     try {
-      HashNode hashNode = InstallationHashes.installationNode();
+      InstallationHashes installationHashes =
+          new InstallationHashes(new InstallationPaths(detectInstallationDir()));
+      HashNode hashNode = installationHashes.installationNode();
       console.println("smooth build version " + BuildVersion.VERSION);
       console.println("");
       printHashNode("", hashNode);

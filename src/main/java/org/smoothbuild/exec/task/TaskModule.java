@@ -17,7 +17,7 @@ public class TaskModule extends AbstractModule {
   @Provides
   @Singleton
   @SandboxHash
-  public Hash provideSandboxHash() throws IOException {
-    return InstallationHashes.sandboxNode().hash();
+  public Hash provideSandboxHash(InstallationHashes installationHashes) throws IOException {
+    return installationHashes.sandboxNode().hash();
   }
 }

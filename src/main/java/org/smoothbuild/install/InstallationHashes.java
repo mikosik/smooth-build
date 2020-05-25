@@ -1,13 +1,13 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.install.InstallationPaths.installationPaths;
-import static org.smoothbuild.install.InstallationPaths.smoothJarPath;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.ModulePath;
@@ -15,16 +15,23 @@ import org.smoothbuild.lang.base.ModulePath;
 import com.google.common.collect.ImmutableList;
 
 public class InstallationHashes {
-  public static HashNode installationNode() throws IOException {
+  private final InstallationPaths installationPaths;
+
+  @Inject
+  public InstallationHashes(InstallationPaths installationPaths) {
+    this.installationPaths = installationPaths;
+  }
+
+  public HashNode installationNode() throws IOException {
     return new HashNode("installation", ImmutableList.of(sandboxNode(), standardLibsNode()));
   }
 
-  public static HashNode sandboxNode() throws IOException {
+  public HashNode sandboxNode() throws IOException {
     return new HashNode("sandbox", ImmutableList.of(smoothJarNode(), javaPlatformNode()));
   }
 
-  private static HashNode smoothJarNode() throws IOException {
-    return new HashNode("smooth.jar", Hash.of(smoothJarPath()));
+  private HashNode smoothJarNode() throws IOException {
+    return new HashNode("smooth.jar", Hash.of(installationPaths.smoothJar()));
   }
 
   private static HashNode javaPlatformNode() {
@@ -46,8 +53,8 @@ public class InstallationHashes {
     return Hash.of(properties.getProperty(name));
   }
 
-  private static HashNode standardLibsNode() throws IOException {
-    List<ModulePath> modules = installationPaths().slibModules();
+  private HashNode standardLibsNode() throws IOException {
+    List<ModulePath> modules = installationPaths.slibModules();
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
     for (ModulePath module : modules) {
       builder.add(moduleNode(module));
