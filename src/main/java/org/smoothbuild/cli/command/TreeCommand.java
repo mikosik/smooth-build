@@ -31,6 +31,8 @@ public class TreeCommand extends LoggingCommand implements Callable<Integer> {
   }
 
   private int treeCommand() {
-    return createInjector().getInstance(TreeRunner.class).run(functions);
+    return createInjector(logLevel)
+        .getInstance(TreeRunner.class)
+        .run(functions);
   }
 }

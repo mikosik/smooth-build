@@ -23,6 +23,8 @@ public class CleanCommand extends LoggingCommand implements Callable<Integer> {
   }
 
   private int cleanCommand() {
-    return createInjector().getInstance(CleanRunner.class).run();
+    return createInjector(logLevel)
+        .getInstance(CleanRunner.class)
+        .run();
   }
 }
