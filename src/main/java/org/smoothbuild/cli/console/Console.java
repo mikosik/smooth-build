@@ -31,6 +31,7 @@ public class Console {
   Console(PrintStream printStream) {
     this.printStream = printStream;
   }
+
   public void errors(List<?> errors) {
     errors.forEach(this::error);
   }
@@ -40,24 +41,25 @@ public class Console {
   }
 
   public void print(String header, List<Log> logs) {
-    print(toText(header, logs));
+    println(toText(header, logs));
   }
 
   private static String toText(String header, List<Log> logs) {
-    StringBuilder text = new StringBuilder(taskLine(header));
+    StringBuilder text = new StringBuilder(formattedHeader(header));
     for (Log log : logs) {
+      text.append("\n");
       text.append(prefixMultiline(log.level() + ": " + log.message()));
     }
     return text.toString();
   }
 
-  private static String taskLine(String header) {
-    return TASK_HEADER_PREFIX + header + "\n";
+  private static String formattedHeader(String header) {
+    return TASK_HEADER_PREFIX + header;
   }
 
   private static String prefixMultiline(String text) {
     String[] lines = text.lines().toArray(String[]::new);
-    return prefixMultiline(lines) + "\n";
+    return prefixMultiline(lines);
   }
 
   // visible for testing
@@ -76,7 +78,7 @@ public class Console {
       int count = counts.get(level).get();
       if (count != 0) {
         int value = counts.get(level).get();
-        print(taskLine(statText(level, value)));
+        println(formattedHeader(statText(level, value)));
       }
       total += count;
     }
@@ -95,9 +97,5 @@ public class Console {
 
   public void println(String line) {
     printStream.println(line);
-  }
-
-  public void print(String line) {
-    printStream.print(line);
   }
 }
