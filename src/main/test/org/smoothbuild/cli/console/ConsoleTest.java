@@ -9,7 +9,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class ConsoleTest {
   private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-  private final Console console = new Console(new PrintStream(outputStream));
+  private final Console console = new Console(new PrintWriter(outputStream, true));
 
   @Nested
   class print_logs {

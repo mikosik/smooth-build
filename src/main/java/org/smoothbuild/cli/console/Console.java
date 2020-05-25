@@ -1,8 +1,9 @@
 package org.smoothbuild.cli.console;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.smoothbuild.util.Strings.unlines;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,16 +21,16 @@ public class Console {
   private static final String MESSAGE_FIRST_LINE_PREFIX = "   + ";
   private static final String MESSAGE_OTHER_LINES_PREFIX = "     ";
 
-  private final PrintStream printStream;
+  private final PrintWriter printWriter;
 
   @Inject
   public Console() {
-    this(System.out);
+    this(new PrintWriter(System.out, true, UTF_8));
   }
 
   // visible for testing
-  Console(PrintStream printStream) {
-    this.printStream = printStream;
+  Console(PrintWriter printWriter) {
+    this.printWriter = printWriter;
   }
 
   public void errors(List<?> errors) {
@@ -96,6 +97,6 @@ public class Console {
   }
 
   public void println(String line) {
-    printStream.println(line);
+    printWriter.println(line);
   }
 }
