@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.ModulePath;

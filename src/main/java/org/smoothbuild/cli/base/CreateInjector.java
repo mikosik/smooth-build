@@ -3,6 +3,7 @@ package org.smoothbuild.cli.base;
 import static com.google.inject.Stage.PRODUCTION;
 
 import java.io.PrintWriter;
+import java.nio.file.Path;
 
 import org.smoothbuild.cli.console.ConsoleModule;
 import org.smoothbuild.cli.console.Level;
@@ -17,20 +18,19 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class CreateInjector {
-  public static Injector createInjector(PrintWriter out, Level logLevel) {
-    return createInjector(out, logLevel, TaskMatchers.ALL);
+  public static Injector createInjector(Path installationDir, PrintWriter out, Level logLevel) {
+    return createInjector(installationDir, out, logLevel, TaskMatchers.ALL);
   }
 
-  public static Injector createInjector(PrintWriter out, Level logLevel, TaskMatcher taskMatcher) {
-    return createInjector(new ConsoleModule(out, logLevel, taskMatcher));
-  }
-
-  private static Injector createInjector(ConsoleModule consoleModule) {
+  public static Injector createInjector(
+      Path installationDir, PrintWriter out, Level logLevel, TaskMatcher taskMatcher) {
+    ConsoleModule consoleModule = new ConsoleModule(out, logLevel, taskMatcher);
+    InstallationPathsModule installationPathsModule = new InstallationPathsModule(installationDir);
     return Guice.createInjector(PRODUCTION,
         new TaskModule(),
         new ObjectDbModule(),
         new FileSystemModule(),
-        new InstallationPathsModule(),
+        installationPathsModule,
         consoleModule);
   }
 }

@@ -75,7 +75,7 @@ public class BuildCommand extends ExclusiveCommand {
 
   @Override
   protected Integer invokeCall() {
-    return createInjector(out(), logLevel, showTasks)
+    return createInjector(installationDir(), out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
         .run(functions);
   }
