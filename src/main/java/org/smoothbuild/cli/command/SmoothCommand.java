@@ -1,6 +1,6 @@
 package org.smoothbuild.cli.command;
 
-import org.smoothbuild.cli.base.FormattedHeadings;
+import org.smoothbuild.cli.base.ACommand;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -23,9 +23,10 @@ import picocli.CommandLine.HelpCommand;
     },
     synopsisSubcommandLabel = "COMMAND" // to avoid default [COMMAND] because COMMAND is mandatory
 )
-public class SmoothCommand extends FormattedHeadings implements Runnable  {
+public class SmoothCommand extends ACommand implements Runnable  {
   @Override
   public void run() {
-    new CommandLine(this).usage(System.out);
+    CommandLine commandLine = spec.commandLine();
+    commandLine.usage(commandLine.getOut());
   }
 }

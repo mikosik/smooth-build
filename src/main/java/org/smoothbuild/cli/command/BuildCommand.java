@@ -77,11 +77,11 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runExclusively(this::buildCommand);
+    return runExclusively(out(), this::buildCommand);
   }
 
   private int buildCommand() {
-    return createInjector(logLevel, showTasks)
+    return createInjector(out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
         .run(functions);
   }

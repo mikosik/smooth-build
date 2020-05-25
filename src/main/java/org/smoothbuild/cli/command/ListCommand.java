@@ -19,11 +19,11 @@ public class ListCommand extends LoggingCommand implements Callable<Integer> {
 
   @Override
   public Integer call() {
-    return runExclusively(this::listCommand);
+    return runExclusively(out(), this::listCommand);
   }
 
   private int listCommand() {
-    return createInjector(logLevel)
+    return createInjector(out(), logLevel)
         .getInstance(ListRunner.class)
         .run();
   }

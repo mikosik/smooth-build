@@ -7,7 +7,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 @Command
-public class LoggingCommand extends FormattedHeadings {
+public class LoggingCommand extends ACommand {
   @Option(
       names = { "--log-level", "-l" },
       defaultValue = "info",

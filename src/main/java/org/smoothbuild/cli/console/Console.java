@@ -1,6 +1,5 @@
 package org.smoothbuild.cli.console;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.PrintWriter;
@@ -24,12 +23,7 @@ public class Console {
   private final PrintWriter printWriter;
 
   @Inject
-  public Console() {
-    this(new PrintWriter(System.out, true, UTF_8));
-  }
-
-  // visible for testing
-  Console(PrintWriter printWriter) {
+  public Console(PrintWriter printWriter) {
     this.printWriter = printWriter;
   }
 
@@ -38,7 +32,7 @@ public class Console {
   }
 
   public void error(Object error) {
-    println("smooth: error: " + error.toString());
+    printErrorToStream(this.printWriter, error.toString());
   }
 
   public void print(String header, List<Log> logs) {
@@ -64,6 +58,7 @@ public class Console {
   }
 
   // visible for testing
+
   public static String prefixMultiline(String[] lines) {
     lines[0] = MESSAGE_FIRST_LINE_PREFIX + lines[0];
     for (int i = 1; i < lines.length; i++) {
@@ -71,7 +66,6 @@ public class Console {
     }
     return unlines(lines);
   }
-
   public void printSummary(Map<Level, AtomicInteger> counts) {
     println("Summary");
     int total = 0;
@@ -94,6 +88,10 @@ public class Console {
       name = name + "s";
     }
     return value + " " + name;
+  }
+
+  public static void printErrorToStream(PrintWriter printWriter, String error) {
+    printWriter.println("smooth: error: " + error);
   }
 
   public void println(String line) {
