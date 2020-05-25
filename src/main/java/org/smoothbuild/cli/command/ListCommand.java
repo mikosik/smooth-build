@@ -1,11 +1,8 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
-import static org.smoothbuild.cli.base.RunExclusively.runExclusively;
 
-import java.util.concurrent.Callable;
-
-import org.smoothbuild.cli.base.LoggingCommand;
+import org.smoothbuild.cli.base.ExclusiveCommand;
 import org.smoothbuild.exec.run.ListRunner;
 
 import picocli.CommandLine.Command;
@@ -14,15 +11,11 @@ import picocli.CommandLine.Command;
     name = ListCommand.NAME,
     description = "Print arg-less user defined functions"
 )
-public class ListCommand extends LoggingCommand implements Callable<Integer> {
+public class ListCommand extends ExclusiveCommand {
   public static final String NAME = "list";
 
   @Override
-  public Integer call() {
-    return runExclusively(out(), this::listCommand);
-  }
-
-  private int listCommand() {
+  protected Integer invokeCall() {
     return createInjector(out(), logLevel)
         .getInstance(ListRunner.class)
         .run();

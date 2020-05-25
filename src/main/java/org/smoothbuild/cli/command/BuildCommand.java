@@ -1,13 +1,11 @@
 package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
-import static org.smoothbuild.cli.base.RunExclusively.runExclusively;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import org.smoothbuild.cli.base.LoggingCommand;
+import org.smoothbuild.cli.base.ExclusiveCommand;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.exec.run.BuildRunner;
 
@@ -20,7 +18,7 @@ import picocli.CommandLine.Parameters;
     name = BuildCommand.NAME,
     description = "Build artifact(s) by running specified function(s)"
 )
-public class BuildCommand extends LoggingCommand implements Callable<Integer> {
+public class BuildCommand extends ExclusiveCommand {
   public static final String NAME = "build";
 
   @Option(
@@ -76,11 +74,7 @@ public class BuildCommand extends LoggingCommand implements Callable<Integer> {
   List<String> functions;
 
   @Override
-  public Integer call() {
-    return runExclusively(out(), this::buildCommand);
-  }
-
-  private int buildCommand() {
+  protected Integer invokeCall() {
     return createInjector(out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
         .run(functions);
