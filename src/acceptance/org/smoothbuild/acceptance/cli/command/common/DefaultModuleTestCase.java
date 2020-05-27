@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 
 public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
   @Test
@@ -16,5 +17,5 @@ public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
         .isFalse();
   }
 
-  protected abstract String[] commandNameWithArgument();
+  protected abstract CommandWithArgs commandNameWithArgument();
 }

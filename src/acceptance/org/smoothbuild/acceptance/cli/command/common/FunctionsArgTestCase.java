@@ -2,13 +2,14 @@ package org.smoothbuild.acceptance.cli.command.common;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 
 public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   @Test
   public void missing_function_argument_causes_error() throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName());
+    whenSmooth(new CommandWithArgs(commandName()));
     thenFinishedWithError();
     thenSysErrContains(
         "Missing required parameter: <function>",
@@ -19,7 +20,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   public void nonexistent_function_argument_causes_error() throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName(), "nonexistentFunction");
+    whenSmooth(new CommandWithArgs(commandName(), "nonexistentFunction"));
     thenFinishedWithError();
     thenSysOutContains(
         sectionName(),
@@ -33,7 +34,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   public void function_specified_twice_causes_error() throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName(), "result", "result");
+    whenSmooth(new CommandWithArgs(commandName(), "result", "result"));
     thenFinishedWithError();
     thenSysOutContains("error: Function 'result' has been specified more than once.\n");
   }
@@ -43,7 +44,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
       throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName(), "result", "result", "other", "other");
+    whenSmooth(new CommandWithArgs(commandName(), "result", "result", "other", "other"));
     thenFinishedWithError();
     thenSysOutContains("error: Function 'result' has been specified more than once.\n");
     thenSysOutContains("error: Function 'other' has been specified more than once.\n");
@@ -53,7 +54,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   public void illegal_function_name_causes_error() throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName(), "illegal^name");
+    whenSmooth(new CommandWithArgs(commandName(), "illegal^name"));
     thenFinishedWithError();
     thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
   }
@@ -63,7 +64,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
       throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(commandName(), "illegal^name other^name");
+    whenSmooth(new CommandWithArgs(commandName(), "illegal^name other^name"));
     thenFinishedWithError();
     thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
     thenSysOutContains("error: Illegal function name 'other^name' passed in command line.\n");
@@ -73,7 +74,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   public void build_command_with_function_that_requires_arguments_prints_error() throws Exception {
     givenScript(
         "  String testStringIdentity(String value) = value;  ");
-    whenSmooth(commandName(), "testStringIdentity");
+    whenSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     thenFinishedWithError();
     thenSysOutContains(
         sectionName(),
@@ -89,7 +90,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
       throws Exception {
     givenScript(
         "  String testStringIdentity(String value = 'default') = value;  ");
-    whenSmooth(commandName(), "testStringIdentity");
+    whenSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     thenFinishedWithSuccess();
   }
 

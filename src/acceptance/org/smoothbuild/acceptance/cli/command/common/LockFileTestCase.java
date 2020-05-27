@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.testing.Sleep3s;
 
 public abstract class LockFileTestCase extends AcceptanceTestCase {
@@ -23,7 +24,7 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
 
     AcceptanceTestCase otherTest = new AcceptanceTestCase() {};
     otherTest.init(projectDir());
-    String[] commandWithArgs = commandNameWithArgument();
+    CommandWithArgs commandWithArgs = commandNameWithArgument();
 
     AtomicInteger savedExitCode = new AtomicInteger();
     AtomicReference<String> savedSysOut = new AtomicReference<>();
@@ -66,5 +67,5 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
     }
   }
 
-  protected abstract String[] commandNameWithArgument();
+  protected abstract CommandWithArgs commandNameWithArgument();
 }
