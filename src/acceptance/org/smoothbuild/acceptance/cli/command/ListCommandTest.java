@@ -1,12 +1,14 @@
 package org.smoothbuild.acceptance.cli.command;
 
+import static org.smoothbuild.acceptance.CommandWithArgs.listCommand;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.cli.command.ListCommand;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class ListCommandTest {
@@ -33,16 +35,16 @@ public class ListCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { ListCommand.NAME };
+    protected CommandWithArgs commandNameWithArgument() {
+      return listCommand();
     }
   }
 
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { ListCommand.NAME };
+    protected CommandWithArgs commandNameWithArgument() {
+      return listCommand();
     }
   }
 
@@ -50,7 +52,7 @@ public class ListCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("list", option, "result");
+      whenSmooth(listCommand(option, "result"));
     }
   }
 }

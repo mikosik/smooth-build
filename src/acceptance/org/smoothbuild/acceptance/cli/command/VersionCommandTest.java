@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class VersionCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("version", option);
+      whenSmooth(versionCommand(option));
     }
   }
 }

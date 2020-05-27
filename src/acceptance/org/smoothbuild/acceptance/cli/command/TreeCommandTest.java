@@ -1,10 +1,12 @@
 package org.smoothbuild.acceptance.cli.command;
 
+import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
 import static org.smoothbuild.util.Strings.unlines;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
@@ -61,16 +63,16 @@ public class TreeCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { TreeCommand.NAME, "result" };
+    protected CommandWithArgs commandNameWithArgument() {
+      return treeCommand("result");
     }
   }
 
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { TreeCommand.NAME, "result" };
+    protected CommandWithArgs commandNameWithArgument() {
+      return treeCommand("result");
     }
   }
 
@@ -91,7 +93,7 @@ public class TreeCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("tree", option, "result");
+      whenSmooth(treeCommand(option, "result"));
     }
   }
 }

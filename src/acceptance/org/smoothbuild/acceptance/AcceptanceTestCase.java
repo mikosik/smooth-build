@@ -16,11 +16,16 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
 import static org.smoothbuild.SmoothConstants.USER_MODULE;
+import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.helpCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.listCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.cli.console.Console.prefixMultiline;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Okios.readAndClose;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
@@ -43,14 +48,7 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.smoothbuild.cli.command.BuildCommand;
-import org.smoothbuild.cli.command.CleanCommand;
-import org.smoothbuild.cli.command.ListCommand;
-import org.smoothbuild.cli.command.TreeCommand;
-import org.smoothbuild.cli.command.VersionCommand;
 import org.smoothbuild.util.DataReader;
-
-import com.google.common.collect.ImmutableList;
 
 import okio.BufferedSource;
 import okio.ByteString;
@@ -125,32 +123,32 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothBuild(String... args) {
-    whenSmooth(concat(BuildCommand.NAME, args));
+    whenSmooth(buildCommand(args));
   }
 
   public void whenSmoothClean(String... args) {
-    whenSmooth(concat(CleanCommand.NAME, args));
-  }
-
-  public void whenSmoothTree(String... args) {
-    whenSmooth(concat(TreeCommand.NAME, args));
+    whenSmooth(cleanCommand(args));
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(concat("help", args));
+    whenSmooth(helpCommand(args));
   }
 
   public void whenSmoothList(String... args) {
-    whenSmooth(concat(ListCommand.NAME, args));
+    whenSmooth(listCommand(args));
+  }
+
+  public void whenSmoothTree(String... args) {
+    whenSmooth(treeCommand(args));
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(concat(VersionCommand.NAME, args));
+    whenSmooth(versionCommand(args));
   }
 
-  public void whenSmooth(String... smoothCommandArgs) {
+  public void whenSmooth(CommandWithArgs command) {
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(smoothCommandArgs));
+      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(command.commandAndArgs()));
       processBuilder.directory(projectDir());
       Process process = processBuilder.start();
       ExecutorService executor = Executors.newFixedThreadPool(2);
@@ -167,11 +165,8 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public static ImmutableList<String> processArgs(String... params) {
-    ImmutableList.Builder<String> builder = ImmutableList.builder();
-    builder.add(SMOOTH_BINARY.toString());
-    builder.addAll(list(params));
-    return builder.build();
+  public static String[] processArgs(String... params) {
+    return concat(SMOOTH_BINARY.toString(), params);
   }
 
   public void thenFinishedWithSuccess() {

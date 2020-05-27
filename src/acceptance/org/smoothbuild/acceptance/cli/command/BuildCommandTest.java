@@ -3,6 +3,7 @@ package org.smoothbuild.acceptance.cli.command;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
@@ -65,16 +67,16 @@ public class BuildCommandTest {
   @Nested
   class DefaultModule extends DefaultModuleTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { BuildCommand.NAME, "result" };
+    protected CommandWithArgs commandNameWithArgument() {
+      return buildCommand("result");
     }
   }
 
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] { BuildCommand.NAME, "result" };
+    protected CommandWithArgs commandNameWithArgument() {
+      return buildCommand("result");
     }
   }
 
@@ -95,7 +97,7 @@ public class BuildCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("build", option, "result");
+      whenSmooth(buildCommand(option, "result"));
     }
   }
 
@@ -106,7 +108,7 @@ public class BuildCommandTest {
       @Test
       public void illegal_value_causes_error() throws IOException {
         givenScript("result = 'abc';");
-        whenSmooth("build", "--show-tasks=ILLEGAL", "result");
+        whenSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
         thenFinishedWithError();
         thenSysErrContains(unlines(
             "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
@@ -124,7 +126,7 @@ public class BuildCommandTest {
       @Test
       public void shows_literals_when_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
-        whenSmooth("build", "--show-tasks=literal", "result");
+        whenSmooth(buildCommand("--show-tasks=literal", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains(quotesX2(LITERAL_TASK_HEADER));
       }
@@ -132,7 +134,7 @@ public class BuildCommandTest {
       @Test
       public void hides_literals_when_not_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
-        whenSmooth("build", "--show-tasks=none", "result");
+        whenSmooth(buildCommand("--show-tasks=none", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(quotesX2(LITERAL_TASK_HEADER));
       }
@@ -148,7 +150,7 @@ public class BuildCommandTest {
       @Test
       public void shows_call_when_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
-        whenSmooth("build", "--show-tasks=call", "result");
+        whenSmooth(buildCommand("--show-tasks=call", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains(CALL_TASK_HEADER);
       }
@@ -156,7 +158,7 @@ public class BuildCommandTest {
       @Test
       public void hides_calls_when_not_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
-        whenSmooth("build", "--show-tasks=none", "result");
+        whenSmooth(buildCommand("--show-tasks=none", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(CALL_TASK_HEADER);
       }
@@ -164,7 +166,7 @@ public class BuildCommandTest {
       @Test
       public void shows_native_call_when_enabled() throws IOException {
         givenScript("result = concat(['a'], ['b']);");
-        whenSmooth("build", "--show-tasks=call", "result");
+        whenSmooth(buildCommand("--show-tasks=call", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains(NATIVE_CALL_TASK_HEADER);
       }
@@ -172,7 +174,7 @@ public class BuildCommandTest {
       @Test
       public void hides_native_calls_when_not_enabled() throws IOException {
         givenScript("result = concat(['a'], ['b']);");
-        whenSmooth("build", "--show-tasks=none", "result");
+        whenSmooth(buildCommand("--show-tasks=none", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
       }
@@ -186,7 +188,7 @@ public class BuildCommandTest {
       @Test
       public void shows_conversion_when_enabled() throws IOException {
         givenScript("[String] result = [];");
-        whenSmooth("build", "--show-tasks=conversion", "result");
+        whenSmooth(buildCommand("--show-tasks=conversion", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains(CONVERSION_TASK_HEADER);
       }
@@ -194,7 +196,7 @@ public class BuildCommandTest {
       @Test
       public void hides_conversion_when_not_enabled() throws IOException {
         givenScript("result = 'myLiteral';");
-        whenSmooth("build", "--show-tasks=none", "result");
+        whenSmooth(buildCommand("--show-tasks=none", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain(CONVERSION_TASK_HEADER);
       }
@@ -211,7 +213,7 @@ public class BuildCommandTest {
         givenScript(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth("build", "--log-level=fatal", "result");
+        whenSmooth(buildCommand("--log-level=fatal", "result"));
         thenFinishedWithError();
         thenSysOutDoesNotContain("my-error-message");
       }
@@ -222,7 +224,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth("build", "--log-level=fatal", "result");
+        whenSmooth(buildCommand("--log-level=fatal", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain("WARNING: my-warning-message");
       }
@@ -233,7 +235,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth("build", "--log-level=fatal", "result");
+        whenSmooth(buildCommand("--log-level=fatal", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain("INFO: my-info-message");
       }
@@ -247,7 +249,7 @@ public class BuildCommandTest {
         givenScript(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth("build", "--log-level=error", "result");
+        whenSmooth(buildCommand("--log-level=error", "result"));
         thenFinishedWithError();
         thenSysOutContains("ERROR: my-error-message");
       }
@@ -258,7 +260,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth("build", "--log-level=error", "result");
+        whenSmooth(buildCommand("--log-level=error", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain("my-warning-message");
       }
@@ -269,7 +271,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth("build", "--log-level=error", "result");
+        whenSmooth(buildCommand("--log-level=error", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain("my-info-message");
       }
@@ -283,7 +285,7 @@ public class BuildCommandTest {
         givenScript(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth("build", "--log-level=warning", "result");
+        whenSmooth(buildCommand("--log-level=warning", "result"));
         thenFinishedWithError();
         thenSysOutContains("ERROR: my-error-message");
       }
@@ -294,7 +296,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth("build", "--log-level=warning", "result");
+        whenSmooth(buildCommand("--log-level=warning", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains("WARNING: my-warning-message");
       }
@@ -305,7 +307,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth("build", "--log-level=warning", "result");
+        whenSmooth(buildCommand("--log-level=warning", "result"));
         thenFinishedWithSuccess();
         thenSysOutDoesNotContain("my-info-message");
       }
@@ -319,7 +321,7 @@ public class BuildCommandTest {
         givenScript(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth("build", "--log-level=info", "result");
+        whenSmooth(buildCommand("--log-level=info", "result"));
         thenFinishedWithError();
         thenSysOutContains("ERROR: my-error-message");
       }
@@ -330,7 +332,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth("build", "--log-level=info", "result");
+        whenSmooth(buildCommand("--log-level=info", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains("WARNING: my-warning-message");
       }
@@ -341,7 +343,7 @@ public class BuildCommandTest {
         givenScript(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth("build", "--log-level=info", "result");
+        whenSmooth(buildCommand("--log-level=info", "result"));
         thenFinishedWithSuccess();
         thenSysOutContains("INFO: my-info-message");
       }

@@ -7,6 +7,7 @@ import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
 import static org.smoothbuild.SmoothConstants.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.SmoothConstants.USER_MODULE;
+import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,9 +15,9 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
-import org.smoothbuild.cli.command.CleanCommand;
 import org.smoothbuild.io.fs.base.Path;
 
 @SuppressWarnings("ClassCanBeStatic")
@@ -80,8 +81,8 @@ public class CleanCommandTest {
   @Nested
   class LockFile extends LockFileTestCase {
     @Override
-    protected String[] commandNameWithArgument() {
-      return new String[] {CleanCommand.NAME };
+    protected CommandWithArgs commandNameWithArgument() {
+      return cleanCommand();
     }
   }
 
@@ -89,7 +90,7 @@ public class CleanCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth("clean", option);
+      whenSmooth(cleanCommand(option));
     }
   }
 }
