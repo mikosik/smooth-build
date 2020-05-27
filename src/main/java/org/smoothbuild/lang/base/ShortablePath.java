@@ -40,6 +40,6 @@ public class ShortablePath {
 
   @Override
   public String toString() {
-    return shorted + "(" + path() + ")";
+    return shorted + "(" + path + ")";
   }
 }
