@@ -2,7 +2,6 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
 import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Lists.concat;
 
@@ -13,25 +12,29 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.InstallationPaths;
+import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.runtime.SRuntime;
 
 public class RuntimeController {
   private final SRuntime runtime;
-  private final InstallationPaths paths;
+  private final InstallationPaths installationPaths;
+  private final ProjectPaths projectPaths;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(SRuntime runtime, InstallationPaths paths, Reporter reporter) {
+  public RuntimeController(SRuntime runtime, InstallationPaths installationPaths,
+      ProjectPaths projectPaths, Reporter reporter) {
     this.runtime = runtime;
-    this.paths = paths;
+    this.installationPaths = installationPaths;
+    this.projectPaths = projectPaths;
     this.reporter = reporter;
   }
 
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
     reporter.startNewPhase("Parsing");
 
-    for (ModulePath module : concat(paths.slibModules(), USER_MODULE)) {
+    for (ModulePath module : concat(installationPaths.slibModules(), projectPaths.userModule())) {
       try (LoggerImpl logger = new LoggerImpl(module.smooth().shorted(), reporter)) {
         loadModule(runtime, module, logger);
       }

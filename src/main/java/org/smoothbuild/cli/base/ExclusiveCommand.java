@@ -1,10 +1,10 @@
 package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
-import static org.smoothbuild.SmoothConstants.USER_MODULE_FILE_NAME;
 import static org.smoothbuild.cli.console.Console.printErrorToStream;
+import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.install.ProjectPaths.USER_MODULE_FILE_NAME;
+import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 import static org.smoothbuild.util.LockFile.lockFile;
 
 import java.io.IOException;
@@ -37,18 +37,14 @@ public abstract class ExclusiveCommand extends LoggingCommand implements Callabl
       printError("Directory '" + projectDir + "' specified via '--project-dir/-d' doesn't exist.");
       return EXIT_CODE_ERROR;
     }
-    Path userModuleRelativePath = USER_MODULE.smooth().path();
-    Path userModulePath = projectDir == null
-        ? userModuleRelativePath
-        : projectDir.resolve(userModuleRelativePath);
-    if (!Files.exists(userModulePath)) {
-      printError("Directory '" + projectDir + "' doesn't have '" + userModuleRelativePath
-          + "'. Is it really smooth enabled project?");
+    if (!Files.exists(projectDir.resolve(USER_MODULE_PATH.toString()))) {
+      printError("Directory '" + projectDir + "' doesn't have " + USER_MODULE_PATH.q()
+          + ". Is it really smooth enabled project?");
       return EXIT_CODE_ERROR;
     }
     Path normalizedProjectDir = projectDir.normalize();
     if (useLockFile) {
-      FileLock fileLock = lockFile(out(), SMOOTH_LOCK_PATH.toJPath());
+      FileLock fileLock = lockFile(out(), projectDir.resolve(SMOOTH_LOCK_PATH.toString()));
       if (fileLock == null) {
         return EXIT_CODE_ERROR;
       }

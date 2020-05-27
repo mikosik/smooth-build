@@ -1,7 +1,5 @@
 package org.smoothbuild.acceptance.testing;
 
-import static org.smoothbuild.io.fs.base.Path.path;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +12,7 @@ public class TempFilePath {
   @SmoothFunction("tempFilePath")
   public static SString tempFilePath(NativeApi nativeApi) throws IOException {
     TempDir tempDir = nativeApi.createTempDir();
-    String osPath = tempDir.asOsPath(path("file.txt"));
+    String osPath = tempDir.rootOsPath() + "/file.txt";
     new File(osPath).mkdirs();
     return nativeApi.factory().string(osPath);
   }

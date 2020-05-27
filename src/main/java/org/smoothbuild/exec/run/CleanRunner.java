@@ -1,12 +1,12 @@
 package org.smoothbuild.exec.run;
 
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
-import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
-import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 
 import java.io.IOException;
 

@@ -33,11 +33,7 @@ public class TempDir {
   }
 
   public String rootOsPath() {
-    return rootPath.toJPath().toString();
-  }
-
-  public String asOsPath(Path path) {
-    return rootPath.append(path).toJPath().toString();
+    return fileSystem.rootDirJPath().resolve(rootPath.value()).toString();
   }
 
   public void destroy() throws IOException {

@@ -11,6 +11,7 @@ import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.cli.taskmatcher.TaskMatchers;
 import org.smoothbuild.exec.task.TaskModule;
 import org.smoothbuild.install.InstallationPathsModule;
+import org.smoothbuild.install.ProjectPathsModule;
 import org.smoothbuild.io.fs.FileSystemModule;
 import org.smoothbuild.lang.object.db.ObjectDbModule;
 
@@ -29,6 +30,7 @@ public class CreateInjector {
         new TaskModule(),
         new ObjectDbModule(),
         new FileSystemModule(projectDir),
+        new ProjectPathsModule(projectDir),
         new InstallationPathsModule(installationDir),
         new ConsoleModule(out, logLevel, taskMatcher));
   }

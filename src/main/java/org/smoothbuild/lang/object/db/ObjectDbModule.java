@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.object.db;
 
-import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import javax.inject.Singleton;
 
