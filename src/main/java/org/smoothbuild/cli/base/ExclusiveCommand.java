@@ -25,12 +25,6 @@ public abstract class ExclusiveCommand extends LoggingCommand implements Callabl
   )
   private Path projectDir;
 
-  @Option(
-      names = { "--INTERNAL-use-lock-file" },
-      hidden = true
-  )
-  protected boolean useLockFile = true;
-
   @Override
   public Integer call() {
     if (!Files.exists(projectDir)) {
@@ -43,20 +37,16 @@ public abstract class ExclusiveCommand extends LoggingCommand implements Callabl
       return EXIT_CODE_ERROR;
     }
     Path normalizedProjectDir = projectDir.normalize();
-    if (useLockFile) {
-      FileLock fileLock = lockFile(out(), projectDir.resolve(SMOOTH_LOCK_PATH.toString()));
-      if (fileLock == null) {
-        return EXIT_CODE_ERROR;
-      }
-      Channel channel = fileLock.acquiredBy();
-      try (channel) {
-        return executeCommand(normalizedProjectDir);
-      } catch (IOException e) {
-        printError("Error closing file lock.");
-        return EXIT_CODE_ERROR;
-      }
-    } else {
+    FileLock fileLock = lockFile(out(), projectDir.resolve(SMOOTH_LOCK_PATH.toString()));
+    if (fileLock == null) {
+      return EXIT_CODE_ERROR;
+    }
+    Channel channel = fileLock.acquiredBy();
+    try (channel) {
       return executeCommand(normalizedProjectDir);
+    } catch (IOException e) {
+      printError("Error closing file lock.");
+      return EXIT_CODE_ERROR;
     }
   }
 
