@@ -9,6 +9,7 @@ import static org.smoothbuild.util.Okios.copyAllAndClose;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +28,11 @@ import okio.Sink;
  */
 public class MemoryFileSystem implements FileSystem {
   private final MemoryDir root = new MemoryDir(null, Path.root());
+
+  @Override
+  public java.nio.file.Path rootDirJPath() {
+    return Paths.get("in-memory");
+  }
 
   @Override
   public PathState pathState(Path path) {

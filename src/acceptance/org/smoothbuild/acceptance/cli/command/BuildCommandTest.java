@@ -1,9 +1,9 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
-import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.File;

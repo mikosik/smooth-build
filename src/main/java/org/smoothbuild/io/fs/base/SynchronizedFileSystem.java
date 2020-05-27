@@ -17,6 +17,11 @@ public class SynchronizedFileSystem implements FileSystem {
   }
 
   @Override
+  public synchronized java.nio.file.Path rootDirJPath() {
+    return fileSystem.rootDirJPath();
+  }
+
+  @Override
   public synchronized PathState pathState(Path path) {
     return fileSystem.pathState(path);
   }

@@ -1,13 +1,13 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
-import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
-import static org.smoothbuild.SmoothConstants.OUTPUTS_DB_PATH;
-import static org.smoothbuild.SmoothConstants.SMOOTH_LOCK_PATH;
-import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +48,8 @@ public class CleanCommandTest {
     public void reports_error_when_user_module_is_missing() {
       whenSmoothClean();
       thenFinishedWithError();
-      thenSysOutContains("smooth: error: Directory '.' doesn't have '" + USER_MODULE.smooth().path()
-          + "'. Is it really smooth enabled project?");
+      thenSysOutContains("smooth: error: Directory '.' doesn't have " + USER_MODULE_PATH.q()
+          + ". Is it really smooth enabled project?");
     }
 
     @Test
@@ -58,8 +58,8 @@ public class CleanCommandTest {
           .isTrue();
       whenSmoothClean();
       thenFinishedWithError();
-      thenSysOutContains("smooth: error: Directory '.' doesn't have '" + USER_MODULE.smooth().path()
-          + "'. Is it really smooth enabled project?");
+      thenSysOutContains("smooth: error: Directory '.' doesn't have " + USER_MODULE_PATH.q()
+          + ". Is it really smooth enabled project?");
     }
 
     @Test

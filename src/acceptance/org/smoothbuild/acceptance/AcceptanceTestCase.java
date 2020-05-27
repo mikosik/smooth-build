@@ -10,12 +10,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.SmoothConstants.SMOOTH_DIR;
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
 import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.helpCommand;
@@ -25,6 +22,9 @@ import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.cli.console.Console.prefixMultiline;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
+import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import static org.smoothbuild.util.Okios.readAndClose;
 import static org.smoothbuild.util.Strings.unlines;
@@ -86,7 +86,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenRawScript(String buildScript) throws IOException {
-    givenFile(USER_MODULE.smooth().path().toString(), buildScript);
+    givenFile(USER_MODULE_PATH.toString(), buildScript);
   }
 
   public void givenFile(String path, String content) throws IOException {
@@ -190,14 +190,14 @@ public abstract class AcceptanceTestCase {
   }
 
   public void thenSysOutContainsParseError(int lineNumber, String... errorLines) {
-    errorLines[0] = USER_MODULE.smooth().path() + ":" + lineNumber + ": " + errorLines[0];
+    errorLines[0] = USER_MODULE_PATH.toString() + ":" + lineNumber + ": " + errorLines[0];
     thenSysOutContainsParseError(errorLines);
   }
 
   public void thenSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
     thenSysOutContains(
-        "  " + USER_MODULE.smooth().path().toString(),
+        "  " + USER_MODULE_PATH.toString(),
         prefixMultiline(errorLines));
   }
 

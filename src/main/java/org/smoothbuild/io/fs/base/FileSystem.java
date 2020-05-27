@@ -7,6 +7,8 @@ import okio.BufferedSource;
 import okio.Sink;
 
 public interface FileSystem {
+  public java.nio.file.Path rootDirJPath();
+
   public PathState pathState(Path path);
 
   public Iterable<Path> files(Path dir) throws IOException;

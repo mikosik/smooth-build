@@ -5,7 +5,6 @@ import static java.util.regex.Pattern.quote;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.util.Lists.list;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,9 +159,5 @@ public class Path {
   @Override
   public String toString() {
     return value;
-  }
-
-  public java.nio.file.Path toJPath() {
-    return Paths.get(value);
   }
 }

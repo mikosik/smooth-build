@@ -1,6 +1,7 @@
 package org.smoothbuild.slib.file.match;
 
 import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.util.function.Predicate;
 import java.util.regex.PatternSyntaxException;
 
@@ -9,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 public class PathMatcher {
   public static Predicate<Path> pathMatcher(String pattern) {
     validatePattern(pattern);
-    return path -> jdkPathMatcher(pattern).matches(path.toJPath());
+    return path -> jdkPathMatcher(pattern).matches(Paths.get(path.value()));
   }
 
   private static java.nio.file.PathMatcher jdkPathMatcher(String patternString) {

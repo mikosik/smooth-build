@@ -8,7 +8,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -41,13 +40,6 @@ public class PathTest {
   public void simple_path_is_not_root() {
     assertThat(path("file.txt").isRoot())
         .isFalse();
-  }
-
-  @ParameterizedTest
-  @MethodSource("validPaths")
-  public void toJPath(String value) {
-    assertThat((Object) path(value).toJPath())
-        .isEqualTo(Paths.get(value));
   }
 
   @Test

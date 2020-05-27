@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.run.artifact;
 
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
-import static org.smoothbuild.SmoothConstants.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.base.Path;

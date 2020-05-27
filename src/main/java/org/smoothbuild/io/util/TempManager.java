@@ -1,6 +1,6 @@
 package org.smoothbuild.io.util;
 
-import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;

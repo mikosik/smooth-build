@@ -1,11 +1,11 @@
 package org.smoothbuild.exec.run;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static org.smoothbuild.SmoothConstants.ARTIFACTS_PATH;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.SmoothConstants.TEMPORARY_PATH;
 import static org.smoothbuild.exec.run.FindFunctions.findFunctions;
 import static org.smoothbuild.exec.run.ValidateFunctionNames.validateFunctionNames;
+import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
+import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
