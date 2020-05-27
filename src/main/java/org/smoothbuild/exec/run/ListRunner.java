@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.run;
 
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
+import static org.smoothbuild.lang.base.Space.USER;
 
 import javax.inject.Inject;
 
@@ -23,7 +23,7 @@ public class ListRunner {
         .functions()
         .all()
         .stream()
-        .filter(f -> f.location().path().equals(USER_MODULE))
+        .filter(f -> f.location().module().space().equals(USER))
         .filter(f -> f.parameters().size() == 0)
         .map(Function::name)
         .sorted()
