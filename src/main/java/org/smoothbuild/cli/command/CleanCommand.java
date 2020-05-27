@@ -2,6 +2,8 @@ package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 
+import java.nio.file.Path;
+
 import org.smoothbuild.cli.base.ExclusiveCommand;
 import org.smoothbuild.exec.run.CleanRunner;
 
@@ -15,8 +17,8 @@ public class CleanCommand extends ExclusiveCommand {
   public static final String NAME = "clean";
 
   @Override
-  protected Integer invokeCall() {
-    return createInjector(installationDir(), out(), logLevel)
+  protected Integer executeCommand(Path projectDir) {
+    return createInjector(projectDir, installationDir(), out(), logLevel)
         .getInstance(CleanRunner.class)
         .run();
   }

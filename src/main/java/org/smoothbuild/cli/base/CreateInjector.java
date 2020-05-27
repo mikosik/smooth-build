@@ -18,19 +18,18 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class CreateInjector {
-  public static Injector createInjector(Path installationDir, PrintWriter out, Level logLevel) {
-    return createInjector(installationDir, out, logLevel, TaskMatchers.ALL);
+  public static Injector createInjector(Path projectDir, Path installationDir, PrintWriter out,
+      Level logLevel) {
+    return createInjector(projectDir, installationDir, out, logLevel, TaskMatchers.ALL);
   }
 
-  public static Injector createInjector(
-      Path installationDir, PrintWriter out, Level logLevel, TaskMatcher taskMatcher) {
-    ConsoleModule consoleModule = new ConsoleModule(out, logLevel, taskMatcher);
-    InstallationPathsModule installationPathsModule = new InstallationPathsModule(installationDir);
+  public static Injector createInjector(Path projectDir, Path installationDir, PrintWriter out,
+      Level logLevel, TaskMatcher taskMatcher) {
     return Guice.createInjector(PRODUCTION,
         new TaskModule(),
         new ObjectDbModule(),
-        new FileSystemModule(),
-        installationPathsModule,
-        consoleModule);
+        new FileSystemModule(projectDir),
+        new InstallationPathsModule(installationDir),
+        new ConsoleModule(out, logLevel, taskMatcher));
   }
 }

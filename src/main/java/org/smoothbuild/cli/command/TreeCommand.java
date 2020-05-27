@@ -2,6 +2,7 @@ package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.base.ExclusiveCommand;
@@ -24,8 +25,8 @@ public class TreeCommand extends ExclusiveCommand {
   List<String> functions;
 
   @Override
-  protected Integer invokeCall() {
-    return createInjector(installationDir(), out(), logLevel)
+  protected Integer executeCommand(Path projectDir) {
+    return createInjector(projectDir, installationDir(), out(), logLevel)
         .getInstance(TreeRunner.class)
         .run(functions);
   }

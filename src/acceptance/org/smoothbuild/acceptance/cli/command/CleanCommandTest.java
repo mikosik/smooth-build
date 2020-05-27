@@ -47,7 +47,7 @@ public class CleanCommandTest {
     public void reports_error_when_user_module_is_missing() {
       whenSmoothClean();
       thenFinishedWithError();
-      thenSysOutContains("smooth: error: Current dir doesn't have '" + USER_MODULE.smooth().path()
+      thenSysOutContains("smooth: error: Directory '.' doesn't have '" + USER_MODULE.smooth().path()
           + "'. Is it really smooth enabled project?");
     }
 
@@ -57,7 +57,7 @@ public class CleanCommandTest {
           .isTrue();
       whenSmoothClean();
       thenFinishedWithError();
-      thenSysOutContains("smooth: error: Current dir doesn't have '" + USER_MODULE.smooth().path()
+      thenSysOutContains("smooth: error: Directory '.' doesn't have '" + USER_MODULE.smooth().path()
           + "'. Is it really smooth enabled project?");
     }
 
@@ -71,7 +71,7 @@ public class CleanCommandTest {
           "Unmatched arguments from index 1: 'some', 'arguments'",
           "",
           "Usage:",
-          "smooth clean [-l=<level>]",
+          "smooth clean [-d=<projectDir>] [-l=<level>]",
           "Try 'smooth help clean' for more information.",
           "");
     }

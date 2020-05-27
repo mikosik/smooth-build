@@ -3,6 +3,7 @@ package org.smoothbuild.cli.command;
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 import static org.smoothbuild.cli.taskmatcher.MatcherCreator.createMatcher;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.base.ExclusiveCommand;
@@ -74,8 +75,8 @@ public class BuildCommand extends ExclusiveCommand {
   List<String> functions;
 
   @Override
-  protected Integer invokeCall() {
-    return createInjector(installationDir(), out(), logLevel, showTasks)
+  protected Integer executeCommand(Path projectDir) {
+    return createInjector(projectDir, installationDir(), out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
         .run(functions);
   }
