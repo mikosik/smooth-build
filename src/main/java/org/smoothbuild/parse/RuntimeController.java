@@ -2,7 +2,9 @@ package org.smoothbuild.parse;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.SmoothConstants.USER_MODULE;
 import static org.smoothbuild.parse.ModuleLoader.loadModule;
+import static org.smoothbuild.util.Lists.concat;
 
 import java.util.function.Consumer;
 
@@ -29,7 +31,7 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
     reporter.startNewPhase("Parsing");
 
-    for (ModulePath module : paths.allModules()) {
+    for (ModulePath module : concat(paths.slibModules(), USER_MODULE)) {
       try (LoggerImpl logger = new LoggerImpl(module.smooth().shorted(), reporter)) {
         loadModule(runtime, module, logger);
       }
