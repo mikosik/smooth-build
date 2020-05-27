@@ -32,7 +32,7 @@ public class Location {
     this.line = line;
   }
 
-  public ModulePath path() {
+  public ModulePath module() {
     return modulePath;
   }
 

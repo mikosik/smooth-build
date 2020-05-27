@@ -39,7 +39,7 @@ public abstract class Task {
   }
 
   public Space space() {
-    return location.path().space();
+    return location.module().space();
   }
 
   public Task convertIfNeeded(ConcreteType type) {
