@@ -10,7 +10,7 @@ public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
   public void missing_default_module_causes_error_without_creating_smooth_dir() {
     whenSmooth(commandNameWithArgument());
     thenFinishedWithError();
-    thenSysOutContains("smooth: error: Current dir doesn't have 'build.smooth'. " +
+    thenSysOutContains("smooth: error: Directory '.' doesn't have 'build.smooth'. " +
         "Is it really smooth enabled project?");
     assertThat(smoothDir().exists())
         .isFalse();

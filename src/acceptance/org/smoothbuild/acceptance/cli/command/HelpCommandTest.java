@@ -47,7 +47,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
   private static String expectedBuildCommandHelp() {
     return unlines(
         "Usage:",
-        "smooth build [-l=<level>] [-s=<filter>] <function>...",
+        "smooth build [-d=<projectDir>] [-l=<level>] [-s=<filter>] <function>...",
         "",
         "Description:",
         "Build artifact(s) by running specified function(s)",
@@ -56,6 +56,10 @@ public class HelpCommandTest extends AcceptanceTestCase {
         "      <function>...         function(s) which results are saved as artifacts",
         "",
         "Options:",
+        "  -d, --project-dir=<projectDir>",
+        "                            Project directory where 'build.smooth' is located.",
+        "                              By default equal to current directory.",
+        "",
         "  -l, --log-level=<level>   Show logs with specified level or above.",
         "",
         "                            Available levels:",
@@ -114,12 +118,16 @@ public class HelpCommandTest extends AcceptanceTestCase {
   private static String expectedCleanCommandHelp() {
     return unlines(
         "Usage:",
-        "smooth clean [-l=<level>]",
+        "smooth clean [-d=<projectDir>] [-l=<level>]",
         "",
         "Description:",
         "Remove all cached objects and artifacts calculated during all previous builds",
         "",
         "Options:",
+        "  -d, --project-dir=<projectDir>",
+        "                            Project directory where 'build.smooth' is located.",
+        "                              By default equal to current directory.",
+        "",
         "  -l, --log-level=<level>   Show logs with specified level or above.",
         "",
         "                            Available levels:",
