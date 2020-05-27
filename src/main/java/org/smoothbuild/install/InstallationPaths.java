@@ -1,8 +1,6 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.SmoothConstants.USER_MODULE;
 import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
-import static org.smoothbuild.util.Lists.concat;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -15,13 +13,8 @@ public class InstallationPaths {
   private static final String SMOOTH_JAR = "smooth.jar";
   private final Path installationDir;
 
-
   public InstallationPaths(Path installationDir) {
     this.installationDir = installationDir;
-  }
-
-  public List<ModulePath> allModules() {
-    return concat(slibModules(), USER_MODULE);
   }
 
   public List<ModulePath> slibModules() {
