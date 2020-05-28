@@ -1,9 +1,7 @@
 package org.smoothbuild.acceptance;
 
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ObjectArrays.concat;
 import static com.google.common.io.ByteStreams.toByteArray;
-import static com.google.common.io.Files.createTempDir;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -50,6 +48,7 @@ import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.cli.Main;
 import org.smoothbuild.util.DataReader;
 
@@ -63,12 +62,7 @@ public abstract class AcceptanceTestCase {
   private String sysErr;
 
   @BeforeEach
-  public void init() {
-    init(createTempDir());
-  }
-
-  public void init(File projectDir) {
-    checkState(this.projectDir == null, "init was already called");
+  public void init(@TempDir File projectDir) {
     this.projectDir = projectDir;
   }
 
