@@ -2,7 +2,6 @@ package org.smoothbuild.cli.command;
 
 import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 
-import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 import org.smoothbuild.cli.base.LoggingCommand;
@@ -19,7 +18,7 @@ public class VersionCommand extends LoggingCommand implements Callable<Integer> 
 
   @Override
   public Integer call() {
-    return createInjector(Paths.get(""), installationDir(), out(), logLevel)
+    return createInjector(installationDir(), out())
         .getInstance(VersionRunner.class)
         .run();
   }
