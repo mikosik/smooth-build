@@ -32,7 +32,7 @@ public class CachingTest extends AcceptanceTestCase {
         "  String notCacheableRandom();   ",
         "  resultA = notCacheableRandom;  ",
         "  resultB = notCacheableRandom;  ");
-    whenSmoothBuild("resultA resultB");
+    whenSmoothBuild("resultA", "resultB");
     thenFinishedWithSuccess();
 
     assertThat(artifactContent("resultA"))

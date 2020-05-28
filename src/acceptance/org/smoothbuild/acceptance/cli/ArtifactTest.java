@@ -176,7 +176,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "  result1 = 'abc';  ",
         "  result2 = 'abc';  ",
         "  result3 = 'abc';  ");
-    whenSmoothBuild("result2 result3 result1");
+    whenSmoothBuild("result2", "result3", "result1");
     thenFinishedWithSuccess();
     thenSysOutContains(
         "Saving artifact(s)",
