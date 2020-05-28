@@ -7,6 +7,7 @@ import java.nio.file.Path;
 
 import org.smoothbuild.cli.console.ConsoleModule;
 import org.smoothbuild.cli.console.Level;
+import org.smoothbuild.cli.console.LoggerModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.cli.taskmatcher.TaskMatchers;
 import org.smoothbuild.exec.task.TaskModule;
@@ -32,6 +33,13 @@ public class CreateInjector {
         new FileSystemModule(projectDir),
         new ProjectPathsModule(projectDir),
         new InstallationPathsModule(installationDir),
-        new ConsoleModule(out, logLevel, taskMatcher));
+        new LoggerModule(logLevel, taskMatcher),
+        new ConsoleModule(out));
+  }
+
+  public static Injector createInjector(Path installationDir, PrintWriter out) {
+    return Guice.createInjector(PRODUCTION,
+        new InstallationPathsModule(installationDir),
+        new ConsoleModule(out));
   }
 }
