@@ -8,7 +8,6 @@ import static org.smoothbuild.util.LockFile.lockFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.channels.OverlappingFileLockException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Nested;
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 @SuppressWarnings("ClassCanBeStatic")
 public class LockFileTest {
-  private PrintWriter writer = new PrintWriter(nullWriter());
+  private final PrintWriter writer = new PrintWriter(nullWriter());
 
   @Nested
   class file_can_be_locked {
@@ -50,7 +49,7 @@ public class LockFileTest {
       assertThat(lockFile(writer, lockFile))
           .isNotNull();
       assertCall(() -> lockFile(writer, lockFile))
-          .throwsException(OverlappingFileLockException.class);
+          .isNull();
     }
   }
 }
