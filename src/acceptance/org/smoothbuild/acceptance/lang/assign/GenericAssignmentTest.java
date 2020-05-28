@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.assign;
+package org.smoothbuild.acceptance.lang.assign;
 
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
