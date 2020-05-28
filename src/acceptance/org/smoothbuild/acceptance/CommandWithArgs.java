@@ -11,11 +11,11 @@ import org.smoothbuild.cli.command.VersionCommand;
 
 public class CommandWithArgs {
   private final String command;
-  private final String [] arguments;
+  private final String [] args;
 
-  public CommandWithArgs(String command, String... arguments) {
+  public CommandWithArgs(String command, String... args) {
     this.command = requireNonNull(command);
-    this.arguments = arguments;
+    this.args = args;
   }
 
   public static CommandWithArgs buildCommand(String... args) {
@@ -42,7 +42,23 @@ public class CommandWithArgs {
     return new CommandWithArgs(VersionCommand.NAME, args);
   }
 
-  public String[] commandAndArgs() {
-    return concat(command, arguments);
+  public String[] commandPlusArgs() {
+    return commandPlus(args);
+  }
+
+  public String[] commandPlusArgsPlus(String... additionalArgs) {
+    String[] allArgs = concat(
+        additionalArgs,
+        args,
+        String.class);
+    return commandPlus(allArgs);
+  }
+
+  private String[] commandPlus(String[] allArgs) {
+    if (command.isBlank()) {
+      return allArgs;
+    } else {
+      return concat(command, allArgs);
+    }
   }
 }

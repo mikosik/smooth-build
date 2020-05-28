@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.cli;
+package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -11,24 +11,9 @@ public class NoCommandTest extends AcceptanceTestCase {
   public void calling_smooth_without_command_defaults_to_help_command() {
     whenSmoothHelp();
     String helpOutput = sysOut();
-    whenSmooth(new CommandWithArgs(""));
+    whenSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
     thenFinishedWithSuccess();
     assertThat(sysOut())
         .isEqualTo(helpOutput);
-  }
-
-  @Test
-  public void unknown_command() {
-    whenSmoothHelp();
-    whenSmooth(new CommandWithArgs("unknownCommand"));
-    thenSysErrContains(
-        "Unmatched argument at index 0: 'unknownCommand'",
-        "",
-        "Did you mean: clean?",
-        "Usage:",
-        "smooth COMMAND",
-        "Try 'smooth help' for more information.",
-        "");
-    thenFinishedWithError();
   }
 }

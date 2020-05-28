@@ -23,7 +23,7 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
     );
 
     AcceptanceTestCase otherTest = new AcceptanceTestCase() {};
-    otherTest.init(projectDir());
+    otherTest.init(projectDirAbsolute());
     CommandWithArgs commandWithArgs = commandNameWithArgument();
 
     AtomicInteger savedExitCode = new AtomicInteger();

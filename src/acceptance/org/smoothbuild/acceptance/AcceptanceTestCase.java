@@ -9,18 +9,18 @@ import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
+import static org.smoothbuild.acceptance.AcceptanceUtils.GIT_REPO_ROOT;
+import static org.smoothbuild.acceptance.AcceptanceUtils.SMOOTH_BINARY;
 import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.helpCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.listCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
-import static org.smoothbuild.acceptance.GitRepo.gitRepoRoot;
-import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 import static org.smoothbuild.cli.console.Console.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
@@ -30,12 +30,15 @@ import static org.smoothbuild.util.Okios.readAndClose;
 import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,17 +49,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.smoothbuild.cli.Main;
 import org.smoothbuild.util.DataReader;
 
 import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class AcceptanceTestCase {
-  private static final Path GIT_REPO_ROOT = gitRepoRoot();
-  private static final Path SMOOTH_BINARY = smoothBinary(GIT_REPO_ROOT);
-
   private File projectDir;
   private Integer exitCode;
   private String sysOut;
@@ -74,7 +74,7 @@ public abstract class AcceptanceTestCase {
 
   @AfterEach
   public void destroy() throws IOException {
-    deleteRecursively(projectDir().toPath());
+    deleteRecursively(projectDirAbsolute().toPath());
   }
 
   public void givenScript(String... lines) throws IOException {
@@ -114,9 +114,7 @@ public abstract class AcceptanceTestCase {
     try {
       Path destinationDir = projectDir.toPath().resolve(dirInsideProject);
       destinationDir.toFile().mkdirs();
-      return Files.copy(
-          GIT_REPO_ROOT.resolve("lib/ivy").resolve(jar),
-          destinationDir.resolve(jar));
+      return Files.copy(GIT_REPO_ROOT.resolve("lib/ivy").resolve(jar), destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -131,7 +129,7 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothHelp(String... args) {
-    whenSmooth(helpCommand(args));
+    whenSmoothWithoutProjectAndInstallationDir(helpCommand(args));
   }
 
   public void whenSmoothList(String... args) {
@@ -143,13 +141,59 @@ public abstract class AcceptanceTestCase {
   }
 
   public void whenSmoothVersion(String... args) {
-    whenSmooth(versionCommand(args));
+    whenSmoothWithoutProjectDir(versionCommand(args));
+  }
+
+  public void whenSmoothWithoutProjectAndInstallationDir(CommandWithArgs command) {
+    runSmooth(command);
+  }
+
+  public void whenSmoothWithoutProjectDir(CommandWithArgs command) {
+    runSmooth(command,
+        "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
   }
 
   public void whenSmooth(CommandWithArgs command) {
+    runSmooth(command,
+        "--project-dir=" + projectDir,
+        "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
+  }
+
+  private void runSmooth(CommandWithArgs command, String... additionalArguments) {
+    switch (AcceptanceUtils.TEST_MODE) {
+      case SINGLE_JVM:
+        runSmoothInCurrentJvm(command, additionalArguments);
+        break;
+        case FULL_BINARY:
+          runSmoothInForkedJvm(command);
+          break;
+      default:
+        fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
+    }
+  }
+
+  private void runSmoothInCurrentJvm(CommandWithArgs command, String... additionalArgs) {
+    ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
+    ByteArrayOutputStream errBytes = new ByteArrayOutputStream();
+    try (PrintWriter outWriter = printWriter(outBytes);
+        PrintWriter errWriter = printWriter(errBytes)) {
+      String[] commandAndAllArgs = command.commandPlusArgsPlus(additionalArgs);
+      exitCode = Main.runSmooth(commandAndAllArgs, outWriter, errWriter);
+      outWriter.flush();
+      errWriter.flush();
+      this.sysOut = outBytes.toString(UTF_8);
+      this.sysErr = errBytes.toString(UTF_8);
+    }
+  }
+
+  private static PrintWriter printWriter(ByteArrayOutputStream outBytes) {
+    return new PrintWriter(outBytes, true, UTF_8);
+  }
+
+  private void runSmoothInForkedJvm(CommandWithArgs command) {
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(command.commandAndArgs()));
-      processBuilder.directory(projectDir());
+      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(command.commandPlusArgs()));
+      processBuilder.directory(projectDirAbsolute());
       Process process = processBuilder.start();
       ExecutorService executor = Executors.newFixedThreadPool(2);
       Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
@@ -309,15 +353,34 @@ public abstract class AcceptanceTestCase {
   }
 
   public File file(String path) {
-    return new File(projectDir(), path);
+    return new File(projectDirAbsolute(), path);
   }
 
-  public File projectDir() {
+  /**
+   * Absolute path to project dir.
+   */
+  public File projectDirAbsolute() {
     return projectDir;
   }
 
+  /**
+   * Project dir that has been passed via --project-dir option.
+   * It may be "." when current dir is equal to {@link #projectDirAbsolute()}.
+   */
+  public Path projectDirOption() {
+    switch (AcceptanceUtils.TEST_MODE) {
+      case SINGLE_JVM:
+        return projectDir.toPath();
+      case FULL_BINARY:
+        return Paths.get(".");
+      default:
+        fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
+        return null;
+    }
+  }
+
   public File smoothDir() {
-    return new File(projectDir(), SMOOTH_DIR.toString());
+    return new File(projectDirAbsolute(), SMOOTH_DIR.toString());
   }
 
   public String artifactContent(String artifact) throws IOException {
@@ -328,7 +391,7 @@ public abstract class AcceptanceTestCase {
   public Map<String, String> artifactDir(String artifact) throws IOException {
     File dir = artifact(artifact);
     if (!dir.exists()) {
-      Assertions.fail("No such artifact: " + artifact);
+      fail("No such artifact: " + artifact);
     }
     HashMap<String, String> result = new HashMap<>();
     addFilesToMap(dir, "", result);

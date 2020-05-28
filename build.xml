@@ -414,7 +414,7 @@
         <chmod file="${dir.build.acceptance}/${zipped.dir}/smooth" perm="u+x"/>
     </target>
 
-    <target name="run.acceptance" depends="compile.acceptance.tests, install-smooth"
+    <target name="run.acceptance.single-jvm" depends="compile.acceptance.tests, install-smooth"
             description="runs acceptance tests">
         <junitlauncher haltonfailure="yes">
             <classpath>
@@ -429,12 +429,35 @@
                     <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
                     <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
                     <env key="repository_dir" value="${basedir}"/>
+                    <env key="acceptance-test-mode" value="single-jvm"/>
                 </fork>
             </testclasses>
         </junitlauncher>
     </target>
 
-    <target name="run.all.test" depends="run.testing.test, run.main.test, run.slib.test, run.acceptance">
+    <target name="run.acceptance.full-binary" depends="compile.acceptance.tests, install-smooth"
+            description="runs acceptance tests">
+        <junitlauncher haltonfailure="yes">
+            <classpath>
+                <path refid="classpath.with.acceptance"/>
+            </classpath>
+            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
+            <!-- <listener type="legacy-brief"/> -->
+            <testclasses outputdir="${dir.build}">
+                <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
+                <fork>
+                    <sysproperty key="junit.jupiter.execution.parallel.enabled" value="true"/>
+                    <sysproperty key="junit.jupiter.execution.parallel.mode.default" value="concurrent"/>
+                    <env key="smooth_home_dir" value="${dir.build.acceptance}/${zipped.dir}"/>
+                    <env key="repository_dir" value="${basedir}"/>
+                    <env key="acceptance-test-mode" value="full-binary"/>
+                </fork>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+    <target name="run.all.test"
+            depends="run.testing.test, run.main.test, run.slib.test, run.acceptance.single-jvm, run.acceptance.full-binary">
     </target>
 
     <target name="all" depends="release, run.all.test"/>

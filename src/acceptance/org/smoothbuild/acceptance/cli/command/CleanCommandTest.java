@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.CommandWithArgs;
+import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.io.fs.base.Path;
@@ -41,15 +42,7 @@ public class CleanCommandTest {
     }
 
     private void createDirInProject(Path projectPath) {
-      assertThat(new File(projectDir(), projectPath.toString()).mkdirs()).isTrue();
-    }
-
-    @Test
-    public void reports_error_when_user_module_is_missing() {
-      whenSmoothClean();
-      thenFinishedWithError();
-      thenSysOutContains("smooth: error: Directory '.' doesn't have " + USER_MODULE_PATH.q()
-          + ". Is it really smooth enabled project?");
+      assertThat(new File(projectDirAbsolute(), projectPath.toString()).mkdirs()).isTrue();
     }
 
     @Test
@@ -58,23 +51,30 @@ public class CleanCommandTest {
           .isTrue();
       whenSmoothClean();
       thenFinishedWithError();
-      thenSysOutContains("smooth: error: Directory '.' doesn't have " + USER_MODULE_PATH.q()
-          + ". Is it really smooth enabled project?");
+      thenSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "
+          + USER_MODULE_PATH.q() + ". Is it really smooth enabled project?");
     }
 
     @Test
     public void with_arguments_prints_error() throws Exception {
       givenScript(
           "  result = 'abc';  ");
-      whenSmoothClean("some arguments");
+      whenSmoothClean("some", "arguments");
       thenFinishedWithError();
+      thenSysErrContains("Unmatched arguments from index");
       thenSysErrContains(
-          "Unmatched arguments from index 1: 'some', 'arguments'",
-          "",
           "Usage:",
           "smooth clean [-d=<projectDir>] [-l=<level>]",
           "Try 'smooth help clean' for more information.",
           "");
+    }
+  }
+
+  @Nested
+  class DefaultModule extends DefaultModuleTestCase {
+    @Override
+    protected CommandWithArgs commandNameWithArgument() {
+      return cleanCommand();
     }
   }
 

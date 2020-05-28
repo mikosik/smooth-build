@@ -327,7 +327,8 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   }
 
   private String invalidFunctionProvidedBy(Class<?> clazz) {
-    return "Invalid function native implementation in " + projectDir() + "/build.jar provided by "
-        + clazz.getCanonicalName();
+    return "Invalid function native implementation in "
+        + projectDirOption().resolve("build.jar").normalize()
+        + " provided by " + clazz.getCanonicalName();
   }
 }

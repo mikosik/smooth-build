@@ -64,7 +64,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
       throws Exception {
     givenScript(
         "  result = 'abc';  ");
-    whenSmooth(new CommandWithArgs(commandName(), "illegal^name other^name"));
+    whenSmooth(new CommandWithArgs(commandName(), "illegal^name", "other^name"));
     thenFinishedWithError();
     thenSysOutContains("error: Illegal function name 'illegal^name' passed in command line.\n");
     thenSysOutContains("error: Illegal function name 'other^name' passed in command line.\n");
