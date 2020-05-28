@@ -64,11 +64,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains(
-        "Invalid function native implementation in build.jar provided by "
-            + SameName2.class.getCanonicalName() + ".sameName: "
-            + "Function with the same name is also provided by "
-            + SameName.class.getCanonicalName() + ".sameName.\n");
+    thenSysOutContains(invalidFunctionProvidedBy(SameName2.class) + ".sameName: "
+        + "Function with the same name is also provided by "
+        + SameName.class.getCanonicalName() + ".sameName.\n");
   }
 
   @Test
@@ -78,8 +76,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains("Invalid function native implementation in build.jar provided by "
-        + IllegalName.class.getCanonicalName()
+    thenSysOutContains(invalidFunctionProvidedBy(IllegalName.class)
         + ".illegalName$: Name 'illegalName$' is illegal.\n");
   }
 
@@ -103,8 +100,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains("Invalid function native implementation in build.jar provided by "
-        + NonPublicMethod.class.getCanonicalName()
+    thenSysOutContains(invalidFunctionProvidedBy(NonPublicMethod.class)
         + ".function: Providing method must be public.\n");
   }
 
@@ -115,8 +111,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains("Invalid function native implementation in build.jar provided by "
-        + NonStaticMethod.class.getCanonicalName()
+    thenSysOutContains(invalidFunctionProvidedBy(NonStaticMethod.class)
         + ".function: Providing method must be static.\n");
   }
 
@@ -152,8 +147,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
-    thenSysOutContains("Invalid function native implementation in build.jar provided by "
-        + WithoutContainer.class.getCanonicalName()
+    thenSysOutContains(invalidFunctionProvidedBy(WithoutContainer.class)
         + ".function: Providing method should have first parameter of type "
         + NativeApi.class.getCanonicalName() + ".\n");
   }
@@ -330,5 +324,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     thenFinishedWithError();
     thenSysOutContains("Function brokenIdentity has faulty native implementation: "
         + "Its actual result type is [Nothing] but it returned object of type String.");
+  }
+
+  private String invalidFunctionProvidedBy(Class<?> clazz) {
+    return "Invalid function native implementation in " + projectDir() + "/build.jar provided by "
+        + clazz.getCanonicalName();
   }
 }
