@@ -5,6 +5,8 @@ import static org.smoothbuild.testing.BooleanCreators.falseByteString;
 import static org.smoothbuild.testing.BooleanCreators.trueByteString;
 import static org.smoothbuild.util.Lists.list;
 
+import java.nio.file.Files;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
@@ -27,7 +29,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -38,7 +40,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -49,7 +51,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
-    assertThat(artifactDir("result"))
+    assertThat(artifactTreeContent("result"))
         .containsExactly("file.txt", "abc");
   }
 
@@ -148,7 +150,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactDir("result"))
+    assertThat(artifactTreeContent("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 
@@ -165,7 +167,7 @@ public class ArtifactTest extends AcceptanceTestCase {
         "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
         "       'file.txt'",
         "");
-    assertThat(artifact("result").exists())
+    assertThat(Files.exists(artifactAbsolutePath("result")))
         .isFalse();
   }
 

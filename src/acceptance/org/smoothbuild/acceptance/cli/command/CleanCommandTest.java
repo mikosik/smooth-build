@@ -1,6 +1,8 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.file.Files.createDirectories;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
@@ -9,8 +11,8 @@ import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,18 +39,18 @@ public class CleanCommandTest {
 
       whenSmoothClean();
       thenFinishedWithSuccess();
-      assertThat(smoothDir().list())
-          .asList().containsExactly(SMOOTH_LOCK_PATH.lastPart().toString());
+      assertThat(Files.list(smoothDirAbsolutePath()).collect(toList()))
+          .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
     }
 
-    private void createDirInProject(Path projectPath) {
-      assertThat(new File(projectDirAbsolute(), projectPath.toString()).mkdirs()).isTrue();
+    private void createDirInProject(Path path) throws IOException {
+      createDirectories(absolutePath(path.toString()));
     }
 
     @Test
-    public void reports_error_when_user_module_is_missing_and_smooth_dir_exists() {
-      assertThat(smoothDir().mkdirs())
-          .isTrue();
+    public void reports_error_when_user_module_is_missing_and_smooth_dir_exists() throws
+        IOException {
+      createDirectories(smoothDirAbsolutePath());
       whenSmoothClean();
       thenFinishedWithError();
       thenSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "

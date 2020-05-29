@@ -8,6 +8,7 @@ import static org.smoothbuild.util.Okios.readAndClose;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -40,7 +41,7 @@ public class JavacTest extends AcceptanceTestCase {
         "  result = [file(toBlob('" + classSource+ "'), 'MyClass.java')] | javac;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(invoke(new File(artifact("result"), "MyClass.class"), "myMethod"))
+    assertThat(invoke(artifactAbsolutePath("result").resolve("MyClass.class"), "myMethod"))
         .isEqualTo("test-string");
   }
 
@@ -71,11 +72,11 @@ public class JavacTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
 
-    File libraryClassFile = new File(artifact("result"), "library/LibraryClass.class");
-    File classFile = new File(artifact("result"), "MyClass.class");
+    Path libraryClassFile = artifactAbsolutePath("result").resolve("library/LibraryClass.class");
+    Path classFile = artifactAbsolutePath("result").resolve("MyClass.class");
     MyClassLoader classLoader = new MyClassLoader();
-    loadClass(classLoader, byteCode(libraryClassFile));
-    assertThat(invoke(classLoader, classFile, "myMethod"))
+    loadClass(classLoader, byteCode(libraryClassFile.toFile()));
+    assertThat(invoke(classLoader, classFile.toFile(), "myMethod"))
         .isEqualTo("5");
   }
 
@@ -120,9 +121,9 @@ public class JavacTest extends AcceptanceTestCase {
     thenSysOutContains("Source option 1.4 is no longer supported.");
   }
 
-  private Object invoke(File appClassFile, String method) throws IOException,
+  private Object invoke(Path appClassFile, String method) throws IOException,
       IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-    return invoke(new MyClassLoader(), appClassFile, method);
+    return invoke(new MyClassLoader(), appClassFile.toFile(), method);
   }
 
   private Object invoke(MyClassLoader classLoader, File appClassFile, String method)

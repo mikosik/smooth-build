@@ -27,7 +27,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                               ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -51,7 +51,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                   ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -62,7 +62,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func;                                   ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -73,7 +73,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func('def');                            ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("def");
   }
 
@@ -86,7 +86,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
         "  result = func('def');                                     ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("def");
   }
 

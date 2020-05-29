@@ -16,7 +16,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testIdentity(value='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 

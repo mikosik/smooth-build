@@ -134,7 +134,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result    = function1;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -145,7 +145,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  result = 'abc' | stringIdentity;         ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -188,7 +188,7 @@ public class FunctionTest extends AcceptanceTestCase {
         "  String result = 'abc';  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
