@@ -27,7 +27,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = myfunc(res = [], forcedType = [ [ 'abc' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -39,7 +39,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = pair(first = [], second = [ [ 'aaa' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list(), list(list("aaa"))));
   }
 
@@ -53,7 +53,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [], second = []);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -65,7 +65,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [ 'aaa' ], second = [ 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aaa", "bbb"));
   }
 
@@ -77,7 +77,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [ 'aaa' ], second = []);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aaa"));
   }
 
@@ -89,7 +89,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testConcat(first = [], second = [ 'bbb' ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("bbb"));
   }
 
@@ -114,7 +114,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = wrapper(f = [], s = [ [ 'aaa' ] ]);                        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list("aaa")));
   }
 
@@ -128,7 +128,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = wrapper(f = [], s = [ [ 'aaa' ] ]);                        ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list("aaa")));
   }
 
@@ -142,7 +142,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [], element = 'bbb');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("bbb"));
   }
 
@@ -154,7 +154,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [ 'aaa' ], element = 'bbb');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aaa", "bbb"));
   }
 
@@ -169,7 +169,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = [ 'aaa' ], element = stringStruct('bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aaa", "bbb"));
   }
 
@@ -185,7 +185,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         "  result = testAppend(array = emptyStringArray, element = stringStruct('bbb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("bbb"));
   }
 

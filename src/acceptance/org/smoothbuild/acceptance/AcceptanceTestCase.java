@@ -316,7 +316,12 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public Object artifactArray(String name) {
+  /**
+   * Returns content of artifact as string
+   * or (when artifact is an array) returns list containing stringified elements.
+   * Works with array artifacts of any depth.
+   */
+  public Object stringifiedArtifact(String name) {
     try {
       return actual(artifactAbsolutePath(name), s -> s.readString(CHARSET));
     } catch (IOException e) {

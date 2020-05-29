@@ -62,7 +62,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -84,7 +84,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -95,7 +95,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -106,7 +106,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -117,7 +117,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -128,7 +128,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -139,7 +139,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     thenSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
