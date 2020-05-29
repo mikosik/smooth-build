@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.file.Files.exists;
 import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
@@ -35,7 +36,7 @@ public class BuildCommandTest {
           "  result = tempFilePath();  ");
       whenSmoothBuild("result");
       thenFinishedWithSuccess();
-      assertThat(new File(artifactContent("result")).exists())
+      assertThat(new File(artifactFileContent("result")).exists())
           .isFalse();
     }
 
@@ -47,7 +48,7 @@ public class BuildCommandTest {
           "  syntactically incorrect script  ");
       whenSmoothBuild("result");
       thenFinishedWithError();
-      assertThat(file(path).exists())
+      assertThat(exists(absolutePath(path)))
           .isFalse();
     }
 
@@ -59,7 +60,7 @@ public class BuildCommandTest {
           "  syntactically incorrect script  ");
       whenSmoothBuild("result");
       thenFinishedWithError();
-      assertThat(file(path).exists())
+      assertThat(exists(absolutePath(path)))
           .isFalse();
     }
   }

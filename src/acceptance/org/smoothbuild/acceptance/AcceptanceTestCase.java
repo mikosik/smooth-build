@@ -5,6 +5,8 @@ import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Files.createDirectories;
+import static java.util.stream.Collectors.toList;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -29,7 +31,6 @@ import static org.smoothbuild.util.Strings.unlines;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,6 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,19 +58,19 @@ import okio.BufferedSource;
 import okio.ByteString;
 
 public abstract class AcceptanceTestCase {
-  private File projectDir;
+  private Path projectDir;
   private Integer exitCode;
   private String sysOut;
   private String sysErr;
 
   @BeforeEach
-  public void init(@TempDir File projectDir) {
+  public void init(@TempDir Path projectDir) {
     this.projectDir = projectDir;
   }
 
   @AfterEach
   public void destroy() throws IOException {
-    deleteRecursively(projectDirAbsolute().toPath());
+    deleteRecursively(projectDirAbsolutePath());
   }
 
   public void givenScript(String... lines) throws IOException {
@@ -84,19 +86,19 @@ public abstract class AcceptanceTestCase {
   }
 
   public void givenFile(String path, String content) throws IOException {
-    File fullPath = file(path);
-    fullPath.getParentFile().mkdirs();
+    Path fullPath = absolutePath(path);
+    createDirectories(fullPath.getParent());
     try (FileWriter writer = new FileWriter(fullPath.toString(), UTF_8)) {
       writer.write(content);
     }
   }
 
   public void givenNativeJar(Class<?>... classes) throws IOException {
-    saveBytecodeInJar(file("build.jar"), classes);
+    saveBytecodeInJar(absolutePath("build.jar"), classes);
   }
 
   public void givenDir(String path) throws IOException {
-    file(path).mkdirs();
+    createDirectories(absolutePath(path));
   }
 
   public void givenJunitCopied() {
@@ -106,8 +108,8 @@ public abstract class AcceptanceTestCase {
 
   private Path copyLib(String jar, String dirInsideProject) {
     try {
-      Path destinationDir = projectDir.toPath().resolve(dirInsideProject);
-      destinationDir.toFile().mkdirs();
+      Path destinationDir = absolutePath(dirInsideProject);
+      createDirectories(destinationDir);
       return Files.copy(GIT_REPO_ROOT.resolve("lib/ivy").resolve(jar), destinationDir.resolve(jar));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
@@ -187,7 +189,7 @@ public abstract class AcceptanceTestCase {
   private void runSmoothInForkedJvm(CommandWithArgs command) {
     try {
       ProcessBuilder processBuilder = new ProcessBuilder(processArgs(command.commandPlusArgs()));
-      processBuilder.directory(projectDirAbsolute());
+      processBuilder.directory(projectDirAbsolutePath().toFile());
       Process process = processBuilder.start();
       ExecutorService executor = Executors.newFixedThreadPool(2);
       Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
@@ -281,17 +283,13 @@ public abstract class AcceptanceTestCase {
     return sysErr;
   }
 
-  public File artifact(String name) {
-    return file(ARTIFACTS_PATH.appendPart(name).toString());
-  }
-
   /**
    * @return given artifact as ByteString, or List<ByteString> if it is array,
    * or List<List<ByteString>> if it is array of depth=2, and so on.
    */
   public Object artifactAsByteStrings(String name) {
     try {
-      return actual(artifact(name), BufferedSource::readByteString);
+      return actual(artifactAbsolutePath(name), BufferedSource::readByteString);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -299,7 +297,7 @@ public abstract class AcceptanceTestCase {
 
   public boolean artifactAsBoolean(String name) {
     try {
-      return readAndClose(buffer(source(artifact(name))), s -> {
+      return readAndClose(buffer(source(artifactAbsolutePath(name))), s -> {
         ByteString value = s.readByteString();
         if (value.size() != 1) {
           throw new RuntimeException("Expected boolean artifact but got " + value.toString());
@@ -320,51 +318,40 @@ public abstract class AcceptanceTestCase {
 
   public Object artifactArray(String name) {
     try {
-      return actual(artifact(name), s -> s.readString(CHARSET));
+      return actual(artifactAbsolutePath(name), s -> s.readString(CHARSET));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
   }
 
-  private static Object actual(File file, DataReader<?> dataReader) throws IOException {
-    if (!file.exists()) {
+  private static Object actual(Path path, DataReader<?> dataReader) throws IOException {
+    if (!Files.exists(path)) {
       return null;
     }
-    if (file.isDirectory()) {
-      return actualArray(file, dataReader);
+    if (Files.isDirectory(path)) {
+      return actualArray(path, dataReader);
     }
-    return readAndClose(buffer(source(file)), dataReader);
+    return readAndClose(buffer(source(path)), dataReader);
   }
 
-  private static Object actualArray(File file, DataReader<?> dataReader) throws IOException {
-    int count = file.list().length;
+  private static Object actualArray(Path path, DataReader<?> dataReader) throws IOException {
+    long count = Files.list(path).count();
 
-    List<Object> result = new ArrayList<>(count);
+    List<Object> result = new ArrayList<>((int) count);
     for (int i = 0; i < count; i++) {
-      result.add(actual(new File(file, Integer.toString(i)), dataReader));
+      result.add(actual(path.resolve(Integer.toString(i)), dataReader));
     }
     return result;
   }
 
-  public File file(String path) {
-    return new File(projectDirAbsolute(), path);
-  }
-
-  /**
-   * Absolute path to project dir.
-   */
-  public File projectDirAbsolute() {
-    return projectDir;
-  }
-
   /**
    * Project dir that has been passed via --project-dir option.
-   * It may be "." when current dir is equal to {@link #projectDirAbsolute()}.
+   * It may be "." when current dir is equal to {@link #projectDirAbsolutePath()}.
    */
   public Path projectDirOption() {
     switch (AcceptanceUtils.TEST_MODE) {
       case SINGLE_JVM:
-        return projectDir.toPath();
+        return projectDir;
       case FULL_BINARY:
         return Paths.get(".");
       default:
@@ -373,38 +360,54 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public File smoothDir() {
-    return new File(projectDirAbsolute(), SMOOTH_DIR.toString());
+  public String artifactFileContent(String artifact) throws IOException {
+    return fileContent(artifactAbsolutePath(artifact));
   }
 
-  public String artifactContent(String artifact) throws IOException {
-    File file = artifact(artifact);
-    return fileContent(file);
-  }
-
-  public Map<String, String> artifactDir(String artifact) throws IOException {
-    File dir = artifact(artifact);
-    if (!dir.exists()) {
+  public Map<String, String> artifactTreeContent(String artifact) throws IOException {
+    Path dir = artifactAbsolutePath(artifact);
+    if (!Files.exists(dir)) {
       fail("No such artifact: " + artifact);
     }
     HashMap<String, String> result = new HashMap<>();
-    addFilesToMap(dir, "", result);
+    addFilesToMap(dir, Paths.get(""), result);
     return result;
   }
 
-  private void addFilesToMap(File dir, String prefix, HashMap<String, String> result)
+  private static void addFilesToMap(Path rootDir, Path relativePath, HashMap<String, String> result)
       throws IOException {
-    for (String fileName : dir.list()) {
-      File file = new File(dir, fileName);
-      if (file.isDirectory()) {
-        addFilesToMap(file, prefix + file.getName() + "/", result);
-      } else {
-        result.put(prefix + file.getName(), fileContent(file));
+    try (Stream<Path> stream = Files.list(rootDir.resolve(relativePath))) {
+      for (Path path : stream.collect(toList())) {
+        Path relative = relativePath.resolve(path.getFileName());
+        if (Files.isDirectory(path)) {
+          addFilesToMap(rootDir, relative, result);
+        } else {
+          result.put(relative.toString(), fileContent(path));
+        }
       }
     }
   }
 
-  private static String fileContent(File file) throws IOException {
-    return readAndClose(buffer(source(file)), s -> s.readString(CHARSET));
+  private static String fileContent(Path path) throws IOException {
+    return readAndClose(buffer(source(path)), s -> s.readString(CHARSET));
+  }
+
+  public Path smoothDirAbsolutePath() {
+    return absolutePath(SMOOTH_DIR.toString());
+  }
+
+  public Path absolutePath(String path) {
+    return projectDirAbsolutePath().resolve(path);
+  }
+
+  public Path artifactAbsolutePath(String name) {
+    return absolutePath(ARTIFACTS_PATH.appendPart(name).toString());
+  }
+
+  /**
+   * Absolute path to project dir.
+   */
+  public Path projectDirAbsolutePath() {
+    return projectDir;
   }
 }

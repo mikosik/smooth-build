@@ -15,7 +15,7 @@ public class ToBlobTest extends AcceptanceTestCase {
         "  result = toBlob('abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 }

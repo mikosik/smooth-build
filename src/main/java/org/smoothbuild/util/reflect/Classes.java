@@ -4,10 +4,10 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.util.Okios.readAndClose;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
@@ -32,8 +32,8 @@ public class Classes {
     return binaryPath.substring(0, newLength).replace('/', '.');
   }
 
-  public static void saveBytecodeInJar(File jarFile, Class<?>... classes) throws IOException {
-    try (JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(jarFile))) {
+  public static void saveBytecodeInJar(Path jarFile, Class<?>... classes) throws IOException {
+    try (JarOutputStream jarOutputStream = jarOutputStream(jarFile)) {
       for (Class<?> clazz : classes) {
         jarOutputStream.putNextEntry(new ZipEntry(binaryPath(clazz)));
         try (InputStream byteCodeInputStream = byteCodeAsInputStream(clazz)) {
@@ -41,6 +41,10 @@ public class Classes {
         }
       }
     }
+  }
+
+  private static JarOutputStream jarOutputStream(Path jarFile) throws IOException {
+    return new JarOutputStream(new FileOutputStream(jarFile.toFile()));
   }
 
   public static InputStream byteCodeAsInputStream(Class<?> clazz) {

@@ -14,7 +14,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("then clause");
   }
 
@@ -24,7 +24,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), 'then clause', 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("else clause");
   }
 
@@ -36,7 +36,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), throwException(), 'else clause');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("else clause");
   }
 
@@ -48,7 +48,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', throwException());  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("then clause");
   }
 
@@ -62,7 +62,7 @@ public class IfTest extends AcceptanceTestCase {
           "  result = if(true(), if(false(), throwException(), 'else clause'), 'ignored');  ");
       whenSmoothBuild("result");
       thenFinishedWithSuccess();
-      assertThat(artifactContent("result"))
+      assertThat(artifactFileContent("result"))
           .isEqualTo("else clause");
     }
 
@@ -75,7 +75,7 @@ public class IfTest extends AcceptanceTestCase {
           "  result = if(true(), if(true(), 'then clause', throwException()), 'ignored');  ");
       whenSmoothBuild("result");
       thenFinishedWithSuccess();
-      assertThat(artifactContent("result"))
+      assertThat(artifactFileContent("result"))
           .isEqualTo("then clause");
     }
   }

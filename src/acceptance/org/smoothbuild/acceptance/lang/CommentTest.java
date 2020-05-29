@@ -15,7 +15,7 @@ public class CommentTest extends AcceptanceTestCase {
         "  result = '';               ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("");
   }
 
@@ -25,7 +25,7 @@ public class CommentTest extends AcceptanceTestCase {
         "  result = '' ;  # comment at the end of line  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("");
   }
 }

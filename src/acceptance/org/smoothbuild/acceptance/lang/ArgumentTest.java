@@ -57,7 +57,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = returnFirst(a='abc', b='def');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -68,7 +68,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = returnFirst(b='def', a='abc');  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -113,7 +113,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity('abc', 'def');                                           ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
@@ -124,7 +124,7 @@ public class ArgumentTest extends AcceptanceTestCase {
         "  result = myIdentity(myArgument='abc', myArgument2='def');                    ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactContent("result"))
+    assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 }

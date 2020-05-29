@@ -38,7 +38,7 @@ public class ConcatTest extends AcceptanceTestCase {
         "  );                                       ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactDir("result"))
+    assertThat(artifactTreeContent("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 

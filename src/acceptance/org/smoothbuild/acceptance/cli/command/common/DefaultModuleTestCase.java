@@ -2,6 +2,8 @@ package org.smoothbuild.acceptance.cli.command.common;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.nio.file.Files;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.CommandWithArgs;
@@ -14,7 +16,7 @@ public abstract class DefaultModuleTestCase extends AcceptanceTestCase {
     thenSysOutContains(
         "smooth: error: Directory '" + projectDirOption() + "' doesn't have 'build.smooth'. " +
         "Is it really smooth enabled project?");
-    assertThat(smoothDir().exists())
+    assertThat(Files.exists(smoothDirAbsolutePath()))
         .isFalse();
   }
 
