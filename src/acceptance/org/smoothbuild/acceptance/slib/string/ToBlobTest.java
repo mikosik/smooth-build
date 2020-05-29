@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.string;
+package org.smoothbuild.acceptance.slib.string;
 
 import static com.google.common.truth.Truth.assertThat;
 

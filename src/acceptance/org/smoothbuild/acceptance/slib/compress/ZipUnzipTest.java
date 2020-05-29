@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.java;
+package org.smoothbuild.acceptance.slib.compress;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -7,12 +7,13 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class JarUnjarTest extends AcceptanceTestCase {
+public class ZipUnzipTest extends AcceptanceTestCase {
   @Test
-  public void jar_unjar() throws IOException {
+  public void zip_unzip() throws IOException {
+    givenFile("dir/file1.txt", "abc");
+    givenFile("file2.txt", "def");
     givenScript(
-        "  result = [ file(toBlob('abc'), 'dir/file1.txt'), file(toBlob('def'), 'file2.txt') ]  ",
-        "    | jar | unjar;                                                                     ");
+        "  result = [ aFile('dir/file1.txt'), aFile('file2.txt') ] | zip | unzip;  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactDir("result"))
@@ -22,7 +23,7 @@ public class JarUnjarTest extends AcceptanceTestCase {
   @Test
   public void corrupted_archive_causes_error() throws IOException {
     givenScript(
-        "  result = toBlob('random junk') | unjar;  ");
+        "  result = toBlob('random junk') | unzip;  ");
     whenSmoothBuild("result");
     thenFinishedWithError();
     thenSysOutContains("Cannot read archive. Corrupted data?");
