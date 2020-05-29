@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.bool;
+package org.smoothbuild.acceptance.slib.bool;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -7,15 +7,14 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class FalseTest extends AcceptanceTestCase {
+public class TrueTest extends AcceptanceTestCase {
   @Test
-  public void false_function() throws IOException {
+  public void true_function() throws IOException {
     givenScript(
-        "  result = false();  ");
+        "  result = true();  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
-        .isEqualTo(false);
-
+        .isEqualTo(true);
   }
 }

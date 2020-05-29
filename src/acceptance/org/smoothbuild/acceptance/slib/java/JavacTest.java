@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.java;
+package org.smoothbuild.acceptance.slib.java;
 
 import static com.google.common.truth.Truth.assertThat;
 import static okio.Okio.buffer;

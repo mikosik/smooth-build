@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.builtin.java;
+package org.smoothbuild.acceptance.slib.java;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
