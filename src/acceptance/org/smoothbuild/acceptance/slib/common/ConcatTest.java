@@ -25,7 +25,7 @@ public class ConcatTest extends AcceptanceTestCase {
         "  result = concat(['abc'], ['def']);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -50,7 +50,7 @@ public class ConcatTest extends AcceptanceTestCase {
         "  result = concat([ aFile('0') ], [ aFile('1') ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 }

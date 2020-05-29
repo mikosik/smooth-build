@@ -16,7 +16,7 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = testFlatten(array = [ [ 'aa' ], [ 'bb', 'cc' ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aa", "bb", "cc"));
   }
 
@@ -28,7 +28,7 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = testFlatten(array = [ [ [ 'aa' ], [ 'bb', 'cc' ] ] ]);  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list("aa"), list("bb", "cc")));
   }
 
@@ -40,7 +40,7 @@ public class GenericTest extends AcceptanceTestCase {
         "  result = pair(a1=testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aa", "bb"));
   }
 }

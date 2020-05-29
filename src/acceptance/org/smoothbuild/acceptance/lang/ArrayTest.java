@@ -17,7 +17,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -27,7 +27,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [Bool] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -37,7 +37,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [String] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -47,7 +47,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [Blob] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -57,7 +57,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [File] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
 
   }
@@ -78,7 +78,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc', 'def' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -88,7 +88,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ toBlob('abc'), toBlob('def') ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -108,7 +108,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[Nothing]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -118,7 +118,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[Nothing]] result = [ [] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list()));
   }
 
@@ -128,7 +128,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[Nothing]] result = [ [], [] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list(), list()));
   }
 
@@ -138,7 +138,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[Bool]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -148,7 +148,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[String]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -158,7 +158,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[Blob]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -168,7 +168,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[File]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -178,7 +178,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[String]] result = [ [], [ 'abc' ], [ 'def', 'ghi' ] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list(), list("abc"), list("def", "ghi")));
   }
 
@@ -188,7 +188,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[[Nothing]]] result = [];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
@@ -198,7 +198,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  [[[String]]] result = [ [ [] ], [ [ 'abc' ], [ 'def', 'ghi' ] ] ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list(list()), list(list("abc"), list("def", "ghi"))));
   }
 
@@ -231,7 +231,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc"));
   }
 
@@ -241,7 +241,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc', ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc"));
   }
 
@@ -259,7 +259,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ 'abc', 'def' ];  ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
@@ -270,7 +270,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ myFile, toBlob('def') ];          ");
     whenSmoothBuild("result");
     thenFinishedWithSuccess();
-    assertThat(artifactArray("result"))
+    assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
