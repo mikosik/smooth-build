@@ -339,13 +339,14 @@ public abstract class AcceptanceTestCase {
   }
 
   private static Object actualArray(Path path, DataReader<?> dataReader) throws IOException {
-    long count = Files.list(path).count();
-
-    List<Object> result = new ArrayList<>((int) count);
-    for (int i = 0; i < count; i++) {
-      result.add(actual(path.resolve(Integer.toString(i)), dataReader));
+    try (Stream<Path> pathStream = Files.list(path)) {
+      long count = pathStream.count();
+      List<Object> result = new ArrayList<>((int) count);
+      for (int i = 0; i < count; i++) {
+        result.add(actual(path.resolve(Integer.toString(i)), dataReader));
+      }
+      return result;
     }
-    return result;
   }
 
   /**
