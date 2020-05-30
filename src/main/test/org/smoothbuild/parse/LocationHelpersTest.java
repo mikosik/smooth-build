@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.parse.LocationHelpers.locationOf;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -40,6 +40,6 @@ public class LocationHelpersTest {
   }
 
   private static ModulePath modulePath() {
-    return new ModulePath(USER, Paths.get("script.smooth"), "{u}/script.smooth");
+    return new ModulePath(USER, Path.of("script.smooth"), "{u}/script.smooth");
   }
 }

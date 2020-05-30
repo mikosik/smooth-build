@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ public class LocationTest {
   class to_string {
     @Test
     public void file() {
-      Location location = location(new ModulePath(USER, Paths.get("abc"), "shortPath"), 2);
+      Location location = location(new ModulePath(USER, Path.of("abc"), "shortPath"), 2);
       assertThat(location.toString())
           .isEqualTo("shortPath:2");
     }
@@ -72,6 +72,6 @@ public class LocationTest {
   }
 
   private static ModulePath modulePath(String name) {
-    return new ModulePath(USER, Paths.get(name), "{SL}/" + name);
+    return new ModulePath(USER, Path.of(name), "{SL}/" + name);
   }
 }

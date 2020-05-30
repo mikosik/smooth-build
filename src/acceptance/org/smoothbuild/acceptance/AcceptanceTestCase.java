@@ -37,7 +37,6 @@ import java.io.PrintWriter;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -358,7 +357,7 @@ public abstract class AcceptanceTestCase {
       case SINGLE_JVM:
         return projectDir;
       case FULL_BINARY:
-        return Paths.get(".");
+        return Path.of(".");
       default:
         fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
         return null;
@@ -375,7 +374,7 @@ public abstract class AcceptanceTestCase {
       fail("No such artifact: " + artifact);
     }
     HashMap<String, String> result = new HashMap<>();
-    addFilesToMap(dir, Paths.get(""), result);
+    addFilesToMap(dir, Path.of(""), result);
     return result;
   }
 

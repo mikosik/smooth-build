@@ -5,7 +5,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,7 +15,7 @@ public class SmoothBinary {
     String smoothHomeEnv = System.getenv("smooth_home_dir");
     Path smoothHome = smoothHomeEnv == null
         ? assembleSmoothBinary(gitRepoRoot)
-        : Paths.get(smoothHomeEnv);
+        : Path.of(smoothHomeEnv);
     return smoothHome.resolve("smooth");
   }
 
