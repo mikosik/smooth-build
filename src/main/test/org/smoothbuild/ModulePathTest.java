@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.lang.base.Space.USER;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.ModulePath;
@@ -36,7 +36,7 @@ public class ModulePathTest {
   void smooth_path() {
     ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
     assertThat((Object) modulePath.smooth().path())
-        .isEqualTo(Paths.get("full/path.smooth"));
+        .isEqualTo(Path.of("full/path.smooth"));
   }
 
   @Test
@@ -50,7 +50,7 @@ public class ModulePathTest {
   void native_path() {
     ModulePath modulePath = modulePath("full/path.smooth", "shortPath");
     assertThat((Object) modulePath.nativ().path())
-        .isEqualTo(Paths.get("full/path.jar"));
+        .isEqualTo(Path.of("full/path.jar"));
   }
 
   @Test
@@ -62,12 +62,12 @@ public class ModulePathTest {
 
   @Test
   public void file_code_location_to_string() {
-    ModulePath location = new ModulePath(USER, Paths.get("abc"), "shortPath");
+    ModulePath location = new ModulePath(USER, Path.of("abc"), "shortPath");
     assertThat(location.toString())
         .isEqualTo("shortPath(abc)");
   }
 
   private static ModulePath modulePath(String fullPath, String shortPath) {
-    return new ModulePath(USER, Paths.get(fullPath), shortPath);
+    return new ModulePath(USER, Path.of(fullPath), shortPath);
   }
 }

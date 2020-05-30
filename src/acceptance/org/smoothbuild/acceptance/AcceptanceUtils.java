@@ -6,7 +6,6 @@ import static org.smoothbuild.acceptance.AcceptanceUtils.TestMode.SINGLE_JVM;
 import static org.smoothbuild.acceptance.SmoothBinary.smoothBinary;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AcceptanceUtils {
   public static final TestMode TEST_MODE = getAcceptanceTestMode();
@@ -39,10 +38,10 @@ public class AcceptanceUtils {
      * then we are run from IDE and working dir is repo's root.
      */
     String repositoryDir = System.getenv("repository_dir");
-    return repositoryDir == null ? workingDir() : Paths.get(repositoryDir);
+    return repositoryDir == null ? workingDir() : Path.of(repositoryDir);
   }
 
   private static Path workingDir() {
-    return Paths.get(".").toAbsolutePath();
+    return Path.of(".").toAbsolutePath();
   }
 }

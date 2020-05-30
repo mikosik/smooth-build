@@ -15,7 +15,6 @@ import static org.smoothbuild.io.fs.base.PathState.NOTHING;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -126,7 +125,7 @@ public class DiskFileSystem implements FileSystem {
     createDir(link.parent());
 
     String escape = escapeString(link.parts().size() - 1);
-    java.nio.file.Path targetJdkPath = Paths.get(escape, target.toString());
+    java.nio.file.Path targetJdkPath = java.nio.file.Path.of(escape, target.toString());
     Files.createSymbolicLink(jdkPath(link), targetJdkPath);
   }
 

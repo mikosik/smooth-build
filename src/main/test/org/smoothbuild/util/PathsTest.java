@@ -40,6 +40,6 @@ public class PathsTest {
   }
 
   private static Path newPath(String path) {
-    return java.nio.file.Paths.get(path);
+    return java.nio.file.Path.of(path);
   }
 }

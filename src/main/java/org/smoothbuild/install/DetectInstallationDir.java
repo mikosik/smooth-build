@@ -1,7 +1,6 @@
 package org.smoothbuild.install;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.smoothbuild.util.reflect.Classes;
 
@@ -18,6 +17,6 @@ public class DetectInstallationDir {
     String smoothJarPath = resourcePath
         .substring(0, resourcePath.lastIndexOf('!'))
         .substring("file:".length());
-    return Paths.get(smoothJarPath);
+    return Path.of(smoothJarPath);
   }
 }

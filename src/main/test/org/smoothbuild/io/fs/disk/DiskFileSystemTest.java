@@ -7,7 +7,6 @@ import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +22,7 @@ public class DiskFileSystemTest extends GenericFileSystemTestCase {
   @BeforeEach
   public void before() {
     tempDir = com.google.common.io.Files.createTempDir();
-    fileSystem = new DiskFileSystem(Paths.get(tempDir.getAbsolutePath()));
+    fileSystem = new DiskFileSystem(java.nio.file.Path.of(tempDir.getAbsolutePath()));
   }
 
   @AfterEach
