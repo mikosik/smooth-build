@@ -3,7 +3,7 @@ package org.smoothbuild.util;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.WRITE;
-import static org.smoothbuild.cli.console.Console.printErrorToStream;
+import static org.smoothbuild.cli.console.Console.printErrorToWriter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,11 +23,11 @@ public class LockFile {
       try {
         createDirectories(dir);
       } catch (FileAlreadyExistsException e) {
-        printErrorToStream(
+        printErrorToWriter(
             out, "Cannot create " + dir + " directory - file with that name already exists.");
         return null;
       } catch (IOException e) {
-        printErrorToStream(out, "Cannot create " + dir + " directory: " + e.getMessage());
+        printErrorToWriter(out, "Cannot create " + dir + " directory: " + e.getMessage());
         return null;
       }
     }
@@ -35,7 +35,7 @@ public class LockFile {
     try {
       FileLock lock = FileChannel.open(path, CREATE, WRITE).tryLock();
       if (lock == null) {
-        printErrorToStream(out, ANOTHER_INSTANCE_IS_RUNNING);
+        printErrorToWriter(out, ANOTHER_INSTANCE_IS_RUNNING);
       }
       return lock;
     } catch (OverlappingFileLockException e) {
@@ -43,12 +43,12 @@ public class LockFile {
       // However acceptance tests in fast-mode are run in single JVM.
       // This makes FileChannel.lock() throw exception instead of returning null when
       // file is already locked.
-      printErrorToStream(
+      printErrorToWriter(
           out, ANOTHER_INSTANCE_IS_RUNNING + "\n And it is running in the same JVM.");
-      printErrorToStream(out, "OverlappingFileLockException: " + e.getMessage());
+      printErrorToWriter(out, "OverlappingFileLockException: " + e.getMessage());
       return null;
     } catch (IOException e) {
-      printErrorToStream(out, "IOException: " + e.getMessage());
+      printErrorToWriter(out, "IOException: " + e.getMessage());
       return null;
     }
   }

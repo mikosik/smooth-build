@@ -21,7 +21,7 @@ import static org.smoothbuild.acceptance.CommandWithArgs.helpCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.listCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
-import static org.smoothbuild.cli.console.Console.prefixMultiline;
+import static org.smoothbuild.cli.console.Reporter.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
