@@ -1,7 +1,7 @@
 package org.smoothbuild.cli.base;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.cli.console.Console.printErrorToStream;
+import static org.smoothbuild.cli.console.Console.printErrorToWriter;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_FILE_NAME;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
@@ -51,7 +51,7 @@ public abstract class ExclusiveCommand extends LoggingCommand implements Callabl
   }
 
   private void printError(String message) {
-    printErrorToStream(out(), message);
+    printErrorToWriter(out(), message);
   }
 
   protected abstract Integer executeCommand(Path projectDir);
