@@ -1,6 +1,6 @@
 Core smooth functions
 ---------------------
-| funtion | definition |
+| function | definition |
 | ---- | ---- |
 | [aFile](api/aFile.md) | Reads single file from project filesystem. |
 | [and](api/and.md) | Returns `true` if both arguments are `true`. |
