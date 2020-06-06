@@ -73,36 +73,35 @@ public class Strings {
     for (int i = 0; i < string.length(); i++) {
       char currentChar = string.charAt(i);
       switch (currentChar) {
-        case TAB:
+        case TAB -> {
           stringBuilder.append('\\');
           stringBuilder.append('t');
-          break;
-        case BACKSPACE:
+        }
+        case BACKSPACE -> {
           stringBuilder.append('\\');
           stringBuilder.append('b');
-          break;
-        case NEW_LINE:
+        }
+        case NEW_LINE -> {
           stringBuilder.append('\\');
           stringBuilder.append('n');
-          break;
-        case CARRIAGE_RETURN:
+        }
+        case CARRIAGE_RETURN -> {
           stringBuilder.append('\\');
           stringBuilder.append('r');
-          break;
-        case FORM_FEED:
+        }
+        case FORM_FEED -> {
           stringBuilder.append('\\');
           stringBuilder.append('f');
-          break;
-        case DOUBLE_QUOTE:
+        }
+        case DOUBLE_QUOTE -> {
           stringBuilder.append('\\');
           stringBuilder.append('"');
-          break;
-        case BACKSLASH:
+        }
+        case BACKSLASH -> {
           stringBuilder.append('\\');
           stringBuilder.append('\\');
-          break;
-        default:
-          stringBuilder.append(currentChar);
+        }
+        default -> stringBuilder.append(currentChar);
       }
     }
     return stringBuilder.toString();
@@ -131,23 +130,15 @@ public class Strings {
   }
 
   private static char convertEscapeCodeToChar(char code, int charIndex) {
-    switch (code) {
-      case 't':
-        return TAB;
-      case 'b':
-        return BACKSPACE;
-      case 'n':
-        return NEW_LINE;
-      case 'r':
-        return CARRIAGE_RETURN;
-      case 'f':
-        return FORM_FEED;
-      case '"':
-        return DOUBLE_QUOTE;
-      case '\\':
-        return BACKSLASH;
-      default:
-        throw illegalEscapeSequenceException(charIndex);
-    }
+    return switch (code) {
+      case 't' -> TAB;
+      case 'b' -> BACKSPACE;
+      case 'n' -> NEW_LINE;
+      case 'r' -> CARRIAGE_RETURN;
+      case 'f' -> FORM_FEED;
+      case '"' -> DOUBLE_QUOTE;
+      case '\\' -> BACKSLASH;
+      default -> throw illegalEscapeSequenceException(charIndex);
+    };
   }
 }

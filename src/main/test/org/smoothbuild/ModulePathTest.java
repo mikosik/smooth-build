@@ -62,12 +62,12 @@ public class ModulePathTest {
 
   @Test
   public void file_code_location_to_string() {
-    ModulePath location = new ModulePath(USER, Path.of("abc"), "shortPath");
+    ModulePath location = ModulePath.modulePath(USER, Path.of("abc"), "shortPath");
     assertThat(location.toString())
         .isEqualTo("shortPath(abc)");
   }
 
   private static ModulePath modulePath(String fullPath, String shortPath) {
-    return new ModulePath(USER, Path.of(fullPath), shortPath);
+    return ModulePath.modulePath(USER, Path.of(fullPath), shortPath);
   }
 }

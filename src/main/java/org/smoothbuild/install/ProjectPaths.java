@@ -1,6 +1,7 @@
 package org.smoothbuild.install;
 
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.base.ModulePath.modulePath;
 import static org.smoothbuild.lang.base.Space.USER;
 
 import org.smoothbuild.io.fs.base.Path;
@@ -23,7 +24,7 @@ public class ProjectPaths {
   }
 
   public ModulePath userModule() {
-    return new ModulePath(
+    return modulePath(
         USER,
         projectDir.resolve(USER_MODULE_PATH.toString()),
         USER_MODULE_PATH.toString());

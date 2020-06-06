@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -13,27 +13,17 @@ import com.google.common.collect.ImmutableList;
 /**
  * Function's signature.
  */
-public class Signature {
-  private final Type type;
-  private final String name;
-  private final ImmutableList<Parameter> parameters;
+public record Signature(Type type, String name, ImmutableList<Parameter> parameters) {
 
-  public Signature(Type type, String name, Iterable<Parameter> params) {
-    this.type = checkNotNull(type);
-    this.name = checkNotNull(name);
-    this.parameters = ImmutableList.copyOf(params);
+  public static Signature signature(
+      Type type, String name, Iterable<? extends Parameter> parameters) {
+    return new Signature(type, name, ImmutableList.copyOf(parameters));
   }
 
-  public Type type() {
-    return type;
-  }
-
-  public String name() {
-    return name;
-  }
-
-  public ImmutableList<Parameter> parameters() {
-    return parameters;
+  public Signature {
+    this.type = requireNonNull(type);
+    this.name = requireNonNull(name);
+    this.parameters = requireNonNull(parameters);
   }
 
   public List<Type> parameterTypes() {
@@ -42,10 +32,9 @@ public class Signature {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Signature)) {
+    if (!(object instanceof Signature that)) {
       return false;
     }
-    Signature that = (Signature) object;
     return type.equals(that.type)
         && name.equals(that.name);
   }

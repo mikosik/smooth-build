@@ -14,13 +14,15 @@ public class LoggingCommand extends ACommand {
       paramLabel = "<level>",
       converter = LogLevelConverter.class,
       description =
-          "Show logs with specified level or above.\n" +
-          "\n" +
-          "Available levels:\n" +
-          "  f, fatal   - show FATAL logs\n" +
-          "  e, error   - show FATAL, ERROR logs\n" +
-          "  w, warning - show FATAL, ERROR, WARNING logs\n" +
-          "  i, info    - show FATAL, ERROR, WARNING, INFO logs\n"
+          """
+              Show logs with specified level or above.
+
+              Available levels:
+                f, fatal   - show FATAL logs
+                e, error   - show FATAL, ERROR logs
+                w, warning - show FATAL, ERROR, WARNING logs
+                i, info    - show FATAL, ERROR, WARNING, INFO logs
+              """
   )
   public Level logLevel;
 }

@@ -202,28 +202,34 @@ public class ObjectDb {
     try {
       List<Hash> hashes = hashedDb.readHashes(dataHash, 1, 2);
       String name = hashedDb.readString(hashes.get(0));
-      switch (name) {
-        case BOOL:
+      return switch (name) {
+        case BOOL -> {
           assertSize(hash, name, hashes, 1);
-          return boolType;
-        case STRING:
+          yield boolType;
+        }
+        case STRING -> {
           assertSize(hash, name, hashes, 1);
-          return stringType;
-        case BLOB:
+          yield stringType;
+        }
+        case BLOB -> {
           assertSize(hash, name, hashes, 1);
-          return blobType;
-        case NOTHING:
+          yield blobType;
+        }
+        case NOTHING -> {
           assertSize(hash, name, hashes, 1);
-          return nothingType;
-        case "":
+          yield nothingType;
+        }
+        case "" -> {
           assertSize(hash, "[]", hashes, 2);
           ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
-          return cacheType(newArrayType(elementType, dataHash));
-        default:
+          yield cacheType(newArrayType(elementType, dataHash));
+        }
+        default -> {
           assertSize(hash, name, hashes, 2);
           Iterable<Field> fields = readFieldSpecs(hashes.get(1), hash);
-          return cacheType(newStructType(name, fields, dataHash));
-      }
+          yield cacheType(newStructType(name, fields, dataHash));
+        }
+      };
     } catch (HashedDbException e) {
       throw new ObjectDbException(hash, e);
     }

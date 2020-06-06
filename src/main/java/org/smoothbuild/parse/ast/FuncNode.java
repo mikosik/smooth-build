@@ -41,10 +41,9 @@ public class FuncNode extends ParameterizedNode {
 
   @Override
   public final boolean equals(Object object) {
-    if (!(object instanceof FuncNode)) {
+    if (!(object instanceof FuncNode that)) {
       return false;
     }
-    FuncNode that = (FuncNode) object;
     return this.name().equals(that.name());
   }
 

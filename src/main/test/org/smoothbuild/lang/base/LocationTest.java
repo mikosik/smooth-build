@@ -52,7 +52,7 @@ public class LocationTest {
   class to_string {
     @Test
     public void file() {
-      Location location = location(new ModulePath(USER, Path.of("abc"), "shortPath"), 2);
+      Location location = location(ModulePath.modulePath(USER, Path.of("abc"), "shortPath"), 2);
       assertThat(location.toString())
           .isEqualTo("shortPath:2");
     }
@@ -72,6 +72,6 @@ public class LocationTest {
   }
 
   private static ModulePath modulePath(String name) {
-    return new ModulePath(USER, Path.of(name), "{SL}/" + name);
+    return ModulePath.modulePath(USER, Path.of(name), "{SL}/" + name);
   }
 }

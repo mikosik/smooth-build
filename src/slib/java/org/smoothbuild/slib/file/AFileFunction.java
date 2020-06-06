@@ -22,18 +22,19 @@ public class AFileFunction {
     }
 
     FileSystem fileSystem = container.fileSystem();
-    switch (fileSystem.pathState(validatedPath)) {
-      case FILE:
+    return switch (fileSystem.pathState(validatedPath)) {
+      case FILE -> {
         FileReader reader = new FileReader(container);
-        return reader.createFile(validatedPath, validatedPath);
-      case DIR:
+        yield reader.createFile(validatedPath, validatedPath);
+      }
+      case DIR -> {
         container.log().error("File " + validatedPath.q() + " doesn't exist. It is a dir.");
-        return null;
-      case NOTHING:
+        yield null;
+      }
+      case NOTHING -> {
         container.log().error("File " + validatedPath.q() + " doesn't exist.");
-        return null;
-      default:
-        throw new RuntimeException("Broken 'file' function implementation: unreachable case");
-    }
+        yield null;
+      }
+    };
   }
 }

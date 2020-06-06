@@ -1,5 +1,6 @@
 package org.smoothbuild.parse;
 
+import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -42,7 +43,7 @@ public class FunctionLoader {
       @Override
       public Function get() {
         List<Parameter> parameters = map(func.params(), this::createParameter);
-        Signature signature = new Signature(func.get(Type.class), func.name(), parameters);
+        Signature signature = signature(func.get(Type.class), func.name(), parameters);
         if (func.isNative()) {
           Native nativ = func.get(Native.class);
           Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);

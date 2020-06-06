@@ -4,7 +4,6 @@ import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.io.fs.base.AssertPath.newUnknownPathState;
 
 import java.io.IOException;
 import java.nio.charset.CharacterCodingException;
@@ -53,14 +52,11 @@ public class HashedDb {
       if (!source.exhausted()) {
         throw new DecodingBooleanException(hash);
       }
-      switch (value) {
-        case 0:
-          return false;
-        case 1:
-          return true;
-        default:
-          throw new DecodingBooleanException(hash);
-      }
+      return switch (value) {
+        case 0 -> false;
+        case 1 -> true;
+        default -> throw new DecodingBooleanException(hash);
+      };
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
@@ -138,36 +134,30 @@ public class HashedDb {
   public boolean contains(Hash hash) throws CorruptedHashedDbException {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
-    switch (pathState) {
-      case FILE:
-        return true;
-      case DIR:
-        throw new CorruptedHashedDbException(
-            "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
-      case NOTHING:
-        return false;
-      default:
-        throw newUnknownPathState(pathState);
-    }
+    return switch (pathState) {
+      case FILE -> true;
+      case DIR -> throw new CorruptedHashedDbException(
+          "Corrupted HashedDb. " + path.q() + " is a directory not a data file.");
+      case NOTHING -> false;
+    };
   }
 
   public BufferedSource source(Hash hash) throws HashedDbException {
     Path path = toPath(hash);
     PathState pathState = fileSystem.pathState(path);
-    switch (pathState) {
-      case FILE:
-        try {
-          return fileSystem.source(path);
-        } catch (IOException e) {
-          throw new HashedDbException(hash, e);
-        }
-      case DIR:
-        throw new CorruptedHashedDbException(
-            format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
-      case NOTHING:
-        throw new NoSuchDataException(hash);
-      default:
-        throw newUnknownPathState(pathState);
+    return switch (pathState) {
+      case FILE -> sourceFile(hash, path);
+      case DIR -> throw new CorruptedHashedDbException(
+          format("Corrupted HashedDb at %s. %s is a directory not a data file.", hash, path.q()));
+      case NOTHING -> throw new NoSuchDataException(hash);
+    };
+  }
+
+  private BufferedSource sourceFile(Hash hash, Path path) throws HashedDbException {
+    try {
+      return fileSystem.source(path);
+    } catch (IOException e) {
+      throw new HashedDbException(hash, e);
     }
   }
 
