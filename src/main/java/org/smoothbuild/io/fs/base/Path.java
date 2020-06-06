@@ -144,8 +144,7 @@ public class Path {
     if (this == object) {
       return true;
     }
-    if (object instanceof Path) {
-      Path that = (Path) object;
+    if (object instanceof Path that) {
       return this.value.equals(that.value);
     }
     return false;

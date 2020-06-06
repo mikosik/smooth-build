@@ -12,14 +12,11 @@ public class PathArgValidator {
   public static Path validatedProjectPath(NativeApi nativeApi, String name, SString path) {
     try {
       String value = path.jValue();
-      switch (value) {
-        case ".":
-          return Path.root();
-        case "":
-          return fail(nativeApi, name, "Path cannot be empty.");
-        default:
-          return path(value);
-      }
+      return switch (value) {
+        case "." -> Path.root();
+        case "" -> fail(nativeApi, name, "Path cannot be empty.");
+        default -> path(value);
+      };
     } catch (IllegalPathException e) {
       return fail(nativeApi, name, e.getMessage());
     }

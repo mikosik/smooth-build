@@ -40,6 +40,6 @@ public class LocationHelpersTest {
   }
 
   private static ModulePath modulePath() {
-    return new ModulePath(USER, Path.of("script.smooth"), "{u}/script.smooth");
+    return ModulePath.modulePath(USER, Path.of("script.smooth"), "{u}/script.smooth");
   }
 }

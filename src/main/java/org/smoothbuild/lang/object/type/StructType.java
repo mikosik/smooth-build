@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.util.Lists.list;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.base.Accessor;
@@ -15,6 +14,7 @@ import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -66,7 +66,8 @@ public class StructType extends ConcreteType {
       throw new IllegalArgumentException("Struct " + name() + " doesn't have field " + fieldName);
     }
     return new Accessor(
-        new Signature(field.type(), field.name(), list(new Parameter(0, this, "object", null))),
+        Signature.signature(
+            field.type(), field.name(), ImmutableList.of(new Parameter(0, this, "object", null))),
         field.name(),
         field.location());
   }

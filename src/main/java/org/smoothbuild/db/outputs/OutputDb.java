@@ -57,16 +57,11 @@ public class OutputDb {
   public synchronized boolean contains(Hash taskHash) throws OutputDbException {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
-    switch (pathState) {
-      case FILE:
-        return true;
-      case NOTHING:
-        return false;
-      case DIR:
-        throw corruptedValueException(taskHash, path + " is directory not a file.");
-      default:
-        throw new RuntimeException("Unexpected case " + pathState);
-    }
+    return switch (pathState) {
+      case FILE -> true;
+      case NOTHING -> false;
+      case DIR -> throw corruptedValueException(taskHash, path + " is directory not a file.");
+    };
   }
 
   public synchronized Output read(Hash taskHash, ConcreteType type) throws OutputDbException {

@@ -18,19 +18,10 @@ public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObj
   @Override
   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
     switch (diagnostic.getKind()) {
-      case ERROR:
-        nativeApi.log().error(diagnostic.getMessage(null));
-        break;
-      case MANDATORY_WARNING:
-      case WARNING:
-        nativeApi.log().warning(diagnostic.getMessage(null));
-        break;
-      case NOTE:
-      case OTHER:
-        nativeApi.log().info(diagnostic.getMessage(null));
-        break;
-      default:
-        throw new RuntimeException("Unknown diagnostic kind " + diagnostic.getKind());
+      case ERROR -> nativeApi.log().error(diagnostic.getMessage(null));
+      case MANDATORY_WARNING, WARNING -> nativeApi.log().warning(diagnostic.getMessage(null));
+      case NOTE, OTHER -> nativeApi.log().info(diagnostic.getMessage(null));
+      default -> throw new RuntimeException("Unknown diagnostic kind " + diagnostic.getKind());
     }
     errorReported = true;
   }

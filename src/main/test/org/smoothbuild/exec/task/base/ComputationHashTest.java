@@ -7,6 +7,7 @@ import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -127,8 +127,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   private Constructor constructor() {
-    return new Constructor(
-        new Signature(personType(), "ConstructorName", list()), unknownLocation());
+    return new Constructor(signature(personType(), "ConstructorName", list()), unknownLocation());
   }
 
   @Test
@@ -141,7 +140,7 @@ public class ComputationHashTest extends TestingContext {
 
   private Accessor accessor() {
     return new Accessor(
-        new Signature(stringType(), "accessor", list()), "fieldName", unknownLocation());
+        signature(stringType(), "accessor", list()), "fieldName", unknownLocation());
   }
 
   private static Algorithm computation(Hash hash) {

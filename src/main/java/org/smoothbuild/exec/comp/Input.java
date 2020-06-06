@@ -7,28 +7,14 @@ import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
 
-/**
- * This class is immutable.
- */
-public class Input {
-  private final ImmutableList<SObject> objects;
-  private final Hash hash;
+public record Input(ImmutableList<SObject>objects, Hash hash) {
 
   public static Input input(Iterable<? extends SObject> objects) {
-    return new Input(objects, calculateHash(objects));
+    return new Input(ImmutableList.copyOf(objects));
   }
 
-  private Input(Iterable<? extends SObject> objects, Hash hash) {
-    this.objects = ImmutableList.copyOf(objects);
-    this.hash = hash;
-  }
-
-  public ImmutableList<SObject> objects() {
-    return objects;
-  }
-
-  public Hash hash() {
-    return hash;
+  private Input(ImmutableList<SObject> objects) {
+    this(objects, calculateHash(objects));
   }
 
   private static Hash calculateHash(Iterable<? extends SObject> objects) {

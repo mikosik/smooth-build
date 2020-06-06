@@ -1,5 +1,6 @@
 package org.smoothbuild.install;
 
+import static org.smoothbuild.lang.base.ModulePath.modulePath;
 import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
 
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ public class InstallationPaths {
 
   public List<ModulePath> slibModules() {
     String file = SLIB_MODULE_FILE;
-    return List.of(new ModulePath(STANDARD_LIBRARY, libDir().resolve(file), "{slib}/" + file));
+    return List.of(modulePath(STANDARD_LIBRARY, libDir().resolve(file), "{slib}/" + file));
   }
 
   private Path libDir() {

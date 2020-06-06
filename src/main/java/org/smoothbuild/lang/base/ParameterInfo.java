@@ -47,10 +47,9 @@ public class ParameterInfo {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof ParameterInfo)) {
+    if (!(object instanceof ParameterInfo that)) {
       return false;
     }
-    ParameterInfo that = (ParameterInfo) object;
     return type.equals(that.type)
         && name.equals(that.name);
   }

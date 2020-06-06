@@ -8,16 +8,9 @@ import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
 
 import java.util.List;
-import java.util.Objects;
 
-/**
- * This class is immutable.
- */
-public final class Log {
-  private final Level level;
-  private final String message;
-
-  public Log(Level level, String message) {
+public record Log(Level level, String message) {
+  public Log {
     this.level = requireNonNull(level);
     this.message = requireNonNull(message);
   }
@@ -38,35 +31,10 @@ public final class Log {
     return new Log(INFO, log);
   }
 
-  public Level level() {
-    return level;
-  }
-
-  public String message() {
-    return message;
-  }
-
   public static List<Log> asLogs(Level level, List<String> messages) {
     return messages.stream()
         .map(m -> new Log(level, m))
         .collect(toList());
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Log log = (Log) o;
-    return level == log.level && message.equals(log.message);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(level, message);
   }
 
   @Override
