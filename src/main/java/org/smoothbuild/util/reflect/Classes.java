@@ -51,8 +51,8 @@ public class Classes {
     return clazz.getClassLoader().getResourceAsStream(binaryPath(clazz));
   }
 
-  public static ByteString bytecode(Class<?> klass) throws IOException {
-    return readAndClose(buffer(source(byteCodeAsInputStream(klass))),
+  public static ByteString bytecode(Class<?> clazz) throws IOException {
+    return readAndClose(buffer(source(byteCodeAsInputStream(clazz))),
         BufferedSource::readByteString);
   }
 }

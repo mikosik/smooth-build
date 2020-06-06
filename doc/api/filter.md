@@ -22,7 +22,7 @@ Following wildcards in glob pattern are supported
 
     Characters `?`, `*`, `\` are not treated as wildcards within brackets and match themselves.
  
- * `{` `}` braces contains group of subpatterns separated by comma `,`.
+ * `{` `}` braces contain group of subpatterns separated by comma `,`.
    Group matches if any subpattern matches.
    For example `file.{txt,md}` matches `file.txt` and `file.md`.
    Groups cannot be nested.
