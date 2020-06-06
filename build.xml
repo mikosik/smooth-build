@@ -332,8 +332,7 @@
             <classpath>
                 <path refid="classpath-with.testing.test"/>
             </classpath>
-            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
-            <!-- <listener type="legacy-brief"/> -->
+            <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.testing.test}" includes="**/*Test.class"/>
                 <fork>
@@ -352,8 +351,7 @@
             <classpath>
                 <path refid="classpath-with.main.test"/>
             </classpath>
-            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
-            <!-- <listener type="legacy-brief"/> -->
+            <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.main.test}" includes="**/*Test.class"/>
                 <fork>
@@ -372,8 +370,7 @@
             <classpath>
                 <path refid="classpath-with.slib.test"/>
             </classpath>
-            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
-            <!-- <listener type="legacy-brief"/> -->
+            <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.slib.test}" includes="**/*Test.class"/>
                 <fork>
@@ -437,8 +434,7 @@
             <classpath>
                 <path refid="classpath.with.acceptance"/>
             </classpath>
-            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
-            <!-- <listener type="legacy-brief"/> -->
+            <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
                 <fork>
@@ -459,8 +455,7 @@
             <classpath>
                 <path refid="classpath.with.acceptance"/>
             </classpath>
-            <!-- This line fails due to a bug in ant that is fixed in 1.10.8 -->
-            <!-- <listener type="legacy-brief"/> -->
+            <listener type="legacy-plain"/>
             <testclasses outputdir="${dir.build}">
                 <fileset dir="${dir.build.class.acceptance}" includes="**/*Test.class"/>
                 <fork>
