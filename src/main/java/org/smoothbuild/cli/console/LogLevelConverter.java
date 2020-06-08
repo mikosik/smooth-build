@@ -13,14 +13,14 @@ import picocli.CommandLine.TypeConversionException;
 public class LogLevelConverter implements ITypeConverter<Level> {
   private static final ImmutableMap<String, Level> MAP =
       ImmutableMap.<String, Level>builder()
-          .put("fatal", FATAL)
           .put("f", FATAL)
-          .put("error", ERROR)
+          .put("fatal", FATAL)
           .put("e", ERROR)
-          .put("warning", WARNING)
+          .put("error", ERROR)
           .put("w", WARNING)
-          .put("info", INFO)
+          .put("warning", WARNING)
           .put("i", INFO)
+          .put("info", INFO)
           .build();
 
   @Override

@@ -15,7 +15,7 @@ public abstract class LogLevelOptionTestCase extends AcceptanceTestCase {
     thenFinishedWithError();
     thenSysErrContains(unlines(
         "Invalid value for option '--log-level': expected one of " +
-            "{fatal,f,error,e,warning,w,info,i} (case-sensitive) but was 'wrong_value'",
+            "{f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'",
         "",
         "Usage:"
     ));
