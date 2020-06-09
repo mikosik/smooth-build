@@ -10,21 +10,21 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class JarUnjarTest extends AcceptanceTestCase {
   @Test
   public void jar_unjar() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('abc'), 'dir/file1.txt'), file(toBlob('def'), 'file2.txt') ]  ",
         "    | jar | unjar;                                                                     ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactTreeContent("result"))
         .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = toBlob('random junk') | unjar;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Cannot read archive. Corrupted data?");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Cannot read archive. Corrupted data?");
   }
 }

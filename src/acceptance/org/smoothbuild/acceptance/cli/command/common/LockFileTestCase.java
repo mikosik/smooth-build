@@ -16,8 +16,8 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
   @Test
   public void command_fails_when_lock_file_is_already_acquired() throws IOException,
       InterruptedException {
-    givenNativeJar(Sleep3s.class);
-    givenScript(
+    createNativeJar(Sleep3s.class);
+    createUserModule(
         "  String sleep3s();    ",
         "  result = sleep3s();  "
     );
@@ -30,14 +30,14 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
     AtomicReference<String> savedSysOut = new AtomicReference<>();
     AtomicReference<String> savedSysErr = new AtomicReference<>();
     Thread thread = new Thread(() -> {
-      otherTest.whenSmoothBuild("result");
+      otherTest.runSmoothBuild("result");
       savedExitCode.set(otherTest.exitCode());
       savedSysOut.set(otherTest.sysOut());
       savedSysErr.set(otherTest.sysErr());
     });
 
     thread.start();
-    whenSmooth(commandWithArgs);
+    runSmooth(commandWithArgs);
     thread.join();
 
     int otherErrorCode = savedExitCode.get();

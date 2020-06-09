@@ -70,19 +70,19 @@ public abstract class AcceptanceTestCase {
     deleteRecursively(projectDirAbsolutePath());
   }
 
-  public void givenScript(String... lines) throws IOException {
-    givenRawScript(quotesX2(join("\n", lines)));
+  public void createUserModule(String... lines) throws IOException {
+    createUserModuleRaw(quotesX2(join("\n", lines)));
   }
 
   public static String quotesX2(String string) {
     return string.replace('\'', '"');
   }
 
-  public void givenRawScript(String buildScript) throws IOException {
-    givenFile(USER_MODULE_PATH.toString(), buildScript);
+  public void createUserModuleRaw(String buildScript) throws IOException {
+    createFile(USER_MODULE_PATH.toString(), buildScript);
   }
 
-  public void givenFile(String path, String content) throws IOException {
+  public void createFile(String path, String content) throws IOException {
     Path fullPath = absolutePath(path);
     createDirectories(fullPath.getParent());
     try (FileWriter writer = new FileWriter(fullPath.toString(), UTF_8)) {
@@ -90,15 +90,15 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public void givenNativeJar(Class<?>... classes) throws IOException {
+  public void createNativeJar(Class<?>... classes) throws IOException {
     saveBytecodeInJar(absolutePath("build.jar"), classes);
   }
 
-  public void givenDir(String path) throws IOException {
+  public void createDir(String path) throws IOException {
     createDirectories(absolutePath(path));
   }
 
-  public void givenJunitCopied() {
+  public void createJunitLibs() {
     copyLib("junit-4.13.jar", "junit/");
     copyLib("hamcrest-core-1.3.jar", "junit/");
   }
@@ -113,53 +113,53 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public void whenSmoothBuild(String... args) {
-    whenSmooth(buildCommand(args));
+  public void runSmoothBuild(String... args) {
+    runSmooth(buildCommand(args));
   }
 
-  public void whenSmoothClean(String... args) {
-    whenSmooth(cleanCommand(args));
+  public void runSmoothClean(String... args) {
+    runSmooth(cleanCommand(args));
   }
 
-  public void whenSmoothHelp(String... args) {
-    whenSmoothWithoutProjectAndInstallationDir(helpCommand(args));
+  public void runSmoothHelp(String... args) {
+    runSmoothWithoutProjectAndInstallationDir(helpCommand(args));
   }
 
-  public void whenSmoothList(String... args) {
-    whenSmooth(listCommand(args));
+  public void runSmoothList(String... args) {
+    runSmooth(listCommand(args));
   }
 
-  public void whenSmoothTree(String... args) {
-    whenSmooth(treeCommand(args));
+  public void runSmoothTree(String... args) {
+    runSmooth(treeCommand(args));
   }
 
-  public void whenSmoothVersion(String... args) {
-    whenSmoothWithoutProjectDir(versionCommand(args));
+  public void runSmoothVersion(String... args) {
+    runSmoothWithoutProjectDir(versionCommand(args));
   }
 
-  public void whenSmoothWithoutProjectAndInstallationDir(CommandWithArgs command) {
-    runSmooth(command);
+  public void runSmoothWithoutProjectAndInstallationDir(CommandWithArgs command) {
+    runSmoothInProperJvm(command);
   }
 
-  public void whenSmoothWithoutProjectDir(CommandWithArgs command) {
-    runSmooth(command,
+  public void runSmoothWithoutProjectDir(CommandWithArgs command) {
+    runSmoothInProperJvm(command,
         "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
   }
 
-  public void whenSmooth(CommandWithArgs command) {
-    runSmooth(command,
+  public void runSmooth(CommandWithArgs command) {
+    runSmoothInProperJvm(command,
         "--project-dir=" + projectDir,
         "--INTERNAL-installation-dir=" + SMOOTH_BINARY.getParent().toAbsolutePath());
   }
 
-  private void runSmooth(CommandWithArgs command, String... additionalArguments) {
+  private void runSmoothInProperJvm(CommandWithArgs command, String... additionalArguments) {
     switch (AcceptanceUtils.TEST_MODE) {
       case SINGLE_JVM:
         runSmoothInCurrentJvm(command, additionalArguments);
         break;
-        case FULL_BINARY:
-          runSmoothInForkedJvm(command);
-          break;
+      case FULL_BINARY:
+        runSmoothInForkedJvm(command);
+        break;
       default:
         fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
     }
@@ -203,15 +203,15 @@ public abstract class AcceptanceTestCase {
     return concat(SMOOTH_BINARY.toString(), params);
   }
 
-  public void thenFinishedWithSuccess() {
-    thenReturnedCode(EXIT_CODE_SUCCESS);
+  public void assertFinishedWithSuccess() {
+    assertReturnedCode(EXIT_CODE_SUCCESS);
   }
 
-  public void thenFinishedWithError() {
-    thenReturnedCode(EXIT_CODE_ERROR);
+  public void assertFinishedWithError() {
+    assertReturnedCode(EXIT_CODE_ERROR);
   }
 
-  private void thenReturnedCode(int expected) {
+  private void assertReturnedCode(int expected) {
     if (expected != exitCode) {
       fail("Expected return code " + expected + " but was " + exitCode + ".\n"
           + "standard out:\n" + sysOut + "\n"
@@ -223,33 +223,33 @@ public abstract class AcceptanceTestCase {
     return exitCode;
   }
 
-  public void thenSysOutContainsParseError(int lineNumber, String... errorLines) {
+  public void assertSysOutContainsParseError(int lineNumber, String... errorLines) {
     errorLines[0] = USER_MODULE_PATH.toString() + ":" + lineNumber + ": " + errorLines[0];
-    thenSysOutContainsParseError(errorLines);
+    assertSysOutContainsParseError(errorLines);
   }
 
-  public void thenSysOutContainsParseError(String... errorLines) {
+  public void assertSysOutContainsParseError(String... errorLines) {
     errorLines[0] = "ERROR: " + errorLines[0];
-    thenSysOutContains(
+    assertSysOutContains(
         "  " + USER_MODULE_PATH.toString(),
         prefixMultiline(errorLines));
   }
 
-  public void thenSysOutContains(String... lines) {
+  public void assertSysOutContains(String... lines) {
     String text = unlines(lines);
     if (!sysOut.contains(text)) {
       failWithFullOutputs(text, "SysOut doesn't contain expected substring");
     }
   }
 
-  public void thenSysOutDoesNotContain(String... lines) {
+  public void assertSysOutDoesNotContain(String... lines) {
     String text = unlines(lines);
     if (sysOut.contains(text)) {
       failWithFullOutputs(text, "SysOut contains forbidden substring");
     }
   }
 
-  public void thenSysErrContains(String... lines) {
+  public void assertSysErrContains(String... lines) {
     String text = unlines(lines);
     if (!sysErr.contains(text)) {
       failWithFullOutputs(text, "SysErr doesn't contain expected substring");

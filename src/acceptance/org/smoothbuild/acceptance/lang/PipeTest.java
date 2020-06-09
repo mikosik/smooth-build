@@ -11,23 +11,23 @@ public class PipeTest extends AcceptanceTestCase {
   @Test
   public void regression_test_error_in_expression_of_argument_of_not_first_element_of_pipe()
       throws IOException {
-    givenScript(
+    createUserModule(
         "  function1 = 'abc';                                   ",
         "  String myIdentity(String value) = value;             ",
         "  result = 'abc' | myIdentity(function1(unknown=''));  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("In call to `function1`: Unknown parameter 'unknown'.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("In call to `function1`: Unknown parameter 'unknown'.");
   }
 
   @Test
   public void regression_test_pipe_can_be_used_as_argument()
       throws IOException {
-    givenScript(
+    createUserModule(
         "  myIdentity(A value) = value;              ",
         "  result = myIdentity('abc' | myIdentity);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }

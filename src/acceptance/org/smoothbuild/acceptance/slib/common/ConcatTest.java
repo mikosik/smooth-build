@@ -11,45 +11,45 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ConcatTest extends AcceptanceTestCase {
   @Test
   public void concatenate_bool_arrays_function() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = concat([true()], [false()]);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(list(trueByteString(), falseByteString()));
   }
 
   @Test
   public void concatenate_string_arrays_function() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = concat(['abc'], ['def']);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
   @Test
   public void concatenate_file_arrays() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = concat(                    ",
         "    [ file(toBlob('abc'), 'file1.txt') ],  ",
         "    [ file(toBlob('def'), 'file2.txt') ],  ",
         "  );                                       ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactTreeContent("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
   public void concatenate_blob_arrays_function() throws Exception {
-    givenFile("0", "abc");
-    givenFile("1", "def");
-    givenScript(
+    createFile("0", "abc");
+    createFile("1", "def");
+    createUserModule(
         "  result = concat([ aFile('0') ], [ aFile('1') ]);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }

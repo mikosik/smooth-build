@@ -31,10 +31,10 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
   @ParameterizedTest
   @MethodSource("conversion_test_specs")
   public void conversion_is_verified(ConversionTestSpec testSpec) throws IOException {
-    givenNativeJar(ReportError.class);
-    givenScript(createTestScript(testSpec));
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    createNativeJar(ReportError.class);
+    createUserModule(createTestScript(testSpec));
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     Object expected = testSpec.expectedResult;
 
     // Currently it is not possible to read artifact of a struct so we are not testing that.

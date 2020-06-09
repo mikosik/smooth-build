@@ -13,7 +13,7 @@ public class ResultAssignmentTest extends AbstractAssignmentTestCase {
 
   @Override
   protected void assertAssignmentError(String targetType, String sourceType) {
-    thenSysOutContainsParseError(1,
+    assertSysOutContainsParseError(1,
         "Function 'result' has body which type is '" + sourceType +
             "' and it is not convertible to function's declared result type '" + targetType + "'.");
   }

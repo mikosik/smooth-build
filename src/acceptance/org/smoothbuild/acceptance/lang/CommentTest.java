@@ -10,21 +10,21 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CommentTest extends AcceptanceTestCase {
   @Test
   public void full_line_comment() throws IOException {
-    givenScript(
+    createUserModule(
         "  # ((( full line comment '  ",
         "  result = '';               ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("");
   }
 
   @Test
   public void trailing_comment() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '' ;  # comment at the end of line  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("");
   }

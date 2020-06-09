@@ -10,176 +10,176 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class StringLiteralTest extends AcceptanceTestCase {
   @Test
   public void string_literal() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
   @Test
   public void missing_closing_quote() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = 'abc;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
+    runSmoothBuild("result");
+    assertFinishedWithError();
   }
 
   @Test
   public void spanning_to_next_line() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = 'ab\nc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
+    runSmoothBuild("result");
+    assertFinishedWithError();
   }
 
   @Test
   public void empty_string() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("");
   }
 
   @Test
   public void with_letters() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = 'abcdefghijklmnopqrstuvwxyz';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abcdefghijklmnopqrstuvwxyz");
   }
 
   @Test
   public void with_capital_letters() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   }
 
   @Test
   public void with_digits() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '0123456789';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("0123456789");
   }
 
   @Test
   public void with_unicode_in_utf8() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = 'abc←';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc←");
   }
 
   @Test
   public void with_smooth_lang_comment_character() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '#';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("#");
   }
 
   @Test
   public void with_single_quotes() throws IOException {
-    givenRawScript("result = \"'\";");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    createUserModuleRaw("result = \"'\";");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("'");
   }
 
   @Test
   public void with_escaped_backslash() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\\\';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\\");
   }
 
   @Test
   public void with_escaped_tab() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\t';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\t");
   }
 
   @Test
   public void with_escaped_backspace() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\b';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\b");
   }
 
   @Test
   public void with_escaped_new_line() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\n';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\n");
   }
 
   @Test
   public void with_escaped_carriage_return() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\r';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\r");
   }
 
   @Test
   public void with_escaped_form_feed() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\r';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\r");
   }
 
   @Test
   public void with_escaped_double_quotes() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\\"';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("\"");
   }
 
   @Test
   public void with_illegal_escape_sequence() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = '\\A';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(1,
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1,
         "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.\n");
   }
 }

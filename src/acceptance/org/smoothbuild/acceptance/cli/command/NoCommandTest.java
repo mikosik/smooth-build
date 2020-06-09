@@ -9,10 +9,10 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 public class NoCommandTest extends AcceptanceTestCase {
   @Test
   public void calling_smooth_without_command_defaults_to_help_command() {
-    whenSmoothHelp();
+    runSmoothHelp();
     String helpOutput = sysOut();
-    whenSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
-    thenFinishedWithSuccess();
+    runSmoothWithoutProjectAndInstallationDir(new CommandWithArgs(""));
+    assertFinishedWithSuccess();
     assertThat(sysOut())
         .isEqualTo(helpOutput);
   }

@@ -10,36 +10,36 @@ import org.smoothbuild.acceptance.testing.Flatten;
 public class GenericTest extends AcceptanceTestCase {
   @Test
   public void flatten_1() throws Exception {
-    givenNativeJar(Flatten.class);
-    givenScript(
+    createNativeJar(Flatten.class);
+    createUserModule(
         "  [E] testFlatten([[E]] array);                                ",
         "  result = testFlatten(array = [ [ 'aa' ], [ 'bb', 'cc' ] ]);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aa", "bb", "cc"));
   }
 
   @Test
   public void flatten_sample_2() throws Exception {
-    givenNativeJar(Flatten.class);
-    givenScript(
+    createNativeJar(Flatten.class);
+    createUserModule(
         "  [E] testFlatten([[E]] array);                                    ",
         "  result = testFlatten(array = [ [ [ 'aa' ], [ 'bb', 'cc' ] ] ]);  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list(list("aa"), list("bb", "cc")));
   }
 
   @Test
   public void pair_and_identity() throws Exception {
-    givenScript(
+    createUserModule(
         "  A testIdentity(A v) = v;                                                ",
         "  [A] pair(A a1, A a2) = [ a1, a2 ];                                      ",
         "  result = pair(a1=testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("aa", "bb"));
   }

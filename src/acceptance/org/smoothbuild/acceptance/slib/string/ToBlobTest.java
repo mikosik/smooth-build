@@ -10,11 +10,11 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ToBlobTest extends AcceptanceTestCase {
   @Test
   public void to_blob_function() throws IOException {
-    givenFile("file.txt", "abc");
-    givenScript(
+    createFile("file.txt", "abc");
+    createUserModule(
         "  result = toBlob('abc');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }

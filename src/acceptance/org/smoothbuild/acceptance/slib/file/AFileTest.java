@@ -8,59 +8,59 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class AFileTest extends AcceptanceTestCase {
   @Test
   public void file_from_smooth_dir_causes_error() throws Exception {
-    givenFile(".smooth/file.txt", "abc");
-    givenScript(
+    createFile(".smooth/file.txt", "abc");
+    createUserModule(
         "  result = aFile('.smooth/file.txt');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Reading file from '.smooth' dir is not allowed.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
   public void file_from_smooth_subdir_causes_error() throws Exception {
-    givenFile(".smooth/subdir/file.txt", "abc");
-    givenScript(
+    createFile(".smooth/subdir/file.txt", "abc");
+    createUserModule(
         "  result = aFile('.smooth/subdir/file.txt');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Reading file from '.smooth' dir is not allowed.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Reading file from '.smooth' dir is not allowed.");
   }
 
   @Test
   public void illegal_path_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = aFile('..');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Param 'path' has illegal value. Path cannot contain '..'.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Param 'path' has illegal value. Path cannot contain '..'.");
   }
 
   @Test
   public void nonexistent_path_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = aFile('nonexistent/file.txt');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("File 'nonexistent/file.txt' doesn't exist.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("File 'nonexistent/file.txt' doesn't exist.");
   }
 
   @Test
   public void dir_path_causes_error() throws Exception {
-    givenDir("some/dir");
-    givenScript(
+    createDir("some/dir");
+    createUserModule(
         "  result = aFile('some/dir');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("File 'some/dir' doesn't exist. It is a dir.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("File 'some/dir' doesn't exist. It is a dir.");
   }
 
   @Test
   public void file_is_returned() throws Exception {
-    givenFile("dir/file.txt", "abc");
-    givenScript(
+    createFile("dir/file.txt", "abc");
+    createUserModule(
         "  result = aFile('dir/file.txt');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactTreeContent("result"))
         .containsExactly("dir/file.txt", "abc");
   }

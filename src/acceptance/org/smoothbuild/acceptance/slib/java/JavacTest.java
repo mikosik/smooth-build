@@ -16,31 +16,31 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class JavacTest extends AcceptanceTestCase {
   @Test
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('public private class MyClass {}'), 'MyClass.java') ]  ",
         "  | javac;                                                                      ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("modifier private not allowed here");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("modifier private not allowed here");
   }
 
   @Test
   public void zero_files_can_be_compiled() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [] | javac;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("Param 'srcs' is empty list.");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("Param 'srcs' is empty list.");
   }
 
   @Test
   public void one_file_can_be_compiled() throws Exception {
     String classSource = "public class MyClass { "
         + "public static String myMethod() {return \\\"test-string\\\";}}";
-    givenScript(
+    createUserModule(
         "  result = [file(toBlob('" + classSource+ "'), 'MyClass.java')] | javac;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(invoke(artifactAbsolutePath("result").resolve("MyClass.class"), "myMethod"))
         .isEqualTo("test-string");
   }
@@ -63,14 +63,14 @@ public class JavacTest extends AcceptanceTestCase {
     librarySource.append("  }");
     librarySource.append("}");
 
-    givenFile("src/MyClass.java", classSource.toString());
-    givenFile("srclib/library/LibraryClass.java", librarySource.toString());
-    givenScript(
+    createFile("src/MyClass.java", classSource.toString());
+    createFile("srclib/library/LibraryClass.java", librarySource.toString());
+    createUserModule(
         "  libraryJar = files('srclib') | javac | jar;           ",
         "  result = files('src') | javac(libs = [ libraryJar ])  ",
         "  | concat(array2 = javac(files('srclib')));       ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
 
     Path libraryClassFile = artifactAbsolutePath("result").resolve("library/LibraryClass.class");
     Path classFile = artifactAbsolutePath("result").resolve("MyClass.class");
@@ -82,43 +82,43 @@ public class JavacTest extends AcceptanceTestCase {
 
   @Test
   public void duplicate_java_files_cause_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  classFile = file(toBlob('public class MyClass {}'), 'MyClass.java');  ",
         "  result = [ classFile, classFile ] | javac;                            ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("duplicate class: MyClass");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("duplicate class: MyClass");
   }
 
   @Test
   public void illegal_source_parameter_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
         "  | javac(source='0.9');                                                ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("invalid source release: 0.9");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("invalid source release: 0.9");
   }
 
   @Test
   public void illegal_target_parameter_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('public class MyClass {}'), 'MyClass.java') ]  ",
         "  | javac(target='0.9');                                                ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("invalid target release: 0.9");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("invalid target release: 0.9");
   }
 
   @Test
   public void compiling_enum_with_source_parameter_set_to_too_old_java_version_causes_error()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('public enum MyClass { VALUE }'), 'MyClass.java') ]  ",
         "  | javac(source='1.4', target='1.4');                                        ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Source option 1.4 is no longer supported.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Source option 1.4 is no longer supported.");
   }
 
   private Object invoke(Path appClassFile, String method) throws IOException,

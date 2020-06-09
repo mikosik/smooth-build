@@ -19,12 +19,12 @@ public class TreeCommandTest {
   class basic extends AcceptanceTestCase {
     @Test
     public void with_parameter_and_array () throws Exception {
-      givenScript(
+      createUserModule(
           "  mySingleton(String element) = [element, 'def'];  ",
           "  result = mySingleton('abc');                     ");
-      whenSmoothTree("result");
-      thenFinishedWithSuccess();
-      thenSysOutContains(quotesX2(unlines(
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains(quotesX2(unlines(
           "[String] result",
           "  [String] mySingleton",
           "    [String]",
@@ -34,11 +34,11 @@ public class TreeCommandTest {
 
     @Test
     public void with_long_string_literal () throws Exception {
-      givenScript(
+      createUserModule(
           "  result = '01234567890123456789012345678901234567890123456789';  ");
-      whenSmoothTree("result");
-      thenFinishedWithSuccess();
-      thenSysOutContains(quotesX2(unlines(
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains(quotesX2(unlines(
           "String result",
           "  String '01234567890123456789012345678901234'...",
           "")));
@@ -46,11 +46,11 @@ public class TreeCommandTest {
 
     @Test
     public void with_convert_computation () throws Exception {
-      givenScript(
+      createUserModule(
           "  Blob result = file(toBlob('abc'), 'name.txt');  ");
-      whenSmoothTree("result");
-      thenFinishedWithSuccess();
-      thenSysOutContains(quotesX2(unlines(
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains(quotesX2(unlines(
           "Blob result",
           "  Blob <- File",
           "    File file",
@@ -93,7 +93,7 @@ public class TreeCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth(treeCommand(option, "result"));
+      runSmooth(treeCommand(option, "result"));
     }
   }
 }

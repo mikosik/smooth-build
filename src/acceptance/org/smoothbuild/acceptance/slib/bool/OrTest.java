@@ -12,52 +12,52 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void false_or_false_returns_false() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = or(false(), false());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }
 
   @Test
   public void false_or_true_returns_true() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = or(false(), true());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }
 
   @Test
   public void true_or_false_returns_true() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = or(true(), false());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }
 
   @Test
   public void true_or_true_returns_true() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = or(true(), true());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }
 
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
-    givenNativeJar(ThrowException.class);
-    givenScript(
+    createNativeJar(ThrowException.class);
+    createUserModule(
         "  Nothing throwException();               ",
         "  result = or(true(), throwException());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }

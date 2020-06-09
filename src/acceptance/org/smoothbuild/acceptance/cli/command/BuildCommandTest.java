@@ -30,12 +30,12 @@ public class BuildCommandTest {
   class basic extends AcceptanceTestCase {
     @Test
     public void temp_file_is_deleted_after_build_execution() throws Exception {
-      givenNativeJar(TempFilePath.class);
-      givenScript(
+      createNativeJar(TempFilePath.class);
+      createUserModule(
           "  String tempFilePath();    ",
           "  result = tempFilePath();  ");
-      whenSmoothBuild("result");
-      thenFinishedWithSuccess();
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
       assertThat(new File(artifactFileContent("result")).exists())
           .isFalse();
     }
@@ -43,11 +43,11 @@ public class BuildCommandTest {
     @Test
     public void build_command_clears_artifacts_dir() throws Exception {
       String path = ARTIFACTS_PATH.appendPart("file.txt").toString();
-      givenFile(path, "content");
-      givenScript(
+      createFile(path, "content");
+      createUserModule(
           "  syntactically incorrect script  ");
-      whenSmoothBuild("result");
-      thenFinishedWithError();
+      runSmoothBuild("result");
+      assertFinishedWithError();
       assertThat(exists(absolutePath(path)))
           .isFalse();
     }
@@ -55,11 +55,11 @@ public class BuildCommandTest {
     @Test
     public void build_command_clears_temporary_dir() throws Exception {
       String path = TEMPORARY_PATH.appendPart("file.txt").toString();
-      givenFile(path, "content");
-      givenScript(
+      createFile(path, "content");
+      createUserModule(
           "  syntactically incorrect script  ");
-      whenSmoothBuild("result");
-      thenFinishedWithError();
+      runSmoothBuild("result");
+      assertFinishedWithError();
       assertThat(exists(absolutePath(path)))
           .isFalse();
     }
@@ -98,7 +98,7 @@ public class BuildCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth(buildCommand(option, "result"));
+      runSmooth(buildCommand(option, "result"));
     }
   }
 
@@ -108,10 +108,10 @@ public class BuildCommandTest {
     class basic extends AcceptanceTestCase {
       @Test
       public void illegal_value_causes_error() throws IOException {
-        givenScript("result = 'abc';");
-        whenSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
-        thenFinishedWithError();
-        thenSysErrContains(unlines(
+        createUserModule("result = 'abc';");
+        runSmooth(buildCommand("--show-tasks=ILLEGAL", "result"));
+        assertFinishedWithError();
+        assertSysErrContains(unlines(
             "Invalid value for option '--show-tasks': Unknown matcher 'ILLEGAL'.",
             "",
             "Usage:"
@@ -126,18 +126,18 @@ public class BuildCommandTest {
 
       @Test
       public void shows_literals_when_enabled() throws IOException {
-        givenScript("result = 'myLiteral';");
-        whenSmooth(buildCommand("--show-tasks=literal", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains(quotesX2(LITERAL_TASK_HEADER));
+        createUserModule("result = 'myLiteral';");
+        runSmooth(buildCommand("--show-tasks=literal", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(quotesX2(LITERAL_TASK_HEADER));
       }
 
       @Test
       public void hides_literals_when_not_enabled() throws IOException {
-        givenScript("result = 'myLiteral';");
-        whenSmooth(buildCommand("--show-tasks=none", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain(quotesX2(LITERAL_TASK_HEADER));
+        createUserModule("result = 'myLiteral';");
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(quotesX2(LITERAL_TASK_HEADER));
       }
     }
 
@@ -150,34 +150,34 @@ public class BuildCommandTest {
 
       @Test
       public void shows_call_when_enabled() throws IOException {
-        givenScript("result = 'myLiteral';");
-        whenSmooth(buildCommand("--show-tasks=call", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains(CALL_TASK_HEADER);
+        createUserModule("result = 'myLiteral';");
+        runSmooth(buildCommand("--show-tasks=call", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_calls_when_not_enabled() throws IOException {
-        givenScript("result = 'myLiteral';");
-        whenSmooth(buildCommand("--show-tasks=none", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain(CALL_TASK_HEADER);
+        createUserModule("result = 'myLiteral';");
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(CALL_TASK_HEADER);
       }
 
       @Test
       public void shows_native_call_when_enabled() throws IOException {
-        givenScript("result = concat(['a'], ['b']);");
-        whenSmooth(buildCommand("--show-tasks=call", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains(NATIVE_CALL_TASK_HEADER);
+        createUserModule("result = concat(['a'], ['b']);");
+        runSmooth(buildCommand("--show-tasks=call", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(NATIVE_CALL_TASK_HEADER);
       }
 
       @Test
       public void hides_native_calls_when_not_enabled() throws IOException {
-        givenScript("result = concat(['a'], ['b']);");
-        whenSmooth(buildCommand("--show-tasks=none", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
+        createUserModule("result = concat(['a'], ['b']);");
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(NATIVE_CALL_TASK_HEADER);
       }
     }
 
@@ -188,18 +188,18 @@ public class BuildCommandTest {
 
       @Test
       public void shows_conversion_when_enabled() throws IOException {
-        givenScript("[String] result = [];");
-        whenSmooth(buildCommand("--show-tasks=conversion", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains(CONVERSION_TASK_HEADER);
+        createUserModule("[String] result = [];");
+        runSmooth(buildCommand("--show-tasks=conversion", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains(CONVERSION_TASK_HEADER);
       }
 
       @Test
       public void hides_conversion_when_not_enabled() throws IOException {
-        givenScript("result = 'myLiteral';");
-        whenSmooth(buildCommand("--show-tasks=none", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain(CONVERSION_TASK_HEADER);
+        createUserModule("result = 'myLiteral';");
+        runSmooth(buildCommand("--show-tasks=none", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain(CONVERSION_TASK_HEADER);
       }
     }
   }
@@ -210,35 +210,35 @@ public class BuildCommandTest {
     class is_fatal extends AcceptanceTestCase {
       @Test
       public void then_error_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportError.class);
-        givenScript(
+        createNativeJar(ReportError.class);
+        createUserModule(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth(buildCommand("--log-level=fatal", "result"));
-        thenFinishedWithError();
-        thenSysOutDoesNotContain("my-error-message");
+        runSmooth(buildCommand("--log-level=fatal", "result"));
+        assertFinishedWithError();
+        assertSysOutDoesNotContain("my-error-message");
       }
 
       @Test
       public void then_warning_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportWarning.class);
-        givenScript(
+        createNativeJar(ReportWarning.class);
+        createUserModule(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth(buildCommand("--log-level=fatal", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain("WARNING: my-warning-message");
+        runSmooth(buildCommand("--log-level=fatal", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain("WARNING: my-warning-message");
       }
 
       @Test
       public void then_info_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportInfo.class);
-        givenScript(
+        createNativeJar(ReportInfo.class);
+        createUserModule(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth(buildCommand("--log-level=fatal", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain("INFO: my-info-message");
+        runSmooth(buildCommand("--log-level=fatal", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain("INFO: my-info-message");
       }
     }
 
@@ -246,35 +246,35 @@ public class BuildCommandTest {
     class is_error extends AcceptanceTestCase {
       @Test
       public void then_error_log_is_shown() throws IOException {
-        givenNativeJar(ReportError.class);
-        givenScript(
+        createNativeJar(ReportError.class);
+        createUserModule(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth(buildCommand("--log-level=error", "result"));
-        thenFinishedWithError();
-        thenSysOutContains("ERROR: my-error-message");
+        runSmooth(buildCommand("--log-level=error", "result"));
+        assertFinishedWithError();
+        assertSysOutContains("ERROR: my-error-message");
       }
 
       @Test
       public void then_warning_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportWarning.class);
-        givenScript(
+        createNativeJar(ReportWarning.class);
+        createUserModule(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth(buildCommand("--log-level=error", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain("my-warning-message");
+        runSmooth(buildCommand("--log-level=error", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain("my-warning-message");
       }
 
       @Test
       public void then_info_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportInfo.class);
-        givenScript(
+        createNativeJar(ReportInfo.class);
+        createUserModule(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth(buildCommand("--log-level=error", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain("my-info-message");
+        runSmooth(buildCommand("--log-level=error", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain("my-info-message");
       }
     }
 
@@ -282,35 +282,35 @@ public class BuildCommandTest {
     class is_warning extends AcceptanceTestCase {
       @Test
       public void then_error_log_is_shown() throws IOException {
-        givenNativeJar(ReportError.class);
-        givenScript(
+        createNativeJar(ReportError.class);
+        createUserModule(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth(buildCommand("--log-level=warning", "result"));
-        thenFinishedWithError();
-        thenSysOutContains("ERROR: my-error-message");
+        runSmooth(buildCommand("--log-level=warning", "result"));
+        assertFinishedWithError();
+        assertSysOutContains("ERROR: my-error-message");
       }
 
       @Test
       public void then_warning_log_is_shown() throws IOException {
-        givenNativeJar(ReportWarning.class);
-        givenScript(
+        createNativeJar(ReportWarning.class);
+        createUserModule(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth(buildCommand("--log-level=warning", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains("WARNING: my-warning-message");
+        runSmooth(buildCommand("--log-level=warning", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains("WARNING: my-warning-message");
       }
 
       @Test
       public void then_info_log_is_not_shown() throws IOException {
-        givenNativeJar(ReportInfo.class);
-        givenScript(
+        createNativeJar(ReportInfo.class);
+        createUserModule(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth(buildCommand("--log-level=warning", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutDoesNotContain("my-info-message");
+        runSmooth(buildCommand("--log-level=warning", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutDoesNotContain("my-info-message");
       }
     }
 
@@ -318,35 +318,35 @@ public class BuildCommandTest {
     class is_info extends AcceptanceTestCase {
       @Test
       public void then_error_log_is_shown() throws IOException {
-        givenNativeJar(ReportError.class);
-        givenScript(
+        createNativeJar(ReportError.class);
+        createUserModule(
             "  Nothing reportError(String message);         ",
             "  result = reportError('my-error-message');    ");
-        whenSmooth(buildCommand("--log-level=info", "result"));
-        thenFinishedWithError();
-        thenSysOutContains("ERROR: my-error-message");
+        runSmooth(buildCommand("--log-level=info", "result"));
+        assertFinishedWithError();
+        assertSysOutContains("ERROR: my-error-message");
       }
 
       @Test
       public void then_warning_log_is_shown() throws IOException {
-        givenNativeJar(ReportWarning.class);
-        givenScript(
+        createNativeJar(ReportWarning.class);
+        createUserModule(
             "  String reportWarning(String message);            ",
             "  result = reportWarning('my-warning-message');    ");
-        whenSmooth(buildCommand("--log-level=info", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains("WARNING: my-warning-message");
+        runSmooth(buildCommand("--log-level=info", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains("WARNING: my-warning-message");
       }
 
       @Test
       public void then_info_log_is_shown() throws IOException {
-        givenNativeJar(ReportInfo.class);
-        givenScript(
+        createNativeJar(ReportInfo.class);
+        createUserModule(
             "  String reportInfo(String message);         ",
             "  result = reportInfo('my-info-message');    ");
-        whenSmooth(buildCommand("--log-level=info", "result"));
-        thenFinishedWithSuccess();
-        thenSysOutContains("INFO: my-info-message");
+        runSmooth(buildCommand("--log-level=info", "result"));
+        assertFinishedWithSuccess();
+        assertSysOutContains("INFO: my-info-message");
       }
     }
   }

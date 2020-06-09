@@ -14,7 +14,7 @@ public class NamedParameterAssignmentTest extends AbstractAssignmentTestCase {
 
   @Override
   protected void assertAssignmentError(String targetType, String sourceType) {
-    thenSysOutContainsParseError(2,
+    assertSysOutContainsParseError(2,
         "In call to `testFunction`: Cannot assign argument of type '" + sourceType +
         "' to parameter 'param' of type '" + targetType + "'.");
   }

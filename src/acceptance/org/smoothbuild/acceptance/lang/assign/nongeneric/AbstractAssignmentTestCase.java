@@ -33,13 +33,13 @@ public abstract class AbstractAssignmentTestCase extends AcceptanceTestCase {
   @ParameterizedTest
   @MethodSource("assignment_test_specs")
   public void assignment_is_verified(AssignmentTestSpec testSpec) throws IOException {
-    givenNativeJar(ReportError.class);
-    givenScript(createTestScript(testSpec));
-    whenSmoothList();
+    createNativeJar(ReportError.class);
+    createUserModule(createTestScript(testSpec));
+    runSmoothList();
     if (testSpec.allowed) {
-      thenFinishedWithSuccess();
+      assertFinishedWithSuccess();
     } else {
-      thenFinishedWithError();
+      assertFinishedWithError();
       assertAssignmentError(testSpec.target.name, testSpec.source.name);
     }
   }
