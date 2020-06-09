@@ -11,52 +11,52 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 public class AndTest extends AcceptanceTestCase {
   @Test
   public void false_and_false_returns_false() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = and(false(), false());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }
 
   @Test
   public void false_and_true_returns_false() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = and(false(), true());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }
 
   @Test
   public void true_and_false_returns_false() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = and(true(), false());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }
 
   @Test
   public void true_and_true_returns_true() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = and(true(), true());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }
 
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_false() throws Exception {
-    givenNativeJar(ThrowException.class);
-    givenScript(
+    createNativeJar(ThrowException.class);
+    createUserModule(
         "  Nothing throwException();                 ",
         "  result = and(false(), throwException());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }

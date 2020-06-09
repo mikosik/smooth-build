@@ -22,11 +22,11 @@ public class LoggingTest extends AcceptanceTestCase {
   public void name(
       TestCaseInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
     userModuleCreator.initialize(this);
-    whenSmoothBuild("--log-level=" + logLevel, "result");
+    runSmoothBuild("--log-level=" + logLevel, "result");
     if (logShown) {
-      thenSysOutContains(LOG_MESSAGE);
+      assertSysOutContains(LOG_MESSAGE);
     } else {
-      thenSysOutDoesNotContain(LOG_MESSAGE);
+      assertSysOutDoesNotContain(LOG_MESSAGE);
     }
   }
 
@@ -48,8 +48,8 @@ public class LoggingTest extends AcceptanceTestCase {
   }
 
   private static void createModuleWithError(AcceptanceTestCase testCase) throws IOException {
-    testCase.givenNativeJar(ReportError.class);
-    testCase.givenScript(unlines(
+    testCase.createNativeJar(ReportError.class);
+    testCase.createUserModule(unlines(
         "Nothing reportError(String message);",
         "result = reportError('" + LOG_MESSAGE + "');",
         ""
@@ -57,8 +57,8 @@ public class LoggingTest extends AcceptanceTestCase {
   }
 
   private static void createModuleWithWarning(AcceptanceTestCase testCase) throws IOException {
-    testCase.givenNativeJar(ReportWarning.class);
-    testCase.givenScript(unlines(
+    testCase.createNativeJar(ReportWarning.class);
+    testCase.createUserModule(unlines(
         "String reportWarning(String message);",
         "result = reportWarning('" + LOG_MESSAGE + "');",
         ""
@@ -66,8 +66,8 @@ public class LoggingTest extends AcceptanceTestCase {
   }
 
   private static void createModuleWithInfo(AcceptanceTestCase testCase) throws IOException {
-    testCase.givenNativeJar(ReportInfo.class);
-    testCase.givenScript(unlines(
+    testCase.createNativeJar(ReportInfo.class);
+    testCase.createUserModule(unlines(
         "String reportInfo(String message);",
         "result = reportInfo('" + LOG_MESSAGE + "');",
         ""

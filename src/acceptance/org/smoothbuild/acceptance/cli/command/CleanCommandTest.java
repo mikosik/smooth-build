@@ -29,7 +29,7 @@ public class CleanCommandTest {
   class clean_command extends AcceptanceTestCase {
     @Test
     public void deletes_content_of_smooth_dir_except_lock_file() throws IOException {
-      givenScript(
+      createUserModule(
           "  result = 'abc';"
       );
       createDirInProject(HASHED_DB_PATH);
@@ -37,8 +37,8 @@ public class CleanCommandTest {
       createDirInProject(ARTIFACTS_PATH);
       createDirInProject(TEMPORARY_PATH);
 
-      whenSmoothClean();
-      thenFinishedWithSuccess();
+      runSmoothClean();
+      assertFinishedWithSuccess();
       assertThat(Files.list(smoothDirAbsolutePath()).collect(toList()))
           .containsExactly(absolutePath(SMOOTH_LOCK_PATH.toString()));
     }
@@ -51,20 +51,20 @@ public class CleanCommandTest {
     public void reports_error_when_user_module_is_missing_and_smooth_dir_exists() throws
         IOException {
       createDirectories(smoothDirAbsolutePath());
-      whenSmoothClean();
-      thenFinishedWithError();
-      thenSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "
+      runSmoothClean();
+      assertFinishedWithError();
+      assertSysOutContains("smooth: error: Directory '" + projectDirOption() + "' doesn't have "
           + USER_MODULE_PATH.q() + ". Is it really smooth enabled project?");
     }
 
     @Test
     public void with_arguments_prints_error() throws Exception {
-      givenScript(
+      createUserModule(
           "  result = 'abc';  ");
-      whenSmoothClean("some", "arguments");
-      thenFinishedWithError();
-      thenSysErrContains("Unmatched arguments from index");
-      thenSysErrContains(
+      runSmoothClean("some", "arguments");
+      assertFinishedWithError();
+      assertSysErrContains("Unmatched arguments from index");
+      assertSysErrContains(
           "Usage:",
           "smooth clean [-d=<projectDir>] [-l=<level>]",
           "Try 'smooth help clean' for more information.",
@@ -92,7 +92,7 @@ public class CleanCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth(cleanCommand(option));
+      runSmooth(cleanCommand(option));
     }
   }
 }

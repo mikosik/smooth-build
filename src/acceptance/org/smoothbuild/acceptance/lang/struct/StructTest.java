@@ -6,227 +6,227 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class StructTest extends AcceptanceTestCase {
   @Test
   public void struct_name_starting_with_lowercase_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  myStruct {}  ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
   }
 
   @Test
   public void struct_name_with_one_large_letter_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  A {}  ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(
         1, "'A' is illegal struct name. It must have at least two characters.\n");
   }
 
   @Test
   public void empty_struct_is_allowed() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {}      ",
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void comma_after_last_field_is_allowed() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct { String field , }  ",
         "  result = 'abc';              ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void illegal_struct_name_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  My-Struct {};    ",
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
+    runSmoothBuild("result");
+    assertFinishedWithError();
   }
 
   @Test
   public void fields_with_same_name_cause_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {        ",
         "    String field1,  ",
         "    String field1   ",
         "  }                 ",
         "  result = 'abc';   ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(3, "'field1' is already defined at build.smooth:2.\n");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(3, "'field1' is already defined at build.smooth:2.\n");
   }
 
   @Test
   public void two_structs_with_same_name_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {}      ",
         "  MyStruct {}      ",
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "'MyStruct' is already defined at build.smooth:1.\n");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "'MyStruct' is already defined at build.smooth:1.\n");
   }
 
   @Test
   public void struct_with_same_name_as_basic_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  String {}        ",
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(1, "'String' is already defined.\n");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1, "'String' is already defined.\n");
   }
 
   @Test
   public void struct_with_same_name_as_struct_type_from_standard_library_causes_error()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  File {}          ",
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(1, "'File' is already defined");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1, "'File' is already defined");
   }
 
   @Test
   public void field_with_unknown_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {           ",
         "    Undefined myField  ",
         "  }                    ",
         "  result = 'abc';      ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Undefined type 'Undefined'.\n");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "Undefined type 'Undefined'.\n");
   }
 
   @Test
   public void first_field_with_array_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {          ",
         "    [String] myField  ",
         "  }                   ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "First field of struct cannot have array type.\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "First field of struct cannot have array type.\n");
   }
 
   @Test
   public void first_field_with_nothing_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {         ",
         "    Nothing myField  ",
         "  }                  ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Struct field cannot have 'Nothing' type.\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "Struct field cannot have 'Nothing' type.\n");
   }
 
   @Test
   public void non_first_field_with_nothing_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {               ",
         "    String myField,        ",
         "    Nothing genericField,  ",
         "  }                        ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(3, "Struct field cannot have 'Nothing' type.\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(3, "Struct field cannot have 'Nothing' type.\n");
   }
 
   @Test
   public void first_field_with_generic_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {   ",
         "    A myField  ",
         "  }            ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "Struct field cannot have a generic type.\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "Struct field cannot have a generic type.\n");
   }
 
   @Test
   public void non_first_field_with_generic_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {         ",
         "    String myField,  ",
         "    A genericField,  ",
         "  }                  ");
-    whenSmoothList();
-    thenFinishedWithError();
-    thenSysOutContainsParseError(3, "Struct field cannot have a generic type.\n");
+    runSmoothList();
+    assertFinishedWithError();
+    assertSysOutContainsParseError(3, "Struct field cannot have a generic type.\n");
   }
 
   @Test
   public void field_type_can_be_defined_after_definition_of_enclosing_structure() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {             ",
         "    OtherStruct myField  ",
         "  }                      ",
         "  OtherStruct {}         ",
         "  result = 'abc';        ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void field_type_can_be_defined_before_definition_of_enclosing_structure()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  OtherStruct {}         ",
         "  MyStruct {             ",
         "    OtherStruct myField  ",
         "  }                      ",
         "  result = 'abc';        ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void field_array_type_can_be_defined_after_definition_of_enclosing_structure()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {               ",
         "    String ignore,         ",
         "    [OtherStruct] myField  ",
         "  }                        ",
         "  OtherStruct {}           ",
         "  result = 'abc';          ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void field_array_type_can_be_defined_before_definition_of_enclosing_structure()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  OtherStruct {}           ",
         "  MyStruct {               ",
         "    String ignore,         ",
         "    [OtherStruct] myField  ",
         "  }                        ",
         "  result = 'abc';          ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void field_with_type_equal_to_enclosing_struct_type_causes_error() throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {          ",
         "    MyStruct myField  ",
         "  }                   ",
         "  result = 'abc';     ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(
         "Type hierarchy contains cycle:",
         "build.smooth:2: MyStruct -> MyStruct");
   }
@@ -234,20 +234,20 @@ public class StructTest extends AcceptanceTestCase {
   @Test
   public void field_with_type_equal_to_array_of_enclosing_struct_type_causes_error()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {            ",
         "    [MyStruct] myField  ",
         "  }                     ",
         "  result = 'abc';       ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(2, "First field of struct cannot have array type.");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(2, "First field of struct cannot have array type.");
   }
 
   @Test
   public void cycle_in_type_hierarchy_causes_error()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {             ",
         "    OtherStruct myField  ",
         "  }                      ",
@@ -255,9 +255,9 @@ public class StructTest extends AcceptanceTestCase {
         "    MyStruct otherField  ",
         "  }                      ",
         "  result = 'abc';        ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContainsParseError(
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(
         "Type hierarchy contains cycle:",
         "build.smooth:2: MyStruct -> OtherStruct",
         "build.smooth:5: OtherStruct -> MyStruct");
@@ -266,20 +266,20 @@ public class StructTest extends AcceptanceTestCase {
   @Test
   public void struct_can_be_declared_before_function_that_uses_it()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct {}                           ",
         "  MyStruct myFunc(MyStruct arg) = arg;  ");
-    whenSmoothList();
-    thenFinishedWithSuccess();
+    runSmoothList();
+    assertFinishedWithSuccess();
   }
 
   @Test
   public void struct_can_be_declared_after_function_that_uses_it()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  MyStruct myFunc(MyStruct arg) = arg;  ",
         "  MyStruct {}                           ");
-    whenSmoothList();
-    thenFinishedWithSuccess();
+    runSmoothList();
+    assertFinishedWithSuccess();
   }
 }

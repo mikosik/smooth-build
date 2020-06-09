@@ -13,155 +13,155 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_bool_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = true();  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(trueByteString());
   }
 
   @Test
   public void store_string_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = 'abc';  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
   @Test
   public void store_blob_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = toBlob('abc');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }
 
   @Test
   public void store_file_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = file(toBlob('abc'), 'file.txt');  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
     assertThat(artifactTreeContent("result"))
         .containsExactly("file.txt", "abc");
   }
 
   @Test
   public void store_empty_array_of_bools_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  [Bool] result = [];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
   @Test
   public void store_array_of_bools_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ true(), false() ];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactAsByteStrings("result"))
         .isEqualTo(list(trueByteString(), falseByteString()));
   }
 
   @Test
   public void store_empty_array_of_strings_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  [String] result = [];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
   @Test
   public void store_array_of_strings_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ 'abc', 'def' ];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
   @Test
   public void store_empty_array_of_nothings_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
   @Test
   public void store_empty_array_of_blobs_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  [Blob] result = [];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
   @Test
   public void store_array_of_blobs_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ toBlob('abc'), toBlob('def') ];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("abc", "def"));
   }
 
   @Test
   public void store_empty_array_of_files_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  [File] result = [];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list());
   }
 
   @Test
   public void store_array_of_files_artifact() throws Exception {
-    givenScript(
+    createUserModule(
         "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
-    thenSysOutContains("result -> '.smooth/artifacts/result'");
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactTreeContent("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
-    givenScript(
+    createUserModule(
         "  myFile = file(toBlob('abc'), 'file.txt');  ",
         "  result = [ myFile, myFile ];               ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains(
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains(
         "Saving artifact(s)",
         "  result -> ???",
         "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
@@ -174,13 +174,13 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order()
       throws Exception {
-    givenScript(
+    createUserModule(
         "  result1 = 'abc';  ",
         "  result2 = 'abc';  ",
         "  result3 = 'abc';  ");
-    whenSmoothBuild("result2", "result3", "result1");
-    thenFinishedWithSuccess();
-    thenSysOutContains(
+    runSmoothBuild("result2", "result3", "result1");
+    assertFinishedWithSuccess();
+    assertSysOutContains(
         "Saving artifact(s)",
         "  result1 -> '.smooth/artifacts/result1'",
         "  result2 -> '.smooth/artifacts/result2'",

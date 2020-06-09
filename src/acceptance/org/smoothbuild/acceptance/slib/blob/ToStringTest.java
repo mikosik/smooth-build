@@ -10,10 +10,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ToStringTest extends AcceptanceTestCase {
   @Test
   public void to_string_function() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = file(toBlob('abc'), 'file1.txt').content | toString;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
         .isEqualTo("abc");
   }

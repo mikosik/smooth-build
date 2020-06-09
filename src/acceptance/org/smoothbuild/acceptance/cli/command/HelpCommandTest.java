@@ -6,9 +6,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class HelpCommandTest extends AcceptanceTestCase {
   @Test
   public void help_command_prints_general_help() {
-    whenSmoothHelp();
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp();
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth COMMAND
         
@@ -34,9 +34,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_build() {
-    whenSmoothHelp("build");
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp("build");
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth build [-d=<projectDir>] [-l=<level>] [-s=<filter>] <function>...
                    
@@ -101,9 +101,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_clean() {
-    whenSmoothHelp("clean");
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp("clean");
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth clean [-d=<projectDir>] [-l=<level>] 
                    
@@ -128,9 +128,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_list() {
-    whenSmoothHelp("list");
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp("list");
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth list [-d=<projectDir>] [-l=<level>]
                 
@@ -155,9 +155,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_tree() {
-    whenSmoothHelp("tree");
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp("tree");
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth tree [-d=<projectDir>] [-l=<level>] <function>...
                 
@@ -185,9 +185,9 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_version() {
-    whenSmoothHelp("version");
-    thenFinishedWithSuccess();
-    thenSysOutContains("""
+    runSmoothHelp("version");
+    assertFinishedWithSuccess();
+    assertSysOutContains("""
         Usage:
         smooth version [-l=<level>]
                 

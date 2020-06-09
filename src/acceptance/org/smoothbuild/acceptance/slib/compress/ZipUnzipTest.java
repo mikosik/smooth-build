@@ -10,22 +10,22 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ZipUnzipTest extends AcceptanceTestCase {
   @Test
   public void zip_unzip() throws IOException {
-    givenFile("dir/file1.txt", "abc");
-    givenFile("file2.txt", "def");
-    givenScript(
+    createFile("dir/file1.txt", "abc");
+    createFile("file2.txt", "def");
+    createUserModule(
         "  result = [ aFile('dir/file1.txt'), aFile('file2.txt') ] | zip | unzip;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactTreeContent("result"))
         .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
   }
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = toBlob('random junk') | unzip;  ");
-    whenSmoothBuild("result");
-    thenFinishedWithError();
-    thenSysOutContains("Cannot read archive. Corrupted data?");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Cannot read archive. Corrupted data?");
   }
 }

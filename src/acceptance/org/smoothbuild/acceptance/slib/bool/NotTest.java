@@ -11,20 +11,20 @@ public class NotTest extends AcceptanceTestCase {
 
   @Test
   public void not_false_returns_true() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = not(false());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(true);
   }
 
   @Test
   public void not_true_returns_false() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = not(true());  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
   }

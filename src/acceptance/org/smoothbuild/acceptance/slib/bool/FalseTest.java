@@ -10,10 +10,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class FalseTest extends AcceptanceTestCase {
   @Test
   public void false_function() throws IOException {
-    givenScript(
+    createUserModule(
         "  result = false();  ");
-    whenSmoothBuild("result");
-    thenFinishedWithSuccess();
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
         .isEqualTo(false);
 

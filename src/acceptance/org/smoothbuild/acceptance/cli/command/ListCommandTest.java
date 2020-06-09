@@ -16,14 +16,14 @@ public class ListCommandTest {
   class basic extends AcceptanceTestCase {
     @Test
     public void list_command_lists_all_available_functions() throws Exception {
-      givenScript(
+      createUserModule(
           "  bFunction = 'abc';  ",
           "  aFunction = 'abc';  ",
           "  dFunction = 'abc';  ",
           "  cFunction = 'abc';  ");
-      whenSmoothList();
-      thenFinishedWithSuccess();
-      thenSysOutContains(
+      runSmoothList();
+      assertFinishedWithSuccess();
+      assertSysOutContains(
           "aFunction",
           "bFunction",
           "cFunction",
@@ -52,7 +52,7 @@ public class ListCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      whenSmooth(listCommand(option, "result"));
+      runSmooth(listCommand(option, "result"));
     }
   }
 }

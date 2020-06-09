@@ -20,14 +20,14 @@ public class GenericAssignmentTest extends AcceptanceTestCase {
     String declarations = structs.stream()
         .map(s -> s.concat("{}\n"))
         .collect(joining());
-    givenScript(declarations,
+    createUserModule(declarations,
         "String innerFunction(" + targetType + " target) = 'abc';                  ",
         "outerFunction(" + sourceType + " source) = innerFunction(target=source);  ");
-    whenSmoothList();
+    runSmoothList();
     if (allowed) {
-      thenFinishedWithSuccess();
+      assertFinishedWithSuccess();
     } else {
-      thenSysOutContainsParseError(structs.size() + 3,
+      assertSysOutContainsParseError(structs.size() + 3,
           "In call to `innerFunction`: Cannot assign argument of type '" + sourceType + "' to " +
               "parameter 'target' of type '" + targetType + "'.");
     }

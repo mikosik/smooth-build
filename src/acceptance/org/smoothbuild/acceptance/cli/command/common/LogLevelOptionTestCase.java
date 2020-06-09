@@ -10,10 +10,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public abstract class LogLevelOptionTestCase extends AcceptanceTestCase {
   @Test
   public void illegal_log_level_value_causes_error() throws IOException {
-    givenScript("result = 'abc';");
+    createUserModule("result = 'abc';");
     whenSmoothCommandWithOption("--log-level=wrong_value");
-    thenFinishedWithError();
-    thenSysErrContains(unlines(
+    assertFinishedWithError();
+    assertSysErrContains(unlines(
         "Invalid value for option '--log-level': expected one of " +
             "{f,fatal,e,error,w,warning,i,info} (case-sensitive) but was 'wrong_value'",
         "",
