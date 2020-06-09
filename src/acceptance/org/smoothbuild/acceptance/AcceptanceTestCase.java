@@ -26,8 +26,8 @@ import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 import static org.smoothbuild.io.fs.disk.RecursiveDeleter.deleteRecursively;
-import static org.smoothbuild.util.Okios.readAndClose;
 import static org.smoothbuild.util.Strings.unlines;
+import static org.smoothbuild.util.io.Okios.readAndClose;
 import static org.smoothbuild.util.reflect.Classes.saveBytecodeInJar;
 
 import java.io.ByteArrayOutputStream;
@@ -51,7 +51,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.cli.Main;
-import org.smoothbuild.util.DataReader;
+import org.smoothbuild.util.io.DataReader;
 
 import okio.BufferedSource;
 import okio.ByteString;

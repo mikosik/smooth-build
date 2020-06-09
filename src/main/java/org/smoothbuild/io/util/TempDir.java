@@ -3,7 +3,7 @@ package org.smoothbuild.io.util;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.util.Okios.copyAllAndClose;
+import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.IOException;
 

@@ -1,10 +1,10 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.io;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.smoothbuild.util.Okios.copyAllAndClose;
-import static org.smoothbuild.util.Okios.readAndClose;
+import static org.smoothbuild.util.io.Okios.copyAllAndClose;
+import static org.smoothbuild.util.io.Okios.readAndClose;
 
 import org.junit.jupiter.api.Test;
 

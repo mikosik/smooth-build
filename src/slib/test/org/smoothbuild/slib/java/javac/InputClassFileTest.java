@@ -5,7 +5,7 @@ import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Okios.readAndClose;
+import static org.smoothbuild.util.io.Okios.readAndClose;
 
 import java.net.URI;
 

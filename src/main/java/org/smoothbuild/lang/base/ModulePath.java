@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base;
 
-import static org.smoothbuild.util.Paths.changeExtension;
+import static org.smoothbuild.util.io.Paths.changeExtension;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.util.Paths;
+import org.smoothbuild.util.io.Paths;
 
 public record ModulePath(Space space, ShortablePath smooth, ShortablePath nativ) {
 

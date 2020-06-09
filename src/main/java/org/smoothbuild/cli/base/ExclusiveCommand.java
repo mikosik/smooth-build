@@ -5,7 +5,7 @@ import static org.smoothbuild.cli.console.Console.printErrorToWriter;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_FILE_NAME;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
-import static org.smoothbuild.util.LockFile.lockFile;
+import static org.smoothbuild.util.io.LockFile.lockFile;
 
 import java.io.IOException;
 import java.nio.channels.Channel;
