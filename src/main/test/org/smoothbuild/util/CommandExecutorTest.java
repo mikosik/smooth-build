@@ -2,10 +2,9 @@ package org.smoothbuild.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
-import java.util.List;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
@@ -16,21 +15,21 @@ public class CommandExecutorTest {
    * free file descriptors which prevent JVM from loading bytecode of appropriate exception class.
    */
   @Test
-  public void execution_closes_all_opened_streams() throws InterruptedException, IOException {
-    /**
+  public void execution_closes_all_opened_streams() throws Exception {
+    /*
      * This command should complete without errors on any OS.
      */
-    List<String> command = list("sleep", "0");
+    String[] command = new String[] {"sleep", "0"};
 
     for (int i = 0; i < 10000; i++) {
-      CommandExecutor.execute(command);
+      CommandExecutor.execute(Path.of("."), command);
     }
   }
 
   @Test
-  public void runing_unknown_binary_throws_IOException() throws Exception {
+  public void running_unknown_binary_throws_IOException() throws Exception {
     try {
-      CommandExecutor.execute(list("binary_file_that_does_not_exist"));
+      CommandExecutor.execute(Path.of("."), new String[] {"binary_file_that_does_not_exist"});
       fail("exception should be thrown");
     } catch (IOException e) {
       // expected
@@ -41,15 +40,15 @@ public class CommandExecutorTest {
   public void failure_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is zero.
     // As it is not zero it will return non zero return code.
-    List<String> command = list("test", "-z", "abc");
-    assertEquals(1, CommandExecutor.execute(command));
+    String[] command = new String[] {"test", "-z", "abc"};
+    assertEquals(1, CommandExecutor.execute(Path.of("."), command).exitCode());
   }
 
   @Test
   public void success_exit_code_is_returned() throws Exception {
     // linux command testing whether length of string "abc" is not zero.
     // As it is not zero it will return zero return code.
-    List<String> command = list("test", "-n", "abc");
-    assertEquals(0, CommandExecutor.execute(command));
+    String[] command = new String[] {"test", "-n", "abc"};
+    assertEquals(0, CommandExecutor.execute(Path.of("."), command).exitCode());
   }
 }

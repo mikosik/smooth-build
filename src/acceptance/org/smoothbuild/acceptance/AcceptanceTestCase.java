@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance;
 
 import static com.google.common.collect.ObjectArrays.concat;
-import static com.google.common.io.ByteStreams.toByteArray;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -42,15 +41,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 import org.smoothbuild.cli.Main;
+import org.smoothbuild.util.CommandExecutor;
+import org.smoothbuild.util.CommandExecutor.CommandResult;
 import org.smoothbuild.util.io.DataReader;
 
 import okio.BufferedSource;
@@ -187,15 +185,12 @@ public abstract class AcceptanceTestCase {
 
   private void runSmoothInForkedJvm(CommandWithArgs command) {
     try {
-      ProcessBuilder processBuilder = new ProcessBuilder(processArgs(command.commandPlusArgs()));
-      processBuilder.directory(projectDirAbsolutePath().toFile());
-      Process process = processBuilder.start();
-      ExecutorService executor = Executors.newFixedThreadPool(2);
-      Future<byte[]> inputStream = executor.submit(() -> toByteArray(process.getInputStream()));
-      Future<byte[]> errorStream = executor.submit(() -> toByteArray(process.getErrorStream()));
-      exitCode = process.waitFor();
-      sysOut = new String(inputStream.get(), UTF_8);
-      sysErr = new String(errorStream.get(), UTF_8);
+      String[] allArguments = processArgs(command.commandPlusArgs());
+      Path workingDir = projectDirAbsolutePath();
+      CommandResult r = CommandExecutor.execute(workingDir, allArguments);
+      exitCode = r.exitCode();
+      sysOut = r.sysOut();
+      sysErr = r.sysErr();
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
       throw new RuntimeException(e);
