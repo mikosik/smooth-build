@@ -31,7 +31,7 @@ import org.smoothbuild.lang.object.type.GenericType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.object.type.TypeNames;
-import org.smoothbuild.util.DataWriter;
+import org.smoothbuild.util.io.DataWriter;
 
 /**
  * This class is thread-safe.

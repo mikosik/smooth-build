@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.io;
 
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.StandardOpenOption.CREATE;

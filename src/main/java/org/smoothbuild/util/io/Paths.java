@@ -1,4 +1,4 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.io;
 
 import java.nio.file.Path;
 

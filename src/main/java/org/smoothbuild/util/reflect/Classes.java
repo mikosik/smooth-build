@@ -2,7 +2,7 @@ package org.smoothbuild.util.reflect;
 
 import static okio.Okio.buffer;
 import static okio.Okio.source;
-import static org.smoothbuild.util.Okios.readAndClose;
+import static org.smoothbuild.util.io.Okios.readAndClose;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

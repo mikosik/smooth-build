@@ -1,10 +1,10 @@
-package org.smoothbuild.util;
+package org.smoothbuild.util.io;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.io.Writer.nullWriter;
 import static java.nio.file.Files.createFile;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.LockFile.lockFile;
+import static org.smoothbuild.util.io.LockFile.lockFile;
 
 import java.io.IOException;
 import java.io.PrintWriter;

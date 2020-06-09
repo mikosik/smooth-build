@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.base.AssertPath.assertPathIsUnused;
 import static org.smoothbuild.io.fs.base.PathState.DIR;
 import static org.smoothbuild.io.fs.base.PathState.FILE;
 import static org.smoothbuild.io.fs.base.PathState.NOTHING;
-import static org.smoothbuild.util.Okios.copyAllAndClose;
+import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
