@@ -125,7 +125,7 @@ public class AstCreator {
       }
 
       private ExprNode createExpr(ExprContext expr) {
-        if (expr.expr() != null) {
+        if (expr.accessor() != null) {
           ExprNode structExpr = createExpr(expr.expr());
           AccessorContext accessor = expr.accessor();
           String name = accessor.name().getText();
