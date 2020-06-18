@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.parse.ParseError.parseError;
-import static org.smoothbuild.parse.ast.StructNode.constructorNameToTypeName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +16,14 @@ import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.ArgNode;
-import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
+import org.smoothbuild.parse.ast.ParameterizedNode;
+
+import com.google.common.collect.ImmutableMap;
 
 public class InferCallTypeAndParamAssignment {
-  public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime, Ast ast,
-      LoggerImpl logger) {
+  public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime,
+      ImmutableMap<String, ParameterizedNode> functions, LoggerImpl logger) {
     new Runnable() {
       @Override
       public void run() {
@@ -106,16 +107,13 @@ public class InferCallTypeAndParamAssignment {
 
       private List<? extends ParameterInfo> functionParameters() {
         String name = call.name();
-        Functions functions = runtime.functions();
-        if (functions.contains(name)) {
-          return functions.get(name).signature().parameters();
+        Functions runtimeFunctions = runtime.functions();
+        if (runtimeFunctions.contains(name)) {
+          return runtimeFunctions.get(name).signature().parameters();
         }
-        if (ast.containsFunc(name)) {
-          return ast.func(name).getParameterInfos();
-        }
-        String structName = constructorNameToTypeName(name);
-        if (ast.containsStruct(structName)) {
-          return ast.struct(structName).getParameterInfos();
+        ParameterizedNode node = functions.get(name);
+        if (node != null) {
+          return node.getParameterInfos();
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
@@ -154,19 +152,17 @@ public class InferCallTypeAndParamAssignment {
 
       private Type functionType() {
         String name = call.name();
-        Functions functions = runtime.functions();
-        if (functions.contains(name)) {
-          return functions.get(name).signature().type();
+        Functions runtimeFunctions = runtime.functions();
+        if (runtimeFunctions.contains(name)) {
+          return runtimeFunctions.get(name).signature().type();
         }
-        if (ast.containsFunc(name)) {
-          return ast.func(name).get(Type.class);
-        }
-        String structName = constructorNameToTypeName(name);
-        if (ast.containsStruct(structName)) {
-          return ast.struct(structName).get(Type.class);
+        ParameterizedNode node = functions.get(name);
+        if (node != null) {
+          return node.get(Type.class);
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
     }.run();
   }
+
 }

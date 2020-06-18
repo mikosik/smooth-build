@@ -44,24 +44,20 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    ast.sortFuncsByDependencies(defined, logger);
+    Ast sortedAst = ast.sortedByDependencies(defined, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    ast.sortTypesByDependencies(defined, logger);
+    inferTypesAndParamAssignment(runtime, sortedAst, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    inferTypesAndParamAssignment(runtime, ast, logger);
+    natives.assignNatives(sortedAst, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    natives.assignNatives(ast, logger);
-    if (logger.hasProblems()) {
-      return Defined.empty();
-    }
-    ImmutableMap<String, Function> declaredFunctions = loadFunctions(runtime, ast);
-    ImmutableMap<String, Type> declaredTypes = ast.structs().stream()
+    ImmutableMap<String, Function> declaredFunctions = loadFunctions(runtime, sortedAst);
+    ImmutableMap<String, Type> declaredTypes = sortedAst.structs().stream()
         .map(n -> n.get(Type.class))
         .collect(toImmutableMap(Type::name, t -> t));
     return new Defined(declaredTypes, declaredFunctions);

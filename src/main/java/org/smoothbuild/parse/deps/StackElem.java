@@ -4,18 +4,22 @@ import java.util.Set;
 
 import org.smoothbuild.parse.ast.Named;
 
-public class StackElem {
-  private final String name;
+public class StackElem<T extends Named> {
+  private final T named;
   private Named missing;
   private final Set<Named> dependencies;
 
-  public StackElem(String name, Set<Named> dependencies) {
-    this.name = name;
+  public StackElem(T named, Set<Named> dependencies) {
+    this.named = named;
     this.dependencies = dependencies;
   }
 
+  public T named() {
+    return named;
+  }
+
   public String name() {
-    return name;
+    return named.name();
   }
 
   public Set<Named> dependencies() {
