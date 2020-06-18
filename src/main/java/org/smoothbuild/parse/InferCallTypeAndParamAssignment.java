@@ -27,7 +27,6 @@ public class InferCallTypeAndParamAssignment {
       @Override
       public void run() {
         call.set(Type.class, null);
-        call.setAssignedArgs(null);
 
         List<? extends ParameterInfo> parameters = functionParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
