@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.BlobBuilder;
@@ -26,6 +25,7 @@ import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.GenericArrayType;
 import org.smoothbuild.lang.object.type.GenericType;
 import org.smoothbuild.lang.object.type.StructType;

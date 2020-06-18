@@ -7,7 +7,6 @@ import static com.google.common.collect.Streams.stream;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.base.MerkleRoot;

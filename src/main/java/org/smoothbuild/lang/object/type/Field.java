@@ -1,8 +1,8 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.object.type;
 
 import static java.util.Objects.requireNonNull;
 
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.parse.ast.Named;
 
 public class Field implements Named {

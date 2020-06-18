@@ -11,7 +11,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.GenericArrayType;
 import org.smoothbuild.lang.object.type.GenericType;
 import org.smoothbuild.lang.object.type.Type;

@@ -8,9 +8,9 @@ import java.util.Map;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
+import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.StructType;
 
 import com.google.common.collect.ImmutableMap;

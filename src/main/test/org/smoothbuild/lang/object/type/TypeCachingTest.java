@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
