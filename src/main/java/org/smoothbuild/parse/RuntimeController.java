@@ -1,12 +1,11 @@
 package org.smoothbuild.parse;
 
-import static java.util.stream.Collectors.toSet;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.parse.ModuleLoader.loadModule;
 import static org.smoothbuild.util.Lists.concat;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.inject.Inject;
@@ -16,9 +15,12 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModulePath;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
+import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
+
+import com.google.common.collect.ImmutableMap;
 
 public class RuntimeController {
   private final SRuntime runtime;
@@ -38,13 +40,15 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
     reporter.startNewPhase("Parsing");
 
-    Set<String> declaredTypes = Types.BASIC_TYPES.stream()
-        .map(Type::name)
-        .collect(toSet());
-    for (ModulePath module : concat(installationPaths.slibModules(), projectPaths.userModule())) {
-      try (LoggerImpl logger = new LoggerImpl(module.smooth().shorted(), reporter)) {
-        Set<String> loadedTypes = loadModule(runtime, declaredTypes, module, logger);
-        declaredTypes.addAll(loadedTypes);
+    ObjectFactory objectFactory = runtime.objectFactory();
+    ImmutableMap<String, Type> basicTypes = Types.BASIC_TYPES.stream()
+        .map(t -> objectFactory.getType(t.name()))
+        .collect(toImmutableMap(Type::name, t -> t));
+    Defined defined = new Defined(basicTypes, ImmutableMap.of());
+    for (ModulePath mPath : concat(installationPaths.slibModules(), projectPaths.userModule())) {
+      try (LoggerImpl logger = new LoggerImpl(mPath.smooth().shorted(), reporter)) {
+        Defined module = loadModule(runtime, defined, mPath, logger);
+        defined = Defined.union(defined, module);
       }
       if (reporter.isProblemReported()) {
         reporter.printSummary();
