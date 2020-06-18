@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class ModuleLoader {
-  public static Defined loadModule(SRuntime runtime, Defined defined,
+  public static Defined loadModule(SRuntime runtime, Defined imported,
       ModulePath modulePath, LoggerImpl logger) {
     Natives natives = findNatives(modulePath.nativ().path(), logger);
     if (logger.hasProblems()) {
@@ -40,15 +40,15 @@ public class ModuleLoader {
       return Defined.empty();
     }
     Ast ast = fromParseTree(modulePath, moduleContext);
-    findSemanticErrors(defined, ast, logger);
+    findSemanticErrors(imported, ast, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    Ast sortedAst = ast.sortedByDependencies(defined, logger);
+    Ast sortedAst = ast.sortedByDependencies(imported, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    inferTypesAndParamAssignment(runtime, sortedAst, logger);
+    inferTypesAndParamAssignment(imported, runtime, sortedAst, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }

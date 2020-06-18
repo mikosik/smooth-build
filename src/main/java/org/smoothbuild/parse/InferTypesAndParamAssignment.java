@@ -37,7 +37,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class InferTypesAndParamAssignment {
-  public static void inferTypesAndParamAssignment(SRuntime runtime, Ast ast, LoggerImpl logger) {
+  public static void inferTypesAndParamAssignment(Defined imported, SRuntime runtime, Ast ast,
+      LoggerImpl logger) {
     ObjectFactory objectFactory = runtime.objectFactory();
     ImmutableMap<String, ParameterizedNode> functionsMap = ast.createFunctionsAndConstructorsMap();
     new AstVisitor() {
@@ -220,7 +221,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypeAndParamAssignment(call, runtime, functionsMap, logger);
+        inferCallTypeAndParamAssignment(call, imported, functionsMap, logger);
       }
 
       @Override
