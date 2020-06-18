@@ -29,38 +29,38 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
 public class ModuleLoader {
-  public static Defined loadModule(SRuntime runtime, Defined imported,
+  public static Definitions loadModule(SRuntime runtime, Definitions imported,
       ModulePath modulePath, LoggerImpl logger) {
     Natives natives = findNatives(modulePath.nativ().path(), logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     ModuleContext moduleContext = parseModule(modulePath, logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     Ast ast = fromParseTree(modulePath, moduleContext);
     findSemanticErrors(imported, ast, logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     Ast sortedAst = ast.sortedByDependencies(imported, logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     inferTypesAndParamAssignment(imported, runtime, sortedAst, logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     natives.assignNatives(sortedAst, logger);
     if (logger.hasProblems()) {
-      return Defined.empty();
+      return Definitions.empty();
     }
     ImmutableMap<String, Function> declaredFunctions = loadFunctions(runtime, sortedAst);
     ImmutableMap<String, Type> declaredTypes = sortedAst.structs().stream()
         .map(n -> n.get(Type.class))
         .collect(toImmutableMap(Type::name, t -> t));
-    return new Defined(declaredTypes, declaredFunctions);
+    return new Definitions(declaredTypes, declaredFunctions);
   }
 
   private static ImmutableMap<String, Function> loadFunctions(SRuntime runtime, Ast ast) {
