@@ -30,4 +30,8 @@ public class StructNode extends ParameterizedNode {
   public static String constructorNameToTypeName(String constructorName) {
     return LOWER_CAMEL.to(UPPER_CAMEL, constructorName);
   }
+
+  public static String typeNameToConstructorName(String constructorName) {
+    return UPPER_CAMEL.to(LOWER_CAMEL, constructorName);
+  }
 }
