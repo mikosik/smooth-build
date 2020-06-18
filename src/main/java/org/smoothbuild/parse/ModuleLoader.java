@@ -44,7 +44,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Defined.empty();
     }
-    ast.sortFuncsByDependencies(runtime.functions(), logger);
+    ast.sortFuncsByDependencies(defined, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }

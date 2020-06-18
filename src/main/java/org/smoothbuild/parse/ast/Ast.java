@@ -3,15 +3,15 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
-import static org.smoothbuild.parse.deps.SortByDependencies.sortByDependencies;
+import static org.smoothbuild.parse.deps.SortByDependencies.sortFunctionsByDependencies;
 
 import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.LoggerImpl;
-import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.Defined;
+import org.smoothbuild.parse.deps.SortByDependencies;
 
 import com.google.common.collect.ImmutableList;
 
@@ -62,8 +62,8 @@ public class Ast {
     return nameToStructMap.get(name);
   }
 
-  public void sortFuncsByDependencies(Functions functions, Logger logger) {
-    List<String> sortedNames = sortByDependencies(functions, this, logger);
+  public void sortFuncsByDependencies(Defined defined, Logger logger) {
+    List<String> sortedNames = sortFunctionsByDependencies(defined.functions(), this, logger);
     if (sortedNames != null) {
       this.funcs = sortedNames
           .stream()
@@ -73,7 +73,8 @@ public class Ast {
   }
 
   public void sortTypesByDependencies(Defined defined, LoggerImpl logger) {
-    List<String> sortedNames = sortByDependencies(defined.types(), this, logger);
+    List<String> sortedNames = SortByDependencies
+        .sortTypesByDependencies(defined.types(), this, logger);
     if (sortedNames != null) {
       this.structs = sortedNames
           .stream()
