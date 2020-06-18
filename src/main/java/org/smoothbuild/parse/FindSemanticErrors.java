@@ -102,18 +102,18 @@ public class FindSemanticErrors {
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
         if (func.hasType()) {
-          assertTypeIsDefined(func.type());
+          assertTypeIsDefined(func.typeNode());
         }
       }
 
       @Override
       public void visitParam(int index, ParamNode param) {
-        assertTypeIsDefined(param.type());
+        assertTypeIsDefined(param.typeNode());
       }
 
       @Override
       public void visitField(int index, FieldNode field) {
-        assertTypeIsDefined(field.type());
+        assertTypeIsDefined(field.typeNode());
       }
 
       private void assertTypeIsDefined(TypeNode type) {
@@ -233,16 +233,16 @@ public class FindSemanticErrors {
         List<FieldNode> fields = struct.fields();
         if (!fields.isEmpty()) {
           FieldNode field = fields.get(0);
-          TypeNode type = field.type();
+          TypeNode type = field.typeNode();
           if (type.isArray()) {
             logger.log(parseError(field, "First field of struct cannot have array type."));
           }
         }
         for (FieldNode field : fields) {
-          if (isGenericTypeName(field.type().name())) {
+          if (isGenericTypeName(field.typeNode().name())) {
             logger.log(parseError(field, "Struct field cannot have a generic type.\n"));
           }
-          if (field.type().isNothing()) {
+          if (field.typeNode().isNothing()) {
             logger.log(parseError(field, "Struct field cannot have 'Nothing' type."));
           }
         }
@@ -257,20 +257,20 @@ public class FindSemanticErrors {
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
         if (func.hasType()
-            && func.type().isGeneric()
+            && func.typeNode().isGeneric()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          logger.log(parseError(func.type(), "Undefined generic type '"
-              + func.type().coreType().name()
+          logger.log(parseError(func.typeNode(), "Undefined generic type '"
+              + func.typeNode().coreType().name()
               + "'. Only generic types used in declaration of function parameters "
               + "can be used here."));
         }
       }
 
       private boolean hasParamWithCoreTypeEqualToResultCoreType(FuncNode func) {
-        String name = func.type().coreType().name();
+        String name = func.typeNode().coreType().name();
         return func.params()
             .stream()
-            .anyMatch(p -> p.type().coreType().name().equals(name));
+            .anyMatch(p -> p.typeNode().coreType().name().equals(name));
       }
     }.visitAst(ast);
   }

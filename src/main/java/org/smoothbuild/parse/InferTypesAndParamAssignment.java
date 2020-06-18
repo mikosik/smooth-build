@@ -63,7 +63,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitField(int index, FieldNode field) {
         super.visitField(index, field);
-        field.set(Type.class, field.type().get(Type.class));
+        field.set(Type.class, field.typeNode().get(Type.class));
         field.set(ParameterInfo.class,
             new ParameterInfo(index, field.get(Type.class), field.name(), false));
       }
@@ -90,7 +90,7 @@ public class InferTypesAndParamAssignment {
       private Type funcType(FuncNode func) {
         if (func.isNative()) {
           if (func.hasType()) {
-            return createType(func.type());
+            return createType(func.typeNode());
           } else {
             logger.log(parseError(func, "Function '" + func.name()
                 + "' is native so should have declared result type."));
@@ -99,7 +99,7 @@ public class InferTypesAndParamAssignment {
         } else {
           Type exprType = func.expr().get(Type.class);
           if (func.hasType()) {
-            Type type = createType(func.type());
+            Type type = createType(func.typeNode());
             if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
               logger.log(parseError(func, "Function '" + func.name()
                   + "' has body which type is " + exprType.q()
@@ -128,7 +128,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitParam(int index, ParamNode param) {
         super.visitParam(index, param);
-        Type type = param.type().get(Type.class);
+        Type type = param.typeNode().get(Type.class);
         param.set(Type.class, type);
         if (type == null) {
           param.set(ParameterInfo.class, null);

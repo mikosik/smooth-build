@@ -58,7 +58,7 @@ public class SortByDependencies {
       @Override
       public void visitField(int index, FieldNode field) {
         super.visitField(index, field);
-        TypeNode type = field.type();
+        TypeNode type = field.typeNode();
         addToDependencies(type);
       }
 

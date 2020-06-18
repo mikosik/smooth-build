@@ -7,24 +7,24 @@ import org.smoothbuild.lang.base.Location;
 import com.google.common.collect.ImmutableList;
 
 public class FuncNode extends ParameterizedNode {
-  private final TypeNode type;
+  private final TypeNode typeNode;
   private final List<ParamNode> params;
   private final ExprNode expr;
 
-  public FuncNode(TypeNode type, String name, List<ParamNode> params, ExprNode expr,
+  public FuncNode(TypeNode typeNode, String name, List<ParamNode> params, ExprNode expr,
       Location location) {
     super(name, location);
-    this.type = type;
+    this.typeNode = typeNode;
     this.params = ImmutableList.copyOf(params);
     this.expr = expr;
   }
 
   public boolean hasType() {
-    return type != null;
+    return typeNode != null;
   }
 
-  public TypeNode type() {
-    return type;
+  public TypeNode typeNode() {
+    return typeNode;
   }
 
   public List<ParamNode> params() {
