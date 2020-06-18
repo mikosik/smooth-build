@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {

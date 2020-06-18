@@ -6,11 +6,11 @@ import static org.smoothbuild.parse.deps.SortByDependencies.sortByDependencies;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.LoggerImpl;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
 
 public class Ast {
@@ -70,8 +70,8 @@ public class Ast {
     }
   }
 
-  public void sortTypesByDependencies(ObjectFactory objectFactory, LoggerImpl logger) {
-    List<String> sortedNames = sortByDependencies(objectFactory, this, logger);
+  public void sortTypesByDependencies(Set<String> declaredTypes, LoggerImpl logger) {
+    List<String> sortedNames = sortByDependencies(declaredTypes, this, logger);
     if (sortedNames != null) {
       this.structs = sortedNames
           .stream()

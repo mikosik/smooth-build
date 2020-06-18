@@ -12,7 +12,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -45,11 +44,10 @@ public class SortByDependencies {
     return new StackElem(func.name(), dependencies);
   }
 
-  public static List<String> sortByDependencies(ObjectFactory objectFactory, Ast ast,
-      Logger logger) {
+  public static List<String> sortByDependencies(Set<String> declaredTypes, Ast ast, Logger logger) {
     List<StructNode> structs = ast.structs();
     return sortByDependencies("Type hierarchy", structs, SortByDependencies::structToStackElem,
-        objectFactory::containsType, logger);
+        declaredTypes::contains, logger);
   }
 
   private static StackElem structToStackElem(StructNode structNode) {
