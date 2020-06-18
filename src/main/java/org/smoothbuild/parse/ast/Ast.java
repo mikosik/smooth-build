@@ -1,30 +1,32 @@
 package org.smoothbuild.parse.ast;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortByDependencies;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.Defined;
 
+import com.google.common.collect.ImmutableList;
+
 public class Ast {
-  private List<StructNode> structs;
-  private List<FuncNode> funcs;
+  private ImmutableList<StructNode> structs;
+  private ImmutableList<FuncNode> funcs;
   private final Map<String, StructNode> nameToStructMap;
   private final Map<String, FuncNode> nameToFuncMap;
 
   public Ast(List<StructNode> structs, List<FuncNode> funcs) {
-    this.structs = structs;
+    this.structs = ImmutableList.copyOf(structs);
     this.nameToStructMap = structs
         .stream()
         .collect(toMap(StructNode::name, identity(), (a, b) -> a));
-    this.funcs = funcs;
+    this.funcs = ImmutableList.copyOf(funcs);
     this.nameToFuncMap = funcs
         .stream()
         .collect(toMap(FuncNode::name, identity(), (a, b) -> a));
@@ -66,7 +68,7 @@ public class Ast {
       this.funcs = sortedNames
           .stream()
           .map(nameToFuncMap::get)
-          .collect(Collectors.toList());
+          .collect(toImmutableList());
     }
   }
 
@@ -76,7 +78,7 @@ public class Ast {
       this.structs = sortedNames
           .stream()
           .map(nameToStructMap::get)
-          .collect(Collectors.toList());
+          .collect(toImmutableList());
     }
   }
 }
