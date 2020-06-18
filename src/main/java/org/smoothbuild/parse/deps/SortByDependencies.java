@@ -8,12 +8,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
@@ -27,12 +26,13 @@ import org.smoothbuild.parse.ast.TypeNode;
 import com.google.common.collect.ImmutableMap;
 
 public class SortByDependencies {
-  public static List<String> sortByDependencies(Functions functions, Ast ast, Logger logger) {
+  public static List<String> sortFunctionsByDependencies(
+      ImmutableMap<String, Function> functions, Ast ast, Logger logger) {
     List<FuncNode> funcs = ast.funcs();
-    Set<String> globalNames = new HashSet<>(functions.names());
+    Set<String> globalNames = new HashSet<>(functions.keySet());
     globalNames.addAll(map(ast.structs(), structNode -> structNode.constructor().name()));
-    return sortByDependencies("Function call graph", funcs, SortByDependencies::funcToStackElem,
-        globalNames::contains, logger);
+    return sortTypesByDependencies("Function call graph", funcs,
+        SortByDependencies::funcToStackElem, globalNames::contains, logger);
   }
 
   private static StackElem funcToStackElem(FuncNode func) {
@@ -47,10 +47,10 @@ public class SortByDependencies {
     return new StackElem(func.name(), dependencies);
   }
 
-  public static List<String> sortByDependencies(
+  public static List<String> sortTypesByDependencies(
       ImmutableMap<String, Type> types, Ast ast, Logger logger) {
     List<StructNode> structs = ast.structs();
-    return sortByDependencies("Type hierarchy", structs, SortByDependencies::structToStackElem,
+    return sortTypesByDependencies("Type hierarchy", structs, SortByDependencies::structToStackElem,
         types::containsKey, logger);
   }
 
@@ -75,10 +75,10 @@ public class SortByDependencies {
     return new StackElem(structNode.name(), dependencies);
   }
 
-  private static <T extends Named> List<String> sortByDependencies(
+  private static <T extends Named> List<String> sortTypesByDependencies(
       String stackName,
       List<T> nodes,
-      Function<T, StackElem> newStackElem,
+      java.util.function.Function<T, StackElem> newStackElem,
       Predicate<String> isAlreadyDefined,
       Logger logger) {
     Map<String, T> notSorted = toMap(nodes, Named::name);
