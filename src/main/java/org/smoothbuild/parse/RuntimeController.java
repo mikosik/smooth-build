@@ -44,11 +44,11 @@ public class RuntimeController {
     ImmutableMap<String, Type> basicTypes = Types.BASIC_TYPES.stream()
         .map(t -> objectFactory.getType(t.name()))
         .collect(toImmutableMap(Type::name, t -> t));
-    Defined defined = new Defined(basicTypes, ImmutableMap.of());
+    Definitions definitions = new Definitions(basicTypes, ImmutableMap.of());
     for (ModulePath mPath : concat(installationPaths.slibModules(), projectPaths.userModule())) {
       try (LoggerImpl logger = new LoggerImpl(mPath.smooth().shorted(), reporter)) {
-        Defined module = loadModule(runtime, defined, mPath, logger);
-        defined = Defined.union(defined, module);
+        Definitions module = loadModule(runtime, definitions, mPath, logger);
+        definitions = Definitions.union(definitions, module);
       }
       if (reporter.isProblemReported()) {
         reporter.printSummary();

@@ -7,7 +7,7 @@ import static org.smoothbuild.parse.deps.SortByDependencies.sortTypesByDependenc
 import java.util.List;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.parse.Defined;
+import org.smoothbuild.parse.Definitions;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -41,9 +41,9 @@ public class Ast {
     return builder.build();
   }
 
-  public Ast sortedByDependencies(Defined defined, Logger logger) {
+  public Ast sortedByDependencies(Definitions definitions, Logger logger) {
     return new Ast(
-        sortTypesByDependencies(defined.types(), this, logger),
-        sortFunctionsByDependencies(defined.functions(), this, logger));
+        sortTypesByDependencies(definitions.types(), this, logger),
+        sortFunctionsByDependencies(definitions.functions(), this, logger));
   }
 }

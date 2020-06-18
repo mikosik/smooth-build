@@ -32,12 +32,12 @@ import org.smoothbuild.util.UnescapingFailedException;
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
-  public static void findSemanticErrors(Defined defined, Ast ast, Logger logger) {
+  public static void findSemanticErrors(Definitions definitions, Ast ast, Logger logger) {
     unescapeStrings(logger, ast);
     parametersReferenceWithParentheses(logger, ast);
-    undefinedReferences(logger, defined, ast);
-    undefinedTypes(logger, defined, ast);
-    duplicateGlobalNames(logger, defined, ast);
+    undefinedReferences(logger, definitions, ast);
+    undefinedTypes(logger, definitions, ast);
+    duplicateGlobalNames(logger, definitions, ast);
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
     defaultParamBeforeNonDefault(logger, ast);
@@ -73,9 +73,9 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedReferences(Logger logger, Defined defined, Ast ast) {
+  private static void undefinedReferences(Logger logger, Definitions definitions, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
-        .addAll(defined.functions().keySet())
+        .addAll(definitions.functions().keySet())
         .addAll(map(ast.funcs(), NamedNode::name))
         .addAll(map(ast.structs(), structNode -> structNode.constructor().name()))
         .build();
@@ -90,7 +90,7 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedTypes(Logger logger, Defined defined, Ast ast) {
+  private static void undefinedTypes(Logger logger, Definitions definitions, Ast ast) {
     List<String> structNames = map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
@@ -122,12 +122,12 @@ public class FindSemanticErrors {
       private boolean isDefinedType(TypeNode type) {
         return isGenericTypeName(type.name())
             || structNames.contains(type.name())
-            || defined.types().containsKey(type.name());
+            || definitions.types().containsKey(type.name());
       }
     }.visitAst(ast);
   }
 
-  private static void duplicateGlobalNames(Logger logger, Defined defined, Ast ast) {
+  private static void duplicateGlobalNames(Logger logger, Definitions definitions, Ast ast) {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(map(ast.structs(), StructNode::constructor));
@@ -135,8 +135,8 @@ public class FindSemanticErrors {
     nameds.sort(comparing(n -> n.location().line()));
 
     for (Named named : nameds) {
-      logIfDuplicate(logger, defined.types(), named);
-      logIfDuplicate(logger, defined.functions(), named);
+      logIfDuplicate(logger, definitions.types(), named);
+      logIfDuplicate(logger, definitions.functions(), named);
     }
     Map<String, Named> checked = new HashMap<>();
     for (Named named : nameds) {

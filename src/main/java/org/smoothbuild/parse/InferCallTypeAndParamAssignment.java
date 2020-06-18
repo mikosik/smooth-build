@@ -21,7 +21,7 @@ import org.smoothbuild.parse.ast.ParameterizedNode;
 import com.google.common.collect.ImmutableMap;
 
 public class InferCallTypeAndParamAssignment {
-  public static void inferCallTypeAndParamAssignment(CallNode call, Defined imported,
+  public static void inferCallTypeAndParamAssignment(CallNode call, Definitions imported,
       ImmutableMap<String, ParameterizedNode> functions, LoggerImpl logger) {
     new Runnable() {
       @Override

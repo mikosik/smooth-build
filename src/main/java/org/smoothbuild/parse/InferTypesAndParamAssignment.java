@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class InferTypesAndParamAssignment {
-  public static void inferTypesAndParamAssignment(Defined imported, SRuntime runtime, Ast ast,
+  public static void inferTypesAndParamAssignment(Definitions imported, SRuntime runtime, Ast ast,
       LoggerImpl logger) {
     ObjectFactory objectFactory = runtime.objectFactory();
     ImmutableMap<String, ParameterizedNode> functionsMap = ast.createFunctionsAndConstructorsMap();
