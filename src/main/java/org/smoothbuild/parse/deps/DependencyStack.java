@@ -8,9 +8,9 @@ import java.util.Deque;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.parse.ast.Named;
 
-public class DependencyStack {
+public class DependencyStack<T extends Named> {
   private final String name;
-  private final Deque<StackElem> stack = new ArrayDeque<>();
+  private final Deque<StackElem<T>> stack = new ArrayDeque<>();
 
   public DependencyStack(String name) {
     this.name = name;
@@ -20,22 +20,23 @@ public class DependencyStack {
     return stack.isEmpty();
   }
 
-  public void push(StackElem element) {
+  public void push(StackElem<T> element) {
     stack.addLast(element);
   }
 
-  public StackElem pop() {
+  public StackElem<T> pop() {
     return stack.removeLast();
   }
 
-  public StackElem peek() {
+  public StackElem<T> peek() {
     return stack.getLast();
   }
 
   public Log createCycleError() {
     String lastMissing = peek().missing().name();
     int first = -1;
-    StackElem[] array = stack.toArray(new StackElem[0]);
+    @SuppressWarnings("unchecked")
+    StackElem<T>[] array = stack.toArray(new StackElem[0]);
     for (int i = array.length - 1; 0 <= i; i--) {
       if (array[i].name().equals(lastMissing)) {
         first = i;
@@ -47,7 +48,7 @@ public class DependencyStack {
     }
     StringBuilder builder = new StringBuilder();
     for (int i = first; i < array.length; i++) {
-      StackElem current = array[i];
+      StackElem<T> current = array[i];
       Named missing = current.missing();
       builder.append(missing.location());
       builder.append(": ");

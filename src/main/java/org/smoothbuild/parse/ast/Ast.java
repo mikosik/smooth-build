@@ -1,85 +1,49 @@
 package org.smoothbuild.parse.ast;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
+import static org.smoothbuild.parse.ast.StructNode.typeNameToConstructorName;
 import static org.smoothbuild.parse.deps.SortByDependencies.sortFunctionsByDependencies;
+import static org.smoothbuild.parse.deps.SortByDependencies.sortTypesByDependencies;
 
 import java.util.List;
-import java.util.Map;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.parse.Defined;
-import org.smoothbuild.parse.deps.SortByDependencies;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 public class Ast {
-  private ImmutableList<StructNode> structs;
-  private ImmutableList<FuncNode> funcs;
-  private final Map<String, StructNode> nameToStructMap;
-  private final Map<String, FuncNode> nameToFuncMap;
+  private final ImmutableList<StructNode> structs;
+  private final ImmutableList<FuncNode> funcs;
 
   public Ast(List<StructNode> structs, List<FuncNode> funcs) {
     this.structs = ImmutableList.copyOf(structs);
-    this.nameToStructMap = structs
-        .stream()
-        .collect(toMap(StructNode::name, identity(), (a, b) -> a));
     this.funcs = ImmutableList.copyOf(funcs);
-    this.nameToFuncMap = funcs
-        .stream()
-        .collect(toMap(FuncNode::name, identity(), (a, b) -> a));
   }
 
   public List<FuncNode> funcs() {
     return funcs;
   }
 
-  public boolean containsFunc(String name) {
-    return nameToFuncMap.containsKey(name);
-  }
-
-  public FuncNode func(String name) {
-    if (!nameToFuncMap.containsKey(name)) {
-      throw new IllegalStateException("Ast does not contain function '" + name + "'");
-    }
-    return nameToFuncMap.get(name);
-  }
-
   public List<StructNode> structs() {
     return structs;
   }
 
-  public boolean containsStruct(String name) {
-    return nameToStructMap.containsKey(name);
+  public ImmutableMap<String, ParameterizedNode> createFunctionsAndConstructorsMap() {
+    Builder<String, ParameterizedNode> builder = ImmutableMap.builder();
+    for (StructNode struct : structs) {
+      builder.put(typeNameToConstructorName(struct.name()), struct);
+    }
+    for (FuncNode func : funcs) {
+      builder.put(func.name(), func);
+    }
+    return builder.build();
   }
 
-  public StructNode struct(String name) {
-    if (!nameToStructMap.containsKey(name)) {
-      throw new IllegalStateException("Ast does not contain struct '" + name + "'");
-    }
-    return nameToStructMap.get(name);
-  }
-
-  public void sortFuncsByDependencies(Defined defined, Logger logger) {
-    List<String> sortedNames = sortFunctionsByDependencies(defined.functions(), this, logger);
-    if (sortedNames != null) {
-      this.funcs = sortedNames
-          .stream()
-          .map(nameToFuncMap::get)
-          .collect(toImmutableList());
-    }
-  }
-
-  public void sortTypesByDependencies(Defined defined, LoggerImpl logger) {
-    List<String> sortedNames = SortByDependencies
-        .sortTypesByDependencies(defined.types(), this, logger);
-    if (sortedNames != null) {
-      this.structs = sortedNames
-          .stream()
-          .map(nameToStructMap::get)
-          .collect(toImmutableList());
-    }
+  public Ast sortedByDependencies(Defined defined, Logger logger) {
+    return new Ast(
+        sortTypesByDependencies(defined.types(), this, logger),
+        sortFunctionsByDependencies(defined.functions(), this, logger));
   }
 }
