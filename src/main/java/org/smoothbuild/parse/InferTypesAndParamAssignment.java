@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.cli.console.LoggerImpl;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.SRuntime;
