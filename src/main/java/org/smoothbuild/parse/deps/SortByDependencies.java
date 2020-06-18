@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.runtime.Functions;
 import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
@@ -22,6 +23,8 @@ import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.Named;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
+
+import com.google.common.collect.ImmutableMap;
 
 public class SortByDependencies {
   public static List<String> sortByDependencies(Functions functions, Ast ast, Logger logger) {
@@ -44,10 +47,11 @@ public class SortByDependencies {
     return new StackElem(func.name(), dependencies);
   }
 
-  public static List<String> sortByDependencies(Set<String> declaredTypes, Ast ast, Logger logger) {
+  public static List<String> sortByDependencies(
+      ImmutableMap<String, Type> types, Ast ast, Logger logger) {
     List<StructNode> structs = ast.structs();
     return sortByDependencies("Type hierarchy", structs, SortByDependencies::structToStackElem,
-        declaredTypes::contains, logger);
+        types::containsKey, logger);
   }
 
   private static StackElem structToStackElem(StructNode structNode) {
