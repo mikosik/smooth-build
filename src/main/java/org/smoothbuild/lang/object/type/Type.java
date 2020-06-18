@@ -3,13 +3,15 @@ package org.smoothbuild.lang.object.type;
 import java.util.List;
 
 import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.parse.ast.Named;
 
 /**
  * Type in smooth language.
  */
-public interface Type {
+public interface Type extends Named {
   public Type superType();
 
+  @Override
   public String name();
 
   /**
