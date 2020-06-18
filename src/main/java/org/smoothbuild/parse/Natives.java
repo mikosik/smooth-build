@@ -64,7 +64,7 @@ public class Natives {
         for (int i = 0; i < params.size(); i++) {
           String declaredName = params.get(i).name();
           Parameter nativeParam = nativeParams[i + 1];
-          Type paramType = params.get(i).type().get(Type.class);
+          Type paramType = params.get(i).typeNode().get(Type.class);
           Class<?> paramJType = nativeParam.getType();
           if (!paramType.jType().equals(paramJType)) {
             logger.log(parseError(func, "Function '" + func.name()

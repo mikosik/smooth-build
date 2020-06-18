@@ -59,7 +59,7 @@ public class FunctionLoader {
       }
 
       private Parameter createParameter(ParamNode param) {
-        Type type = param.type().get(Type.class);
+        Type type = param.typeNode().get(Type.class);
         String name = param.name();
         Expression defaultValue = param.hasDefaultValue()
             ? createExpression(param.defaultValue())

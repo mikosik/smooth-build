@@ -3,14 +3,14 @@ package org.smoothbuild.parse.ast;
 import org.smoothbuild.lang.base.Location;
 
 public class FieldNode extends NamedNode {
-  private final TypeNode type;
+  private final TypeNode typeNode;
 
-  public FieldNode(TypeNode type, String name, Location location) {
+  public FieldNode(TypeNode typeNode, String name, Location location) {
     super(name, location);
-    this.type = type;
+    this.typeNode = typeNode;
   }
 
-  public TypeNode type() {
-    return type;
+  public TypeNode typeNode() {
+    return typeNode;
   }
 }

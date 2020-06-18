@@ -36,7 +36,7 @@ public class AstVisitor {
   }
 
   public void visitField(int index, FieldNode field) {
-    visitType(field.type());
+    visitType(field.typeNode());
   }
 
   public void visitFuncs(List<FuncNode> funcs) {
@@ -45,7 +45,7 @@ public class AstVisitor {
 
   public void visitFunc(FuncNode func) {
     if (func.hasType()) {
-      visitType(func.type());
+      visitType(func.typeNode());
     }
     visitParams(func.params());
     if (!func.isNative()) {
@@ -58,7 +58,7 @@ public class AstVisitor {
   }
 
   public void visitParam(int index, ParamNode param) {
-    visitType(param.type());
+    visitType(param.typeNode());
     if (param.hasDefaultValue()) {
       visitExpr(param.defaultValue());
     }
