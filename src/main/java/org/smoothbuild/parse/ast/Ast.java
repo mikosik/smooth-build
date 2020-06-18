@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<FuncNode> funcs;
+  private ImmutableMap<String, ParameterizedNode> functionsAndConstructorsMap;
 
   public Ast(List<StructNode> structs, List<FuncNode> funcs) {
     this.structs = ImmutableList.copyOf(structs);
@@ -30,7 +31,14 @@ public class Ast {
     return structs;
   }
 
-  public ImmutableMap<String, ParameterizedNode> createFunctionsAndConstructorsMap() {
+  public ImmutableMap<String, ParameterizedNode> functionsAndConstructorsMap() {
+    if (functionsAndConstructorsMap == null) {
+      functionsAndConstructorsMap = createFunctionsAndConstructorsMap();
+    }
+    return functionsAndConstructorsMap;
+  }
+
+  private ImmutableMap<String, ParameterizedNode> createFunctionsAndConstructorsMap() {
     Builder<String, ParameterizedNode> builder = ImmutableMap.builder();
     for (StructNode struct : structs) {
       builder.put(typeNameToConstructorName(struct.name()), struct);

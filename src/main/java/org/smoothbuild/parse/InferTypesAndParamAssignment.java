@@ -27,20 +27,17 @@ import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.parse.ast.ParameterizedNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class InferTypesAndParamAssignment {
   public static void inferTypesAndParamAssignment(Definitions imported, SRuntime runtime, Ast ast,
       LoggerImpl logger) {
     ObjectFactory objectFactory = runtime.objectFactory();
-    ImmutableMap<String, ParameterizedNode> functionsMap = ast.createFunctionsAndConstructorsMap();
     new AstVisitor() {
       Scope<Type> scope;
 
@@ -221,7 +218,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypeAndParamAssignment(call, imported, functionsMap, logger);
+        inferCallTypeAndParamAssignment(call, imported, ast.functionsAndConstructorsMap(), logger);
       }
 
       @Override
