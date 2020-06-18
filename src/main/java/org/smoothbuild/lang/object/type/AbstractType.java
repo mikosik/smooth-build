@@ -5,6 +5,7 @@ import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 
 import java.util.List;
 
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
@@ -29,6 +30,12 @@ public abstract class AbstractType implements Type {
   @Override
   public String name() {
     return name;
+  }
+
+  @Override
+  public Location location() {
+    // TODO remove this once refactoring is completed
+    return Location.unknownLocation();
   }
 
   @Override

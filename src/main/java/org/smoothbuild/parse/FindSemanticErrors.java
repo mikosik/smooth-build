@@ -15,9 +15,6 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.CallNode;
@@ -35,14 +32,12 @@ import org.smoothbuild.util.UnescapingFailedException;
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
-  public static void findSemanticErrors(SRuntime runtime, Ast ast,
-      Logger logger) {
-    Functions functions = runtime.functions();
+  public static void findSemanticErrors(Defined defined, Ast ast, Logger logger) {
     unescapeStrings(logger, ast);
     parametersReferenceWithParentheses(logger, ast);
-    undefinedReferences(logger, functions, ast);
-    undefinedTypes(logger, runtime.objectFactory(), ast);
-    duplicateGlobalNames(logger, runtime, ast);
+    undefinedReferences(logger, defined, ast);
+    undefinedTypes(logger, defined, ast);
+    duplicateGlobalNames(logger, defined, ast);
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
     defaultParamBeforeNonDefault(logger, ast);
@@ -78,9 +73,9 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedReferences(Logger logger, Functions functions, Ast ast) {
+  private static void undefinedReferences(Logger logger, Defined defined, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
-        .addAll(functions.names())
+        .addAll(defined.functions().keySet())
         .addAll(map(ast.funcs(), NamedNode::name))
         .addAll(map(ast.structs(), structNode -> structNode.constructor().name()))
         .build();
@@ -95,7 +90,7 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedTypes(Logger logger, ObjectFactory objectFactory, Ast ast) {
+  private static void undefinedTypes(Logger logger, Defined defined, Ast ast) {
     List<String> structNames = map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
@@ -127,33 +122,39 @@ public class FindSemanticErrors {
       private boolean isDefinedType(TypeNode type) {
         return isGenericTypeName(type.name())
             || structNames.contains(type.name())
-            || objectFactory.containsType(type.name());
+            || defined.types().containsKey(type.name());
       }
     }.visitAst(ast);
   }
 
-  private static void duplicateGlobalNames(Logger logger, SRuntime runtime, Ast ast) {
-    Functions functions = runtime.functions();
-    ObjectFactory objectFactory = runtime.objectFactory();
-    Map<String, Named> defined = new HashMap<>(functions.nameToFunctionMap());
+  private static void duplicateGlobalNames(Logger logger, Defined defined, Ast ast) {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(map(ast.structs(), StructNode::constructor));
     nameds.addAll(ast.funcs());
     nameds.sort(comparing(n -> n.location().line()));
+
     for (Named named : nameds) {
-      String name = named.name();
-      if (defined.containsKey(name)) {
-        Named otherDefinition = defined.get(name);
-        String atLocation = " at " + otherDefinition.location();
-        logger.log(alreadyDefinedError(named, name, atLocation));
-      } else {
-        if (objectFactory.containsType(name)) {
-          logger.log(alreadyDefinedError(named, name, ""));
-        }  else {
-          defined.put(name, named);
-        }
-      }
+      logIfDuplicate(logger, defined.types(), named);
+      logIfDuplicate(logger, defined.functions(), named);
+    }
+    Map<String, Named> checked = new HashMap<>();
+    for (Named named : nameds) {
+      logIfDuplicate(logger, checked, named);
+      checked.put(named.name(), named);
+    }
+  }
+
+  private static void logIfDuplicate(
+      Logger logger, Map<String, ? extends Named> types, Named named) {
+    String name = named.name();
+    if (types.containsKey(name)) {
+      Named otherDefinition = types.get(name);
+      Location location = otherDefinition.location();
+      String atLocation = location.equals(Location.unknownLocation())
+          ? ""
+          : " at " + location;
+      logger.log(alreadyDefinedError(named, name, atLocation));
     }
   }
 

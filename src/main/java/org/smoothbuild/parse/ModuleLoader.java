@@ -40,7 +40,7 @@ public class ModuleLoader {
       return Defined.empty();
     }
     Ast ast = fromParseTree(modulePath, moduleContext);
-    findSemanticErrors(runtime, ast, logger);
+    findSemanticErrors(defined, ast, logger);
     if (logger.hasProblems()) {
       return Defined.empty();
     }
