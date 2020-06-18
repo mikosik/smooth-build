@@ -10,11 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.LoggerImpl;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ParameterizedNode;
@@ -22,7 +21,7 @@ import org.smoothbuild.parse.ast.ParameterizedNode;
 import com.google.common.collect.ImmutableMap;
 
 public class InferCallTypeAndParamAssignment {
-  public static void inferCallTypeAndParamAssignment(CallNode call, SRuntime runtime,
+  public static void inferCallTypeAndParamAssignment(CallNode call, Defined imported,
       ImmutableMap<String, ParameterizedNode> functions, LoggerImpl logger) {
     new Runnable() {
       @Override
@@ -107,9 +106,9 @@ public class InferCallTypeAndParamAssignment {
 
       private List<? extends ParameterInfo> functionParameters() {
         String name = call.name();
-        Functions runtimeFunctions = runtime.functions();
-        if (runtimeFunctions.contains(name)) {
-          return runtimeFunctions.get(name).signature().parameters();
+        Function function = imported.functions().get(name);
+        if (function != null) {
+          return function.signature().parameters();
         }
         ParameterizedNode node = functions.get(name);
         if (node != null) {
@@ -152,9 +151,9 @@ public class InferCallTypeAndParamAssignment {
 
       private Type functionType() {
         String name = call.name();
-        Functions runtimeFunctions = runtime.functions();
-        if (runtimeFunctions.contains(name)) {
-          return runtimeFunctions.get(name).signature().type();
+        Function function = imported.functions().get(name);
+        if (function != null) {
+          return function.signature().type();
         }
         ParameterizedNode node = functions.get(name);
         if (node != null) {
