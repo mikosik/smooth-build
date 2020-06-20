@@ -20,7 +20,8 @@ public class Node {
 
   public <T> T get(Class<T> clazz) {
     if (!map().containsKey(clazz)) {
-      throw new NoSuchElementException(clazz.getName());
+      throw new NoSuchElementException("Cannot find attribute of type" + clazz.getName()
+          + " in AST Node " + this.getClass().getCanonicalName() + " " + toString());
     }
     @SuppressWarnings("unchecked")
     T result = (T) map().get(clazz);
