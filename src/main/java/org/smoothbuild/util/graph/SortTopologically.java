@@ -226,5 +226,12 @@ public class SortTopologically {
   public static record TopologicalSortingResult<K, N, E>(
       List<GraphNode<K, N, E>>sorted,
       List<GraphEdge<E, K>> cycle) {
+    public ImmutableList<N> valuesReversed() {
+      return sorted()
+          .stream()
+          .map(GraphNode::value)
+          .collect(toImmutableList())
+          .reverse();
+    }
   }
 }
