@@ -37,7 +37,7 @@ public class GenericTest extends AcceptanceTestCase {
     createUserModule(
         "  A testIdentity(A v) = v;                                                ",
         "  [A] pair(A a1, A a2) = [ a1, a2 ];                                      ",
-        "  result = pair(a1=testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));  ");
+        "  result = pair(a1 = testIdentity(v = 'aa'), a2 = testIdentity(v = 'bb'));  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
