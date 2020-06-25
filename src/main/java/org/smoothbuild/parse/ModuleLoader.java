@@ -56,8 +56,8 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    ImmutableMap<String, Function> declaredFunctions = loadFunctions(runtime, sortedAst);
-    ImmutableMap<String, Type> declaredTypes = sortedAst.structs().stream()
+    var declaredFunctions = loadFunctions(runtime, sortedAst);
+    var declaredTypes = sortedAst.structs().stream()
         .map(n -> n.get(Type.class))
         .collect(toImmutableMap(Type::name, t -> t));
     return new Definitions(declaredTypes, declaredFunctions);
