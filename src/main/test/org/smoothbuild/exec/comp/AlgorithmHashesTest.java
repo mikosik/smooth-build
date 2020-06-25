@@ -8,6 +8,7 @@ import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.stringLiteralAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -33,9 +34,10 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(convertAlgorithmHash(stringType()));
     hashes.add(constructorCallAlgorithmHash(constructor));
     hashes.add(accessorCallAlgorithmHash(accessor));
+    hashes.add(stringLiteralAlgorithmHash("abc"));
 
     assertThat(hashes.size())
-        .isEqualTo(5);
+        .isEqualTo(6);
   }
 
   @Test
@@ -69,6 +71,12 @@ public class AlgorithmHashesTest extends TestingContext {
 
     assertThat(accessorCallAlgorithmHash(accessor))
         .isNotEqualTo(accessorCallAlgorithmHash(accessor2));
+  }
+
+  @Test
+  public void string_literal_algorithm_has_different_hash_for_different_strings() {
+    assertThat(stringLiteralAlgorithmHash("abc"))
+        .isNotEqualTo(stringLiteralAlgorithmHash("def"));
   }
 
   private static Accessor accessor(String fieldName) {

@@ -29,6 +29,10 @@ public class AlgorithmHashes {
     return hash(4, Hash.of(accessor.fieldName()));
   }
 
+  public static Hash stringLiteralAlgorithmHash(String string) {
+    return hash(5, Hash.of(string));
+  }
+
   private static Hash hash(int id, Hash hash) {
     return Hash.of(Hash.of(id), hash);
   }

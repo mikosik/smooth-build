@@ -28,6 +28,7 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.GenericArrayType;
 import org.smoothbuild.lang.object.type.GenericType;
+import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.lang.object.type.TypeNames;
@@ -131,7 +132,7 @@ public class ObjectFactory {
     return objectDb.nothingType();
   }
 
-  public ConcreteType stringType() {
+  public StringType stringType() {
     return objectDb.stringType();
   }
 

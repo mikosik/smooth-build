@@ -122,7 +122,7 @@ public class BuildCommandTest {
     @Nested
     class literal_matcher extends AcceptanceTestCase {
       private static final String LITERAL_TASK_HEADER =
-          "'myLiteral'                              build.smooth:1                 const";
+          "'myLiteral'                              build.smooth:1";
 
       @Test
       public void shows_literals_when_enabled() throws IOException {
