@@ -20,7 +20,6 @@ import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
@@ -30,7 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleLoader {
-  public static Definitions loadModule(SRuntime runtime, Definitions imported,
+  public static Definitions loadModule(ObjectFactory objectFactory, Definitions imported,
       ModulePath modulePath, LoggerImpl logger) {
     Natives natives = findNatives(modulePath.nativ().path(), logger);
     if (logger.hasProblems()) {
@@ -49,7 +48,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    inferTypesAndParamAssignment(sortedAst, imported, runtime.objectFactory(), logger);
+    inferTypesAndParamAssignment(sortedAst, imported, objectFactory, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
@@ -57,7 +56,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    var declaredFunctions = loadFunctions(imported, runtime, sortedAst, runtime.objectFactory());
+    var declaredFunctions = loadFunctions(imported, sortedAst, objectFactory);
     var declaredTypes = sortedAst.structs().stream()
         .map(n -> n.get(Type.class))
         .collect(toImmutableMap(Type::name, t -> t));
@@ -65,16 +64,14 @@ public class ModuleLoader {
   }
 
   private static ImmutableMap<String, Function> loadFunctions(
-      Definitions imported, SRuntime runtime, Ast ast, ObjectFactory objectFactory) {
+      Definitions imported, Ast ast, ObjectFactory objectFactory) {
     var localFunctions = new HashMap<String, Function>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
-      runtime.functions().add(constructor);
     }
     for (FuncNode func : ast.funcs()) {
       Function function = loadFunction(func, imported.functions(), localFunctions, objectFactory);
-      runtime.functions().add(function);
       localFunctions.put(function.name(), function);
     }
     return ImmutableMap.copyOf(localFunctions);

@@ -9,18 +9,17 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.runtime.Functions;
-import org.smoothbuild.lang.runtime.SRuntime;
+import org.smoothbuild.parse.Definitions;
 
 public class FindFunctions {
-  public static Optional<List<Function>> findFunctions(Reporter reporter, SRuntime runtime,
+  public static Optional<List<Function>> findFunctions(Reporter reporter, Definitions definitions,
       List<String> names) {
-    Functions functions = runtime.functions();
+    var functions = definitions.functions();
     List<Function> functionsToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      if (functions.contains(name)) {
-        Function function = functions.get(name);
+      Function function = functions.get(name);
+      if (function != null) {
         if (function.canBeCalledArgless()) {
           functionsToRun.add(function);
         } else {
