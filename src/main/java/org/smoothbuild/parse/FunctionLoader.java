@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -16,10 +17,10 @@ import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -35,9 +36,14 @@ import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.parse.expr.StringLiteralExpression;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class FunctionLoader {
-  public static Function loadFunction(SRuntime runtime, FuncNode func) {
+  public static Function loadFunction(
+      FuncNode func,
+      ImmutableMap<String, Function> importedFunctions,
+      HashMap<String, Function> localFunctions,
+      ObjectFactory objectFactory) {
     return new Supplier<Function>() {
       @Override
       public Function get() {
@@ -97,7 +103,10 @@ public class FunctionLoader {
       }
 
       private Expression createCall(CallNode call) {
-        Function function = runtime.functions().get(call.name());
+        Function function = localFunctions.get(call.name());
+        if (function == null) {
+          function = importedFunctions.get(call.name());
+        }
         List<Expression> argExpressions = createArgumentExpressions(call, function);
         return function.createCallExpression(argExpressions, call.location());
       }
@@ -119,7 +128,7 @@ public class FunctionLoader {
 
       private Expression createStringLiteral(StringNode string) {
         return new StringLiteralExpression(
-            runtime.objectFactory().stringType(),
+            objectFactory.stringType(),
             string.get(String.class),
             string.location());
       }
