@@ -66,16 +66,7 @@ hash(
 ```
 arrayComputationHash =
 hash(
-  hash(0x01),
-)
-```
-
-### Identity computation
-
-```
-identityComputationHash =
-hash(
-  hash(0x02),
+  hash(0x00),
 )
 ```
 
@@ -84,7 +75,7 @@ hash(
 ```
 nativeCallComputation =
 hash(
-  hash(0x03),
+  hash(0x01),
   nativeFunctionHash,
 )
 ```
@@ -104,7 +95,7 @@ hash(
 ```
 convertComputationHash =
 hash(
-  hash(0x04),
+  hash(0x02),
   destinationTypeHash,
 )
 ```
@@ -114,7 +105,7 @@ hash(
 ```
 constructorCallComputationHash =
 hash(
-  hash(0x05),
+  hash(0x03),
   constructedInstanceTypeHash,
 )
 ```
@@ -124,8 +115,18 @@ hash(
 ```
 accessorCallComputationHash =
 hash(
-  hash(0x06),
+  hash(0x04),
   hash(fieldName),
+)
+```
+
+### String Literal Computation
+
+```
+StringLiteralComputationHash =
+hash(
+  hash(0x05),
+  hash(string),
 )
 ```
 
