@@ -16,7 +16,6 @@ import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
@@ -119,8 +118,10 @@ public class FunctionLoader {
       }
 
       private Expression createStringLiteral(StringNode string) {
-        SString object = runtime.objectFactory().string(string.get(String.class));
-        return new StringLiteralExpression(object, string.location());
+        return new StringLiteralExpression(
+            runtime.objectFactory().stringType(),
+            string.get(String.class),
+            string.location());
       }
 
       private Expression createArray(ArrayNode array) {
