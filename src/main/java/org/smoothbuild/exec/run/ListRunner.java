@@ -19,9 +19,9 @@ public class ListRunner {
   }
 
   public int run() {
-    return runtimeController.setUpRuntimeAndRun(runtime -> runtime
+    return runtimeController.setUpRuntimeAndRun(defintions -> defintions
         .functions()
-        .all()
+        .values()
         .stream()
         .filter(f -> f.location().module().space().equals(USER))
         .filter(f -> f.parameters().size() == 0)

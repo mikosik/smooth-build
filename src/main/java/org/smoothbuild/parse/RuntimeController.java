@@ -18,36 +18,34 @@ import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.SRuntime;
 
 import com.google.common.collect.ImmutableMap;
 
 public class RuntimeController {
-  private final SRuntime runtime;
+  private final ObjectFactory objectFactory;
   private final InstallationPaths installationPaths;
   private final ProjectPaths projectPaths;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(SRuntime runtime, InstallationPaths installationPaths,
+  public RuntimeController(ObjectFactory objectFactory, InstallationPaths installationPaths,
       ProjectPaths projectPaths, Reporter reporter) {
-    this.runtime = runtime;
+    this.objectFactory = objectFactory;
     this.installationPaths = installationPaths;
     this.projectPaths = projectPaths;
     this.reporter = reporter;
   }
 
-  public int setUpRuntimeAndRun(Consumer<SRuntime> runner) {
+  public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    ObjectFactory objectFactory = runtime.objectFactory();
     ImmutableMap<String, Type> basicTypes = Types.BASIC_TYPES.stream()
         .map(t -> objectFactory.getType(t.name()))
         .collect(toImmutableMap(Type::name, t -> t));
     Definitions definitions = new Definitions(basicTypes, ImmutableMap.of());
     for (ModulePath mPath : concat(installationPaths.slibModules(), projectPaths.userModule())) {
       try (LoggerImpl logger = new LoggerImpl(mPath.smooth().shorted(), reporter)) {
-        Definitions module = loadModule(runtime, definitions, mPath, logger);
+        Definitions module = loadModule(objectFactory, definitions, mPath, logger);
         definitions = Definitions.union(definitions, module);
       }
       if (reporter.isProblemReported()) {
@@ -55,7 +53,7 @@ public class RuntimeController {
         return EXIT_CODE_ERROR;
       }
     }
-    runner.accept(runtime);
+    runner.accept(definitions);
     reporter.printSummary();
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }

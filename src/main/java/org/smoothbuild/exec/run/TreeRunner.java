@@ -13,7 +13,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.runtime.SRuntime;
+import org.smoothbuild.parse.Definitions;
 import org.smoothbuild.parse.RuntimeController;
 
 public class TreeRunner {
@@ -35,7 +35,8 @@ public class TreeRunner {
       console.errors(errors);
       return EXIT_CODE_ERROR;
     }
-    return runtimeController.setUpRuntimeAndRun((runtime) -> treeExecutor.execute(runtime, names));
+    return runtimeController.setUpRuntimeAndRun(
+        (definitions) -> treeExecutor.execute(definitions, names));
   }
 
   public static class TreeExecutor {
@@ -46,9 +47,9 @@ public class TreeRunner {
       this.reporter = reporter;
     }
 
-    public void execute(SRuntime runtime, List<String> names) {
+    public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Generating tree");
-      findFunctions(reporter, runtime, names)
+      findFunctions(reporter, definitions, names)
           .ifPresent(functions -> functions.forEach(f -> print(treeOf(f))));
     }
 

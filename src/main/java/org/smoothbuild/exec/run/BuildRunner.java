@@ -18,7 +18,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.run.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.runtime.SRuntime;
+import org.smoothbuild.parse.Definitions;
 import org.smoothbuild.parse.RuntimeController;
 
 public class BuildRunner {
@@ -53,7 +53,8 @@ public class BuildRunner {
       }
     }
 
-    return runtimeController.setUpRuntimeAndRun((runtime) -> buildExecutor.execute(runtime, names));
+    return runtimeController.setUpRuntimeAndRun(
+        (definitions) -> buildExecutor.execute(definitions, names));
   }
 
   public static class BuildExecutor {
@@ -66,9 +67,9 @@ public class BuildRunner {
       this.reporter = reporter;
     }
 
-    public void execute(SRuntime runtime, List<String> names) {
+    public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Building");
-      findFunctions(reporter, runtime, names)
+      findFunctions(reporter, definitions, names)
           .ifPresent(artifactBuilder::buildArtifacts);
     }
   }
