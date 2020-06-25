@@ -15,7 +15,6 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.runtime.SRuntime;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -35,9 +34,8 @@ import org.smoothbuild.parse.ast.TypeNode;
 import com.google.common.collect.ImmutableList;
 
 public class InferTypesAndParamAssignment {
-  public static void inferTypesAndParamAssignment(Definitions imported, SRuntime runtime, Ast ast,
-      LoggerImpl logger) {
-    ObjectFactory objectFactory = runtime.objectFactory();
+  public static void inferTypesAndParamAssignment(Ast ast, Definitions imported,
+      ObjectFactory objectFactory, LoggerImpl logger) {
     new AstVisitor() {
       Scope<Type> scope;
 
