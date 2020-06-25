@@ -1,5 +1,6 @@
 package org.smoothbuild.parse.ast;
 
+import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.parse.ast.StructNode.typeNameToConstructorName;
 import static org.smoothbuild.util.Lists.map;
@@ -12,7 +13,6 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.parse.AstVisitor;
-import org.smoothbuild.parse.Definitions;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
@@ -20,7 +20,6 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.ImmutableSet;
 
 public class Ast {
   private final ImmutableList<StructNode> structs;
@@ -58,13 +57,13 @@ public class Ast {
     return builder.build();
   }
 
-  public Ast sortedByDependencies(Definitions definitions, Logger logger) {
-    var sortedTypes = sortTypesByDependencies(definitions.types().keySet());
+  public Ast sortedByDependencies(Logger logger) {
+    var sortedTypes = sortTypesByDependencies();
     if (sortedTypes.sorted() == null) {
       reportCycle(logger,"Type hierarchy" , sortedTypes.cycle());
       return null;
     }
-    var sortedFunctions = sortFunctionsByDependencies(definitions.functions().keySet());
+    var sortedFunctions = sortFunctionsByDependencies();
     if (sortedFunctions.sorted() == null) {
       reportCycle(logger, "Function call graph", sortedFunctions.cycle());
       return null;
@@ -72,25 +71,22 @@ public class Ast {
     return new Ast(sortedTypes.valuesReversed(), sortedFunctions.valuesReversed());
   }
 
-  private TopologicalSortingResult<String, FuncNode, Location> sortFunctionsByDependencies(
-      ImmutableSet<String> importedFunctionNames) {
-    List<String> constructors = map(structs(), structNode -> structNode.constructor().name());
-    var namesToSkip = ImmutableSet.<String>builder()
-        .addAll(constructors)
-        .addAll(importedFunctionNames)
-        .build();
-    var nodes = map(funcs(), func -> funcNodeToGraphNode(func, namesToSkip));
+  private TopologicalSortingResult<String, FuncNode, Location> sortFunctionsByDependencies() {
+    Set<String> funcNames = funcs.stream()
+        .map(NamedNode::name)
+        .collect(toSet());
+    var nodes = map(funcs(), func -> funcNodeToGraphNode(func, funcNames));
     return sortTopologically(nodes);
   }
 
   private static GraphNode<String, FuncNode, Location> funcNodeToGraphNode(FuncNode func,
-      ImmutableSet<String> importedFunctionNames) {
+      Set<String> funcNames) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!importedFunctionNames.contains(call.name())) {
+        if (funcNames.contains(call.name())) {
           dependencies.add(new GraphEdge<>(call.location(), call.name()));
         }
       }
@@ -98,14 +94,16 @@ public class Ast {
     return new GraphNode<>(func.name(), func, ImmutableList.copyOf(dependencies));
   }
 
-  private TopologicalSortingResult<String, StructNode, Location> sortTypesByDependencies(
-      ImmutableSet<String> importedTypeNames) {
-    var nodes = map(structs(), struct -> structNodeToGraphNode(struct, importedTypeNames));
+  private TopologicalSortingResult<String, StructNode, Location> sortTypesByDependencies() {
+    Set<String> structNames = structs.stream()
+        .map(NamedNode::name)
+        .collect(toSet());
+    var nodes = map(structs(), struct -> structNodeToGraphNode(struct, structNames));
     return sortTopologically(nodes);
   }
 
   private static GraphNode<String, StructNode, Location> structNodeToGraphNode(
-      StructNode structNode, ImmutableSet<String> importedTypeNames) {
+      StructNode struct, Set<String> funcNames) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
@@ -118,13 +116,13 @@ public class Ast {
         if (type.isArray()) {
           addToDependencies(((ArrayTypeNode) type).elementType());
         } else {
-          if (!importedTypeNames.contains(type.name())) {
+          if (funcNames.contains(type.name())) {
             dependencies.add(new GraphEdge<>(type.location(), type.name()));
           }
         }
       }
-    }.visitStruct(structNode);
-    return new GraphNode<>(structNode.name(), structNode, ImmutableList.copyOf(dependencies));
+    }.visitStruct(struct);
+    return new GraphNode<>(struct.name(), struct, ImmutableList.copyOf(dependencies));
   }
 
   private static void reportCycle(Logger logger, String name,
