@@ -79,10 +79,10 @@ public class Computer {
   }
 
   private Hash computationHash(Algorithm algorithm, Input input) {
-    return computationHash(algorithm, input, sandboxHash);
+    return computationHash(sandboxHash, algorithm, input);
   }
 
-  public static Hash computationHash(Algorithm algorithm, Input input, Hash sandboxHash) {
+  public static Hash computationHash(Hash sandboxHash, Algorithm algorithm, Input input) {
     return Hash.of(sandboxHash, algorithm.hash(), input.hash());
   }
 }
