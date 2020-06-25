@@ -44,7 +44,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    Ast sortedAst = ast.sortedByDependencies(imported, logger);
+    Ast sortedAst = ast.sortedByDependencies(logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
