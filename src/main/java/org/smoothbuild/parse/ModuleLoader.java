@@ -48,7 +48,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    inferTypesAndParamAssignment(imported, runtime, sortedAst, logger);
+    inferTypesAndParamAssignment(sortedAst, imported, runtime.objectFactory(), logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
