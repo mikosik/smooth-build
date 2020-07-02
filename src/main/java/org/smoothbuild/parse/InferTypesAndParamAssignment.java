@@ -73,9 +73,7 @@ public class InferTypesAndParamAssignment {
 
         scope = scope();
         func.params().forEach(p -> scope.add(p.name(), p.get(Type.class)));
-        if (!func.isNative()) {
-          visitExpr(func.expr());
-        }
+        func.visitExpr(this);
         scope = null;
 
         Type type = funcType(func);
