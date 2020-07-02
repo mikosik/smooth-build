@@ -23,7 +23,6 @@ import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.Node;
 import org.smoothbuild.parse.ast.StructNode;
 
 import com.google.common.collect.ImmutableList;
@@ -59,7 +58,7 @@ public class ModuleLoader {
     }
     var declaredFunctions = loadFunctions(imported, sortedAst, objectFactory);
     var declaredTypes = sortedAst.structs().stream()
-        .map(Node::type)
+        .map(structNode -> structNode.type().get())
         .collect(toImmutableMap(Type::name, t -> t));
     return new Definitions(declaredTypes, declaredFunctions);
   }
@@ -83,11 +82,11 @@ public class ModuleLoader {
     List<FieldNode> fields = struct.fields();
     for (int i = 0; i < fields.size(); i++) {
       FieldNode field = fields.get(i);
-      builder.add(new Parameter(i, field.type(), field.name(), null));
+      builder.add(new Parameter(i, field.type().get(), field.name(), null));
     }
     ImmutableList<Parameter> parameters = builder.build();
     Signature signature =
-        new Signature(struct.type(), struct.constructor().name(), parameters);
+        new Signature(struct.type().get(), struct.constructor().name(), parameters);
     return new Constructor(signature, struct.location());
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.Type;
@@ -10,7 +11,7 @@ import org.smoothbuild.lang.object.type.Type;
 public class Node {
   private final Location location;
   private Map<Class<?>, Object> map;
-  private Type type;
+  private Optional<Type> type;
 
   public Node(Location location) {
     this.location = location;
@@ -20,11 +21,15 @@ public class Node {
     return location;
   }
 
-  public Type type() {
+  public Optional<Type> type() {
     return type;
   }
 
   public void setType(Type type) {
+    this.type = Optional.of(type);
+  }
+
+  public void setType(Optional<Type> type) {
     this.type = type;
   }
 

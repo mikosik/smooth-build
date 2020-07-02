@@ -1,14 +1,15 @@
 package org.smoothbuild.parse;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
-import static org.smoothbuild.lang.object.type.MissingType.MISSING_TYPE;
 import static org.smoothbuild.parse.ParseError.parseError;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Function;
@@ -27,7 +28,7 @@ public class InferCallTypeAndParamAssignment {
     new Runnable() {
       @Override
       public void run() {
-        call.setType(MISSING_TYPE);
+        call.setType(empty());
         List<? extends ParameterInfo> parameters = functionParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
         if (logger.hasProblems()) {
@@ -89,7 +90,7 @@ public class InferCallTypeAndParamAssignment {
                   inCallToPrefix(call) + "Parameter " + param.q() + " must be specified."));
             }
           } else {
-            Type argType = arg.type();
+            Type argType = arg.type().get();
             if (!param.type().isParamAssignableFrom(argType)) {
               logger.log(parseError(arg, inCallToPrefix(call)
                   + "Cannot assign argument of type " + argType.q() + " to parameter '"
@@ -124,7 +125,7 @@ public class InferCallTypeAndParamAssignment {
         for (int i = 0; i < parameters.size(); i++) {
           if (parameters.get(i).type().isGeneric()) {
             genericTypes.add(parameters.get(i).type());
-            actualTypes.add(assignedArgs.get(i).type());
+            actualTypes.add(assignedArgs.get(i).type().get());
           }
         }
         if (actualTypes.contains(null)) {
@@ -140,20 +141,15 @@ public class InferCallTypeAndParamAssignment {
         }
       }
 
-      private Type callType(GenericTypeMap<Type> actualTypeMap) {
-        Type functionType = functionType();
-        if (functionType == MISSING_TYPE) {
-          return MISSING_TYPE;
-        } else {
-          return actualTypeMap.applyTo(functionType);
-        }
+      private Optional<Type> callType(GenericTypeMap<Type> actualTypeMap) {
+        return functionType().map(actualTypeMap::applyTo);
       }
 
-      private Type functionType() {
+      private Optional<Type> functionType() {
         String name = call.name();
         Function function = imported.functions().get(name);
         if (function != null) {
-          return function.signature().type();
+          return Optional.of(function.signature().type());
         }
         ParameterizedNode node = functions.get(name);
         if (node != null) {
