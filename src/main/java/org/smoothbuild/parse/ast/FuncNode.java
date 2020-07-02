@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.parse.AstVisitor;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,6 +20,12 @@ public class FuncNode extends ParameterizedNode {
     this.expr = expr;
   }
 
+  public void visitType(AstVisitor astVisitor) {
+    if (typeNode != null) {
+      astVisitor.visitType(typeNode);
+    }
+  }
+
   public boolean hasType() {
     return typeNode != null;
   }
@@ -33,6 +40,12 @@ public class FuncNode extends ParameterizedNode {
 
   public boolean isNative() {
     return expr == null;
+  }
+
+  public void visitExpr(AstVisitor astVisitor) {
+    if (expr != null) {
+      astVisitor.visitExpr(expr);
+    }
   }
 
   public ExprNode expr() {

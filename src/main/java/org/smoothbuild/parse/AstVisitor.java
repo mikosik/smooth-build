@@ -44,13 +44,9 @@ public class AstVisitor {
   }
 
   public void visitFunc(FuncNode func) {
-    if (func.hasType()) {
-      visitType(func.typeNode());
-    }
+    func.visitType(this);
     visitParams(func.params());
-    if (!func.isNative()) {
-      visitExpr(func.expr());
-    }
+    func.visitExpr(this);
   }
 
   public void visitParams(List<ParamNode> params) {
