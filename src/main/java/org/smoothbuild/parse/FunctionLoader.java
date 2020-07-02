@@ -47,16 +47,32 @@ public class FunctionLoader {
     return new Supplier<Function>() {
       @Override
       public Function get() {
+        return switch (func.definitionKind()) {
+          case SOURCE -> definedFunction();
+          case NATIVE -> nativeFunction();
+          case GENERATED -> throw new RuntimeException(
+              "FuncNode with illegal kind. Only constructors are generated.");
+        };
+      }
+
+      private DefinedFunction definedFunction() {
+        return new DefinedFunction(
+            createSignature(),
+            func.location(),
+            createExpression(func.expr()));
+      }
+
+      private Function nativeFunction() {
+        Native nativ = func.get(Native.class);
+        Signature signature = createSignature();
+        Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
+        boolean isCacheable = nativ.cacheable();
+        return new NativeFunction(nativ, signature, func.location(), isCacheable, hash);
+      }
+
+      private Signature createSignature() {
         List<Parameter> parameters = map(func.params(), this::createParameter);
-        Signature signature = signature(func.type().get(), func.name(), parameters);
-        if (func.isNative()) {
-          Native nativ = func.get(Native.class);
-          Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
-          boolean isCacheable = nativ.cacheable();
-          return new NativeFunction(nativ, signature, func.location(), isCacheable, hash);
-        } else {
-          return new DefinedFunction(signature, func.location(), createExpression(func.expr()));
-        }
+        return signature(func.type().get(), func.name(), parameters);
       }
 
       private Hash createNativeFunctionHash(Hash jarHash, Signature signature) {

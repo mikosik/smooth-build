@@ -3,28 +3,33 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.parse.ast.DefinitionKind.NATIVE;
+import static org.smoothbuild.parse.ast.DefinitionKind.SOURCE;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
 public class FuncNodeTest {
+  @Nested
+  class definition_kind_of {
+    @Test
+    public void func_with_expression_is_source() {
+      FuncNode func = new FuncNode(typeNode(), "name", list(), exprNode(), unknownLocation());
+      assertThat(func.definitionKind())
+          .isEqualTo(SOURCE);
+    }
 
-  @Test
-  public void func_with_expression_is_not_native() {
-    FuncNode func = new FuncNode(typeNode(), "name", list(), exprNode(), unknownLocation());
-    assertThat(func.isNative())
-        .isFalse();
-  }
-
-  @Test
-  public void func_without_expression_is_native() {
-    FuncNode func = new FuncNode(new TypeNode("type", unknownLocation()), "name", list(), null,
-        unknownLocation());
-    assertThat(func.isNative())
-        .isTrue();
+    @Test
+    public void func_without_expression_is_native() {
+      FuncNode func = new FuncNode(new TypeNode("type", unknownLocation()), "name", list(), null,
+          unknownLocation());
+      assertThat(func.definitionKind())
+          .isEqualTo(NATIVE);
+    }
   }
 
   @Test
