@@ -1,6 +1,7 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.lang.base.Scope.scope;
+import static org.smoothbuild.lang.object.type.MissingType.MISSING_TYPE;
 import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 import static org.smoothbuild.parse.ParseError.parseError;
 
@@ -44,15 +45,14 @@ public class InferTypesAndParamAssignment {
         super.visitStruct(struct);
         List<Field> fields = new ArrayList<>();
         for (FieldNode field : struct.fields()) {
-          ConcreteType type = (ConcreteType) field.get(Type.class);
-          if (type == null) {
+          Type type = field.type();
+          if (type == MISSING_TYPE) {
             return;
           } else {
-            fields.add(new Field(type, field.name(), field.location()));
+            fields.add(new Field((ConcreteType) type, field.name(), field.location()));
           }
         }
-        ConcreteType type = objectFactory.structType(struct.name(), fields);
-        struct.set(Type.class, type);
+        struct.setType(objectFactory.structType(struct.name(), fields));
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
           struct.setParameterInfos(parameters);
@@ -60,11 +60,11 @@ public class InferTypesAndParamAssignment {
       }
 
       @Override
-      public void visitField(int index, FieldNode field) {
-        super.visitField(index, field);
-        field.set(Type.class, field.typeNode().get(Type.class));
-        field.set(ParameterInfo.class,
-            new ParameterInfo(index, field.get(Type.class), field.name(), false));
+      public void visitField(int index, FieldNode fieldNode) {
+        super.visitField(index, fieldNode);
+        fieldNode.setType(fieldNode.typeNode().type());
+        fieldNode.set(ParameterInfo.class,
+            new ParameterInfo(index, fieldNode.type(), fieldNode.name(), false));
       }
 
       @Override
@@ -72,12 +72,12 @@ public class InferTypesAndParamAssignment {
         visitParams(func.params());
 
         scope = scope();
-        func.params().forEach(p -> scope.add(p.name(), p.get(Type.class)));
+        func.params().forEach(p -> scope.add(p.name(), p.type()));
         func.visitExpr(this);
         scope = null;
 
         Type type = funcType(func);
-        func.set(Type.class, type);
+        func.setType(type);
         List<ParameterInfo> parameters = createParameters(func.params());
         if (parameters != null) {
           func.setParameterInfos(parameters);
@@ -94,10 +94,12 @@ public class InferTypesAndParamAssignment {
             return null;
           }
         } else {
-          Type exprType = func.expr().get(Type.class);
+          Type exprType = func.expr().type();
           if (func.hasType()) {
             Type type = createType(func.typeNode());
-            if (type != null && exprType != null && !type.isAssignableFrom(exprType)) {
+            if (type != MISSING_TYPE
+                && exprType != MISSING_TYPE
+                && !type.isAssignableFrom(exprType)) {
               logger.log(parseError(func, "Function '" + func.name()
                   + "' has body which type is " + exprType.q()
                   + " and it is not convertible to function's declared result type " + type.q()
@@ -125,17 +127,17 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitParam(int index, ParamNode param) {
         super.visitParam(index, param);
-        Type type = param.typeNode().get(Type.class);
-        param.set(Type.class, type);
-        if (type == null) {
+        Type type = param.typeNode().type();
+        param.setType(type);
+        if (type == MISSING_TYPE) {
           param.set(ParameterInfo.class, null);
         } else {
           ParameterInfo info = new ParameterInfo(
-              index, param.get(Type.class), param.name(), param.hasDefaultValue());
+              index, param.type(), param.name(), param.hasDefaultValue());
           param.set(ParameterInfo.class, info);
           if (param.hasDefaultValue()) {
-            Type defaultValueType = param.defaultValue().get(Type.class);
-            if (defaultValueType != null && !type.isAssignableFrom(defaultValueType)) {
+            Type defaultValueType = param.defaultValue().type();
+            if (defaultValueType != MISSING_TYPE && !type.isAssignableFrom(defaultValueType)) {
               logger.log(parseError(param, "Parameter '" + param.name()
                   + "' is of type " + type.q() + " so it cannot have default value of type "
                   + defaultValueType.q() + "."));
@@ -147,30 +149,31 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitType(TypeNode type) {
         super.visitType(type);
-        type.set(Type.class, createType(type));
+        type.setType(createType(type));
       }
 
       private Type createType(TypeNode type) {
         if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return objectFactory.arrayType(createType(elementType));
+        } else {
+          return objectFactory.getType(type.name());
         }
-        return objectFactory.getType(type.name());
       }
 
       @Override
       public void visitAccessor(AccessorNode expr) {
         super.visitAccessor(expr);
-        Type exprType = expr.expr().get(Type.class);
-        if (exprType == null) {
-          expr.set(Type.class, null);
+        Type exprType = expr.expr().type();
+        if (exprType == MISSING_TYPE) {
+          expr.setType(MISSING_TYPE);
         } else {
           if (exprType instanceof StructType
               && ((StructType) exprType).fields().containsKey(expr.fieldName())) {
-            expr.set(Type.class,
+            expr.setType(
                 ((StructType) exprType).fields().get(expr.fieldName()).type());
           } else {
-            expr.set(Type.class, null);
+            expr.setType(MISSING_TYPE);
             logger.log(parseError(expr.location(), "Type " + exprType.q()
                 + " doesn't have field '" + expr.fieldName() + "'."));
           }
@@ -180,7 +183,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitArray(ArrayNode array) {
         super.visitArray(array);
-        array.set(Type.class, findArrayType(array));
+        array.setType(findArrayType(array));
       }
 
       private Type findArrayType(ArrayNode array) {
@@ -188,15 +191,15 @@ public class InferTypesAndParamAssignment {
         if (expressions.isEmpty()) {
           return objectFactory.arrayType(objectFactory.nothingType());
         }
-        Type firstType = expressions.get(0).get(Type.class);
-        if (firstType == null) {
-          return null;
+        Type firstType = expressions.get(0).type();
+        if (firstType == MISSING_TYPE) {
+          return MISSING_TYPE;
         }
         Type elemType = firstType;
         for (int i = 1; i < expressions.size(); i++) {
-          Type type = expressions.get(i).get(Type.class);
-          if (type == null) {
-            return null;
+          Type type = expressions.get(i).type();
+          if (type == MISSING_TYPE) {
+            return MISSING_TYPE;
           }
           elemType = elemType.commonSuperType(type);
 
@@ -220,19 +223,19 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        ref.set(Type.class, scope.get(ref.name()));
+        ref.setType(scope.get(ref.name()));
       }
 
       @Override
       public void visitArg(ArgNode arg) {
         super.visitArg(arg);
-        arg.set(Type.class, arg.expr().get(Type.class));
+        arg.setType(arg.expr().type());
       }
 
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.set(Type.class, objectFactory.stringType());
+        string.setType(objectFactory.stringType());
       }
     }.visitAst(ast);
   }
