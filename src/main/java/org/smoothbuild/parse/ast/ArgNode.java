@@ -3,6 +3,7 @@ package org.smoothbuild.parse.ast;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.type.Type;
 
 public class ArgNode extends NamedNode {
   private final int position;
@@ -33,7 +34,7 @@ public class ArgNode extends NamedNode {
   }
 
   public String typeAndName() {
-    return type().name() + ":" + nameSanitized();
+    return type().map(Type::name).orElse("<missing type>") + ":" + nameSanitized();
   }
 
   public ExprNode expr() {

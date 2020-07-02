@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.base.Location.unknownLocation;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.testing.TestingContext;
@@ -64,7 +66,7 @@ public class ArgNodeTest extends TestingContext {
 
   private static ExprNode expr(Type type) {
     ExprNode expr = mock(ExprNode.class);
-    when(expr.type()).thenReturn(type);
+    when(expr.type()).thenReturn(Optional.of(type));
     return expr;
   }
 }

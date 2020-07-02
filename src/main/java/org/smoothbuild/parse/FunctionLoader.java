@@ -48,7 +48,7 @@ public class FunctionLoader {
       @Override
       public Function get() {
         List<Parameter> parameters = map(func.params(), this::createParameter);
-        Signature signature = signature(func.type(), func.name(), parameters);
+        Signature signature = signature(func.type().get(), func.name(), parameters);
         if (func.isNative()) {
           Native nativ = func.get(Native.class);
           Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
@@ -64,7 +64,7 @@ public class FunctionLoader {
       }
 
       private Parameter createParameter(ParamNode param) {
-        Type type = param.typeNode().type();
+        Type type = param.typeNode().type().get();
         String name = param.name();
         Expression defaultValue = param.hasDefaultValue()
             ? createExpression(param.defaultValue())
@@ -92,7 +92,7 @@ public class FunctionLoader {
       }
 
       private Expression createAccessor(AccessorNode accessor) {
-        StructType type = (StructType) accessor.expr().type();
+        StructType type = (StructType) accessor.expr().type().get();
         Accessor accessorFunction = type.accessor(accessor.fieldName());
         return accessorFunction.createCallExpression(
             list(createExpression(accessor.expr())), accessor.location());
@@ -134,7 +134,7 @@ public class FunctionLoader {
       }
 
       private Expression createArray(ArrayNode array) {
-        ArrayType type = (ArrayType) array.type();
+        ArrayType type = (ArrayType) array.type().get();
         List<Expression> elements = map(array.elements(), this::createExpression);
         return new ArrayLiteralExpression(type, elements, array.location());
       }
