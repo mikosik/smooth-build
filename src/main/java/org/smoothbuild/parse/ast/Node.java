@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.type.Type;
 
 public class Node {
   private final Location location;
   private Map<Class<?>, Object> map;
+  private Type type;
 
   public Node(Location location) {
     this.location = location;
@@ -16,6 +18,14 @@ public class Node {
 
   public Location location() {
     return location;
+  }
+
+  public Type type() {
+    return type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
   }
 
   public <T> T get(Class<T> clazz) {

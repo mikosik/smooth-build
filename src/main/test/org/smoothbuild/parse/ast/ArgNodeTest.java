@@ -49,7 +49,7 @@ public class ArgNodeTest extends TestingContext {
   @Test
   public void type_and_name_of_named_argument() {
     ArgNode arg = new ArgNode(1, "name", expr(stringType()), unknownLocation());
-    arg.set(Type.class, stringType());
+    arg.setType(stringType());
     assertThat(arg.typeAndName())
         .isEqualTo("String:" + "name");
   }
@@ -57,14 +57,14 @@ public class ArgNodeTest extends TestingContext {
   @Test
   public void nameless_argument_to_string() {
     ArgNode arg = new ArgNode(1, null, expr(stringType()), unknownLocation());
-    arg.set(Type.class, stringType());
+    arg.setType(stringType());
     assertThat(arg.typeAndName())
         .isEqualTo("String:<nameless>");
   }
 
   private static ExprNode expr(Type type) {
     ExprNode expr = mock(ExprNode.class);
-    when(expr.get(Type.class)).thenReturn(type);
+    when(expr.type()).thenReturn(type);
     return expr;
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.parse;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.smoothbuild.lang.object.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.object.type.MissingType.MISSING_TYPE;
 import static org.smoothbuild.parse.ParseError.parseError;
 
 import java.util.ArrayList;
@@ -26,8 +27,7 @@ public class InferCallTypeAndParamAssignment {
     new Runnable() {
       @Override
       public void run() {
-        call.set(Type.class, null);
-
+        call.setType(MISSING_TYPE);
         List<? extends ParameterInfo> parameters = functionParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
         if (logger.hasProblems()) {
@@ -41,7 +41,7 @@ public class InferCallTypeAndParamAssignment {
         }
 
         call.setAssignedArgs(assignedArgs);
-        call.set(Type.class, callType(actualTypeMap));
+        call.setType(callType(actualTypeMap));
       }
 
       private List<ArgNode> assignedArguments(List<? extends ParameterInfo> parameters) {
@@ -89,7 +89,7 @@ public class InferCallTypeAndParamAssignment {
                   inCallToPrefix(call) + "Parameter " + param.q() + " must be specified."));
             }
           } else {
-            Type argType = arg.get(Type.class);
+            Type argType = arg.type();
             if (!param.type().isParamAssignableFrom(argType)) {
               logger.log(parseError(arg, inCallToPrefix(call)
                   + "Cannot assign argument of type " + argType.q() + " to parameter '"
@@ -124,7 +124,7 @@ public class InferCallTypeAndParamAssignment {
         for (int i = 0; i < parameters.size(); i++) {
           if (parameters.get(i).type().isGeneric()) {
             genericTypes.add(parameters.get(i).type());
-            actualTypes.add(assignedArgs.get(i).get(Type.class));
+            actualTypes.add(assignedArgs.get(i).type());
           }
         }
         if (actualTypes.contains(null)) {
@@ -142,8 +142,8 @@ public class InferCallTypeAndParamAssignment {
 
       private Type callType(GenericTypeMap<Type> actualTypeMap) {
         Type functionType = functionType();
-        if (functionType == null) {
-          return null;
+        if (functionType == MISSING_TYPE) {
+          return MISSING_TYPE;
         } else {
           return actualTypeMap.applyTo(functionType);
         }
@@ -157,11 +157,10 @@ public class InferCallTypeAndParamAssignment {
         }
         ParameterizedNode node = functions.get(name);
         if (node != null) {
-          return node.get(Type.class);
+          return node.type();
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
     }.run();
   }
-
 }
