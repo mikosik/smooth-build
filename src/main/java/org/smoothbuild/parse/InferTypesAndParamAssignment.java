@@ -83,30 +83,39 @@ public class InferTypesAndParamAssignment {
       }
 
       private Optional<Type> funcType(FuncNode func) {
-        if (func.isNative()) {
-          if (func.hasType()) {
-            return createType(func.typeNode());
-          } else {
-            logger.log(parseError(func, "Function '" + func.name()
-                + "' is native so should have declared result type."));
-            return empty();
-          }
+        return switch (func.definitionKind()) {
+          case SOURCE -> typeOfDeclaredFunc(func);
+          case NATIVE -> typeOfNativeFunc(func);
+          case GENERATED -> throw new RuntimeException(
+              "FuncNode with illegal kind. Only constructors are generated.");
+        };
+      }
+
+      private Optional<Type> typeOfDeclaredFunc(FuncNode func) {
+        Optional<Type> exprType = func.expr().type();
+        if (func.hasType()) {
+          Optional<Type> type = createType(func.typeNode());
+          type.ifPresent(t -> exprType.ifPresent(et -> {
+            if (!t.isAssignableFrom(et)) {
+              logger.log(parseError(func, "Function '" + func.name()
+                  + "' has body which type is " + et.q()
+                  + " and it is not convertible to function's declared result type " + t.q()
+                  + "."));
+            }
+          }));
+          return type;
         } else {
-          Optional<Type> exprType = func.expr().type();
-          if (func.hasType()) {
-            Optional<Type> type = createType(func.typeNode());
-            type.ifPresent(t -> exprType.ifPresent(et -> {
-              if (!t.isAssignableFrom(et)) {
-                logger.log(parseError(func, "Function '" + func.name()
-                    + "' has body which type is " + et.q()
-                    + " and it is not convertible to function's declared result type " + t.q()
-                    + "."));
-              }
-            }));
-            return type;
-          } else {
-            return exprType;
-          }
+          return exprType;
+        }
+      }
+
+      private Optional<Type> typeOfNativeFunc(FuncNode func) {
+        if (func.hasType()) {
+          return createType(func.typeNode());
+        } else {
+          logger.log(parseError(func, "Function '" + func.name()
+              + "' is native so should have declared result type."));
+          return empty();
         }
       }
 
