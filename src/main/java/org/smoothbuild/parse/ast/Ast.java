@@ -17,7 +17,7 @@ import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.ImmutableSet;
 
 public class Ast {
   private final ImmutableList<StructNode> structs;
@@ -37,6 +37,18 @@ public class Ast {
     return structs;
   }
 
+  public Set<String> callableNames() {
+    var builder = ImmutableSet.<String>builder();
+    new AstVisitor() {
+      @Override
+      public void visitCallable(CallableNode callable) {
+        super.visitCallable(callable);
+        builder.add(callable.name());
+      }
+    }.visitAst(this);
+    return builder.build();
+  }
+
   public ImmutableMap<String, CallableNode> callablesMap() {
     if (callablesMap == null) {
       callablesMap = createCallablesMap();
@@ -45,11 +57,14 @@ public class Ast {
   }
 
   private ImmutableMap<String, CallableNode> createCallablesMap() {
-    Builder<String, CallableNode> builder = ImmutableMap.builder();
-    structs.stream()
-        .map(StructNode::constructor)
-        .forEach(c -> builder.put(c.name(), c));
-    funcs.forEach(f -> builder.put(f.name(), f));
+    var builder = ImmutableMap.<String, CallableNode>builder();
+    new AstVisitor() {
+      @Override
+      public void visitCallable(CallableNode callable) {
+        super.visitCallable(callable);
+        builder.put(callable.name(), callable);
+      }
+    }.visitAst(this);
     return builder.build();
   }
 
