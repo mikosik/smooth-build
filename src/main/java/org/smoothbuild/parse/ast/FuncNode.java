@@ -1,8 +1,5 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.parse.ast.DefinitionKind.NATIVE;
-import static org.smoothbuild.parse.ast.DefinitionKind.SOURCE;
-
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
@@ -40,12 +37,8 @@ public class FuncNode extends CallableNode {
     return params;
   }
 
-  public DefinitionKind definitionKind() {
-    if (expr == null) {
-      return NATIVE;
-    } else {
-      return SOURCE;
-    }
+  public boolean isNative() {
+    return expr == null;
   }
 
   public void visitExpr(AstVisitor astVisitor) {

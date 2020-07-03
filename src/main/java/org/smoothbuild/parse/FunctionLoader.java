@@ -47,12 +47,11 @@ public class FunctionLoader {
     return new Supplier<Callable>() {
       @Override
       public Callable get() {
-        return switch (func.definitionKind()) {
-          case SOURCE -> definedFunction();
-          case NATIVE -> nativeFunction();
-          case GENERATED -> throw new RuntimeException(
-              "FuncNode with illegal kind. Only constructors are generated.");
-        };
+        if (func.isNative()) {
+          return nativeFunction();
+        } else {
+          return definedFunction();
+        }
       }
 
       private DefinedFunction definedFunction() {
