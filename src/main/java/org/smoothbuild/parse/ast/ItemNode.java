@@ -2,12 +2,12 @@ package org.smoothbuild.parse.ast;
 
 import org.smoothbuild.lang.base.Location;
 
-public class ParamNode extends NamedNode {
+public class ItemNode extends NamedNode {
   private final int index;
   private final TypeNode typeNode;
   private final ExprNode defaultValue;
 
-  public ParamNode(int index, TypeNode typeNode, String name, ExprNode defaultValue,
+  public ItemNode(int index, TypeNode typeNode, String name, ExprNode defaultValue,
       Location location) {
     super(name, location);
     this.index = index;

@@ -42,27 +42,28 @@ public class AstCreator {
       public Void visitStruct(StructContext struct) {
         String name = struct.TYPE_IDENTIFIER().getText();
         Location location = locationOf(path, struct.TYPE_IDENTIFIER().getSymbol());
-        List<FieldNode> fields = createFields(struct.fieldList());
+        List<ItemNode> fields = createFields(struct.fieldList());
         structs.add(new StructNode(name, fields, location));
         return null;
       }
 
-      private List<FieldNode> createFields(FieldListContext fieldList) {
-        ArrayList<FieldNode> result = new ArrayList<>();
+      private List<ItemNode> createFields(FieldListContext fieldList) {
+        var result = new ArrayList<ItemNode>();
         if (fieldList != null) {
-          for (FieldContext field : sane(fieldList.field())) {
-            result.add(createField(field));
+          List<FieldContext> saneList = sane(fieldList.field());
+          for (int i = 0; i < saneList.size(); i++) {
+            result.add(createField(i, saneList.get(i)));
           }
         }
         return result;
       }
 
-      private FieldNode createField(FieldContext field) {
+      private ItemNode createField(int index, FieldContext field) {
         TypeNode type = createType(field.type());
         NameContext nameContext = field.name();
         String name = nameContext.getText();
         Location location = locationOf(path, nameContext);
-        return new FieldNode(type, name, location);
+        return new ItemNode(index, type, name, null, location);
       }
 
       @Override
@@ -70,7 +71,7 @@ public class AstCreator {
         TypeNode type = func.type() == null ? null : createType(func.type());
         NameContext nameContext = func.name();
         String name = nameContext.getText();
-        List<ParamNode> params = createParams(func.paramList());
+        List<ItemNode> params = createParams(func.paramList());
         visibleParams = paramNames(params);
         ExprNode pipe = func.pipe() == null ? null : createPipe(func.pipe());
         visitChildren(func);
@@ -79,15 +80,15 @@ public class AstCreator {
         return null;
       }
 
-      private Set<String> paramNames(List<ParamNode> params) {
+      private Set<String> paramNames(List<ItemNode> params) {
         return params
             .stream()
             .map(NamedNode::name)
             .collect(toSet());
       }
 
-      private List<ParamNode> createParams(ParamListContext paramList) {
-        ArrayList<ParamNode> result = new ArrayList<>();
+      private List<ItemNode> createParams(ParamListContext paramList) {
+        ArrayList<ItemNode> result = new ArrayList<>();
         if (paramList != null) {
           List<ParamContext> paramContexts = sane(paramList.param());
           for (int i = 0; i < paramContexts.size(); i++) {
@@ -97,14 +98,14 @@ public class AstCreator {
         return result;
       }
 
-      private ParamNode createParam(int index, ParamContext param) {
+      private ItemNode createParam(int index, ParamContext param) {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
         Location location = locationOf(path, param);
         ExprNode defaultValue = param.expr() != null
             ? createExpr(param.expr())
             : null;
-        return new ParamNode(index, type, name, defaultValue, location);
+        return new ItemNode(index, type, name, defaultValue, location);
       }
 
       private ExprNode createPipe(PipeContext pipe) {

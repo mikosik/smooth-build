@@ -25,11 +25,11 @@ public class AstVisitor {
   public void visitCallable(CallableNode callable) {
   }
 
-  public void visitFields(List<FieldNode> fields) {
+  public void visitFields(List<ItemNode> fields) {
     visitIndexedElements(fields, this::visitField);
   }
 
-  public void visitField(int index, FieldNode field) {
+  public void visitField(int index, ItemNode field) {
     visitType(field.typeNode());
   }
 
@@ -44,11 +44,11 @@ public class AstVisitor {
     func.visitExpr(this);
   }
 
-  public void visitParams(List<ParamNode> params) {
+  public void visitParams(List<ItemNode> params) {
     visitIndexedElements(params, this::visitParam);
   }
 
-  public void visitParam(int index, ParamNode param) {
+  public void visitParam(int index, ItemNode param) {
     visitType(param.typeNode());
     if (param.hasDefaultValue()) {
       visitExpr(param.defaultValue());

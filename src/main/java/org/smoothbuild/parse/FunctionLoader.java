@@ -27,7 +27,7 @@ import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.ItemNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.expr.ArrayLiteralExpression;
@@ -78,7 +78,7 @@ public class FunctionLoader {
         return Hash.of(jarHash, Hash.of(signature.name()));
       }
 
-      private Parameter createParameter(ParamNode param) {
+      private Parameter createParameter(ItemNode param) {
         Type type = param.typeNode().type().get();
         String name = param.name();
         Expression defaultValue = param.hasDefaultValue()
