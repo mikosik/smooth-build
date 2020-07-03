@@ -9,13 +9,13 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.object.type.Type;
 
-public class ParameterInfo {
+public class ItemInfo {
   private final int index;
   private final Type type;
   private final String name;
   private final boolean hasDefaultValue;
 
-  public ParameterInfo(int index, Type type, String name, boolean hasDefaultValue) {
+  public ItemInfo(int index, Type type, String name, boolean hasDefaultValue) {
     this.index = index;
     this.type = checkNotNull(type);
     this.name = checkNotNull(name);
@@ -47,7 +47,7 @@ public class ParameterInfo {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof ParameterInfo that)) {
+    if (!(object instanceof ItemInfo that)) {
       return false;
     }
     return type.equals(that.type)
@@ -70,7 +70,7 @@ public class ParameterInfo {
     return type.name() + " " + name;
   }
 
-  public static String iterableToString(Iterable<ParameterInfo> names) {
+  public static String iterableToString(Iterable<ItemInfo> names) {
     int typeLength = longestType(names);
     int nameLength = longestName(names);
     return stream(names)
@@ -79,17 +79,17 @@ public class ParameterInfo {
         .collect(joining());
   }
 
-  public static int longestType(Iterable<ParameterInfo> names) {
+  public static int longestType(Iterable<ItemInfo> names) {
     int result = 0;
-    for (ParameterInfo name : names) {
+    for (ItemInfo name : names) {
       result = Math.max(result, name.type.name().length());
     }
     return result;
   }
 
-  public static int longestName(Iterable<ParameterInfo> names) {
+  public static int longestName(Iterable<ItemInfo> names) {
     int result = 0;
-    for (ParameterInfo name : names) {
+    for (ItemInfo name : names) {
       result = Math.max(result, name.name.length());
     }
     return result;

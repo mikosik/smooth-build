@@ -14,9 +14,9 @@ import org.smoothbuild.testing.TestingContext;
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
-public class ParameterInfoTest extends TestingContext {
+public class ItemInfoTest extends TestingContext {
   private final String name = "name";
-  private ParameterInfo parameterInfo;
+  private ItemInfo itemInfo;
   private final ConcreteType bool = boolType();
   private final ConcreteType string = stringType();
   private final ConcreteType blob = blobType();
@@ -25,27 +25,27 @@ public class ParameterInfoTest extends TestingContext {
 
   @Test
   public void null_type_is_forbidden() {
-    assertCall(() -> new ParameterInfo(0, null, name, true))
+    assertCall(() -> new ItemInfo(0, null, name, true))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new ParameterInfo(0, type, null, true))
+    assertCall(() -> new ItemInfo(0, type, null, true))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_getter() {
-    parameterInfo = new ParameterInfo(0, type, name, true);
-    assertThat(parameterInfo.type())
+    itemInfo = new ItemInfo(0, type, name, true);
+    assertThat(itemInfo.type())
         .isEqualTo(type);
   }
 
   @Test
   public void name_getter() {
-    parameterInfo = new ParameterInfo(0, type, name, true);
-    assertThat(parameterInfo.name())
+    itemInfo = new ItemInfo(0, type, name, true);
+    assertThat(itemInfo.name())
         .isEqualTo(name);
   }
 
@@ -53,49 +53,49 @@ public class ParameterInfoTest extends TestingContext {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
     tester.addEqualityGroup(
-        new ParameterInfo(0, string, "equal", true),
-        new ParameterInfo(1, string, "equal", true));
+        new ItemInfo(0, string, "equal", true),
+        new ItemInfo(1, string, "equal", true));
     for (ConcreteType type :
         ImmutableList.of(bool, string, arrayType(string), blob, nothing, personType())) {
       tester.addEqualityGroup(
-          new ParameterInfo(0, type, name, true),
-          new ParameterInfo(1, type, name, true));
+          new ItemInfo(0, type, name, true),
+          new ItemInfo(1, type, name, true));
       tester.addEqualityGroup(
-          new ParameterInfo(0, type, "name2", true),
-          new ParameterInfo(1, type, "name2", true));
+          new ItemInfo(0, type, "name2", true),
+          new ItemInfo(1, type, "name2", true));
     }
     tester.testEquals();
   }
 
   @Test
   public void to_padded_string() {
-    parameterInfo = new ParameterInfo(0, string, "myName", true);
-    assertThat(parameterInfo.toPaddedString(10, 13))
+    itemInfo = new ItemInfo(0, string, "myName", true);
+    assertThat(itemInfo.toPaddedString(10, 13))
         .isEqualTo("String    : myName       ");
   }
 
   @Test
   public void to_padded_string_for_short_limits() {
-    parameterInfo = new ParameterInfo(0, string, "myName", true);
-    assertThat(parameterInfo.toPaddedString(1, 1))
+    itemInfo = new ItemInfo(0, string, "myName", true);
+    assertThat(itemInfo.toPaddedString(1, 1))
         .isEqualTo("String: myName");
   }
 
   @Test
   public void to_string() {
-    parameterInfo = new ParameterInfo(0, string, "myName", true);
-    assertThat(parameterInfo.toString())
+    itemInfo = new ItemInfo(0, string, "myName", true);
+    assertThat(itemInfo.toString())
         .isEqualTo("String myName");
   }
 
   @Test
   public void params_to_string() {
-    List<ParameterInfo> names = new ArrayList<>();
-    names.add(new ParameterInfo(0, string, "param1", true));
-    names.add(new ParameterInfo(0, string, "param2-with-very-long", true));
-    names.add(new ParameterInfo(0, arrayType(blob), "param3", true));
+    List<ItemInfo> names = new ArrayList<>();
+    names.add(new ItemInfo(0, string, "param1", true));
+    names.add(new ItemInfo(0, string, "param2-with-very-long", true));
+    names.add(new ItemInfo(0, arrayType(blob), "param3", true));
 
-    assertThat(ParameterInfo.iterableToString(names))
+    assertThat(ItemInfo.iterableToString(names))
         .isEqualTo(unlines(
             "  String: param1               ",
             "  String: param2-with-very-long",

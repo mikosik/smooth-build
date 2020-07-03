@@ -5,7 +5,7 @@ import static com.google.common.base.Strings.padEnd;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.expr.Expression;
 
-public class Parameter extends ParameterInfo {
+public class Parameter extends ItemInfo {
   private final Expression defaultValue;
 
   public Parameter(int index, Type type, String name, Expression defaultValue) {
