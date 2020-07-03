@@ -13,9 +13,9 @@ import com.google.common.collect.ImmutableList;
 
 public class StructNode extends NamedNode {
   private final CallableNode constructor;
-  private final List<FieldNode> fields;
+  private final List<ItemNode> fields;
 
-  public StructNode(String name, List<FieldNode> fields, Location location) {
+  public StructNode(String name, List<ItemNode> fields, Location location) {
     super(name, location);
     this.constructor = new ConstructorNode(name, location);
     this.fields = ImmutableList.copyOf(fields);
@@ -25,7 +25,7 @@ public class StructNode extends NamedNode {
     return constructor;
   }
 
-  public List<FieldNode> fields() {
+  public List<ItemNode> fields() {
     return fields;
   }
 

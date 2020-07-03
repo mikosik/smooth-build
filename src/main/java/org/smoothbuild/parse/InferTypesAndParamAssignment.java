@@ -25,10 +25,9 @@ import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
-import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.ItemNode;
 import org.smoothbuild.parse.ast.NamedNode;
-import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.StructNode;
@@ -60,7 +59,7 @@ public class InferTypesAndParamAssignment {
       }
 
       @Override
-      public void visitField(int index, FieldNode fieldNode) {
+      public void visitField(int index, ItemNode fieldNode) {
         super.visitField(index, fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
         fieldNode.set(ParameterInfo.class,
@@ -132,7 +131,7 @@ public class InferTypesAndParamAssignment {
       }
 
       @Override
-      public void visitParam(int index, ParamNode param) {
+      public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
         Optional<Type> type = param.typeNode().type();
         param.setType(type);

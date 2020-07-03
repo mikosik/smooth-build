@@ -21,8 +21,8 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.ItemNode;
 import org.smoothbuild.parse.ast.StructNode;
 
 import com.google.common.collect.ImmutableList;
@@ -79,9 +79,9 @@ public class ModuleLoader {
 
   private static Constructor loadConstructor(StructNode struct) {
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-    List<FieldNode> fields = struct.fields();
+    List<ItemNode> fields = struct.fields();
     for (int i = 0; i < fields.size(); i++) {
-      FieldNode field = fields.get(i);
+      ItemNode field = fields.get(i);
       builder.add(new Parameter(i, field.type().get(), field.name(), null));
     }
     ImmutableList<Parameter> parameters = builder.build();

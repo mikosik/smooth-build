@@ -8,10 +8,10 @@ import com.google.common.collect.ImmutableList;
 
 public class FuncNode extends CallableNode {
   private final TypeNode typeNode;
-  private final List<ParamNode> params;
+  private final List<ItemNode> params;
   private final ExprNode expr;
 
-  public FuncNode(TypeNode typeNode, String name, List<ParamNode> params, ExprNode expr,
+  public FuncNode(TypeNode typeNode, String name, List<ItemNode> params, ExprNode expr,
       Location location) {
     super(name, location);
     this.typeNode = typeNode;
@@ -33,7 +33,7 @@ public class FuncNode extends CallableNode {
     return typeNode;
   }
 
-  public List<ParamNode> params() {
+  public List<ItemNode> params() {
     return params;
   }
 

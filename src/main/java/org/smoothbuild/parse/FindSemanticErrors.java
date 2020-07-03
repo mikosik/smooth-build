@@ -18,11 +18,10 @@ import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;
+import org.smoothbuild.parse.ast.ItemNode;
 import org.smoothbuild.parse.ast.Named;
 import org.smoothbuild.parse.ast.NamedNode;
-import org.smoothbuild.parse.ast.ParamNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.StructNode;
@@ -101,12 +100,12 @@ public class FindSemanticErrors {
       }
 
       @Override
-      public void visitParam(int index, ParamNode param) {
+      public void visitParam(int index, ItemNode param) {
         assertTypeIsDefined(param.typeNode());
       }
 
       @Override
-      public void visitField(int index, FieldNode field) {
+      public void visitField(int index, ItemNode field) {
         assertTypeIsDefined(field.typeNode());
       }
 
@@ -164,7 +163,7 @@ public class FindSemanticErrors {
   private static void duplicateFieldNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitFields(List<FieldNode> fields) {
+      public void visitFields(List<ItemNode> fields) {
         super.visitFields(fields);
         findDuplicateNames(logger, fields);
       }
@@ -174,7 +173,7 @@ public class FindSemanticErrors {
   private static void duplicateParamNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitParams(List<ParamNode> params) {
+      public void visitParams(List<ItemNode> params) {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
@@ -196,10 +195,10 @@ public class FindSemanticErrors {
   private static void defaultParamBeforeNonDefault(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitParams(List<ParamNode> params) {
+      public void visitParams(List<ItemNode> params) {
         super.visitParams(params);
         boolean foundParamWithDefaultValue = false;
-        for (ParamNode param : params) {
+        for (ItemNode param : params) {
           if (param.hasDefaultValue()) {
             foundParamWithDefaultValue = true;
           } else if (foundParamWithDefaultValue) {
@@ -230,15 +229,15 @@ public class FindSemanticErrors {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
-        List<FieldNode> fields = struct.fields();
+        List<ItemNode> fields = struct.fields();
         if (!fields.isEmpty()) {
-          FieldNode field = fields.get(0);
+          ItemNode field = fields.get(0);
           TypeNode type = field.typeNode();
           if (type.isArray()) {
             logger.log(parseError(field, "First field of struct cannot have array type."));
           }
         }
-        for (FieldNode field : fields) {
+        for (ItemNode field : fields) {
           if (isGenericTypeName(field.typeNode().name())) {
             logger.log(parseError(field, "Struct field cannot have a generic type.\n"));
           }

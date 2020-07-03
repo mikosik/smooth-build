@@ -13,7 +13,7 @@ import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.ParamNode;
+import org.smoothbuild.parse.ast.ItemNode;
 
 public class Natives {
   private final Map<String, Native> map;
@@ -55,7 +55,7 @@ public class Natives {
           return;
         }
         Parameter[] nativeParams = method.getParameters();
-        List<ParamNode> params = func.params();
+        List<ItemNode> params = func.params();
         if (params.size() != nativeParams.length - 1) {
           logger.log(parseError(func, "Function '" + func.name() + "' has "
               + params.size() + " parameter(s) but its native implementation has "
