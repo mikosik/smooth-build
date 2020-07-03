@@ -3,10 +3,12 @@ package org.smoothbuild.parse.ast;
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Native;
 
 public class FuncNode extends CallableNode {
   private final TypeNode typeNode;
   private final ExprNode expr;
+  private Native nativ;
 
   public FuncNode(TypeNode typeNode, String name, List<ItemNode> params, ExprNode expr,
       Location location) {
@@ -41,6 +43,14 @@ public class FuncNode extends CallableNode {
 
   public ExprNode expr() {
     return expr;
+  }
+
+  public Native nativ() {
+    return nativ;
+  }
+
+  public void setNative(Native nativ) {
+    this.nativ = nativ;
   }
 
   @Override
