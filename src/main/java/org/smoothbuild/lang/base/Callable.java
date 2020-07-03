@@ -48,7 +48,7 @@ public abstract class Callable implements Named {
 
   public boolean canBeCalledArgless() {
     return signature.parameters().stream()
-        .allMatch(ParameterInfo::hasDefaultValue);
+        .allMatch(ItemInfo::hasDefaultValue);
   }
 
   public Expression createAgrlessCallExpression(Location location) {

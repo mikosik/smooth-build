@@ -2,21 +2,21 @@ package org.smoothbuild.parse.ast;
 
 import java.util.List;
 
+import org.smoothbuild.lang.base.ItemInfo;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ParameterInfo;
 
 public class CallableNode extends NamedNode {
-  private List<ParameterInfo> parameterInfos;
+  private List<ItemInfo> parameterInfos;
 
   public CallableNode(String name, Location location) {
     super(name, location);
   }
 
-  public List<ParameterInfo> parameterInfos() {
+  public List<ItemInfo> parameterInfos() {
     return parameterInfos;
   }
 
-  public void setParameterInfos(List<ParameterInfo> parameterInfos) {
+  public void setParameterInfos(List<ItemInfo> parameterInfos) {
     this.parameterInfos = parameterInfos;
   }
 }

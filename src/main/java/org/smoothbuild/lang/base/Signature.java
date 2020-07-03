@@ -27,7 +27,7 @@ public record Signature(Type type, String name, ImmutableList<Parameter> paramet
   }
 
   public List<Type> parameterTypes() {
-    return map(parameters, ParameterInfo::type);
+    return map(parameters, ItemInfo::type);
   }
 
   @Override

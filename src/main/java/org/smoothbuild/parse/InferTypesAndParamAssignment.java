@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
-import org.smoothbuild.lang.base.ParameterInfo;
+import org.smoothbuild.lang.base.ItemInfo;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
@@ -52,7 +52,7 @@ public class InferTypesAndParamAssignment {
             .map(f -> new Field((ConcreteType) f.type().get(), f.name(), f.location()))
             .collect(toImmutableList());
         struct.setType(objectFactory.structType(struct.name(), fields));
-        List<ParameterInfo> parameters = createParameters(struct.fields());
+        List<ItemInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
           struct.constructor().setParameterInfos(parameters);
         }
@@ -62,8 +62,8 @@ public class InferTypesAndParamAssignment {
       public void visitField(int index, ItemNode fieldNode) {
         super.visitField(index, fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
-        fieldNode.set(ParameterInfo.class,
-            new ParameterInfo(index, fieldNode.type().get(), fieldNode.name(), false));
+        fieldNode.set(ItemInfo.class,
+            new ItemInfo(index, fieldNode.type().get(), fieldNode.name(), false));
       }
 
       @Override
@@ -76,7 +76,7 @@ public class InferTypesAndParamAssignment {
         scope = null;
 
         func.setType(funcType(func));
-        List<ParameterInfo> parameters = createParameters(func.params());
+        List<ItemInfo> parameters = createParameters(func.params());
         if (parameters != null) {
           func.setParameterInfos(parameters);
         }
@@ -118,13 +118,13 @@ public class InferTypesAndParamAssignment {
         }
       }
 
-      private List<ParameterInfo> createParameters(List<? extends NamedNode> params) {
-        Builder<ParameterInfo> builder = ImmutableList.builder();
+      private List<ItemInfo> createParameters(List<? extends NamedNode> params) {
+        Builder<ItemInfo> builder = ImmutableList.builder();
         for (NamedNode param : params) {
-          if (param.get(ParameterInfo.class) == null) {
+          if (param.get(ItemInfo.class) == null) {
             return null;
           } else {
-            builder.add(param.get(ParameterInfo.class));
+            builder.add(param.get(ItemInfo.class));
           }
         }
         return builder.build();
@@ -136,8 +136,8 @@ public class InferTypesAndParamAssignment {
         Optional<Type> type = param.typeNode().type();
         param.setType(type);
         type.ifPresentOrElse(t -> {
-              var info = new ParameterInfo(index, t, param.name(), param.hasDefaultValue());
-              param.set(ParameterInfo.class, info);
+              var info = new ItemInfo(index, t, param.name(), param.hasDefaultValue());
+              param.set(ItemInfo.class, info);
               if (param.hasDefaultValue()) {
                 Optional<Type> defaultValueType = param.defaultValue().type();
                 defaultValueType.ifPresent(dt -> {
@@ -149,7 +149,7 @@ public class InferTypesAndParamAssignment {
                 });
               }
             },
-            () -> param.set(ParameterInfo.class, null));
+            () -> param.set(ItemInfo.class, null));
       }
 
       @Override
