@@ -113,7 +113,7 @@ public class InferCallTypeAndParamAssignment {
         }
         CallableNode node = callables.get(name);
         if (node != null) {
-          return node.getParameterInfos();
+          return node.parameterInfos();
         }
         throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
       }
