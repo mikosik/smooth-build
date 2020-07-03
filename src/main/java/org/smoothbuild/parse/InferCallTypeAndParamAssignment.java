@@ -18,13 +18,13 @@ import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.ParameterizedNode;
+import org.smoothbuild.parse.ast.CallableNode;
 
 import com.google.common.collect.ImmutableMap;
 
 public class InferCallTypeAndParamAssignment {
   public static void inferCallTypeAndParamAssignment(CallNode call, Definitions imported,
-      ImmutableMap<String, ParameterizedNode> functions, LoggerImpl logger) {
+      ImmutableMap<String, CallableNode> callables, LoggerImpl logger) {
     new Runnable() {
       @Override
       public void run() {
@@ -111,7 +111,7 @@ public class InferCallTypeAndParamAssignment {
         if (function != null) {
           return function.signature().parameters();
         }
-        ParameterizedNode node = functions.get(name);
+        CallableNode node = callables.get(name);
         if (node != null) {
           return node.getParameterInfos();
         }
@@ -151,7 +151,7 @@ public class InferCallTypeAndParamAssignment {
         if (function != null) {
           return Optional.of(function.signature().type());
         }
-        ParameterizedNode node = functions.get(name);
+        CallableNode node = callables.get(name);
         if (node != null) {
           return node.type();
         }

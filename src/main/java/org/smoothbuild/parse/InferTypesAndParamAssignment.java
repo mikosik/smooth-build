@@ -223,7 +223,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypeAndParamAssignment(call, imported, ast.functionsAndConstructorsMap(), logger);
+        inferCallTypeAndParamAssignment(call, imported, ast.callablesMap(), logger);
       }
 
       @Override
