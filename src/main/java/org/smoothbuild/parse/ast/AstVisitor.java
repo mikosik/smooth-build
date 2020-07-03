@@ -14,7 +14,15 @@ public class AstVisitor {
   }
 
   public void visitStruct(StructNode struct) {
+    visitConstructor(struct.constructor());
     visitFields(struct.fields());
+  }
+
+  public void visitConstructor(CallableNode constructor) {
+    visitCallable(constructor);
+  }
+
+  public void visitCallable(CallableNode callable) {
   }
 
   public void visitFields(List<FieldNode> fields) {
@@ -30,6 +38,7 @@ public class AstVisitor {
   }
 
   public void visitFunc(FuncNode func) {
+    visitCallable(func);
     func.visitType(this);
     visitParams(func.params());
     func.visitExpr(this);
@@ -86,7 +95,8 @@ public class AstVisitor {
     visitExpr(arg.expr());
   }
 
-  public void visitString(StringNode string) {}
+  public void visitString(StringNode string) {
+  }
 
   public <E> void visitIndexedElements(List<E> elements, BiConsumer<Integer, ? super E> consumer) {
     for (int i = 0; i < elements.size(); i++) {
