@@ -6,7 +6,6 @@ import static org.smoothbuild.parse.ast.DefinitionKind.SOURCE;
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.parse.AstVisitor;
 
 import com.google.common.collect.ImmutableList;
 

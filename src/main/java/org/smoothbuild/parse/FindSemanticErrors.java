@@ -17,6 +17,7 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.FieldNode;
 import org.smoothbuild.parse.ast.FuncNode;

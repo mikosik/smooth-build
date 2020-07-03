@@ -22,6 +22,7 @@ import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
 import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
+import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.CallNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FieldNode;

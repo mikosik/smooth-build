@@ -1,21 +1,7 @@
-package org.smoothbuild.parse;
+package org.smoothbuild.parse.ast;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-
-import org.smoothbuild.parse.ast.AccessorNode;
-import org.smoothbuild.parse.ast.ArgNode;
-import org.smoothbuild.parse.ast.ArrayNode;
-import org.smoothbuild.parse.ast.Ast;
-import org.smoothbuild.parse.ast.CallNode;
-import org.smoothbuild.parse.ast.ExprNode;
-import org.smoothbuild.parse.ast.FieldNode;
-import org.smoothbuild.parse.ast.FuncNode;
-import org.smoothbuild.parse.ast.ParamNode;
-import org.smoothbuild.parse.ast.RefNode;
-import org.smoothbuild.parse.ast.StringNode;
-import org.smoothbuild.parse.ast.StructNode;
-import org.smoothbuild.parse.ast.TypeNode;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
