@@ -116,7 +116,7 @@ public class AstCreator {
           // nameless piped argument's location is set to the pipe character '|'
           Location location = locationOf(path, pipe.p.get(i));
           List<ArgNode> args = new ArrayList<>();
-          args.add(new ArgNode(0, null, result, location));
+          args.add(new ArgNode(null, result, location));
           args.addAll(createArgList(call.argList()));
           String name = call.name().getText();
           result = new CallNode(name, args, locationOf(path, call.name()));
@@ -166,7 +166,7 @@ public class AstCreator {
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
             ExprNode exprNode = createPipe(pipe);
-            result.add(new ArgNode(i + 1, name, exprNode, locationOf(path, arg)));
+            result.add(new ArgNode(name, exprNode, locationOf(path, arg)));
           }
         }
         return result;
