@@ -10,7 +10,7 @@ import org.smoothbuild.parse.AstVisitor;
 
 import com.google.common.collect.ImmutableList;
 
-public class FuncNode extends ParameterizedNode {
+public class FuncNode extends CallableNode {
   private final TypeNode typeNode;
   private final List<ParamNode> params;
   private final ExprNode expr;

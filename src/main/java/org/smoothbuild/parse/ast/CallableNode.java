@@ -5,8 +5,8 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ParameterInfo;
 
-public class ParameterizedNode extends NamedNode {
-  public ParameterizedNode(String name, Location location) {
+public class CallableNode extends NamedNode {
+  public CallableNode(String name, Location location) {
     super(name, location);
   }
 

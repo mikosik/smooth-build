@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<FuncNode> funcs;
-  private ImmutableMap<String, ParameterizedNode> functionsAndConstructorsMap;
+  private ImmutableMap<String, CallableNode> callablesMap;
 
   public Ast(List<StructNode> structs, List<FuncNode> funcs) {
     this.structs = ImmutableList.copyOf(structs);
@@ -38,15 +38,15 @@ public class Ast {
     return structs;
   }
 
-  public ImmutableMap<String, ParameterizedNode> functionsAndConstructorsMap() {
-    if (functionsAndConstructorsMap == null) {
-      functionsAndConstructorsMap = createFunctionsAndConstructorsMap();
+  public ImmutableMap<String, CallableNode> callablesMap() {
+    if (callablesMap == null) {
+      callablesMap = createCallablesMap();
     }
-    return functionsAndConstructorsMap;
+    return callablesMap;
   }
 
-  private ImmutableMap<String, ParameterizedNode> createFunctionsAndConstructorsMap() {
-    Builder<String, ParameterizedNode> builder = ImmutableMap.builder();
+  private ImmutableMap<String, CallableNode> createCallablesMap() {
+    Builder<String, CallableNode> builder = ImmutableMap.builder();
     structs.stream()
         .map(StructNode::constructor)
         .forEach(c -> builder.put(c.name(), c));

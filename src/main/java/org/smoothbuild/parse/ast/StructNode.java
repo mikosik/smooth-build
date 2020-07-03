@@ -12,7 +12,7 @@ import org.smoothbuild.lang.object.type.Type;
 import com.google.common.collect.ImmutableList;
 
 public class StructNode extends NamedNode {
-  private final ParameterizedNode constructor;
+  private final CallableNode constructor;
   private final List<FieldNode> fields;
 
   public StructNode(String name, List<FieldNode> fields, Location location) {
@@ -21,7 +21,7 @@ public class StructNode extends NamedNode {
     this.fields = ImmutableList.copyOf(fields);
   }
 
-  public ParameterizedNode constructor() {
+  public CallableNode constructor() {
     return constructor;
   }
 
@@ -29,7 +29,7 @@ public class StructNode extends NamedNode {
     return fields;
   }
 
-  private class ConstructorNode extends ParameterizedNode {
+  private class ConstructorNode extends CallableNode {
     public ConstructorNode(String structName, Location location) {
       super(UPPER_CAMEL.to(LOWER_CAMEL, structName), location);
     }
