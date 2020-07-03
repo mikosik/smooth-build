@@ -1,7 +1,6 @@
 package org.smoothbuild.parse;
 
 import static org.smoothbuild.parse.ParseError.parseError;
-import static org.smoothbuild.parse.ast.DefinitionKind.NATIVE;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -30,14 +29,14 @@ public class Natives {
         super.visitFunc(func);
         if (map.containsKey(func.name())) {
           Native nativ = map.get(func.name());
-          if (func.definitionKind() == NATIVE) {
+          if (func.isNative()) {
             assign(func, nativ);
           } else {
             logger.log(parseError(func, "Function '" + func.name()
                 + "' has both definition and native implementation in " + nativ.jarFile() + "."));
           }
         } else {
-          if (func.definitionKind() == NATIVE) {
+          if (func.isNative()) {
             logger.log(parseError(func, "Function '" + func.name()
                 + "' is native but does not have native implementation."));
           }

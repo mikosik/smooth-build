@@ -84,15 +84,24 @@ public class InferTypesAndParamAssignment {
       }
 
       private Optional<Type> funcType(FuncNode func) {
-        return switch (func.definitionKind()) {
-          case SOURCE -> typeOfDeclaredFunc(func);
-          case NATIVE -> typeOfNativeFunc(func);
-          case GENERATED -> throw new RuntimeException(
-              "FuncNode with illegal kind. Only constructors are generated.");
-        };
+        if (func.isNative()) {
+          return typeOfNativeFunction(func);
+        } else {
+          return typeOfDeclaredFunction(func);
+        }
       }
 
-      private Optional<Type> typeOfDeclaredFunc(FuncNode func) {
+      private Optional<Type> typeOfNativeFunction(FuncNode func) {
+        if (func.hasType()) {
+          return createType(func.typeNode());
+        } else {
+          logger.log(parseError(func, "Function '" + func.name()
+              + "' is native so should have declared result type."));
+          return empty();
+        }
+      }
+
+      private Optional<Type> typeOfDeclaredFunction(FuncNode func) {
         Optional<Type> exprType = func.expr().type();
         if (func.hasType()) {
           Optional<Type> type = createType(func.typeNode());
@@ -107,16 +116,6 @@ public class InferTypesAndParamAssignment {
           return type;
         } else {
           return exprType;
-        }
-      }
-
-      private Optional<Type> typeOfNativeFunc(FuncNode func) {
-        if (func.hasType()) {
-          return createType(func.typeNode());
-        } else {
-          logger.log(parseError(func, "Function '" + func.name()
-              + "' is native so should have declared result type."));
-          return empty();
         }
       }
 
