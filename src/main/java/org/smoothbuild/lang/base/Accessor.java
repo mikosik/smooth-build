@@ -6,7 +6,7 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.expr.AccessorCallExpression;
 import org.smoothbuild.parse.expr.Expression;
 
-public class Accessor extends Function {
+public class Accessor extends Callable {
   private final String fieldName;
 
   public Accessor(Signature signature, String fieldName, Location location) {

@@ -6,7 +6,7 @@ import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.parse.expr.ConstructorCallExpression;
 import org.smoothbuild.parse.expr.Expression;
 
-public class Constructor extends Function {
+public class Constructor extends Callable {
   public Constructor(Signature signature, Location location) {
     super(signature, location);
   }

@@ -13,57 +13,57 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
-public class FunctionTest extends TestingContext {
+public class CallableTest extends TestingContext {
   private final ConcreteType STRING = stringType();
 
   @Test
   public void nullSignatureIsForbidden() {
-    assertCall(() -> new MyFunction(null))
+    assertCall(() -> new MyCallable(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_returns_signature_type() {
-    Function function = new MyFunction(signature(STRING, "name", list()));
-    assertThat(function.type())
+    Callable callable = new MyCallable(signature(STRING, "name", list()));
+    assertThat(callable.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void name_returns_signature_name() {
-    Function function = new MyFunction(signature(STRING, "name", list()));
-    assertThat(function.type())
+    Callable callable = new MyCallable(signature(STRING, "name", list()));
+    assertThat(callable.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void params_returns_signature_params() {
     List<Parameter> parameters = list(new Parameter(0, STRING, "name", null));
-    Function function = new MyFunction(signature(STRING, "name", parameters));
-    assertThat(function.parameters())
+    Callable callable = new MyCallable(signature(STRING, "name", parameters));
+    assertThat(callable.parameters())
         .isEqualTo(parameters);
   }
 
   @Test
-  public void function_without_params_can_be_called_without_args() {
-    Function function = new MyFunction(signature(STRING, "name", list()));
-    assertThat(function.canBeCalledArgless())
+  public void callable_without_params_can_be_called_without_args() {
+    Callable callable = new MyCallable(signature(STRING, "name", list()));
+    assertThat(callable.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void function_with_all_params_with_default_values_can_be_called_without_args() {
+  public void callable_with_all_params_with_default_values_can_be_called_without_args() {
     List<Parameter> parameters = list(paramWithDefault(), paramWithDefault());
-    Function function = new MyFunction(signature(STRING, "name", parameters));
-    assertThat(function.canBeCalledArgless())
+    Callable callable = new MyCallable(signature(STRING, "name", parameters));
+    assertThat(callable.canBeCalledArgless())
         .isTrue();
   }
 
   @Test
-  public void function_with_one_param_without_default_values_cannot_be_called_without_args() {
+  public void callable_with_one_param_without_default_values_cannot_be_called_without_args() {
     List<Parameter> parameters = list(paramWithDefault(), paramWithoutDefault());
-    Function function = new MyFunction(signature(STRING, "name", parameters));
-    assertThat(function.canBeCalledArgless())
+    Callable callable = new MyCallable(signature(STRING, "name", parameters));
+    assertThat(callable.canBeCalledArgless())
         .isFalse();
   }
 
@@ -75,8 +75,8 @@ public class FunctionTest extends TestingContext {
     return new Parameter(0, stringType(), "a", null);
   }
 
-  public static class MyFunction extends Function {
-    public MyFunction(Signature signature) {
+  public static class MyCallable extends Callable {
+    public MyCallable(Signature signature) {
       super(signature, Location.unknownLocation());
     }
 
