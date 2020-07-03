@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.parse.AstVisitor;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
 import org.smoothbuild.util.graph.SortTopologically.TopologicalSortingResult;
