@@ -6,17 +6,17 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ParameterInfo;
 
 public class CallableNode extends NamedNode {
+  private List<ParameterInfo> parameterInfos;
+
   public CallableNode(String name, Location location) {
     super(name, location);
   }
 
-  public List<? extends ParameterInfo> getParameterInfos() {
-    @SuppressWarnings("unchecked")
-    List<ParameterInfo> list = get(List.class);
-    return list;
+  public List<ParameterInfo> parameterInfos() {
+    return parameterInfos;
   }
 
-  public void setParameterInfos(List<? extends ParameterInfo> parameterInfos) {
-    set(List.class, parameterInfos);
+  public void setParameterInfos(List<ParameterInfo> parameterInfos) {
+    this.parameterInfos = parameterInfos;
   }
 }
