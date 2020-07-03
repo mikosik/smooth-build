@@ -16,9 +16,13 @@ public class StructNode extends NamedNode {
   private final List<ItemNode> fields;
 
   public StructNode(String name, List<ItemNode> fields, Location location) {
+    this(name, ImmutableList.copyOf(fields), location);
+  }
+
+  private StructNode(String name, ImmutableList<ItemNode> fields, Location location) {
     super(name, location);
-    this.constructor = new ConstructorNode(name, location);
-    this.fields = ImmutableList.copyOf(fields);
+    this.constructor = new ConstructorNode(name, fields, location);
+    this.fields = fields;
   }
 
   public CallableNode constructor() {
@@ -30,8 +34,8 @@ public class StructNode extends NamedNode {
   }
 
   private class ConstructorNode extends CallableNode {
-    public ConstructorNode(String structName, Location location) {
-      super(UPPER_CAMEL.to(LOWER_CAMEL, structName), location);
+    public ConstructorNode(String structName, List<ItemNode> params, Location location) {
+      super(UPPER_CAMEL.to(LOWER_CAMEL, structName), params, location);
     }
 
     @Override

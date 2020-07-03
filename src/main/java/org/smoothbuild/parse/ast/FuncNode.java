@@ -4,18 +4,14 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
 
-import com.google.common.collect.ImmutableList;
-
 public class FuncNode extends CallableNode {
   private final TypeNode typeNode;
-  private final List<ItemNode> params;
   private final ExprNode expr;
 
   public FuncNode(TypeNode typeNode, String name, List<ItemNode> params, ExprNode expr,
       Location location) {
-    super(name, location);
+    super(name, params, location);
     this.typeNode = typeNode;
-    this.params = ImmutableList.copyOf(params);
     this.expr = expr;
   }
 
@@ -31,10 +27,6 @@ public class FuncNode extends CallableNode {
 
   public TypeNode typeNode() {
     return typeNode;
-  }
-
-  public List<ItemNode> params() {
-    return params;
   }
 
   public boolean isNative() {
