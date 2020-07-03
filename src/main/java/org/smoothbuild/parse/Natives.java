@@ -76,7 +76,7 @@ public class Natives {
             return;
           }
         }
-        func.set(Native.class, nativ);
+        func.setNative(nativ);
       }
     }.visitAst(ast);
   }

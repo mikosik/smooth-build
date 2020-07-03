@@ -62,7 +62,7 @@ public class FunctionLoader {
       }
 
       private Callable nativeFunction() {
-        Native nativ = func.get(Native.class);
+        Native nativ = func.nativ();
         Signature signature = createSignature();
         Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
         boolean isCacheable = nativ.cacheable();
