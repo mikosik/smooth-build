@@ -8,20 +8,20 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.parse.Definitions;
 
-public class FindFunctions {
-  public static Optional<List<Function>> findFunctions(Reporter reporter, Definitions definitions,
+public class FindCallables {
+  public static Optional<List<Callable>> findCallables(Reporter reporter, Definitions definitions,
       List<String> names) {
-    var functions = definitions.functions();
-    List<Function> functionsToRun = new ArrayList<>();
+    var callables = definitions.callables();
+    List<Callable> callablesToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      Function function = functions.get(name);
-      if (function != null) {
-        if (function.canBeCalledArgless()) {
-          functionsToRun.add(function);
+      Callable callable = callables.get(name);
+      if (callable != null) {
+        if (callable.canBeCalledArgless()) {
+          callablesToRun.add(callable);
         } else {
           logs.add(error("Function '" + name
               + "' cannot be invoked from command line as it requires arguments."));
@@ -33,7 +33,7 @@ public class FindFunctions {
     }
     reporter.report("Validating arguments", logs);
     if (logs.isEmpty()) {
-      return Optional.of(functionsToRun);
+      return Optional.of(callablesToRun);
     } else {
       return Optional.empty();
     }

@@ -75,7 +75,7 @@ public class FindSemanticErrors {
 
   private static void undefinedReferences(Logger logger, Definitions definitions, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
-        .addAll(definitions.functions().keySet())
+        .addAll(definitions.callables().keySet())
         .addAll(map(ast.funcs(), NamedNode::name))
         .addAll(map(ast.structs(), structNode -> structNode.constructor().name()))
         .build();
@@ -136,7 +136,7 @@ public class FindSemanticErrors {
 
     for (Named named : nameds) {
       logIfDuplicate(logger, definitions.types(), named);
-      logIfDuplicate(logger, definitions.functions(), named);
+      logIfDuplicate(logger, definitions.callables(), named);
     }
     Map<String, Named> checked = new HashMap<>();
     for (Named named : nameds) {

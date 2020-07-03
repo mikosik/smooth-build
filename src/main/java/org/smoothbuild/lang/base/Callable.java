@@ -11,11 +11,11 @@ import org.smoothbuild.parse.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Function implements Named {
+public abstract class Callable implements Named {
   private final Signature signature;
   private final Location location;
 
-  public Function(Signature signature, Location location) {
+  public Callable(Signature signature, Location location) {
     this.signature = checkNotNull(signature);
     this.location = checkNotNull(location);
   }

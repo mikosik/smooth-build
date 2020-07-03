@@ -11,7 +11,7 @@ import org.smoothbuild.parse.expr.NativeCallExpression;
  *
  * @see DefinedFunction
  */
-public class NativeFunction extends Function {
+public class NativeFunction extends Callable {
   private final Native nativ;
   private final Hash hash;
   private final boolean isCacheable;

@@ -13,8 +13,8 @@ import java.util.List;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LoggerImpl;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
@@ -63,15 +63,15 @@ public class ModuleLoader {
     return new Definitions(declaredTypes, declaredFunctions);
   }
 
-  private static ImmutableMap<String, Function> loadFunctions(
+  private static ImmutableMap<String, Callable> loadFunctions(
       Definitions imported, Ast ast, ObjectFactory objectFactory) {
-    var localFunctions = new HashMap<String, Function>();
+    var localFunctions = new HashMap<String, Callable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
     }
     for (FuncNode func : ast.funcs()) {
-      Function function = loadFunction(func, imported.functions(), localFunctions, objectFactory);
+      Callable function = loadFunction(func, imported.callables(), localFunctions, objectFactory);
       localFunctions.put(function.name(), function);
     }
     return ImmutableMap.copyOf(localFunctions);

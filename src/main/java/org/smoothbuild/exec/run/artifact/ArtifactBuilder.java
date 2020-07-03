@@ -20,7 +20,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
@@ -40,8 +40,8 @@ public class ArtifactBuilder {
     this.reporter = reporter;
   }
 
-  public void buildArtifacts(List<Function> functions) {
-    ImmutableList<Task> tasks = functions.stream()
+  public void buildArtifacts(List<Callable> callables) {
+    ImmutableList<Task> tasks = callables.stream()
         .map(f -> f.createAgrlessCallExpression(commandLineLocation()).createTask(null))
         .collect(toImmutableList());
     try {

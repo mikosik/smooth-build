@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.DefinedFunction;
-import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Parameter;
@@ -39,14 +39,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class FunctionLoader {
-  public static Function loadFunction(
+  public static Callable loadFunction(
       FuncNode func,
-      ImmutableMap<String, Function> importedFunctions,
-      HashMap<String, Function> localFunctions,
+      ImmutableMap<String, Callable> importedCallables,
+      HashMap<String, Callable> localCallables,
       ObjectFactory objectFactory) {
-    return new Supplier<Function>() {
+    return new Supplier<Callable>() {
       @Override
-      public Function get() {
+      public Callable get() {
         return switch (func.definitionKind()) {
           case SOURCE -> definedFunction();
           case NATIVE -> nativeFunction();
@@ -62,7 +62,7 @@ public class FunctionLoader {
             createExpression(func.expr()));
       }
 
-      private Function nativeFunction() {
+      private Callable nativeFunction() {
         Native nativ = func.get(Native.class);
         Signature signature = createSignature();
         Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
@@ -119,17 +119,17 @@ public class FunctionLoader {
       }
 
       private Expression createCall(CallNode call) {
-        Function function = localFunctions.get(call.name());
-        if (function == null) {
-          function = importedFunctions.get(call.name());
+        Callable callable = localCallables.get(call.name());
+        if (callable == null) {
+          callable = importedCallables.get(call.name());
         }
-        List<Expression> argExpressions = createArgumentExpressions(call, function);
-        return function.createCallExpression(argExpressions, call.location());
+        List<Expression> argExpressions = createArgumentExpressions(call, callable);
+        return callable.createCallExpression(argExpressions, call.location());
       }
 
       private List<Expression> createArgumentExpressions(CallNode call,
-          Function function) {
-        ImmutableList<Parameter> parameters = function.parameters();
+          Callable callable) {
+        ImmutableList<Parameter> parameters = callable.parameters();
         ArrayList<Expression> result = new ArrayList<>(parameters.size());
         List<ArgNode> args = call.assignedArgs();
         for (int i = 0; i < parameters.size(); i++) {

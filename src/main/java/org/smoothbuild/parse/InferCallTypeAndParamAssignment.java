@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.ParameterInfo;
 import org.smoothbuild.lang.object.type.GenericTypeMap;
 import org.smoothbuild.lang.object.type.Type;
@@ -29,7 +29,7 @@ public class InferCallTypeAndParamAssignment {
       @Override
       public void run() {
         call.setType(empty());
-        List<? extends ParameterInfo> parameters = functionParameters();
+        List<? extends ParameterInfo> parameters = callableParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
         if (logger.hasProblems()) {
           return;
@@ -105,11 +105,11 @@ public class InferCallTypeAndParamAssignment {
         return "In call to `" + call.name() + "`: ";
       }
 
-      private List<? extends ParameterInfo> functionParameters() {
+      private List<? extends ParameterInfo> callableParameters() {
         String name = call.name();
-        Function function = imported.functions().get(name);
-        if (function != null) {
-          return function.signature().parameters();
+        Callable callable = imported.callables().get(name);
+        if (callable != null) {
+          return callable.signature().parameters();
         }
         CallableNode node = callables.get(name);
         if (node != null) {
@@ -142,14 +142,14 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private Optional<Type> callType(GenericTypeMap<Type> actualTypeMap) {
-        return functionType().map(actualTypeMap::applyTo);
+        return callableType().map(actualTypeMap::applyTo);
       }
 
-      private Optional<Type> functionType() {
+      private Optional<Type> callableType() {
         String name = call.name();
-        Function function = imported.functions().get(name);
-        if (function != null) {
-          return Optional.of(function.signature().type());
+        Callable callable = imported.callables().get(name);
+        if (callable != null) {
+          return Optional.of(callable.signature().type());
         }
         CallableNode node = callables.get(name);
         if (node != null) {

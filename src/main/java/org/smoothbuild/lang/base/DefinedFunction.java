@@ -12,7 +12,7 @@ import org.smoothbuild.parse.expr.Expression;
  *
  * @see NativeFunction
  */
-public class DefinedFunction extends Function {
+public class DefinedFunction extends Callable {
   private final Expression body;
 
   public DefinedFunction(Signature signature, Location location, Expression body) {

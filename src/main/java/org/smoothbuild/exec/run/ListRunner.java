@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.Space.USER;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.parse.RuntimeController;
 
 public class ListRunner {
@@ -20,12 +20,12 @@ public class ListRunner {
 
   public int run() {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
-        .functions()
+        .callables()
         .values()
         .stream()
         .filter(f -> f.location().module().space().equals(USER))
         .filter(f -> f.parameters().size() == 0)
-        .map(Function::name)
+        .map(Callable::name)
         .sorted()
         .forEach(console::println));
   }

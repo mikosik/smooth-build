@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.exec.run.FindFunctions.findFunctions;
+import static org.smoothbuild.exec.run.FindCallables.findCallables;
 import static org.smoothbuild.exec.run.ValidateFunctionNames.validateFunctionNames;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.parse.Definitions;
 import org.smoothbuild.parse.RuntimeController;
 
@@ -49,12 +49,12 @@ public class TreeRunner {
 
     public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Generating tree");
-      findFunctions(reporter, definitions, names)
+      findCallables(reporter, definitions, names)
           .ifPresent(functions -> functions.forEach(f -> print(treeOf(f))));
     }
 
-    private Task treeOf(Function function) {
-      return function
+    private Task treeOf(Callable callable) {
+      return callable
           .createAgrlessCallExpression(commandLineLocation())
           .createTask(null);
     }
