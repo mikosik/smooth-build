@@ -54,7 +54,7 @@ public class InferTypesAndParamAssignment {
         struct.setType(objectFactory.structType(struct.name(), fields));
         List<ParameterInfo> parameters = createParameters(struct.fields());
         if (parameters != null) {
-          struct.setParameterInfos(parameters);
+          struct.constructor().setParameterInfos(parameters);
         }
       }
 

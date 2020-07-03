@@ -2,7 +2,6 @@ package org.smoothbuild.parse.ast;
 
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.parse.ast.StructNode.typeNameToConstructorName;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
@@ -48,12 +47,10 @@ public class Ast {
 
   private ImmutableMap<String, ParameterizedNode> createFunctionsAndConstructorsMap() {
     Builder<String, ParameterizedNode> builder = ImmutableMap.builder();
-    for (StructNode struct : structs) {
-      builder.put(typeNameToConstructorName(struct.name()), struct);
-    }
-    for (FuncNode func : funcs) {
-      builder.put(func.name(), func);
-    }
+    structs.stream()
+        .map(StructNode::constructor)
+        .forEach(c -> builder.put(c.name(), c));
+    funcs.forEach(f -> builder.put(f.name(), f));
     return builder.build();
   }
 

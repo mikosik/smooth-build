@@ -4,22 +4,24 @@ import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.object.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public class StructNode extends ParameterizedNode {
-  private final NamedNode constructor;
+public class StructNode extends NamedNode {
+  private final ParameterizedNode constructor;
   private final List<FieldNode> fields;
 
   public StructNode(String name, List<FieldNode> fields, Location location) {
     super(name, location);
-    this.constructor = new NamedNode(UPPER_CAMEL.to(LOWER_CAMEL, name), location);
+    this.constructor = new ConstructorNode(name, location);
     this.fields = ImmutableList.copyOf(fields);
   }
 
-  public Named constructor() {
+  public ParameterizedNode constructor() {
     return constructor;
   }
 
@@ -27,11 +29,19 @@ public class StructNode extends ParameterizedNode {
     return fields;
   }
 
-  public static String constructorNameToTypeName(String constructorName) {
-    return LOWER_CAMEL.to(UPPER_CAMEL, constructorName);
-  }
+  private class ConstructorNode extends ParameterizedNode {
+    public ConstructorNode(String structName, Location location) {
+      super(UPPER_CAMEL.to(LOWER_CAMEL, structName), location);
+    }
 
-  public static String typeNameToConstructorName(String constructorName) {
-    return UPPER_CAMEL.to(LOWER_CAMEL, constructorName);
+    @Override
+    public Optional<Type> type() {
+      return StructNode.this.type();
+    }
+
+    @Override
+    public void setType(Optional<Type> type) {
+      throw new UnsupportedOperationException();
+    }
   }
 }
