@@ -42,7 +42,7 @@ public class FindSemanticErrors {
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
     defaultParamBeforeNonDefault(logger, ast);
-    structNameStartingWithLowercaseLetter(logger, ast);
+    structNameWithSingleCapitalLetter(logger, ast);
     firstFieldWithForbiddenType(logger, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
   }
@@ -213,7 +213,7 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void structNameStartingWithLowercaseLetter(Logger logger, Ast ast) {
+  private static void structNameWithSingleCapitalLetter(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
