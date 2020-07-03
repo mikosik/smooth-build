@@ -144,7 +144,7 @@ public class FunctionLoader {
       private Expression createStringLiteral(StringNode string) {
         return new StringLiteralExpression(
             objectFactory.stringType(),
-            string.get(String.class),
+            string.unescapedValue(),
             string.location());
       }
 
