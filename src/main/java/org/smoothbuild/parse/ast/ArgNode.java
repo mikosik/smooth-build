@@ -6,17 +6,11 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.Type;
 
 public class ArgNode extends NamedNode {
-  private final int position;
   private final ExprNode expr;
 
-  public ArgNode(int position, String name, ExprNode expr, Location location) {
+  public ArgNode(String name, ExprNode expr, Location location) {
     super(name, location);
-    this.position = position;
     this.expr = expr;
-  }
-
-  public int position() {
-    return position;
   }
 
   public boolean hasName() {
