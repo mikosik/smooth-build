@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
-import static org.smoothbuild.util.Strings.unescaped;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ public class FindSemanticErrors {
       public void visitString(StringNode string) {
         super.visitString(string);
         try {
-          string.set(String.class, unescaped(string.value()));
+          string.calculateUnescaped();
         } catch (UnescapingFailedException e) {
           logger.log(parseError(string, e.getMessage()));
         }
