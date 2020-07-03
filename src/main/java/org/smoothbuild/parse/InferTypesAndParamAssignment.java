@@ -24,17 +24,17 @@ import org.smoothbuild.parse.ast.ArrayTypeNode;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.CallNode;
+import org.smoothbuild.parse.ast.CallableNode;
 import org.smoothbuild.parse.ast.ExprNode;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ItemNode;
-import org.smoothbuild.parse.ast.NamedNode;
 import org.smoothbuild.parse.ast.RefNode;
 import org.smoothbuild.parse.ast.StringNode;
 import org.smoothbuild.parse.ast.StructNode;
 import org.smoothbuild.parse.ast.TypeNode;
+import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
 public class InferTypesAndParamAssignment {
   public static void inferTypesAndParamAssignment(Ast ast, Definitions imported,
@@ -52,18 +52,14 @@ public class InferTypesAndParamAssignment {
             .map(f -> new Field((ConcreteType) f.type().get(), f.name(), f.location()))
             .collect(toImmutableList());
         struct.setType(objectFactory.structType(struct.name(), fields));
-        List<ItemInfo> parameters = createParameters(struct.fields());
-        if (parameters != null) {
-          struct.constructor().setParameterInfos(parameters);
-        }
       }
 
       @Override
       public void visitField(int index, ItemNode fieldNode) {
         super.visitField(index, fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
-        fieldNode.set(ItemInfo.class,
-            new ItemInfo(index, fieldNode.type().get(), fieldNode.name(), false));
+        fieldNode.setItemInfo(
+            Optional.of(new ItemInfo(index, fieldNode.type().get(), fieldNode.name(), false)));
       }
 
       @Override
@@ -76,9 +72,15 @@ public class InferTypesAndParamAssignment {
         scope = null;
 
         func.setType(funcType(func));
-        List<ItemInfo> parameters = createParameters(func.params());
-        if (parameters != null) {
-          func.setParameterInfos(parameters);
+        visitCallable(func);
+      }
+
+      @Override
+      public void visitCallable(CallableNode callable) {
+        super.visitCallable(callable);
+        var infos = Lists.map(callable.params(), ItemNode::itemInfo);
+        if (infos.stream().noneMatch(Optional::isEmpty)) {
+           callable.setParameterInfos(infos.stream().map(Optional::get).collect(toImmutableList()));
         }
       }
 
@@ -118,18 +120,6 @@ public class InferTypesAndParamAssignment {
         }
       }
 
-      private List<ItemInfo> createParameters(List<? extends NamedNode> params) {
-        Builder<ItemInfo> builder = ImmutableList.builder();
-        for (NamedNode param : params) {
-          if (param.get(ItemInfo.class) == null) {
-            return null;
-          } else {
-            builder.add(param.get(ItemInfo.class));
-          }
-        }
-        return builder.build();
-      }
-
       @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
@@ -137,7 +127,7 @@ public class InferTypesAndParamAssignment {
         param.setType(type);
         type.ifPresentOrElse(t -> {
               var info = new ItemInfo(index, t, param.name(), param.hasDefaultValue());
-              param.set(ItemInfo.class, info);
+              param.setItemInfo(Optional.of(info));
               if (param.hasDefaultValue()) {
                 Optional<Type> defaultValueType = param.defaultValue().type();
                 defaultValueType.ifPresent(dt -> {
@@ -149,7 +139,7 @@ public class InferTypesAndParamAssignment {
                 });
               }
             },
-            () -> param.set(ItemInfo.class, null));
+            () -> param.setItemInfo(empty()));
       }
 
       @Override

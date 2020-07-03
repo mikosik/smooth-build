@@ -14,8 +14,8 @@ public class AstVisitor {
   }
 
   public void visitStruct(StructNode struct) {
-    visitConstructor(struct.constructor());
     visitFields(struct.fields());
+    visitConstructor(struct.constructor());
   }
 
   public void visitConstructor(CallableNode constructor) {
@@ -23,6 +23,7 @@ public class AstVisitor {
   }
 
   public void visitCallable(CallableNode callable) {
+    visitParams(callable.params());
   }
 
   public void visitFields(List<ItemNode> fields) {
@@ -38,10 +39,9 @@ public class AstVisitor {
   }
 
   public void visitFunc(FuncNode func) {
-    visitCallable(func);
     func.visitType(this);
-    visitParams(func.params());
     func.visitExpr(this);
+    visitCallable(func);
   }
 
   public void visitParams(List<ItemNode> params) {
