@@ -50,7 +50,7 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemNode param) {
     visitType(param.typeNode());
-    if (param.hasDefaultValue()) {
+    if (param.declaresDefaultValue()) {
       visitExpr(param.defaultValue());
     }
   }

@@ -53,7 +53,7 @@ public class InferCallTypeAndParamAssignment {
         boolean inNamedArgsSection = false;
         for (int i = 0; i < args.size(); i++) {
           ArgNode arg = args.get(i);
-          if (arg.hasName()) {
+          if (arg.declaresName()) {
             inNamedArgsSection = true;
             ItemInfo param = parametersMap.get(arg.name());
             if (param == null) {

@@ -23,7 +23,7 @@ public class FuncNode extends CallableNode {
     }
   }
 
-  public boolean hasType() {
+  public boolean declaresType() {
     return typeNode != null;
   }
 

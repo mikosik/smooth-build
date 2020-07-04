@@ -16,14 +16,14 @@ public class ArgNodeTest extends TestingContext {
   @Test
   public void named_arg_has_name() {
     ArgNode arg = new ArgNode("name", expr(stringType()), unknownLocation());
-    assertThat(arg.hasName())
+    assertThat(arg.declaresName())
         .isTrue();
   }
 
   @Test
   public void nameless_arg_does_not_have_name() {
     ArgNode arg = new ArgNode(null, expr(stringType()), unknownLocation());
-    assertThat(arg.hasName())
+    assertThat(arg.declaresName())
         .isFalse();
   }
 
