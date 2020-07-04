@@ -102,11 +102,11 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private String inCallToPrefix(CallNode call) {
-        return "In call to `" + call.name() + "`: ";
+        return "In call to `" + call.calledName() + "`: ";
       }
 
       private List<? extends ItemInfo> callableParameters() {
-        String name = call.name();
+        String name = call.calledName();
         Callable callable = imported.callables().get(name);
         if (callable != null) {
           return callable.signature().parameters();
@@ -115,7 +115,7 @@ public class InferCallTypeAndParamAssignment {
         if (node != null) {
           return node.parameterInfos();
         }
-        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
+        throw new RuntimeException("Couldn't find '" + call.calledName() + "' function.");
       }
 
       private GenericTypeMap<Type> inferActualTypesOfGenericParameters(
@@ -134,9 +134,9 @@ public class InferCallTypeAndParamAssignment {
         try {
           return inferMapping(genericTypes, actualTypes);
         } catch (IllegalArgumentException e) {
-          logger.log(parseError(call,
-              "Cannot infer actual type(s) for generic parameter(s) in call to '" + call.name() +
-                  "'."));
+          logger.log(
+              parseError(call, "Cannot infer actual type(s) for generic parameter(s) in call to '"
+                  + call.calledName() + "'."));
           return null;
         }
       }
@@ -146,7 +146,7 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private Optional<Type> callableType() {
-        String name = call.name();
+        String name = call.calledName();
         Callable callable = imported.callables().get(name);
         if (callable != null) {
           return Optional.of(callable.signature().type());
@@ -155,7 +155,7 @@ public class InferCallTypeAndParamAssignment {
         if (node != null) {
           return node.type();
         }
-        throw new RuntimeException("Couldn't find '" + call.name() + "' function.");
+        throw new RuntimeException("Couldn't find '" + call.calledName() + "' function.");
       }
     }.run();
   }

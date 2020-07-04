@@ -81,8 +81,8 @@ public class FindSemanticErrors {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!all.contains(call.name())) {
-          logger.log(parseError(call.location(), "'" + call.name() + "' is undefined."));
+        if (!all.contains(call.calledName())) {
+          logger.log(parseError(call.location(), "'" + call.calledName() + "' is undefined."));
         }
       }
     }.visitAst(ast);
