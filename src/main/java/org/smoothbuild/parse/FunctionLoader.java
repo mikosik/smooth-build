@@ -118,9 +118,9 @@ public class FunctionLoader {
       }
 
       private Expression createCall(CallNode call) {
-        Callable callable = localCallables.get(call.name());
+        Callable callable = localCallables.get(call.calledName());
         if (callable == null) {
-          callable = importedCallables.get(call.name());
+          callable = importedCallables.get(call.calledName());
         }
         List<Expression> argExpressions = createArgumentExpressions(call, callable);
         return callable.createCallExpression(argExpressions, call.location());

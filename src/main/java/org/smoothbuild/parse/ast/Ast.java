@@ -97,8 +97,8 @@ public class Ast {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (funcNames.contains(call.name())) {
-          dependencies.add(new GraphEdge<>(call.location(), call.name()));
+        if (funcNames.contains(call.calledName())) {
+          dependencies.add(new GraphEdge<>(call.location(), call.calledName()));
         }
       }
     }.visitFunc(func);
