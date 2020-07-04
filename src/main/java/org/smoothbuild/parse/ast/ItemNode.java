@@ -31,7 +31,7 @@ public class ItemNode extends NamedNode {
     return defaultValue;
   }
 
-  public boolean hasDefaultValue() {
+  public boolean declaresDefaultValue() {
     return defaultValue != null;
   }
 

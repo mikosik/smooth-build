@@ -13,18 +13,18 @@ public class ArgNode extends NamedNode {
     this.expr = expr;
   }
 
-  public boolean hasName() {
+  public boolean declaresName() {
     return super.name() != null;
   }
 
   @Override
   public String name() {
-    checkState(hasName());
+    checkState(declaresName());
     return super.name();
   }
 
   public String nameSanitized() {
-    return hasName() ? name() : "<nameless>";
+    return declaresName() ? name() : "<nameless>";
   }
 
   public String typeAndName() {

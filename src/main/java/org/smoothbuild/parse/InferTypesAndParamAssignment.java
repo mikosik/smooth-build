@@ -93,7 +93,7 @@ public class InferTypesAndParamAssignment {
       }
 
       private Optional<Type> typeOfNativeFunction(FuncNode func) {
-        if (func.hasType()) {
+        if (func.declaresType()) {
           return createType(func.typeNode());
         } else {
           logger.log(parseError(func, "Function '" + func.name()
@@ -104,7 +104,7 @@ public class InferTypesAndParamAssignment {
 
       private Optional<Type> typeOfDeclaredFunction(FuncNode func) {
         Optional<Type> exprType = func.expr().type();
-        if (func.hasType()) {
+        if (func.declaresType()) {
           Optional<Type> type = createType(func.typeNode());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
@@ -126,9 +126,9 @@ public class InferTypesAndParamAssignment {
         Optional<Type> type = param.typeNode().type();
         param.setType(type);
         type.ifPresentOrElse(t -> {
-              var info = new ItemInfo(index, t, param.name(), param.hasDefaultValue());
+              var info = new ItemInfo(index, t, param.name(), param.declaresDefaultValue());
               param.setItemInfo(Optional.of(info));
-              if (param.hasDefaultValue()) {
+              if (param.declaresDefaultValue()) {
                 Optional<Type> defaultValueType = param.defaultValue().type();
                 defaultValueType.ifPresent(dt -> {
                   if (!t.isAssignableFrom(dt)) {

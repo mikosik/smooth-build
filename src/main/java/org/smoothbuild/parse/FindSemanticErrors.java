@@ -94,7 +94,7 @@ public class FindSemanticErrors {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        if (func.hasType()) {
+        if (func.declaresType()) {
           assertTypeIsDefined(func.typeNode());
         }
       }
@@ -199,7 +199,7 @@ public class FindSemanticErrors {
         super.visitParams(params);
         boolean foundParamWithDefaultValue = false;
         for (ItemNode param : params) {
-          if (param.hasDefaultValue()) {
+          if (param.declaresDefaultValue()) {
             foundParamWithDefaultValue = true;
           } else if (foundParamWithDefaultValue) {
             logger.log(parseError(param,
@@ -255,7 +255,7 @@ public class FindSemanticErrors {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        if (func.hasType()
+        if (func.declaresType()
             && func.typeNode().isGeneric()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
           logger.log(parseError(func.typeNode(), "Undefined generic type '"

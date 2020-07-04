@@ -81,7 +81,7 @@ public class FunctionLoader {
       private Parameter createParameter(ItemNode param) {
         Type type = param.typeNode().type().get();
         String name = param.name();
-        Expression defaultValue = param.hasDefaultValue()
+        Expression defaultValue = param.declaresDefaultValue()
             ? createExpression(param.defaultValue())
             : null;
         return new Parameter(param.index(), type, name, defaultValue);
