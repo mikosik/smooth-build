@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.parse.ast.Named;
@@ -41,5 +42,5 @@ public interface Type extends Named {
 
   public boolean isParamAssignableFrom(Type type);
 
-  public Type commonSuperType(Type type);
+  public Optional<Type> commonSuperType(Type type);
 }

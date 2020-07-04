@@ -42,7 +42,7 @@ public class ArrayLiteralExpression extends Expression {
     return (ConcreteArrayType) elements
         .stream()
         .map(t -> (Type) t.type())
-        .reduce(Type::commonSuperType)
+        .reduce((type, type2) -> type.commonSuperType(type2).get())
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);
   }
