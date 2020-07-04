@@ -5,6 +5,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -46,18 +47,19 @@ public class GenericTypeMap<T extends Type> {
         if (builder.containsKey(core)) {
           T previous = builder.get(core);
           @SuppressWarnings("unchecked")
-          T commonSuperType = (T) previous.commonSuperType(actualCore);
-          if (commonSuperType == null) {
-            throw new IllegalArgumentException("Types " + previous.name() + ", " + actualCore.name()
-                + " don't have common super type.");
-          } else {
-            builder.put(core, commonSuperType);
-          }
+          Optional<T> commonSuperType = (Optional<T>) previous.commonSuperType(actualCore);
+          builder.put(core, commonSuperType.orElseThrow(() -> throwExc(actualCore, previous)));
         } else {
           builder.put(core, actualCore);
         }
       }
     }
     return ImmutableMap.copyOf(builder);
+  }
+
+  private static <T extends Type> IllegalArgumentException throwExc(
+      T type1, T type2) {
+    return new IllegalArgumentException("Types " + type2.name() + ", " + type1.name()
+        + " don't have common super type.");
   }
 }

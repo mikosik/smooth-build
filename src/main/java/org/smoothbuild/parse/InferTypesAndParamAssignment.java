@@ -196,15 +196,15 @@ public class InferTypesAndParamAssignment {
           if (type.isEmpty()) {
             return empty();
           }
-          elemType = elemType.commonSuperType(type.get());
-
-          if (elemType == null) {
+          Optional<Type> common = elemType.commonSuperType(type.get());
+          if (common.isEmpty()) {
             logger.log(parseError(array,
                 "Array cannot contain elements of incompatible types.\n"
                     + "First element has type " + firstType.get().q()
                     + " while element at index " + i + " has type " + type.get().q() + "."));
             return empty();
           }
+          elemType = common.get();
         }
         return Optional.of(objectFactory.arrayType(elemType));
       }

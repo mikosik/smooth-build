@@ -4,6 +4,7 @@ import static com.google.common.collect.Lists.reverse;
 import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.base.SObject;
@@ -90,7 +91,7 @@ public abstract class AbstractType implements Type {
   }
 
   @Override
-  public Type commonSuperType(Type that) {
+  public Optional<Type> commonSuperType(Type that) {
     /*
      * Algorithm below works correctly for all smooth types currently existing in smooth because it
      * is not possible to define recursive struct types. It will fail when conversion chain
@@ -100,8 +101,8 @@ public abstract class AbstractType implements Type {
 
     List<? extends Type> hierarchy1 = this.hierarchy();
     List<? extends Type> hierarchy2 = that.hierarchy();
-    Type type = closestCommonSuperType(hierarchy1, hierarchy2);
-    if (type == null) {
+    Optional<Type> type = closestCommonSuperType(hierarchy1, hierarchy2);
+    if (type.isEmpty()) {
       Type last1 = hierarchy1.get(0);
       Type last2 = hierarchy2.get(0);
       Type last1Core = last1.coreType();
@@ -109,7 +110,7 @@ public abstract class AbstractType implements Type {
       boolean isNothing1 = last1Core.isNothing();
       boolean isNothing2 = last2Core.isNothing();
       if (isNothing1 && isNothing2) {
-        type = last1.coreDepth() < last2.coreDepth() ? last2 : last1;
+        type = Optional.of(last1.coreDepth() < last2.coreDepth() ? last2 : last1);
       } else if (isNothing1) {
         type = firstWithDepthNotLowerThan(hierarchy2, last1.coreDepth());
       } else if (isNothing2) {
@@ -119,7 +120,7 @@ public abstract class AbstractType implements Type {
     return type;
   }
 
-  private static Type closestCommonSuperType(List<? extends Type> hierarchy1,
+  private static Optional<Type> closestCommonSuperType(List<? extends Type> hierarchy1,
       List<? extends Type> hierarchy2) {
     int index = 0;
     Type type = null;
@@ -128,14 +129,14 @@ public abstract class AbstractType implements Type {
       type = hierarchy1.get(index);
       index++;
     }
-    return type;
+    return Optional.ofNullable(type);
   }
 
-  private static Type firstWithDepthNotLowerThan(List<? extends Type> hierarchy, int depth) {
+  private static Optional<Type> firstWithDepthNotLowerThan(List<? extends Type> hierarchy, int depth) {
     return reverse(hierarchy)
         .stream()
+        .map(t -> (Type) t)
         .filter(t -> depth <= t.coreDepth())
-        .findFirst()
-        .orElse(null);
+        .findFirst();
   }
 }
