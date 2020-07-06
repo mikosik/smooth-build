@@ -1,6 +1,6 @@
 package org.smoothbuild.parse.ast;
 
-import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.object.type.TypeNames;

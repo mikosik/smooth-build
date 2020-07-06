@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
