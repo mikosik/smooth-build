@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.object.db;
 
+import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.SEVERITY;
 import static org.smoothbuild.lang.object.base.Messages.TEXT;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
-import static org.smoothbuild.lang.object.type.TypeNames.isGenericTypeName;
 
 import java.io.IOException;
 import java.util.Map;

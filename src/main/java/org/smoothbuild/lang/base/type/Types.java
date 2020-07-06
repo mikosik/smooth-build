@@ -1,18 +1,31 @@
 package org.smoothbuild.lang.base.type;
 
+import static java.lang.Character.isUpperCase;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
   private static final Type MISSING = new MissingType();
 
-  private static final BasicType BLOB = new BasicType("Blob");
-  private static final BasicType BOOL = new BasicType("Bool");
-  private static final BasicType NOTHING = new BasicType("Nothing");
-  private static final BasicType STRING = new BasicType("String");
+  private static final BasicConcreteType BLOB = new BasicConcreteType("Blob");
+  private static final BasicConcreteType BOOL = new BasicConcreteType("Bool");
+  private static final BasicConcreteType NOTHING = new BasicConcreteType("Nothing");
+  private static final BasicConcreteType STRING = new BasicConcreteType("String");
+  private static final BasicConcreteType TYPE = new BasicConcreteType("Type");
 
+  /**
+   * Basic types available in smooth language. Note that `Type` doesn't belong to that list.
+   * Smooth language doesn't have 'Type' type yet but it is declared already above and tested.
+   */
   public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
+
+  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()
+      .addAll(BASIC_TYPES)
+      .add(TYPE)
+      .add(MISSING)
+      .build();
 
   public static Type missing() {
     return MISSING;
@@ -22,20 +35,24 @@ public class Types {
     return new BasicGenericType(name);
   }
 
-  public static BasicType blob() {
+  public static BasicConcreteType blob() {
     return BLOB;
   }
 
-  public static BasicType bool() {
+  public static BasicConcreteType bool() {
     return BOOL;
   }
 
-  public static BasicType nothing() {
+  public static BasicConcreteType nothing() {
     return NOTHING;
   }
 
-  public static BasicType string() {
+  public static BasicConcreteType string() {
     return STRING;
+  }
+
+  public static BasicConcreteType type() {
+    return TYPE;
   }
 
   public static StructType struct(String name, Iterable<Field> fields) {
@@ -60,5 +77,9 @@ public class Types {
 
   public static GenericArrayType array(GenericType elemType) {
     return new GenericArrayType(elemType);
+  }
+
+  public static boolean isGenericTypeName(String name) {
+    return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 }

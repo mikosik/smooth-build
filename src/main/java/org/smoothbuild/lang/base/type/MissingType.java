@@ -1,20 +1,72 @@
 package org.smoothbuild.lang.base.type;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import java.util.List;
+import java.util.Optional;
 
-public record MissingType(String name) implements Type {
-  private static final String NAME = "Missing";
+public class MissingType extends Type {
+  private static final String NAME = "--Missing--";
 
-  public MissingType() {
-    this(NAME);
-  }
-
-  public MissingType {
-    checkArgument(NAME.equals(name));
+  protected MissingType() {
+    super(NAME);
   }
 
   @Override
-  public String q() {
-    return "'" + name + "'";
+  public boolean isGeneric() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isArray() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isNothing() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Type superType() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Type coreType() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int coreDepth() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Type changeCoreDepthBy(int coreDepth) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public <T extends Type> T replaceCoreType(T coreType) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public List<? extends Type> hierarchy() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isAssignableFrom(Type type) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean isParamAssignableFrom(Type type) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Optional<Type> commonSuperType(Type that) {
+    throw new UnsupportedOperationException();
   }
 }

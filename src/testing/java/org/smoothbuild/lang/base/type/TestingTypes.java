@@ -1,0 +1,46 @@
+package org.smoothbuild.lang.base.type;
+
+import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.type.Types.array;
+import static org.smoothbuild.lang.base.type.Types.blob;
+import static org.smoothbuild.lang.base.type.Types.bool;
+import static org.smoothbuild.lang.base.type.Types.generic;
+import static org.smoothbuild.lang.base.type.Types.nothing;
+import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.type;
+
+import java.util.List;
+
+public class TestingTypes {
+  public static final ConcreteType type = type();
+  public static final ConcreteType bool = bool();
+  public static final ConcreteType string = string();
+  public static final ConcreteType blob = blob();
+  public static final ConcreteType nothing = nothing();
+  public static final StructType person = struct(
+      "Person", List.of(
+          new Field(string, "firstName", unknownLocation()),
+          new Field(string, "lastName", unknownLocation())));
+  public static final GenericType a = generic("A");
+  public static final GenericType b = generic("B");
+
+  public static final ConcreteArrayType arrayType = array(type);
+  public static final ConcreteArrayType arrayBool = array(bool);
+  public static final ConcreteArrayType arrayString = array(string);
+  public static final ConcreteArrayType arrayBlob = array(blob);
+  public static final ConcreteArrayType arrayNothing = array(nothing);
+  public static final ConcreteArrayType arrayPerson = array(person);
+  public static final GenericArrayType arrayA = array(a);
+  public static final GenericArrayType arrayB = array(b);
+
+  public static final ConcreteArrayType array2Type = array(arrayType);
+  public static final ConcreteArrayType array2Bool = array(arrayBool);
+  public static final ConcreteArrayType array2String = array(arrayString);
+  public static final ConcreteArrayType array2Blob = array(arrayBlob);
+  public static final ConcreteArrayType array2Nothing = array(arrayNothing);
+  public static final ConcreteArrayType array2Person = array(arrayPerson);
+  public static final GenericArrayType array2A = array(arrayA);
+  public static final GenericArrayType array2B = array(arrayB);
+}
+
