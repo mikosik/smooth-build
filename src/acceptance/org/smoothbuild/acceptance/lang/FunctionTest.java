@@ -61,6 +61,15 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void function_with_same_name_as_constructor_of_slib_struct_causes_error() throws Exception {
+    createUserModule(
+        "  file = 'def';  ");
+    runSmoothBuild("myStruct");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1, "'file' is already defined at {slib}/slib.smooth:");
+  }
+
+  @Test
   public void overriding_core_function_causes_error() throws Exception {
     createUserModule(
         "  aFile = 'abc';  ");
