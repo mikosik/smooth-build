@@ -3,11 +3,13 @@ package org.smoothbuild.lang.base.type;
 import java.util.List;
 import java.util.Optional;
 
-public class MissingType extends IType {
+import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
+
+public class MissingType extends Type {
   private static final String NAME = "--Missing--";
 
   protected MissingType() {
-    super(NAME);
+    super(NAME, new BasicCompoundability());
   }
 
   @Override
@@ -26,12 +28,12 @@ public class MissingType extends IType {
   }
 
   @Override
-  public IType superType() {
+  public Type superType() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public IType coreType() {
+  public Type coreType() {
     throw new UnsupportedOperationException();
   }
 
@@ -41,32 +43,32 @@ public class MissingType extends IType {
   }
 
   @Override
-  public IType changeCoreDepthBy(int coreDepth) {
+  public Type changeCoreDepthBy(int delta) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends IType> T replaceCoreType(T coreType) {
+  public <T extends Type> T replaceCoreType(T coreType) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public List<? extends IType> hierarchy() {
+  public List<? extends Type> hierarchy() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isAssignableFrom(IType type) {
+  public boolean isAssignableFrom(Type type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isParamAssignableFrom(IType type) {
+  public boolean isParamAssignableFrom(Type type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Optional<IType> commonSuperType(IType that) {
+  public Optional<Type> commonSuperType(Type that) {
     throw new UnsupportedOperationException();
   }
 }

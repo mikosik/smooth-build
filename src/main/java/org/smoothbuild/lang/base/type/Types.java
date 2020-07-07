@@ -1,57 +1,65 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
+
+import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
-  private static final IType MISSING = new MissingType();
+  private static final Type MISSING = new MissingType();
 
-  private static final BasicConcreteType BLOB = new BasicConcreteType("Blob");
-  private static final BasicConcreteType BOOL = new BasicConcreteType("Bool");
-  private static final BasicConcreteType NOTHING = new BasicConcreteType("Nothing");
-  private static final BasicConcreteType STRING = new BasicConcreteType("String");
-  private static final BasicConcreteType TYPE = new BasicConcreteType("Type");
+  private static final ConcreteType BLOB = newBasicType("Blob");
+  private static final ConcreteType BOOL = newBasicType("Bool");
+  private static final ConcreteType NOTHING = newBasicType("Nothing");
+  private static final ConcreteType STRING = newBasicType("String");
+  private static final ConcreteType TYPE = newBasicType("Type");
 
   /**
    * Basic types available in smooth language. Note that `Type` doesn't belong to that list.
    * Smooth language doesn't have 'Type' type yet but it is declared already above and tested.
    */
-  public static final ImmutableSet<IType> BASIC_TYPES = ImmutableSet.of(
+  public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
 
-  public static final ImmutableSet<IType> ALL_TYPES = ImmutableSet.<IType>builder()
+  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()
       .addAll(BASIC_TYPES)
       .add(TYPE)
       .add(MISSING)
       .build();
 
-  public static IType missing() {
+  private static ConcreteType newBasicType(String name) {
+    return new ConcreteType(name, null, new BasicCompoundability());
+  }
+
+  public static Type missing() {
     return MISSING;
   }
 
-  public static BasicGenericType generic(String name) {
-    return new BasicGenericType(name);
+  public static GenericType generic(String name) {
+    checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
+    return new GenericType(name, new BasicCompoundability());
   }
 
-  public static BasicConcreteType blob() {
+  public static ConcreteType blob() {
     return BLOB;
   }
 
-  public static BasicConcreteType bool() {
+  public static ConcreteType bool() {
     return BOOL;
   }
 
-  public static BasicConcreteType nothing() {
+  public static ConcreteType nothing() {
     return NOTHING;
   }
 
-  public static BasicConcreteType string() {
+  public static ConcreteType string() {
     return STRING;
   }
 
-  public static BasicConcreteType type() {
+  public static ConcreteType type() {
     return TYPE;
   }
 
@@ -59,15 +67,17 @@ public class Types {
     return new StructType(name, ImmutableList.copyOf(fields));
   }
 
-  public static IType array(IType elemType) {
+  public static Type array(Type elemType) {
     if (MISSING.equals(elemType)) {
       return MISSING;
-    } else if (elemType instanceof GenericType genericElemType) {
-      return array(genericElemType);
-    } else if (elemType instanceof ConcreteType concreteElemType) {
-      return array(concreteElemType);
     } else {
-      throw new RuntimeException("Unexpected class: " + elemType.getClass().getCanonicalName());
+      if (elemType instanceof GenericType genericElemType) {
+        return array(genericElemType);
+      } else if (elemType instanceof ConcreteType concreteElemType) {
+        return array(concreteElemType);
+      } else {
+        throw new RuntimeException("Unexpected class: " + elemType.getClass().getCanonicalName());
+      }
     }
   }
 

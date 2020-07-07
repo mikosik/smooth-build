@@ -1,12 +1,9 @@
 package org.smoothbuild.lang.base.type;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
-import java.util.Objects;
-
-import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.lang.base.type.compound.StructCompoundability;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -19,7 +16,7 @@ public class StructType extends ConcreteType {
   }
 
   public StructType(String name, ImmutableMap<String, Field> fields) {
-    super(name, calculateSuperType(fields));
+    super(name, calculateSuperType(fields), new StructCompoundability());
     this.fields = fields;
   }
 
@@ -41,33 +38,5 @@ public class StructType extends ConcreteType {
 
   public ImmutableMap<String, Field> fields() {
     return fields;
-  }
-
-  @Override
-  public org.smoothbuild.lang.object.type.Type toRecordType(ObjectFactory objectFactory) {
-    Iterable<org.smoothbuild.lang.object.type.Field> rFields = fields.values().stream()
-        .map(f -> new org.smoothbuild.lang.object.type.Field(
-            (org.smoothbuild.lang.object.type.ConcreteType) f.type().toRecordType(objectFactory),
-            f.name(),
-            null))
-        .collect(toImmutableList());
-    return objectFactory.structType(name(), rFields);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o instanceof StructType that) {
-      return this.name().equals(that.name())
-          && this.fields.equals(that.fields);
-    }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name());
   }
 }

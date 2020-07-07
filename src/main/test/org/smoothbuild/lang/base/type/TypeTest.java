@@ -62,21 +62,21 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void name(IType type, String name) {
+  public void name(Type type, String name) {
     assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(IType type, String name) {
+  public void quoted_name(Type type, String name) {
     assertThat(type.q())
         .isEqualTo("'" + name + "'");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(IType type, String name) {
+  public void to_string(Type type, String name) {
     assertThat(type.toString())
         .isEqualTo("Type(\"" + name + "\")");
   }
@@ -112,7 +112,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("coreType_test_data")
-  public void coreType(IType type, IType expected) {
+  public void coreType(Type type, Type expected) {
     assertThat(type.coreType())
         .isEqualTo(expected);
   }
@@ -147,7 +147,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("replaceCoreType_test_data")
-  public void replaceCoreType(IType type, IType coreType, IType expected) {
+  public void replaceCoreType(Type type, Type coreType, Type expected) {
     assertThat(type.replaceCoreType(coreType))
         .isEqualTo(expected);
   }
@@ -380,7 +380,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("coreDepth_test_data")
-  public void coreDepth(IType type, int expected) {
+  public void coreDepth(Type type, int expected) {
     assertThat(type.coreDepth())
         .isEqualTo(expected);
   }
@@ -414,7 +414,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("changeCoreDepthBy_test_data_with_illegal_values")
-  public void changeCoreDepthBy_fails_for(IType type, int change) {
+  public void changeCoreDepthBy_fails_for(Type type, int change) {
     assertCall(() -> type.changeCoreDepthBy(change))
         .throwsException(IllegalArgumentException.class);
   }
@@ -456,7 +456,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("changeCoreDepth_test_data")
-  public void changeCoreDepthBy(IType type, int change, IType expected) {
+  public void changeCoreDepthBy(Type type, int change, Type expected) {
     assertThat(type.changeCoreDepthBy(change))
         .isEqualTo(expected);
   }
@@ -538,7 +538,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isGeneric_test_data")
-  public void isGeneric(IType type, boolean expected) {
+  public void isGeneric(Type type, boolean expected) {
     assertThat(type.isGeneric())
         .isEqualTo(expected);
   }
@@ -575,7 +575,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isArray_test_data")
-  public void isArray(IType type, boolean expected) {
+  public void isArray(Type type, boolean expected) {
     assertThat(type.isArray())
         .isEqualTo(expected);
   }
@@ -609,7 +609,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("superType_test_data")
-  public void superType(IType type, IType expected) {
+  public void superType(Type type, Type expected) {
     assertThat(type.superType())
         .isEqualTo(expected);
   }
@@ -644,8 +644,8 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("hierarchy_test_data")
-  public void hierarchy(List<IType> hierarchy) {
-    IType root = hierarchy.get(hierarchy.size() - 1);
+  public void hierarchy(List<Type> hierarchy) {
+    Type root = hierarchy.get(hierarchy.size() - 1);
     assertThat(root.hierarchy())
         .isEqualTo(hierarchy);
   }
@@ -677,7 +677,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isAssignableFrom_test_data")
-  public void isAssignableFrom(IType destination, IType source, boolean expected) {
+  public void isAssignableFrom(Type destination, Type source, boolean expected) {
     assertThat(destination.isAssignableFrom(source))
         .isEqualTo(expected);
   }
@@ -1159,7 +1159,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isParamAssignableFrom_test_data")
-  public void isParamAssignableFrom(IType destination, IType source, boolean expected) {
+  public void isParamAssignableFrom(Type destination, Type source, boolean expected) {
     assertThat(destination.isParamAssignableFrom(source))
         .isEqualTo(expected);
   }
@@ -1640,7 +1640,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("commonSuperType_test_data")
-  public void commonSuperType(IType type1, IType type2, Optional<IType> expected) {
+  public void commonSuperType(Type type1, Type type2, Optional<Type> expected) {
     assertThat(type1.commonSuperType(type2))
         .isEqualTo(expected);
     assertThat(type2.commonSuperType(type1))
@@ -1772,7 +1772,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("actualCoreTypeWhenAssignedFrom_test_data")
-  public void actualCoreTypeWhenAssignedFrom(GenericType type, IType assigned, IType expected) {
+  public void actualCoreTypeWhenAssignedFrom(GenericType type, Type assigned, Type expected) {
     if (expected == null) {
       assertCall(() -> type.actualCoreTypeWhenAssignedFrom(assigned))
           .throwsException(IllegalArgumentException.class);
@@ -1868,7 +1868,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("elemType_test_data")
-  public void elemType(ArrayType type, IType expected) {
+  public void elemType(ArrayType type, Type expected) {
     assertThat(type.elemType())
         .isEqualTo(expected);
   }

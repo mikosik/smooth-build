@@ -1,46 +1,70 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.Lists.reverse;
+import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.type.compound.Compoundability;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Type extends IType {
-  private ImmutableList<IType> hierarchy;
+public abstract class Type {
+  private final String name;
+  protected final Compoundability compoundability;
+  private ImmutableList<Type> hierarchy;
 
-  protected Type(String name) {
-    super(name);
+  protected Type(String name, Compoundability compoundability) {
+    this.name = name;
+    this.compoundability = compoundability;
   }
 
-  @Override
+  public String name() {
+    return name;
+  }
+
+  public String q() {
+    return "'" + name + "'";
+  }
+
+  public abstract boolean isGeneric();
+
   public boolean isArray() {
-    return false;
+    return compoundability.isArray();
   }
 
-  @Override
   public boolean isNothing() {
-    return false;
+    return this == nothing();
   }
 
-  public abstract org.smoothbuild.lang.object.type.Type toRecordType(ObjectFactory objectFactory);
+  public abstract Type superType();
 
-  @Override
-  public <T extends IType> T replaceCoreType(T coreType) {
-    return coreType;
+  public org.smoothbuild.lang.object.type.Type toRecordType(ObjectFactory objectFactory) {
+    return compoundability.toRecordType(this, objectFactory);
   }
 
-  @Override
+  public Type coreType() {
+    return compoundability.coreType(this);
+  }
+
+  public <T extends Type> T replaceCoreType(T coreType) {
+    @SuppressWarnings("unchecked")
+    T result = (T) coreType.changeCoreDepthBy(coreDepth());
+    return result;
+  }
+
   public int coreDepth() {
-    return 0;
+    return compoundability.coreDepth(this);
   }
 
-  @Override
-  public List<? extends IType> hierarchy() {
-    ImmutableList<IType> h = hierarchy;
+  public Type changeCoreDepthBy(int delta) {
+    return compoundability.changeCoreDepthBy(this, delta);
+  }
+
+  public List<? extends Type> hierarchy() {
+    ImmutableList<Type> h = hierarchy;
     if (h == null) {
       h = calculateHierarchy();
       hierarchy = h;
@@ -48,19 +72,22 @@ public abstract class Type extends IType {
     return h;
   }
 
-  private ImmutableList<IType> calculateHierarchy() {
+  private ImmutableList<Type> calculateHierarchy() {
     if (superType() == null) {
       return ImmutableList.of(this);
     } else {
-      return ImmutableList.<IType>builder()
+      return ImmutableList.<Type>builder()
           .addAll(superType().hierarchy())
           .add(this)
           .build();
     }
   }
 
-  @Override
-  public Optional<IType> commonSuperType(IType that) {
+  public abstract boolean isAssignableFrom(Type type);
+
+  public abstract boolean isParamAssignableFrom(Type type);
+
+  public Optional<Type> commonSuperType(Type that) {
     /*
      * Algorithm below works correctly for all smooth types currently existing in smooth because it
      * is not possible to define recursive struct types. It will fail when conversion chain
@@ -68,14 +95,14 @@ public abstract class Type extends IType {
      * chain has infinite length (for example structure X is convertible to its array [X]).
      */
 
-    List<? extends IType> hierarchy1 = this.hierarchy();
-    List<? extends IType> hierarchy2 = that.hierarchy();
-    Optional<IType> type = closestCommonSuperType(hierarchy1, hierarchy2);
+    List<? extends Type> hierarchy1 = this.hierarchy();
+    List<? extends Type> hierarchy2 = that.hierarchy();
+    Optional<Type> type = closestCommonSuperType(hierarchy1, hierarchy2);
     if (type.isEmpty()) {
-      IType last1 = hierarchy1.get(0);
-      IType last2 = hierarchy2.get(0);
-      IType last1Core = last1.coreType();
-      IType last2Core = last2.coreType();
+      Type last1 = hierarchy1.get(0);
+      Type last2 = hierarchy2.get(0);
+      Type last1Core = last1.coreType();
+      Type last2Core = last2.coreType();
       boolean isNothing1 = last1Core.isNothing();
       boolean isNothing2 = last2Core.isNothing();
       if (isNothing1 && isNothing2) {
@@ -89,10 +116,10 @@ public abstract class Type extends IType {
     return type;
   }
 
-  private static Optional<IType> closestCommonSuperType(List<? extends IType> hierarchy1,
-      List<? extends IType> hierarchy2) {
+  private static Optional<Type> closestCommonSuperType(List<? extends Type> hierarchy1,
+      List<? extends Type> hierarchy2) {
     int index = 0;
-    IType type = null;
+    Type type = null;
     while (index < hierarchy1.size() && index < hierarchy2.size()
         && hierarchy1.get(index).equals(hierarchy2.get(index))) {
       type = hierarchy1.get(index);
@@ -101,12 +128,27 @@ public abstract class Type extends IType {
     return Optional.ofNullable(type);
   }
 
-  private static Optional<IType> firstWithDepthNotLowerThan(
-      List<? extends IType> hierarchy, int depth) {
+  private static Optional<Type> firstWithDepthNotLowerThan(
+      List<? extends Type> hierarchy, int depth) {
     return reverse(hierarchy)
         .stream()
-        .map(t -> (IType) t)
+        .map(t -> (Type) t)
         .filter(t -> depth <= t.coreDepth())
         .findFirst();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    return compoundability.areEqual(this, o);
+  }
+
+  @Override
+  public int hashCode() {
+    return compoundability.hashCode(this);
+  }
+
+  @Override
+  public String toString() {
+    return "Type(\"" + name() + "\")";
   }
 }
