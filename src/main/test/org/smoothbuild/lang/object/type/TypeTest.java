@@ -49,23 +49,28 @@ import com.google.common.testing.EqualsTester;
 public class TypeTest {
   @ParameterizedTest
   @MethodSource("names")
-  public static void name(Type type, String name) {
+  public void name(Type type, String name) {
     assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public static void quoted_name(Type type, String name) {
+  public void quoted_name(Type type, String name) {
     assertThat(type.q())
         .isEqualTo("'" + name + "'");
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public static void to_string(Type type, String name) {
-    assertThat(type.toString())
-        .isEqualTo("Type(\"" + name + "\")");
+  public void to_string(Type type, String name) {
+    if (type instanceof ConcreteType concreteType) {
+      assertThat(concreteType.toString())
+          .isEqualTo("Type(\"" + name + "\"):" + concreteType.hash());
+    } else {
+      assertThat(type.toString())
+          .isEqualTo("Type(\"" + name + "\")");
+    }
   }
 
   public static Stream<Arguments> names() {
@@ -98,7 +103,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("jType_test_data")
-  public static void jType(Type type, Class<?> expected) {
+  public void jType(Type type, Class<?> expected) {
     assertThat(type.jType())
         .isEqualTo(expected);
   }
@@ -122,7 +127,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("coreType_test_data")
-  public static void coreType(Type type, Type expected) {
+  public void coreType(Type type, Type expected) {
     assertThat(type.coreType())
         .isEqualTo(expected);
   }
@@ -157,7 +162,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("replaceCoreType_test_data")
-  public static void replaceCoreType(Type type, Type coreType, Type expected) {
+  public void replaceCoreType(Type type, Type coreType, Type expected) {
     assertThat(type.replaceCoreType(coreType))
         .isEqualTo(expected);
   }
@@ -390,7 +395,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("coreDepth_test_data")
-  public static void coreDepth(Type type, int expected) {
+  public void coreDepth(Type type, int expected) {
     assertThat(type.coreDepth())
         .isEqualTo(expected);
   }
