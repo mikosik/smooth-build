@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.base.type;
 
-public abstract class ConcreteType extends Type {
+import org.smoothbuild.lang.base.type.compound.Compoundability;
+
+public class ConcreteType extends Type {
   private final ConcreteType superType;
 
-  public ConcreteType(String name, ConcreteType superType) {
-    super(name);
+  public ConcreteType(String name, ConcreteType superType, Compoundability compoundability) {
+    super(name, compoundability);
     this.superType = superType;
   }
 
@@ -14,35 +16,12 @@ public abstract class ConcreteType extends Type {
   }
 
   @Override
-  public boolean isNothing() {
-    return this == Types.nothing();
-  }
-
-  @Override
   public ConcreteType superType() {
     return superType;
   }
 
   @Override
-  public ConcreteType coreType() {
-    return this;
-  }
-
-  @Override
-  public ConcreteType changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    ConcreteType result = this;
-    for (int i = 0; i < delta; i++) {
-      result = new ConcreteArrayType(result);
-    }
-    return result;
-  }
-
-  @Override
-  public boolean isAssignableFrom(IType type) {
+  public boolean isAssignableFrom(Type type) {
     if (type.isGeneric()) {
       return false;
     }
@@ -66,7 +45,7 @@ public abstract class ConcreteType extends Type {
   }
 
   @Override
-  public boolean isParamAssignableFrom(IType type) {
+  public boolean isParamAssignableFrom(Type type) {
     return isAssignableFrom(type);
   }
 }

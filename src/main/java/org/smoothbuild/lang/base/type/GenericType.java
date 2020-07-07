@@ -1,12 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
-public abstract class GenericType extends Type {
-  public GenericType(String name) {
-    super(name);
-  }
+import org.smoothbuild.lang.base.type.compound.Compoundability;
 
-  public <T extends IType> T actualCoreTypeWhenAssignedFrom(T type) {
-    return type;
+public class GenericType extends Type {
+  public GenericType(String name, Compoundability compoundability) {
+    super(name, compoundability);
   }
 
   @Override
@@ -20,25 +18,7 @@ public abstract class GenericType extends Type {
   }
 
   @Override
-  public GenericType coreType() {
-    return this;
-  }
-
-  @Override
-  public GenericType changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    GenericType result = this;
-    for (int i = 0; i < delta; i++) {
-      result = new GenericArrayType(result);
-    }
-    return result;
-  }
-
-  @Override
-  public boolean isAssignableFrom(IType type) {
+  public boolean isAssignableFrom(Type type) {
     if (type.isGeneric()) {
       return equals(type);
     } else {
@@ -47,10 +27,14 @@ public abstract class GenericType extends Type {
   }
 
   @Override
-  public boolean isParamAssignableFrom(IType type) {
+  public boolean isParamAssignableFrom(Type type) {
     if (type.coreType().isNothing()) {
       return true;
     }
     return coreDepth() <= type.coreDepth();
+  }
+
+  public <T extends Type> T actualCoreTypeWhenAssignedFrom(T source) {
+    return compoundability.actualCoreTypeWhenAssignedFrom(this, source);
   }
 }
