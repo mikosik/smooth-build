@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
-  private static final Type MISSING = new MissingType();
+  private static final IType MISSING = new MissingType();
 
   private static final BasicConcreteType BLOB = new BasicConcreteType("Blob");
   private static final BasicConcreteType BOOL = new BasicConcreteType("Bool");
@@ -18,16 +18,16 @@ public class Types {
    * Basic types available in smooth language. Note that `Type` doesn't belong to that list.
    * Smooth language doesn't have 'Type' type yet but it is declared already above and tested.
    */
-  public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(
+  public static final ImmutableSet<IType> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
 
-  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()
+  public static final ImmutableSet<IType> ALL_TYPES = ImmutableSet.<IType>builder()
       .addAll(BASIC_TYPES)
       .add(TYPE)
       .add(MISSING)
       .build();
 
-  public static Type missing() {
+  public static IType missing() {
     return MISSING;
   }
 
@@ -59,7 +59,7 @@ public class Types {
     return new StructType(name, ImmutableList.copyOf(fields));
   }
 
-  public static Type array(Type elemType) {
+  public static IType array(IType elemType) {
     if (MISSING.equals(elemType)) {
       return MISSING;
     } else if (elemType instanceof GenericType genericElemType) {

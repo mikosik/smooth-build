@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-public abstract class ConcreteType extends ValidType {
+public abstract class ConcreteType extends Type {
   private final ConcreteType superType;
 
   public ConcreteType(String name, ConcreteType superType) {
@@ -42,7 +42,7 @@ public abstract class ConcreteType extends ValidType {
   }
 
   @Override
-  public boolean isAssignableFrom(Type type) {
+  public boolean isAssignableFrom(IType type) {
     if (type.isGeneric()) {
       return false;
     }
@@ -66,7 +66,7 @@ public abstract class ConcreteType extends ValidType {
   }
 
   @Override
-  public boolean isParamAssignableFrom(Type type) {
+  public boolean isParamAssignableFrom(IType type) {
     return isAssignableFrom(type);
   }
 }
