@@ -35,7 +35,7 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
-  public <T extends Type> T replaceCoreType(T coreType) {
+  public <T extends IType> T replaceCoreType(T coreType) {
     @SuppressWarnings("unchecked")
     T result = (T) coreType.changeCoreDepthBy(coreDepth());
     return result;
@@ -51,7 +51,7 @@ public class GenericArrayType extends GenericType implements ArrayType {
   }
 
   @Override
-  public <T extends Type> T actualCoreTypeWhenAssignedFrom(T type) {
+  public <T extends IType> T actualCoreTypeWhenAssignedFrom(T type) {
     if (type.isArray()) {
       @SuppressWarnings("unchecked")
       T result = (T) elemType.actualCoreTypeWhenAssignedFrom(((ArrayType) type).elemType());

@@ -1,49 +1,112 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.collect.Lists.reverse;
+
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Type {
-  private final String name;
+import org.smoothbuild.lang.object.db.ObjectFactory;
+
+import com.google.common.collect.ImmutableList;
+
+public abstract class Type extends IType {
+  private ImmutableList<IType> hierarchy;
 
   protected Type(String name) {
-    this.name = name;
+    super(name);
   }
-
-  public String name() {
-    return name;
-  }
-
-  public String q() {
-    return "'" + name + "'";
-  }
-
-  public abstract boolean isGeneric();
-
-  public abstract boolean isArray();
-
-  public abstract boolean isNothing();
-
-  public abstract Type superType();
-
-  public abstract Type coreType();
-
-  public abstract <T extends Type> T replaceCoreType(T coreType);
-
-  public abstract int coreDepth();
-
-  public abstract Type changeCoreDepthBy(int coreDepth);
-
-  public abstract List<? extends Type> hierarchy();
-
-  public abstract boolean isAssignableFrom(Type type);
-
-  public abstract boolean isParamAssignableFrom(Type type);
-
-  public abstract Optional<Type> commonSuperType(Type that);
 
   @Override
-  public String toString() {
-    return "Type(\"" + name() + "\")";
+  public boolean isArray() {
+    return false;
+  }
+
+  @Override
+  public boolean isNothing() {
+    return false;
+  }
+
+  public abstract org.smoothbuild.lang.object.type.Type toRecordType(ObjectFactory objectFactory);
+
+  @Override
+  public <T extends IType> T replaceCoreType(T coreType) {
+    return coreType;
+  }
+
+  @Override
+  public int coreDepth() {
+    return 0;
+  }
+
+  @Override
+  public List<? extends IType> hierarchy() {
+    ImmutableList<IType> h = hierarchy;
+    if (h == null) {
+      h = calculateHierarchy();
+      hierarchy = h;
+    }
+    return h;
+  }
+
+  private ImmutableList<IType> calculateHierarchy() {
+    if (superType() == null) {
+      return ImmutableList.of(this);
+    } else {
+      return ImmutableList.<IType>builder()
+          .addAll(superType().hierarchy())
+          .add(this)
+          .build();
+    }
+  }
+
+  @Override
+  public Optional<IType> commonSuperType(IType that) {
+    /*
+     * Algorithm below works correctly for all smooth types currently existing in smooth because it
+     * is not possible to define recursive struct types. It will fail when conversion chain
+     * (hierarchy) contains cycle (for example struct type is convertible to itself) or conversion
+     * chain has infinite length (for example structure X is convertible to its array [X]).
+     */
+
+    List<? extends IType> hierarchy1 = this.hierarchy();
+    List<? extends IType> hierarchy2 = that.hierarchy();
+    Optional<IType> type = closestCommonSuperType(hierarchy1, hierarchy2);
+    if (type.isEmpty()) {
+      IType last1 = hierarchy1.get(0);
+      IType last2 = hierarchy2.get(0);
+      IType last1Core = last1.coreType();
+      IType last2Core = last2.coreType();
+      boolean isNothing1 = last1Core.isNothing();
+      boolean isNothing2 = last2Core.isNothing();
+      if (isNothing1 && isNothing2) {
+        type = Optional.of(last1.coreDepth() < last2.coreDepth() ? last2 : last1);
+      } else if (isNothing1) {
+        type = firstWithDepthNotLowerThan(hierarchy2, last1.coreDepth());
+      } else if (isNothing2) {
+        type = firstWithDepthNotLowerThan(hierarchy1, last2.coreDepth());
+      }
+    }
+    return type;
+  }
+
+  private static Optional<IType> closestCommonSuperType(List<? extends IType> hierarchy1,
+      List<? extends IType> hierarchy2) {
+    int index = 0;
+    IType type = null;
+    while (index < hierarchy1.size() && index < hierarchy2.size()
+        && hierarchy1.get(index).equals(hierarchy2.get(index))) {
+      type = hierarchy1.get(index);
+      index++;
+    }
+    return Optional.ofNullable(type);
+  }
+
+  private static Optional<IType> firstWithDepthNotLowerThan(
+      List<? extends IType> hierarchy, int depth) {
+    return reverse(hierarchy)
+        .stream()
+        .map(t -> (IType) t)
+        .filter(t -> depth <= t.coreDepth())
+        .findFirst();
   }
 }

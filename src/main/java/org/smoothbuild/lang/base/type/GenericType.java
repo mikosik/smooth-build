@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
-public abstract class GenericType extends ValidType {
+public abstract class GenericType extends Type {
   public GenericType(String name) {
     super(name);
   }
 
-  public <T extends Type> T actualCoreTypeWhenAssignedFrom(T type) {
+  public <T extends IType> T actualCoreTypeWhenAssignedFrom(T type) {
     return type;
   }
 
@@ -38,7 +38,7 @@ public abstract class GenericType extends ValidType {
   }
 
   @Override
-  public boolean isAssignableFrom(Type type) {
+  public boolean isAssignableFrom(IType type) {
     if (type.isGeneric()) {
       return equals(type);
     } else {
@@ -47,7 +47,7 @@ public abstract class GenericType extends ValidType {
   }
 
   @Override
-  public boolean isParamAssignableFrom(Type type) {
+  public boolean isParamAssignableFrom(IType type) {
     if (type.coreType().isNothing()) {
       return true;
     }

@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class GenericTypeMapTest {
   @ParameterizedTest
   @MethodSource("inferMapping_test_data")
-  public void inferMapping(List<Type> types, List<Type> actualTypes, Type type, Type expected) {
+  public void inferMapping(List<IType> types, List<IType> actualTypes, IType type, IType expected) {
     if (type == null) {
       assertCall(() -> GenericTypeMap
           .inferMapping(types, actualTypes))

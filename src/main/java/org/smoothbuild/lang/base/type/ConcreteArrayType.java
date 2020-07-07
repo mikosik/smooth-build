@@ -39,7 +39,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public <T extends Type> T replaceCoreType(T coreType) {
+  public <T extends IType> T replaceCoreType(T coreType) {
     @SuppressWarnings("unchecked")
     T result = (T) coreType.changeCoreDepthBy(coreDepth());
     return result;

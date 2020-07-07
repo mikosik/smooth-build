@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import java.util.List;
 import java.util.Optional;
 
-public class MissingType extends Type {
+public class MissingType extends IType {
   private static final String NAME = "--Missing--";
 
   protected MissingType() {
@@ -26,12 +26,12 @@ public class MissingType extends Type {
   }
 
   @Override
-  public Type superType() {
+  public IType superType() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Type coreType() {
+  public IType coreType() {
     throw new UnsupportedOperationException();
   }
 
@@ -41,32 +41,32 @@ public class MissingType extends Type {
   }
 
   @Override
-  public Type changeCoreDepthBy(int coreDepth) {
+  public IType changeCoreDepthBy(int coreDepth) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public <T extends Type> T replaceCoreType(T coreType) {
+  public <T extends IType> T replaceCoreType(T coreType) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public List<? extends Type> hierarchy() {
+  public List<? extends IType> hierarchy() {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isAssignableFrom(Type type) {
+  public boolean isAssignableFrom(IType type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean isParamAssignableFrom(Type type) {
+  public boolean isParamAssignableFrom(IType type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public Optional<Type> commonSuperType(Type that) {
+  public Optional<IType> commonSuperType(IType that) {
     throw new UnsupportedOperationException();
   }
 }
