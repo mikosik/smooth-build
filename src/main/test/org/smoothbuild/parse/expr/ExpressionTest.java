@@ -1,7 +1,7 @@
 package org.smoothbuild.parse.expr;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -21,13 +21,13 @@ public class ExpressionTest {
 
   @Test
   public void null_children_is_forbidden() {
-    assertCall(() -> new MyExpression(null, unknownLocation()))
+    assertCall(() -> new MyExpression(null, internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void code_location() {
-    Location location = unknownLocation();
+    Location location = internal();
     MyExpression expression = new MyExpression(list(), location);
     assertThat(expression.location())
         .isEqualTo(location);

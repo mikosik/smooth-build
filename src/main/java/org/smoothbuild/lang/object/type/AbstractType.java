@@ -36,7 +36,7 @@ public abstract class AbstractType implements Type {
   @Override
   public Location location() {
     // TODO remove this once refactoring is completed
-    return Location.unknownLocation();
+    return Location.internal();
   }
 
   @Override

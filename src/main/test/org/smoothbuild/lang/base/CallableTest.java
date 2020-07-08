@@ -77,7 +77,7 @@ public class CallableTest extends TestingContext {
 
   public static class MyCallable extends Callable {
     public MyCallable(Signature signature) {
-      super(signature, Location.unknownLocation());
+      super(signature, Location.internal());
     }
 
     @Override

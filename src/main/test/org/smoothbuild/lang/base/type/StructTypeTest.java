@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -40,7 +40,7 @@ public class StructTypeTest {
   private static List<Field> fields(ConcreteType... types) {
     List<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
-      result.add(new Field(types[i], "name" + i, unknownLocation()));
+      result.add(new Field(types[i], "name" + i, internal()));
     }
     return result;
   }

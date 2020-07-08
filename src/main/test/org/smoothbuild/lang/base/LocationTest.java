@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
 import static org.smoothbuild.lang.base.Location.location;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -39,7 +39,7 @@ public class LocationTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(unknownLocation(), unknownLocation());
+    tester.addEqualityGroup(internal(), internal());
     tester.addEqualityGroup(commandLineLocation(), commandLineLocation());
     tester.addEqualityGroup(location(modulePath("abc"), 7), location(modulePath("abc"), 7));
     tester.addEqualityGroup(location(modulePath("abc"), 11), location(modulePath("abc"), 11));
@@ -65,7 +65,7 @@ public class LocationTest {
 
     @Test
     public void unknown() {
-      Location location = unknownLocation();
+      Location location = internal();
       assertThat(location.toString())
           .isEqualTo("unknown location");
     }

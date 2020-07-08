@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.array2A;
 import static org.smoothbuild.lang.base.type.TestingTypes.array2B;
@@ -52,7 +52,7 @@ import org.smoothbuild.lang.base.Location;
 import com.google.common.testing.EqualsTester;
 
 public class TypeTest {
-  private static final Location LOCATION = unknownLocation();
+  private static final Location LOCATION = internal();
 
   @Test
   public void verify_all_basic_types_are_tested() {

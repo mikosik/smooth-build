@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.object.db;
 
 import static java.util.Objects.requireNonNullElse;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
@@ -258,7 +258,7 @@ public class ObjectDb {
     Hash typeHash = hashes.get(1);
     String name = hashedDb.readString(nameHash);
     ConcreteType type = getTypeOrWrapException(typeHash, parentHash);
-    return new Field(type, name, unknownLocation());
+    return new Field(type, name, internal());
   }
 
   private <T extends ConcreteType> T cacheType(T type) {

@@ -1,7 +1,7 @@
 package org.smoothbuild;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Space.USER;
 
 import java.nio.file.Path;
@@ -16,7 +16,7 @@ public class ModulePathTest {
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
 
-    tester.addEqualityGroup(unknownLocation(), unknownLocation());
+    tester.addEqualityGroup(internal(), internal());
     tester.addEqualityGroup(modulePath("abc", "def"), modulePath("abc", "def"));
     tester.addEqualityGroup(modulePath("abc", "222"), modulePath("abc", "222"));
     tester.addEqualityGroup(modulePath("111", "def"), modulePath("111", "def"));
