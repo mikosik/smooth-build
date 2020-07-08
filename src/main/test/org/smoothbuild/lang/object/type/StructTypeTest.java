@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -68,7 +68,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
   private static List<Field> fields(ConcreteType... types) {
     ArrayList<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
-      result.add(new Field(types[i], "name" + i, unknownLocation()));
+      result.add(new Field(types[i], "name" + i, internal()));
     }
     return result;
   }

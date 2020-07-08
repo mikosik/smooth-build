@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.list;
 
@@ -127,7 +127,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   private Constructor constructor() {
-    return new Constructor(signature(personType(), "ConstructorName", list()), unknownLocation());
+    return new Constructor(signature(personType(), "ConstructorName", list()), internal());
   }
 
   @Test
@@ -140,7 +140,7 @@ public class ComputationHashTest extends TestingContext {
 
   private Accessor accessor() {
     return new Accessor(
-        signature(stringType(), "accessor", list()), "fieldName", unknownLocation());
+        signature(stringType(), "accessor", list()), "fieldName", internal());
   }
 
   private static Algorithm computation(Hash hash) {

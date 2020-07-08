@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -27,8 +27,8 @@ public class TypeStableHashTest extends TestingContext {
 
   private StructType structType(ObjectDb objectDb) {
     return objectDb.structType("NewType", list(
-        new Field(objectDb.stringType(), "name", unknownLocation()),
-        new Field(objectDb.blobType(), "data", unknownLocation())));
+        new Field(objectDb.stringType(), "name", internal()),
+        new Field(objectDb.blobType(), "data", internal())));
   }
 
   private static void assertHash(ConcreteType type, String hash) {

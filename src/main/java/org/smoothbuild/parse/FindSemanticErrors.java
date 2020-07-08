@@ -149,7 +149,7 @@ public class FindSemanticErrors {
     if (types.containsKey(name)) {
       Named otherDefinition = types.get(name);
       Location location = otherDefinition.location();
-      String atLocation = location.equals(Location.unknownLocation())
+      String atLocation = location.equals(Location.internal())
           ? ""
           : " at " + location;
       logger.log(alreadyDefinedError(named, name, atLocation));

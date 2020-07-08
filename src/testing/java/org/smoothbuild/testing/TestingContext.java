@@ -1,7 +1,7 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -194,14 +194,14 @@ public class TestingContext {
   public StructType personType() {
     ConcreteType string = stringType();
     return structType("Person", list(
-        new Field(string, "firstName", unknownLocation()),
-        new Field(string, "lastName", unknownLocation())));
+        new Field(string, "firstName", internal()),
+        new Field(string, "lastName", internal())));
   }
 
   public StructType fileType() {
     return structType("File", list(
-        new Field(blobType(), "content", unknownLocation()),
-        new Field(stringType(), "path", unknownLocation())));
+        new Field(blobType(), "content", internal()),
+        new Field(stringType(), "path", internal())));
   }
 
   public Bool bool(boolean value) {
@@ -285,11 +285,11 @@ public class TestingContext {
     public TestingObjectFactory(ObjectDb objectDb) {
       super(objectDb);
       structType("File", list(
-          new Field(blobType(), "content", unknownLocation()),
-          new Field(stringType(), "path", unknownLocation())));
+          new Field(blobType(), "content", internal()),
+          new Field(stringType(), "path", internal())));
       structType("Message", list(
-          new Field(stringType(), "text", unknownLocation()),
-          new Field(stringType(), "severity", unknownLocation())));
+          new Field(stringType(), "text", internal()),
+          new Field(stringType(), "severity", internal())));
     }
   }
 }

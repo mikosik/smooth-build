@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.lang.base.Space.UNKNOWN;
+import static org.smoothbuild.lang.base.Space.INTERNAL;
 import static org.smoothbuild.lang.base.Space.USER;
 
 public record Location(ModulePath modulePath, int line) {
@@ -11,8 +11,8 @@ public record Location(ModulePath modulePath, int line) {
     return new Location(ModulePath.modulePath(USER, null, null), 1);
   }
 
-  public static Location unknownLocation() {
-    return new Location(ModulePath.modulePath(UNKNOWN, null, null), -1);
+  public static Location internal() {
+    return new Location(ModulePath.modulePath(INTERNAL, null, null), -1);
   }
 
   public static Location location(ModulePath modulePath, int line) {
@@ -30,8 +30,8 @@ public record Location(ModulePath modulePath, int line) {
 
   @Override
   public String toString() {
-    if (modulePath.space() == UNKNOWN) {
-      return "unknown location";
+    if (modulePath.space() == INTERNAL) {
+      return "smooth internal";
     } else if (modulePath.smooth().path() == null) {
       return "command line";
     } else {

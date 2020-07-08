@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
@@ -20,8 +20,8 @@ public class TestingTypes {
   public static final ConcreteType nothing = nothing();
   public static final StructType person = struct(
       "Person", List.of(
-          new Field(string, "firstName", unknownLocation()),
-          new Field(string, "lastName", unknownLocation())));
+          new Field(string, "firstName", internal()),
+          new Field(string, "lastName", internal())));
   public static final GenericType a = generic("A");
   public static final GenericType b = generic("B");
 

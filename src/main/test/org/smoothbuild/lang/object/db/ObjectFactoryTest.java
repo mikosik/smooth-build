@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.object.db;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.unknownLocation;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
@@ -111,7 +111,7 @@ public class ObjectFactoryTest extends TestingContext {
   @Test
   public void custom_struct_type_can_be_retrieved_by_name() {
     Type type = emptyCacheObjectFactory().structType(
-        "MyStruct", list(new Field(stringType(), "field", unknownLocation())));
+        "MyStruct", list(new Field(stringType(), "field", internal())));
     assertThat(emptyCacheObjectFactory().getType("MyStruct"))
         .isEqualTo(type);
   }
@@ -126,7 +126,7 @@ public class ObjectFactoryTest extends TestingContext {
   @Test
   public void reusing_struct_name_causes_exception() {
     emptyCacheObjectFactory().structType(
-        "MyStruct", list(new Field(stringType(), "field", unknownLocation())));
+        "MyStruct", list(new Field(stringType(), "field", internal())));
     assertCall(() -> emptyCacheObjectFactory().structType("MyStruct", list()))
         .throwsException(IllegalStateException.class);
   }
