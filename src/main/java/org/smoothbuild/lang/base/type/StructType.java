@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.StructCompoundability;
 
 import com.google.common.collect.ImmutableList;
@@ -11,12 +12,12 @@ import com.google.common.collect.ImmutableMap;
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
 
-  public StructType(String name, ImmutableList<Field> fields) {
-    this(name, fieldsMap(fields));
+  public StructType(String name, Location location, ImmutableList<Field> fields) {
+    this(name, location, fieldsMap(fields));
   }
 
-  public StructType(String name, ImmutableMap<String, Field> fields) {
-    super(name, calculateSuperType(fields), new StructCompoundability());
+  public StructType(String name, Location location, ImmutableMap<String, Field> fields) {
+    super(name, location, calculateSuperType(fields), new StructCompoundability());
     this.fields = fields;
   }
 

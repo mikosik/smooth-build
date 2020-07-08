@@ -6,23 +6,33 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.Compoundability;
 import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Type {
+public abstract class Type implements Named {
   private final String name;
+  private final Location location;
   protected final Compoundability compoundability;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(String name, Compoundability compoundability) {
+  protected Type(String name, Location location, Compoundability compoundability) {
     this.name = name;
+    this.location = location;
     this.compoundability = compoundability;
   }
 
+  @Override
   public String name() {
     return name;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   public String q() {

@@ -2,8 +2,8 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
-import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -67,7 +67,7 @@ public class LocationTest {
     public void unknown() {
       Location location = internal();
       assertThat(location.toString())
-          .isEqualTo("unknown location");
+          .isEqualTo("smooth internal");
     }
   }
 
