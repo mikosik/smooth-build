@@ -9,7 +9,7 @@ public class MissingType extends Type {
   private static final String NAME = "--Missing--";
 
   protected MissingType() {
-    super(NAME, new BasicCompoundability());
+    super(NAME, null, new BasicCompoundability());
   }
 
   @Override

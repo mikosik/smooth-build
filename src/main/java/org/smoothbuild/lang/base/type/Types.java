@@ -2,7 +2,9 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
+import static org.smoothbuild.lang.base.Location.internal;
 
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
 
 import com.google.common.collect.ImmutableList;
@@ -31,7 +33,7 @@ public class Types {
       .build();
 
   private static ConcreteType newBasicType(String name) {
-    return new ConcreteType(name, null, new BasicCompoundability());
+    return new ConcreteType(name, internal(), null, new BasicCompoundability());
   }
 
   public static Type missing() {
@@ -40,7 +42,7 @@ public class Types {
 
   public static GenericType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
-    return new GenericType(name, new BasicCompoundability());
+    return new GenericType(name, internal(), new BasicCompoundability());
   }
 
   public static ConcreteType blob() {
@@ -63,8 +65,8 @@ public class Types {
     return TYPE;
   }
 
-  public static StructType struct(String name, Iterable<Field> fields) {
-    return new StructType(name, ImmutableList.copyOf(fields));
+  public static StructType struct(String name, Location location, Iterable<Field> fields) {
+    return new StructType(name, location, ImmutableList.copyOf(fields));
   }
 
   public static Type array(Type elemType) {

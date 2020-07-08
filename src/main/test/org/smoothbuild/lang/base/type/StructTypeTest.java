@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.type.TestingTypes.FAKE_LOCATION;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -16,24 +17,24 @@ import org.junit.jupiter.api.Test;
 public class StructTypeTest {
   @Test
   public void struct_type_without_fields_can_be_created() {
-    struct("Struct", list());
+    struct("Struct", FAKE_LOCATION, list());
   }
 
   @Test
   public void first_field_type_cannot_be_nothing() {
-    assertCall(() -> struct("Struct", fields(nothing())))
+    assertCall(() -> struct("Struct", FAKE_LOCATION, fields(nothing())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_nothing_array() {
-    assertCall(() -> struct("Struct", fields(array(nothing()))))
+    assertCall(() -> struct("Struct", FAKE_LOCATION, fields(array(nothing()))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void first_field_type_cannot_be_array() {
-    assertCall(() -> struct("Struct", fields(array(string()))))
+    assertCall(() -> struct("Struct", FAKE_LOCATION, fields(array(string()))))
         .throwsException(IllegalArgumentException.class);
   }
 

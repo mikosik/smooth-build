@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.Compoundability;
 
 public class GenericType extends Type {
-  public GenericType(String name, Compoundability compoundability) {
-    super(name, compoundability);
+  public GenericType(String name, Location location, Compoundability compoundability) {
+    super(name, location, compoundability);
   }
 
   @Override
