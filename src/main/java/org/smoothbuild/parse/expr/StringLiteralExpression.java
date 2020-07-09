@@ -25,4 +25,9 @@ public class StringLiteralExpression extends Expression {
     Algorithm algorithm = new StringLiteralAlgorithm(stringType, string);
     return new NormalTask(algorithm, ImmutableList.of(), location(), true);
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

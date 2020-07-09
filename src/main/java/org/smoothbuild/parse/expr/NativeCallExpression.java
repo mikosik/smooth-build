@@ -51,4 +51,9 @@ public class NativeCallExpression extends Expression {
     }
     return result;
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

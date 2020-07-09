@@ -39,6 +39,11 @@ public class ExpressionTest {
     }
 
     @Override
+    public <T> T visit(ExpressionVisitor<T> visitor) {
+      return null;
+    }
+
+    @Override
     public Task createTask(Scope<Task> scope) {
       return null;
     }
