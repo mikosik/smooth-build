@@ -27,4 +27,9 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
       return new ConcreteArrayType(elemSuperType);
     }
   }
+
+  @Override
+  public <T> T visit(TypeVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

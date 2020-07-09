@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.Compoundability;
 
-public class ConcreteType extends Type {
+public abstract class ConcreteType extends Type {
   private final ConcreteType superType;
 
   public ConcreteType(String name, Location location, ConcreteType superType,
@@ -34,10 +34,8 @@ public class ConcreteType extends Type {
       return true;
     }
     if (this instanceof ConcreteArrayType && type instanceof ConcreteArrayType) {
-      ConcreteType
-          thisElemType = ((ConcreteArrayType) this).elemType();
-      ConcreteType
-          thatElemType = ((ConcreteArrayType) type).elemType();
+      ConcreteType thisElemType = ((ConcreteArrayType) this).elemType();
+      ConcreteType thatElemType = ((ConcreteArrayType) type).elemType();
       return thisElemType.isAssignableFrom(thatElemType);
     }
     if (type instanceof StructType) {

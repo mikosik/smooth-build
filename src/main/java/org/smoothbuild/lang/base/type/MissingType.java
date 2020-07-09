@@ -72,4 +72,9 @@ public class MissingType extends Type {
   public Optional<Type> commonSuperType(Type that) {
     throw new UnsupportedOperationException();
   }
+
+  @Override
+  public <T> T visit(TypeVisitor<T> visitor) {
+    throw new UnsupportedOperationException();
+  }
 }

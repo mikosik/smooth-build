@@ -40,4 +40,9 @@ public class StructType extends ConcreteType {
   public ImmutableMap<String, Field> fields() {
     return fields;
   }
+
+  @Override
+  public <T> T visit(TypeVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

@@ -35,6 +35,11 @@ public class GenericType extends Type {
     return coreDepth() <= type.coreDepth();
   }
 
+  @Override
+  public <T> T visit(TypeVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
+
   public <T extends Type> T actualCoreTypeWhenAssignedFrom(T source) {
     return compoundability.actualCoreTypeWhenAssignedFrom(this, source);
   }

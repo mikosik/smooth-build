@@ -152,6 +152,8 @@ public abstract class Type implements Named {
     return compoundability.jType();
   }
 
+  public abstract <T> T visit(TypeVisitor<T> visitor);
+
   @Override
   public boolean equals(Object o) {
     return compoundability.areEqual(this, o);

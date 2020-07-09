@@ -6,12 +6,7 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
-import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Bool;
-import org.smoothbuild.lang.object.base.Nothing;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.type.TypeType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -19,11 +14,11 @@ import com.google.common.collect.ImmutableSet;
 public class Types {
   private static final Type MISSING = new MissingType();
 
-  private static final ConcreteType BLOB = newBasicType("Blob", Blob.class);
-  private static final ConcreteType BOOL = newBasicType("Bool", Bool.class);
-  private static final ConcreteType NOTHING = newBasicType("Nothing", Nothing.class);
-  private static final ConcreteType STRING = newBasicType("String", SString.class);
-  private static final ConcreteType TYPE = newBasicType("Type", TypeType.class);
+  private static final ConcreteType BLOB = new BlobType();
+  private static final ConcreteType BOOL = new BoolType();
+  private static final ConcreteType NOTHING = new NothingType();
+  private static final ConcreteType STRING = new StringType();
+  private static final ConcreteType TYPE = new TypeType();
 
   /**
    * Basic types available in smooth language. Note that `Type` doesn't belong to that list.
@@ -37,11 +32,6 @@ public class Types {
       .add(TYPE)
       .add(MISSING)
       .build();
-
-  private static ConcreteType newBasicType(String name,
-      Class<? extends SObject> jType) {
-    return new ConcreteType(name, internal(), null, new BasicCompoundability(jType));
-  }
 
   public static Type missing() {
     return MISSING;
