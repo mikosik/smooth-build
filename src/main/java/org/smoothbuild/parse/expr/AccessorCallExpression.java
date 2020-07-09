@@ -25,4 +25,9 @@ public class AccessorCallExpression extends Expression {
     List<Task> dependencies = childrenTasks(scope);
     return new NormalTask(algorithm, dependencies, location(), true);
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

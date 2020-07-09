@@ -46,4 +46,9 @@ public class ArrayLiteralExpression extends Expression {
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

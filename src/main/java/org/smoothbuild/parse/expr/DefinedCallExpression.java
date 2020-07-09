@@ -43,4 +43,9 @@ public class DefinedCallExpression extends Expression {
     }
     return functionScope;
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }

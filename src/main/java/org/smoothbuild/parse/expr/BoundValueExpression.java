@@ -16,4 +16,9 @@ public class BoundValueExpression extends Expression {
   public Task createTask(Scope<Task> scope) {
     return scope.get(name);
   }
+
+  @Override
+  public <T> T visit(ExpressionVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }
