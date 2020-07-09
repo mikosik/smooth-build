@@ -17,4 +17,9 @@ public class GenericArrayType extends GenericType implements ArrayType {
   public GenericType elemType() {
     return elemType;
   }
+
+  @Override
+  public <T> T visit(TypeVisitor<T> visitor) {
+    return visitor.visit(this);
+  }
 }
