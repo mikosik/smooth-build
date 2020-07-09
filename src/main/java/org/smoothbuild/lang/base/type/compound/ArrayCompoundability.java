@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.object.base.Array;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 
 public class ArrayCompoundability implements Compoundability {
@@ -66,6 +68,11 @@ public class ArrayCompoundability implements Compoundability {
   @Override
   public int hashCode(Type type) {
     return Objects.hash(type.name());
+  }
+
+  @Override
+  public Class<? extends SObject> jType() {
+    return Array.class;
   }
 
   private Type elemType(Type t) {

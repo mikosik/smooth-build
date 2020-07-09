@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 
 public class StructCompoundability extends DefaultCompoundability {
@@ -38,5 +40,10 @@ public class StructCompoundability extends DefaultCompoundability {
   @Override
   public int hashCode(Type type) {
     return Objects.hash(type.name());
+  }
+
+  @Override
+  public Class<? extends SObject> jType() {
+    return Struct.class;
   }
 }
