@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type.compound;
 
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 
 public interface Compoundability {
@@ -19,4 +20,6 @@ public interface Compoundability {
   public boolean areEqual(Type type, Object object);
 
   public int hashCode(Type type);
+
+  public Class<? extends SObject> jType();
 }

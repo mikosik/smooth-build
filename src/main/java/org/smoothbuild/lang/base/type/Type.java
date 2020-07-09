@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.Compoundability;
+import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.parse.ast.Named;
 
@@ -145,6 +146,10 @@ public abstract class Type implements Named {
         .map(t -> (Type) t)
         .filter(t -> depth <= t.coreDepth())
         .findFirst();
+  }
+
+  public Class<? extends SObject> jType() {
+    return compoundability.jType();
   }
 
   @Override
