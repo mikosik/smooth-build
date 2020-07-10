@@ -12,12 +12,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
-  private static final Type MISSING = new MissingType();
+  private static final MissingType MISSING = new MissingType();
 
-  private static final ConcreteType BLOB = new BlobType();
-  private static final ConcreteType BOOL = new BoolType();
-  private static final ConcreteType NOTHING = new NothingType();
-  private static final ConcreteType STRING = new StringType();
+  private static final BlobType BLOB = new BlobType();
+  private static final BoolType BOOL = new BoolType();
+  private static final NothingType NOTHING = new NothingType();
+  private static final StringType STRING = new StringType();
 
   /**
    * Basic types available in smooth language.
@@ -39,19 +39,19 @@ public class Types {
     return new GenericType(name, internal(), new BasicCompoundability(SObject.class));
   }
 
-  public static ConcreteType blob() {
+  public static BlobType blob() {
     return BLOB;
   }
 
-  public static ConcreteType bool() {
+  public static BoolType bool() {
     return BOOL;
   }
 
-  public static ConcreteType nothing() {
+  public static NothingType nothing() {
     return NOTHING;
   }
 
-  public static ConcreteType string() {
+  public static StringType string() {
     return STRING;
   }
 
