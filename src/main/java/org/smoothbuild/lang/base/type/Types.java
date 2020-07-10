@@ -18,18 +18,15 @@ public class Types {
   private static final ConcreteType BOOL = new BoolType();
   private static final ConcreteType NOTHING = new NothingType();
   private static final ConcreteType STRING = new StringType();
-  private static final ConcreteType TYPE = new TypeType();
 
   /**
-   * Basic types available in smooth language. Note that `Type` doesn't belong to that list.
-   * Smooth language doesn't have 'Type' type yet but it is declared already above and tested.
+   * Basic types available in smooth language.
    */
   public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
 
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()
       .addAll(BASIC_TYPES)
-      .add(TYPE)
       .add(MISSING)
       .build();
 
@@ -56,10 +53,6 @@ public class Types {
 
   public static ConcreteType string() {
     return STRING;
-  }
-
-  public static ConcreteType type() {
-    return TYPE;
   }
 
   public static StructType struct(String name, Location location, Iterable<Field> fields) {

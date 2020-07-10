@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.base.type.Types.generic;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.Types.type;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 
 public class TestingTypes {
-  public static final ConcreteType type = type();
   public static final ConcreteType bool = bool();
   public static final ConcreteType string = string();
   public static final ConcreteType blob = blob();
@@ -33,7 +31,6 @@ public class TestingTypes {
   public static final GenericType a = generic("A");
   public static final GenericType b = generic("B");
 
-  public static final ConcreteArrayType arrayType = array(type);
   public static final ConcreteArrayType arrayBool = array(bool);
   public static final ConcreteArrayType arrayString = array(string);
   public static final ConcreteArrayType arrayBlob = array(blob);
@@ -42,7 +39,6 @@ public class TestingTypes {
   public static final GenericArrayType arrayA = array(a);
   public static final GenericArrayType arrayB = array(b);
 
-  public static final ConcreteArrayType array2Type = array(arrayType);
   public static final ConcreteArrayType array2Bool = array(arrayBool);
   public static final ConcreteArrayType array2String = array(arrayString);
   public static final ConcreteArrayType array2Blob = array(arrayBlob);

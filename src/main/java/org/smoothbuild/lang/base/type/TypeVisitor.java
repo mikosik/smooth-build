@@ -17,10 +17,6 @@ public class TypeVisitor<T> {
     return null;
   }
 
-  public T visit(TypeType type) {
-    return null;
-  }
-
   public T visit(StructType type) {
     return null;
   }
