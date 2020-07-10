@@ -87,6 +87,12 @@ public class HashingBufferedSink implements BufferedSink {
   }
 
   @Override
+  public BufferedSink write(ByteString byteString, int offset, int byteCount) throws IOException {
+    bufferedSink.write(byteString, offset, byteCount);
+    return this;
+  }
+
+  @Override
   public BufferedSink write(byte[] source) throws IOException {
     bufferedSink.write(source);
     return this;
