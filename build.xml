@@ -32,28 +32,29 @@
     <property name="dir.build.release.file" location="${dir.build.release}/smooth.zip"/>
     <property name="dir.build.acceptance" location="${dir.build}/acceptance"/>
 
-    <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.7.2.jar"/>
-    <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.7.2.jar"/>
+    <property name="lib.antlr4" value="${dir.lib}/ivy/antlr4-4.8-1.jar"/>
+    <property name="lib.antlr4-runtime" value="${dir.lib}/ivy/antlr4-runtime-4.8-1.jar"/>
     <property name="lib.antlr3-runtime" value="${dir.lib}/ivy/antlr-runtime-3.5.2.jar"/>
     <property name="lib.aopalliance" value="${dir.lib}/ivy/aopalliance-1.0.jar"/>
     <property name="lib.failureaccess" value="${dir.lib}/ivy/failureaccess-1.0.1.jar"/>
-    <property name="lib.guava" value="${dir.lib}/ivy/guava-28.1-jre.jar"/>
-    <property name="lib.guava-testlib" value="${dir.lib}/ivy/guava-testlib-28.1-jre.jar"/>
-    <property name="lib.guice" value="${dir.lib}/ivy/guice-4.2.2.jar"/>
+    <property name="lib.guava" value="${dir.lib}/ivy/guava-29.0-jre.jar"/>
+    <property name="lib.guava-testlib" value="${dir.lib}/ivy/guava-testlib-29.0-jre.jar"/>
+    <property name="lib.guice" value="${dir.lib}/ivy/guice-4.2.3.jar"/>
     <property name="lib.hamcrest" value="${dir.lib}/ivy/hamcrest-core-1.3.jar"/>
     <property name="lib.hamcrest-library" value="${dir.lib}/ivy/hamcrest-library-1.3.jar"/>
     <property name="lib.javax.inject" value="${dir.lib}/ivy/javax.inject-1.jar"/>
-    <property name="lib.kotlin-stdlib" value="${dir.lib}/ivy/kotlin-stdlib-1.3.50.jar"/>
-    <property name="lib.kotlin-stdlib-common" value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.50.jar"/>
-    <property name="lib.mockito" value="${dir.lib}/ivy/mockito-core-3.3.0.jar"/>
+    <property name="lib.kotlin-stdlib" value="${dir.lib}/ivy/kotlin-stdlib-1.3.70.jar"/>
+    <property name="lib.kotlin-stdlib-common"
+              value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.70.jar"/>
+    <property name="lib.mockito" value="${dir.lib}/ivy/mockito-core-3.3.3.jar"/>
     <property name="lib.byte-buddy" value="${dir.lib}/ivy/byte-buddy-1.10.5.jar"/>
     <property name="lib.byte-buddy-agent" value="${dir.lib}/ivy/byte-buddy-agent-1.10.5.jar"/>
     <property name="lib.objenesis" value="${dir.lib}/ivy/objenesis-2.6.jar"/>
-    <property name="lib.okio" value="${dir.lib}/ivy/okio-2.4.0.jar"/>
-    <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.1.jar"/>
+    <property name="lib.okio" value="${dir.lib}/ivy/okio-2.7.0.jar"/>
+    <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.3.jar"/>
     <property name="lib.truth" value="${dir.lib}/ivy/truth-1.0.1.jar"/>
     <property name="lib.diffutils" value="${dir.lib}/ivy/diffutils-1.3.0.jar"/>
-    <property name="lib.picocli" value="${dir.lib}/ivy/picocli-4.2.0.jar"/>
+    <property name="lib.picocli" value="${dir.lib}/ivy/picocli-4.4.0.jar"/>
 
     <target name="init">
         <delete dir="${dir.build}"/>

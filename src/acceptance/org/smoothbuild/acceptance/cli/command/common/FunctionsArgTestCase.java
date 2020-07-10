@@ -12,7 +12,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
     runSmooth(new CommandWithArgs(commandName()));
     assertFinishedWithError();
     assertSysErrContains(
-        "Missing required parameter: <function>",
+        "Missing required parameter: '<function>'",
         "");
   }
 

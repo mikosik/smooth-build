@@ -19,8 +19,6 @@ public class HelpCommandTest extends AcceptanceTestCase {
         times significantly.
         More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md
         
-        Options:
-        
         Commands:
           build    Build artifact(s) by running specified function(s)
           clean    Remove all cached objects and artifacts calculated during all
