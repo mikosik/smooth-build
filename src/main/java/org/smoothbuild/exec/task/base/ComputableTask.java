@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.base.type.ConcreteType;
 
 public abstract class ComputableTask extends Task {
   public final Algorithm algorithm;
   public final boolean cacheable;
 
-  public ComputableTask(Algorithm algorithm, List<? extends Task> dependencies, Location location,
-      boolean cacheable) {
-    super(dependencies, location);
+  public ComputableTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
+      Location location, boolean cacheable) {
+    super(type, dependencies, location);
     this.algorithm = algorithm;
     this.cacheable = cacheable;
   }
@@ -23,18 +23,13 @@ public abstract class ComputableTask extends Task {
   }
 
   @Override
-  public String description() {
+  public String sourceDescription() {
     return algorithm.description();
   }
 
   @Override
   public TaskKind kind() {
     return algorithm.kind();
-  }
-
-  @Override
-  public ConcreteType type() {
-    return algorithm.type();
   }
 
   public Algorithm algorithm() {

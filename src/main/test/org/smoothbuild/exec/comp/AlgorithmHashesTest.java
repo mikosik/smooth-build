@@ -17,8 +17,8 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.testing.TestingContext;
 
 public class AlgorithmHashesTest extends TestingContext {
@@ -26,13 +26,13 @@ public class AlgorithmHashesTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
-    Constructor constructor = constructor("MyStruct2");
+    StructType constructedType = constructedType("MyStruct2");
     Accessor accessor = accessor("myField");
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(nativeCallAlgorithmHash(function));
     hashes.add(convertAlgorithmHash(stringType()));
-    hashes.add(constructorCallAlgorithmHash(constructor));
+    hashes.add(constructorCallAlgorithmHash(constructedType));
     hashes.add(accessorCallAlgorithmHash(accessor));
     hashes.add(stringLiteralAlgorithmHash("abc"));
 
@@ -57,11 +57,11 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void constructor_call_algorithm_has_different_hash_for_different_types() {
-    Constructor constructor = constructor("MyStruct1");
-    Constructor constructor2 = constructor("MyStruct2");
+    StructType constructedType = constructedType("MyStruct1");
+    StructType constructedType2 = constructedType("MyStruct2");
 
-    assertThat(constructorCallAlgorithmHash(constructor))
-        .isNotEqualTo(constructorCallAlgorithmHash(constructor2));
+    assertThat(constructorCallAlgorithmHash(constructedType))
+        .isNotEqualTo(constructorCallAlgorithmHash(constructedType2));
   }
 
   @Test
@@ -91,9 +91,7 @@ public class AlgorithmHashesTest extends TestingContext {
     return function;
   }
 
-  private Constructor constructor(String typeName) {
-    Constructor constructor = mock(Constructor.class);
-    when(constructor.type()).thenReturn(structType(typeName, list()));
-    return constructor;
+  private StructType constructedType(String typeName) {
+    return structType(typeName, list());
   }
 }

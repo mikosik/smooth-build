@@ -23,6 +23,7 @@ public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<FuncNode> funcs;
   private ImmutableMap<String, CallableNode> callablesMap;
+  private ImmutableMap<String, StructNode> structsMap;
 
   public Ast(List<StructNode> structs, List<FuncNode> funcs) {
     this.structs = ImmutableList.copyOf(structs);
@@ -63,6 +64,25 @@ public class Ast {
       public void visitCallable(CallableNode callable) {
         super.visitCallable(callable);
         builder.put(callable.name(), callable);
+      }
+    }.visitAst(this);
+    return builder.build();
+  }
+
+
+  public ImmutableMap<String, StructNode> structsMap() {
+    if (structsMap == null) {
+      structsMap = createStructsMap();
+    }
+    return structsMap;
+  }
+
+  private ImmutableMap<String, StructNode> createStructsMap() {
+    var builder = ImmutableMap.<String, StructNode>builder();
+    new AstVisitor() {
+      @Override
+      public void visitStruct(StructNode struct) {
+        builder.put(struct.name(), struct);
       }
     }.visitAst(this);
     return builder.build();

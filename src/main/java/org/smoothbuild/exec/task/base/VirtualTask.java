@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 

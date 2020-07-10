@@ -1,17 +1,14 @@
 package org.smoothbuild.exec.task.base;
 
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.exec.comp.Algorithm;
-import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
+import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
@@ -22,12 +19,18 @@ import com.google.common.collect.ImmutableList;
 public abstract class Task {
   public static final int NAME_LENGTH_LIMIT = 40;
 
+  private final ConcreteType type;
   protected final ImmutableList<Task> dependencies;
   protected final Location location;
 
-  public Task(List<? extends Task> dependencies, Location location) {
+  public Task(ConcreteType type, List<? extends Task> dependencies, Location location) {
+    this.type = type;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
+  }
+
+  public ConcreteType type() {
+    return type;
   }
 
   public ImmutableList<Task> children() {
@@ -42,21 +45,13 @@ public abstract class Task {
     return location.module().space();
   }
 
-  public Task convertIfNeeded(ConcreteType type) {
-    if (type().equals(type)) {
-      return this;
-    } else {
-      Algorithm algorithm = new ConvertAlgorithm(type, type());
-      List<Task> dependencies = list(this);
-      return new NormalTask(algorithm, dependencies, location(), true);
-    }
-  }
-
   public abstract String name();
 
-  public abstract String description();
+  public String description() {
+    return type.name() + sourceDescription();
+  }
 
-  public abstract ConcreteType type();
+  public abstract String sourceDescription();
 
   public abstract Feeder<SObject> startComputation(Worker worker);
 

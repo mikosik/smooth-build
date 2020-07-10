@@ -6,18 +6,18 @@ import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.plugin.NativeApi;
-
-import com.google.common.collect.ImmutableList;
 
 public class ConstructorCallAlgorithm implements Algorithm {
   private final Constructor constructor;
+  private final StructType constructedType;
 
-  public ConstructorCallAlgorithm(Constructor constructor) {
+  public ConstructorCallAlgorithm(Constructor constructor, StructType constructedType) {
     this.constructor = constructor;
+    this.constructedType = constructedType;
   }
 
   @Override
@@ -27,20 +27,21 @@ public class ConstructorCallAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return constructorCallAlgorithmHash(constructor);
+    return constructorCallAlgorithmHash(constructedType);
   }
 
   @Override
   public ConcreteType type() {
-    return constructor.type();
+    return constructedType;
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    StructBuilder builder = nativeApi.factory().structBuilder(constructor.type());
-    ImmutableList<Parameter> parameters = constructor.signature().parameters();
-    for (int i = 0; i < parameters.size(); i++) {
-      builder.set(parameters.get(i).name(), input.objects().get(i));
+    StructBuilder builder = nativeApi.factory().structBuilder(constructedType);
+    var fields = constructedType.fields();
+    var namesIterator = fields.keySet().iterator();
+    for (int i = 0; i < fields.size(); i++) {
+      builder.set(namesIterator.next(), input.objects().get(i));
     }
     return new Output(builder.build(), nativeApi.messages());
   }

@@ -124,20 +124,6 @@ public class ObjectFactoryTest extends TestingContext {
   }
 
   @Test
-  public void reusing_struct_name_causes_exception() {
-    emptyCacheObjectFactory().structType(
-        "MyStruct", list(new Field(stringType(), "field", internal())));
-    assertCall(() -> emptyCacheObjectFactory().structType("MyStruct", list()))
-        .throwsException(IllegalStateException.class);
-  }
-
-  @Test
-  public void reusing_basic_type_name_as_struct_name_causes_exception() {
-    assertCall(() -> emptyCacheObjectFactory().structType("String", list()))
-        .throwsException(IllegalStateException.class);
-  }
-
-  @Test
   public void type_type_can_not_be_retrieved_by_name() {
     assertCall(() -> emptyCacheObjectFactory().getType("Type"))
         .throwsException(IllegalStateException.class);

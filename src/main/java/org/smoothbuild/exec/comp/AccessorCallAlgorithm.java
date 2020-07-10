@@ -16,9 +16,11 @@ import com.google.common.collect.ImmutableList;
 
 public class AccessorCallAlgorithm implements Algorithm {
   private final Accessor accessor;
+  private final ConcreteType type;
 
-  public AccessorCallAlgorithm(Accessor accessor) {
+  public AccessorCallAlgorithm(Accessor accessor, ConcreteType type) {
     this.accessor = accessor;
+    this.type = type;
   }
 
   @Override
@@ -33,7 +35,7 @@ public class AccessorCallAlgorithm implements Algorithm {
 
   @Override
   public ConcreteType type() {
-    return accessor.type();
+    return type;
   }
 
   @Override

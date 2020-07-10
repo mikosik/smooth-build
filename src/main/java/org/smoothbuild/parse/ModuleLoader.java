@@ -18,8 +18,8 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ItemNode;
@@ -48,7 +48,7 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    inferTypesAndParamAssignment(sortedAst, imported, objectFactory, logger);
+    inferTypesAndParamAssignment(sortedAst, imported, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }

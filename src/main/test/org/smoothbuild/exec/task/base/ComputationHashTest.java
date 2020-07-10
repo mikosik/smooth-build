@@ -8,6 +8,8 @@ import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
+import static org.smoothbuild.lang.object.type.TestingTypes.person;
+import static org.smoothbuild.lang.object.type.TestingTypes.string;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.type.TestingTypes;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -104,7 +107,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
+    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(),
+        person);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("af8f490d36d092f1c660585e557ff988b1048c17"));
@@ -112,7 +116,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
+    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("0df5916d25416379005a8e4700fca183b7ae86da"));
@@ -120,27 +124,27 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor());
+    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("55076a75491bc119310d29f3d4239ebeba07360f"));
   }
 
   private Constructor constructor() {
-    return new Constructor(signature(personType(), "ConstructorName", list()), internal());
+    return new Constructor(signature(TestingTypes.person, "ConstructorName", list()), internal());
   }
 
   @Test
   public void hash_of_computation_with_accessor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new AccessorCallAlgorithm(accessor());
+    Algorithm algorithm = new AccessorCallAlgorithm(accessor(), string);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("d4ef1a2529ad47aca82b72dd736dccc1ea4c1f01"));
   }
 
   private Accessor accessor() {
-    return new Accessor(
-        signature(stringType(), "accessor", list()), "fieldName", internal());
+    return new Accessor(signature(org.smoothbuild.lang.base.type.TestingTypes.string,
+        "accessor", list()), "fieldName", internal());
   }
 
   private static Algorithm computation(Hash hash) {

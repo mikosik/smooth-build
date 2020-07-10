@@ -3,17 +3,15 @@ package org.smoothbuild.exec.task.base;
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.base.type.ConcreteType;
 
 public abstract class NonComputableTask extends Task {
   private final String name;
-  private final ConcreteType type;
 
   public NonComputableTask(String name, ConcreteType type, List<? extends Task> dependencies,
       Location location) {
-    super(dependencies, location);
+    super(type, dependencies, location);
     this.name = name;
-    this.type = type;
   }
 
   @Override
@@ -22,12 +20,7 @@ public abstract class NonComputableTask extends Task {
   }
 
   @Override
-  public String description() {
-    return type.name() + " " + name;
-  }
-
-  @Override
-  public ConcreteType type() {
-    return type;
+  public String sourceDescription() {
+    return " " + name;
   }
 }

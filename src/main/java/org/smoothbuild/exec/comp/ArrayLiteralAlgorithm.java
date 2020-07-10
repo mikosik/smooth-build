@@ -24,7 +24,7 @@ public class ArrayLiteralAlgorithm implements Algorithm {
 
   @Override
   public String description() {
-    return arrayType.name();
+    return "";
   }
 
   @Override

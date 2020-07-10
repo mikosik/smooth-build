@@ -19,6 +19,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
+import org.smoothbuild.exec.task.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.object.base.SObject;
@@ -30,19 +31,21 @@ public class ArtifactBuilder {
 
   private final ParallelTaskExecutor parallelExecutor;
   private final ArtifactSaver artifactSaver;
+  private final ExecutionPlanner executionPlanner;
   private final Reporter reporter;
 
   @Inject
   public ArtifactBuilder(ParallelTaskExecutor parallelExecutor, ArtifactSaver artifactSaver,
-      Reporter reporter) {
+      ExecutionPlanner executionPlanner, Reporter reporter) {
     this.parallelExecutor = parallelExecutor;
     this.artifactSaver = artifactSaver;
+    this.executionPlanner = executionPlanner;
     this.reporter = reporter;
   }
 
   public void buildArtifacts(List<Callable> callables) {
     ImmutableList<Task> tasks = callables.stream()
-        .map(f -> f.createAgrlessCallExpression(commandLineLocation()).createTask(null))
+        .map(this::planFor)
         .collect(toImmutableList());
     try {
       Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
@@ -58,6 +61,11 @@ public class ArtifactBuilder {
       reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
       reporter.printlnRaw("Build process has been interrupted.");
     }
+  }
+
+  private Task planFor(Callable callable) {
+    return executionPlanner
+        .createPlan(callable.createAgrlessCallExpression(commandLineLocation()));
   }
 
   private void save(Entry<Task, SObject> artifact) {

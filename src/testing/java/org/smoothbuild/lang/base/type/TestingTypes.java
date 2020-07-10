@@ -18,10 +18,10 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 
 public class TestingTypes {
-  public static final ConcreteType bool = bool();
-  public static final ConcreteType string = string();
-  public static final ConcreteType blob = blob();
-  public static final ConcreteType nothing = nothing();
+  public static final BoolType bool = bool();
+  public static final StringType string = string();
+  public static final BlobType blob = blob();
+  public static final NothingType nothing = nothing();
   public static final Location FAKE_LOCATION =
       location(modulePath(USER, Path.of("fake/path"), "shortPath"), 1);
   public static final StructType person = struct(

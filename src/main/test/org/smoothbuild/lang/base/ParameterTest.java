@@ -3,15 +3,13 @@ package org.smoothbuild.lang.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.type.TestingTypes.string;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.parse.expr.Expression;
-import org.smoothbuild.testing.TestingContext;
 
-public class ParameterTest extends TestingContext {
-  private final ConcreteType string = stringType();
+public class ParameterTest {
   private final String name = "name";
   private Parameter parameter;
 

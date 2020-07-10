@@ -8,9 +8,7 @@ import static org.smoothbuild.util.Lists.list;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Scope;
 
 public class ExpressionTest {
   @Test
@@ -40,11 +38,6 @@ public class ExpressionTest {
 
     @Override
     public <T> T visit(ExpressionVisitor<T> visitor) {
-      return null;
-    }
-
-    @Override
-    public Task createTask(Scope<Task> scope) {
       return null;
     }
   }

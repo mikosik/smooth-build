@@ -1,8 +1,14 @@
 package org.smoothbuild.parse;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Scope.scope;
+import static org.smoothbuild.lang.base.type.Types.array;
+import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.nothing;
+import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 import static org.smoothbuild.parse.ParseError.parseError;
 
@@ -12,11 +18,11 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.ItemInfo;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.Field;
-import org.smoothbuild.lang.object.type.StructType;
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Field;
+import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -37,8 +43,8 @@ import org.smoothbuild.util.Lists;
 import com.google.common.collect.ImmutableList;
 
 public class InferTypesAndParamAssignment {
-  public static void inferTypesAndParamAssignment(Ast ast, Definitions imported,
-      ObjectFactory objectFactory, LoggerImpl logger) {
+  public static void inferTypesAndParamAssignment(
+      Ast ast, Definitions imported, LoggerImpl logger) {
     new AstVisitor() {
       Scope<Type> scope;
 
@@ -51,7 +57,7 @@ public class InferTypesAndParamAssignment {
         ImmutableList<Field> fields = struct.fields().stream()
             .map(f -> new Field((ConcreteType) f.type().get(), f.name(), f.location()))
             .collect(toImmutableList());
-        struct.setType(objectFactory.structType(struct.name(), fields));
+        struct.setType(struct(struct.name(), struct.location(), fields));
       }
 
       @Override
@@ -150,11 +156,29 @@ public class InferTypesAndParamAssignment {
       }
 
       private Optional<Type> createType(TypeNode type) {
-        if (type.isArray()) {
+        if (isGenericTypeName(type.name())) {
+          return Optional.of(Types.generic(type.name()));
+        } else if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
-          return createType(elementType).map(objectFactory::arrayType);
+          return createType(elementType).map(Types::array);
         } else {
-          return Optional.of(objectFactory.getType(type.name()));
+          return Optional.of(findType(type.name()));
+        }
+      }
+
+      private Type findType(String name) {
+        Type type = imported.types().get(name);
+        return requireNonNullElseGet(type, () -> findStructType(name));
+      }
+
+      private Type findStructType(String name) {
+        StructNode structNode = ast.structsMap().get(name);
+        if (structNode == null) {
+          throw new RuntimeException(
+              "Cannot find type '" + name + "'. Available types = " + ast.structsMap());
+        } else {
+          return structNode.type().orElseThrow(() -> new RuntimeException(
+              "Cannot find type '" + name + "'. Available types = " + ast.structsMap()));
         }
       }
 
@@ -184,7 +208,7 @@ public class InferTypesAndParamAssignment {
       private Optional<Type> findArrayType(ArrayNode array) {
         List<ExprNode> expressions = array.elements();
         if (expressions.isEmpty()) {
-          return Optional.of(objectFactory.arrayType(objectFactory.nothingType()));
+          return Optional.of(array(nothing()));
         }
         Optional<Type> firstType = expressions.get(0).type();
         if (firstType.isEmpty()) {
@@ -207,7 +231,7 @@ public class InferTypesAndParamAssignment {
           }
           elemType = common.get();
         }
-        return Optional.of(objectFactory.arrayType(elemType));
+        return Optional.of(array(elemType));
       }
 
       @Override
@@ -231,7 +255,7 @@ public class InferTypesAndParamAssignment {
       @Override
       public void visitString(StringNode string) {
         super.visitString(string);
-        string.setType(objectFactory.stringType());
+        string.setType(string());
       }
     }.visitAst(ast);
   }

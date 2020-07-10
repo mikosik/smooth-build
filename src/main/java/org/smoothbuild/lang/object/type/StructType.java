@@ -4,16 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
-import static org.smoothbuild.lang.base.Signature.signature;
 
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -57,16 +53,5 @@ public class StructType extends ConcreteType {
 
   public ImmutableMap<String, Field> fields() {
     return fields;
-  }
-
-  public Accessor accessor(String fieldName) {
-    Field field = fields.get(fieldName);
-    if (field == null) {
-      throw new IllegalArgumentException("Struct " + name() + " doesn't have field " + fieldName);
-    }
-    var location = field.location();
-    var parameters = ImmutableList.of(new Parameter(0, this, "object", null, location));
-    var signature = signature(field.type(), field.name(), parameters);
-    return new Accessor(signature, field.name(), location);
   }
 }
