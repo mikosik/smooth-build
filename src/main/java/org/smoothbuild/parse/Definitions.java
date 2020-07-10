@@ -1,7 +1,7 @@
 package org.smoothbuild.parse;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableMap;
 

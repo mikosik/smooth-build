@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.task.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.parse.Definitions;
 import org.smoothbuild.parse.RuntimeController;
@@ -41,10 +42,12 @@ public class TreeRunner {
 
   public static class TreeExecutor {
     private final Reporter reporter;
+    private final ExecutionPlanner executionPlanner;
 
     @Inject
-    public TreeExecutor(Reporter reporter) {
+    public TreeExecutor(Reporter reporter, ExecutionPlanner executionPlanner) {
       this.reporter = reporter;
+      this.executionPlanner = executionPlanner;
     }
 
     public void execute(Definitions definitions, List<String> names) {
@@ -54,9 +57,8 @@ public class TreeRunner {
     }
 
     private Task treeOf(Callable callable) {
-      return callable
-          .createAgrlessCallExpression(commandLineLocation())
-          .createTask(null);
+      return executionPlanner.createPlan(
+          callable.createAgrlessCallExpression(commandLineLocation()));
     }
 
     private void print(Task task) {

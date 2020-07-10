@@ -1,13 +1,10 @@
 package org.smoothbuild.parse.expr;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Scope;
 
 import com.google.common.collect.ImmutableList;
 
@@ -27,8 +24,8 @@ public abstract class Expression {
     this.location = checkNotNull(location);
   }
 
-  public List<Task> childrenTasks(Scope<Task> scope) {
-    return map(children, ch -> ch.createTask(scope));
+  public ImmutableList<Expression> children() {
+    return children;
   }
 
   public Location location() {
@@ -36,6 +33,4 @@ public abstract class Expression {
   }
 
   public abstract <T> T visit(ExpressionVisitor<T> visitor);
-
-  public abstract Task createTask(Scope<Task> scope);
 }

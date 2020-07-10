@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.object.type.TypeNames.FILE;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +20,6 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**
@@ -39,7 +39,7 @@ public class ArtifactSaver {
     Path artifactPath = artifactPath(name);
     if (object instanceof Array) {
       return saveArray(artifactPath, (Array) object);
-    } else if (object.type().equals(objectFactory.getType(TypeNames.FILE))) {
+    } else if (object.type().name().equals(FILE)) {
       return saveFile(artifactPath, (Struct) object);
     } else {
       return saveBasicObject(artifactPath, object);
@@ -60,7 +60,7 @@ public class ArtifactSaver {
         saveArray(artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
-    } else if (elemType.equals(objectFactory.getType(TypeNames.FILE))) {
+    } else if (elemType.name().equals(FILE)) {
       saveFileArray(artifactPath, array.asIterable(Struct.class));
     } else {
       saveObjectArray(artifactPath, array);

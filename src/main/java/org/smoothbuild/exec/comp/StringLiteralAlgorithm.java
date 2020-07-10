@@ -29,11 +29,6 @@ public class StringLiteralAlgorithm implements Algorithm {
   }
 
   @Override
-  public String description() {
-    return type().name() + " " + name;
-  }
-
-  @Override
   public TaskKind kind() {
     return LITERAL;
   }

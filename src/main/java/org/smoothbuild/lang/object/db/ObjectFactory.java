@@ -1,11 +1,14 @@
 package org.smoothbuild.lang.object.db;
 
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.SEVERITY;
 import static org.smoothbuild.lang.object.base.Messages.TEXT;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
+import static org.smoothbuild.lang.object.type.TypeNames.FILE;
+import static org.smoothbuild.lang.object.type.TypeNames.MESSAGE;
 
 import java.io.IOException;
 import java.util.Map;
@@ -34,8 +37,9 @@ import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
-import org.smoothbuild.lang.object.type.TypeNames;
 import org.smoothbuild.util.io.DataWriter;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -45,11 +49,28 @@ import org.smoothbuild.util.io.DataWriter;
 public class ObjectFactory {
   private final ObjectDb objectDb;
   private final ConcurrentHashMap<String, ConcreteType> cache;
+  private final StructType messageType;
+  private final StructType fileType;
 
   @Inject
   public ObjectFactory(ObjectDb objectDb) {
     this.objectDb = objectDb;
+    this.messageType = createMessageType(objectDb);
+    this.fileType = createFileType(objectDb);
     this.cache = createInitializedCache(objectDb);
+  }
+
+  private static StructType createMessageType(ObjectDb objectDb) {
+    StringType stringType = objectDb.stringType();
+    Field text = new Field(stringType, "text", internal());
+    Field severity = new Field(stringType, "severity", internal());
+    return objectDb.structType(MESSAGE, ImmutableList.of(text, severity));
+  }
+
+  private static StructType createFileType(ObjectDb objectDb) {
+    Field content = new Field(objectDb.blobType(), "content", internal());
+    Field path = new Field(objectDb.stringType(), "path", internal());
+    return objectDb.structType(FILE, ImmutableList.of(content, path));
   }
 
   private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectDb objectDb) {
@@ -124,11 +145,11 @@ public class ObjectFactory {
   }
 
   public StructType fileType() {
-    return (StructType) getType(TypeNames.FILE);
+    return fileType;
   }
 
   public StructType messageType() {
-    return (StructType) getType(TypeNames.MESSAGE);
+    return messageType;
   }
 
   public NothingType nothingType() {
@@ -141,10 +162,7 @@ public class ObjectFactory {
 
   public StructType structType(String name, Iterable<Field> fields) {
     StructType type = objectDb.structType(name, fields);
-    ConcreteType previousValue = cache.putIfAbsent(name, type);
-    if (previousValue != null) {
-      throw new IllegalStateException("Type '" + name + "' is already added to runtime types.");
-    }
+    cache.putIfAbsent(name, type);
     return type;
   }
 

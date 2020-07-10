@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base;
 
 import java.util.List;
 
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.parse.expr.AccessorCallExpression;
 import org.smoothbuild.parse.expr.Expression;
 

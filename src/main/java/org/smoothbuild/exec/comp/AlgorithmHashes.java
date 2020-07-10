@@ -2,7 +2,6 @@ package org.smoothbuild.exec.comp;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -20,8 +19,7 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash constructorCallAlgorithmHash(Constructor constructor) {
-    StructType type = constructor.type();
+  public static Hash constructorCallAlgorithmHash(StructType type) {
     return hash(3, type.hash());
   }
 

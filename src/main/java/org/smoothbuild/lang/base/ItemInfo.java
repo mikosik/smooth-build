@@ -7,7 +7,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.parse.ast.Named;
 
 public class ItemInfo implements Named {

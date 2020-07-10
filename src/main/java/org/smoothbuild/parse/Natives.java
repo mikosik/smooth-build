@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Native;
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.AstVisitor;
 import org.smoothbuild.parse.ast.FuncNode;

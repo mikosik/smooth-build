@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Strings.padEnd;
 
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.parse.expr.Expression;
 
 public class Parameter extends ItemInfo {

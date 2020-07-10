@@ -10,6 +10,7 @@ import org.smoothbuild.exec.comp.Algorithm;
 import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
@@ -18,9 +19,9 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 import com.google.common.collect.ImmutableList;
 
 public class IfTask extends ComputableTask {
-  public IfTask(Algorithm algorithm, List<? extends Task> dependencies, Location location,
-      boolean cacheable) {
-    super(algorithm, dependencies, location, cacheable);
+  public IfTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
+      Location location, boolean cacheable) {
+    super(type, algorithm, dependencies, location, cacheable);
   }
 
   @Override

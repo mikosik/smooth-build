@@ -33,20 +33,20 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
   }
 
   @Override
-  public ConcreteType visit(NothingType type) {
+  public org.smoothbuild.lang.object.type.NothingType visit(NothingType type) {
     return objectFactory.nothingType();
   }
 
   @Override
-  public ConcreteType visit(StringType type) {
+  public org.smoothbuild.lang.object.type.StringType visit(StringType type) {
     return objectFactory.stringType();
   }
 
   @Override
-  public ConcreteType visit(StructType type) {
+  public org.smoothbuild.lang.object.type.StructType visit(StructType type) {
     Iterable<Field> binaryFields =
         type.fields().values().stream()
-            .map(f -> new Field(f.type().visit(this), f.name(), null))
+            .map(f -> new Field(f.type().visit(this), f.name(), f.location()))
             .collect(toImmutableList());
     return objectFactory.structType(type.name(), binaryFields);
   }
@@ -57,7 +57,7 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
   }
 
   @Override
-  public ConcreteType visit(ConcreteArrayType type) {
+  public org.smoothbuild.lang.object.type.ConcreteArrayType visit(ConcreteArrayType type) {
     return objectFactory.arrayType(type.elemType().visit(this));
   }
 

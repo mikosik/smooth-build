@@ -3,7 +3,7 @@ package org.smoothbuild.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.lang.base.type.Type;
 
 public class Node {
   private final Location location;

@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.lang.object.type.TestingTypes.blob;
-import static org.smoothbuild.lang.object.type.TestingTypes.string;
+import static org.smoothbuild.lang.base.type.TestingTypes.blob;
+import static org.smoothbuild.lang.base.type.TestingTypes.string;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
