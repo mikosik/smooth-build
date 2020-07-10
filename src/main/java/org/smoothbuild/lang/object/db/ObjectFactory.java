@@ -23,11 +23,14 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BlobType;
+import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.GenericArrayType;
 import org.smoothbuild.lang.object.type.GenericType;
+import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.Type;
@@ -112,11 +115,11 @@ public class ObjectFactory {
     return new GenericArrayType(elementType);
   }
 
-  public ConcreteType blobType() {
+  public BlobType blobType() {
     return objectDb.blobType();
   }
 
-  public ConcreteType boolType() {
+  public BoolType boolType() {
     return objectDb.boolType();
   }
 
@@ -128,7 +131,7 @@ public class ObjectFactory {
     return (StructType) getType(TypeNames.MESSAGE);
   }
 
-  public ConcreteType nothingType() {
+  public NothingType nothingType() {
     return objectDb.nothingType();
   }
 
