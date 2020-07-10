@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
@@ -38,7 +39,7 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Parameter> parameters = list(new Parameter(0, STRING, "name", null));
+    List<Parameter> parameters = list(new Parameter(0, STRING, "name", null, internal()));
     Callable callable = new MyCallable(signature(STRING, "name", parameters));
     assertThat(callable.parameters())
         .isEqualTo(parameters);
@@ -68,16 +69,16 @@ public class CallableTest extends TestingContext {
   }
 
   private Parameter paramWithDefault() {
-    return new Parameter(0, stringType(), "a", mock(Expression.class));
+    return new Parameter(0, stringType(), "a", mock(Expression.class), internal());
   }
 
   private Parameter paramWithoutDefault() {
-    return new Parameter(0, stringType(), "a", null);
+    return new Parameter(0, stringType(), "a", null, internal());
   }
 
   public static class MyCallable extends Callable {
     public MyCallable(Signature signature) {
-      super(signature, Location.internal());
+      super(signature, internal());
     }
 
     @Override
