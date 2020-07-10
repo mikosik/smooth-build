@@ -84,7 +84,7 @@ public class FunctionLoader {
         Expression defaultValue = param.declaresDefaultValue()
             ? createExpression(param.defaultValue())
             : null;
-        return new Parameter(param.index(), type, name, defaultValue);
+        return new Parameter(param.index(), type, name, defaultValue, param.location());
       }
 
       private Expression createExpression(ExprNode expr) {

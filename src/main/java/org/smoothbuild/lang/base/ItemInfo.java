@@ -1,25 +1,28 @@
 package org.smoothbuild.lang.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.collect.Streams.stream;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
 import org.smoothbuild.lang.object.type.Type;
+import org.smoothbuild.parse.ast.Named;
 
-public class ItemInfo {
+public class ItemInfo implements Named {
   private final int index;
   private final Type type;
   private final String name;
   private final boolean hasDefaultValue;
+  private final Location location;
 
-  public ItemInfo(int index, Type type, String name, boolean hasDefaultValue) {
+  public ItemInfo(int index, Type type, String name, boolean hasDefaultValue, Location location) {
     this.index = index;
-    this.type = checkNotNull(type);
-    this.name = checkNotNull(name);
+    this.type = requireNonNull(type);
+    this.name = requireNonNull(name);
     this.hasDefaultValue = hasDefaultValue;
+    this.location = requireNonNull(location);
   }
 
   public int index() {
@@ -30,6 +33,7 @@ public class ItemInfo {
     return type;
   }
 
+  @Override
   public String name() {
     return name;
   }
@@ -43,6 +47,11 @@ public class ItemInfo {
 
   public boolean hasDefaultValue() {
     return hasDefaultValue;
+  }
+
+  @Override
+  public Location location() {
+    return location;
   }
 
   @Override

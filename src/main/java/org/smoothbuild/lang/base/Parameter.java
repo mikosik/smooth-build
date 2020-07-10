@@ -8,8 +8,8 @@ import org.smoothbuild.parse.expr.Expression;
 public class Parameter extends ItemInfo {
   private final Expression defaultValue;
 
-  public Parameter(int index, Type type, String name, Expression defaultValue) {
-    super(index, type, name, defaultValue != null);
+  public Parameter(int index, Type type, String name, Expression defaultValue, Location location) {
+    super(index, type, name, defaultValue != null, location);
     this.defaultValue = defaultValue;
   }
 

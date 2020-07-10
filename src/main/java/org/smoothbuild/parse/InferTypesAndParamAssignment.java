@@ -58,8 +58,8 @@ public class InferTypesAndParamAssignment {
       public void visitField(int index, ItemNode fieldNode) {
         super.visitField(index, fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
-        fieldNode.setItemInfo(
-            Optional.of(new ItemInfo(index, fieldNode.type().get(), fieldNode.name(), false)));
+        fieldNode.setItemInfo(Optional.of(new ItemInfo(
+            index, fieldNode.type().get(), fieldNode.name(), false, fieldNode.location())));
       }
 
       @Override
@@ -126,7 +126,8 @@ public class InferTypesAndParamAssignment {
         Optional<Type> type = param.typeNode().type();
         param.setType(type);
         type.ifPresentOrElse(t -> {
-              var info = new ItemInfo(index, t, param.name(), param.declaresDefaultValue());
+              var info = new ItemInfo(
+                  index, t, param.name(), param.declaresDefaultValue(), param.location());
               param.setItemInfo(Optional.of(info));
               if (param.declaresDefaultValue()) {
                 Optional<Type> defaultValueType = param.defaultValue().type();

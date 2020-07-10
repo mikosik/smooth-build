@@ -82,7 +82,7 @@ public class ModuleLoader {
     List<ItemNode> fields = struct.fields();
     for (int i = 0; i < fields.size(); i++) {
       ItemNode field = fields.get(i);
-      builder.add(new Parameter(i, field.type().get(), field.name(), null));
+      builder.add(new Parameter(i, field.type().get(), field.name(), null, field.location()));
     }
     ImmutableList<Parameter> parameters = builder.build();
     Signature signature =
