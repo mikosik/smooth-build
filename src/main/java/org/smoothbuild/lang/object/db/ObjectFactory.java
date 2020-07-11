@@ -22,18 +22,14 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.base.StructBuilder;
-import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.Field;
-import org.smoothbuild.lang.object.type.GenericArrayType;
-import org.smoothbuild.lang.object.type.GenericType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
-import org.smoothbuild.lang.object.type.Type;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -102,20 +98,8 @@ public class ObjectFactory {
     return objectDb.structBuilder(type);
   }
 
-  public ArrayType arrayType(Type elementType) {
-    if (elementType.isGeneric()) {
-      return arrayType((GenericType) elementType);
-    } else {
-      return arrayType((ConcreteType) elementType);
-    }
-  }
-
   public ConcreteArrayType arrayType(ConcreteType elementType) {
     return objectDb.arrayType(elementType);
-  }
-
-  public GenericArrayType arrayType(GenericType elementType) {
-    return new GenericArrayType(elementType);
   }
 
   public BlobType blobType() {

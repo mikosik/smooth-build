@@ -30,30 +30,4 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   public ConcreteType elemType() {
     return elemType;
   }
-
-  @Override
-  public ConcreteType coreType() {
-    return elemType.coreType();
-  }
-
-  @Override
-  public <T extends Type> T replaceCoreType(T coreType) {
-    @SuppressWarnings("unchecked")
-    T result = (T) coreType.changeCoreDepthBy(coreDepth());
-    return result;
-  }
-
-  @Override
-  public int coreDepth() {
-    return 1 + elemType.coreDepth();
-  }
-
-  @Override
-  public ConcreteType changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      return elemType.changeCoreDepthBy(delta + 1);
-    } else {
-      return super.changeCoreDepthBy(delta);
-    }
-  }
 }

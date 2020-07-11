@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.object.type;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -33,63 +32,6 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   @Override
   public ConcreteType superType() {
     return (ConcreteType) super.superType();
-  }
-
-  @Override
-  public ConcreteType coreType() {
-    return this;
-  }
-
-  @Override
-  public ConcreteType changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    ConcreteType result = this;
-    for (int i = 0; i < delta; i++) {
-      result = objectDb.arrayType(result);
-    }
-    return result;
-  }
-
-  @Override
-  public boolean isGeneric() {
-    return false;
-  }
-
-  @Override
-  public List<ConcreteType> hierarchy() {
-    @SuppressWarnings("unchecked")
-    List<ConcreteType> result = (List<ConcreteType>) super.hierarchy();
-    return result;
-  }
-
-  @Override
-  public boolean isAssignableFrom(Type type) {
-    if (type.isGeneric()) {
-      return false;
-    }
-    if (this.equals(type)) {
-      return true;
-    }
-    if (type.isNothing()) {
-      return true;
-    }
-    if (this instanceof ConcreteArrayType && type instanceof ConcreteArrayType) {
-      ConcreteType thisElemType = ((ConcreteArrayType) this).elemType();
-      ConcreteType thatElemType = ((ConcreteArrayType) type).elemType();
-      return thisElemType.isAssignableFrom(thatElemType);
-    }
-    if (type instanceof StructType) {
-      return isAssignableFrom(((StructType) type).superType());
-    }
-    return false;
-  }
-
-  @Override
-  public boolean isParamAssignableFrom(Type type) {
-    return isAssignableFrom(type);
   }
 
   @Override
