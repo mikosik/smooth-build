@@ -5,7 +5,6 @@
         <dependency org="org.junit.jupiter" name="junit-jupiter-engine" rev="5.6.2"/>
         <dependency org="org.junit.jupiter" name="junit-jupiter-params" rev="5.6.2"/>
         <dependency org="org.junit.platform" name="junit-platform-launcher" rev="1.6.2"/>
-        <dependency org="com.googlecode.junit-toolbox" name="junit-toolbox" rev="2.4"/>
         <dependency org="com.google.guava" name="guava" rev="29.0-jre"/>
         <dependency org="com.google.guava" name="guava-testlib" rev="29.0-jre"/>
         <dependency org="com.google.inject" name="guice" rev="4.2.3"/>
