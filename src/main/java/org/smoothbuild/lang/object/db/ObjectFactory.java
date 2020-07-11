@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.object.db;
 
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.SEVERITY;
@@ -11,8 +10,6 @@ import static org.smoothbuild.lang.object.type.TypeNames.FILE;
 import static org.smoothbuild.lang.object.type.TypeNames.MESSAGE;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,7 +45,6 @@ import com.google.common.collect.ImmutableList;
 @Singleton
 public class ObjectFactory {
   private final ObjectDb objectDb;
-  private final ConcurrentHashMap<String, ConcreteType> cache;
   private final StructType messageType;
   private final StructType fileType;
 
@@ -57,7 +53,6 @@ public class ObjectFactory {
     this.objectDb = objectDb;
     this.messageType = createMessageType(objectDb);
     this.fileType = createFileType(objectDb);
-    this.cache = createInitializedCache(objectDb);
   }
 
   private static StructType createMessageType(ObjectDb objectDb) {
@@ -71,19 +66,6 @@ public class ObjectFactory {
     Field content = new Field(objectDb.blobType(), "content", internal());
     Field path = new Field(objectDb.stringType(), "path", internal());
     return objectDb.structType(FILE, ImmutableList.of(content, path));
-  }
-
-  private static ConcurrentHashMap<String, ConcreteType> createInitializedCache(ObjectDb objectDb) {
-    ConcurrentHashMap<String, ConcreteType> map = new ConcurrentHashMap<>();
-    putType(map, objectDb.blobType());
-    putType(map, objectDb.boolType());
-    putType(map, objectDb.nothingType());
-    putType(map, objectDb.stringType());
-    return map;
-  }
-
-  private static void putType(Map<String, ConcreteType> map, ConcreteType type) {
-    map.put(type.name(), type);
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
@@ -161,21 +143,7 @@ public class ObjectFactory {
   }
 
   public StructType structType(String name, Iterable<Field> fields) {
-    StructType type = objectDb.structType(name, fields);
-    cache.putIfAbsent(name, type);
-    return type;
-  }
-
-  public Type getType(String name) {
-    if (isGenericTypeName(name)) {
-      return new GenericType(name);
-    } else {
-      ConcreteType type = cache.get(name);
-      if (type == null) {
-        throw new IllegalStateException("Unknown runtime type '" + name + "'.");
-      }
-      return type;
-    }
+    return objectDb.structType(name, fields);
   }
 
   public Struct errorMessage(String text) {
@@ -197,9 +165,5 @@ public class ObjectFactory {
         .set(TEXT, textObject)
         .set(SEVERITY, severityObject)
         .build();
-  }
-
-  public boolean containsType(String name) {
-    return cache.containsKey(name);
   }
 }
