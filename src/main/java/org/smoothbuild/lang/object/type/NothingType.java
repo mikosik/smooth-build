@@ -12,7 +12,7 @@ import org.smoothbuild.lang.object.db.ObjectDbException;
  */
 public class NothingType extends ConcreteType {
   public NothingType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, null, "Nothing", Nothing.class, hashedDb, objectDb);
+    super(merkleRoot, "Nothing", Nothing.class, hashedDb, objectDb);
   }
 
   @Override

@@ -2,7 +2,6 @@ package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
@@ -22,24 +21,6 @@ public class StructTypeTest extends AbstractTypeTestCase {
   @Test
   public void struct_type_without_fields_can_be_created() {
     structType("Struct", list());
-  }
-
-  @Test
-  public void first_field_type_cannot_be_nothing() {
-    assertCall(() -> structType("Struct", fields(nothingType())))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void first_field_type_cannot_be_nothing_array() {
-    assertCall(() -> structType("Struct", fields(arrayType(nothingType()))))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void first_field_type_cannot_be_array() {
-    assertCall(() -> structType("Struct", fields(arrayType(stringType()))))
-        .throwsException(IllegalArgumentException.class);
   }
 
   @Test

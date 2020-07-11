@@ -19,20 +19,15 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   protected final HashedDb hashedDb;
   protected final ObjectDb objectDb;
 
-  protected ConcreteType(MerkleRoot merkleRoot, ConcreteType superType,
-      String name, Class<? extends SObject> jType, HashedDb hashedDb, ObjectDb objectDb) {
-    super(superType, name, jType);
+  protected ConcreteType(MerkleRoot merkleRoot, String name, Class<? extends SObject> jType,
+      HashedDb hashedDb, ObjectDb objectDb) {
+    super(name, jType);
     this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
     this.objectDb = objectDb;
   }
 
   public abstract SObject newObject(MerkleRoot merkleRoot);
-
-  @Override
-  public ConcreteType superType() {
-    return (ConcreteType) super.superType();
-  }
 
   @Override
   public Hash hash() {
