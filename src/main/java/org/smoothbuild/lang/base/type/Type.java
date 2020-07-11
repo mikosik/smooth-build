@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.compound.Compoundability;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -51,10 +50,6 @@ public abstract class Type implements Named {
   }
 
   public abstract Type superType();
-
-  public org.smoothbuild.lang.object.type.Type toRecordType(ObjectFactory objectFactory) {
-    return compoundability.toRecordType(this, objectFactory);
-  }
 
   public Type coreType() {
     return compoundability.coreType(this);

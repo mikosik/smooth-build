@@ -7,7 +7,6 @@ import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 
 public class ArrayCompoundability implements Compoundability {
   @Override
@@ -46,12 +45,6 @@ public class ArrayCompoundability implements Compoundability {
     } else {
       throw new IllegalArgumentException("Cannot assign " + destination + " from " + source.name());
     }
-  }
-
-  @Override
-  public org.smoothbuild.lang.object.type.Type toRecordType(
-      Type type, ObjectFactory objectFactory) {
-    return objectFactory.arrayType(elemType(type).toRecordType(objectFactory));
   }
 
   @Override

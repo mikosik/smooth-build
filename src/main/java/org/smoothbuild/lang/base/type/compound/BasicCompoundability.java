@@ -4,19 +4,12 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 
 public class BasicCompoundability extends DefaultCompoundability {
   private final Class<? extends SObject> jType;
 
   public BasicCompoundability(Class<? extends SObject> jType) {
     this.jType = jType;
-  }
-
-  @Override
-  public  org.smoothbuild.lang.object.type.Type toRecordType(
-      Type type, ObjectFactory objectFactory) {
-    return objectFactory.getType(type.name());
   }
 
   @Override
