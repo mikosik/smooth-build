@@ -29,20 +29,8 @@ public class StructType extends ConcreteType {
 
   private StructType(MerkleRoot merkleRoot, String name, ImmutableMap<String, Field> fields,
       HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, calculateSuperType(fields), name, Struct.class, hashedDb, objectDb);
+    super(merkleRoot, name, Struct.class, hashedDb, objectDb);
     this.fields = checkNotNull(fields);
-  }
-
-  private static ConcreteType calculateSuperType(ImmutableMap<String, Field> fields) {
-    if (fields.size() == 0) {
-      return null;
-    } else {
-      ConcreteType superType = fields.values().iterator().next().type();
-      if (superType.isArray() || superType.isNothing()) {
-        throw new IllegalArgumentException();
-      }
-      return superType;
-    }
   }
 
   @Override

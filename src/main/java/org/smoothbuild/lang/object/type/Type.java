@@ -6,8 +6,6 @@ import org.smoothbuild.lang.object.base.SObject;
  * Type in smooth language.
  */
 public interface Type {
-  public Type superType();
-
   public String name();
 
   /**

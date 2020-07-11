@@ -5,19 +5,12 @@ import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 import org.smoothbuild.lang.object.base.SObject;
 
 public abstract class AbstractType implements Type {
-  private final Type superType;
   private final String name;
   private final Class<? extends SObject> jType;
 
-  public AbstractType(Type superType, String name, Class<? extends SObject> jType) {
-    this.superType = superType;
+  public AbstractType(String name, Class<? extends SObject> jType) {
     this.name = name;
     this.jType = jType;
-  }
-
-  @Override
-  public Type superType() {
-    return superType;
   }
 
   @Override

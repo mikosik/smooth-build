@@ -26,24 +26,6 @@ public class TypeCachingTest extends TestingContext {
   }
 
   @Test
-  public void creating_array_type_reuses_cached_instance_of_its_supertype() {
-    StructType superType = structType("MySuperType", list());
-    StructType type = structType("MyType", list(field(superType)));
-    assertReturnsSameInstanceEachTime(() -> arrayType(type).superType());
-  }
-
-  @Test
-  public void reading_array_type_reuses_cached_instance_of_its_supertype() {
-    StructType superType = structType("MySuperType", list());
-    StructType myType = structType("MyType", list(field(superType)));
-    ConcreteType type = arrayType(myType);
-    ObjectDb objectDbOther = objectDbOther();
-
-    assertReturnsSameInstanceEachTime(
-        () -> ((ConcreteType) objectDbOther.get(type.hash())).superType());
-  }
-
-  @Test
   public void creating_struct_type_reuses_cached_instance() {
     List<Field> fields = list(new Field(stringType(), "name", internal()));
     assertReturnsSameInstanceEachTime(() -> structType("MyStruct", fields));
@@ -60,9 +42,5 @@ public class TypeCachingTest extends TestingContext {
 
   private static void assertReturnsSameInstanceEachTime(Supplier<Object> supplier) {
     assertThat(supplier.get()).isSameInstanceAs(supplier.get());
-  }
-
-  private static Field field(StructType superType) {
-    return new Field(superType, "name", internal());
   }
 }

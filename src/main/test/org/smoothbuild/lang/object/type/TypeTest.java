@@ -142,38 +142,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("superType_test_data")
-  public void superType(Type type, Type expected) {
-    assertThat(type.superType())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> superType_test_data() {
-    return List.of(
-        arguments(type, null),
-        arguments(bool, null),
-        arguments(string, null),
-        arguments(blob, null),
-        arguments(nothing, null),
-        arguments(person, string),
-
-        arguments(arrayType, null),
-        arguments(arrayBool, null),
-        arguments(arrayString, null),
-        arguments(arrayBlob, null),
-        arguments(arrayNothing, null),
-        arguments(arrayPerson, arrayString),
-
-        arguments(array2Type, null),
-        arguments(array2Bool, null),
-        arguments(array2String, null),
-        arguments(array2Blob, null),
-        arguments(array2Nothing, null),
-        arguments(array2Person, array2String)
-    );
-  }
-
-  @ParameterizedTest
   @MethodSource("elemType_test_data")
   public void elemType(ArrayType type, Type expected) {
     assertThat(type.elemType())

@@ -298,11 +298,7 @@ public class ObjectDb {
 
   private ConcreteArrayType newArrayType(ConcreteType elementType, Hash dataHash) throws
       HashedDbException {
-    ConcreteType elementSuperType = elementType.superType();
-    ConcreteArrayType superType =
-        elementSuperType == null ? null : cacheType(newArrayType(elementSuperType));
-    return new ConcreteArrayType(
-        writeRoot(typeType, dataHash), superType, elementType, hashedDb, this);
+    return new ConcreteArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
   }
 
   private StructType newStructType(String name, Iterable<Field> fields) throws HashedDbException {

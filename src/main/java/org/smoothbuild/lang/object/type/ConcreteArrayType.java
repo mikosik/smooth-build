@@ -14,9 +14,9 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
 
-  public ConcreteArrayType(MerkleRoot merkleRoot, ConcreteArrayType superType,
-      ConcreteType elemType, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, superType, "[" + elemType.name() + "]", Array.class, hashedDb, objectDb);
+  public ConcreteArrayType(MerkleRoot merkleRoot, ConcreteType elemType, HashedDb hashedDb,
+      ObjectDb objectDb) {
+    super(merkleRoot, "[" + elemType.name() + "]", Array.class, hashedDb, objectDb);
     this.elemType = checkNotNull(elemType);
   }
 
