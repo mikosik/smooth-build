@@ -14,12 +14,24 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
 
-public class VirtualTask extends NonComputableTask {
+public class VirtualTask extends Task {
+  private final String name;
   private final Task task;
 
   public VirtualTask(String name, ConcreteType type, Task task, Location location) {
-    super(name, type, ImmutableList.of(task), location);
+    super(type, ImmutableList.of(task), location);
+    this.name = name;
     this.task = task;
+  }
+
+  @Override
+  public String name() {
+    return name;
+  }
+
+  @Override
+  public String sourceDescription() {
+    return " " + name;
   }
 
   @Override
