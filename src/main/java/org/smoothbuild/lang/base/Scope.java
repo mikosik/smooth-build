@@ -4,80 +4,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public abstract class Scope<E> {
+public class Scope<E> {
+  private final Scope<E> outerScope;
+  private final Map<String, E> bindings = new HashMap<>();
+
   public static <E> Scope<E> scope() {
-    return scope(new EmptyScope<>());
+    return new Scope<E>(null);
   }
 
   public static <E> Scope<E> scope(Scope<E> outerScope) {
-    return new InnerScope<>(outerScope);
+    return new Scope<>(outerScope);
   }
 
-  public abstract boolean contains(String name);
+  public Scope(Scope<E> outerScope) {
+    this.outerScope = outerScope;
+  }
 
-  public abstract E get(String name);
+  public boolean contains(String name) {
+    return bindings.containsKey(name) || (outerScope != null && outerScope.contains(name));
+  }
 
-  public abstract void add(String name, E element);
-
-  public abstract Scope<E> outerScope();
-
-  private static class InnerScope<E> extends Scope<E> {
-    private final Scope<E> outerScope;
-    private final Map<String, E> bindings = new HashMap<>();
-
-    public InnerScope(Scope<E> outerScope) {
-      this.outerScope = outerScope;
+  public E get(String name) {
+    if (bindings.containsKey(name)) {
+      return bindings.get(name);
     }
-
-    @Override
-    public boolean contains(String name) {
-      return bindings.containsKey(name) || outerScope.contains(name);
-    }
-
-    @Override
-    public E get(String name) {
-      if (bindings.containsKey(name)) {
-        return bindings.get(name);
-      }
+    if (outerScope != null) {
       return outerScope.get(name);
     }
-
-    @Override
-    public void add(String name, E element) {
-      if (bindings.containsKey(name)) {
-        throw new IllegalStateException("Name " + name + " is already bound in current scope.");
-      }
-      bindings.put(name, element);
-    }
-
-    @Override
-    public Scope<E> outerScope() {
-      if (outerScope.getClass() == EmptyScope.class) {
-        throw new UnsupportedOperationException();
-      }
-      return outerScope;
-    }
+    throw new NoSuchElementException(name);
   }
 
-  private static class EmptyScope<E> extends Scope<E> {
-    @Override
-    public boolean contains(String name) {
-      return false;
+  public void add(String name, E element) {
+    if (bindings.containsKey(name)) {
+      throw new IllegalStateException("Name " + name + " is already bound in current scope.");
     }
+    bindings.put(name, element);
+  }
 
-    @Override
-    public E get(String name) {
-      throw new NoSuchElementException(name);
+  public Scope<E> outerScope() {
+    if (outerScope == null) {
+      throw new IllegalStateException("This is top level scope. It doesn't have outer scope.");
     }
-
-    @Override
-    public void add(String name, E element) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Scope<E> outerScope() {
-      throw new UnsupportedOperationException();
-    }
+    return outerScope;
   }
 }

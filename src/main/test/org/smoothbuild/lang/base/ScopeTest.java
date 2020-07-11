@@ -73,7 +73,7 @@ public class ScopeTest {
   public void top_level_scope_doesnt_have_outer_scope() {
     scope = scope();
     assertCall(() -> scope.outerScope())
-        .throwsException(UnsupportedOperationException.class);
+        .throwsException(IllegalStateException.class);
   }
 
   @Test
