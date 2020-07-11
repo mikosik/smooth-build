@@ -52,7 +52,6 @@ public class ConvertAlgorithm implements Algorithm {
     assertThat(input.objects().size() == 1);
     SObject object = input.objects().get(0);
     assertThat(!destinationType.equals(object.type()));
-    assertThat(destinationType.isAssignableFrom(object.type()));
     if (object instanceof Array) {
       return new Output(convertArray(nativeApi, (Array) object, destinationType), nativeApi.messages());
     }

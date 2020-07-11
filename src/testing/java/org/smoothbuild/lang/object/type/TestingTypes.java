@@ -13,8 +13,6 @@ public class TestingTypes {
   public static final ConcreteType nothing = objectDb.nothingType();
   public static final StructType person = context.personType();
   public static final StructType file = context.fileType();
-  public static final GenericType a = new GenericType("a");
-  public static final GenericType b = new GenericType("b");
 
   public static final ConcreteArrayType arrayType = array(type);
   public static final ConcreteArrayType arrayBool = array(bool);
@@ -23,8 +21,6 @@ public class TestingTypes {
   public static final ConcreteArrayType arrayNothing = array(nothing);
   public static final ConcreteArrayType arrayPerson = array(person);
   public static final ConcreteArrayType arrayFile = array(file);
-  public static final GenericArrayType arrayA = array(a);
-  public static final GenericArrayType arrayB = array(b);
 
   public static final ConcreteArrayType array2Type = array(arrayType);
   public static final ConcreteArrayType array2Bool = array(arrayBool);
@@ -33,14 +29,8 @@ public class TestingTypes {
   public static final ConcreteArrayType array2Nothing = array(arrayNothing);
   public static final ConcreteArrayType array2Person = array(arrayPerson);
   public static final ConcreteArrayType array2File = array(arrayFile);
-  public static final GenericArrayType array2A = array(arrayA);
-  public static final GenericArrayType array2B = array(arrayB);
 
   private static ConcreteArrayType array(ConcreteType elemType) {
     return objectDb.arrayType(elemType);
-  }
-
-  private static GenericArrayType array(GenericType elemType) {
-    return new GenericArrayType(elemType);
   }
 }
