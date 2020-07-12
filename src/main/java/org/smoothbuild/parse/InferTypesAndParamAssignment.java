@@ -54,10 +54,16 @@ public class InferTypesAndParamAssignment {
         if (struct.fields().stream().anyMatch(f -> f.type().isEmpty())) {
           return;
         }
-        ImmutableList<Field> fields = struct.fields().stream()
-            .map(f -> new Field((ConcreteType) f.type().get(), f.name(), f.location()))
-            .collect(toImmutableList());
-        struct.setType(struct(struct.name(), struct.location(), fields));
+
+        List<ItemNode> fieldNodes = struct.fields();
+        var builder = ImmutableList.<Field>builder();
+        for (int i = 0; i < fieldNodes.size(); i++) {
+          ItemNode fieldNode = fieldNodes.get(i);
+          Field field = new Field(i, (ConcreteType) fieldNode.type().get(), fieldNode.name(),
+              fieldNode.location());
+          builder.add(field);
+        }
+        struct.setType(struct(struct.name(), struct.location(), builder.build()));
       }
 
       @Override

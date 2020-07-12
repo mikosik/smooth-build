@@ -41,7 +41,7 @@ public class StructTypeTest {
   private static List<Field> fields(ConcreteType... types) {
     List<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
-      result.add(new Field(types[i], "name" + i, internal()));
+      result.add(new Field(i, types[i], "name" + i, internal()));
     }
     return result;
   }
