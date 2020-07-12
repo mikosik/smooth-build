@@ -2,6 +2,8 @@ package org.smoothbuild.slib.java;
 
 import static okio.Okio.buffer;
 import static okio.Okio.sink;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +15,6 @@ import java.util.jar.Manifest;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.BlobBuilder;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -29,7 +30,7 @@ public class JarFunction {
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
       for (Struct file : files.asIterable(Struct.class)) {
-        String path = ((SString) file.get("path")).jValue();
+        String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
           return null;
@@ -54,8 +55,8 @@ public class JarFunction {
 
   private static void jarFile(Struct file, JarOutputStream jarOutputStream)
       throws IOException {
-    jarOutputStream.putNextEntry(new JarEntry(((SString) file.get("path")).jValue()));
-    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+    jarOutputStream.putNextEntry(new JarEntry(filePath(file).jValue()));
+    try (BufferedSource source = fileContent(file).source()) {
       BufferedSink sink = buffer(sink(jarOutputStream));
       source.readAll(sink);
       sink.flush();

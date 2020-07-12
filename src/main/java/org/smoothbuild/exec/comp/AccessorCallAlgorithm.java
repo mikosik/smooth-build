@@ -43,7 +43,7 @@ public class AccessorCallAlgorithm implements Algorithm {
     ImmutableList<SObject> objects = input.objects();
     checkArgument(objects.size() == 1);
     Struct struct = (Struct) objects.get(0);
-    return new Output(struct.get(accessor.fieldName()), nativeApi.messages());
+    return new Output(struct.get(accessor.fieldIndex()), nativeApi.messages());
   }
 
   @Override

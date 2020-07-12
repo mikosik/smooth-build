@@ -1,21 +1,21 @@
 package org.smoothbuild.slib.java.javac;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 
 import java.net.URI;
 import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final Struct file;
 
   public InputSourceFile(Struct file) {
-    super(URI.create("string:///" + ((SString) file.get("path")).jValue()), Kind.SOURCE);
+    super(URI.create("string:///" + filePath(file).jValue()), Kind.SOURCE);
     this.file = file;
   }
 
@@ -28,6 +28,6 @@ public class InputSourceFile extends SimpleJavaFileObject {
   }
 
   private Scanner scanner() {
-    return new Scanner(((Blob) file.get("content")).source().inputStream(), UTF_8);
+    return new Scanner(fileContent(file).source().inputStream(), UTF_8);
   }
 }

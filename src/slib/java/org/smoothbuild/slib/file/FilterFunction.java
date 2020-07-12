@@ -1,6 +1,7 @@
 package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
@@ -27,7 +28,7 @@ public class FilterFunction {
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
 
     for (Struct file : files.asIterable(Struct.class)) {
-      if (filter.test(path(((SString) file.get("path")).jValue()))) {
+      if (filter.test(path(filePath(file).jValue()))) {
         builder.add(file);
       }
     }

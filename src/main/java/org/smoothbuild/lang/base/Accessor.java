@@ -7,11 +7,11 @@ import org.smoothbuild.parse.expr.AccessorCallExpression;
 import org.smoothbuild.parse.expr.Expression;
 
 public class Accessor extends Callable {
-  private final String fieldName;
+  private final int fieldIndex;
 
-  public Accessor(Signature signature, String fieldName, Location location) {
+  public Accessor(Signature signature, int fieldIndex, Location location) {
     super(signature, location);
-    this.fieldName = fieldName;
+    this.fieldIndex = fieldIndex;
   }
 
   @Override
@@ -19,8 +19,8 @@ public class Accessor extends Callable {
     return (ConcreteType) signature().type();
   }
 
-  public String fieldName() {
-    return fieldName;
+  public int fieldIndex() {
+    return fieldIndex;
   }
 
   @Override

@@ -21,7 +21,7 @@ public class ObjectDbException extends RuntimeException {
   }
 
   private static String buildMessage(Hash hash, String message) {
-    return "Cannot read object at " + hash + " ." + (message == null ? "" : " " + message);
+    return "Cannot read object at " + hash + "." + (message == null ? "" : " " + message);
   }
 
   public ObjectDbException(Throwable cause) {

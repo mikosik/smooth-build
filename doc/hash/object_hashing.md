@@ -93,14 +93,8 @@ hash(
   hash(
     hash(structName),
     hash(
-      hash(
-        hash(field1Name),
-        field1TypeHash
-      ),
-      hash(
-        hash(field2Name),
-        field2TypeHash
-      ),
+      field1TypeHash
+      field2TypeHash
     )
   )
 )
@@ -147,10 +141,10 @@ arrayInstanceHash =
 hash(
   arrayTypeHash,
   hash(
-    element1Hash,
-    element2Hash,
+    element1ValueHash,
+    element2ValueHash,
     ...
-    elementNHash
+    elementNValueHash
   )
 )
 ```
@@ -163,10 +157,10 @@ structInstanceHash =
 hash(
   structTypeHash,
   hash(
-    field1Hash,
-    field2Hash,
+    field1ValueHash,
+    field2ValueHash,
     ...
-    fieldNHash
+    fieldNValueHash
   )
 )
 ```

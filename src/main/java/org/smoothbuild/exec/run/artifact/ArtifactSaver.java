@@ -4,7 +4,8 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.object.type.TypeNames.FILE;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,9 +17,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.lang.object.db.FileStruct;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -27,19 +27,17 @@ import org.smoothbuild.util.DuplicatesDetector;
  */
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final ObjectFactory objectFactory;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory) {
+  public ArtifactSaver(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.objectFactory = objectFactory;
   }
 
   public Path save(String name, SObject object) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
     if (object instanceof Array) {
       return saveArray(artifactPath, (Array) object);
-    } else if (object.type().name().equals(FILE)) {
+    } else if (object.type().name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (Struct) object);
     } else {
       return saveBasicObject(artifactPath, object);
@@ -60,7 +58,7 @@ public class ArtifactSaver {
         saveArray(artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
-    } else if (elemType.name().equals(FILE)) {
+    } else if (elemType.name().equals(FileStruct.NAME)) {
       saveFileArray(artifactPath, array.asIterable(Struct.class));
     } else {
       saveObjectArray(artifactPath, array);
@@ -85,7 +83,7 @@ public class ArtifactSaver {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
-        Path targetPath = targetPath(file.get("content"));
+        Path targetPath = targetPath(fileContent(file));
         fileSystem.createLink(sourcePath, targetPath);
       }
     }
@@ -114,6 +112,6 @@ public class ArtifactSaver {
   }
 
   private static Path fileObjectPath(Struct file) {
-    return path(((SString) file.get("path")).jValue());
+    return path(filePath(file).jValue());
   }
 }

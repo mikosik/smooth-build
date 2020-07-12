@@ -1,25 +1,24 @@
 package org.smoothbuild.lang.object.base;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.checkIndex;
 
 import java.util.List;
-import java.util.Map;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
-import org.smoothbuild.lang.object.type.Field;
+import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
 public class Struct extends SObjectImpl {
-  private ImmutableMap<String, SObject> fields;
+  private ImmutableList<SObject> fields;
   private final ObjectDb objectDb;
 
   public Struct(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
@@ -32,40 +31,47 @@ public class Struct extends SObjectImpl {
     return (StructType) super.type();
   }
 
-  public SObject get(String name) {
-    ImmutableMap<String, SObject> fields = fields();
-    checkArgument(fields.containsKey(name), name);
-    return fields.get(name);
+  public SObject get(int index) {
+    ImmutableList<SObject> fields = fields();
+    checkIndex(index, fields.size());
+    return fields.get(index);
   }
 
   public SObject superObject() {
-    ImmutableMap<String, SObject> fields = fields();
-    return fields.size() == 0 ? null : fields.values().iterator().next();
+    ImmutableList<SObject> fields = fields();
+    return fields.size() == 0 ? null : fields.iterator().next();
   }
 
-  private ImmutableMap<String, SObject> fields() {
+  private ImmutableList<SObject> fields() {
     if (fields == null) {
-      try {
-        ImmutableMap<String, Field> fieldTypes = type().fields();
-        List<Hash> hashes = hashedDb.readHashes(dataHash(), fieldTypes.size());
-        int i = 0;
-        ImmutableMap.Builder<String, SObject> builder = ImmutableMap.builder();
-        for (Map.Entry<String, Field> entry : fieldTypes.entrySet()) {
-          SObject object = objectDb.get(hashes.get(i));
-          if (!entry.getValue().type().equals(object.type())) {
-            throw new ObjectDbException(hash(), "It" +
-                "s type specifies field '" + entry.getKey()
-                + "' with type " + entry.getValue().type() + " but its data has object of type "
-                + object.type() + " assigned to that field.");
-          }
-          builder.put(entry.getKey(), object);
-          i++;
-        }
-        fields = builder.build();
-      } catch (HashedDbException e) {
-        throw new ObjectDbException(hash(), e);
+      var fieldTypes = type().fieldTypes();
+      var fieldHashes = readFieldHashes(fieldTypes);
+      if (fieldTypes.size() != fieldHashes.size()) {
+        throw new ObjectDbException(hash(), "Its type (Struct) specifies " + fieldTypes.size()
+            + " fields but its data points to" + fieldHashes.size() + "  fields.");
       }
+      var builder = ImmutableList.<SObject>builder();
+      for (int i = 0; i < fieldTypes.size(); i++) {
+        SObject object = objectDb.get(fieldHashes.get(i));
+        ConcreteType type = fieldTypes.get(i);
+        if (type.equals(object.type())) {
+          builder.add(object);
+        } else {
+          throw new ObjectDbException(hash(), "Its type (Struct) specifies field at index " + i
+              + " with type " + type + " but its data has object of type " + object.type()
+              + " at that index.");
+        }
+      }
+      fields = builder.build();
     }
     return fields;
+  }
+
+  private List<Hash> readFieldHashes(final ImmutableList<ConcreteType> fieldTypes) {
+    try {
+      return hashedDb.readHashes(dataHash(), fieldTypes.size());
+    } catch (HashedDbException e) {
+      throw new ObjectDbException(hash(), "Error reading field hashes.", e);
+    }
   }
 }

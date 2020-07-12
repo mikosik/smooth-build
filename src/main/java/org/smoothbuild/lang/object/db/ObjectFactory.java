@@ -1,13 +1,9 @@
 package org.smoothbuild.lang.object.db;
 
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
-import static org.smoothbuild.lang.object.base.Messages.SEVERITY;
-import static org.smoothbuild.lang.object.base.Messages.TEXT;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
-import static org.smoothbuild.lang.object.type.TypeNames.FILE;
-import static org.smoothbuild.lang.object.type.TypeNames.MESSAGE;
+import static org.smoothbuild.lang.object.db.MessageStruct.MESSAGE;
 
 import java.io.IOException;
 
@@ -21,12 +17,10 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -53,15 +47,12 @@ public class ObjectFactory {
 
   private static StructType createMessageType(ObjectDb objectDb) {
     StringType stringType = objectDb.stringType();
-    Field text = new Field(stringType, "text", internal());
-    Field severity = new Field(stringType, "severity", internal());
-    return objectDb.structType(MESSAGE, ImmutableList.of(text, severity));
+    return objectDb.structType(MESSAGE, ImmutableList.of(stringType, stringType));
   }
 
   private static StructType createFileType(ObjectDb objectDb) {
-    Field content = new Field(objectDb.blobType(), "content", internal());
-    Field path = new Field(objectDb.stringType(), "path", internal());
-    return objectDb.structType(FILE, ImmutableList.of(content, path));
+    var fieldTypes = ImmutableList.of(objectDb.blobType(), objectDb.stringType());
+    return objectDb.structType(FileStruct.NAME, fieldTypes);
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
@@ -84,18 +75,15 @@ public class ObjectFactory {
   }
 
   public Struct file(SString path, Blob content) {
-    return structBuilder(fileType())
-        .set("content", content)
-        .set("path", path)
-        .build();
+    return objectDb.struct(fileType(), ImmutableList.of(content, path));
   }
 
   public SString string(String string) {
     return objectDb.string(string);
   }
 
-  public StructBuilder structBuilder(StructType type) {
-    return objectDb.structBuilder(type);
+  public Struct struct(StructType type, Iterable<? extends SObject> fields) {
+    return objectDb.struct(type, fields);
   }
 
   public ConcreteArrayType arrayType(ConcreteType elementType) {
@@ -126,8 +114,8 @@ public class ObjectFactory {
     return objectDb.stringType();
   }
 
-  public StructType structType(String name, Iterable<Field> fields) {
-    return objectDb.structType(name, fields);
+  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
+    return objectDb.structType(name, fieldTypes);
   }
 
   public Struct errorMessage(String text) {
@@ -145,9 +133,6 @@ public class ObjectFactory {
   private Struct message(String severity, String text) {
     SObject textObject = objectDb.string(text);
     SObject severityObject = objectDb.string(severity);
-    return objectDb.structBuilder(messageType())
-        .set(TEXT, textObject)
-        .set(SEVERITY, severityObject)
-        .build();
+    return objectDb.struct(messageType(), ImmutableList.of(textObject, severityObject));
   }
 }

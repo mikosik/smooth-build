@@ -4,6 +4,7 @@ import static java.io.File.createTempFile;
 import static okio.Okio.sink;
 import static okio.Okio.source;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class UnzipFunction {
           String name = entry.getName();
           if (!name.endsWith("/") && filter.test(name)) {
             Struct unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
-            String fileName = ((SString) unzippedEntry.get("path")).jValue();
+            String fileName = filePath(unzippedEntry).jValue();
             if (duplicatesDetector.addValue(fileName)) {
               nativeApi.log().error("archive contains two files with the same path = " + fileName);
               throw new AbortException();

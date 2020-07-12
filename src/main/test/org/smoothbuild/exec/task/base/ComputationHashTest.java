@@ -111,7 +111,7 @@ public class ComputationHashTest extends TestingContext {
         person);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("af8f490d36d092f1c660585e557ff988b1048c17"));
+        .isEqualTo(Hash.decode("520befa7702ecf3beb051061fa664606a6d838e4"));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("0df5916d25416379005a8e4700fca183b7ae86da"));
+        .isEqualTo(Hash.decode("1f74b5dcf22e370899faf349e4f8a5d6618c4194"));
   }
 
   @Test
@@ -127,7 +127,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("55076a75491bc119310d29f3d4239ebeba07360f"));
+        .isEqualTo(Hash.decode("ee13a008033a89baf8ecfe3c7b730b0406f1ab1b"));
   }
 
   private Constructor constructor() {
@@ -139,12 +139,12 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new AccessorCallAlgorithm(accessor(), string);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("d4ef1a2529ad47aca82b72dd736dccc1ea4c1f01"));
+        .isEqualTo(Hash.decode("8d7e433df55397d1a4c9153f5168ad7aef261644"));
   }
 
   private Accessor accessor() {
     return new Accessor(signature(org.smoothbuild.lang.base.type.TestingTypes.string,
-        "accessor", list()), "fieldName", internal());
+        "accessor", list()), 0, internal());
   }
 
   private static Algorithm computation(Hash hash) {

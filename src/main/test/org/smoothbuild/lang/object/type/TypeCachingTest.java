@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -27,13 +26,13 @@ public class TypeCachingTest extends TestingContext {
 
   @Test
   public void creating_struct_type_reuses_cached_instance() {
-    List<Field> fields = list(new Field(stringType(), "name", internal()));
+    List<ConcreteType> fields = list(stringType());
     assertReturnsSameInstanceEachTime(() -> structType("MyStruct", fields));
   }
 
   @Test
   public void reading_struct_type_reuses_cached_instance() {
-    List<Field> fields = list(new Field(stringType(), "name", internal()));
+    List<ConcreteType> fields = list(stringType());
     ConcreteType type = structType("MyStruct", fields);
     ObjectDb objectDbOther = objectDbOther();
 

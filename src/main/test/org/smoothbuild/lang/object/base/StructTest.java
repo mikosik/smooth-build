@@ -2,239 +2,163 @@ package org.smoothbuild.lang.object.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.util.Lists.list;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
 public class StructTest extends TestingContext {
   @Test
-  public void setting_nonexistent_field_throws_exception() {
-    StructBuilder builder = structBuilder(personType());
-    SString sstring = string("abc");
-    assertCall(() -> builder.set("unknown", sstring))
+  public void creating_struct_with_less_fields_than_specified_in_its_type_causes_exception() {
+    assertCall(() -> struct(personType(), List.of(string("John"))))
+        .throwsException(IllegalArgumentException.class);
+  }
+
+  @Test
+  public void creating_struct_with_more_fields_than_specified_in_its_type_causes_exception() {
+    assertCall(() -> struct(personType(), List.of(string("John"), string("Doe"), string("abc"))))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void setting_field_to_null_throws_exception() {
-    StructBuilder builder = structBuilder(personType());
-    assertCall(() -> builder.set("firstName", null))
+    assertCall(() -> struct(personType(), List.of(string("John"), null)))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void setting_field_to_object_of_wrong_type_throws_exception() {
     Array array = arrayBuilder(stringType()).build();
-    StructBuilder builder = structBuilder(personType());
-    assertCall(() -> builder.set("firstName", array))
+    assertCall(() -> struct(personType(), List.of(string("John"), array)))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void type_of_person_struct_is_person() {
-    Struct person = structBuilder(personType())
-        .set("firstName", string("John"))
-        .set("lastName", string("Doe"))
-        .build();
+    Struct person = johnDoePerson();
     assertThat(person.type())
         .isEqualTo(personType());
   }
 
   @Test
   public void field_contains_object_passed_to_builder() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    assertThat(person.get("firstName"))
-        .isEqualTo(firstName);
+    Struct person = johnDoePerson();
+    assertThat(person.type())
+        .isEqualTo(personType());
+    assertThat(person.get(0))
+        .isEqualTo(string("John"));
   }
 
   @Test
-  public void reading_nonexistent_fields_throws_exception() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    assertCall(() -> person.get("nonexistent"))
-        .throwsException(new IllegalArgumentException("nonexistent"));
+  public void reading_fields_with_negative_index_throws_exception() {
+    Struct person = johnDoePerson();
+    assertCall(() -> person.get(-1))
+        .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
-  public void build_throws_exception_when_not_all_fields_are_set() {
-    StructBuilder builder = structBuilder(personType()).set("firstName", string("John"));
-    assertCall(builder::build)
-        .throwsException(new IllegalStateException("Field lastName hasn't been specified."));
+  public void reading_fields_with_index_greater_than_max_index_throws_exception() {
+    Struct person = johnDoePerson();
+    assertCall(() -> person.get(2))
+        .throwsException(IndexOutOfBoundsException.class);
   }
 
   @Test
   public void super_object_is_equal_to_first_field() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person = johnDoePerson();
     assertThat(person.superObject())
-        .isEqualTo(firstName);
+        .isEqualTo(string("John"));
   }
 
   @Test
   public void super_object_is_null_when_struct_type_has_no_fields() {
-    Struct struct = structBuilder(structType("MyStruct", list())).build();
+    Struct struct = struct(emptyType(), List.of());
     assertThat(struct.superObject())
         .isNull();
   }
 
   @Test
   public void struct_hash_is_different_of_its_field_hash() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person = johnDoePerson();
     assertThat(person.hash())
-        .isNotEqualTo(person.get("firstName").hash());
+        .isNotEqualTo(person.get(0).hash());
   }
 
   @Test
   public void structs_with_equal_fields_are_equal() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person1 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    Struct person2 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = johnDoePerson();
     assertThat(person1)
         .isEqualTo(person2);
   }
 
   @Test
   public void structs_with_one_field_different_are_not_equal() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person1 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    Struct person2 = structBuilder(personType())
-        .set("firstName", string("different"))
-        .set("lastName", lastName)
-        .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = struct(personType(), List.of(string("John"), string("Doe2")));
+
     assertThat(person1)
         .isNotEqualTo(person2);
   }
 
   @Test
   public void structs_with_equal_fields_have_equal_hashes() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person1 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    Struct person2 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = johnDoePerson();
     assertThat(person1.hash())
         .isEqualTo(person2.hash());
   }
 
   @Test
   public void structs_with_different_field_have_different_hashes() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person1 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    Struct person2 = structBuilder(personType())
-        .set("firstName", string("different"))
-        .set("lastName", lastName)
-        .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = struct(personType(), List.of(string("John"), string("Doe2")));
     assertThat(person1.hash())
         .isNotEqualTo(person2.hash());
   }
 
   @Test
   public void structs_with_equal_fields_have_equal_hash_codes() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person1 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
-    Struct person2 = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = johnDoePerson();
     assertThat(person1.hashCode())
         .isEqualTo(person2.hashCode());
   }
 
   @Test
   public void structs_with_different_field_have_different_hash_codes() {
-        SString firstName = string("John");
-        SString lastName = string("Doe");
-        Struct person1 = structBuilder(personType())
-            .set("firstName", firstName)
-            .set("lastName", lastName)
-            .build();
-        Struct person2 = structBuilder(personType())
-            .set("firstName", string("different"))
-            .set("lastName", lastName)
-            .build();
+    Struct person1 = johnDoePerson();
+    Struct person2 = struct(personType(), List.of(string("John"), string("Doe2")));
         assertThat(person1.hashCode())
             .isNotEqualTo(person2.hashCode());
   }
 
   @Test
   public void struct_can_be_read_by_hash() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person = johnDoePerson();
     assertThat(objectDbOther().get(person.hash()))
         .isEqualTo(person);
   }
 
   @Test
   public void struct_read_by_hash_have_equal_fields() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person = johnDoePerson();
     Struct personRead = (Struct) objectDbOther().get(person.hash());
-    assertThat(personRead.get("firstName"))
-        .isEqualTo(person.get("firstName"));
-    assertThat(personRead.get("lastName"))
-        .isEqualTo(person.get("lastName"));
+    assertThat(personRead.get(0))
+        .isEqualTo(person.get(0));
+    assertThat(personRead.get(1))
+        .isEqualTo(person.get(1));
   }
 
   @Test
   public void to_string() {
-    SString firstName = string("John");
-    SString lastName = string("Doe");
-    Struct person = structBuilder(personType())
-        .set("firstName", firstName)
-        .set("lastName", lastName)
-        .build();
+    Struct person = johnDoePerson();
     assertThat(person.toString())
         .isEqualTo("Person(...):" + person.hash());
+  }
+
+  private Struct johnDoePerson() {
+    return struct(personType(), List.of(string("John"), string("Doe")));
   }
 }

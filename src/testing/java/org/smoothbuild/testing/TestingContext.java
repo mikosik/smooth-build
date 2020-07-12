@@ -1,7 +1,6 @@
 package org.smoothbuild.testing;
 
 import static org.smoothbuild.SmoothConstants.CHARSET;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -24,20 +23,19 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
+import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
 
 import okio.ByteString;
@@ -183,8 +181,8 @@ public class TestingContext {
     return objectDb().arrayType(elementType);
   }
 
-  public StructType structType(String name, Iterable<Field> fields) {
-    return objectDb().structType(name, fields);
+  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
+    return objectDb().structType(name, fieldTypes);
   }
 
   public StructType emptyType() {
@@ -193,15 +191,11 @@ public class TestingContext {
 
   public StructType personType() {
     ConcreteType string = stringType();
-    return structType("Person", list(
-        new Field(string, "firstName", internal()),
-        new Field(string, "lastName", internal())));
+    return structType("Person", list(string, string));
   }
 
   public StructType fileType() {
-    return structType("File", list(
-        new Field(blobType(), "content", internal()),
-        new Field(stringType(), "path", internal())));
+    return structType("File", list(blobType(), stringType()));
   }
 
   public Bool bool(boolean value) {
@@ -220,19 +214,16 @@ public class TestingContext {
     return objectDb().arrayBuilder(elemType);
   }
 
-  public StructBuilder structBuilder(StructType type) {
-    return objectDb().structBuilder(type);
+  public Struct struct(StructType type, Iterable<? extends SObject> fields) {
+    return objectDb().struct(type, fields);
   }
 
   public Struct empty() {
-    return structBuilder(emptyType()).build();
+    return struct(emptyType(), ImmutableList.of());
   }
 
   public Struct person(String firstName, String lastName) {
-    return structBuilder(personType())
-        .set("firstName", string(firstName))
-        .set("lastName", string(lastName))
-        .build();
+    return struct(personType(), ImmutableList.of(string(firstName), string(lastName)));
   }
 
   public Array messageArrayWithOneError() {
@@ -243,11 +234,11 @@ public class TestingContext {
     return array(objectFactory().messageType());
   }
 
-  public <T extends SObject> Array array(SObject... elements) {
+  public Array array(SObject... elements) {
     return array(elements[0].type(), elements);
   }
 
-  public <T extends SObject> Array array(ConcreteType elementType, SObject... elements) {
+  public Array array(ConcreteType elementType, SObject... elements) {
     return objectDb().arrayBuilder(elementType).addAll(list(elements)).build();
   }
 
@@ -284,12 +275,8 @@ public class TestingContext {
   public static class TestingObjectFactory extends ObjectFactory {
     public TestingObjectFactory(ObjectDb objectDb) {
       super(objectDb);
-      structType("File", list(
-          new Field(blobType(), "content", internal()),
-          new Field(stringType(), "path", internal())));
-      structType("Message", list(
-          new Field(stringType(), "text", internal()),
-          new Field(stringType(), "severity", internal())));
+      structType("File", list(blobType(), stringType()));
+      structType("Message", list(stringType(), stringType()));
     }
   }
 }

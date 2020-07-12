@@ -3,6 +3,8 @@ package org.smoothbuild.io.util;
 import static com.google.common.base.Preconditions.checkState;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.IOException;
@@ -14,7 +16,6 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 
 import okio.BufferedSource;
@@ -58,8 +59,8 @@ public class TempDir {
   }
 
   private void writeFileImpl(Struct file) throws IOException {
-    Path path = path(((SString) file.get("path")).jValue());
-    Blob content = (Blob) file.get("content");
+    Path path = path(filePath(file).jValue());
+    Blob content = fileContent(file);
     copyAllAndClose(content.source(), fileSystem.sink(rootPath.append(path)));
   }
 
