@@ -6,7 +6,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.db.ObjectDbException;
@@ -57,13 +56,8 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash(
                 hash("Person"),
                 hash(
-                    hash(
-                        hash("firstName"),
-                        hash(stringType())
-                    ),
-                    hash(
-                        hash("lastName"),
-                        hash(stringType()))
+                    hash(stringType()),
+                    hash(stringType())
                 ))))
         .isEqualTo(personType().hash());
   }
@@ -143,29 +137,6 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         .withCause(new DecodingStringException(notStringHash, null));
   }
 
-  @Test
-  public void merkle_tree_for_struct_type_with_field_name_that_is_not_legal_utf8_sequence_causes_exception()
-      throws Exception {
-    Hash notStringHash = hash(ByteString.of((byte) -64));
-    Hash instanceHash =
-        hash(
-            hash(typeType()),
-            hash(
-                hash("Person"),
-                hash(
-                    hash(
-                        hash("firstName"),
-                        hash(stringType())
-                    ),
-                    hash(
-                        notStringHash,
-                        hash(stringType()))
-                )));
-    assertCall(() -> objectDb().get(instanceHash))
-        .throwsException(new ObjectDbException(instanceHash))
-        .withCause(new DecodingStringException(notStringHash, null));
-  }
-
   // testing Merkle tree of type data
 
   @ParameterizedTest
@@ -183,7 +154,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
   }
 
   @Test
-  public void merkle_root_of_data_of_struct_type_with_one_children_causes_exception()
+  public void struct_type_with_merkle_tree_with_data_with_one_children_causes_exception()
       throws Exception {
     Hash instanceHash =
         hash(
@@ -193,6 +164,39 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
     assertCall(() -> objectDb().get(instanceHash))
         .throwsException(new ObjectDbException(instanceHash,
         "It is 'Person' type but its Merkle root has 1 children when 2 is expected."));
+  }
+
+  @Test
+  public void struct_type_with_merkle_tree_with_data_with_second_children_not_being_array_causes_exception()
+      throws Exception {
+    Hash instanceHash =
+        hash(
+            hash(typeType()),
+            hash(
+                hash("Person"),
+                hash(stringType())
+                ));
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash, fieldReadingErrorMessage(1)));
+  }
+
+  @Test
+  public void struct_type_with_merkle_tree_with_data_with_second_children_being_array_of_non_type_causes_exception()
+      throws Exception {
+    Hash stringHash = hash(string("abc"));
+    Hash instanceHash =
+        hash(
+            hash(typeType()),
+            hash(
+                hash("Person"),
+                hash(
+                    stringHash
+                )));
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash, fieldReadingErrorMessage(0)))
+        .withCause(new ObjectDbException(stringHash,
+            "Expected object which is instance of 'Type' type but its Merkle tree's first child" +
+                " is not 'Type' type."));
   }
 
   @Test
@@ -208,26 +212,6 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             "It is '[]' type but its Merkle root has 1 children when 2 is expected."));
   }
 
-  @Test
-  public void merkle_tree_of_struct_type_field_with_more_than_2_children_causes_exception()
-      throws Exception {
-    Hash dataHash = hash(
-        hash("firstName"),
-        hash(stringType()),
-        hash("corrupted")
-    );
-    Hash instanceHash =
-        hash(
-            hash(typeType()),
-            hash(
-                hash("Person"),
-                hash(
-                    dataHash)));
-    assertCall(() -> objectDb().get(instanceHash))
-        .throwsException(new ObjectDbException(instanceHash))
-        .withCause(new DecodingHashSequenceException(dataHash, 2, 3));
-  }
-
   // corrupted dependent types
 
   @Test
@@ -240,15 +224,10 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
             hash(
                 hash("Person"),
                 hash(
-                    hash(
-                        hash("firstName"),
-                        hash
-                    ),
-                    hash(
-                        hash("lastName"),
-                        hash(stringType())))));
+                    hash,
+                    hash(stringType()))));
     assertCall(() -> objectDb().get(instanceHash))
-        .throwsException(new ObjectDbException(instanceHash))
+        .throwsException(new ObjectDbException(instanceHash, fieldReadingErrorMessage(0)))
         .withCause(new ObjectDbException(hash));
   }
 
@@ -271,5 +250,9 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
     return new ObjectDbException(hash, "Expected object which is instance of 'Type' type but " +
         "its Merkle tree has only one child (so it should be 'Type' type) " +
         "but it has different hash.");
+  }
+
+  private static String fieldReadingErrorMessage(int index) {
+    return "It is a Struct Type and reading field type at index " + index + " caused error.";
   }
 }

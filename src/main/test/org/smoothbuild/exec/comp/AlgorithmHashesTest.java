@@ -27,7 +27,7 @@ public class AlgorithmHashesTest extends TestingContext {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
     StructType constructedType = constructedType("MyStruct2");
-    Accessor accessor = accessor("myField");
+    Accessor accessor = accessor(0);
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(nativeCallAlgorithmHash(function));
@@ -65,9 +65,9 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void accessor_call_algorithm_has_different_hash_for_different_types() {
-    Accessor accessor = accessor("myField");
-    Accessor accessor2 = accessor("myField2");
+  public void accessor_call_algorithm_has_different_hash_for_different_field_indexes() {
+    Accessor accessor = accessor(0);
+    Accessor accessor2 = accessor(1);
 
     assertThat(accessorCallAlgorithmHash(accessor))
         .isNotEqualTo(accessorCallAlgorithmHash(accessor2));
@@ -79,9 +79,9 @@ public class AlgorithmHashesTest extends TestingContext {
         .isNotEqualTo(stringLiteralAlgorithmHash("def"));
   }
 
-  private static Accessor accessor(String fieldName) {
+  private static Accessor accessor(int index) {
     Accessor accessor = mock(Accessor.class);
-    when(accessor.fieldName()).thenReturn(fieldName);
+    when(accessor.fieldIndex()).thenReturn(index);
     return accessor;
   }
 

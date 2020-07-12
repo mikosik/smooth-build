@@ -1,9 +1,10 @@
 package org.smoothbuild.slib.java.junit;
 
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Struct;
 
 import okio.BufferedSource;
@@ -32,7 +33,7 @@ public class FileClassLoader extends ClassLoader {
   }
 
   private byte[] fileToByteArray(Struct file) throws IOException {
-    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+    try (BufferedSource source = fileContent(file).source()) {
       return source.readByteArray();
     }
   }

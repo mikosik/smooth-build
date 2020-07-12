@@ -35,8 +35,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
             hash(personType()),
             fieldValuesHash);
     Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get("firstName"))
-        .throwsException(new ObjectDbException(structHash))
+    assertCall(() -> struct.get(0))
+        .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
         .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 1));
   }
 
@@ -52,8 +52,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
             hash(personType()),
             fieldValuesHash);
     Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get("firstName"))
-        .throwsException(new ObjectDbException(structHash))
+    assertCall(() -> struct.get(0))
+        .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
         .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 3));
   }
 
@@ -66,10 +66,14 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
                 hash(string("John")),
                 hash(bool(true))));
     Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get("firstName"))
-        .throwsException(new ObjectDbException(structHash, "Its type specifies field 'lastName' "
-        + "with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but its data "
-        + "has object of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 assigned "
-        + "to that field."));
+    assertCall(() -> struct.get(0))
+        .throwsException(new ObjectDbException(structHash, "Its type (Struct) specifies field " +
+            "at index 1 with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but " +
+            "its data has object of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 " +
+            "at that index."));
+  }
+
+  private static String errorReadingFieldHashes() {
+    return "Error reading field hashes.";
   }
 }

@@ -1,5 +1,6 @@
 package org.smoothbuild.slib.java.javac;
 
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class PackagedJavaFileObjects {
       for (Struct file : files.asIterable(Struct.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
-          nativeApi.log().error("File " + file.get("path")
+          nativeApi.log().error("File " + filePath(file)
               + " is contained by two different library jar files.");
           throw new AbortException();
         } else {

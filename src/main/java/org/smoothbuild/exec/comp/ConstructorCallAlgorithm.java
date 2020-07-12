@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.object.base.StructBuilder;
+import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -37,13 +37,8 @@ public class ConstructorCallAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    StructBuilder builder = nativeApi.factory().structBuilder(constructedType);
-    var fields = constructedType.fields();
-    var namesIterator = fields.keySet().iterator();
-    for (int i = 0; i < fields.size(); i++) {
-      builder.set(namesIterator.next(), input.objects().get(i));
-    }
-    return new Output(builder.build(), nativeApi.messages());
+    Struct struct = nativeApi.factory().struct(constructedType, input.objects());
+    return new Output(struct, nativeApi.messages());
   }
 
   @Override

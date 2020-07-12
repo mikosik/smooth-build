@@ -13,7 +13,6 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.Field;
 
 public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
   private final ObjectFactory objectFactory;
@@ -44,11 +43,11 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
 
   @Override
   public org.smoothbuild.lang.object.type.StructType visit(StructType type) {
-    Iterable<Field> binaryFields =
+    Iterable<ConcreteType> fieldTypes =
         type.fields().values().stream()
-            .map(f -> new Field(f.type().visit(this), f.name(), f.location()))
+            .map(f -> f.type().visit(this))
             .collect(toImmutableList());
-    return objectFactory.structType(type.name(), binaryFields);
+    return objectFactory.structType(type.name(), fieldTypes);
   }
 
   @Override

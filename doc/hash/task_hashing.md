@@ -110,13 +110,13 @@ hash(
 )
 ```
 
-### Accessor Call Computation
+### Field Access Call Computation
 
 ```
-accessorCallComputationHash =
+fieldAccessCallComputationHash =
 hash(
   hash(0x04),
-  hash(fieldName),
+  hash(fieldIndex),
 )
 ```
 

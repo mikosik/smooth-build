@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -22,13 +21,11 @@ public class TypeStableHashTest extends TestingContext {
     assertHash(arrayType(stringType()), "e512d5a472c0a1f893f98e42f06477a1a0a1a675");
     assertHash(arrayType(blobType()), "a9e9aaa1450fee5c9a1a18a9c2cf1674e6ee611b");
     assertHash(arrayType(nothingType()), "5338d0bb9718388a329374e779726c6ed0a4d6d4");
-    assertHash(structType(objectDb()), "a23d6de28f8161a221df3720bf89429ef9b4c62c");
+    assertHash(structType(objectDb()), "79c0883112e1bdfab33acbb93ef632ebc457e998");
   }
 
   private StructType structType(ObjectDb objectDb) {
-    return objectDb.structType("NewType", list(
-        new Field(objectDb.stringType(), "name", internal()),
-        new Field(objectDb.blobType(), "data", internal())));
+    return objectDb.structType("NewType", list(objectDb.stringType(), objectDb.blobType()));
   }
 
   private static void assertHash(ConcreteType type, String hash) {

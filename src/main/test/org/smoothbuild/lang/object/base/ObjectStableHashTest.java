@@ -55,7 +55,7 @@ public class ObjectStableHashTest extends TestingContext {
   @Test
   public void hash_of_some_struct_is_stable() {
     assertThat(person("John", "Doe").hash())
-        .isEqualTo(Hash.decode("a94de85056893e6464baa8ded12a9a765c5b56fc"));
+        .isEqualTo(Hash.decode("607ed693f01530c32a1ce3cf6f15e909dd70353f"));
   }
 
   @Test
@@ -97,13 +97,13 @@ public class ObjectStableHashTest extends TestingContext {
   @Test
   public void hash_of_empty_struct_array_is_stable() {
     assertThat(emptyArrayOf(personType()).hash())
-        .isEqualTo(Hash.decode("21187af9783689f62abc2f1e10fb76233d167af8"));
+        .isEqualTo(Hash.decode("10cb38bcff3f52a99e48d8c48c6c84bd8657b675"));
   }
 
   @Test
   public void hash_of_non_empty_struct_array_is_stable() {
     assertThat(arrayBuilder(personType()).add(person("John", "Doe")).build().hash())
-        .isEqualTo(Hash.decode("28c181c073e198d5ca5f233ac682a7a09f0aeb63"));
+        .isEqualTo(Hash.decode("0ef68db28f526a5cb7c3dc8f54e0d09ae54da00f"));
   }
 
   @Test

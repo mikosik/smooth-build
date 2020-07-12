@@ -1,6 +1,8 @@
 package org.smoothbuild.slib.compress;
 
 import static okio.Okio.sink;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -9,7 +11,6 @@ import java.util.zip.ZipOutputStream;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.BlobBuilder;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -25,7 +26,7 @@ public class ZipFunction {
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (ZipOutputStream zipOutputStream = new ZipOutputStream(blobBuilder.sink().outputStream())) {
       for (Struct file : files.asIterable(Struct.class)) {
-        String path = ((SString) file.get("path")).jValue();
+        String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
           throw new AbortException();
@@ -38,9 +39,9 @@ public class ZipFunction {
 
   private static void zipFile(Struct file, ZipOutputStream zipOutputStream)
       throws IOException {
-    ZipEntry entry = new ZipEntry(((SString) file.get("path")).jValue());
+    ZipEntry entry = new ZipEntry(filePath(file).jValue());
     zipOutputStream.putNextEntry(entry);
-    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+    try (BufferedSource source = fileContent(file).source()) {
       source.readAll(sink(zipOutputStream));
     }
     zipOutputStream.closeEntry();

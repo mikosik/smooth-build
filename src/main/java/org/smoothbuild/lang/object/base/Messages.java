@@ -1,15 +1,14 @@
 package org.smoothbuild.lang.object.base;
 
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.lang.object.db.MessageStruct.messageSeverity;
+import static org.smoothbuild.lang.object.db.MessageStruct.messageText;
 
 import org.smoothbuild.cli.console.Level;
 
 import com.google.common.collect.ImmutableSet;
 
 public class Messages {
-  public static final String SEVERITY = "severity";
-  public static final String TEXT = "text";
-
   public static final String INFO = "INFO";
   public static final String WARNING = "WARNING";
   public static final String ERROR = "ERROR";
@@ -33,14 +32,10 @@ public class Messages {
   }
 
   public static String severity(SObject message) {
-    return stringField((Struct) message, SEVERITY);
+    return messageSeverity((Struct) message).jValue();
   }
 
   public static String text(SObject message) {
-    return stringField((Struct) message, TEXT);
-  }
-
-  private static String stringField(Struct message, String fieldName) {
-    return ((SString) message.get(fieldName)).jValue();
+    return messageText((Struct) message).jValue();
   }
 }

@@ -24,7 +24,7 @@ public class AlgorithmHashes {
   }
 
   public static Hash accessorCallAlgorithmHash(Accessor accessor) {
-    return hash(4, Hash.of(accessor.fieldName()));
+    return hash(4, Hash.of(accessor.fieldIndex()));
   }
 
   public static Hash stringLiteralAlgorithmHash(String string) {

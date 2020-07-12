@@ -1,13 +1,14 @@
 package org.smoothbuild.testing.common;
 
 import static okio.Okio.sink;
+import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.testing.TestingContext;
 
@@ -28,9 +29,9 @@ public class JarTester {
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
-    JarEntry entry = new JarEntry(((SString) file.get("path")).jValue());
+    JarEntry entry = new JarEntry(filePath(file).jValue());
     jarOutputStream.putNextEntry(entry);
-    try (BufferedSource source = ((Blob) file.get("content")).source()) {
+    try (BufferedSource source = fileContent(file).source()) {
       source.readAll(sink(jarOutputStream));
     }
     jarOutputStream.closeEntry();

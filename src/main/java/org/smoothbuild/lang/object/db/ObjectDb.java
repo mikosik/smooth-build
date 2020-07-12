@@ -1,7 +1,8 @@
 package org.smoothbuild.lang.object.db;
 
+import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
-import static org.smoothbuild.lang.base.Location.internal;
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
@@ -9,7 +10,6 @@ import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.object.type.TypeNames.STRING;
 import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,16 +25,16 @@ import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.base.StructBuilder;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
-import org.smoothbuild.lang.object.type.Field;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.object.type.TypeType;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is thread-safe.
@@ -101,8 +101,23 @@ public class ObjectDb {
     return wrapException(() -> newString(string));
   }
 
-  public StructBuilder structBuilder(StructType type) {
-    return new StructBuilder(type, this);
+  public Struct struct(StructType structType, Iterable<? extends SObject> fields) {
+    List<SObject> fieldList = ImmutableList.copyOf(fields);
+    var types = structType.fieldTypes();
+    if (types.size() != fieldList.size()) {
+      throw new IllegalArgumentException("Type specifies " + types.size() +
+          " fields but provided " + fieldList.size() + ".");
+    }
+    for (int i = 0; i < types.size(); i++) {
+      ConcreteType specifiedType = types.get(i);
+      ConcreteType fieldType = fieldList.get(i).type();
+      if (!specifiedType.equals(fieldType)) {
+        throw new IllegalArgumentException("Type (Struct) specifies field at index " + i
+            + " with type " + specifiedType + " but provided field has type " + fieldType
+            + " at that index.");
+      }
+    }
+    return wrapException(() ->newStruct(structType, fieldList));
   }
 
   public SObject get(Hash hash) {
@@ -144,8 +159,8 @@ public class ObjectDb {
     return stringType;
   }
 
-  public StructType structType(String name, Iterable<Field> fields) {
-    return cacheType(wrapException(() -> newStructType(name, fields)));
+  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
+    return cacheType(wrapException(() -> newStructType(name, fieldTypes)));
   }
 
   public TypeType typeType() {
@@ -226,7 +241,7 @@ public class ObjectDb {
         }
         default -> {
           assertSize(hash, name, hashes, 2);
-          Iterable<Field> fields = readFieldSpecs(hashes.get(1), hash);
+          ImmutableList<ConcreteType> fields = readStructTypeFieldTypes(hashes.get(1), hash);
           yield cacheType(newStructType(name, fields, dataHash));
         }
       };
@@ -244,21 +259,27 @@ public class ObjectDb {
     }
   }
 
-  private Iterable<Field> readFieldSpecs(Hash hash, Hash parentHash) throws HashedDbException {
-    List<Field> result = new ArrayList<>();
-    for (Hash fieldHash : hashedDb.readHashes(hash)) {
-      result.add(getFieldSpec(fieldHash, parentHash));
+  private ImmutableList<ConcreteType> readStructTypeFieldTypes(Hash hash, Hash parentHash) {
+    var builder = ImmutableList.<ConcreteType>builder();
+    List<Hash> fieldTypeHashes = readStructTypeFieldTypeHashes(hash, parentHash);
+    for (int i = 0; i < fieldTypeHashes.size(); i++) {
+      try {
+        builder.add(getType(fieldTypeHashes.get(i)));
+      } catch (ObjectDbException e) {
+        throw new ObjectDbException(parentHash, "It is a Struct Type and reading field type " +
+            "at index " + i + " caused error.", e);
+      }
     }
-    return result;
+    return builder.build();
   }
 
-  private Field getFieldSpec(Hash fieldHash, Hash parentHash) throws HashedDbException {
-    List<Hash> hashes = hashedDb.readHashes(fieldHash, 2);
-    Hash nameHash = hashes.get(0);
-    Hash typeHash = hashes.get(1);
-    String name = hashedDb.readString(nameHash);
-    ConcreteType type = getTypeOrWrapException(typeHash, parentHash);
-    return new Field(type, name, internal());
+  private List<Hash> readStructTypeFieldTypeHashes(Hash hash, Hash parentHash) {
+    try {
+      return hashedDb.readHashes(hash);
+    } catch (HashedDbException e) {
+      throw new ObjectDbException(
+          parentHash, "It is a Struct Type and reading its field types array caused error.", e);
+    }
   }
 
   private <T extends ConcreteType> T cacheType(T type) {
@@ -269,8 +290,8 @@ public class ObjectDb {
 
   // methods for creating type's SObjects
 
-  public Array newArray(ConcreteArrayType type, List<SObject> elements) throws
-      HashedDbException {
+  public Array newArray(ConcreteArrayType type, Iterable<? extends SObject> elements)
+      throws HashedDbException {
     return type.newObject(writeRoot(type, writeArrayData(elements)));
   }
 
@@ -286,7 +307,7 @@ public class ObjectDb {
     return stringType.newObject(writeRoot(stringType, writeStringData(string)));
   }
 
-  public Struct newStruct(StructType type, List<SObject> objects) throws HashedDbException {
+  private Struct newStruct(StructType type, List<?extends SObject> objects) throws HashedDbException {
     return type.newObject(writeRoot(type, writeStructData(objects)));
   }
 
@@ -301,14 +322,15 @@ public class ObjectDb {
     return new ConcreteArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
   }
 
-  private StructType newStructType(String name, Iterable<Field> fields) throws HashedDbException {
-    Hash dataHash = writeStructTypeData(name, fields);
-    return newStructType(name, fields, dataHash);
+  private StructType newStructType(String name, Iterable<? extends ConcreteType> fieldTypes)
+      throws HashedDbException {
+    Hash dataHash = writeStructTypeData(name, fieldTypes);
+    return newStructType(name, fieldTypes, dataHash);
   }
 
-  private StructType newStructType(String name, Iterable<Field> fields, Hash dataHash) throws
-      HashedDbException {
-    return new StructType(writeRoot(typeType, dataHash), name, fields, hashedDb, this);
+  private StructType newStructType(String name, Iterable<? extends ConcreteType> fieldTypes,
+      Hash dataHash) throws HashedDbException {
+    return new StructType(writeRoot(typeType, dataHash), name, fieldTypes, hashedDb, this);
   }
 
   // methods for writing Merkle node(s) to HashedDb
@@ -329,7 +351,7 @@ public class ObjectDb {
     return new MerkleRoot(hash, type, dataHash);
   }
 
-  private Hash writeArrayData(List<SObject> elements) throws HashedDbException {
+  private Hash writeArrayData(Iterable<? extends SObject> elements) throws HashedDbException {
     return writeSequence(elements);
   }
 
@@ -341,12 +363,12 @@ public class ObjectDb {
     return hashedDb.writeString(string);
   }
 
-  private Hash writeStructData(List<SObject> fieldValues) throws HashedDbException {
+  private Hash writeStructData(List<? extends SObject> fieldValues) throws HashedDbException {
     return writeSequence(fieldValues);
   }
 
-  private Hash writeSequence(List<SObject> objects) throws HashedDbException {
-    Hash[] hashes = objects.stream()
+  private Hash writeSequence(Iterable<? extends SObject> objects) throws HashedDbException {
+    Hash[] hashes = stream(objects)
         .map(SObject::hash)
         .toArray(Hash[]::new);
     return hashedDb.writeHashes(hashes);
@@ -360,19 +382,17 @@ public class ObjectDb {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  private Hash writeStructTypeData(String name, Iterable<Field> fields) throws HashedDbException {
-      return hashedDb.writeHashes(hashedDb.writeString(name), writeFieldSpecs(fields));
+  private Hash writeStructTypeData(String name, Iterable<? extends ConcreteType> fieldTypes)
+      throws HashedDbException {
+    Hash hash = writeStructTypeFieldTypes(fieldTypes);
+    return hashedDb.writeHashes(hashedDb.writeString(name), hash);
   }
 
-  private Hash writeFieldSpecs(Iterable<Field> fieldSpecs) throws HashedDbException {
-    List<Hash> fieldHashes = new ArrayList<>();
-    for (Field field : fieldSpecs) {
-      fieldHashes.add(writeFieldSpec(field));
-    }
-    return hashedDb.writeHashes(fieldHashes.toArray(new Hash[0]));
-  }
-
-  private Hash writeFieldSpec(Field fieldSpec) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeString(fieldSpec.name()), fieldSpec.type().hash());
+  private Hash writeStructTypeFieldTypes(Iterable<? extends ConcreteType> fieldTypes)
+      throws HashedDbException {
+    List<Hash> typeHashes = stream(fieldTypes)
+        .map(ConcreteType::hash)
+        .collect(toList());
+    return hashedDb.writeHashes(typeHashes);
   }
 }

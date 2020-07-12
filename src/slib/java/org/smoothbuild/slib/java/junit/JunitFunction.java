@@ -4,6 +4,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.lang.object.db.FileStruct.filePath;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
@@ -31,7 +32,7 @@ public class JunitFunction {
       throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
     Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
-        .collect(toMap(f -> toBinaryName(((SString) f.get("path")).jValue()), identity()));
+        .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
     Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
     for (Entry<String, Struct> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
@@ -50,7 +51,7 @@ public class JunitFunction {
       Predicate<Path> filter = createFilter(nativeApi, include);
       int testCount = 0;
       for (String binaryName : testFiles.keySet()) {
-        Path filePath = path(((SString) testFiles.get(binaryName).get("path")).jValue());
+        Path filePath = path(filePath(testFiles.get(binaryName)).jValue());
         if (filter.test(filePath)) {
           testCount++;
           Class<?> testClass = loadClass(nativeApi, classLoader, binaryName);

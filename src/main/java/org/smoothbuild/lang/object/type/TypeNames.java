@@ -6,7 +6,4 @@ public class TypeNames {
   public static final String NOTHING = "Nothing";
   public static final String STRING = "String";
   public static final String TYPE = "Type";
-
-  public static final String FILE = "File";
-  public static final String MESSAGE = "Message";
 }

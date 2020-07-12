@@ -52,7 +52,7 @@ public class StructType extends ConcreteType {
     var location = field.location();
     var parameter = new Parameter(0, this, "object", null, location);
     var signature = signature(field.type(), field.name(), ImmutableList.of(parameter));
-    return new Accessor(signature, field.name(), location);
+    return new Accessor(signature, field.index(), location);
   }
 
   @Override
