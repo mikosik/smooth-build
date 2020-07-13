@@ -3,6 +3,7 @@ package org.smoothbuild.db.hashed;
 import static java.lang.String.format;
 import static java.nio.ByteBuffer.wrap;
 import static java.nio.charset.CodingErrorAction.REPORT;
+import static java.util.Arrays.asList;
 import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
@@ -86,6 +87,10 @@ public class HashedDb {
   }
 
   public Hash writeHashes(Hash... hashes) throws HashedDbException {
+    return writeHashes(asList(hashes));
+  }
+
+  public Hash writeHashes(Iterable<Hash> hashes) throws HashedDbException {
     try (HashingBufferedSink sink = sink()) {
       for (Hash hash : hashes) {
         sink.write(hash);
