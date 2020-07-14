@@ -2,7 +2,6 @@ package org.smoothbuild.lang.object.db;
 
 import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.object.db.Helpers.wrapException;
 import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
@@ -10,6 +9,7 @@ import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.object.type.TypeNames.STRING;
 import static org.smoothbuild.lang.object.type.TypeNames.TUPLE;
 import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
+import static org.smoothbuild.util.Iterables.map;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -387,15 +387,8 @@ public class ObjectDb {
 
   private Hash writeStructTypeData(Iterable<? extends ConcreteType> fieldTypes)
       throws HashedDbException {
-    Hash hash = writeStructTypeFieldTypes(fieldTypes);
-    return hashedDb.writeHashes(hashedDb.writeString(TUPLE), hash);
-  }
-
-  private Hash writeStructTypeFieldTypes(Iterable<? extends ConcreteType> fieldTypes)
-      throws HashedDbException {
-    List<Hash> typeHashes = stream(fieldTypes)
-        .map(ConcreteType::hash)
-        .collect(toList());
-    return hashedDb.writeHashes(typeHashes);
+    Hash name = hashedDb.writeString(TUPLE);
+    Hash fields = hashedDb.writeHashes(map(fieldTypes, ConcreteType::hash));
+    return hashedDb.writeHashes(name, fields);
   }
 }
