@@ -10,9 +10,9 @@ public abstract class ComputableTask extends Task {
   public final Algorithm algorithm;
   public final boolean cacheable;
 
-  public ComputableTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
-      Location location, boolean cacheable) {
-    super(type, dependencies, location);
+  public ComputableTask(ConcreteType type, String algorithmDescription, Algorithm algorithm,
+      List<? extends Task> dependencies, Location location, boolean cacheable) {
+    super(type, algorithmDescription, dependencies, location);
     this.algorithm = algorithm;
     this.cacheable = cacheable;
   }
@@ -20,11 +20,6 @@ public abstract class ComputableTask extends Task {
   @Override
   public String name() {
     return algorithm.name();
-  }
-
-  @Override
-  public String sourceDescription() {
-    return algorithm.description();
   }
 
   @Override

@@ -23,11 +23,6 @@ public class ArrayLiteralAlgorithm implements Algorithm {
   }
 
   @Override
-  public String description() {
-    return "";
-  }
-
-  @Override
   public TaskKind kind() {
     return LITERAL;
   }

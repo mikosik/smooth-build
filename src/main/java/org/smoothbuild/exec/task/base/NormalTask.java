@@ -18,9 +18,10 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 import com.google.common.collect.ImmutableList;
 
 public class NormalTask extends ComputableTask {
-  public NormalTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
+  public NormalTask(ConcreteType type, String algorithmDescription, Algorithm algorithm,
+      List<? extends Task> dependencies,
       Location location, boolean cacheable) {
-    super(type, algorithm, dependencies, location, cacheable);
+    super(type, algorithmDescription, algorithm, dependencies, location, cacheable);
   }
 
   @Override

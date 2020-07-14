@@ -14,9 +14,5 @@ public interface Algorithm {
 
   public Output run(Input input, NativeApi nativeApi) throws Exception;
 
-  public default String description() {
-    return " " + name();
-  }
-
   public TaskKind kind();
 }

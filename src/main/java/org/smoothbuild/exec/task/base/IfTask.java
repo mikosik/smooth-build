@@ -19,9 +19,11 @@ import org.smoothbuild.util.concurrent.FeedingConsumer;
 import com.google.common.collect.ImmutableList;
 
 public class IfTask extends ComputableTask {
+  public static final String IF_FUNCTION_NAME = "if";
+
   public IfTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
       Location location, boolean cacheable) {
-    super(type, algorithm, dependencies, location, cacheable);
+    super(type, IF_FUNCTION_NAME, algorithm, dependencies, location, cacheable);
   }
 
   @Override
