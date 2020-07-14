@@ -19,7 +19,7 @@ public class VirtualTask extends Task {
   private final Task task;
 
   public VirtualTask(String name, ConcreteType type, Task task, Location location) {
-    super(type, ImmutableList.of(task), location);
+    super(type, name, ImmutableList.of(task), location);
     this.name = name;
     this.task = task;
   }
@@ -27,11 +27,6 @@ public class VirtualTask extends Task {
   @Override
   public String name() {
     return name;
-  }
-
-  @Override
-  public String sourceDescription() {
-    return " " + name;
   }
 
   @Override

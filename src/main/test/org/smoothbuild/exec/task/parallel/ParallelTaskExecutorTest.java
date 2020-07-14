@@ -238,7 +238,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(string, algorithm, dependencies, internal(), true);
+    return new NormalTask(string, "description", algorithm, dependencies, internal(), true);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {

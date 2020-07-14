@@ -24,12 +24,7 @@ public class ConvertAlgorithm implements Algorithm {
 
   @Override
   public String name() {
-    return destinationType.name() + description();
-  }
-
-  @Override
-  public String description() {
-    return " <- " + sourceType.name();
+    return destinationType.name() + " <- " + sourceType.name();
   }
 
   @Override
