@@ -18,7 +18,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.db.FileStruct;
+import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -27,17 +27,19 @@ import org.smoothbuild.util.DuplicatesDetector;
  */
 public class ArtifactSaver {
   private final FileSystem fileSystem;
+  private final ObjectFactory objectFactory;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem) {
+  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
+    this.objectFactory = objectFactory;
   }
 
   public Path save(String name, SObject object) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
     if (object instanceof Array) {
       return saveArray(artifactPath, (Array) object);
-    } else if (object.type().name().equals(FileStruct.NAME)) {
+    } else if (object.type().equals(objectFactory.fileType())) {
       return saveFile(artifactPath, (Struct) object);
     } else {
       return saveBasicObject(artifactPath, object);
@@ -58,7 +60,7 @@ public class ArtifactSaver {
         saveArray(artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
-    } else if (elemType.name().equals(FileStruct.NAME)) {
+    } else if (elemType.equals(objectFactory.fileType())) {
       saveFileArray(artifactPath, array.asIterable(Struct.class));
     } else {
       saveObjectArray(artifactPath, array);

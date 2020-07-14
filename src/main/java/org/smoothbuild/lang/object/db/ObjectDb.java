@@ -8,6 +8,7 @@ import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
 import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
 import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
 import static org.smoothbuild.lang.object.type.TypeNames.STRING;
+import static org.smoothbuild.lang.object.type.TypeNames.TUPLE;
 import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
 
 import java.util.List;
@@ -159,8 +160,8 @@ public class ObjectDb {
     return stringType;
   }
 
-  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
-    return cacheType(wrapException(() -> newStructType(name, fieldTypes)));
+  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+    return cacheType(wrapException(() -> newStructType(fieldTypes)));
   }
 
   public TypeType typeType() {
@@ -239,11 +240,13 @@ public class ObjectDb {
           ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
           yield cacheType(newArrayType(elementType, dataHash));
         }
-        default -> {
-          assertSize(hash, name, hashes, 2);
+        case TUPLE -> {
+          assertSize(hash, TUPLE, hashes, 2);
           ImmutableList<ConcreteType> fields = readStructTypeFieldTypes(hashes.get(1), hash);
-          yield cacheType(newStructType(name, fields, dataHash));
+          yield cacheType(newStructType(fields, dataHash));
         }
+        default -> throw new ObjectDbException(
+            hash, "It is instance of type but it has illegal name = '" + name + "'");
       };
     } catch (HashedDbException e) {
       throw new ObjectDbException(hash, e);
@@ -322,15 +325,15 @@ public class ObjectDb {
     return new ConcreteArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
   }
 
-  private StructType newStructType(String name, Iterable<? extends ConcreteType> fieldTypes)
+  private StructType newStructType(Iterable<? extends ConcreteType> fieldTypes)
       throws HashedDbException {
-    Hash dataHash = writeStructTypeData(name, fieldTypes);
-    return newStructType(name, fieldTypes, dataHash);
+    Hash dataHash = writeStructTypeData(fieldTypes);
+    return newStructType(fieldTypes, dataHash);
   }
 
-  private StructType newStructType(String name, Iterable<? extends ConcreteType> fieldTypes,
+  private StructType newStructType(Iterable<? extends ConcreteType> fieldTypes,
       Hash dataHash) throws HashedDbException {
-    return new StructType(writeRoot(typeType, dataHash), name, fieldTypes, hashedDb, this);
+    return new StructType(writeRoot(typeType, dataHash), fieldTypes, hashedDb, this);
   }
 
   // methods for writing Merkle node(s) to HashedDb
@@ -382,10 +385,10 @@ public class ObjectDb {
     return hashedDb.writeHashes(hashedDb.writeString(name));
   }
 
-  private Hash writeStructTypeData(String name, Iterable<? extends ConcreteType> fieldTypes)
+  private Hash writeStructTypeData(Iterable<? extends ConcreteType> fieldTypes)
       throws HashedDbException {
     Hash hash = writeStructTypeFieldTypes(fieldTypes);
-    return hashedDb.writeHashes(hashedDb.writeString(name), hash);
+    return hashedDb.writeHashes(hashedDb.writeString(TUPLE), hash);
   }
 
   private Hash writeStructTypeFieldTypes(Iterable<? extends ConcreteType> fieldTypes)

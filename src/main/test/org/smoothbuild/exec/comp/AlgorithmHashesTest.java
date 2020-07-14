@@ -26,7 +26,7 @@ public class AlgorithmHashesTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
-    StructType constructedType = constructedType("MyStruct2");
+    StructType constructedType = structType(list());
     Accessor accessor = accessor(0);
 
     hashes.add(arrayAlgorithmHash());
@@ -57,8 +57,8 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void constructor_call_algorithm_has_different_hash_for_different_types() {
-    StructType constructedType = constructedType("MyStruct1");
-    StructType constructedType2 = constructedType("MyStruct2");
+    StructType constructedType = structType(list(stringType()));
+    StructType constructedType2 = structType(list(blobType()));
 
     assertThat(constructorCallAlgorithmHash(constructedType))
         .isNotEqualTo(constructorCallAlgorithmHash(constructedType2));
@@ -89,9 +89,5 @@ public class AlgorithmHashesTest extends TestingContext {
     NativeFunction function = mock(NativeFunction.class);
     when(function.hash()).thenReturn(hash);
     return function;
-  }
-
-  private StructType constructedType(String typeName) {
-    return structType(typeName, list());
   }
 }
