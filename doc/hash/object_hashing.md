@@ -83,7 +83,7 @@ hash(
 )
 ```
 
-Struct type
+Tuple type
 -----------
 
 ```
@@ -91,7 +91,7 @@ structTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash(structName),
+    hash("Tuple"),
     hash(
       field1TypeHash
       field2TypeHash

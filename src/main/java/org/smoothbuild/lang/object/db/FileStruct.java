@@ -5,7 +5,6 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 
 public class FileStruct {
-  public static final String NAME = "File";
   private static final int CONTENT_INDEX = 0;
   private static final int PATH_INDEX = 1;
 

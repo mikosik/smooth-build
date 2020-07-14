@@ -155,7 +155,7 @@ public class StructTest extends TestingContext {
   public void to_string() {
     Struct person = johnDoePerson();
     assertThat(person.toString())
-        .isEqualTo("Person(...):" + person.hash());
+        .isEqualTo("Tuple(...):" + person.hash());
   }
 
   private Struct johnDoePerson() {

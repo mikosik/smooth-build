@@ -47,7 +47,7 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
         type.fields().values().stream()
             .map(f -> f.type().visit(this))
             .collect(toImmutableList());
-    return objectFactory.structType(type.name(), fieldTypes);
+    return objectFactory.structType(fieldTypes);
   }
 
   @Override

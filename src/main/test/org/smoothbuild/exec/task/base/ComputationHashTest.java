@@ -111,7 +111,7 @@ public class ComputationHashTest extends TestingContext {
         person);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("520befa7702ecf3beb051061fa664606a6d838e4"));
+        .isEqualTo(Hash.decode("84859bd0be7a07c5381a8bdb6e0550399befda04"));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("1f74b5dcf22e370899faf349e4f8a5d6618c4194"));
+        .isEqualTo(Hash.decode("ce4042c0d29b51e2b526ef5b095e7284215f6b4a"));
   }
 
   @Test
@@ -127,7 +127,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("ee13a008033a89baf8ecfe3c7b730b0406f1ab1b"));
+        .isEqualTo(Hash.decode("ff94e04a74fcf260266d8b9247ff5e9642944845"));
   }
 
   private Constructor constructor() {

@@ -3,7 +3,6 @@ package org.smoothbuild.lang.object.db;
 import static org.smoothbuild.lang.object.base.Messages.ERROR;
 import static org.smoothbuild.lang.object.base.Messages.INFO;
 import static org.smoothbuild.lang.object.base.Messages.WARNING;
-import static org.smoothbuild.lang.object.db.MessageStruct.MESSAGE;
 
 import java.io.IOException;
 
@@ -47,12 +46,11 @@ public class ObjectFactory {
 
   private static StructType createMessageType(ObjectDb objectDb) {
     StringType stringType = objectDb.stringType();
-    return objectDb.structType(MESSAGE, ImmutableList.of(stringType, stringType));
+    return objectDb.structType(ImmutableList.of(stringType, stringType));
   }
 
   private static StructType createFileType(ObjectDb objectDb) {
-    var fieldTypes = ImmutableList.of(objectDb.blobType(), objectDb.stringType());
-    return objectDb.structType(FileStruct.NAME, fieldTypes);
+    return objectDb.structType(ImmutableList.of(objectDb.blobType(), objectDb.stringType()));
   }
 
   public ArrayBuilder arrayBuilder(ConcreteType elementType) {
@@ -114,8 +112,8 @@ public class ObjectFactory {
     return objectDb.stringType();
   }
 
-  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
-    return objectDb.structType(name, fieldTypes);
+  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+    return objectDb.structType(fieldTypes);
   }
 
   public Struct errorMessage(String text) {

@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.object.corrupt;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.lang.object.type.TypeNames.TUPLE;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(typeType()),
             hash(
-                hash("Person"),
+                hash(TUPLE),
                 hash(
                     hash(stringType()),
                     hash(stringType())
@@ -137,6 +138,20 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         .withCause(new DecodingStringException(notStringHash, null));
   }
 
+  @Test
+  public void merkle_tree_for_type_with_name_that_is_not_known_type()
+      throws Exception {
+    Hash notStringHash = hash("not a type");
+    Hash instanceHash =
+        hash(
+            hash(typeType()),
+            hash(
+                notStringHash));
+    assertCall(() -> objectDb().get(instanceHash))
+        .throwsException(new ObjectDbException(
+            instanceHash, "It is instance of type but it has illegal name = 'not a type'"));
+  }
+
   // testing Merkle tree of type data
 
   @ParameterizedTest
@@ -160,10 +175,10 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(typeType()),
             hash(
-                hash("Person")));
+                hash(TUPLE)));
     assertCall(() -> objectDb().get(instanceHash))
         .throwsException(new ObjectDbException(instanceHash,
-        "It is 'Person' type but its Merkle root has 1 children when 2 is expected."));
+        "It is 'Tuple' type but its Merkle root has 1 children when 2 is expected."));
   }
 
   @Test
@@ -173,7 +188,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(typeType()),
             hash(
-                hash("Person"),
+                hash(TUPLE),
                 hash(stringType())
                 ));
     assertCall(() -> objectDb().get(instanceHash))
@@ -188,7 +203,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(typeType()),
             hash(
-                hash("Person"),
+                hash(TUPLE),
                 hash(
                     stringHash
                 )));
@@ -222,7 +237,7 @@ public class CorruptedTypeTest extends AbstractCorruptedTestCase {
         hash(
             hash(typeType()),
             hash(
-                hash("Person"),
+                hash(TUPLE),
                 hash(
                     hash,
                     hash(stringType()))));

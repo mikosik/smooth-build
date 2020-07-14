@@ -53,14 +53,9 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(Type type, String name) {
-    if (type instanceof ConcreteType concreteType) {
-      assertThat(concreteType.toString())
-          .isEqualTo("Type(\"" + name + "\"):" + concreteType.hash());
-    } else {
-      assertThat(type.toString())
-          .isEqualTo("Type(\"" + name + "\")");
-    }
+  public void to_string(ConcreteType type, String name) {
+    assertThat(type.toString())
+        .isEqualTo("Type(\"" + name + "\"):" + type.hash());
   }
 
   public static Stream<Arguments> names() {
@@ -70,21 +65,21 @@ public class TypeTest {
         arguments(string, "String"),
         arguments(blob, "Blob"),
         arguments(nothing, "Nothing"),
-        arguments(person, "Person"),
+        arguments(person, "Tuple"),
 
         arguments(arrayType, "[Type]"),
         arguments(arrayBool, "[Bool]"),
         arguments(arrayString, "[String]"),
         arguments(arrayBlob, "[Blob]"),
         arguments(arrayNothing, "[Nothing]"),
-        arguments(arrayPerson, "[Person]"),
+        arguments(arrayPerson, "[Tuple]"),
 
         arguments(array2Type, "[[Type]]"),
         arguments(array2Bool, "[[Bool]]"),
         arguments(array2String, "[[String]]"),
         arguments(array2Blob, "[[Blob]]"),
         arguments(array2Nothing, "[[Nothing]]"),
-        arguments(array2Person, "[[Person]]")
+        arguments(array2Person, "[[Tuple]]")
     );
   }
 

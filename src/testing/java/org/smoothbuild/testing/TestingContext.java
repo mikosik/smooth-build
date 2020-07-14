@@ -44,7 +44,6 @@ public class TestingContext {
   private Computer computer;
   private Container container;
   private ObjectFactory objectFactory;
-  private ObjectFactory emptyCacheObjectFactory;
   private OutputDb outputDb;
   private FileSystem outputDbFileSystem;
   private ObjectDb objectDb;
@@ -81,19 +80,9 @@ public class TestingContext {
    */
   public ObjectFactory objectFactory() {
     if (objectFactory == null) {
-      objectFactory = new TestingObjectFactory(objectDb());
+      objectFactory = new ObjectFactory(objectDb());
     }
     return objectFactory;
-  }
-
-  /**
-   * instance without File and Message types cached
-   */
-  public ObjectFactory emptyCacheObjectFactory() {
-    if (emptyCacheObjectFactory == null) {
-      emptyCacheObjectFactory = new ObjectFactory(objectDb());
-    }
-    return emptyCacheObjectFactory;
   }
 
   public ObjectDb objectDb() {
@@ -181,21 +170,21 @@ public class TestingContext {
     return objectDb().arrayType(elementType);
   }
 
-  public StructType structType(String name, Iterable<? extends ConcreteType> fieldTypes) {
-    return objectDb().structType(name, fieldTypes);
+  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+    return objectDb().structType(fieldTypes);
   }
 
   public StructType emptyType() {
-    return structType("Empty", list());
+    return structType(list());
   }
 
   public StructType personType() {
     ConcreteType string = stringType();
-    return structType("Person", list(string, string));
+    return structType(list(string, string));
   }
 
   public StructType fileType() {
-    return structType("File", list(blobType(), stringType()));
+    return structType(list(blobType(), stringType()));
   }
 
   public Bool bool(boolean value) {
@@ -269,14 +258,6 @@ public class TestingContext {
       return objectFactory().blob(sink -> sink.write(bytes));
     } catch (IOException e) {
       throw new RuntimeException(e);
-    }
-  }
-
-  public static class TestingObjectFactory extends ObjectFactory {
-    public TestingObjectFactory(ObjectDb objectDb) {
-      super(objectDb);
-      structType("File", list(blobType(), stringType()));
-      structType("Message", list(stringType(), stringType()));
     }
   }
 }

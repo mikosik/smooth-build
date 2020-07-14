@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.smoothbuild.lang.object.type.TypeNames.TUPLE;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.MerkleRoot;
@@ -15,9 +16,9 @@ import com.google.common.collect.ImmutableList;
 public class StructType extends ConcreteType {
   private final ImmutableList<ConcreteType> fieldTypes;
 
-  public StructType(MerkleRoot merkleRoot, String name, Iterable<? extends ConcreteType> fieldTypes,
+  public StructType(MerkleRoot merkleRoot, Iterable<? extends ConcreteType> fieldTypes,
       HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, name, Struct.class, hashedDb, objectDb);
+    super(merkleRoot, TUPLE, Struct.class, hashedDb, objectDb);
     this.fieldTypes = ImmutableList.copyOf(fieldTypes);
   }
 
