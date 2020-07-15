@@ -64,7 +64,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     ConcreteType type = accessor.type();
     Algorithm algorithm = new AccessorCallAlgorithm(accessor, type.visit(typeConverter));
     List<Task> children = childrenTasks(expression.children());
-    return new NormalTask(type, accessor.name(), algorithm, children, accessor.location(), true);
+    return new NormalTask(
+        type, "." + accessor.name(), algorithm, children, accessor.location(), true);
   }
 
   @Override
