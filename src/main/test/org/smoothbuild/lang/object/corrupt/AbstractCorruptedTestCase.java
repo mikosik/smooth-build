@@ -16,8 +16,12 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
   }
 
   protected Hash hash(boolean value) throws IOException, HashedDbException {
+    return hash((byte) (value ? 1 : 0));
+  }
+
+  protected Hash hash(byte value) throws IOException, HashedDbException {
     try (HashingBufferedSink sink = hashedDb().sink()) {
-      sink.writeByte(value ? 1 : 0);
+      sink.writeByte(value);
       sink.close();
       return sink.hash();
     }

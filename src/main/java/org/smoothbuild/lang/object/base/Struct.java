@@ -11,6 +11,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -58,7 +59,8 @@ public class Struct extends SObjectImpl {
           builder.add(object);
         } else {
           throw new ObjectDbException(hash(), "Its type (Struct) specifies field at index " + i
-              + " with type " + type + " but its data has object of type " + object.type()
+              + " with type " + type.name() + " but its data has object of type " +
+              ((Type) object.type()).name()
               + " at that index.");
         }
       }

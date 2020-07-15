@@ -1,9 +1,9 @@
 package org.smoothbuild.parse.ast;
 
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.type.TypeNames;
 
 public class TypeNode extends NamedNode {
   public TypeNode(String name, Location location) {
@@ -15,7 +15,7 @@ public class TypeNode extends NamedNode {
   }
 
   public boolean isNothing() {
-    return name().equals(TypeNames.NOTHING);
+    return name().equals(nothing().name());
   }
 
   public boolean isGeneric() {

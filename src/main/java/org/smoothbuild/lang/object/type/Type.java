@@ -8,10 +8,7 @@ import org.smoothbuild.lang.object.base.SObject;
 public interface Type {
   public String name();
 
-  /**
-   * @return single quoted name of this type.
-   */
-  public String q();
+  public TypeKind kind();
 
   public Class<? extends SObject> jType();
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.lang.object.type.TypeNames.STRING;
+import static org.smoothbuild.lang.object.type.TypeKind.STRING;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.lang.object.base.MerkleRoot;

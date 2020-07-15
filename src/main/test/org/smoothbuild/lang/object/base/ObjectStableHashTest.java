@@ -13,103 +13,103 @@ public class ObjectStableHashTest extends TestingContext {
   @Test
   public void hash_of_true_bool_is_stable() {
     assertThat(bool(true).hash())
-        .isEqualTo(Hash.decode("86ade1928ff1d0175a33d59080289212f79ff921"));
+        .isEqualTo(Hash.decode("1b2cc6d5b65563f4fad11e636aa0ceeaa495dcd5"));
   }
 
   @Test
   public void hash_of_false_bool_is_stable() {
     assertThat(bool(false).hash())
-        .isEqualTo(Hash.decode("fe2c2d262ca0d3325738e492c11ef37523469d99"));
+        .isEqualTo(Hash.decode("908f5b97e65d0f37dc47aea545f01d170030afea"));
   }
 
   @Test
   public void hash_of_empty_string_is_stable() {
     assertThat(string("").hash())
-        .isEqualTo(Hash.decode("0af6d4b68d3dadc04f1fd8d207702afd4809a0c2"));
+        .isEqualTo(Hash.decode("fb2fbb7cd2d45c8cf05e6d36f1625fe4d5abf184"));
   }
 
   @Test
   public void hash_of_some_string_is_stable() {
     assertThat(string("abc").hash())
-        .isEqualTo(Hash.decode("4d3465c4280a64e3a6c2272fc48e971d102eac93"));
+        .isEqualTo(Hash.decode("fe3f9608bd1039a1c57c9e5ddaeb3ec40c726a86"));
   }
 
   @Test
   public void hash_of_empty_blob_is_stable() throws Exception {
     assertThat(blobBuilder().build().hash())
-        .isEqualTo(Hash.decode("6915b0de6d40fc94df5c229b46da15e34d7c232b"));
+        .isEqualTo(Hash.decode("e435c7df508352d6323f415b83b0b774368393a1"));
   }
 
   @Test
   public void hash_of_some_blob_is_stable() {
     assertThat(blob(ByteString.encodeUtf8("aaa")).hash())
-        .isEqualTo(Hash.decode("72ae3804e4c12bbd45e26440e9817a5bf3ca0811"));
+        .isEqualTo(Hash.decode("0371e591163d9903e066311778b278ba01166abd"));
   }
 
   @Test
   public void hash_of_empty_struct_is_stable() {
     assertThat(empty().hash())
-        .isEqualTo(Hash.decode("cf06c7988fec90a64aa97ce0a6b984134fba58e7"));
+        .isEqualTo(Hash.decode("3119eb20fa9ca28c9903eec9d66d1e47eeb84a2b"));
   }
 
   @Test
   public void hash_of_some_struct_is_stable() {
     assertThat(person("John", "Doe").hash())
-        .isEqualTo(Hash.decode("f5e41db5cac5b64ff0981b856e24126938d52fb7"));
+        .isEqualTo(Hash.decode("8fd0a5ea3fa2fe3b5976e9899fb291e19c89fcad"));
   }
 
   @Test
   public void hash_of_empty_bool_array_is_stable() {
     assertThat(emptyArrayOf(boolType()).hash())
-        .isEqualTo(Hash.decode("ddc07c59607a4a56f2d34b6cc8fef9459c51f3f3"));
+        .isEqualTo(Hash.decode("827cfcc22b8b410a19f7a01ff9d0357768dde8ab"));
   }
 
   @Test
   public void hash_of_non_empty_bool_array_is_stable() {
     assertThat(arrayBuilder(boolType()).add(bool(true)).build().hash())
-        .isEqualTo(Hash.decode("394b5eddb75a2279b8fcf4ab238d8d0258cdac39"));
+        .isEqualTo(Hash.decode("94e663261b24e8d6ea20b94c0f77b814f9bfc9ce"));
   }
 
   @Test
   public void hash_of_empty_string_array_is_stable() {
     assertThat(emptyArrayOf(stringType()).hash())
-        .isEqualTo(Hash.decode("b2d4a44801204a93da825d1b4db4ef4af2787d82"));
+        .isEqualTo(Hash.decode("a6e806a46d0b1cead4799969c4b1e72308cfd6f2"));
   }
 
   @Test
   public void hash_of_non_empty_string_array_is_stable() {
     assertThat(arrayBuilder(stringType()).add(string("")).build().hash())
-        .isEqualTo(Hash.decode("98370fae56927d0832578f133ca73ff1f58fe415"));
+        .isEqualTo(Hash.decode("3f7f52c110494a4b1ae31d7cbd3f48b54bd37d3d"));
   }
 
   @Test
   public void hash_of_empty_blob_array_is_stable() {
     assertThat(emptyArrayOf(blobType()).hash())
-        .isEqualTo(Hash.decode("000c25ccefc9fbd916400c36eb99bd2610f507ea"));
+        .isEqualTo(Hash.decode("e7eb1c317bb961731786e2b0284a8a3bd8274028"));
   }
 
   @Test
   public void hash_of_non_empty_blob_array_is_stable() {
     assertThat(arrayBuilder(blobType()).add(blob(ByteString.of())).build().hash())
-        .isEqualTo(Hash.decode("3dd2f9efc115cc922304f91df183bc8359df9ec8"));
+        .isEqualTo(Hash.decode("f547cabc9d16af42d05327e45f2ebd2ef4cc5039"));
   }
 
   @Test
   public void hash_of_empty_struct_array_is_stable() {
     assertThat(emptyArrayOf(personType()).hash())
-        .isEqualTo(Hash.decode("d7199997d2b7245e8dc85b0ceee6667cfc13e5a2"));
+        .isEqualTo(Hash.decode("accb4e3e6419fda6b0bf85a685e6f98cf2d80892"));
   }
 
   @Test
   public void hash_of_non_empty_struct_array_is_stable() {
     assertThat(arrayBuilder(personType()).add(person("John", "Doe")).build().hash())
-        .isEqualTo(Hash.decode("e1a6574433494a0b7ba443725da2891eb51439b9"));
+        .isEqualTo(Hash.decode("feb7e2f8f2370a972d305393f926cfdaea04608e"));
   }
 
   @Test
   public void hash_of_empty_nothing_array_is_stable() {
     assertThat(emptyArrayOf(nothingType()).hash())
-        .isEqualTo(Hash.decode("034da224a1b3f7e2d2702ce8c5dd986f11b9b08a"));
+        .isEqualTo(Hash.decode("6bb1e56cac86965238be0be6f6994543a4c9d2ed"));
   }
 
   private Array emptyArrayOf(ConcreteType elemType) {

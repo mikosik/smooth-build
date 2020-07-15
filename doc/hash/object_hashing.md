@@ -12,7 +12,7 @@ Type type
 typeTypeHash =
 hash(
   hash(
-    hash("Type")
+    hash(0x00)
   )
 )
 ```
@@ -25,7 +25,7 @@ nothingTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash("Nothing")
+    hash(0x01)
   )
 )
 ```
@@ -38,7 +38,7 @@ boolTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash("Bool")
+    hash(0x05)
   )
 )
 ```
@@ -51,7 +51,7 @@ stringTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash("String")
+    hash(0x06)
   )
 )
 ```
@@ -64,7 +64,7 @@ blobTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash("Blob")
+    hash(0x04)
   )
 )
 ```
@@ -77,7 +77,7 @@ arrayTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash(""),
+    hash(0x03),
     elementTypeHash
   )
 )
@@ -91,7 +91,7 @@ structTypeHash =
 hash(
   typeTypeHash,
   hash(
-    hash("Tuple"),
+    hash(0x02),
     hash(
       field1TypeHash
       field2TypeHash

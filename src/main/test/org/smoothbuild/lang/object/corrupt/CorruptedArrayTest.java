@@ -86,6 +86,6 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
             ));
     assertCall(() -> ((Array) objectDb().get(instanceHash)).asIterable(SString.class))
         .throwsException(new ObjectDbException(instanceHash,
-            "It is array with type '[String]' but one of its elements has type 'Bool'"));
+            "It is array with type [STRING] but one of its elements has type BOOL"));
   }
 }

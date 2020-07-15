@@ -3,12 +3,14 @@ package org.smoothbuild.lang.object.db;
 import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
 import static org.smoothbuild.lang.object.db.Helpers.wrapException;
-import static org.smoothbuild.lang.object.type.TypeNames.BLOB;
-import static org.smoothbuild.lang.object.type.TypeNames.BOOL;
-import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
-import static org.smoothbuild.lang.object.type.TypeNames.STRING;
-import static org.smoothbuild.lang.object.type.TypeNames.TUPLE;
-import static org.smoothbuild.lang.object.type.TypeNames.TYPE;
+import static org.smoothbuild.lang.object.type.TypeKind.ARRAY;
+import static org.smoothbuild.lang.object.type.TypeKind.BLOB;
+import static org.smoothbuild.lang.object.type.TypeKind.BOOL;
+import static org.smoothbuild.lang.object.type.TypeKind.NOTHING;
+import static org.smoothbuild.lang.object.type.TypeKind.STRING;
+import static org.smoothbuild.lang.object.type.TypeKind.TUPLE;
+import static org.smoothbuild.lang.object.type.TypeKind.TYPE;
+import static org.smoothbuild.lang.object.type.TypeKind.typeKindMarkedWith;
 import static org.smoothbuild.util.Iterables.map;
 
 import java.util.List;
@@ -33,6 +35,7 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TypeKind;
 import org.smoothbuild.lang.object.type.TypeType;
 
 import com.google.common.collect.ImmutableList;
@@ -217,26 +220,32 @@ public class ObjectDb {
   private ConcreteType readType(Hash hash, Hash dataHash) {
     try {
       List<Hash> hashes = hashedDb.readHashes(dataHash, 1, 2);
-      String name = hashedDb.readString(hashes.get(0));
-      return switch (name) {
+      byte marker = hashedDb.readByte(hashes.get(0));
+      TypeKind typeKind = typeKindMarkedWith(marker);
+      if (typeKind == null) {
+        throw new ObjectDbException(hash,
+            "It is instance of type but it has illegal TypeKind marker = " + marker + ".");
+      }
+      return switch (typeKind) {
+        case TYPE -> null;
         case BOOL -> {
-          assertSize(hash, name, hashes, 1);
+          assertSize(hash, BOOL, hashes, 1);
           yield boolType;
         }
         case STRING -> {
-          assertSize(hash, name, hashes, 1);
+          assertSize(hash, STRING, hashes, 1);
           yield stringType;
         }
         case BLOB -> {
-          assertSize(hash, name, hashes, 1);
+          assertSize(hash, BLOB, hashes, 1);
           yield blobType;
         }
         case NOTHING -> {
-          assertSize(hash, name, hashes, 1);
+          assertSize(hash, NOTHING, hashes, 1);
           yield nothingType;
         }
-        case "" -> {
-          assertSize(hash, "[]", hashes, 2);
+        case ARRAY -> {
+          assertSize(hash, ARRAY, hashes, 2);
           ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
           yield cacheType(newArrayType(elementType, dataHash));
         }
@@ -245,19 +254,17 @@ public class ObjectDb {
           ImmutableList<ConcreteType> fields = readStructTypeFieldTypes(hashes.get(1), hash);
           yield cacheType(newStructType(fields, dataHash));
         }
-        default -> throw new ObjectDbException(
-            hash, "It is instance of type but it has illegal name = '" + name + "'");
       };
     } catch (HashedDbException e) {
       throw new ObjectDbException(hash, e);
     }
   }
 
-  private static void assertSize(Hash hash, String typeName, List<Hash> hashes,
+  private static void assertSize(Hash hash, TypeKind typeKind, List<Hash> hashes,
       int expectedSize) {
     if (hashes.size() != expectedSize) {
       throw new ObjectDbException(hash,
-          "It is '" + typeName + "' type but its Merkle root has " + hashes.size() +
+          "It is " + typeKind + " type but its Merkle root has " + hashes.size() +
           " children when " + expectedSize + " is expected.");
     }
   }
@@ -338,9 +345,9 @@ public class ObjectDb {
 
   // methods for writing Merkle node(s) to HashedDb
 
-  private MerkleRoot writeBasicTypeRoot(TypeType typeType, String typeName) throws
+  private MerkleRoot writeBasicTypeRoot(TypeType typeType, TypeKind typeKind) throws
       HashedDbException {
-    return writeRoot(typeType, writeBasicTypeData(typeName));
+    return writeRoot(typeType, writeBasicTypeData(typeKind));
   }
 
   private MerkleRoot writeTypeTypeRoot() throws HashedDbException {
@@ -378,17 +385,20 @@ public class ObjectDb {
   }
 
   private Hash writeArrayTypeData(ConcreteType elementType) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeString(""), elementType.hash());
-  }
-
-  private Hash writeBasicTypeData(String name) throws HashedDbException {
-    return hashedDb.writeHashes(hashedDb.writeString(name));
+    return writeNonBasicTypeData(ARRAY, elementType.hash());
   }
 
   private Hash writeStructTypeData(Iterable<? extends ConcreteType> fieldTypes)
       throws HashedDbException {
-    Hash name = hashedDb.writeString(TUPLE);
     Hash fields = hashedDb.writeHashes(map(fieldTypes, ConcreteType::hash));
-    return hashedDb.writeHashes(name, fields);
+    return writeNonBasicTypeData(TUPLE, fields);
+  }
+
+  private Hash writeNonBasicTypeData(TypeKind typeKind, Hash fields) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeByte(typeKind.marker()), fields);
+  }
+
+  private Hash writeBasicTypeData(TypeKind typeKind) throws HashedDbException {
+    return hashedDb.writeHashes(hashedDb.writeByte(typeKind.marker()));
   }
 }

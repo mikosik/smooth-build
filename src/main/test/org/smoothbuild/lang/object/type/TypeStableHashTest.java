@@ -11,17 +11,17 @@ import org.smoothbuild.testing.TestingContext;
 public class TypeStableHashTest extends TestingContext {
   @Test
   public void hashes_of_types_are_stable() {
-    assertHash(typeType(), "7b5ffbdc620f77f806320ba5562ccfcafae2214b");
-    assertHash(boolType(), "912e97481a6f232997c26729f48c14d33540c9e1");
-    assertHash(stringType(), "7561a6b22d5fe8e18dec31904e0e9cdf6644ca96");
-    assertHash(blobType(), "6cb65ce7804fbcabff468d1d7aca46d4b5279f00");
-    assertHash(nothingType(), "9044640e5b343d11e66b356a82564b618d8df7e6");
-    assertHash(arrayType(typeType()), "a3000ef0acab0cdcb657fd32a0ffbc84242030a8");
-    assertHash(arrayType(boolType()), "aa0cbea2dccb4fbbd596df2be9ba5116cda382d9");
-    assertHash(arrayType(stringType()), "e512d5a472c0a1f893f98e42f06477a1a0a1a675");
-    assertHash(arrayType(blobType()), "a9e9aaa1450fee5c9a1a18a9c2cf1674e6ee611b");
-    assertHash(arrayType(nothingType()), "5338d0bb9718388a329374e779726c6ed0a4d6d4");
-    assertHash(structType(objectDb()), "fba2a5f13796c31cfc74759c3cf0bd266be5f14b");
+    assertHash(typeType(), "14764e5894f9e586eb2fd50f0e0cf6d3b7f5df2b");
+    assertHash(boolType(), "191329dd09662183b6ff84bfd0974bee63bfeaa7");
+    assertHash(stringType(), "ebb7b4e331dbccdabf478446d50c94fe41c7aad1");
+    assertHash(blobType(), "9d4ec666c8ffca9153ddd9b954a4c4a2a0626bd5");
+    assertHash(nothingType(), "9d783ccc61946cc04a060718dd6cebc43e15faa9");
+    assertHash(arrayType(typeType()), "09162b5575b7e9789ac39a3fcc38a489097bc589");
+    assertHash(arrayType(boolType()), "f082a89aac074674527aee80f27b6b88e887b7f0");
+    assertHash(arrayType(stringType()), "c8999ed960294d33405a2854370c6cbde15cdc02");
+    assertHash(arrayType(blobType()), "02c7be1aa35535d48a7d132fa14fab80c02b1c10");
+    assertHash(arrayType(nothingType()), "50ed8d7e2a595dd932606e3ddb3f080b0a852adb");
+    assertHash(structType(objectDb()), "da349340eec7fba9b53d46faff52893f56c37947");
   }
 
   private StructType structType(ObjectDb objectDb) {

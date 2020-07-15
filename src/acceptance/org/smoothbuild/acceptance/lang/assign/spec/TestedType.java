@@ -1,27 +1,29 @@
 package org.smoothbuild.acceptance.lang.assign.spec;
 
+import static org.smoothbuild.lang.base.type.Types.blob;
+import static org.smoothbuild.lang.base.type.Types.bool;
+import static org.smoothbuild.lang.base.type.Types.nothing;
+import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.util.Lists.list;
-
-import org.smoothbuild.lang.object.type.TypeNames;
 
 public class TestedType {
   public static final TestedType BLOB = new TestedType(
-      TypeNames.BLOB,
+      blob().name(),
       "toBlob('xyz')",
       "xyz"
   );
   public static final TestedType BOOL = new TestedType(
-      TypeNames.BOOL,
+      bool().name(),
       "true()",
       new String(new byte[] {1})
   );
   public static final TestedType NOTHING = new TestedType(
-      TypeNames.NOTHING,
+      nothing().name(),
       "reportError('e')",
       null,
       "Nothing reportError(String message);");
   public static final TestedType STRING = new TestedType(
-      TypeNames.STRING,
+      string().name(),
       "'abc'",
       "abc"
   );
@@ -39,7 +41,7 @@ public class TestedType {
   public static final TestedType BLOB_ARRAY = array(BLOB);
   public static final TestedType BOOL_ARRAY = array(BOOL);
   public static final TestedType NOTHING_ARRAY = new TestedType(
-      "[" + TypeNames.NOTHING + "]",
+      "[" + nothing().name() + "]",
       "[]",
       list()
   );

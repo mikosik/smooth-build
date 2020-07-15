@@ -8,6 +8,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -32,8 +33,8 @@ public class Array extends SObjectImpl {
     ImmutableList<SObject> elements = elements();
     for (SObject object : elements) {
       if (!object.type().equals(type().elemType())) {
-        throw new ObjectDbException(hash(), "It is array with type " + type().q()
-            + " but one of its elements has type " + object.type().q());
+        throw new ObjectDbException(hash(), "It is array with type " + ((Type) type()).name()
+            + " but one of its elements has type " + ((Type) object.type()).name());
       }
     }
     @SuppressWarnings("unchecked")
@@ -44,8 +45,8 @@ public class Array extends SObjectImpl {
   private <T extends SObject> void assertIsIterableAs(Class<T> clazz) {
     ConcreteType elemType = type().elemType();
     if (!(elemType.isNothing() || clazz.isAssignableFrom(elemType.jType()))) {
-      throw new IllegalArgumentException("Array of type " + type().q() + " cannot be iterated as " +
-          Struct.class.getCanonicalName());
+      throw new IllegalArgumentException(type().name() + " cannot be viewed as Iterable of "
+          + clazz.getCanonicalName() + ".");
     }
   }
 
