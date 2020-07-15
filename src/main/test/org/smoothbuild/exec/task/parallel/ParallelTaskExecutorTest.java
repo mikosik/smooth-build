@@ -134,7 +134,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         .isNull();
     verify(reporter).report(
         eq(task),
-        eq("runtimeException                         smooth internal               "),
+        eq("task-name                                smooth internal               "),
         eq(List.of(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
@@ -161,7 +161,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm concatAlgorithm() {
-    return new TestAlgorithm("concat", Hash.of(1)) {
+    return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         String joinedArgs = input.objects()
@@ -175,7 +175,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm valueAlgorithm(String value) {
-    return new TestAlgorithm("value", Hash.of(Hash.of(2), Hash.of(value))) {
+    return new TestAlgorithm(Hash.of(Hash.of(2), Hash.of(value))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         SString result = nativeApi.factory().string(value);
@@ -185,7 +185,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm throwingAlgorithm(ArithmeticException exception) {
-    return new TestAlgorithm("runtimeException", Hash.of(3)) {
+    return new TestAlgorithm(Hash.of(3)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         throw exception;
@@ -194,7 +194,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter) {
-    return new TestAlgorithm("sleepyCounter", Hash.of(4)) {
+    return new TestAlgorithm(Hash.of(4)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         sleep1000ms();
@@ -204,7 +204,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm getIncrementAlgorithm(AtomicInteger counter) {
-    return new TestAlgorithm("sleepyCounter", Hash.of(5)) {
+    return new TestAlgorithm(Hash.of(5)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         return toSString(nativeApi, counter.getAndIncrement());
@@ -214,7 +214,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
   private Algorithm sleepyWriteReadAlgorithm(
       Hash hash, AtomicInteger write, AtomicInteger read) {
-    return new TestAlgorithm("sleepyWriteRead", hash) {
+    return new TestAlgorithm(hash) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         write.incrementAndGet();
@@ -238,7 +238,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(string, "description", algorithm, dependencies, internal(), true);
+    return new NormalTask(string, "task-name", algorithm, dependencies, internal(), true);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {
@@ -254,17 +254,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private abstract class TestAlgorithm implements Algorithm {
-    private final String name;
     private final Hash hash;
 
-    protected TestAlgorithm(String name, Hash hash) {
-      this.name = name;
+    protected TestAlgorithm(Hash hash) {
       this.hash = hash;
-    }
-
-    @Override
-    public String name() {
-      return name;
     }
 
     @Override

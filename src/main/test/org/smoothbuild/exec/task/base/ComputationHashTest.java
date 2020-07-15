@@ -23,9 +23,7 @@ import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.comp.NativeCallAlgorithm;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.base.type.TestingTypes;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -99,7 +97,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConvertAlgorithm(stringType(), stringType());
+    Algorithm algorithm = new ConvertAlgorithm(stringType());
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("1ec66039449159837c5e5e82ce3da7bbf89ed417"));
@@ -107,8 +105,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(),
-        person);
+    Algorithm algorithm = new ConstructorCallAlgorithm(person);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("84859bd0be7a07c5381a8bdb6e0550399befda04"));
@@ -116,7 +113,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
+    Algorithm algorithm = new ConstructorCallAlgorithm(person);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("ce4042c0d29b51e2b526ef5b095e7284215f6b4a"));
@@ -124,14 +121,10 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor(), person);
+    Algorithm algorithm = new ConstructorCallAlgorithm(person);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("ff94e04a74fcf260266d8b9247ff5e9642944845"));
-  }
-
-  private Constructor constructor() {
-    return new Constructor(signature(TestingTypes.person, "ConstructorName", list()), internal());
   }
 
   @Test
@@ -149,11 +142,6 @@ public class ComputationHashTest extends TestingContext {
 
   private static Algorithm computation(Hash hash) {
     return new Algorithm() {
-      @Override
-      public String name() {
-        return "computation-name";
-      }
-
       @Override
       public Hash hash() {
         return hash;

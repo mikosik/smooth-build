@@ -184,7 +184,7 @@ public class BuildCommandTest {
     @Nested
     class conversion_matcher extends AcceptanceTestCase {
       private static final String CONVERSION_TASK_HEADER =
-          "[String] <- [Nothing]                    build.smooth:1";
+          "[String]<-[Nothing]                      build.smooth:1";
 
       @Test
       public void shows_conversion_when_enabled() throws IOException {

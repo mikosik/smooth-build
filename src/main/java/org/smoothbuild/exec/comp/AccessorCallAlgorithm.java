@@ -24,11 +24,6 @@ public class AccessorCallAlgorithm implements Algorithm {
   }
 
   @Override
-  public String name() {
-    return accessor.name();
-  }
-
-  @Override
   public Hash hash() {
     return accessorCallAlgorithmHash(accessor);
   }

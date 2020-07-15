@@ -15,22 +15,21 @@ import org.smoothbuild.lang.plugin.NativeApi;
 public class StringLiteralAlgorithm implements Algorithm {
   private final StringType stringType;
   private final String string;
-  private final String name;
+  private final String shortedString;
 
   public StringLiteralAlgorithm(StringType stringType, String string) {
     this.stringType = stringType;
     this.string = string;
-    this.name = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
-  }
-
-  @Override
-  public String name() {
-    return name;
+    this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
   }
 
   @Override
   public TaskKind kind() {
     return LITERAL;
+  }
+
+  public String shortedString() {
+    return shortedString;
   }
 
   @Override

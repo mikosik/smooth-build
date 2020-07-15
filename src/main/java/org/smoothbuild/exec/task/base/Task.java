@@ -20,14 +20,14 @@ public abstract class Task {
   public static final int NAME_LENGTH_LIMIT = 40;
 
   private final ConcreteType type;
-  private final String sourceDescription;
+  private final String name;
   protected final ImmutableList<Task> dependencies;
   protected final Location location;
 
-  public Task(ConcreteType type, String implementationDescription,
-      List<? extends Task> dependencies, Location location) {
+  public Task(ConcreteType type, String name, List<? extends Task> dependencies,
+      Location location) {
     this.type = type;
-    this.sourceDescription = implementationDescription;
+    this.name = name;
     this.dependencies = ImmutableList.copyOf(dependencies);
     this.location = location;
   }
@@ -48,10 +48,12 @@ public abstract class Task {
     return location.module().space();
   }
 
-  public abstract String name();
+  public String name() {
+    return name;
+  }
 
   public String description() {
-    return type.name() + (sourceDescription.isEmpty() ? "" : " " + sourceDescription);
+    return type.name() + " " + name;
   }
 
   public abstract Feeder<SObject> startComputation(Worker worker);

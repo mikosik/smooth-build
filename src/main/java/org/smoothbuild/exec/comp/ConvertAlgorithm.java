@@ -15,16 +15,9 @@ import org.smoothbuild.lang.plugin.NativeApi;
 
 public class ConvertAlgorithm implements Algorithm {
   private final ConcreteType destinationType;
-  private final ConcreteType sourceType;
 
-  public ConvertAlgorithm(ConcreteType destinationType, ConcreteType sourceType) {
+  public ConvertAlgorithm(ConcreteType destinationType) {
     this.destinationType = destinationType;
-    this.sourceType = sourceType;
-  }
-
-  @Override
-  public String name() {
-    return destinationType.name() + " <- " + sourceType.name();
   }
 
   @Override

@@ -25,11 +25,6 @@ public class NativeCallAlgorithm implements Algorithm {
   }
 
   @Override
-  public String name() {
-    return function.name();
-  }
-
-  @Override
   public Hash hash() {
     return nativeCallAlgorithmHash(function);
   }
