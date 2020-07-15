@@ -23,7 +23,7 @@ public class StructType extends ConcreteType {
   }
 
   @Override
-  public Struct newObject(MerkleRoot merkleRoot) {
+  public Struct newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
     return new Struct(merkleRoot, objectDb, hashedDb);
   }

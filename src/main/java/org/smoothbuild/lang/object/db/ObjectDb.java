@@ -131,7 +131,7 @@ public class ObjectDb {
       } else {
         ConcreteType type = getTypeOrWrapException(hashes.get(0), hash);
         Hash dataHash = hashes.get(1);
-        return type.newObject(new MerkleRoot(hash, type, dataHash));
+        return type.newJObject(new MerkleRoot(hash, type, dataHash));
       }
     } catch (HashedDbException e) {
       throw new ObjectDbException(hash, e);
@@ -295,23 +295,23 @@ public class ObjectDb {
 
   public Array newArray(ConcreteArrayType type, Iterable<? extends SObject> elements)
       throws HashedDbException {
-    return type.newObject(writeRoot(type, writeArrayData(elements)));
+    return type.newJObject(writeRoot(type, writeArrayData(elements)));
   }
 
   public Blob newBlob(Hash dataHash) throws HashedDbException {
-    return blobType.newObject(writeRoot(blobType, dataHash));
+    return blobType.newJObject(writeRoot(blobType, dataHash));
   }
 
   private Bool newBool(boolean value) throws HashedDbException {
-    return boolType.newObject(writeRoot(boolType, writeBoolData(value)));
+    return boolType.newJObject(writeRoot(boolType, writeBoolData(value)));
   }
 
   private SString newString(String string) throws HashedDbException {
-    return stringType.newObject(writeRoot(stringType, writeStringData(string)));
+    return stringType.newJObject(writeRoot(stringType, writeStringData(string)));
   }
 
   private Struct newStruct(StructType type, List<?extends SObject> objects) throws HashedDbException {
-    return type.newObject(writeRoot(type, writeStructData(objects)));
+    return type.newJObject(writeRoot(type, writeStructData(objects)));
   }
 
   private ConcreteArrayType newArrayType(ConcreteType elementType) throws

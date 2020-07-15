@@ -27,7 +27,10 @@ public abstract class ConcreteType extends AbstractType implements SObject {
     this.objectDb = objectDb;
   }
 
-  public abstract SObject newObject(MerkleRoot merkleRoot);
+  /**
+   * Creates new java object representing Binary Object represented by merkleRoot.
+   */
+  public abstract SObject newJObject(MerkleRoot merkleRoot);
 
   @Override
   public Hash hash() {
