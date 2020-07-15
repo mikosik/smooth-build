@@ -18,11 +18,6 @@ public class ArrayLiteralAlgorithm implements Algorithm {
   }
 
   @Override
-  public String name() {
-    return arrayType.name();
-  }
-
-  @Override
   public TaskKind kind() {
     return LITERAL;
   }

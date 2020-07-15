@@ -75,7 +75,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     Algorithm algorithm = new ArrayLiteralAlgorithm(typeConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(
-        actualType, "", algorithm, convertedElements, expression.location(), true);
+        actualType, actualType.name(), algorithm, convertedElements, expression.location(), true);
   }
 
   private List<Task> convertedElements(ConcreteType type, List<Task> elements) {
@@ -100,7 +100,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(ConstructorCallExpression expression) {
     Constructor constructor = expression.constructor();
     StructType type = typeConverter.visit(constructor.type());
-    Algorithm algorithm = new ConstructorCallAlgorithm(constructor, type);
+    Algorithm algorithm = new ConstructorCallAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
     return new NormalTask(constructor.type(), constructor.name(), algorithm, dependencies,
         expression.location(), true);
@@ -163,9 +163,9 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   @Override
   public Task visit(StringLiteralExpression expression) {
     var stringType = typeConverter.visit(string());
-    Algorithm algorithm = new StringLiteralAlgorithm(stringType, expression.string());
-    return new NormalTask(
-        string(), algorithm.name(), algorithm, ImmutableList.of(), expression.location(), true);
+    var algorithm = new StringLiteralAlgorithm(stringType, expression.string());
+    return new NormalTask(string(), algorithm.shortedString(), algorithm, ImmutableList.of(),
+        expression.location(), true);
   }
 
   public List<Task> childrenTasks(List<Expression> children) {
@@ -176,12 +176,11 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     if (task.type().equals(requiredType)) {
       return task;
     } else {
-      Algorithm algorithm = new ConvertAlgorithm(
-          requiredType.visit(typeConverter),
-          task.type().visit(typeConverter));
+      String description = requiredType.name() + "<-" + task.type().name();
+      Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(typeConverter));
       List<Task> dependencies = list(task);
-      return new NormalTask(requiredType, "<- " + task.type().name(), algorithm, dependencies,
-          task.location(), true);
+      return new NormalTask(
+          requiredType, description, algorithm, dependencies, task.location(), true);
     }
   }
 }

@@ -10,16 +10,11 @@ public abstract class ComputableTask extends Task {
   public final Algorithm algorithm;
   public final boolean cacheable;
 
-  public ComputableTask(ConcreteType type, String algorithmDescription, Algorithm algorithm,
+  public ComputableTask(ConcreteType type, String name, Algorithm algorithm,
       List<? extends Task> dependencies, Location location, boolean cacheable) {
-    super(type, algorithmDescription, dependencies, location);
+    super(type, name, dependencies, location);
     this.algorithm = algorithm;
     this.cacheable = cacheable;
-  }
-
-  @Override
-  public String name() {
-    return algorithm.name();
   }
 
   @Override
@@ -37,6 +32,6 @@ public abstract class ComputableTask extends Task {
 
   @Override
   public String toString() {
-    return "Task(" + algorithm.name() + ")";
+    return "Task(" + algorithm.getClass().getCanonicalName() + ")";
   }
 }

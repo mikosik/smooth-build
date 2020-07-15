@@ -27,7 +27,7 @@ public class TreeCommandTest {
       assertSysOutContains(quotesX2(unlines(
           "[String] result",
           "  [String] mySingleton",
-          "    [String]",
+          "    [String] [String]",
           "      String 'abc'",
           "      String 'def'")));
     }
@@ -52,7 +52,7 @@ public class TreeCommandTest {
       assertFinishedWithSuccess();
       assertSysOutContains(quotesX2(unlines(
           "Blob result",
-          "  Blob <- File",
+          "  Blob Blob<-File",
           "    File file",
           "      Blob toBlob",
           "        String 'abc'",
