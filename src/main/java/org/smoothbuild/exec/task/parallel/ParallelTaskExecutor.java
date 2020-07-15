@@ -19,6 +19,8 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
+import com.google.common.collect.Streams;
+
 /**
  * Executes tasks in parallel.
  *
@@ -41,7 +43,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
+  public Map<Task, SObject> executeAll(Iterable<Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(tasks);
   }
@@ -63,8 +65,8 @@ public class ParallelTaskExecutor {
       return reporter;
     }
 
-    public Map<Task, SObject> executeAll(List<Task> tasks) throws InterruptedException {
-      List<Feeder<SObject>> results = tasks.stream()
+    public Map<Task, SObject> executeAll(Iterable<Task> tasks) throws InterruptedException {
+      List<Feeder<SObject>> results = Streams.stream(tasks)
           .map(t -> t.startComputation(this))
           .collect(toList());
       runWhenAllAvailable(results, jobExecutor::terminate);
@@ -73,7 +75,8 @@ public class ParallelTaskExecutor {
       return toMap(tasks, results);
     }
 
-    private static HashMap<Task, SObject> toMap(List<Task> tasks, List<Feeder<SObject>> results) {
+    private static HashMap<Task, SObject> toMap(
+        Iterable<Task> tasks, List<Feeder<SObject>> results) {
       HashMap<Task, SObject> result = new HashMap<>();
       Iterator<Feeder<SObject>> it = results.iterator();
       for (Task task : tasks) {

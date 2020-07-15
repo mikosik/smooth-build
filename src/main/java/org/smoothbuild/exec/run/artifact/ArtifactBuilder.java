@@ -1,9 +1,7 @@
 package org.smoothbuild.exec.run.artifact;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
+import static java.util.Map.Entry.comparingByKey;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
@@ -11,7 +9,6 @@ import static org.smoothbuild.lang.base.Location.commandLineLocation;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
@@ -24,7 +21,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.object.base.SObject;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
@@ -44,18 +41,19 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(List<Callable> callables) {
-    ImmutableList<Task> tasks = callables.stream()
-        .map(this::planFor)
-        .collect(toImmutableList());
+    var builder = ImmutableMap.<String, Task>builder();
+    for (Callable callable : callables) {
+      builder.put(callable.name(), planFor(callable));
+    }
+    ImmutableMap<String, Task> namedTasks = builder.build();
     try {
-      Map<Task, SObject> artifacts = parallelExecutor.executeAll(tasks);
+      Map<Task, SObject> artifacts = parallelExecutor.executeAll(namedTasks.values());
       if (!artifacts.containsValue(null)) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
-        List<Entry<Task, SObject>> sortedArtifacts = artifacts.entrySet()
+        namedTasks.entrySet()
             .stream()
-            .sorted(comparing(e -> e.getKey().name()))
-            .collect(toList());
-        sortedArtifacts.forEach(this::save);
+            .sorted(comparingByKey())
+            .forEach(e -> save(e.getKey(), artifacts.get(e.getValue())));
       }
     } catch (InterruptedException e) {
       reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
@@ -66,10 +64,6 @@ public class ArtifactBuilder {
   private Task planFor(Callable callable) {
     return executionPlanner
         .createPlan(callable.createAgrlessCallExpression(commandLineLocation()));
-  }
-
-  private void save(Entry<Task, SObject> artifact) {
-    save(artifact.getKey().name(), artifact.getValue());
   }
 
   private void save(String name, SObject sObject) {
