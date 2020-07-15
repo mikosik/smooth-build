@@ -1,15 +1,26 @@
 package org.smoothbuild.db.hashed;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.Byte.MAX_VALUE;
+import static java.lang.Byte.MIN_VALUE;
 import static java.lang.String.format;
 import static okio.ByteString.encodeUtf8;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -143,157 +154,185 @@ public class HashedDbTest extends TestingContext {
             "Corrupted HashedDb. Cannot store data at '" + hash + "' as it is a directory."));
   }
 
-  @Test
-  public void written_true_boolean_can_be_read_back() throws Exception {
-    hash = hashedDb().writeBoolean(true);
-    assertThat(hashedDb().readBoolean(hash))
-        .isTrue();
+  @Nested
+  class aBool {
+    @Test
+    public void with_true_value_can_be_read_back() throws Exception {
+      hash = hashedDb().writeBoolean(true);
+      assertThat(hashedDb().readBoolean(hash))
+          .isTrue();
+    }
+
+    @Test
+    public void with_false_value_can_be_read_back() throws Exception {
+      hash = hashedDb().writeBoolean(false);
+      assertThat(hashedDb().readBoolean(hash))
+          .isFalse();
+    }
   }
 
-  @Test
-  public void written_false_boolean_can_be_read_back() throws Exception {
-    hash = hashedDb().writeBoolean(false);
-    assertThat(hashedDb().readBoolean(hash))
-        .isFalse();
+  @Nested
+  @TestInstance(PER_CLASS) // workaround that allows non-static allByteValues
+  class aByte {
+    @ParameterizedTest
+    @MethodSource("allByteValues")
+    public void with_given_value_can_be_read_back(int value) throws Exception {
+      hash = hashedDb().writeByte((byte) value);
+      assertThat(hashedDb().readByte(hash))
+          .isEqualTo(value);
+    }
+
+    private Stream<Arguments> allByteValues() {
+      return IntStream.range(MIN_VALUE, MAX_VALUE)
+          .mapToObj(Arguments::of);
+    }
   }
 
-  @Test
-  public void written_string_can_be_read_back() throws Exception {
-    hash = hashedDb().writeString("abc");
-    assertThat(hashedDb().readString(hash))
-        .isEqualTo("abc");
+  @Nested
+  class aString {
+    @ParameterizedTest
+    @ValueSource(strings = {"", "a", "abc", "!@#$"})
+    public void with_given_value_can_be_read_back() throws Exception {
+      hash = hashedDb().writeString("abc");
+      assertThat(hashedDb().readString(hash))
+          .isEqualTo("abc");
+    }
   }
 
-  // readHashes(hash)
+  @Nested
+  class aHashSequence {
+    @Test
+    public void with_no_elements_can_be_read_back() throws Exception {
+      hash = hashedDb().writeHashes();
+      assertThat(hashedDb().readHashes(hash))
+          .isEqualTo(list());
+    }
 
-  @Test
-  public void written_empty_sequence_of_hashes_can_be_read_back() throws Exception {
-    hash = hashedDb().writeHashes();
-    assertThat(hashedDb().readHashes(hash))
-        .isEqualTo(list());
+    @Test
+    public void with_one_element_can_be_read_back() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("abc"));
+      assertThat(hashedDb().readHashes(hash))
+          .isEqualTo(list(Hash.of("abc")));
+    }
+
+    @Test
+    public void with_two_elements_can_be_read_back() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("abc"), Hash.of("def"));
+      assertThat(hashedDb().readHashes(hash))
+          .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
+    }
+
+    @Test
+    public void not_written_sequence_of_hashes_cannot_be_read_back() {
+      hash = Hash.of("abc");
+      assertCall(() -> hashedDb().readHashes(hash))
+          .throwsException(new NoSuchDataException(hash));
+    }
+
+    @Test
+    public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
+      hash = hashedDb().writeString("12345");
+      assertCall(() -> hashedDb().readHashes(hash))
+          .throwsException(new DecodingHashSequenceException(hash));
+    }
   }
 
-  @Test
-  public void written_one_element_sequence_of_hashes_can_be_read_back() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("abc"));
-    assertThat(hashedDb().readHashes(hash))
-        .isEqualTo(list(Hash.of("abc")));
+  @Nested
+  class read_hashes_with_expected_size {
+    @Test
+    public void reading_0_hashes_with_expect_size_0_succeeds() throws Exception {
+      hash = hashedDb().writeHashes();
+      assertThat(hashedDb().readHashes(hash, 0))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void reading_0_hashes_with_expect_size_1_causes_exception() throws Exception {
+      hash = hashedDb().writeHashes();
+      assertCall(() -> hashedDb().readHashes(hash, 1))
+          .throwsException(new DecodingHashSequenceException(hash, 1, 0));
+    }
+
+    @Test
+    public void reading_1_hashes_with_expect_size_0_causes_exception() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"));
+      assertCall(() -> hashedDb().readHashes(hash, 0))
+          .throwsException(new DecodingHashSequenceException(hash, 0, 1));
+    }
+
+    @Test
+    public void reading_1_hashes_with_expect_size_1_succeeds() throws HashedDbException {
+      hash = hashedDb().writeHashes(Hash.of("a"));
+      assertThat(hashedDb().readHashes(hash, 1))
+          .isEqualTo(list(Hash.of("a")));
+    }
+
+    @Test
+    public void reading_1_hashes_with_expect_size_2_causes_exception() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"));
+      assertCall(() -> hashedDb().readHashes(hash, 2))
+          .throwsException(new DecodingHashSequenceException(hash, 2, 1));
+    }
+
+    @Test
+    public void reading_not_written_sequence_of_hashes_with_expect_size_0_throws_exception() {
+      hash = Hash.of("abc");
+      assertCall(() -> hashedDb().readHashes(hash, 0))
+          .throwsException(new NoSuchDataException(hash));
+    }
+
+    @Test
+    public void reading_corrupted_sequence_of_hashes_with_expect_size_causes_exception()
+        throws Exception {
+      hash = hashedDb().writeString("12345");
+      assertCall(() -> hashedDb().readHashes(hash, 0))
+          .throwsException(new DecodingHashSequenceException(hash));
+    }
   }
 
-  @Test
-  public void written_two_elements_sequence_of_hashes_can_be_read_back() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("abc"), Hash.of("def"));
-    assertThat(hashedDb().readHashes(hash))
-        .isEqualTo(list(Hash.of("abc"), Hash.of("def")));
-  }
+  @Nested
+  class read_hashes_with_expected_min_and_max_size {
+    @Test
+    public void reading_less_hashes_than_expected_range_causes_exception() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"));
+      assertCall(() -> hashedDb().readHashes(hash, 2, 4))
+          .throwsException(new DecodingHashSequenceException(hash, 2, 4, 1));
+    }
 
-  @Test
-  public void not_written_sequence_of_hashes_cannot_be_read_back() {
-    hash = Hash.of("abc");
-    assertCall(() -> hashedDb().readHashes(hash))
-        .throwsException(new NoSuchDataException(hash));
-  }
+    @Test
+    public void reading_exactly_min_expected_hashes_succeeds() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"));
+      assertThat(hashedDb().readHashes(hash, 2, 4))
+          .isEqualTo(list(Hash.of("a"), Hash.of("b")));
+    }
 
-  @Test
-  public void corrupted_sequence_of_hashes_cannot_be_read_back() throws Exception {
-    hash = hashedDb().writeString("12345");
-    assertCall(() -> hashedDb().readHashes(hash))
-        .throwsException(new DecodingHashSequenceException(hash));
-  }
+    @Test
+    public void reading_exactly_max_expected_hashes_succeeds() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"), Hash.of("c"));
+      assertThat(hashedDb().readHashes(hash, 2, 3))
+          .isEqualTo(list(Hash.of("a"), Hash.of("b"), Hash.of("c")));
+    }
 
-  // readHashes(hash, expectedSize)
+    @Test
+    public void reading_more_hashes_than_expected_range_causes_exception() throws Exception {
+      hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"), Hash.of("c"));
+      assertCall(() -> hashedDb().readHashes(hash, 0, 2))
+          .throwsException(new DecodingHashSequenceException(hash, 0, 2, 3));
+    }
 
-  @Test
-  public void reading_0_hashes_with_expect_size_0_succeeds() throws Exception {
-    hash = hashedDb().writeHashes();
-    assertThat(hashedDb().readHashes(hash, 0))
-        .isEqualTo(list());
-  }
+    @Test
+    public void reading_not_written_sequence_of_hashes_with_expect_range_with_min_0_throws_exception() {
+      hash = Hash.of("abc");
+      assertCall(() -> hashedDb().readHashes(hash, 0, 2))
+          .throwsException(new NoSuchDataException(hash));
+    }
 
-  @Test
-  public void reading_0_hashes_with_expect_size_1_causes_exception() throws Exception {
-    hash = hashedDb().writeHashes();
-    assertCall(() -> hashedDb().readHashes(hash, 1))
-        .throwsException(new DecodingHashSequenceException(hash, 1, 0));
-  }
-
-  @Test
-  public void reading_1_hashes_with_expect_size_0_causes_exception() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"));
-    assertCall(() -> hashedDb().readHashes(hash, 0))
-        .throwsException(new DecodingHashSequenceException(hash, 0, 1));
-  }
-
-  @Test
-  public void reading_1_hashes_with_expect_size_1_succeeds() throws HashedDbException {
-    hash = hashedDb().writeHashes(Hash.of("a"));
-    assertThat(hashedDb().readHashes(hash, 1))
-        .isEqualTo(list(Hash.of("a")));
-  }
-
-  @Test
-  public void reading_1_hashes_with_expect_size_2_causes_exception() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"));
-    assertCall(() -> hashedDb().readHashes(hash, 2))
-        .throwsException(new DecodingHashSequenceException(hash, 2, 1));
-  }
-
-  @Test
-  public void reading_not_written_sequence_of_hashes_with_expect_size_0_throws_exception() {
-    hash = Hash.of("abc");
-    assertCall(() -> hashedDb().readHashes(hash, 0))
-        .throwsException(new NoSuchDataException(hash));
-  }
-
-  @Test
-  public void reading_corrupted_sequence_of_hashes_with_expect_size_causes_exception()
-      throws Exception {
-    hash = hashedDb().writeString("12345");
-    assertCall(() -> hashedDb().readHashes(hash, 0))
-        .throwsException(new DecodingHashSequenceException(hash));
-  }
-
-  // readHashes(hash, minExpectedSize, maxExpectedSize)
-
-  @Test
-  public void reading_less_hashes_than_expected_range_causes_exception() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"));
-    assertCall(() -> hashedDb().readHashes(hash, 2, 4))
-        .throwsException(new DecodingHashSequenceException(hash, 2, 4, 1));
-  }
-
-  @Test
-  public void reading_exactly_min_expected_hashes_succeeds() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"));
-    assertThat(hashedDb().readHashes(hash, 2, 4))
-        .isEqualTo(list(Hash.of("a"), Hash.of("b")));
-  }
-
-  @Test
-  public void reading_exactly_max_expected_hashes_succeeds() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"), Hash.of("c"));
-    assertThat(hashedDb().readHashes(hash, 2, 3))
-        .isEqualTo(list(Hash.of("a"), Hash.of("b"), Hash.of("c")));
-  }
-
-  @Test
-  public void reading_more_hashes_than_expected_range_causes_exception() throws Exception {
-    hash = hashedDb().writeHashes(Hash.of("a"), Hash.of("b"), Hash.of("c"));
-    assertCall(() -> hashedDb().readHashes(hash, 0, 2))
-        .throwsException(new DecodingHashSequenceException(hash, 0, 2, 3));
-  }
-
-  @Test
-  public void reading_not_written_sequence_of_hashes_with_expect_range_with_min_0_throws_exception() {
-    hash = Hash.of("abc");
-    assertCall(() -> hashedDb().readHashes(hash, 0, 2))
-        .throwsException(new NoSuchDataException(hash));
-  }
-
-  @Test
-  public void reading_corrupted_sequence_of_hashes_with_expect_range_causes_exception() throws Exception {
-    hash = hashedDb().writeString("12345");
-    assertCall(() -> hashedDb().readHashes(hash, 0, 2))
-        .throwsException(new DecodingHashSequenceException(hash));
+    @Test
+    public void reading_corrupted_sequence_of_hashes_with_expect_range_causes_exception() throws
+        Exception {
+      hash = hashedDb().writeString("12345");
+      assertCall(() -> hashedDb().readHashes(hash, 0, 2))
+          .throwsException(new DecodingHashSequenceException(hash));
+    }
   }
 }

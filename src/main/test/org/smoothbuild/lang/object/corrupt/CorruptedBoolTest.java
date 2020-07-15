@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.db.hashed.DecodingBooleanException;
+import org.smoothbuild.db.hashed.DecodingByteException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.db.ObjectDbException;
@@ -43,7 +44,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
             dataHash);
     assertCall(() -> ((Bool) objectDb().get(instanceHash)).jValue())
         .throwsException(new ObjectDbException(instanceHash))
-        .withCause(new DecodingBooleanException(dataHash));
+        .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
   @Test
@@ -55,7 +56,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
             dataHash);
     assertCall(() -> ((Bool) objectDb().get(instanceHash)).jValue())
         .throwsException(new ObjectDbException(instanceHash))
-        .withCause(new DecodingBooleanException(dataHash));
+        .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
   @SuppressWarnings("unused")
