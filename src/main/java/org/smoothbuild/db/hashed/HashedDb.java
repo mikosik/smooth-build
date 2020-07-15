@@ -33,10 +33,26 @@ public class HashedDb {
     this.tempManager = tempManager;
   }
 
-
   public Hash writeBoolean(boolean value) throws HashedDbException {
+    return writeByte(value ? (byte) 1 : (byte) 0);
+  }
+
+  public boolean readBoolean(Hash hash) throws HashedDbException {
+    try {
+      byte value = readByte(hash);
+      return switch (value) {
+        case 0 -> false;
+        case 1 -> true;
+        default -> throw new DecodingBooleanException(hash);
+      };
+    } catch (DecodingByteException e) {
+      throw new DecodingBooleanException(hash, e);
+    }
+  }
+
+  public Hash writeByte(byte value) throws HashedDbException {
     try (HashingBufferedSink sink = sink()) {
-      sink.writeByte(value ? 1 : 0);
+      sink.writeByte(value);
       sink.close();
       return sink.hash();
     } catch (IOException e) {
@@ -44,20 +60,16 @@ public class HashedDb {
     }
   }
 
-  public boolean readBoolean(Hash hash) throws HashedDbException {
+  public byte readByte(Hash hash) throws HashedDbException {
     try (BufferedSource source = source(hash)) {
       if (source.exhausted()) {
-        throw new DecodingBooleanException(hash);
+        throw new DecodingByteException(hash);
       }
       byte value = source.readByte();
       if (!source.exhausted()) {
-        throw new DecodingBooleanException(hash);
+        throw new DecodingByteException(hash);
       }
-      return switch (value) {
-        case 0 -> false;
-        case 1 -> true;
-        default -> throw new DecodingBooleanException(hash);
-      };
+      return value;
     } catch (IOException e) {
       throw new HashedDbException(hash, e);
     }
