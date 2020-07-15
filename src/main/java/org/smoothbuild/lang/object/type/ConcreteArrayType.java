@@ -21,7 +21,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
   }
 
   @Override
-  public Array newObject(MerkleRoot merkleRoot) {
+  public Array newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
     return new Array(merkleRoot, objectDb, hashedDb);
   }

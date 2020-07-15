@@ -16,7 +16,7 @@ public class NothingType extends ConcreteType {
   }
 
   @Override
-  public SObject newObject(MerkleRoot merkleRoot) {
+  public SObject newJObject(MerkleRoot merkleRoot) {
     throw new ObjectDbException(merkleRoot.hash(),
         "Object type is Nothing so such object cannot exist.");
   }

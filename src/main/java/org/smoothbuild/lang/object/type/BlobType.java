@@ -17,7 +17,7 @@ public class BlobType extends ConcreteType {
   }
 
   @Override
-  public Blob newObject(MerkleRoot merkleRoot) {
+  public Blob newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
     return new Blob(merkleRoot, hashedDb);
   }

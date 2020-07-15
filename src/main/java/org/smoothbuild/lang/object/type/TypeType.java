@@ -18,7 +18,7 @@ public class TypeType extends ConcreteType {
   }
 
   @Override
-  public ConcreteType newObject(MerkleRoot merkleRoot) {
+  public ConcreteType newJObject(MerkleRoot merkleRoot) {
     return objectDb.getType(merkleRoot);
   }
 }

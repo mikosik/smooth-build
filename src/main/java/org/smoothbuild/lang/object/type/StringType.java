@@ -17,7 +17,7 @@ public class StringType extends ConcreteType {
   }
 
   @Override
-  public SString newObject(MerkleRoot merkleRoot) {
+  public SString newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.type()));
     return new SString(merkleRoot, hashedDb);
   }
