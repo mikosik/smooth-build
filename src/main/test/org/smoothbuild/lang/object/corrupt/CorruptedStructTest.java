@@ -68,9 +68,7 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
     Struct struct = (Struct) objectDb().get(structHash);
     assertCall(() -> struct.get(0))
         .throwsException(new ObjectDbException(structHash, "Its type (Struct) specifies field " +
-            "at index 1 with type Type(\"String\"):7561a6b22d5fe8e18dec31904e0e9cdf6644ca96 but " +
-            "its data has object of type Type(\"Bool\"):912e97481a6f232997c26729f48c14d33540c9e1 " +
-            "at that index."));
+            "at index 1 with type STRING but its data has object of type BOOL at that index."));
   }
 
   private static String errorReadingFieldHashes() {

@@ -19,9 +19,9 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   protected final HashedDb hashedDb;
   protected final ObjectDb objectDb;
 
-  protected ConcreteType(MerkleRoot merkleRoot, String name, Class<? extends SObject> jType,
+  protected ConcreteType(MerkleRoot merkleRoot, TypeKind kind, Class<? extends SObject> jType,
       HashedDb hashedDb, ObjectDb objectDb) {
-    super(name, jType);
+    super(kind, jType);
     this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
     this.objectDb = objectDb;
@@ -60,6 +60,6 @@ public abstract class ConcreteType extends AbstractType implements SObject {
 
   @Override
   public String toString() {
-    return type().name() + "(\"" + name() + "\"):" + hash();
+    return kind().name() + ":" + hash();
   }
 }

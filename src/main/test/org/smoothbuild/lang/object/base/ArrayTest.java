@@ -24,10 +24,8 @@ public class ArrayTest extends TestingContext {
         .add(string("abc"))
         .build();
     assertCall(() -> array.asIterable(Struct.class))
-        .throwsException(
-            new IllegalArgumentException(
-                "Array of type '[String]' cannot be iterated as "
-                    + Struct.class.getCanonicalName()));
+        .throwsException(new IllegalArgumentException(
+            "[STRING] cannot be viewed as Iterable of " + Struct.class.getCanonicalName() + "."));
   }
 
   @Test
@@ -202,6 +200,6 @@ public class ArrayTest extends TestingContext {
         .add(sstring2)
         .build();
     assertThat(array.toString())
-        .isEqualTo("[String](...):" + array.hash());
+        .isEqualTo("[STRING](...):" + array.hash());
   }
 }

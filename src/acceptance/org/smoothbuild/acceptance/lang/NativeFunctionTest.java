@@ -299,7 +299,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains(
         "Function addElementOfWrongTypeToArray threw java exception from its native code.");
-    assertSysOutContains("Element type must be Blob but was String.");
+    assertSysOutContains("Element type must be BLOB but was STRING.");
   }
 
   @Test
@@ -311,7 +311,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function emptyStringArray has faulty native implementation: "
-        + "Its actual result type is [Blob] but it returned object of type [String].");
+        + "Its actual result type is [BLOB] but it returned object of type [STRING].");
   }
 
   @Test
@@ -323,7 +323,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function brokenIdentity has faulty native implementation: "
-        + "Its actual result type is [Nothing] but it returned object of type String.");
+        + "Its actual result type is [NOTHING] but it returned object of type STRING.");
   }
 
   private String invalidFunctionProvidedBy(Class<?> clazz) {

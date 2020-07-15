@@ -47,39 +47,39 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("names")
   public void quoted_name(Type type, String name) {
-    assertThat(type.q())
-        .isEqualTo("'" + name + "'");
+    assertThat(type.name())
+        .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
   public void to_string(ConcreteType type, String name) {
     assertThat(type.toString())
-        .isEqualTo("Type(\"" + name + "\"):" + type.hash());
+        .isEqualTo(name + ":" + type.hash());
   }
 
   public static Stream<Arguments> names() {
     return Stream.of(
-        arguments(type, "Type"),
-        arguments(bool, "Bool"),
-        arguments(string, "String"),
-        arguments(blob, "Blob"),
-        arguments(nothing, "Nothing"),
-        arguments(person, "Tuple"),
+        arguments(type, "TYPE"),
+        arguments(bool, "BOOL"),
+        arguments(string, "STRING"),
+        arguments(blob, "BLOB"),
+        arguments(nothing, "NOTHING"),
+        arguments(person, "TUPLE"),
 
-        arguments(arrayType, "[Type]"),
-        arguments(arrayBool, "[Bool]"),
-        arguments(arrayString, "[String]"),
-        arguments(arrayBlob, "[Blob]"),
-        arguments(arrayNothing, "[Nothing]"),
-        arguments(arrayPerson, "[Tuple]"),
+        arguments(arrayType, "[TYPE]"),
+        arguments(arrayBool, "[BOOL]"),
+        arguments(arrayString, "[STRING]"),
+        arguments(arrayBlob, "[BLOB]"),
+        arguments(arrayNothing, "[NOTHING]"),
+        arguments(arrayPerson, "[TUPLE]"),
 
-        arguments(array2Type, "[[Type]]"),
-        arguments(array2Bool, "[[Bool]]"),
-        arguments(array2String, "[[String]]"),
-        arguments(array2Blob, "[[Blob]]"),
-        arguments(array2Nothing, "[[Nothing]]"),
-        arguments(array2Person, "[[Tuple]]")
+        arguments(array2Type, "[[TYPE]]"),
+        arguments(array2Bool, "[[BOOL]]"),
+        arguments(array2String, "[[STRING]]"),
+        arguments(array2Blob, "[[BLOB]]"),
+        arguments(array2Nothing, "[[NOTHING]]"),
+        arguments(array2Person, "[[TUPLE]]")
     );
   }
 

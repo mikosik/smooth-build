@@ -81,20 +81,20 @@ public class StringTest extends TestingContext {
   public void to_string_contains_string_value() {
     SString sstring = string(string);
     assertThat(sstring.toString())
-        .isEqualTo("String(\"my string\"):" + sstring.hash());
+        .isEqualTo("STRING(\"my string\"):" + sstring.hash());
   }
 
   @Test
   public void to_string_contains_shortened_string_value_for_long_strings() {
     SString sstring = string("123456789012345678901234567890");
     assertThat(sstring.toString())
-        .isEqualTo("String(\"1234567890123456789012345\"...):" + sstring.hash());
+        .isEqualTo("STRING(\"1234567890123456789012345\"...):" + sstring.hash());
   }
 
   @Test
   public void to_string_contains_properly_escaped_special_characters() {
     SString sstring = string("\t \b \n \r \f \" \\");
     assertThat(sstring.toString())
-        .isEqualTo("String(\"\\t \\b \\n \\r \\f \\\" \\\\\"):" + sstring.hash());
+        .isEqualTo("STRING(\"\\t \\b \\n \\r \\f \\\" \\\\\"):" + sstring.hash());
   }
 }

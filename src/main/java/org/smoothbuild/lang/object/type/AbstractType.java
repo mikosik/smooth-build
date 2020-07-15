@@ -1,26 +1,26 @@
 package org.smoothbuild.lang.object.type;
 
-import static org.smoothbuild.lang.object.type.TypeNames.NOTHING;
+import static org.smoothbuild.lang.object.type.TypeKind.NOTHING;
 
 import org.smoothbuild.lang.object.base.SObject;
 
 public abstract class AbstractType implements Type {
-  private final String name;
   private final Class<? extends SObject> jType;
+  private final TypeKind kind;
 
-  public AbstractType(String name, Class<? extends SObject> jType) {
-    this.name = name;
+  public AbstractType(TypeKind kind, Class<? extends SObject> jType) {
+    this.kind = kind;
     this.jType = jType;
   }
 
   @Override
   public String name() {
-    return name;
+    return kind.name();
   }
 
   @Override
-  public String q() {
-    return "'" + name + "'";
+  public TypeKind kind() {
+    return kind;
   }
 
   @Override
@@ -35,6 +35,6 @@ public abstract class AbstractType implements Type {
 
   @Override
   public boolean isNothing() {
-    return name.equals(NOTHING);
+    return kind == NOTHING;
   }
 }
