@@ -18,7 +18,7 @@ public class TypeCachingTest extends TestingContext {
 
   @Test
   public void reading_array_type_reuses_cached_instance() {
-    ConcreteType type = arrayType(stringType());
+    BinaryType type = arrayType(stringType());
     ObjectDb objectDbOther = objectDbOther();
     assertReturnsSameInstanceEachTime(() -> objectDbOther.get(type.hash()));
   }
@@ -30,7 +30,7 @@ public class TypeCachingTest extends TestingContext {
 
   @Test
   public void reading_struct_type_reuses_cached_instance() {
-    ConcreteType type = structType(List.of(stringType()));
+    BinaryType type = structType(List.of(stringType()));
     ObjectDb objectDbOther = objectDbOther();
 
     assertReturnsSameInstanceEachTime(() -> objectDbOther.get(type.hash()));

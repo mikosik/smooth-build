@@ -11,15 +11,15 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class CallNativeAlgorithm implements Algorithm {
-  private final ConcreteType type;
+  private final BinaryType type;
   private final NativeFunction function;
 
-  public CallNativeAlgorithm(ConcreteType type, NativeFunction function) {
+  public CallNativeAlgorithm(BinaryType type, NativeFunction function) {
     this.type = type;
     this.function = function;
   }
@@ -30,7 +30,7 @@ public class CallNativeAlgorithm implements Algorithm {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return type;
   }
 

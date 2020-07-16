@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -112,7 +112,7 @@ public class ObjectStableHashTest extends TestingContext {
         .isEqualTo(Hash.decode("6bb1e56cac86965238be0be6f6994543a4c9d2ed"));
   }
 
-  private Array emptyArrayOf(ConcreteType elemType) {
+  private Array emptyArrayOf(BinaryType elemType) {
     return arrayBuilder(elemType).build();
   }
 }

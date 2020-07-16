@@ -12,9 +12,10 @@ import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 
-public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
+public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
   private final ObjectFactory objectFactory;
 
   public TypeToBinaryTypeConverter(ObjectFactory objectFactory) {
@@ -22,12 +23,12 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
   }
 
   @Override
-  public ConcreteType visit(BlobType type) {
+  public BinaryType visit(BlobType type) {
     return objectFactory.blobType();
   }
 
   @Override
-  public ConcreteType visit(BoolType type) {
+  public BinaryType visit(BoolType type) {
     return objectFactory.boolType();
   }
 
@@ -43,7 +44,7 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
 
   @Override
   public org.smoothbuild.lang.object.type.StructType visit(StructType type) {
-    Iterable<ConcreteType> fieldTypes =
+    Iterable<BinaryType> fieldTypes =
         type.fields().values().stream()
             .map(f -> f.type().visit(this))
             .collect(toImmutableList());
@@ -51,17 +52,17 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<ConcreteType> {
   }
 
   @Override
-  public ConcreteType visit(GenericType type) {
+  public BinaryType visit(GenericType type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public org.smoothbuild.lang.object.type.ConcreteArrayType visit(ConcreteArrayType type) {
+  public ArrayType visit(ConcreteArrayType type) {
     return objectFactory.arrayType(type.elemType().visit(this));
   }
 
   @Override
-  public ConcreteType visit(GenericArrayType type) {
+  public BinaryType visit(GenericArrayType type) {
     throw new UnsupportedOperationException();
   }
 }

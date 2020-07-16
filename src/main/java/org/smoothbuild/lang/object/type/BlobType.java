@@ -11,7 +11,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 /**
  * This class is immutable.
  */
-public class BlobType extends ConcreteType {
+public class BlobType extends BinaryType {
   public BlobType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, BLOB, hashedDb, objectDb);
   }

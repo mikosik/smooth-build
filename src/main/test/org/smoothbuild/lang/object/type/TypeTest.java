@@ -39,21 +39,21 @@ import com.google.common.testing.EqualsTester;
 public class TypeTest {
   @ParameterizedTest
   @MethodSource("names")
-  public void name(Type type, String name) {
+  public void name(BinaryType type, String name) {
     assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void quoted_name(Type type, String name) {
+  public void quoted_name(BinaryType type, String name) {
     assertThat(type.name())
         .isEqualTo(name);
   }
 
   @ParameterizedTest
   @MethodSource("names")
-  public void to_string(ConcreteType type, String name) {
+  public void to_string(BinaryType type, String name) {
     assertThat(type.toString())
         .isEqualTo(name + ":" + type.hash());
   }
@@ -85,14 +85,14 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("jType_test_data")
-  public void jType(Type type, Class<?> expected) {
+  public void jType(BinaryType type, Class<?> expected) {
     assertThat(type.jType())
         .isEqualTo(expected);
   }
 
   public static List<Arguments> jType_test_data() {
     return List.of(
-        arguments(type, ConcreteType.class),
+        arguments(type, BinaryType.class),
         arguments(bool, Bool.class),
         arguments(string, SString.class),
         arguments(blob, Blob.class),
@@ -107,7 +107,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isArray_test_data")
-  public void isArray(Type type, boolean expected) {
+  public void isArray(BinaryType type, boolean expected) {
     assertThat(type.isArray())
         .isEqualTo(expected);
   }
@@ -138,7 +138,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("elemType_test_data")
-  public void elemType(ArrayType type, Type expected) {
+  public void elemType(ArrayType type, BinaryType expected) {
     assertThat(type.elemType())
         .isEqualTo(expected);
   }

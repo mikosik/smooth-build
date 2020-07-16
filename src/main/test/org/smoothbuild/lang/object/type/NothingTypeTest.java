@@ -4,7 +4,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 
 public class NothingTypeTest extends AbstractTypeTestCase {
   @Override
-  protected ConcreteType getType(ObjectDb objectDb) {
+  protected BinaryType getType(ObjectDb objectDb) {
     return objectDb.nothingType();
   }
 }

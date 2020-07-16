@@ -6,14 +6,14 @@ import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class CreateArrayAlgorithm implements Algorithm {
-  private final ConcreteArrayType arrayType;
+  private final ArrayType arrayType;
 
-  public CreateArrayAlgorithm(ConcreteArrayType arrayType) {
+  public CreateArrayAlgorithm(ArrayType arrayType) {
     this.arrayType = arrayType;
   }
 
@@ -28,7 +28,7 @@ public class CreateArrayAlgorithm implements Algorithm {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return arrayType;
   }
 

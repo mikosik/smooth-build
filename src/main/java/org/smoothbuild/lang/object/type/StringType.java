@@ -11,7 +11,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 /**
  * This class is immutable.
  */
-public class StringType extends ConcreteType {
+public class StringType extends BinaryType {
   public StringType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, STRING, hashedDb, objectDb);
   }

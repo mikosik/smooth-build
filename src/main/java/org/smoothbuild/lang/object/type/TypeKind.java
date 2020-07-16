@@ -9,7 +9,7 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 
 public enum TypeKind {
-  TYPE((byte) 0, ConcreteType.class),
+  TYPE((byte) 0, BinaryType.class),
   NOTHING((byte) 1, Nothing.class),
   TUPLE((byte) 2, Struct.class),
   ARRAY((byte) 3, Array.class),

@@ -19,7 +19,7 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**
@@ -52,7 +52,7 @@ public class ArtifactSaver {
   }
 
   private Path saveArray(Path artifactPath, Array array) throws IOException, DuplicatedPathsException {
-    ConcreteType elemType = array.type().elemType();
+    BinaryType elemType = array.type().elemType();
     fileSystem.createDir(artifactPath);
     if (elemType.isArray()) {
       int i = 0;

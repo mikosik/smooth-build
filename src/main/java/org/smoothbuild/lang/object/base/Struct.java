@@ -9,9 +9,8 @@ import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.StructType;
-import org.smoothbuild.lang.object.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
@@ -54,13 +53,13 @@ public class Struct extends SObjectImpl {
       var builder = ImmutableList.<SObject>builder();
       for (int i = 0; i < fieldTypes.size(); i++) {
         SObject object = objectDb.get(fieldHashes.get(i));
-        ConcreteType type = fieldTypes.get(i);
+        BinaryType type = fieldTypes.get(i);
         if (type.equals(object.type())) {
           builder.add(object);
         } else {
           throw new ObjectDbException(hash(), "Its type (Struct) specifies field at index " + i
               + " with type " + type.name() + " but its data has object of type " +
-              ((Type) object.type()).name()
+              object.type().name()
               + " at that index.");
         }
       }
@@ -69,7 +68,7 @@ public class Struct extends SObjectImpl {
     return fields;
   }
 
-  private List<Hash> readFieldHashes(final ImmutableList<ConcreteType> fieldTypes) {
+  private List<Hash> readFieldHashes(final ImmutableList<BinaryType> fieldTypes) {
     try {
       return hashedDb.readHashes(dataHash(), fieldTypes.size());
     } catch (HashedDbException e) {

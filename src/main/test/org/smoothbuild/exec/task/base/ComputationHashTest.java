@@ -24,7 +24,7 @@ import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.comp.ReadTupleElementAlgorithm;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -148,7 +148,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public ConcreteType type() {
+      public BinaryType type() {
         return null;
       }
 

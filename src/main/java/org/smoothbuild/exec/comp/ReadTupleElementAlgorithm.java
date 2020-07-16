@@ -9,16 +9,16 @@ import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
 public class ReadTupleElementAlgorithm implements Algorithm {
   private final Accessor accessor;
-  private final ConcreteType type;
+  private final BinaryType type;
 
-  public ReadTupleElementAlgorithm(Accessor accessor, ConcreteType type) {
+  public ReadTupleElementAlgorithm(Accessor accessor, BinaryType type) {
     this.accessor = accessor;
     this.type = type;
   }
@@ -29,7 +29,7 @@ public class ReadTupleElementAlgorithm implements Algorithm {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return type;
   }
 

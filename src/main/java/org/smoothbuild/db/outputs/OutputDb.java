@@ -22,7 +22,7 @@ import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -64,7 +64,7 @@ public class OutputDb {
     };
   }
 
-  public synchronized Output read(Hash taskHash, ConcreteType type) throws OutputDbException {
+  public synchronized Output read(Hash taskHash, BinaryType type) throws OutputDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       SObject messagesObject = objectDb.get(Hash.read(source));
       ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());

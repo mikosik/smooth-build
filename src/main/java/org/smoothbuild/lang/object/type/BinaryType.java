@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.object.type;
 
+import static org.smoothbuild.lang.object.type.TypeKind.NOTHING;
+
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -9,19 +11,15 @@ import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SObjectImpl;
 import org.smoothbuild.lang.object.db.ObjectDb;
 
-/**
- * Concrete type in smooth language.
- *
- * This class is immutable.
- */
-public abstract class ConcreteType extends AbstractType implements SObject {
+public abstract class BinaryType implements SObject {
+  private final TypeKind kind;
   private final SObjectImpl object;
   protected final HashedDb hashedDb;
   protected final ObjectDb objectDb;
 
-  protected ConcreteType(MerkleRoot merkleRoot, TypeKind kind, HashedDb hashedDb,
+  protected BinaryType(MerkleRoot merkleRoot, TypeKind kind, HashedDb hashedDb,
       ObjectDb objectDb) {
-    super(kind);
+    this.kind = kind;
     this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
     this.objectDb = objectDb;
@@ -43,14 +41,14 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return object.type();
   }
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof ConcreteType
-        && Objects.equals(hash(), ((ConcreteType) object).hash());
+    return object instanceof BinaryType
+        && Objects.equals(hash(), ((BinaryType) object).hash());
   }
 
   @Override
@@ -61,5 +59,25 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   @Override
   public String toString() {
     return kind().name() + ":" + hash();
+  }
+
+  public String name() {
+    return kind.name();
+  }
+
+  public TypeKind kind() {
+    return kind;
+  }
+
+  public Class<? extends SObject> jType() {
+    return kind.jType();
+  }
+
+  public boolean isArray() {
+    return this instanceof ArrayType;
+  }
+
+  public boolean isNothing() {
+    return kind == NOTHING;
   }
 }
