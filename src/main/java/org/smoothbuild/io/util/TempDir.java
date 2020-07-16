@@ -16,7 +16,7 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 import okio.BufferedSource;
 
@@ -48,17 +48,17 @@ public class TempDir {
   }
 
   private void writeFilesImpl(Array files) throws IOException {
-    for (Struct file : files.asIterable(Struct.class)) {
+    for (Tuple file : files.asIterable(Tuple.class)) {
       writeFileImpl(file);
     }
   }
 
-  public void writeFile(Struct file) throws IOException {
+  public void writeFile(Tuple file) throws IOException {
     assertNotDestroyed();
     writeFileImpl(file);
   }
 
-  private void writeFileImpl(Struct file) throws IOException {
+  private void writeFileImpl(Tuple file) throws IOException {
     Path path = path(filePath(file).jValue());
     Blob content = fileContent(file);
     copyAllAndClose(content.source(), fileSystem.sink(rootPath.append(path)));
@@ -74,7 +74,7 @@ public class TempDir {
     for (PathIterator it = recursivePathsIterator(fileSystem, rootPath); it.hasNext(); ) {
       Path path = it.next();
       Blob content = readContentImpl(path);
-      Struct file = container.factory().file(container.factory().string(path.toString()), content);
+      Tuple file = container.factory().file(container.factory().string(path.toString()), content);
       arrayBuilder.add(file);
     }
     return arrayBuilder.build();

@@ -5,15 +5,15 @@ import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class CreateTupleAlgorithm implements Algorithm {
-  private final StructType constructedType;
+  private final TupleType constructedType;
 
-  public CreateTupleAlgorithm(StructType constructedType) {
+  public CreateTupleAlgorithm(TupleType constructedType) {
     this.constructedType = constructedType;
   }
 
@@ -29,8 +29,8 @@ public class CreateTupleAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Struct struct = nativeApi.factory().struct(constructedType, input.objects());
-    return new Output(struct, nativeApi.messages());
+    Tuple tuple = nativeApi.factory().struct(constructedType, input.objects());
+    return new Output(tuple, nativeApi.messages());
   }
 
   @Override

@@ -4,7 +4,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 
 public class AlgorithmHashes {
   public static Hash createArrayAlgorithmHash() {
@@ -19,7 +19,7 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash createTupleAlgorithmHash(StructType type) {
+  public static Hash createTupleAlgorithmHash(TupleType type) {
     return hash(3, type.hash());
   }
 

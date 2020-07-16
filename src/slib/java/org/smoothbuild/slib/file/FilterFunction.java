@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
@@ -27,7 +27,7 @@ public class FilterFunction {
     }
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileType());
 
-    for (Struct file : files.asIterable(Struct.class)) {
+    for (Tuple file : files.asIterable(Tuple.class)) {
       if (filter.test(path(filePath(file).jValue()))) {
         builder.add(file);
       }

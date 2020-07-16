@@ -34,7 +34,7 @@ import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.parse.ast.Named;
 import org.smoothbuild.parse.expr.AccessorCallExpression;
 import org.smoothbuild.parse.expr.ArrayLiteralExpression;
@@ -100,7 +100,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   @Override
   public Task visit(ConstructorCallExpression expression) {
     Constructor constructor = expression.constructor();
-    StructType type = typeConverter.visit(constructor.type());
+    TupleType type = typeConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
     return new NormalTask(constructor.type(), constructor.name(), algorithm, dependencies,

@@ -10,25 +10,25 @@ import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectDbException;
 import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class Struct extends SObjectImpl {
+public class Tuple extends SObjectImpl {
   private ImmutableList<SObject> fields;
   private final ObjectDb objectDb;
 
-  public Struct(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
+  public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
     this.objectDb = objectDb;
   }
 
   @Override
-  public StructType type() {
-    return (StructType) super.type();
+  public TupleType type() {
+    return (TupleType) super.type();
   }
 
   public SObject get(int index) {

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.testing.TestingContext;
 
 public class AlgorithmHashesTest extends TestingContext {
@@ -26,7 +26,7 @@ public class AlgorithmHashesTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
-    StructType constructedType = structType(list());
+    TupleType constructedType = structType(list());
     Accessor accessor = accessor(0);
 
     hashes.add(createArrayAlgorithmHash());
@@ -57,8 +57,8 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void create_tuple_algorithm_has_different_hash_for_different_types() {
-    StructType constructedType = structType(list(stringType()));
-    StructType constructedType2 = structType(list(blobType()));
+    TupleType constructedType = structType(list(stringType()));
+    TupleType constructedType2 = structType(list(blobType()));
 
     assertThat(createTupleAlgorithmHash(constructedType))
         .isNotEqualTo(createTupleAlgorithmHash(constructedType2));

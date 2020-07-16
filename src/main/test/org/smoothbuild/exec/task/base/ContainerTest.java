@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.object.base.Messages.text;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {
@@ -22,13 +22,13 @@ public class ContainerTest extends TestingContext {
   @Test
   public void messages_are_logged() {
     container().log().error("message");
-    Iterable<Struct> iterable = container().messages().asIterable(Struct.class);
+    Iterable<Tuple> iterable = container().messages().asIterable(Tuple.class);
     assertThat(iterable)
         .hasSize(1);
-    Struct struct = iterable.iterator().next();
-    assertThat(text(struct))
+    Tuple tuple = iterable.iterator().next();
+    assertThat(text(tuple))
         .isEqualTo("message");
-    assertThat(severity(struct))
+    assertThat(severity(tuple))
         .isEqualTo("ERROR");
   }
 

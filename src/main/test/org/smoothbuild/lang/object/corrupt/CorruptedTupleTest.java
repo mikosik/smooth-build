@@ -6,10 +6,10 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.db.ObjectDbException;
 
-public class CorruptedStructTest extends AbstractCorruptedTestCase {
+public class CorruptedTupleTest extends AbstractCorruptedTestCase {
   @Test
   public void learning_test_create_struct() throws Exception {
     /*
@@ -34,8 +34,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             fieldValuesHash);
-    Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get(0))
+    Tuple tuple = (Tuple) objectDb().get(structHash);
+    assertCall(() -> tuple.get(0))
         .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
         .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 1));
   }
@@ -51,8 +51,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
         hash(
             hash(personType()),
             fieldValuesHash);
-    Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get(0))
+    Tuple tuple = (Tuple) objectDb().get(structHash);
+    assertCall(() -> tuple.get(0))
         .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
         .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 3));
   }
@@ -65,8 +65,8 @@ public class CorruptedStructTest extends AbstractCorruptedTestCase {
             hash(
                 hash(string("John")),
                 hash(bool(true))));
-    Struct struct = (Struct) objectDb().get(structHash);
-    assertCall(() -> struct.get(0))
+    Tuple tuple = (Tuple) objectDb().get(structHash);
+    assertCall(() -> tuple.get(0))
         .throwsException(new ObjectDbException(structHash, "Its type (Struct) specifies field " +
             "at index 1 with type STRING but its data has object of type BOOL at that index."));
   }

@@ -5,7 +5,7 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -14,7 +14,7 @@ public class InputSourceFileTest extends TestingContext {
   @Test
   public void get_char_content_returns_file_content() {
     Path path = path("my/path");
-    Struct file = file(path, ByteString.encodeUtf8("abc"));
+    Tuple file = file(path, ByteString.encodeUtf8("abc"));
     assertThat(new InputSourceFile(file).getCharContent(true).toString())
         .isEqualTo("abc");
   }
@@ -22,7 +22,7 @@ public class InputSourceFileTest extends TestingContext {
   @Test
   public void uri() {
     Path path = path("my/path");
-    Struct file = file(path);
+    Tuple file = file(path);
     assertThat(new InputSourceFile(file).getName())
         .isEqualTo("/" + path.toString());
   }

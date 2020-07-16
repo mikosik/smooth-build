@@ -8,7 +8,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
@@ -37,8 +37,8 @@ public class ReadTupleElementAlgorithm implements Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     ImmutableList<SObject> objects = input.objects();
     checkArgument(objects.size() == 1);
-    Struct struct = (Struct) objects.get(0);
-    return new Output(struct.get(accessor.fieldIndex()), nativeApi.messages());
+    Tuple tuple = (Tuple) objects.get(0);
+    return new Output(tuple.get(accessor.fieldIndex()), nativeApi.messages());
   }
 
   @Override

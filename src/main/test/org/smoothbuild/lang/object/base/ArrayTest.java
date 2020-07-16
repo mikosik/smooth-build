@@ -14,7 +14,7 @@ public class ArrayTest extends TestingContext {
   public void empty_nothing_array_can_be_iterated_as_struct() {
     Array array = arrayBuilder(nothingType())
         .build();
-    assertThat(array.asIterable(Struct.class))
+    assertThat(array.asIterable(Tuple.class))
         .isEmpty();
   }
 
@@ -23,9 +23,9 @@ public class ArrayTest extends TestingContext {
     Array array = arrayBuilder(stringType())
         .add(string("abc"))
         .build();
-    assertCall(() -> array.asIterable(Struct.class))
+    assertCall(() -> array.asIterable(Tuple.class))
         .throwsException(new IllegalArgumentException(
-            "[STRING] cannot be viewed as Iterable of " + Struct.class.getCanonicalName() + "."));
+            "[STRING] cannot be viewed as Iterable of " + Tuple.class.getCanonicalName() + "."));
   }
 
   @Test

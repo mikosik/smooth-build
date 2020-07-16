@@ -14,6 +14,7 @@ import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.BinaryType;
+import org.smoothbuild.lang.object.type.TupleType;
 
 public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
   private final ObjectFactory objectFactory;
@@ -43,7 +44,7 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
   }
 
   @Override
-  public org.smoothbuild.lang.object.type.StructType visit(StructType type) {
+  public TupleType visit(StructType type) {
     Iterable<BinaryType> fieldTypes =
         type.fields().values().stream()
             .map(f -> f.type().visit(this))
