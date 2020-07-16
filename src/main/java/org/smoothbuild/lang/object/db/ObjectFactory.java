@@ -16,10 +16,10 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -53,7 +53,7 @@ public class ObjectFactory {
     return objectDb.structType(ImmutableList.of(objectDb.blobType(), objectDb.stringType()));
   }
 
-  public ArrayBuilder arrayBuilder(ConcreteType elementType) {
+  public ArrayBuilder arrayBuilder(BinaryType elementType) {
     return objectDb.arrayBuilder(elementType);
   }
 
@@ -84,7 +84,7 @@ public class ObjectFactory {
     return objectDb.struct(type, fields);
   }
 
-  public ConcreteArrayType arrayType(ConcreteType elementType) {
+  public ArrayType arrayType(BinaryType elementType) {
     return objectDb.arrayType(elementType);
   }
 
@@ -112,7 +112,7 @@ public class ObjectFactory {
     return objectDb.stringType();
   }
 
-  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
     return objectDb.structType(fieldTypes);
   }
 

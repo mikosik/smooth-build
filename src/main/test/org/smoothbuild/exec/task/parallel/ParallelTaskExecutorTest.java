@@ -39,7 +39,7 @@ import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -271,7 +271,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     @Override
-    public ConcreteType type() {
+    public BinaryType type() {
       return stringType();
     }
   }

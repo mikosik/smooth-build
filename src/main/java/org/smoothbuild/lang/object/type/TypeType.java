@@ -9,18 +9,18 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 /**
  * This class is immutable.
  */
-public class TypeType extends ConcreteType {
+public class TypeType extends BinaryType {
   public TypeType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, TYPE, hashedDb, objectDb);
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return this;
   }
 
   @Override
-  public ConcreteType newJObject(MerkleRoot merkleRoot) {
+  public BinaryType newJObject(MerkleRoot merkleRoot) {
     return objectDb.getType(merkleRoot);
   }
 }

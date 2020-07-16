@@ -3,7 +3,7 @@ package org.smoothbuild.exec.comp;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class AlgorithmHashes {
@@ -15,7 +15,7 @@ public class AlgorithmHashes {
     return hash(1, function.hash());
   }
 
-  public static Hash convertAlgorithmHash(ConcreteType destinationType) {
+  public static Hash convertAlgorithmHash(BinaryType destinationType) {
     return hash(2, destinationType.hash());
   }
 

@@ -28,7 +28,7 @@ public class TypeStableHashTest extends TestingContext {
     return objectDb.structType(list(objectDb.stringType(), objectDb.blobType()));
   }
 
-  private static void assertHash(ConcreteType type, String hash) {
+  private static void assertHash(BinaryType type, String hash) {
     assertThat(type.hash())
         .isEqualTo(Hash.decode(hash));
   }

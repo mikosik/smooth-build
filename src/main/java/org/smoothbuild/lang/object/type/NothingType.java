@@ -11,7 +11,7 @@ import org.smoothbuild.lang.object.db.ObjectDbException;
 /**
  * This class is immutable.
  */
-public class NothingType extends ConcreteType {
+public class NothingType extends BinaryType {
   public NothingType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, NOTHING, hashedDb, objectDb);
   }

@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 
 /**
  * This class is immutable.
@@ -31,7 +31,7 @@ public class SObjectImpl implements SObject {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return merkleRoot.type();
   }
 

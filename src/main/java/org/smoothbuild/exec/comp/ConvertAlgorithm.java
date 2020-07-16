@@ -9,14 +9,14 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
 public class ConvertAlgorithm implements Algorithm {
-  private final ConcreteType destinationType;
+  private final BinaryType destinationType;
 
-  public ConvertAlgorithm(ConcreteType destinationType) {
+  public ConvertAlgorithm(BinaryType destinationType) {
     this.destinationType = destinationType;
   }
 
@@ -31,7 +31,7 @@ public class ConvertAlgorithm implements Algorithm {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return destinationType;
   }
 
@@ -48,8 +48,8 @@ public class ConvertAlgorithm implements Algorithm {
   }
 
   private static SObject convertArray(NativeApi nativeApi, Array array,
-      ConcreteType destinationType) {
-    ConcreteType elemType = ((ConcreteArrayType) destinationType).elemType();
+      BinaryType destinationType) {
+    BinaryType elemType = ((ArrayType) destinationType).elemType();
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemType);
     for (SObject element : array.asIterable(SObject.class)) {
       if (element instanceof Array) {
@@ -62,7 +62,7 @@ public class ConvertAlgorithm implements Algorithm {
   }
 
   private static SObject convertStruct(Struct struct,
-      ConcreteType destinationType) {
+      BinaryType destinationType) {
     SObject superObject = struct.superObject();
     if (superObject.type().equals(destinationType)) {
       return superObject;

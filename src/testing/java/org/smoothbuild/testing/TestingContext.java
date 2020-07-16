@@ -25,10 +25,10 @@ import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -166,11 +166,11 @@ public class TestingContext {
     return objectDb().nothingType();
   }
 
-  public ConcreteArrayType arrayType(ConcreteType elementType) {
+  public ArrayType arrayType(BinaryType elementType) {
     return objectDb().arrayType(elementType);
   }
 
-  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
     return objectDb().structType(fieldTypes);
   }
 
@@ -179,7 +179,7 @@ public class TestingContext {
   }
 
   public StructType personType() {
-    ConcreteType string = stringType();
+    BinaryType string = stringType();
     return structType(list(string, string));
   }
 
@@ -199,7 +199,7 @@ public class TestingContext {
     return objectDb().blobBuilder();
   }
 
-  public ArrayBuilder arrayBuilder(ConcreteType elemType) {
+  public ArrayBuilder arrayBuilder(BinaryType elemType) {
     return objectDb().arrayBuilder(elemType);
   }
 
@@ -227,7 +227,7 @@ public class TestingContext {
     return array(elements[0].type(), elements);
   }
 
-  public Array array(ConcreteType elementType, SObject... elements) {
+  public Array array(BinaryType elementType, SObject... elements) {
     return objectDb().arrayBuilder(elementType).addAll(list(elements)).build();
   }
 

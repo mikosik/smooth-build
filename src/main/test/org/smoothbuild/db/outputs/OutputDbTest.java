@@ -15,7 +15,7 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -76,7 +76,7 @@ public class OutputDbTest extends TestingContext {
     file = file(path, bytes);
     array = arrayBuilder(objectFactory().fileType()).add(file).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ConcreteArrayType arrayType = arrayType(objectFactory().fileType());
+    ArrayType arrayType = arrayType(objectFactory().fileType());
 
     assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Struct.class))
         .containsExactly(file);
@@ -87,7 +87,7 @@ public class OutputDbTest extends TestingContext {
     blob = blob(bytes);
     array = arrayBuilder(blobType()).add(blob).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ConcreteArrayType arrayType = arrayType(blobType());
+    ArrayType arrayType = arrayType(blobType());
 
     assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Blob.class))
         .containsExactly(blob);
@@ -98,7 +98,7 @@ public class OutputDbTest extends TestingContext {
     boolValue = bool(true);
     array = arrayBuilder(boolType()).add(boolValue).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ConcreteArrayType arrayType = arrayType(boolType());
+    ArrayType arrayType = arrayType(boolType());
 
     assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Bool.class))
         .containsExactly(boolValue);
@@ -109,7 +109,7 @@ public class OutputDbTest extends TestingContext {
     stringValue = string(string);
     array = arrayBuilder(stringType()).add(stringValue).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ConcreteArrayType arrayType = arrayType(stringType());
+    ArrayType arrayType = arrayType(stringType());
 
     assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(SString.class))
         .containsExactly(stringValue);

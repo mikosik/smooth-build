@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.Struct;
-import org.smoothbuild.lang.object.type.ConcreteType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
@@ -23,7 +23,7 @@ public class CreateTupleAlgorithm implements Algorithm {
   }
 
   @Override
-  public ConcreteType type() {
+  public BinaryType type() {
     return constructedType;
   }
 

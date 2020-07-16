@@ -28,10 +28,10 @@ import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.type.ArrayType;
+import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
-import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.object.type.StructType;
@@ -45,7 +45,7 @@ import com.google.common.collect.ImmutableList;
  */
 public class ObjectDb {
   private final HashedDb hashedDb;
-  private final ConcurrentHashMap<Hash, ConcreteType> typeCache;
+  private final ConcurrentHashMap<Hash, BinaryType> typeCache;
 
   /**
    * Following fields are effectively immutable - they are set only once in {@link #initialize()}
@@ -89,7 +89,7 @@ public class ObjectDb {
 
   // methods for creating non-type SObjects or its builders
 
-  public ArrayBuilder arrayBuilder(ConcreteType elementType) {
+  public ArrayBuilder arrayBuilder(BinaryType elementType) {
     return new ArrayBuilder(arrayType(elementType), this);
   }
 
@@ -113,8 +113,8 @@ public class ObjectDb {
           " fields but provided " + fieldList.size() + ".");
     }
     for (int i = 0; i < types.size(); i++) {
-      ConcreteType specifiedType = types.get(i);
-      ConcreteType fieldType = fieldList.get(i).type();
+      BinaryType specifiedType = types.get(i);
+      BinaryType fieldType = fieldList.get(i).type();
       if (!specifiedType.equals(fieldType)) {
         throw new IllegalArgumentException("Type (Struct) specifies field at index " + i
             + " with type " + specifiedType + " but provided field has type " + fieldType
@@ -132,7 +132,7 @@ public class ObjectDb {
           // be Type("Type") smooth object. getType() will verify it.
           return getType(hash);
       } else {
-        ConcreteType type = getTypeOrWrapException(hashes.get(0), hash);
+        BinaryType type = getTypeOrWrapException(hashes.get(0), hash);
         Hash dataHash = hashes.get(1);
         return type.newJObject(new MerkleRoot(hash, type, dataHash));
       }
@@ -143,7 +143,7 @@ public class ObjectDb {
 
   // methods for returning type SObjects
 
-  public ConcreteArrayType arrayType(ConcreteType elementType) {
+  public ArrayType arrayType(BinaryType elementType) {
     return cacheType(wrapException(() -> newArrayType(elementType)));
   }
 
@@ -163,7 +163,7 @@ public class ObjectDb {
     return stringType;
   }
 
-  public StructType structType(Iterable<? extends ConcreteType> fieldTypes) {
+  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
     return cacheType(wrapException(() -> newStructType(fieldTypes)));
   }
 
@@ -171,7 +171,7 @@ public class ObjectDb {
     return typeType;
   }
 
-  private ConcreteType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
+  private BinaryType getTypeOrWrapException(Hash typeHash, Hash parentHash) {
     try {
       return getType(typeHash);
     } catch (ObjectDbException e) {
@@ -179,8 +179,8 @@ public class ObjectDb {
     }
   }
 
-  public ConcreteType getType(MerkleRoot merkleRoot) {
-    ConcreteType type = typeCache.get(merkleRoot.hash());
+  public BinaryType getType(MerkleRoot merkleRoot) {
+    BinaryType type = typeCache.get(merkleRoot.hash());
     if (type != null) {
       return type;
     } else {
@@ -188,8 +188,8 @@ public class ObjectDb {
     }
   }
 
-  private ConcreteType getType(Hash hash) {
-    ConcreteType type = typeCache.get(hash);
+  private BinaryType getType(Hash hash) {
+    BinaryType type = typeCache.get(hash);
     if (type != null) {
       return type;
     } else {
@@ -217,7 +217,7 @@ public class ObjectDb {
     }
   }
 
-  private ConcreteType readType(Hash hash, Hash dataHash) {
+  private BinaryType readType(Hash hash, Hash dataHash) {
     try {
       List<Hash> hashes = hashedDb.readHashes(dataHash, 1, 2);
       byte marker = hashedDb.readByte(hashes.get(0));
@@ -246,12 +246,12 @@ public class ObjectDb {
         }
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
-          ConcreteType elementType = getTypeOrWrapException(hashes.get(1), hash);
+          BinaryType elementType = getTypeOrWrapException(hashes.get(1), hash);
           yield cacheType(newArrayType(elementType, dataHash));
         }
         case TUPLE -> {
           assertSize(hash, TUPLE, hashes, 2);
-          ImmutableList<ConcreteType> fields = readStructTypeFieldTypes(hashes.get(1), hash);
+          ImmutableList<BinaryType> fields = readStructTypeFieldTypes(hashes.get(1), hash);
           yield cacheType(newStructType(fields, dataHash));
         }
       };
@@ -269,8 +269,8 @@ public class ObjectDb {
     }
   }
 
-  private ImmutableList<ConcreteType> readStructTypeFieldTypes(Hash hash, Hash parentHash) {
-    var builder = ImmutableList.<ConcreteType>builder();
+  private ImmutableList<BinaryType> readStructTypeFieldTypes(Hash hash, Hash parentHash) {
+    var builder = ImmutableList.<BinaryType>builder();
     List<Hash> fieldTypeHashes = readStructTypeFieldTypeHashes(hash, parentHash);
     for (int i = 0; i < fieldTypeHashes.size(); i++) {
       try {
@@ -292,7 +292,7 @@ public class ObjectDb {
     }
   }
 
-  private <T extends ConcreteType> T cacheType(T type) {
+  private <T extends BinaryType> T cacheType(T type) {
     @SuppressWarnings("unchecked")
     T result = (T) requireNonNullElse(typeCache.putIfAbsent(type.hash(), type), type);
     return result;
@@ -300,7 +300,7 @@ public class ObjectDb {
 
   // methods for creating type's SObjects
 
-  public Array newArray(ConcreteArrayType type, Iterable<? extends SObject> elements)
+  public Array newArray(ArrayType type, Iterable<? extends SObject> elements)
       throws HashedDbException {
     return type.newJObject(writeRoot(type, writeArrayData(elements)));
   }
@@ -321,24 +321,24 @@ public class ObjectDb {
     return type.newJObject(writeRoot(type, writeStructData(objects)));
   }
 
-  private ConcreteArrayType newArrayType(ConcreteType elementType) throws
+  private ArrayType newArrayType(BinaryType elementType) throws
       HashedDbException {
     Hash dataHash = writeArrayTypeData(elementType);
     return newArrayType(elementType, dataHash);
   }
 
-  private ConcreteArrayType newArrayType(ConcreteType elementType, Hash dataHash) throws
+  private ArrayType newArrayType(BinaryType elementType, Hash dataHash) throws
       HashedDbException {
-    return new ConcreteArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
+    return new ArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
   }
 
-  private StructType newStructType(Iterable<? extends ConcreteType> fieldTypes)
+  private StructType newStructType(Iterable<? extends BinaryType> fieldTypes)
       throws HashedDbException {
     Hash dataHash = writeStructTypeData(fieldTypes);
     return newStructType(fieldTypes, dataHash);
   }
 
-  private StructType newStructType(Iterable<? extends ConcreteType> fieldTypes,
+  private StructType newStructType(Iterable<? extends BinaryType> fieldTypes,
       Hash dataHash) throws HashedDbException {
     return new StructType(writeRoot(typeType, dataHash), fieldTypes, hashedDb, this);
   }
@@ -356,7 +356,7 @@ public class ObjectDb {
     return new MerkleRoot(hash, null, dataHash);
   }
 
-  private MerkleRoot writeRoot(ConcreteType type, Hash dataHash) throws HashedDbException {
+  private MerkleRoot writeRoot(BinaryType type, Hash dataHash) throws HashedDbException {
     Hash hash = hashedDb.writeHashes(type.hash(), dataHash);
     return new MerkleRoot(hash, type, dataHash);
   }
@@ -384,13 +384,13 @@ public class ObjectDb {
     return hashedDb.writeHashes(hashes);
   }
 
-  private Hash writeArrayTypeData(ConcreteType elementType) throws HashedDbException {
+  private Hash writeArrayTypeData(BinaryType elementType) throws HashedDbException {
     return writeNonBasicTypeData(ARRAY, elementType.hash());
   }
 
-  private Hash writeStructTypeData(Iterable<? extends ConcreteType> fieldTypes)
+  private Hash writeStructTypeData(Iterable<? extends BinaryType> fieldTypes)
       throws HashedDbException {
-    Hash fields = hashedDb.writeHashes(map(fieldTypes, ConcreteType::hash));
+    Hash fields = hashedDb.writeHashes(map(fieldTypes, BinaryType::hash));
     return writeNonBasicTypeData(TUPLE, fields);
   }
 

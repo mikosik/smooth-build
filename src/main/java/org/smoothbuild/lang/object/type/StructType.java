@@ -13,10 +13,10 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class StructType extends ConcreteType {
-  private final ImmutableList<ConcreteType> fieldTypes;
+public class StructType extends BinaryType {
+  private final ImmutableList<BinaryType> fieldTypes;
 
-  public StructType(MerkleRoot merkleRoot, Iterable<? extends ConcreteType> fieldTypes,
+  public StructType(MerkleRoot merkleRoot, Iterable<? extends BinaryType> fieldTypes,
       HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, TUPLE, hashedDb, objectDb);
     this.fieldTypes = ImmutableList.copyOf(fieldTypes);
@@ -28,7 +28,7 @@ public class StructType extends ConcreteType {
     return new Struct(merkleRoot, objectDb, hashedDb);
   }
 
-  public ImmutableList<ConcreteType> fieldTypes() {
+  public ImmutableList<BinaryType> fieldTypes() {
     return fieldTypes;
   }
 }

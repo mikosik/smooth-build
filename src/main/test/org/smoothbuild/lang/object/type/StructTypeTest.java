@@ -12,7 +12,7 @@ import com.google.common.collect.Lists;
 
 public class StructTypeTest extends AbstractTypeTestCase {
   @Override
-  protected ConcreteType getType(ObjectDb objectDb) {
+  protected BinaryType getType(ObjectDb objectDb) {
     return objectDb.structType(List.of(objectDb.stringType(), objectDb.stringType()));
   }
 
@@ -23,7 +23,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
 
   @Test
   public void struct_type_with_different_field_order_has_different_hash() {
-    List<ConcreteType> fields = List.of(stringType(), blobType());
+    List<BinaryType> fields = List.of(stringType(), blobType());
     StructType type = structType(fields);
     StructType type2 = structType(Lists.reverse(fields));
     assertThat(type.hash())
@@ -33,7 +33,7 @@ public class StructTypeTest extends AbstractTypeTestCase {
   @Test
   public void two_level_deep_struct_type_can_be_read_back() {
     StructType type = structType(List.of(stringType(), stringType()));
-    assertTypesAreDeeplyEqual((ConcreteType) objectDbOther().get(type.hash()), type);
+    assertTypesAreDeeplyEqual((BinaryType) objectDbOther().get(type.hash()), type);
   }
 
   @Test

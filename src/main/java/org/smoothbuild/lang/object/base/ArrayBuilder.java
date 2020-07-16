@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.smoothbuild.lang.object.db.ObjectDb;
-import org.smoothbuild.lang.object.type.ConcreteArrayType;
+import org.smoothbuild.lang.object.type.ArrayType;
 
 public class ArrayBuilder {
-  private final ConcreteArrayType type;
+  private final ArrayType type;
   private final ObjectDb objectDb;
   private final List<SObject> elements;
 
-  public ArrayBuilder(ConcreteArrayType type, ObjectDb objectDb) {
+  public ArrayBuilder(ArrayType type, ObjectDb objectDb) {
     this.type = type;
     this.objectDb = objectDb;
     this.elements = new ArrayList<>();
