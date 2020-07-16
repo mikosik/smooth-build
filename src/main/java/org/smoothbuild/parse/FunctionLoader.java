@@ -20,7 +20,6 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.parse.ast.AccessorNode;
 import org.smoothbuild.parse.ast.ArgNode;
 import org.smoothbuild.parse.ast.ArrayNode;
@@ -42,8 +41,7 @@ public class FunctionLoader {
   public static Callable loadFunction(
       FuncNode func,
       ImmutableMap<String, Callable> importedCallables,
-      HashMap<String, Callable> localCallables,
-      ObjectFactory objectFactory) {
+      HashMap<String, Callable> localCallables) {
     return new Supplier<Callable>() {
       @Override
       public Callable get() {
@@ -143,7 +141,6 @@ public class FunctionLoader {
 
       private Expression createStringLiteral(StringNode string) {
         return new StringLiteralExpression(
-            objectFactory.stringType(),
             string.unescapedValue(),
             string.location());
       }

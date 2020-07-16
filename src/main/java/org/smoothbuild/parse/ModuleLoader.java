@@ -19,7 +19,6 @@ import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.parse.ast.Ast;
 import org.smoothbuild.parse.ast.FuncNode;
 import org.smoothbuild.parse.ast.ItemNode;
@@ -29,8 +28,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleLoader {
-  public static Definitions loadModule(ObjectFactory objectFactory, Definitions imported,
-      ModulePath modulePath, LoggerImpl logger) {
+  public static Definitions loadModule(Definitions imported, ModulePath modulePath,
+      LoggerImpl logger) {
     Natives natives = findNatives(modulePath.nativ().path(), logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
@@ -56,22 +55,21 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    var declaredFunctions = loadFunctions(imported, sortedAst, objectFactory);
+    var declaredFunctions = loadFunctions(imported, sortedAst);
     var declaredTypes = sortedAst.structs().stream()
         .map(structNode -> structNode.type().get())
         .collect(toImmutableMap(Type::name, t -> t));
     return new Definitions(declaredTypes, declaredFunctions);
   }
 
-  private static ImmutableMap<String, Callable> loadFunctions(
-      Definitions imported, Ast ast, ObjectFactory objectFactory) {
+  private static ImmutableMap<String, Callable> loadFunctions(Definitions imported, Ast ast) {
     var localFunctions = new HashMap<String, Callable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
     }
     for (FuncNode func : ast.funcs()) {
-      Callable function = loadFunction(func, imported.callables(), localFunctions, objectFactory);
+      Callable function = loadFunction(func, imported.callables(), localFunctions);
       localFunctions.put(function.name(), function);
     }
     return ImmutableMap.copyOf(localFunctions);

@@ -17,20 +17,17 @@ import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 
 import com.google.common.collect.ImmutableMap;
 
 public class RuntimeController {
-  private final ObjectFactory objectFactory;
   private final InstallationPaths installationPaths;
   private final ProjectPaths projectPaths;
   private final Reporter reporter;
 
   @Inject
-  public RuntimeController(ObjectFactory objectFactory, InstallationPaths installationPaths,
-      ProjectPaths projectPaths, Reporter reporter) {
-    this.objectFactory = objectFactory;
+  public RuntimeController(InstallationPaths installationPaths, ProjectPaths projectPaths,
+      Reporter reporter) {
     this.installationPaths = installationPaths;
     this.projectPaths = projectPaths;
     this.reporter = reporter;
@@ -44,7 +41,7 @@ public class RuntimeController {
     Definitions definitions = new Definitions(basicTypes, ImmutableMap.of());
     for (ModulePath mPath : concat(installationPaths.slibModules(), projectPaths.userModule())) {
       try (LoggerImpl logger = new LoggerImpl(mPath.smooth().shorted(), reporter)) {
-        Definitions module = loadModule(objectFactory, definitions, mPath, logger);
+        Definitions module = loadModule(definitions, mPath, logger);
         definitions = Definitions.union(definitions, module);
       }
       if (reporter.isProblemReported()) {
