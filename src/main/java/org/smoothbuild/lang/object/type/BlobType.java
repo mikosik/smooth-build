@@ -13,7 +13,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
  */
 public class BlobType extends ConcreteType {
   public BlobType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, BLOB, Blob.class, hashedDb, objectDb);
+    super(merkleRoot, BLOB, hashedDb, objectDb);
   }
 
   @Override

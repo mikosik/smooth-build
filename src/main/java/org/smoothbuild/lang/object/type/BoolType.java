@@ -13,7 +13,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
  */
 public class BoolType extends ConcreteType {
   public BoolType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, BOOL, Bool.class, hashedDb, objectDb);
+    super(merkleRoot, BOOL, hashedDb, objectDb);
   }
 
   @Override

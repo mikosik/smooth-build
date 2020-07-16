@@ -18,7 +18,7 @@ public class StructType extends ConcreteType {
 
   public StructType(MerkleRoot merkleRoot, Iterable<? extends ConcreteType> fieldTypes,
       HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, TUPLE, Struct.class, hashedDb, objectDb);
+    super(merkleRoot, TUPLE, hashedDb, objectDb);
     this.fieldTypes = ImmutableList.copyOf(fieldTypes);
   }
 
