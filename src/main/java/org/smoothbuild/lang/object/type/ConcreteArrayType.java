@@ -17,7 +17,7 @@ public class ConcreteArrayType extends ConcreteType implements ArrayType {
 
   public ConcreteArrayType(MerkleRoot merkleRoot, ConcreteType elemType, HashedDb hashedDb,
       ObjectDb objectDb) {
-    super(merkleRoot, ARRAY, Array.class, hashedDb, objectDb);
+    super(merkleRoot, ARRAY, hashedDb, objectDb);
     this.elemType = checkNotNull(elemType);
   }
 

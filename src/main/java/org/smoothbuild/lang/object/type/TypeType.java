@@ -11,7 +11,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
  */
 public class TypeType extends ConcreteType {
   public TypeType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, TYPE, ConcreteType.class, hashedDb, objectDb);
+    super(merkleRoot, TYPE, hashedDb, objectDb);
   }
 
   @Override

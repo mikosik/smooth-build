@@ -5,12 +5,10 @@ import static org.smoothbuild.lang.object.type.TypeKind.NOTHING;
 import org.smoothbuild.lang.object.base.SObject;
 
 public abstract class AbstractType implements Type {
-  private final Class<? extends SObject> jType;
   private final TypeKind kind;
 
-  public AbstractType(TypeKind kind, Class<? extends SObject> jType) {
+  public AbstractType(TypeKind kind) {
     this.kind = kind;
-    this.jType = jType;
   }
 
   @Override
@@ -25,7 +23,7 @@ public abstract class AbstractType implements Type {
 
   @Override
   public Class<? extends SObject> jType() {
-    return jType;
+    return kind.jType();
   }
 
   @Override

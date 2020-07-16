@@ -43,6 +43,7 @@ public abstract class AbstractTypeTestCase extends TestingContext {
         && expected.hash().equals(actual.hash())
         && expected.dataHash().equals(actual.dataHash())
         && expected.isNothing() == actual.isNothing()
+        && expected.kind().equals(actual.kind())
         && expected.jType().equals(actual.jType())
         && expected.type().equals(expected.type())
         && expected.toString().equals(expected.toString()))

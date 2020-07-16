@@ -19,9 +19,9 @@ public abstract class ConcreteType extends AbstractType implements SObject {
   protected final HashedDb hashedDb;
   protected final ObjectDb objectDb;
 
-  protected ConcreteType(MerkleRoot merkleRoot, TypeKind kind, Class<? extends SObject> jType,
-      HashedDb hashedDb, ObjectDb objectDb) {
-    super(kind, jType);
+  protected ConcreteType(MerkleRoot merkleRoot, TypeKind kind, HashedDb hashedDb,
+      ObjectDb objectDb) {
+    super(kind);
     this.object = new SObjectImpl(merkleRoot, hashedDb);
     this.hashedDb = hashedDb;
     this.objectDb = objectDb;

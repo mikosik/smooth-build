@@ -13,7 +13,7 @@ import org.smoothbuild.lang.object.db.ObjectDb;
  */
 public class StringType extends ConcreteType {
   public StringType(MerkleRoot merkleRoot, HashedDb hashedDb, ObjectDb objectDb) {
-    super(merkleRoot, STRING, SString.class, hashedDb, objectDb);
+    super(merkleRoot, STRING, hashedDb, objectDb);
   }
 
   @Override
