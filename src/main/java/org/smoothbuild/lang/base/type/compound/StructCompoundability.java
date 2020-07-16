@@ -5,7 +5,7 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 public class StructCompoundability extends DefaultCompoundability {
   @Override
@@ -27,6 +27,6 @@ public class StructCompoundability extends DefaultCompoundability {
 
   @Override
   public Class<? extends SObject> jType() {
-    return Struct.class;
+    return Tuple.class;
   }
 }

@@ -8,7 +8,7 @@ import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
@@ -44,7 +44,7 @@ public class ConvertAlgorithm implements Algorithm {
       return new Output(convertArray(nativeApi, (Array) object, destinationType), nativeApi.messages());
     }
     assertThat(!object.type().isNothing());
-    return new Output(convertStruct((Struct) object, destinationType), nativeApi.messages());
+    return new Output(convertStruct((Tuple) object, destinationType), nativeApi.messages());
   }
 
   private static SObject convertArray(NativeApi nativeApi, Array array,
@@ -55,19 +55,19 @@ public class ConvertAlgorithm implements Algorithm {
       if (element instanceof Array) {
         builder.add(convertArray(nativeApi, (Array) element, elemType));
       } else {
-        builder.add(convertStruct((Struct) element, elemType));
+        builder.add(convertStruct((Tuple) element, elemType));
       }
     }
     return builder.build();
   }
 
-  private static SObject convertStruct(Struct struct,
+  private static SObject convertStruct(Tuple tuple,
       BinaryType destinationType) {
-    SObject superObject = struct.superObject();
+    SObject superObject = tuple.superObject();
     if (superObject.type().equals(destinationType)) {
       return superObject;
     }
-    return convertStruct((Struct) superObject, destinationType);
+    return convertStruct((Tuple) superObject, destinationType);
   }
 
   private static void assertThat(boolean expression) {

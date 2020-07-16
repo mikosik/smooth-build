@@ -22,7 +22,7 @@ import org.smoothbuild.lang.object.base.BlobBuilder;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
@@ -31,7 +31,7 @@ import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.lang.object.type.TypeType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
@@ -170,20 +170,20 @@ public class TestingContext {
     return objectDb().arrayType(elementType);
   }
 
-  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
+  public TupleType structType(Iterable<? extends BinaryType> fieldTypes) {
     return objectDb().structType(fieldTypes);
   }
 
-  public StructType emptyType() {
+  public TupleType emptyType() {
     return structType(list());
   }
 
-  public StructType personType() {
+  public TupleType personType() {
     BinaryType string = stringType();
     return structType(list(string, string));
   }
 
-  public StructType fileType() {
+  public TupleType fileType() {
     return structType(list(blobType(), stringType()));
   }
 
@@ -203,15 +203,15 @@ public class TestingContext {
     return objectDb().arrayBuilder(elemType);
   }
 
-  public Struct struct(StructType type, Iterable<? extends SObject> fields) {
+  public Tuple struct(TupleType type, Iterable<? extends SObject> fields) {
     return objectDb().struct(type, fields);
   }
 
-  public Struct empty() {
+  public Tuple empty() {
     return struct(emptyType(), ImmutableList.of());
   }
 
-  public Struct person(String firstName, String lastName) {
+  public Tuple person(String firstName, String lastName) {
     return struct(personType(), ImmutableList.of(string(firstName), string(lastName)));
   }
 
@@ -243,11 +243,11 @@ public class TestingContext {
     return objectFactory().infoMessage(text);
   }
 
-  public Struct file(Path path) {
+  public Tuple file(Path path) {
     return file(path, ByteString.encodeString(path.toString(), CHARSET));
   }
 
-  public Struct file(Path path, ByteString content) {
+  public Tuple file(Path path, ByteString content) {
     SString string = objectFactory().string(path.toString());
     Blob blob = blob(content);
     return objectFactory().file(string, blob);

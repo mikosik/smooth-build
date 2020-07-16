@@ -15,14 +15,14 @@ import org.smoothbuild.lang.object.base.BlobBuilder;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.util.io.DataWriter;
 
 import com.google.common.collect.ImmutableList;
@@ -34,8 +34,8 @@ import com.google.common.collect.ImmutableList;
 @Singleton
 public class ObjectFactory {
   private final ObjectDb objectDb;
-  private final StructType messageType;
-  private final StructType fileType;
+  private final TupleType messageType;
+  private final TupleType fileType;
 
   @Inject
   public ObjectFactory(ObjectDb objectDb) {
@@ -44,12 +44,12 @@ public class ObjectFactory {
     this.fileType = createFileType(objectDb);
   }
 
-  private static StructType createMessageType(ObjectDb objectDb) {
+  private static TupleType createMessageType(ObjectDb objectDb) {
     StringType stringType = objectDb.stringType();
     return objectDb.structType(ImmutableList.of(stringType, stringType));
   }
 
-  private static StructType createFileType(ObjectDb objectDb) {
+  private static TupleType createFileType(ObjectDb objectDb) {
     return objectDb.structType(ImmutableList.of(objectDb.blobType(), objectDb.stringType()));
   }
 
@@ -72,7 +72,7 @@ public class ObjectFactory {
     return objectDb.bool(value);
   }
 
-  public Struct file(SString path, Blob content) {
+  public Tuple file(SString path, Blob content) {
     return objectDb.struct(fileType(), ImmutableList.of(content, path));
   }
 
@@ -80,7 +80,7 @@ public class ObjectFactory {
     return objectDb.string(string);
   }
 
-  public Struct struct(StructType type, Iterable<? extends SObject> fields) {
+  public Tuple struct(TupleType type, Iterable<? extends SObject> fields) {
     return objectDb.struct(type, fields);
   }
 
@@ -96,11 +96,11 @@ public class ObjectFactory {
     return objectDb.boolType();
   }
 
-  public StructType fileType() {
+  public TupleType fileType() {
     return fileType;
   }
 
-  public StructType messageType() {
+  public TupleType messageType() {
     return messageType;
   }
 
@@ -112,23 +112,23 @@ public class ObjectFactory {
     return objectDb.stringType();
   }
 
-  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
+  public TupleType structType(Iterable<? extends BinaryType> fieldTypes) {
     return objectDb.structType(fieldTypes);
   }
 
-  public Struct errorMessage(String text) {
+  public Tuple errorMessage(String text) {
     return message(ERROR, text);
   }
 
-  public Struct warningMessage(String text) {
+  public Tuple warningMessage(String text) {
     return message(WARNING, text);
   }
 
-  public Struct infoMessage(String text) {
+  public Tuple infoMessage(String text) {
     return message(INFO, text);
   }
 
-  private Struct message(String severity, String text) {
+  private Tuple message(String severity, String text) {
     SObject textObject = objectDb.string(text);
     SObject severityObject = objectDb.string(severity);
     return objectDb.struct(messageType(), ImmutableList.of(textObject, severityObject));

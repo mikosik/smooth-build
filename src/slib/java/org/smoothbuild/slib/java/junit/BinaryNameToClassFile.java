@@ -10,7 +10,7 @@ import java.util.Map;
 
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.slib.compress.UnzipFunction;
@@ -18,13 +18,13 @@ import org.smoothbuild.util.DuplicatesDetector;
 
 public class BinaryNameToClassFile {
 
-  public static Map<String, Struct> binaryNameToClassFile(NativeApi nativeApi,
+  public static Map<String, Tuple> binaryNameToClassFile(NativeApi nativeApi,
       Iterable<Blob> libraryJars) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
-    Map<String, Struct> binaryNameToClassFile = new HashMap<>();
+    Map<String, Tuple> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
       Array fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (Struct classFile : fileArray.asIterable(Struct.class)) {
+      for (Tuple classFile : fileArray.asIterable(Tuple.class)) {
         String classFilePath = (filePath(classFile)).jValue();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {

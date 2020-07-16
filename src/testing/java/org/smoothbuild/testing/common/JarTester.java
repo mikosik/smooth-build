@@ -9,7 +9,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;
@@ -17,10 +17,10 @@ import okio.BufferedSource;
 
 public class JarTester {
 
-  public static Blob jar(Struct... files) throws IOException {
+  public static Blob jar(Tuple... files) throws IOException {
     Buffer buffer = new Buffer();
     try (JarOutputStream jarOutputStream = new JarOutputStream(buffer.outputStream())) {
-      for (Struct file : files) {
+      for (Tuple file : files) {
         addEntry(jarOutputStream, file);
       }
     }
@@ -28,7 +28,7 @@ public class JarTester {
     return new TestingContext().blob(buffer.readByteString());
   }
 
-  private static void addEntry(JarOutputStream jarOutputStream, Struct file) throws IOException {
+  private static void addEntry(JarOutputStream jarOutputStream, Tuple file) throws IOException {
     JarEntry entry = new JarEntry(filePath(file).jValue());
     jarOutputStream.putNextEntry(entry);
     try (BufferedSource source = fileContent(file).source()) {

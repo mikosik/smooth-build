@@ -18,7 +18,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.ArrayType;
@@ -74,8 +74,8 @@ public class OutputDb {
       }
 
       Array messages = (Array) messagesObject;
-      Iterable<Struct> structs = messages.asIterable(Struct.class);
-      for (Struct m : structs) {
+      Iterable<Tuple> structs = messages.asIterable(Tuple.class);
+      for (Tuple m : structs) {
         String severity = severity(m);
         if (!isValidSeverity(severity)) {
           throw corruptedValueException(taskHash,

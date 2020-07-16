@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.testing.TestingContext;
 
-public class StructArrayTest extends TestingContext {
+public class TupleArrayTest extends TestingContext {
 
   @Test
   public void type_of_struct_array_is_struct_array() {

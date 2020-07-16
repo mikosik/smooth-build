@@ -15,7 +15,7 @@ import java.util.jar.Manifest;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.BlobBuilder;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -29,7 +29,7 @@ public class JarFunction {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();
     try (JarOutputStream jarOutputStream = createOutputStream(blobBuilder, manifest)) {
-      for (Struct file : files.asIterable(Struct.class)) {
+      for (Tuple file : files.asIterable(Tuple.class)) {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot jar two files with the same path = " + path);
@@ -53,7 +53,7 @@ public class JarFunction {
     }
   }
 
-  private static void jarFile(Struct file, JarOutputStream jarOutputStream)
+  private static void jarFile(Tuple file, JarOutputStream jarOutputStream)
       throws IOException {
     jarOutputStream.putNextEntry(new JarEntry(filePath(file).jValue()));
     try (BufferedSource source = fileContent(file).source()) {

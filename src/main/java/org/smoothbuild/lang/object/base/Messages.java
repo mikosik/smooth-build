@@ -15,7 +15,7 @@ public class Messages {
   private static final ImmutableSet<String> SEVERITIES = ImmutableSet.of(ERROR, WARNING, INFO);
 
   public static boolean containsErrors(Array messages) {
-    return stream(messages.asIterable(Struct.class))
+    return stream(messages.asIterable(Tuple.class))
         .anyMatch(m -> severity(m).equals(ERROR));
   }
 
@@ -24,7 +24,7 @@ public class Messages {
   }
 
   public static boolean isEmpty(Array messages) {
-    return !messages.asIterable(Struct.class).iterator().hasNext();
+    return !messages.asIterable(Tuple.class).iterator().hasNext();
   }
 
   public static Level level(SObject message) {
@@ -32,10 +32,10 @@ public class Messages {
   }
 
   public static String severity(SObject message) {
-    return messageSeverity((Struct) message).jValue();
+    return messageSeverity((Tuple) message).jValue();
   }
 
   public static String text(SObject message) {
-    return messageText((Struct) message).jValue();
+    return messageText((Tuple) message).jValue();
   }
 }

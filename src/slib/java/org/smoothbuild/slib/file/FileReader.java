@@ -6,7 +6,7 @@ import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 import okio.BufferedSource;
 
@@ -17,7 +17,7 @@ public class FileReader {
     this.container = container;
   }
 
-  public Struct createFile(Path path, Path projectPath) throws IOException {
+  public Tuple createFile(Path path, Path projectPath) throws IOException {
     return container.factory().file(createPath(path), createContent(projectPath));
   }
 

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSink;
@@ -77,7 +77,7 @@ public class TempDirTest extends TestingContext {
     try (BufferedSink sink = fullFileSystem().sink(rootPath.append(path))) {
       sink.write(bytes);
     }
-    assertThat(tempDir.readFiles().asIterable(Struct.class))
+    assertThat(tempDir.readFiles().asIterable(Tuple.class))
         .containsExactly(file(path, bytes));
   }
 

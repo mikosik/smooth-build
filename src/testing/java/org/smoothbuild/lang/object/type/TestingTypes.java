@@ -11,8 +11,8 @@ public class TestingTypes {
   public static final BinaryType string = objectDb.stringType();
   public static final BinaryType blob = objectDb.blobType();
   public static final BinaryType nothing = objectDb.nothingType();
-  public static final StructType person = context.personType();
-  public static final StructType file = context.fileType();
+  public static final TupleType person = context.personType();
+  public static final TupleType file = context.fileType();
 
   public static final ArrayType arrayType = array(type);
   public static final ArrayType arrayBool = array(bool);

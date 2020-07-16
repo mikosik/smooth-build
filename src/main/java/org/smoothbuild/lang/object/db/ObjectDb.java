@@ -27,14 +27,14 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.MerkleRoot;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.object.type.BlobType;
 import org.smoothbuild.lang.object.type.BoolType;
 import org.smoothbuild.lang.object.type.NothingType;
 import org.smoothbuild.lang.object.type.StringType;
-import org.smoothbuild.lang.object.type.StructType;
+import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.lang.object.type.TypeKind;
 import org.smoothbuild.lang.object.type.TypeType;
 
@@ -105,9 +105,9 @@ public class ObjectDb {
     return wrapException(() -> newString(string));
   }
 
-  public Struct struct(StructType structType, Iterable<? extends SObject> fields) {
+  public Tuple struct(TupleType tupleType, Iterable<? extends SObject> fields) {
     List<SObject> fieldList = ImmutableList.copyOf(fields);
-    var types = structType.fieldTypes();
+    var types = tupleType.fieldTypes();
     if (types.size() != fieldList.size()) {
       throw new IllegalArgumentException("Type specifies " + types.size() +
           " fields but provided " + fieldList.size() + ".");
@@ -121,7 +121,7 @@ public class ObjectDb {
             + " at that index.");
       }
     }
-    return wrapException(() ->newStruct(structType, fieldList));
+    return wrapException(() ->newStruct(tupleType, fieldList));
   }
 
   public SObject get(Hash hash) {
@@ -163,7 +163,7 @@ public class ObjectDb {
     return stringType;
   }
 
-  public StructType structType(Iterable<? extends BinaryType> fieldTypes) {
+  public TupleType structType(Iterable<? extends BinaryType> fieldTypes) {
     return cacheType(wrapException(() -> newStructType(fieldTypes)));
   }
 
@@ -317,7 +317,7 @@ public class ObjectDb {
     return stringType.newJObject(writeRoot(stringType, writeStringData(string)));
   }
 
-  private Struct newStruct(StructType type, List<?extends SObject> objects) throws HashedDbException {
+  private Tuple newStruct(TupleType type, List<?extends SObject> objects) throws HashedDbException {
     return type.newJObject(writeRoot(type, writeStructData(objects)));
   }
 
@@ -332,15 +332,15 @@ public class ObjectDb {
     return new ArrayType(writeRoot(typeType, dataHash), elementType, hashedDb, this);
   }
 
-  private StructType newStructType(Iterable<? extends BinaryType> fieldTypes)
+  private TupleType newStructType(Iterable<? extends BinaryType> fieldTypes)
       throws HashedDbException {
     Hash dataHash = writeStructTypeData(fieldTypes);
     return newStructType(fieldTypes, dataHash);
   }
 
-  private StructType newStructType(Iterable<? extends BinaryType> fieldTypes,
+  private TupleType newStructType(Iterable<? extends BinaryType> fieldTypes,
       Hash dataHash) throws HashedDbException {
-    return new StructType(writeRoot(typeType, dataHash), fieldTypes, hashedDb, this);
+    return new TupleType(writeRoot(typeType, dataHash), fieldTypes, hashedDb, this);
   }
 
   // methods for writing Merkle node(s) to HashedDb

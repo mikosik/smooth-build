@@ -17,7 +17,7 @@ import javax.tools.ToolProvider;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -64,7 +64,7 @@ public class JavacFunction {
       LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
       Iterable<String> options = options();
       try (SandboxedJavaFileManager fileManager = fileManager(diagnostic)) {
-        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(Struct.class));
+        Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(Tuple.class));
 
         /*
          * Java compiler fails miserably when there's no java files.
@@ -108,9 +108,9 @@ public class JavacFunction {
       return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
-    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Struct> sourceFiles) {
+    private static Iterable<InputSourceFile> toJavaFiles(Iterable<Tuple> sourceFiles) {
       ArrayList<InputSourceFile> result = new ArrayList<>();
-      for (Struct file : sourceFiles) {
+      for (Tuple file : sourceFiles) {
         result.add(new InputSourceFile(file));
       }
       return result;

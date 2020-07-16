@@ -5,21 +5,21 @@ import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 import okio.BufferedSource;
 
 public class FileClassLoader extends ClassLoader {
-  private final Map<String, Struct> binaryNameToFile;
+  private final Map<String, Tuple> binaryNameToFile;
 
-  public FileClassLoader(Map<String, Struct> binaryNameToFile) {
+  public FileClassLoader(Map<String, Tuple> binaryNameToFile) {
     super(FileClassLoader.class.getClassLoader());
     this.binaryNameToFile = binaryNameToFile;
   }
 
   @Override
   public Class<?> findClass(String name) throws ClassNotFoundException {
-    Struct file = binaryNameToFile.get(name);
+    Tuple file = binaryNameToFile.get(name);
     if (file == null) {
       throw new ClassNotFoundException(name);
     }
@@ -32,7 +32,7 @@ public class FileClassLoader extends ClassLoader {
     }
   }
 
-  private byte[] fileToByteArray(Struct file) throws IOException {
+  private byte[] fileToByteArray(Tuple file) throws IOException {
     try (BufferedSource source = fileContent(file).source()) {
       return source.readByteArray();
     }

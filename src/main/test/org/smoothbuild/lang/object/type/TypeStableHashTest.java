@@ -24,7 +24,7 @@ public class TypeStableHashTest extends TestingContext {
     assertHash(structType(objectDb()), "da349340eec7fba9b53d46faff52893f56c37947");
   }
 
-  private StructType structType(ObjectDb objectDb) {
+  private TupleType structType(ObjectDb objectDb) {
     return objectDb.structType(list(objectDb.stringType(), objectDb.blobType()));
   }
 

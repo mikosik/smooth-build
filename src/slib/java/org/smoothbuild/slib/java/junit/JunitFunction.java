@@ -19,7 +19,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -31,10 +31,10 @@ public class JunitFunction {
   public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include)
       throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
-    Map<String, Struct> testFiles = stream(unzipped.asIterable(Struct.class).spliterator(), false)
+    Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
         .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
-    Map<String, Struct> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
-    for (Entry<String, Struct> entry : testFiles.entrySet()) {
+    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
+    for (Entry<String, Tuple> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
         nativeApi.log().error("Both 'tests' and 'deps' contains class " + entry.getValue());
         return null;
@@ -75,7 +75,7 @@ public class JunitFunction {
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
-      Map<String, Struct> binaryNameToClassFile, FileClassLoader classLoader) {
+      Map<String, Tuple> binaryNameToClassFile, FileClassLoader classLoader) {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
       return JUnitCoreWrapper.newInstance(nativeApi,
           loadClass(nativeApi, classLoader, "org.junit.runner.JUnitCore"));

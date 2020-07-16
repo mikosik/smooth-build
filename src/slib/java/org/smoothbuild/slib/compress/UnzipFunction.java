@@ -21,7 +21,7 @@ import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
 import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
@@ -45,7 +45,7 @@ public class UnzipFunction {
           ZipEntry entry = entries.nextElement();
           String name = entry.getName();
           if (!name.endsWith("/") && filter.test(name)) {
-            Struct unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+            Tuple unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
             String fileName = filePath(unzippedEntry).jValue();
             if (duplicatesDetector.addValue(fileName)) {
               nativeApi.log().error("archive contains two files with the same path = " + fileName);
@@ -69,7 +69,7 @@ public class UnzipFunction {
     return tempFile;
   }
 
-  private static Struct unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry)
+  private static Tuple unzipEntry(NativeApi nativeApi, InputStream inputStream, ZipEntry entry)
       throws IOException {
     String fileName = entry.getName();
     try {

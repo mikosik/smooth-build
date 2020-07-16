@@ -9,7 +9,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.ArrayBuilder;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSink;
@@ -26,7 +26,7 @@ public class OutputClassFileTest extends TestingContext {
     try (BufferedSink sink = buffer(sink(outputClassFile.openOutputStream()))) {
       sink.write(bytes);
     }
-    assertThat(fileArrayBuilder.build().asIterable(Struct.class))
+    assertThat(fileArrayBuilder.build().asIterable(Tuple.class))
         .containsExactly(file(path, bytes));
   }
 

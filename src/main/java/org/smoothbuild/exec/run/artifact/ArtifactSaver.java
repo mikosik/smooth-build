@@ -17,7 +17,7 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -40,13 +40,13 @@ public class ArtifactSaver {
     if (object instanceof Array) {
       return saveArray(artifactPath, (Array) object);
     } else if (object.type().equals(objectFactory.fileType())) {
-      return saveFile(artifactPath, (Struct) object);
+      return saveFile(artifactPath, (Tuple) object);
     } else {
       return saveBasicObject(artifactPath, object);
     }
   }
 
-  private Path saveFile(Path artifactPath, Struct file) throws IOException, DuplicatedPathsException {
+  private Path saveFile(Path artifactPath, Tuple file) throws IOException, DuplicatedPathsException {
     saveFileArray(artifactPath, List.of(file));
     return artifactPath.append(fileObjectPath(file));
   }
@@ -61,7 +61,7 @@ public class ArtifactSaver {
         i++;
       }
     } else if (elemType.equals(objectFactory.fileType())) {
-      saveFileArray(artifactPath, array.asIterable(Struct.class));
+      saveFileArray(artifactPath, array.asIterable(Tuple.class));
     } else {
       saveObjectArray(artifactPath, array);
     }
@@ -78,10 +78,10 @@ public class ArtifactSaver {
     }
   }
 
-  private void saveFileArray(Path artifactPath, Iterable<Struct> files) throws IOException,
+  private void saveFileArray(Path artifactPath, Iterable<Tuple> files) throws IOException,
       DuplicatedPathsException {
     DuplicatesDetector<Path> duplicatesDetector = new DuplicatesDetector<>();
-    for (Struct file : files) {
+    for (Tuple file : files) {
       Path filePath = fileObjectPath(file);
       Path sourcePath = artifactPath.append(filePath);
       if (!duplicatesDetector.addValue(filePath)) {
@@ -113,7 +113,7 @@ public class ArtifactSaver {
     return artifactPath;
   }
 
-  private static Path fileObjectPath(Struct file) {
+  private static Path fileObjectPath(Tuple file) {
     return path(filePath(file).jValue());
   }
 }

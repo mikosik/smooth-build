@@ -6,12 +6,12 @@ import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.Nothing;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 public enum TypeKind {
   TYPE((byte) 0, BinaryType.class),
   NOTHING((byte) 1, Nothing.class),
-  TUPLE((byte) 2, Struct.class),
+  TUPLE((byte) 2, Tuple.class),
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),

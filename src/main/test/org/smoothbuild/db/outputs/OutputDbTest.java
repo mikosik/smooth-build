@@ -14,7 +14,7 @@ import org.smoothbuild.lang.object.base.Blob;
 import org.smoothbuild.lang.object.base.Bool;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.object.type.ArrayType;
 import org.smoothbuild.testing.TestingContext;
 
@@ -26,7 +26,7 @@ public class OutputDbTest extends TestingContext {
   private Path path = path("file/path");
 
   private Array array;
-  private Struct file;
+  private Tuple file;
   private Blob blob;
   private Bool boolValue;
   private SString stringValue;
@@ -78,7 +78,7 @@ public class OutputDbTest extends TestingContext {
     outputDb().write(hash, new Output(array, emptyMessageArray()));
     ArrayType arrayType = arrayType(objectFactory().fileType());
 
-    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Struct.class))
+    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Tuple.class))
         .containsExactly(file);
   }
 

@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.slib.compress.UnzipFunction;
@@ -20,7 +20,7 @@ public class PackagedJavaFileObjects {
     Set<InputClassFile> result = new HashSet<>();
     for (Blob jarBlob : libraryJars) {
       Array files = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
-      for (Struct file : files.asIterable(Struct.class)) {
+      for (Tuple file : files.asIterable(Tuple.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
           nativeApi.log().error("File " + filePath(file)

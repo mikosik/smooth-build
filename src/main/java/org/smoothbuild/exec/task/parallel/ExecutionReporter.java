@@ -21,7 +21,7 @@ import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.Struct;
+import org.smoothbuild.lang.object.base.Tuple;
 
 import com.google.common.collect.Streams;
 
@@ -55,7 +55,7 @@ public class ExecutionReporter {
   }
 
   private void print(Task task, ResultSource resultSource, Array messages) {
-    List<Log> logs = Streams.stream(messages.asIterable(Struct.class))
+    List<Log> logs = Streams.stream(messages.asIterable(Tuple.class))
         .map(m -> new Log(level(m), text(m)))
         .collect(toList());
     print(task, resultSource, logs);
