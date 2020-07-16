@@ -7,11 +7,11 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 
 public class AlgorithmHashes {
-  public static Hash arrayAlgorithmHash() {
+  public static Hash createArrayAlgorithmHash() {
     return hash(0);
   }
 
-  public static Hash nativeCallAlgorithmHash(NativeFunction function) {
+  public static Hash callNativeAlgorithmHash(NativeFunction function) {
     return hash(1, function.hash());
   }
 
@@ -19,15 +19,15 @@ public class AlgorithmHashes {
     return hash(2, destinationType.hash());
   }
 
-  public static Hash constructorCallAlgorithmHash(StructType type) {
+  public static Hash createTupleAlgorithmHash(StructType type) {
     return hash(3, type.hash());
   }
 
-  public static Hash accessorCallAlgorithmHash(Accessor accessor) {
+  public static Hash ReadTupleElementAlgorithmHash(Accessor accessor) {
     return hash(4, Hash.of(accessor.fieldIndex()));
   }
 
-  public static Hash stringLiteralAlgorithmHash(String string) {
+  public static Hash fixedStringAlgorithmHash(String string) {
     return hash(5, Hash.of(string));
   }
 

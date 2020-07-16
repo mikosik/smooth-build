@@ -3,12 +3,12 @@ package org.smoothbuild.exec.comp;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.ReadTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.stringLiteralAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.createArrayAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.createTupleAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -29,24 +29,24 @@ public class AlgorithmHashesTest extends TestingContext {
     StructType constructedType = structType(list());
     Accessor accessor = accessor(0);
 
-    hashes.add(arrayAlgorithmHash());
-    hashes.add(nativeCallAlgorithmHash(function));
+    hashes.add(createArrayAlgorithmHash());
+    hashes.add(callNativeAlgorithmHash(function));
     hashes.add(convertAlgorithmHash(stringType()));
-    hashes.add(constructorCallAlgorithmHash(constructedType));
-    hashes.add(accessorCallAlgorithmHash(accessor));
-    hashes.add(stringLiteralAlgorithmHash("abc"));
+    hashes.add(createTupleAlgorithmHash(constructedType));
+    hashes.add(ReadTupleElementAlgorithmHash(accessor));
+    hashes.add(fixedStringAlgorithmHash("abc"));
 
     assertThat(hashes.size())
         .isEqualTo(6);
   }
 
   @Test
-  public void native_call_algorithm_has_different_hash_for_different_functions() {
+  public void call_native_algorithm_has_different_hash_for_different_functions() {
     NativeFunction function = nativeFunctionWithHash(Hash.of(1));
     NativeFunction function2 = nativeFunctionWithHash(Hash.of(2));
 
-    assertThat(nativeCallAlgorithmHash(function))
-        .isNotEqualTo(nativeCallAlgorithmHash(function2));
+    assertThat(callNativeAlgorithmHash(function))
+        .isNotEqualTo(callNativeAlgorithmHash(function2));
   }
 
   @Test
@@ -56,27 +56,27 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void constructor_call_algorithm_has_different_hash_for_different_types() {
+  public void create_tuple_algorithm_has_different_hash_for_different_types() {
     StructType constructedType = structType(list(stringType()));
     StructType constructedType2 = structType(list(blobType()));
 
-    assertThat(constructorCallAlgorithmHash(constructedType))
-        .isNotEqualTo(constructorCallAlgorithmHash(constructedType2));
+    assertThat(createTupleAlgorithmHash(constructedType))
+        .isNotEqualTo(createTupleAlgorithmHash(constructedType2));
   }
 
   @Test
-  public void accessor_call_algorithm_has_different_hash_for_different_field_indexes() {
+  public void read_tuple_element_algorithm_has_different_hash_for_different_field_indexes() {
     Accessor accessor = accessor(0);
     Accessor accessor2 = accessor(1);
 
-    assertThat(accessorCallAlgorithmHash(accessor))
-        .isNotEqualTo(accessorCallAlgorithmHash(accessor2));
+    assertThat(ReadTupleElementAlgorithmHash(accessor))
+        .isNotEqualTo(ReadTupleElementAlgorithmHash(accessor2));
   }
 
   @Test
-  public void string_literal_algorithm_has_different_hash_for_different_strings() {
-    assertThat(stringLiteralAlgorithmHash("abc"))
-        .isNotEqualTo(stringLiteralAlgorithmHash("def"));
+  public void fixed_string_algorithm_has_different_hash_for_different_strings() {
+    assertThat(fixedStringAlgorithmHash("abc"))
+        .isNotEqualTo(fixedStringAlgorithmHash("def"));
   }
 
   private static Accessor accessor(int index) {

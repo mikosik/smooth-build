@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.AlgorithmHashes.constructorCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.createTupleAlgorithmHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -10,16 +10,16 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StructType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ConstructorCallAlgorithm implements Algorithm {
+public class CreateTupleAlgorithm implements Algorithm {
   private final StructType constructedType;
 
-  public ConstructorCallAlgorithm(StructType constructedType) {
+  public CreateTupleAlgorithm(StructType constructedType) {
     this.constructedType = constructedType;
   }
 
   @Override
   public Hash hash() {
-    return constructorCallAlgorithmHash(constructedType);
+    return createTupleAlgorithmHash(constructedType);
   }
 
   @Override

@@ -13,13 +13,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.exec.comp.AccessorCallAlgorithm;
 import org.smoothbuild.exec.comp.Algorithm;
-import org.smoothbuild.exec.comp.ArrayLiteralAlgorithm;
-import org.smoothbuild.exec.comp.ConstructorCallAlgorithm;
+import org.smoothbuild.exec.comp.CallNativeAlgorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
-import org.smoothbuild.exec.comp.NativeCallAlgorithm;
-import org.smoothbuild.exec.comp.StringLiteralAlgorithm;
+import org.smoothbuild.exec.comp.CreateArrayAlgorithm;
+import org.smoothbuild.exec.comp.CreateTupleAlgorithm;
+import org.smoothbuild.exec.comp.FixedStringAlgorithm;
+import org.smoothbuild.exec.comp.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.task.base.IfTask;
 import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.Task;
@@ -62,7 +62,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(AccessorCallExpression expression) {
     Accessor accessor = expression.accessor();
     ConcreteType type = accessor.type();
-    Algorithm algorithm = new AccessorCallAlgorithm(accessor, type.visit(typeConverter));
+    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor, type.visit(typeConverter));
     List<Task> children = childrenTasks(expression.children());
     return new NormalTask(
         type, "." + accessor.name(), algorithm, children, accessor.location(), true);
@@ -73,7 +73,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     List<Task> elements = childrenTasks(expression.children());
     ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
 
-    Algorithm algorithm = new ArrayLiteralAlgorithm(typeConverter.visit(actualType));
+    Algorithm algorithm = new CreateArrayAlgorithm(typeConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(
         actualType, actualType.name(), algorithm, convertedElements, expression.location(), true);
@@ -101,7 +101,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(ConstructorCallExpression expression) {
     Constructor constructor = expression.constructor();
     StructType type = typeConverter.visit(constructor.type());
-    Algorithm algorithm = new ConstructorCallAlgorithm(type);
+    Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
     return new NormalTask(constructor.type(), constructor.name(), algorithm, dependencies,
         expression.location(), true);
@@ -139,7 +139,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
 
-    Algorithm algorithm = new NativeCallAlgorithm(
+    Algorithm algorithm = new CallNativeAlgorithm(
         actualResultType.visit(typeConverter), nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
     if (nativeFunction.name().equals(IF_FUNCTION_NAME)) {
@@ -164,7 +164,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   @Override
   public Task visit(StringLiteralExpression expression) {
     var stringType = typeConverter.visit(string());
-    var algorithm = new StringLiteralAlgorithm(stringType, expression.string());
+    var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(string(), algorithm.shortedString(), algorithm, ImmutableList.of(),
         expression.location(), true);
   }

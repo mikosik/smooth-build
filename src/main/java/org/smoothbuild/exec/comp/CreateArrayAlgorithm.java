@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.AlgorithmHashes.arrayAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.createArrayAlgorithmHash;
 import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -10,10 +10,10 @@ import org.smoothbuild.lang.object.type.ConcreteArrayType;
 import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class ArrayLiteralAlgorithm implements Algorithm {
+public class CreateArrayAlgorithm implements Algorithm {
   private final ConcreteArrayType arrayType;
 
-  public ArrayLiteralAlgorithm(ConcreteArrayType arrayType) {
+  public CreateArrayAlgorithm(ConcreteArrayType arrayType) {
     this.arrayType = arrayType;
   }
 
@@ -24,7 +24,7 @@ public class ArrayLiteralAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return arrayAlgorithmHash();
+    return createArrayAlgorithmHash();
   }
 
   @Override

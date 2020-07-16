@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.AlgorithmHashes.stringLiteralAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.exec.task.base.Task.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
@@ -12,12 +12,12 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class StringLiteralAlgorithm implements Algorithm {
+public class FixedStringAlgorithm implements Algorithm {
   private final StringType stringType;
   private final String string;
   private final String shortedString;
 
-  public StringLiteralAlgorithm(StringType stringType, String string) {
+  public FixedStringAlgorithm(StringType stringType, String string) {
     this.stringType = stringType;
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
@@ -34,7 +34,7 @@ public class StringLiteralAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return stringLiteralAlgorithmHash(string);
+    return fixedStringAlgorithmHash(string);
   }
 
   @Override
