@@ -1,15 +1,12 @@
 package org.smoothbuild.parse.expr;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.object.type.StringType;
 
 public class StringLiteralExpression extends Expression {
-  private final StringType stringType;
   private final String string;
 
-  public StringLiteralExpression(StringType stringType, String string, Location location) {
+  public StringLiteralExpression(String string, Location location) {
     super(location);
-    this.stringType = stringType;
     this.string = string;
   }
 
