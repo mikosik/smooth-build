@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.exec.comp.AlgorithmHashes.accessorCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.ReadTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
@@ -14,18 +14,18 @@ import org.smoothbuild.lang.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class AccessorCallAlgorithm implements Algorithm {
+public class ReadTupleElementAlgorithm implements Algorithm {
   private final Accessor accessor;
   private final ConcreteType type;
 
-  public AccessorCallAlgorithm(Accessor accessor, ConcreteType type) {
+  public ReadTupleElementAlgorithm(Accessor accessor, ConcreteType type) {
     this.accessor = accessor;
     this.type = type;
   }
 
   @Override
   public Hash hash() {
-    return accessorCallAlgorithmHash(accessor);
+    return ReadTupleElementAlgorithmHash(accessor);
   }
 
   @Override

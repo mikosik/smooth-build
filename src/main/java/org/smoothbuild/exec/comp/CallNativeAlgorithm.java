@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.comp;
 
-import static org.smoothbuild.exec.comp.AlgorithmHashes.nativeCallAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.object.base.Messages.containsErrors;
 
@@ -15,18 +15,18 @@ import org.smoothbuild.lang.object.type.ConcreteType;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 
-public class NativeCallAlgorithm implements Algorithm {
+public class CallNativeAlgorithm implements Algorithm {
   private final ConcreteType type;
   private final NativeFunction function;
 
-  public NativeCallAlgorithm(ConcreteType type, NativeFunction function) {
+  public CallNativeAlgorithm(ConcreteType type, NativeFunction function) {
     this.type = type;
     this.function = function;
   }
 
   @Override
   public Hash hash() {
-    return nativeCallAlgorithmHash(function);
+    return callNativeAlgorithmHash(function);
   }
 
   @Override
