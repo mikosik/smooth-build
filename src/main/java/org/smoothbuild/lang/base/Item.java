@@ -10,14 +10,17 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.parse.ast.Named;
 
-public class ItemInfo implements Named {
+/**
+ * Item contains attributes common to both struct field and function parameter.
+ */
+public class Item implements Named {
   private final int index;
   private final Type type;
   private final String name;
   private final boolean hasDefaultValue;
   private final Location location;
 
-  public ItemInfo(int index, Type type, String name, boolean hasDefaultValue, Location location) {
+  public Item(int index, Type type, String name, boolean hasDefaultValue, Location location) {
     this.index = index;
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
@@ -56,7 +59,7 @@ public class ItemInfo implements Named {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof ItemInfo that)) {
+    if (!(object instanceof Item that)) {
       return false;
     }
     return type.equals(that.type)
@@ -79,7 +82,7 @@ public class ItemInfo implements Named {
     return type.name() + " " + name;
   }
 
-  public static String iterableToString(Iterable<ItemInfo> names) {
+  public static String iterableToString(Iterable<Item> names) {
     int typeLength = longestType(names);
     int nameLength = longestName(names);
     return stream(names)
@@ -88,17 +91,17 @@ public class ItemInfo implements Named {
         .collect(joining());
   }
 
-  public static int longestType(Iterable<ItemInfo> names) {
+  public static int longestType(Iterable<Item> names) {
     int result = 0;
-    for (ItemInfo name : names) {
+    for (Item name : names) {
       result = Math.max(result, name.type.name().length());
     }
     return result;
   }
 
-  public static int longestName(Iterable<ItemInfo> names) {
+  public static int longestName(Iterable<Item> names) {
     int result = 0;
-    for (ItemInfo name : names) {
+    for (Item name : names) {
       result = Math.max(result, name.name.length());
     }
     return result;
