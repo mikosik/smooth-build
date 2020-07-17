@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.parse.Definitions;
+import org.smoothbuild.lang.parse.Definitions;
 
 public class FindCallables {
   public static Optional<List<Callable>> findCallables(Reporter reporter, Definitions definitions,

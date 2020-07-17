@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.parse.ast.Named;
+import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
