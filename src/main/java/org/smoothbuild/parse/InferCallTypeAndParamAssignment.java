@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.ItemInfo;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.parse.ast.ArgNode;
@@ -29,7 +29,7 @@ public class InferCallTypeAndParamAssignment {
       @Override
       public void run() {
         call.setType(empty());
-        List<? extends ItemInfo> parameters = callableParameters();
+        List<? extends Item> parameters = callableParameters();
         List<ArgNode> assignedArgs = assignedArguments(parameters);
         if (logger.hasProblems()) {
           return;
@@ -45,17 +45,17 @@ public class InferCallTypeAndParamAssignment {
         call.setType(callType(actualTypeMap));
       }
 
-      private List<ArgNode> assignedArguments(List<? extends ItemInfo> parameters) {
+      private List<ArgNode> assignedArguments(List<? extends Item> parameters) {
         List<ArgNode> assignedArgs = asList(new ArgNode[parameters.size()]);
-        Map<String, ? extends ItemInfo> parametersMap = parameters.stream()
-            .collect(toMap(ItemInfo::name, p -> p));
+        Map<String, ? extends Item> parametersMap = parameters.stream()
+            .collect(toMap(Item::name, p -> p));
         List<ArgNode> args = call.args();
         boolean inNamedArgsSection = false;
         for (int i = 0; i < args.size(); i++) {
           ArgNode arg = args.get(i);
           if (arg.declaresName()) {
             inNamedArgsSection = true;
-            ItemInfo param = parametersMap.get(arg.name());
+            Item param = parametersMap.get(arg.name());
             if (param == null) {
               logger.log(parseError(arg, inCallToPrefix(call)
                   + "Unknown parameter '" + arg.name() + "'."));
@@ -82,7 +82,7 @@ public class InferCallTypeAndParamAssignment {
         }
 
         for (int i = 0; i < parameters.size(); i++) {
-          ItemInfo param = parameters.get(i);
+          Item param = parameters.get(i);
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
             if (!param.hasDefaultValue()) {
@@ -105,7 +105,7 @@ public class InferCallTypeAndParamAssignment {
         return "In call to `" + call.calledName() + "`: ";
       }
 
-      private List<? extends ItemInfo> callableParameters() {
+      private List<? extends Item> callableParameters() {
         String name = call.calledName();
         Callable callable = imported.callables().get(name);
         if (callable != null) {
@@ -119,7 +119,7 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private GenericTypeMap<Type> inferActualTypesOfGenericParameters(
-          List<? extends ItemInfo> parameters, List<ArgNode> assignedArgs) {
+          List<? extends Item> parameters, List<ArgNode> assignedArgs) {
         List<Type> genericTypes = new ArrayList<>();
         List<Type> actualTypes = new ArrayList<>();
         for (int i = 0; i < parameters.size(); i++) {

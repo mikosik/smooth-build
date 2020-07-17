@@ -2,13 +2,13 @@ package org.smoothbuild.parse.ast;
 
 import java.util.List;
 
-import org.smoothbuild.lang.base.ItemInfo;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallableNode extends NamedNode {
-  private List<ItemInfo> parameterInfos;
+  private List<Item> parameterInfos;
   private final List<ItemNode> params;
 
   public CallableNode(String name, List<ItemNode> params, Location location) {
@@ -20,11 +20,11 @@ public class CallableNode extends NamedNode {
     return params;
   }
 
-  public List<ItemInfo> parameterInfos() {
+  public List<Item> parameterInfos() {
     return parameterInfos;
   }
 
-  public void setParameterInfos(List<ItemInfo> parameterInfos) {
+  public void setParameterInfos(List<Item> parameterInfos) {
     this.parameterInfos = parameterInfos;
   }
 }

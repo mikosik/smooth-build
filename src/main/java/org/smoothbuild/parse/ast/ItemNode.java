@@ -2,14 +2,14 @@ package org.smoothbuild.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.ItemInfo;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
 public class ItemNode extends NamedNode {
   private final int index;
   private final TypeNode typeNode;
   private final ExprNode defaultValue;
-  private Optional<ItemInfo> itemInfo;
+  private Optional<Item> itemInfo;
 
   public ItemNode(int index, TypeNode typeNode, String name, ExprNode defaultValue,
       Location location) {
@@ -35,11 +35,11 @@ public class ItemNode extends NamedNode {
     return defaultValue != null;
   }
 
-  public Optional<ItemInfo> itemInfo() {
+  public Optional<Item> itemInfo() {
     return itemInfo;
   }
 
-  public void setItemInfo(Optional<ItemInfo> itemInfo) {
+  public void setItemInfo(Optional<Item> itemInfo) {
     this.itemInfo = itemInfo;
   }
 }
