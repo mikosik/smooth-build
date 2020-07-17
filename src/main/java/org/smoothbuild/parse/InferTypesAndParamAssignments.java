@@ -42,7 +42,7 @@ import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
 
-public class InferTypesAndParamAssignment {
+public class InferTypesAndParamAssignments {
   public static void inferTypesAndParamAssignment(
       Ast ast, Definitions imported, LoggerImpl logger) {
     new AstVisitor() {
