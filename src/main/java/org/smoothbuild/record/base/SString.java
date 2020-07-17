@@ -8,7 +8,7 @@ import org.smoothbuild.record.db.Helpers;
 /**
  * This class is immutable.
  */
-public class SString extends SObjectImpl {
+public class SString extends RecordImpl {
   public SString(MerkleRoot merkleRoot, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
   }

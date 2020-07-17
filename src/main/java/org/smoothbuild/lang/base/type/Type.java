@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.TypeProperties;
 import org.smoothbuild.lang.parse.ast.Named;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableList;
 
@@ -143,7 +143,7 @@ public abstract class Type implements Named {
         .findFirst();
   }
 
-  public Class<? extends SObject> jType() {
+  public Class<? extends Record> jType() {
     return properties.jType();
   }
 

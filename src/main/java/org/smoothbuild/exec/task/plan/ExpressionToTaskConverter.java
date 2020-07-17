@@ -43,8 +43,8 @@ import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.Named;
-import org.smoothbuild.record.db.ObjectFactory;
-import org.smoothbuild.record.type.TupleType;
+import org.smoothbuild.record.db.RecordFactory;
+import org.smoothbuild.record.spec.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 
@@ -53,8 +53,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   private Scope<Task> scope;
 
   @Inject
-  public ExpressionToTaskConverter(ObjectFactory objectFactory) {
-    this.typeConverter = new TypeToBinaryTypeConverter(objectFactory);
+  public ExpressionToTaskConverter(RecordFactory recordFactory) {
+    this.typeConverter = new TypeToBinaryTypeConverter(recordFactory);
     this.scope = scope();
   }
 
@@ -100,7 +100,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   @Override
   public Task visit(ConstructorCallExpression expression) {
     Constructor constructor = expression.constructor();
-    TupleType type = typeConverter.visit(constructor.type());
+    TupleSpec type = typeConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
     return new NormalTask(constructor.type(), constructor.name(), algorithm, dependencies,

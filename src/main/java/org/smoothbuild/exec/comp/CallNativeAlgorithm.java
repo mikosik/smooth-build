@@ -12,15 +12,15 @@ import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.record.base.SObject;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.base.Record;
+import org.smoothbuild.record.spec.Spec;
 
 public class CallNativeAlgorithm implements Algorithm {
-  private final BinaryType type;
+  private final Spec spec;
   private final NativeFunction function;
 
-  public CallNativeAlgorithm(BinaryType type, NativeFunction function) {
-    this.type = type;
+  public CallNativeAlgorithm(Spec spec, NativeFunction function) {
+    this.spec = spec;
     this.function = function;
   }
 
@@ -30,22 +30,22 @@ public class CallNativeAlgorithm implements Algorithm {
   }
 
   @Override
-  public BinaryType type() {
-    return type;
+  public Spec type() {
+    return spec;
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
-      SObject result = (SObject) function.nativ().method()
+      Record result = (Record) function.nativ().method()
           .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
         return nullOutput(nativeApi);
       }
-      if (!type.equals(result.type())) {
+      if (!spec.equals(result.spec())) {
         nativeApi.log().error("Function " + function.name()
-            + " has faulty native implementation: Its actual result type is " + type.name()
-            + " but it returned object of type " + result.type().name() + ".");
+            + " has faulty native implementation: Its actual result type is " + spec.name()
+            + " but it returned object of type " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());
@@ -75,7 +75,7 @@ public class CallNativeAlgorithm implements Algorithm {
     return new Output(null, nativeApi.messages());
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<SObject> arguments) {
+  private static Object[] createArguments(NativeApi nativeApi, List<Record> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
     nativeArguments[0] = nativeApi;
     for (int i = 0; i < arguments.size(); i++) {

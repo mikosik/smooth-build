@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.record.base.SString;
-import org.smoothbuild.record.db.ObjectDbException;
+import org.smoothbuild.record.db.RecordDbException;
 
 import okio.ByteString;
 
@@ -18,23 +18,23 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
      * This test makes sure that other tests in this class use proper scheme to save smooth bool
      * in HashedDb.
      */
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(stringType()),
+            hash(stringSpec()),
             hash("aaa"));
-    assertThat(((SString) objectDb().get(instanceHash)).jValue())
+    assertThat(((SString) recordDb().get(recordHash)).jValue())
         .isEqualTo("aaa");
   }
 
   @Test
   public void string_with_data_being_invalid_utf8_sequence_is_corrupted() throws Exception {
     Hash notStringHash = hash(ByteString.of((byte) -64));
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(stringType()),
+            hash(stringSpec()),
             notStringHash);
-    assertCall(() -> ((SString) objectDb().get(instanceHash)).jValue())
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((SString) recordDb().get(recordHash)).jValue())
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new DecodingStringException(notStringHash, null));
   }
 }

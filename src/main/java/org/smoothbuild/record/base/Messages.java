@@ -27,15 +27,15 @@ public class Messages {
     return !messages.asIterable(Tuple.class).iterator().hasNext();
   }
 
-  public static Level level(SObject message) {
+  public static Level level(Record message) {
     return Level.valueOf(severity(message));
   }
 
-  public static String severity(SObject message) {
+  public static String severity(Record message) {
     return messageSeverity((Tuple) message).jValue();
   }
 
-  public static String text(SObject message) {
+  public static String text(Record message) {
     return messageText((Tuple) message).jValue();
   }
 }

@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.record.type.TupleType;
+import org.smoothbuild.record.spec.TupleSpec;
 import org.smoothbuild.testing.TestingContext;
 
 public class AlgorithmHashesTest extends TestingContext {
@@ -26,12 +26,12 @@ public class AlgorithmHashesTest extends TestingContext {
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
     NativeFunction function = nativeFunctionWithHash(Hash.of(0));
-    TupleType constructedType = structType(list());
+    TupleSpec constructedType = tupleSpec(list());
     Accessor accessor = accessor(0);
 
     hashes.add(createArrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash(function));
-    hashes.add(convertAlgorithmHash(stringType()));
+    hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(createTupleAlgorithmHash(constructedType));
     hashes.add(ReadTupleElementAlgorithmHash(accessor));
     hashes.add(fixedStringAlgorithmHash("abc"));
@@ -51,14 +51,14 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void convert_algorithm_has_different_hash_for_different_types() {
-    assertThat(convertAlgorithmHash(stringType()))
-        .isNotEqualTo(convertAlgorithmHash(blobType()));
+    assertThat(convertAlgorithmHash(stringSpec()))
+        .isNotEqualTo(convertAlgorithmHash(blobSpec()));
   }
 
   @Test
   public void create_tuple_algorithm_has_different_hash_for_different_types() {
-    TupleType constructedType = structType(list(stringType()));
-    TupleType constructedType2 = structType(list(blobType()));
+    TupleSpec constructedType = tupleSpec(list(stringSpec()));
+    TupleSpec constructedType2 = tupleSpec(list(blobSpec()));
 
     assertThat(createTupleAlgorithmHash(constructedType))
         .isNotEqualTo(createTupleAlgorithmHash(constructedType2));

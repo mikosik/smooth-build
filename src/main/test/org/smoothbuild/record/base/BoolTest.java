@@ -10,9 +10,9 @@ import com.google.common.truth.Truth;
 
 public class BoolTest extends TestingContext {
   @Test
-  public void type_of_bool_is_bool() {
-    assertThat(bool(true).type())
-        .isEqualTo(boolType());
+  public void spec_of_bool_is_bool() {
+    assertThat(bool(true).spec())
+        .isEqualTo(boolSpec());
   }
 
   @Test
@@ -81,14 +81,14 @@ public class BoolTest extends TestingContext {
   public void bool_can_be_read_back_by_hash() {
     Bool bool = bool(true);
     Hash hash = bool.hash();
-    assertThat(objectDbOther().get(hash))
+    assertThat(recordDbOther().get(hash))
         .isEqualTo(bool);
   }
 
   @Test
   public void bool_read_back_by_hash_has_same_jvalue() {
     Bool bool = bool(true);
-    assertThat(((Bool) objectDbOther().get(bool.hash())).jValue())
+    assertThat(((Bool) recordDbOther().get(bool.hash())).jValue())
         .isTrue();
   }
 

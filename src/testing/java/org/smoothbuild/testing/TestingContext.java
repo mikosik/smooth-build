@@ -21,19 +21,19 @@ import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.BlobBuilder;
 import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.ObjectDb;
-import org.smoothbuild.record.db.ObjectFactory;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
-import org.smoothbuild.record.type.BlobType;
-import org.smoothbuild.record.type.BoolType;
-import org.smoothbuild.record.type.NothingType;
-import org.smoothbuild.record.type.StringType;
-import org.smoothbuild.record.type.TupleType;
-import org.smoothbuild.record.type.TypeType;
+import org.smoothbuild.record.db.RecordDb;
+import org.smoothbuild.record.db.RecordFactory;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.BlobSpec;
+import org.smoothbuild.record.spec.BoolSpec;
+import org.smoothbuild.record.spec.NothingSpec;
+import org.smoothbuild.record.spec.Spec;
+import org.smoothbuild.record.spec.SpecSpec;
+import org.smoothbuild.record.spec.StringSpec;
+import org.smoothbuild.record.spec.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.util.Providers;
@@ -43,10 +43,10 @@ import okio.ByteString;
 public class TestingContext {
   private Computer computer;
   private Container container;
-  private ObjectFactory objectFactory;
+  private RecordFactory recordFactory;
   private OutputDb outputDb;
   private FileSystem outputDbFileSystem;
-  private ObjectDb objectDb;
+  private RecordDb recordDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -72,29 +72,26 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), objectFactory(), tempManager());
+    return new Container(fullFileSystem(), recordFactory(), tempManager());
   }
 
-  /**
-   * instance with File and Message types
-   */
-  public ObjectFactory objectFactory() {
-    if (objectFactory == null) {
-      objectFactory = new ObjectFactory(objectDb());
+  public RecordFactory recordFactory() {
+    if (recordFactory == null) {
+      recordFactory = new RecordFactory(recordDb());
     }
-    return objectFactory;
+    return recordFactory;
   }
 
-  public ObjectDb objectDb() {
-    if (objectDb == null) {
-      objectDb = ObjectDb.objectDb(hashedDb());
+  public RecordDb recordDb() {
+    if (recordDb == null) {
+      recordDb = RecordDb.recordDb(hashedDb());
     }
-    return objectDb;
+    return recordDb;
   }
 
   public OutputDb outputDb() {
     if (outputDb == null) {
-      outputDb = new OutputDb(outputDbFileSystem(), objectDb(), objectFactory());
+      outputDb = new OutputDb(outputDbFileSystem(), recordDb(), recordFactory());
     }
     return outputDb;
   }
@@ -106,8 +103,8 @@ public class TestingContext {
     return outputDbFileSystem;
   }
 
-  public ObjectDb objectDbOther() {
-    return ObjectDb.objectDb(hashedDb());
+  public RecordDb recordDbOther() {
+    return RecordDb.recordDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -146,101 +143,101 @@ public class TestingContext {
     return fullFileSystem;
   }
 
-  public TypeType typeType() {
-    return objectDb().typeType();
+  public SpecSpec specSpec() {
+    return recordDb().specSpec();
   }
 
-  public BoolType boolType() {
-    return objectDb().boolType();
+  public BoolSpec boolSpec() {
+    return recordDb().boolSpec();
   }
 
-  public StringType stringType() {
-    return objectDb().stringType();
+  public StringSpec stringSpec() {
+    return recordDb().stringSpec();
   }
 
-  public BlobType blobType() {
-    return objectDb().blobType();
+  public BlobSpec blobSpec() {
+    return recordDb().blobSpec();
   }
 
-  public NothingType nothingType() {
-    return objectDb().nothingType();
+  public NothingSpec nothingSpec() {
+    return recordDb().nothingSpec();
   }
 
-  public ArrayType arrayType(BinaryType elementType) {
-    return objectDb().arrayType(elementType);
+  public ArraySpec arraySpec(Spec elementSpec) {
+    return recordDb().arraySpec(elementSpec);
   }
 
-  public TupleType structType(Iterable<? extends BinaryType> fieldTypes) {
-    return objectDb().structType(fieldTypes);
+  public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
+    return recordDb().tupleSpec(elementSpecs);
   }
 
-  public TupleType emptyType() {
-    return structType(list());
+  public TupleSpec emptySpec() {
+    return tupleSpec(list());
   }
 
-  public TupleType personType() {
-    BinaryType string = stringType();
-    return structType(list(string, string));
+  public TupleSpec personSpec() {
+    Spec string = stringSpec();
+    return tupleSpec(list(string, string));
   }
 
-  public TupleType fileType() {
-    return structType(list(blobType(), stringType()));
+  public TupleSpec fileSpec() {
+    return tupleSpec(list(blobSpec(), stringSpec()));
   }
 
   public Bool bool(boolean value) {
-    return objectDb().bool(value);
+    return recordDb().bool(value);
   }
 
   public SString string(String string) {
-    return objectDb().string(string);
+    return recordDb().string(string);
   }
 
   public BlobBuilder blobBuilder() {
-    return objectDb().blobBuilder();
+    return recordDb().blobBuilder();
   }
 
-  public ArrayBuilder arrayBuilder(BinaryType elemType) {
-    return objectDb().arrayBuilder(elemType);
+  public ArrayBuilder arrayBuilder(Spec elemSpec) {
+    return recordDb().arrayBuilder(elemSpec);
   }
 
-  public Tuple struct(TupleType type, Iterable<? extends SObject> fields) {
-    return objectDb().struct(type, fields);
+  public Tuple tuple(TupleSpec spec, Iterable<? extends Record> elements) {
+    return recordDb().tuple(spec, elements);
   }
 
   public Tuple empty() {
-    return struct(emptyType(), ImmutableList.of());
+    return tuple(emptySpec(), ImmutableList.of());
   }
 
   public Tuple person(String firstName, String lastName) {
-    return struct(personType(), ImmutableList.of(string(firstName), string(lastName)));
+    return tuple(personSpec(), ImmutableList.of(string(firstName), string(lastName)));
   }
 
   public Array messageArrayWithOneError() {
-    return array(objectFactory().errorMessage("error message"));
+    return array(recordFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
-    return array(objectFactory().messageType());
+    return array(recordFactory().messageSpec());
   }
 
-  public Array array(SObject... elements) {
-    return array(elements[0].type(), elements);
+  public Array array(Record... elements) {
+    return array(elements[0].spec(), elements);
   }
 
-  public Array array(BinaryType elementType, SObject... elements) {
-    return objectDb().arrayBuilder(elementType).addAll(list(elements)).build();
+  public Array array(Spec elementSpec, Record... elements) {
+    return recordDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
-  public SObject errorMessage(String text) {
-    return objectFactory().errorMessage(text);
+  public Record errorMessage(String text) {
+    return recordFactory().errorMessage(text);
   }
 
-  public SObject warningMessage(String text) {
-    return objectFactory().warningMessage(text);
+  public Record warningMessage(String text) {
+    return recordFactory().warningMessage(text);
   }
 
-  public SObject infoMessage(String text) {
-    return objectFactory().infoMessage(text);
+  public Record infoMessage(String text) {
+    return recordFactory().infoMessage(text);
   }
 
   public Tuple file(Path path) {
@@ -248,14 +245,14 @@ public class TestingContext {
   }
 
   public Tuple file(Path path, ByteString content) {
-    SString string = objectFactory().string(path.toString());
+    SString string = recordFactory().string(path.toString());
     Blob blob = blob(content);
-    return objectFactory().file(string, blob);
+    return recordFactory().file(string, blob);
   }
 
   public Blob blob(ByteString bytes) {
     try {
-      return objectFactory().blob(sink -> sink.write(bytes));
+      return recordFactory().blob(sink -> sink.write(bytes));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

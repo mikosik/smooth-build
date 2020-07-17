@@ -12,10 +12,10 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.type.ArrayType;
+import org.smoothbuild.record.spec.ArraySpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -56,62 +56,62 @@ public class OutputDbTest extends TestingContext {
 
   @Test
   public void reading_not_written_value_fails() {
-    assertCall(() -> outputDb().read(hash, stringType()))
+    assertCall(() -> outputDb().read(hash, stringSpec()))
         .throwsException(OutputDbException.class);
   }
 
   @Test
   public void written_messages_can_be_read_back() throws Exception {
     stringValue = string("abc");
-    SObject message = errorMessage("error message");
+    Record message = errorMessage("error message");
     Array messages = array(message);
     outputDb().write(hash, new Output(stringValue, messages));
 
-    assertThat(outputDb().read(hash, stringType()).messages())
+    assertThat(outputDb().read(hash, stringSpec()).messages())
         .isEqualTo(messages);
   }
 
   @Test
   public void written_file_array_can_be_read_back() throws Exception {
     file = file(path, bytes);
-    array = arrayBuilder(objectFactory().fileType()).add(file).build();
+    array = arrayBuilder(recordFactory().fileSpec()).add(file).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ArrayType arrayType = arrayType(objectFactory().fileType());
+    ArraySpec arraySpec = arraySpec(recordFactory().fileSpec());
 
-    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Tuple.class))
+    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(Tuple.class))
         .containsExactly(file);
   }
 
   @Test
   public void written_blob_array_can_be_read_back() throws Exception {
     blob = blob(bytes);
-    array = arrayBuilder(blobType()).add(blob).build();
+    array = arrayBuilder(blobSpec()).add(blob).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ArrayType arrayType = arrayType(blobType());
+    ArraySpec arraySpec = arraySpec(blobSpec());
 
-    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Blob.class))
+    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(Blob.class))
         .containsExactly(blob);
   }
 
   @Test
   public void written_bool_array_can_be_read_back() throws Exception {
     boolValue = bool(true);
-    array = arrayBuilder(boolType()).add(boolValue).build();
+    array = arrayBuilder(boolSpec()).add(boolValue).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ArrayType arrayType = arrayType(boolType());
+    ArraySpec arraySpec = arraySpec(boolSpec());
 
-    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(Bool.class))
+    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(Bool.class))
         .containsExactly(boolValue);
   }
 
   @Test
   public void written_string_array_can_be_read_back() throws Exception {
     stringValue = string(string);
-    array = arrayBuilder(stringType()).add(stringValue).build();
+    array = arrayBuilder(stringSpec()).add(stringValue).build();
     outputDb().write(hash, new Output(array, emptyMessageArray()));
-    ArrayType arrayType = arrayType(stringType());
+    ArraySpec arraySpec = arraySpec(stringSpec());
 
-    assertThat(((Array) outputDb().read(hash, arrayType).value()).asIterable(SString.class))
+    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(SString.class))
         .containsExactly(stringValue);
   }
 
@@ -120,7 +120,7 @@ public class OutputDbTest extends TestingContext {
     file = file(path, bytes);
     outputDb().write(hash, new Output(file, emptyMessageArray()));
 
-    assertThat(outputDb().read(hash, objectFactory().fileType()).value())
+    assertThat(outputDb().read(hash, recordFactory().fileSpec()).value())
         .isEqualTo(file);
   }
 
@@ -129,7 +129,7 @@ public class OutputDbTest extends TestingContext {
     blob = blob(bytes);
     outputDb().write(hash, new Output(blob, emptyMessageArray()));
 
-    assertThat(outputDb().read(hash, blobType()).value())
+    assertThat(outputDb().read(hash, blobSpec()).value())
         .isEqualTo(blob);
   }
 
@@ -138,7 +138,7 @@ public class OutputDbTest extends TestingContext {
     boolValue = bool(true);
     outputDb().write(hash, new Output(boolValue, emptyMessageArray()));
 
-    assertThat(((Bool) outputDb().read(hash, boolType()).value()).jValue())
+    assertThat(((Bool) outputDb().read(hash, boolSpec()).value()).jValue())
         .isTrue();
   }
 
@@ -146,7 +146,7 @@ public class OutputDbTest extends TestingContext {
   public void written_string_can_be_read_back() throws Exception {
     stringValue = string(string);
     outputDb().write(hash, new Output(stringValue, emptyMessageArray()));
-    assertThat(((SString) outputDb().read(hash, stringType()).value()).jValue())
+    assertThat(((SString) outputDb().read(hash, stringSpec()).value()).jValue())
         .isEqualTo(string);
   }
 }

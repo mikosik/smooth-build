@@ -7,14 +7,14 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.Spec;
 
 public class CreateArrayAlgorithm implements Algorithm {
-  private final ArrayType arrayType;
+  private final ArraySpec arraySpec;
 
-  public CreateArrayAlgorithm(ArrayType arrayType) {
-    this.arrayType = arrayType;
+  public CreateArrayAlgorithm(ArraySpec arraySpec) {
+    this.arraySpec = arraySpec;
   }
 
   @Override
@@ -28,15 +28,15 @@ public class CreateArrayAlgorithm implements Algorithm {
   }
 
   @Override
-  public BinaryType type() {
-    return arrayType;
+  public Spec type() {
+    return arraySpec;
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
     Array array = nativeApi
         .factory()
-        .arrayBuilder(arrayType.elemType())
+        .arrayBuilder(arraySpec.elemSpec())
         .addAll(input.objects())
         .build();
     return new Output(array, nativeApi.messages());

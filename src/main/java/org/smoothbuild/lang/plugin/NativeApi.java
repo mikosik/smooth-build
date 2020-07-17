@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.db.RecordFactory;
 import org.smoothbuild.util.CommandExecutor;
 
 /**
@@ -12,7 +12,7 @@ import org.smoothbuild.util.CommandExecutor;
  * from one thread by native functions.
  */
 public interface NativeApi {
-  public ObjectFactory factory();
+  public RecordFactory factory();
 
   public MessageLogger log();
 

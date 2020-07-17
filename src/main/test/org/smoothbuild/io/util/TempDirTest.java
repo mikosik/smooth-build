@@ -107,9 +107,9 @@ public class TempDirTest extends TestingContext {
         .throwsException(IllegalStateException.class);
   }
 
-  private static ByteString blobToByteString(Blob object) {
+  private static ByteString blobToByteString(Blob blob) {
     try {
-      return object.source().readByteString();
+      return blob.source().readByteString();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

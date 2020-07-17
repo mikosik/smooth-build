@@ -8,7 +8,7 @@ import java.util.List;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -23,8 +23,8 @@ public class VirtualTask extends Task {
   }
 
   @Override
-  public Feeder<SObject> startComputation(Worker worker) {
-    FeedingConsumer<SObject> result = new FeedingConsumer<>();
+  public Feeder<Record> startComputation(Worker worker) {
+    FeedingConsumer<Record> result = new FeedingConsumer<>();
     task.startComputation(worker).addConsumer(
         sObject -> {
           worker.reporter().print(this, GROUP, List.of());

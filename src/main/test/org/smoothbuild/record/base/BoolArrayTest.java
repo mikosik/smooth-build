@@ -7,9 +7,9 @@ import org.smoothbuild.testing.TestingContext;
 
 public class BoolArrayTest extends TestingContext {
   @Test
-  public void type_of_bool_array_is_bool_array() {
-    Array array = arrayBuilder(boolType()).build();
-    assertThat(array.type())
-        .isEqualTo(arrayType(boolType()));
+  public void spec_of_bool_array_is_bool_array() {
+    Array array = arrayBuilder(boolSpec()).build();
+    assertThat(array.spec())
+        .isEqualTo(arraySpec(boolSpec()));
   }
 }

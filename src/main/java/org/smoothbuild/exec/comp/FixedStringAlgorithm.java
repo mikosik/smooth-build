@@ -9,16 +9,16 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.record.base.SString;
-import org.smoothbuild.record.type.BinaryType;
-import org.smoothbuild.record.type.StringType;
+import org.smoothbuild.record.spec.Spec;
+import org.smoothbuild.record.spec.StringSpec;
 
 public class FixedStringAlgorithm implements Algorithm {
-  private final StringType stringType;
+  private final StringSpec stringSpec;
   private final String string;
   private final String shortedString;
 
-  public FixedStringAlgorithm(StringType stringType, String string) {
-    this.stringType = stringType;
+  public FixedStringAlgorithm(StringSpec stringSpec, String string) {
+    this.stringSpec = stringSpec;
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
   }
@@ -38,8 +38,8 @@ public class FixedStringAlgorithm implements Algorithm {
   }
 
   @Override
-  public BinaryType type() {
-    return stringType;
+  public Spec type() {
+    return stringSpec;
   }
 
   @Override

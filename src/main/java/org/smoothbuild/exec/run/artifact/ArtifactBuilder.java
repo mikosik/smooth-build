@@ -19,7 +19,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.task.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -47,7 +47,7 @@ public class ArtifactBuilder {
     }
     ImmutableMap<String, Task> namedTasks = builder.build();
     try {
-      Map<Task, SObject> artifacts = parallelExecutor.executeAll(namedTasks.values());
+      Map<Task, Record> artifacts = parallelExecutor.executeAll(namedTasks.values());
       if (!artifacts.containsValue(null)) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         namedTasks.entrySet()
@@ -66,9 +66,9 @@ public class ArtifactBuilder {
         .createPlan(callable.createAgrlessCallExpression(commandLineLocation()));
   }
 
-  private void save(String name, SObject sObject) {
+  private void save(String name, Record record) {
     try {
-      Path path = artifactSaver.save(name, sObject);
+      Path path = artifactSaver.save(name, record);
       reportSuccess(name, path);
     } catch (IOException e) {
       reportFailure(name,

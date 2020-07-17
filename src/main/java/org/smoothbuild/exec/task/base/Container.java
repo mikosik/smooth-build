@@ -13,31 +13,31 @@ import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
-import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.base.Record;
+import org.smoothbuild.record.db.RecordFactory;
 
 /**
  * This class is NOT thread-safe.
  */
 public class Container implements NativeApi, Closeable {
   private final FileSystem fileSystem;
-  private final ObjectFactory objectFactory;
+  private final RecordFactory recordFactory;
   private final TempManager tempManager;
   private final List<TempDir> tempDirs;
   private final MessageLoggerImpl messageLogger;
 
   @Inject
-  public Container(FileSystem fileSystem, ObjectFactory objectFactory, TempManager tempManager) {
+  public Container(FileSystem fileSystem, RecordFactory recordFactory, TempManager tempManager) {
     this.fileSystem = fileSystem;
-    this.objectFactory = objectFactory;
+    this.recordFactory = recordFactory;
     this.tempManager = tempManager;
     this.tempDirs = new ArrayList<>();
-    this.messageLogger = new MessageLoggerImpl(objectFactory);
+    this.messageLogger = new MessageLoggerImpl(recordFactory);
   }
 
   @Override
-  public ObjectFactory factory() {
-    return objectFactory;
+  public RecordFactory factory() {
+    return recordFactory;
   }
 
   public FileSystem fileSystem() {
@@ -51,7 +51,7 @@ public class Container implements NativeApi, Closeable {
 
   @Override
   public Array messages() {
-    return objectFactory.arrayBuilder(objectFactory.messageType())
+    return recordFactory.arrayBuilder(recordFactory.messageSpec())
         .addAll(messageLogger.messages)
         .build();
   }
@@ -71,26 +71,26 @@ public class Container implements NativeApi, Closeable {
   }
 
   private static class MessageLoggerImpl implements MessageLogger {
-    private final List<SObject> messages = new ArrayList<>();
-    private final ObjectFactory objectFactory;
+    private final List<Record> messages = new ArrayList<>();
+    private final RecordFactory recordFactory;
 
-    public MessageLoggerImpl(ObjectFactory objectFactory) {
-      this.objectFactory = objectFactory;
+    public MessageLoggerImpl(RecordFactory recordFactory) {
+      this.recordFactory = recordFactory;
     }
 
     @Override
     public void error(String message) {
-      messages.add(objectFactory.errorMessage(message));
+      messages.add(recordFactory.errorMessage(message));
     }
 
     @Override
     public void warning(String message) {
-      messages.add(objectFactory.warningMessage(message));
+      messages.add(recordFactory.warningMessage(message));
     }
 
     @Override
     public void info(String message) {
-      messages.add(objectFactory.infoMessage(message));
+      messages.add(recordFactory.infoMessage(message));
     }
   }
 }

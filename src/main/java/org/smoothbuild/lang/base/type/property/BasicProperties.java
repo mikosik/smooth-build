@@ -3,12 +3,12 @@ package org.smoothbuild.lang.base.type.property;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 public class BasicProperties extends DefaultProperties {
-  private final Class<? extends SObject> jType;
+  private final Class<? extends Record> jType;
 
-  public BasicProperties(Class<? extends SObject> jType) {
+  public BasicProperties(Class<? extends Record> jType) {
     this.jType = jType;
   }
 
@@ -29,7 +29,7 @@ public class BasicProperties extends DefaultProperties {
   }
 
   @Override
-  public Class<? extends SObject> jType() {
+  public Class<? extends Record> jType() {
     return jType;
   }
 }

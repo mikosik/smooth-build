@@ -17,12 +17,12 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.ObjectDb;
-import org.smoothbuild.record.db.ObjectFactory;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.db.RecordDb;
+import org.smoothbuild.record.db.RecordFactory;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.Spec;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -32,14 +32,14 @@ import okio.BufferedSource;
  */
 public class OutputDb {
   private final FileSystem fileSystem;
-  private final ObjectDb objectDb;
-  private final ObjectFactory objectFactory;
+  private final RecordDb recordDb;
+  private final RecordFactory recordFactory;
 
   @Inject
-  public OutputDb(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
+  public OutputDb(FileSystem fileSystem, RecordDb recordDb, RecordFactory recordFactory) {
     this.fileSystem = fileSystem;
-    this.objectDb = objectDb;
-    this.objectFactory = objectFactory;
+    this.recordDb = recordDb;
+    this.recordFactory = recordFactory;
   }
 
   public synchronized void write(Hash taskHash, Output output) throws OutputDbException {
@@ -64,13 +64,13 @@ public class OutputDb {
     };
   }
 
-  public synchronized Output read(Hash taskHash, BinaryType type) throws OutputDbException {
+  public synchronized Output read(Hash taskHash, Spec spec) throws OutputDbException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      SObject messagesObject = objectDb.get(Hash.read(source));
-      ArrayType messageArrayType = objectFactory.arrayType(objectFactory.messageType());
-      if (!messagesObject.type().equals(messageArrayType)) {
-        throw corruptedValueException(taskHash, "Expected " + messageArrayType
-            + " as first child of its Merkle root, but got " + messagesObject.type());
+      Record messagesObject = recordDb.get(Hash.read(source));
+      ArraySpec messageArraySpec = recordFactory.arraySpec(recordFactory.messageSpec());
+      if (!messagesObject.spec().equals(messageArraySpec)) {
+        throw corruptedValueException(taskHash, "Expected " + messageArraySpec
+            + " as first child of its Merkle root, but got " + messagesObject.spec());
       }
 
       Array messages = (Array) messagesObject;
@@ -85,13 +85,13 @@ public class OutputDb {
       if (containsErrors(messages)) {
         return new Output(null, messages);
       } else {
-        Hash resultObjectHash = Hash.read(source);
-        SObject object = objectDb.get(resultObjectHash);
-        if (!type.equals(object.type())) {
-          throw corruptedValueException(taskHash, "Expected value of type " + type
-              + " as second child of its Merkle root, but got " + object.type());
+        Hash resultRecordHash = Hash.read(source);
+        Record record = recordDb.get(resultRecordHash);
+        if (!spec.equals(record.spec())) {
+          throw corruptedValueException(taskHash, "Expected value of type " + spec
+              + " as second child of its Merkle root, but got " + record.spec());
         }
-        return new Output(object, messages);
+        return new Output(record, messages);
       }
     } catch (IOException e) {
       throw outputDbException(e);

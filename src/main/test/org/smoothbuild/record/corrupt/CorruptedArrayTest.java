@@ -14,9 +14,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
-import org.smoothbuild.record.db.ObjectDbException;
+import org.smoothbuild.record.db.RecordDbException;
 
 import okio.ByteString;
 
@@ -27,20 +27,20 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
      * This test makes sure that other tests in this class use proper scheme to save smooth array
      * in HashedDb.
      */
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(arrayType(stringType())),
+            hash(arraySpec(stringSpec())),
             hash(
                 hash(
-                    hash(stringType()),
+                    hash(stringSpec()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(stringType()),
+                    hash(stringSpec()),
                     hash("bbb")
                 )
             ));
-    List<String> strings = stream(((Array) objectDb().get(instanceHash))
+    List<String> strings = stream(((Array) recordDb().get(recordHash))
         .asIterable(SString.class))
         .map(SString::jValue)
         .collect(toList());
@@ -59,33 +59,33 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
   public void array_with_data_size_different_than_multiple_of_hash_size_is_corrupted(
       int byteCount) throws Exception {
     Hash notHashOfHashSequence = hash(ByteString.of(new byte[byteCount]));
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(arrayType(stringType())),
+            hash(arraySpec(stringSpec())),
             notHashOfHashSequence
         );
-    assertCall(() -> ((Array) objectDb().get(instanceHash)).asIterable(SObject.class))
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(Record.class))
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new DecodingHashSequenceException(notHashOfHashSequence));
   }
 
   @Test
-  public void array_with_one_element_of_wrong_type_is_corrupted() throws Exception {
-    Hash instanceHash =
+  public void array_with_one_element_of_wrong_spec_is_corrupted() throws Exception {
+    Hash recordHash =
         hash(
-            hash(arrayType(stringType())),
+            hash(arraySpec(stringSpec())),
             hash(
                 hash(
-                    hash(stringType()),
+                    hash(stringSpec()),
                     hash("aaa")
                 ),
                 hash(
-                    hash(boolType()),
+                    hash(boolSpec()),
                     hash(true)
                 )
             ));
-    assertCall(() -> ((Array) objectDb().get(instanceHash)).asIterable(SString.class))
-        .throwsException(new ObjectDbException(instanceHash,
-            "It is array with type [STRING] but one of its elements has type BOOL"));
+    assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(SString.class))
+        .throwsException(new RecordDbException(recordHash,
+            "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
   }
 }

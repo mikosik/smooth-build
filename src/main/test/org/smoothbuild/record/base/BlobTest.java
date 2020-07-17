@@ -22,9 +22,9 @@ public class BlobTest extends TestingContext {
   }
 
   @Test
-  public void type_of_blob_is_blob() {
-    assertThat(blob(bytes).type())
-        .isEqualTo(blobType());
+  public void spec_of_blob_is_blob() {
+    assertThat(blob(bytes).spec())
+        .isEqualTo(blobSpec());
   }
 
   @Test
@@ -81,7 +81,7 @@ public class BlobTest extends TestingContext {
   public void blob_can_be_read_by_hash() {
     Blob blob = blob(bytes);
     Hash hash = blob.hash();
-    assertThat(objectDbOther().get(hash))
+    assertThat(recordDbOther().get(hash))
         .isEqualTo(blob);
   }
 
@@ -89,7 +89,7 @@ public class BlobTest extends TestingContext {
   public void blob_read_by_hash_has_same_content() throws Exception {
     Blob blob = blob(bytes);
     Hash hash = blob.hash();
-    assertThat(((Blob) objectDbOther().get(hash)).source().readByteString())
+    assertThat(((Blob) recordDbOther().get(hash)).source().readByteString())
         .isEqualTo(blob.source().readByteString());
   }
 
