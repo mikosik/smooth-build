@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.parse.expr.Expression;
+import org.smoothbuild.lang.expr.Expression;
 
 public class ExecutionPlanner {
   private final Provider<ExpressionToTaskConverter> converterProvider;

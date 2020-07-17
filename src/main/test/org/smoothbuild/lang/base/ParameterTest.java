@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.parse.expr.Expression;
+import org.smoothbuild.lang.expr.Expression;
 
 public class ParameterTest {
   private final String name = "name";
