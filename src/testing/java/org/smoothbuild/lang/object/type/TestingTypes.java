@@ -12,7 +12,6 @@ public class TestingTypes {
   public static final BinaryType blob = objectDb.blobType();
   public static final BinaryType nothing = objectDb.nothingType();
   public static final TupleType person = context.personType();
-  public static final TupleType file = context.fileType();
 
   public static final ArrayType arrayType = array(type);
   public static final ArrayType arrayBool = array(bool);
@@ -20,7 +19,6 @@ public class TestingTypes {
   public static final ArrayType arrayBlob = array(blob);
   public static final ArrayType arrayNothing = array(nothing);
   public static final ArrayType arrayPerson = array(person);
-  public static final ArrayType arrayFile = array(file);
 
   public static final ArrayType array2Type = array(arrayType);
   public static final ArrayType array2Bool = array(arrayBool);
@@ -28,7 +26,6 @@ public class TestingTypes {
   public static final ArrayType array2Blob = array(arrayBlob);
   public static final ArrayType array2Nothing = array(arrayNothing);
   public static final ArrayType array2Person = array(arrayPerson);
-  public static final ArrayType array2File = array(arrayFile);
 
   private static ArrayType array(BinaryType elemType) {
     return objectDb.arrayType(elemType);
