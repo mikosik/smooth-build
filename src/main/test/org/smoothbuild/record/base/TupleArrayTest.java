@@ -8,9 +8,9 @@ import org.smoothbuild.testing.TestingContext;
 public class TupleArrayTest extends TestingContext {
 
   @Test
-  public void type_of_struct_array_is_struct_array() {
-    Array array = arrayBuilder(personType()).build();
-    assertThat(array.type())
-        .isEqualTo(arrayType(personType()));
+  public void spec_of_tuple_array_is_tuple_array() {
+    Array array = arrayBuilder(personSpec()).build();
+    assertThat(array.spec())
+        .isEqualTo(arraySpec(personSpec()));
   }
 }

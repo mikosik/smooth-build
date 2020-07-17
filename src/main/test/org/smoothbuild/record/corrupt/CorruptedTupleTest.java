@@ -7,18 +7,18 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.ObjectDbException;
+import org.smoothbuild.record.db.RecordDbException;
 
 public class CorruptedTupleTest extends AbstractCorruptedTestCase {
   @Test
-  public void learning_test_create_struct() throws Exception {
+  public void learning_test_create_tuple() throws Exception {
     /*
-     * This test makes sure that other tests in this class use proper scheme to save smooth struct
+     * This test makes sure that other tests in this class use proper scheme to save smooth tuple
      * in HashedDb.
      */
     assertThat(
         hash(
-            hash(personType()),
+            hash(personSpec()),
             hash(
                 hash(string("John")),
                 hash(string("Doe")))))
@@ -26,52 +26,52 @@ public class CorruptedTupleTest extends AbstractCorruptedTestCase {
   }
 
   @Test
-  public void struct_with_too_few_fields_is_corrupted() throws Exception {
-    Hash fieldValuesHash =
+  public void tuple_with_too_few_elements_is_corrupted() throws Exception {
+    Hash elementValuesHash =
         hash(
             hash(string("John")));
-    Hash structHash =
+    Hash tupleHash =
         hash(
-            hash(personType()),
-            fieldValuesHash);
-    Tuple tuple = (Tuple) objectDb().get(structHash);
+            hash(personSpec()),
+            elementValuesHash);
+    Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
-        .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 1));
+        .throwsException(new RecordDbException(tupleHash, errorReadingElementHashes()))
+        .withCause(new DecodingHashSequenceException(elementValuesHash, 2, 1));
   }
 
   @Test
-  public void struct_with_too_many_fields_is_corrupted() throws Exception {
-    Hash fieldValuesHash =
+  public void tuple_with_too_many_elements_is_corrupted() throws Exception {
+    Hash elementValuesHash =
         hash(
             hash(string("John")),
             hash(string("Doe")),
             hash(string("junk")));
-    Hash structHash =
+    Hash tupleHash =
         hash(
-            hash(personType()),
-            fieldValuesHash);
-    Tuple tuple = (Tuple) objectDb().get(structHash);
+            hash(personSpec()),
+            elementValuesHash);
+    Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new ObjectDbException(structHash, errorReadingFieldHashes()))
-        .withCause(new DecodingHashSequenceException(fieldValuesHash, 2, 3));
+        .throwsException(new RecordDbException(tupleHash, errorReadingElementHashes()))
+        .withCause(new DecodingHashSequenceException(elementValuesHash, 2, 3));
   }
 
   @Test
-  public void struct_with_field_of_wrong_type_is_corrupted() throws Exception {
-    Hash structHash =
+  public void tuple_with_element_of_wrong_spec_is_corrupted() throws Exception {
+    Hash tupleHash =
         hash(
-            hash(personType()),
+            hash(personSpec()),
             hash(
                 hash(string("John")),
                 hash(bool(true))));
-    Tuple tuple = (Tuple) objectDb().get(structHash);
+    Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new ObjectDbException(structHash, "Its type (Struct) specifies field " +
-            "at index 1 with type STRING but its data has object of type BOOL at that index."));
+        .throwsException(new RecordDbException(tupleHash, "Its TUPLE spec declares element 1 " +
+            "to have STRING spec but its data has record with BOOL spec at that index."));
   }
 
-  private static String errorReadingFieldHashes() {
-    return "Error reading field hashes.";
+  private static String errorReadingElementHashes() {
+    return "Error reading element hashes.";
   }
 }

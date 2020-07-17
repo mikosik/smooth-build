@@ -14,7 +14,7 @@ import org.smoothbuild.exec.task.TaskModule;
 import org.smoothbuild.install.InstallationPathsModule;
 import org.smoothbuild.install.ProjectPathsModule;
 import org.smoothbuild.io.fs.FileSystemModule;
-import org.smoothbuild.record.db.ObjectDbModule;
+import org.smoothbuild.record.db.RecordDbModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -29,7 +29,7 @@ public class CreateInjector {
       Level logLevel, TaskMatcher taskMatcher) {
     return Guice.createInjector(PRODUCTION,
         new TaskModule(),
-        new ObjectDbModule(),
+        new RecordDbModule(),
         new FileSystemModule(projectDir),
         new ProjectPathsModule(projectDir),
         new InstallationPathsModule(installationDir),

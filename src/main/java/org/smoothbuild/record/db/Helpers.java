@@ -8,7 +8,7 @@ public class Helpers {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new ObjectDbException(e);
+      throw new RecordDbException(e);
     }
   }
 
@@ -16,7 +16,7 @@ public class Helpers {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new ObjectDbException(hash, e);
+      throw new RecordDbException(hash, e);
     }
   }
 

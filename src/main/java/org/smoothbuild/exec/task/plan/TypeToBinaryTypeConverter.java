@@ -11,59 +11,61 @@ import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
-import org.smoothbuild.record.db.ObjectFactory;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
-import org.smoothbuild.record.type.TupleType;
+import org.smoothbuild.record.db.RecordFactory;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.NothingSpec;
+import org.smoothbuild.record.spec.Spec;
+import org.smoothbuild.record.spec.StringSpec;
+import org.smoothbuild.record.spec.TupleSpec;
 
-public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
-  private final ObjectFactory objectFactory;
+public class TypeToBinaryTypeConverter extends TypeVisitor<Spec> {
+  private final RecordFactory recordFactory;
 
-  public TypeToBinaryTypeConverter(ObjectFactory objectFactory) {
-    this.objectFactory = objectFactory;
+  public TypeToBinaryTypeConverter(RecordFactory recordFactory) {
+    this.recordFactory = recordFactory;
   }
 
   @Override
-  public BinaryType visit(BlobType type) {
-    return objectFactory.blobType();
+  public Spec visit(BlobType type) {
+    return recordFactory.blobSpec();
   }
 
   @Override
-  public BinaryType visit(BoolType type) {
-    return objectFactory.boolType();
+  public Spec visit(BoolType type) {
+    return recordFactory.boolSpec();
   }
 
   @Override
-  public org.smoothbuild.record.type.NothingType visit(NothingType type) {
-    return objectFactory.nothingType();
+  public NothingSpec visit(NothingType type) {
+    return recordFactory.nothingSpec();
   }
 
   @Override
-  public org.smoothbuild.record.type.StringType visit(StringType type) {
-    return objectFactory.stringType();
+  public StringSpec visit(StringType type) {
+    return recordFactory.stringSpec();
   }
 
   @Override
-  public TupleType visit(StructType type) {
-    Iterable<BinaryType> fieldTypes =
+  public TupleSpec visit(StructType type) {
+    Iterable<Spec> fieldTypes =
         type.fields().values().stream()
             .map(f -> f.type().visit(this))
             .collect(toImmutableList());
-    return objectFactory.structType(fieldTypes);
+    return recordFactory.tupleSpec(fieldTypes);
   }
 
   @Override
-  public BinaryType visit(GenericType type) {
+  public Spec visit(GenericType type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public ArrayType visit(ConcreteArrayType type) {
-    return objectFactory.arrayType(type.elemType().visit(this));
+  public ArraySpec visit(ConcreteArrayType type) {
+    return recordFactory.arraySpec(type.elemType().visit(this));
   }
 
   @Override
-  public BinaryType visit(GenericArrayType type) {
+  public Spec visit(GenericArrayType type) {
     throw new UnsupportedOperationException();
   }
 }

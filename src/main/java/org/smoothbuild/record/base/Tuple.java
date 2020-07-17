@@ -7,60 +7,59 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.record.db.ObjectDb;
-import org.smoothbuild.record.db.ObjectDbException;
-import org.smoothbuild.record.type.BinaryType;
-import org.smoothbuild.record.type.TupleType;
+import org.smoothbuild.record.db.RecordDb;
+import org.smoothbuild.record.db.RecordDbException;
+import org.smoothbuild.record.spec.Spec;
+import org.smoothbuild.record.spec.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class Tuple extends SObjectImpl {
-  private ImmutableList<SObject> elements;
-  private final ObjectDb objectDb;
+public class Tuple extends RecordImpl {
+  private ImmutableList<Record> elements;
+  private final RecordDb recordDb;
 
-  public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
+  public Tuple(MerkleRoot merkleRoot, RecordDb recordDb, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
-    this.objectDb = objectDb;
+    this.recordDb = recordDb;
   }
 
   @Override
-  public TupleType type() {
-    return (TupleType) super.type();
+  public TupleSpec spec() {
+    return (TupleSpec) super.spec();
   }
 
-  public SObject get(int index) {
-    ImmutableList<SObject> fields = elements();
-    checkIndex(index, fields.size());
-    return fields.get(index);
+  public Record get(int index) {
+    ImmutableList<Record> elements = elements();
+    checkIndex(index, elements.size());
+    return elements.get(index);
   }
 
-  public SObject superObject() {
-    ImmutableList<SObject> fields = elements();
-    return fields.size() == 0 ? null : fields.iterator().next();
+  public Record superObject() {
+    ImmutableList<Record> elements = elements();
+    return elements.size() == 0 ? null : elements.iterator().next();
   }
 
-  private ImmutableList<SObject> elements() {
+  private ImmutableList<Record> elements() {
     if (elements == null) {
-      var fieldTypes = type().elementTypes();
-      var fieldHashes = readFieldHashes(fieldTypes);
-      if (fieldTypes.size() != fieldHashes.size()) {
-        throw new ObjectDbException(hash(), "Its type (Struct) specifies " + fieldTypes.size()
-            + " fields but its data points to" + fieldHashes.size() + "  fields.");
+      var elementSpecs = spec().elementSpecs();
+      var elementHashes = readElementHashes(elementSpecs);
+      if (elementSpecs.size() != elementHashes.size()) {
+        throw new RecordDbException(hash(), "Its TUPLE spec declares " + elementSpecs.size()
+            + " elements but its data points to" + elementHashes.size() + "  elements.");
       }
-      var builder = ImmutableList.<SObject>builder();
-      for (int i = 0; i < fieldTypes.size(); i++) {
-        SObject object = objectDb.get(fieldHashes.get(i));
-        BinaryType type = fieldTypes.get(i);
-        if (type.equals(object.type())) {
-          builder.add(object);
+      var builder = ImmutableList.<Record>builder();
+      for (int i = 0; i < elementSpecs.size(); i++) {
+        Record record = recordDb.get(elementHashes.get(i));
+        Spec spec = elementSpecs.get(i);
+        if (spec.equals(record.spec())) {
+          builder.add(record);
         } else {
-          throw new ObjectDbException(hash(), "Its type (Struct) specifies field at index " + i
-              + " with type " + type.name() + " but its data has object of type " +
-              object.type().name()
-              + " at that index.");
+          throw new RecordDbException(hash(), "Its TUPLE spec declares element " + i
+              + " to have " + spec.name() + " spec but its data has record with " +
+              record.spec().name() + " spec at that index.");
         }
       }
       elements = builder.build();
@@ -68,11 +67,11 @@ public class Tuple extends SObjectImpl {
     return elements;
   }
 
-  private List<Hash> readFieldHashes(final ImmutableList<BinaryType> fieldTypes) {
+  private List<Hash> readElementHashes(final ImmutableList<Spec> elementSpecs) {
     try {
-      return hashedDb.readHashes(dataHash(), fieldTypes.size());
+      return hashedDb.readHashes(dataHash(), elementSpecs.size());
     } catch (HashedDbException e) {
-      throw new ObjectDbException(hash(), "Error reading field hashes.", e);
+      throw new RecordDbException(hash(), "Error reading element hashes.", e);
     }
   }
 }

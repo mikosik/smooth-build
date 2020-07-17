@@ -6,7 +6,7 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 public class ArrayProperties implements TypeProperties {
   @Override
@@ -64,7 +64,7 @@ public class ArrayProperties implements TypeProperties {
   }
 
   @Override
-  public Class<? extends SObject> jType() {
+  public Class<? extends Record> jType() {
     return Array.class;
   }
 

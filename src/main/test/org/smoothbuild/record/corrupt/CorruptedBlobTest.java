@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.db.ObjectDbException;
+import org.smoothbuild.record.db.RecordDbException;
 
 import com.google.common.truth.Truth;
 
@@ -20,23 +20,23 @@ public class CorruptedBlobTest  extends AbstractCorruptedTestCase {
      * in HashedDb.
      */
     ByteString byteString = ByteString.of((byte) 1, (byte) 2);
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(blobType()),
+            hash(blobSpec()),
             hash(byteString));
-    Truth.assertThat(((Blob) objectDb().get(instanceHash)).source().readByteString())
+    Truth.assertThat(((Blob) recordDb().get(recordHash)).source().readByteString())
         .isEqualTo(byteString);
   }
 
   @Test
   public void bool_with_data_hash_pointing_nowhere_is_corrupted() throws Exception {
     Hash dataHash = Hash.of(33);
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(blobType()),
+            hash(blobSpec()),
             dataHash);
-    assertCall(() -> ((Blob) objectDb().get(instanceHash)).source())
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((Blob) recordDb().get(recordHash)).source())
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new NoSuchDataException(dataHash));
   }
 }

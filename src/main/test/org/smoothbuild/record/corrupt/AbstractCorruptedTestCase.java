@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -35,8 +35,8 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
     }
   }
 
-  protected Hash hash(SObject object) {
-    return object.hash();
+  protected Hash hash(Record record) {
+    return record.hash();
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {

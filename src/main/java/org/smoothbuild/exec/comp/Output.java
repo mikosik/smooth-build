@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
-public record Output(SObject value, Array messages) {
+public record Output(Record value, Array messages) {
 
   public Output {
     this.value = value;
@@ -17,7 +17,7 @@ public record Output(SObject value, Array messages) {
     return value != null;
   }
 
-  public SObject value() {
+  public Record value() {
     checkState(hasValue(), "Output does not contain value.");
     return value;
   }

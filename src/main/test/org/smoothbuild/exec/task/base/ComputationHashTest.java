@@ -8,8 +8,8 @@ import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.record.type.TestingTypes.PERSON;
-import static org.smoothbuild.record.type.TestingTypes.STRING;
+import static org.smoothbuild.record.spec.TestingSpecs.PERSON;
+import static org.smoothbuild.record.spec.TestingSpecs.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import org.smoothbuild.exec.comp.ReadTupleElementAlgorithm;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
 public class ComputationHashTest extends TestingContext {
@@ -65,7 +65,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CreateArrayAlgorithm(arrayType(stringType()));
+    Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(stringSpec()));
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("16457f3457ec260bb4be0161933c32010b162123"));
@@ -73,7 +73,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_array_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CreateArrayAlgorithm(arrayType(stringType()));
+    Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(stringSpec()));
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("a45fc25de1f36f700edd0a7a6fbfbde52a52796c"));
@@ -81,7 +81,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringType(), mockNativeFunction());
+    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNativeFunction());
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("d66663fdde3d70dda784d5b035578cbd7bd6c184"));
@@ -89,7 +89,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringType(), mockNativeFunction());
+    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNativeFunction());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("556691e768974b206168183cee2224cb0b09fb90"));
@@ -97,7 +97,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_convert_from_nothing_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ConvertAlgorithm(stringType());
+    Algorithm algorithm = new ConvertAlgorithm(stringSpec());
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("8f4c9864950191a3fd2fc6ef4dff00c6ffe8b21b"));
@@ -148,7 +148,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public BinaryType type() {
+      public Spec type() {
         return null;
       }
 

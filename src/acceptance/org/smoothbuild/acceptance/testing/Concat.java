@@ -3,15 +3,15 @@ package org.smoothbuild.acceptance.testing;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 public class Concat {
   @SmoothFunction("testConcat")
   public static Array testConcat(NativeApi nativeApi, Array first, Array second) {
     return nativeApi.factory()
-        .arrayBuilder(first.type().elemType())
-        .addAll(first.asIterable(SObject.class))
-        .addAll(second.asIterable(SObject.class))
+        .arrayBuilder(first.spec().elemSpec())
+        .addAll(first.asIterable(Record.class))
+        .addAll(second.asIterable(Record.class))
         .build();
   }
 }

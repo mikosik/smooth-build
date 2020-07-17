@@ -6,16 +6,16 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.HashingBufferedSink;
-import org.smoothbuild.record.db.ObjectDb;
+import org.smoothbuild.record.db.RecordDb;
 
 import okio.BufferedSink;
 
 public class BlobBuilder implements Closeable {
-  private final ObjectDb objectDb;
+  private final RecordDb recordDb;
   private final HashingBufferedSink sink;
 
-  public BlobBuilder(ObjectDb objectDb, HashingBufferedSink sink) {
-    this.objectDb = objectDb;
+  public BlobBuilder(RecordDb recordDb, HashingBufferedSink sink) {
+    this.recordDb = recordDb;
     this.sink = sink;
   }
 
@@ -30,6 +30,6 @@ public class BlobBuilder implements Closeable {
 
   public Blob build() throws IOException {
     close();
-    return wrapException(() -> objectDb.newBlob(sink.hash()));
+    return wrapException(() -> recordDb.newBlob(sink.hash()));
   }
 }

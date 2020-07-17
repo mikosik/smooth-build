@@ -7,8 +7,8 @@ import org.smoothbuild.testing.TestingContext;
 
 public class StringArrayTest extends TestingContext {
   @Test
-  public void type_of_string_array_is_string_array() {
-    assertThat(arrayBuilder(stringType()).build().type())
-        .isEqualTo(arrayType(stringType()));
+  public void spec_of_string_array_is_string_array() {
+    assertThat(arrayBuilder(stringSpec()).build().spec())
+        .isEqualTo(arraySpec(stringSpec()));
   }
 }

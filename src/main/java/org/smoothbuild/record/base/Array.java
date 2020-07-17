@@ -4,36 +4,36 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
-import org.smoothbuild.record.db.ObjectDb;
-import org.smoothbuild.record.db.ObjectDbException;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.db.RecordDb;
+import org.smoothbuild.record.db.RecordDbException;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.Spec;
 
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
  */
-public class Array extends SObjectImpl {
-  private final ObjectDb objectDb;
+public class Array extends RecordImpl {
+  private final RecordDb recordDb;
 
-  public Array(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
+  public Array(MerkleRoot merkleRoot, RecordDb recordDb, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
-    this.objectDb = objectDb;
+    this.recordDb = recordDb;
   }
 
   @Override
-  public ArrayType type() {
-    return (ArrayType) super.type();
+  public ArraySpec spec() {
+    return (ArraySpec) super.spec();
   }
 
-  public <T extends SObject> Iterable<T> asIterable(Class<T> clazz) {
+  public <T extends Record> Iterable<T> asIterable(Class<T> clazz) {
     assertIsIterableAs(clazz);
-    ImmutableList<SObject> elements = elements();
-    for (SObject object : elements) {
-      if (!object.type().equals(type().elemType())) {
-        throw new ObjectDbException(hash(), "It is array with type " + type().name()
-            + " but one of its elements has type " + object.type().name());
+    ImmutableList<Record> elements = elements();
+    for (Record record : elements) {
+      if (!record.spec().equals(spec().elemSpec())) {
+        throw new RecordDbException(hash(), "It is array which spec == " + spec().name()
+            + " but one of its elements has spec == " + record.spec().name());
       }
     }
     @SuppressWarnings("unchecked")
@@ -41,23 +41,23 @@ public class Array extends SObjectImpl {
     return result;
   }
 
-  private <T extends SObject> void assertIsIterableAs(Class<T> clazz) {
-    BinaryType elemType = type().elemType();
-    if (!(elemType.isNothing() || clazz.isAssignableFrom(elemType.jType()))) {
-      throw new IllegalArgumentException(type().name() + " cannot be viewed as Iterable of "
+  private <T extends Record> void assertIsIterableAs(Class<T> clazz) {
+    Spec elemSpec = spec().elemSpec();
+    if (!(elemSpec.isNothing() || clazz.isAssignableFrom(elemSpec.jType()))) {
+      throw new IllegalArgumentException(spec().name() + " cannot be viewed as Iterable of "
           + clazz.getCanonicalName() + ".");
     }
   }
 
-  private ImmutableList<SObject> elements() {
+  private ImmutableList<Record> elements() {
     try {
       return hashedDb
           .readHashes(dataHash())
           .stream()
-          .map(objectDb::get)
+          .map(recordDb::get)
           .collect(toImmutableList());
     } catch (HashedDbException e) {
-      throw new ObjectDbException(hash(), e);
+      throw new RecordDbException(hash(), e);
     }
   }
 }

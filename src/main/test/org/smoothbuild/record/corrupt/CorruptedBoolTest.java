@@ -14,7 +14,7 @@ import org.smoothbuild.db.hashed.DecodingBooleanException;
 import org.smoothbuild.db.hashed.DecodingByteException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.db.ObjectDbException;
+import org.smoothbuild.record.db.RecordDbException;
 
 import com.google.common.truth.Truth;
 
@@ -28,35 +28,35 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
   public void run_learning_test(boolean value) throws Exception {
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(boolType()),
+            hash(boolSpec()),
             hash(value));
-    Truth.assertThat(((Bool) objectDb().get(instanceHash)).jValue())
+    Truth.assertThat(((Bool) recordDb().get(recordHash)).jValue())
         .isEqualTo(value);
   }
 
   @Test
   public void bool_with_empty_bytes_as_data_is_corrupted() throws Exception {
     Hash dataHash = hash(ByteString.of());
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(boolType()),
+            hash(boolSpec()),
             dataHash);
-    assertCall(() -> ((Bool) objectDb().get(instanceHash)).jValue())
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
   @Test
   public void bool_with_more_than_one_byte_as_data_is_corrupted() throws Exception {
     Hash dataHash = hash(ByteString.of((byte) 0, (byte) 0));
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(boolType()),
+            hash(boolSpec()),
             dataHash);
-    assertCall(() -> ((Bool) objectDb().get(instanceHash)).jValue())
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
@@ -74,12 +74,12 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
   public void bool_with_one_byte_data_not_equal_zero_nor_one_is_corrupted(byte value)
       throws Exception {
     Hash dataHash = hash(ByteString.of(value));
-    Hash instanceHash =
+    Hash recordHash =
         hash(
-            hash(boolType()),
+            hash(boolSpec()),
             dataHash);
-    assertCall(() -> ((Bool) objectDb().get(instanceHash)).jValue())
-        .throwsException(new ObjectDbException(instanceHash))
+    assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
+        .throwsException(new RecordDbException(recordHash))
         .withCause(new DecodingBooleanException(dataHash));
   }
 }

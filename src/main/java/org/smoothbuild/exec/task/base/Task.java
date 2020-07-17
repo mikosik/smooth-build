@@ -8,7 +8,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
@@ -56,7 +56,7 @@ public abstract class Task {
     return type.name() + " " + name;
   }
 
-  public abstract Feeder<SObject> startComputation(Worker worker);
+  public abstract Feeder<Record> startComputation(Worker worker);
 
   public static List<ConcreteType> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);

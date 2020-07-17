@@ -11,16 +11,16 @@ import okio.ByteString;
 
 public class ArrayTest extends TestingContext {
   @Test
-  public void empty_nothing_array_can_be_iterated_as_struct() {
-    Array array = arrayBuilder(nothingType())
+  public void empty_nothing_array_can_be_iterated_as_tuple() {
+    Array array = arrayBuilder(nothingSpec())
         .build();
     assertThat(array.asIterable(Tuple.class))
         .isEmpty();
   }
 
   @Test
-  public void string_array_cannot_be_iterated_as_struct() {
-    Array array = arrayBuilder(stringType())
+  public void string_array_cannot_be_iterated_as_tuple() {
+    Array array = arrayBuilder(stringSpec())
         .add(string("abc"))
         .build();
     assertCall(() -> array.asIterable(Tuple.class))
@@ -30,7 +30,7 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void empty_array_is_empty() {
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .build();
     assertThat(array.asIterable(SString.class))
         .isEmpty();
@@ -38,21 +38,21 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void adding_null_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(stringType());
+    ArrayBuilder arrayBuilder = arrayBuilder(stringSpec());
     assertCall(() -> arrayBuilder.add(null))
         .throwsException(NullPointerException.class);
   }
 
   @Test
-  public void adding_element_with_wrong_smooth_type_is_forbidden() {
-    ArrayBuilder arrayBuilder = arrayBuilder(stringType());
+  public void adding_element_with_wrong_smooth_spec_is_forbidden() {
+    ArrayBuilder arrayBuilder = arrayBuilder(stringSpec());
     assertCall(() -> arrayBuilder.add(blob(ByteString.of())))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void array_contains_added_element() {
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(string("abc"))
         .build();
     assertThat(array.asIterable(SString.class))
@@ -63,7 +63,7 @@ public class ArrayTest extends TestingContext {
   public void array_contains_added_element_via_add_all_method() {
     SString sstring = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .addAll(list(sstring, sstring2))
         .build();
     assertThat(array.asIterable(SString.class))
@@ -76,7 +76,7 @@ public class ArrayTest extends TestingContext {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
     SString sstring3 = string("ghi");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .add(sstring3)
@@ -89,7 +89,7 @@ public class ArrayTest extends TestingContext {
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
     SString sstring = string("abc");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring)
         .add(sstring)
         .build();
@@ -101,11 +101,11 @@ public class ArrayTest extends TestingContext {
   public void arrays_with_same_elements_have_same_hash() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
-    Array array2 = arrayBuilder(stringType())
+    Array array2 = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
@@ -116,7 +116,7 @@ public class ArrayTest extends TestingContext {
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
     SString sstring = string("abc");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring)
         .build();
     assertThat(array.hash())
@@ -127,11 +127,11 @@ public class ArrayTest extends TestingContext {
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
-    Array array2 = arrayBuilder(stringType())
+    Array array2 = arrayBuilder(stringSpec())
         .add(sstring2)
         .add(sstring1)
         .build();
@@ -143,10 +143,10 @@ public class ArrayTest extends TestingContext {
   public void array_with_one_more_element_have_different_hash() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .build();
-    Array array2 = arrayBuilder(stringType())
+    Array array2 = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
@@ -158,11 +158,11 @@ public class ArrayTest extends TestingContext {
   public void array_can_be_read_by_hash() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
-    assertThat(objectDbOther().get(array.hash()))
+    assertThat(recordDbOther().get(array.hash()))
         .isEqualTo(array);
   }
 
@@ -170,11 +170,11 @@ public class ArrayTest extends TestingContext {
   public void array_read_by_hash_contains_same_elements() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
-    assertThat(((Array) objectDbOther().get(array.hash())).asIterable(SString.class))
+    assertThat(((Array) recordDbOther().get(array.hash())).asIterable(SString.class))
         .containsExactly(sstring1, sstring2)
         .inOrder();
   }
@@ -183,11 +183,11 @@ public class ArrayTest extends TestingContext {
   public void array_read_by_hash_has_same_hash() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();
-    assertThat(objectDbOther().get(array.hash()).hash())
+    assertThat(recordDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
   }
 
@@ -195,7 +195,7 @@ public class ArrayTest extends TestingContext {
   public void to_string() {
     SString sstring1 = string("abc");
     SString sstring2 = string("def");
-    Array array = arrayBuilder(stringType())
+    Array array = arrayBuilder(stringSpec())
         .add(sstring1)
         .add(sstring2)
         .build();

@@ -11,7 +11,7 @@ import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -24,9 +24,9 @@ public class NormalTask extends ComputableTask {
   }
 
   @Override
-  public Feeder<SObject> startComputation(Worker worker) {
-    FeedingConsumer<SObject> result = new FeedingConsumer<>();
-    ImmutableList<Feeder<SObject>> dependencyResults = dependencies()
+  public Feeder<Record> startComputation(Worker worker) {
+    FeedingConsumer<Record> result = new FeedingConsumer<>();
+    ImmutableList<Feeder<Record>> dependencyResults = dependencies()
         .stream()
         .map(ch -> ch.startComputation(worker))
         .collect(toImmutableList());
@@ -35,8 +35,8 @@ public class NormalTask extends ComputableTask {
     return result;
   }
 
-  private static Input toInput(List<Feeder<SObject>> results) {
-    List<SObject> childValues = results
+  private static Input toInput(List<Feeder<Record>> results) {
+    List<Record> childValues = results
         .stream()
         .map(Feeder::get)
         .collect(toImmutableList());

@@ -6,31 +6,31 @@ import static org.smoothbuild.record.db.Helpers.wrapException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.smoothbuild.record.db.ObjectDb;
-import org.smoothbuild.record.type.ArrayType;
+import org.smoothbuild.record.db.RecordDb;
+import org.smoothbuild.record.spec.ArraySpec;
 
 public class ArrayBuilder {
-  private final ArrayType type;
-  private final ObjectDb objectDb;
-  private final List<SObject> elements;
+  private final ArraySpec spec;
+  private final RecordDb recordDb;
+  private final List<Record> elements;
 
-  public ArrayBuilder(ArrayType type, ObjectDb objectDb) {
-    this.type = type;
-    this.objectDb = objectDb;
+  public ArrayBuilder(ArraySpec spec, RecordDb recordDb) {
+    this.spec = spec;
+    this.recordDb = recordDb;
     this.elements = new ArrayList<>();
   }
 
-  public ArrayBuilder addAll(Iterable<? extends SObject> objects) {
-    stream(objects).forEach(this::add);
+  public ArrayBuilder addAll(Iterable<? extends Record> records) {
+    stream(records).forEach(this::add);
     return this;
   }
 
-  public ArrayBuilder add(SObject elem) {
-    if (!type.elemType().equals(elem.type())) {
-      throw new IllegalArgumentException("Element type must be " + type.elemType().name()
-          + " but was " + elem.type().name() + ".");
+  public ArrayBuilder add(Record elem) {
+    if (!spec.elemSpec().equals(elem.spec())) {
+      throw new IllegalArgumentException("Element spec must be " + spec.elemSpec().name()
+          + " but was " + elem.spec().name() + ".");
     }
-    Class<?> required = type.elemType().jType();
+    Class<?> required = spec.elemSpec().jType();
     if (!required.equals(elem.getClass())) {
       throw new IllegalArgumentException("Element must be instance of java class "
           + required.getCanonicalName() + " but it is instance of "
@@ -41,6 +41,6 @@ public class ArrayBuilder {
   }
 
   public Array build() {
-    return wrapException(() -> objectDb.newArray(type, elements));
+    return wrapException(() -> recordDb.newArray(spec, elements));
   }
 }

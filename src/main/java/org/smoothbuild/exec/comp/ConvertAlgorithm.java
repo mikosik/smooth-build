@@ -8,16 +8,16 @@ import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.Spec;
 
 public class ConvertAlgorithm implements Algorithm {
-  private final BinaryType destinationType;
+  private final Spec destinationSpec;
 
-  public ConvertAlgorithm(BinaryType destinationType) {
-    this.destinationType = destinationType;
+  public ConvertAlgorithm(Spec destinationSpec) {
+    this.destinationSpec = destinationSpec;
   }
 
   @Override
@@ -27,47 +27,45 @@ public class ConvertAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return convertAlgorithmHash(destinationType);
+    return convertAlgorithmHash(destinationSpec);
   }
 
   @Override
-  public BinaryType type() {
-    return destinationType;
+  public Spec type() {
+    return destinationSpec;
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
-    SObject object = input.objects().get(0);
-    assertThat(!destinationType.equals(object.type()));
-    if (object instanceof Array) {
-      return new Output(convertArray(nativeApi, (Array) object, destinationType), nativeApi.messages());
+    Record record = input.objects().get(0);
+    assertThat(!destinationSpec.equals(record.spec()));
+    if (record instanceof Array) {
+      return new Output(convertArray(nativeApi, (Array) record, destinationSpec), nativeApi.messages());
     }
-    assertThat(!object.type().isNothing());
-    return new Output(convertStruct((Tuple) object, destinationType), nativeApi.messages());
+    assertThat(!record.spec().isNothing());
+    return new Output(convertStruct((Tuple) record, destinationSpec), nativeApi.messages());
   }
 
-  private static SObject convertArray(NativeApi nativeApi, Array array,
-      BinaryType destinationType) {
-    BinaryType elemType = ((ArrayType) destinationType).elemType();
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemType);
-    for (SObject element : array.asIterable(SObject.class)) {
+  private static Record convertArray(NativeApi nativeApi, Array array, Spec destinationSpec) {
+    Spec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemSpec);
+    for (Record element : array.asIterable(Record.class)) {
       if (element instanceof Array) {
-        builder.add(convertArray(nativeApi, (Array) element, elemType));
+        builder.add(convertArray(nativeApi, (Array) element, elemSpec));
       } else {
-        builder.add(convertStruct((Tuple) element, elemType));
+        builder.add(convertStruct((Tuple) element, elemSpec));
       }
     }
     return builder.build();
   }
 
-  private static SObject convertStruct(Tuple tuple,
-      BinaryType destinationType) {
-    SObject superObject = tuple.superObject();
-    if (superObject.type().equals(destinationType)) {
+  private static Record convertStruct(Tuple tuple, Spec destinationSpec) {
+    Record superObject = tuple.superObject();
+    if (superObject.spec().equals(destinationSpec)) {
       return superObject;
     }
-    return convertStruct((Tuple) superObject, destinationType);
+    return convertStruct((Tuple) superObject, destinationSpec);
   }
 
   private static void assertThat(boolean expression) {

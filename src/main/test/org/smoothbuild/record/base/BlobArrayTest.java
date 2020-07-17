@@ -9,9 +9,9 @@ public class BlobArrayTest extends TestingContext {
   private Array array;
 
   @Test
-  public void type_of_blob_array_is_blob_array() {
-    array = arrayBuilder(blobType()).build();
-    assertThat(array.type())
-        .isEqualTo(arrayType(blobType()));
+  public void spec_of_blob_array_is_blob_array() {
+    array = arrayBuilder(blobSpec()).build();
+    assertThat(array.spec())
+        .isEqualTo(arraySpec(blobSpec()));
   }
 }

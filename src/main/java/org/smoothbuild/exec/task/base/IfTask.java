@@ -12,7 +12,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -27,16 +27,16 @@ public class IfTask extends ComputableTask {
   }
 
   @Override
-  public Feeder<SObject> startComputation(Worker worker) {
-    FeedingConsumer<SObject> ifResult = new FeedingConsumer<>();
-    Feeder<SObject> conditionResult = conditionTask().startComputation(worker);
-    Consumer<SObject> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
-    Consumer<SObject> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
+  public Feeder<Record> startComputation(Worker worker) {
+    FeedingConsumer<Record> ifResult = new FeedingConsumer<>();
+    Feeder<Record> conditionResult = conditionTask().startComputation(worker);
+    Consumer<Record> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
+    Consumer<Record> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
     conditionResult.addConsumer(thenOrElseEnqueuer);
     return ifResult;
   }
 
-  private Consumer<SObject> thenOrElseEnqueuer(Worker worker, Consumer<SObject> ifEnqueuer) {
+  private Consumer<Record> thenOrElseEnqueuer(Worker worker, Consumer<Record> ifEnqueuer) {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
       Task thenOrElseTask = condition ? thenTask() : elseTask();
@@ -44,10 +44,10 @@ public class IfTask extends ComputableTask {
     };
   }
 
-  private Consumer<SObject> ifEnqueuer(Worker worker, Consumer<SObject> ifResultConsumer,
-      Supplier<SObject> conditionResult) {
+  private Consumer<Record> ifEnqueuer(Worker worker, Consumer<Record> ifResultConsumer,
+      Supplier<Record> conditionResult) {
     return thenOrElseResult -> {
-      SObject conditionValue = conditionResult.get();
+      Record conditionValue = conditionResult.get();
 
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.

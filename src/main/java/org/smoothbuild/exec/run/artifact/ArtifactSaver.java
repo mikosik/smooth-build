@@ -16,10 +16,10 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.ObjectFactory;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.db.RecordFactory;
+import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**
@@ -27,22 +27,22 @@ import org.smoothbuild.util.DuplicatesDetector;
  */
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final ObjectFactory objectFactory;
+  private final RecordFactory recordFactory;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory) {
+  public ArtifactSaver(FileSystem fileSystem, RecordFactory recordFactory) {
     this.fileSystem = fileSystem;
-    this.objectFactory = objectFactory;
+    this.recordFactory = recordFactory;
   }
 
-  public Path save(String name, SObject object) throws IOException, DuplicatedPathsException {
+  public Path save(String name, Record record) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
-    if (object instanceof Array) {
-      return saveArray(artifactPath, (Array) object);
-    } else if (object.type().equals(objectFactory.fileType())) {
-      return saveFile(artifactPath, (Tuple) object);
+    if (record instanceof Array) {
+      return saveArray(artifactPath, (Array) record);
+    } else if (record.spec().equals(recordFactory.fileSpec())) {
+      return saveFile(artifactPath, (Tuple) record);
     } else {
-      return saveBasicObject(artifactPath, object);
+      return saveBasicObject(artifactPath, record);
     }
   }
 
@@ -52,15 +52,15 @@ public class ArtifactSaver {
   }
 
   private Path saveArray(Path artifactPath, Array array) throws IOException, DuplicatedPathsException {
-    BinaryType elemType = array.type().elemType();
+    Spec elemSpec = array.spec().elemSpec();
     fileSystem.createDir(artifactPath);
-    if (elemType.isArray()) {
+    if (elemSpec.isArray()) {
       int i = 0;
       for (Array element : array.asIterable(Array.class)) {
         saveArray(artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
-    } else if (elemType.equals(objectFactory.fileType())) {
+    } else if (elemSpec.equals(recordFactory.fileSpec())) {
       saveFileArray(artifactPath, array.asIterable(Tuple.class));
     } else {
       saveObjectArray(artifactPath, array);
@@ -70,9 +70,9 @@ public class ArtifactSaver {
 
   private void saveObjectArray(Path artifactPath, Array array) throws IOException {
     int i = 0;
-    for (SObject object : array.asIterable(SObject.class)) {
+    for (Record record : array.asIterable(Record.class)) {
       Path sourcePath = artifactPath.appendPart(Integer.valueOf(i).toString());
-      Path targetPath = targetPath(object);
+      Path targetPath = targetPath(record);
       fileSystem.createLink(sourcePath, targetPath);
       i++;
     }
@@ -106,8 +106,8 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private Path saveBasicObject(Path artifactPath, SObject object) throws IOException {
-    Path targetPath = targetPath(object);
+  private Path saveBasicObject(Path artifactPath, Record record) throws IOException {
+    Path targetPath = targetPath(record);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
     return artifactPath;

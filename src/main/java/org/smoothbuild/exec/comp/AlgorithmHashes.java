@@ -3,8 +3,8 @@ package org.smoothbuild.exec.comp;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.record.type.BinaryType;
-import org.smoothbuild.record.type.TupleType;
+import org.smoothbuild.record.spec.Spec;
+import org.smoothbuild.record.spec.TupleSpec;
 
 public class AlgorithmHashes {
   public static Hash createArrayAlgorithmHash() {
@@ -15,11 +15,11 @@ public class AlgorithmHashes {
     return hash(1, function.hash());
   }
 
-  public static Hash convertAlgorithmHash(BinaryType destinationType) {
-    return hash(2, destinationType.hash());
+  public static Hash convertAlgorithmHash(Spec destinationSpec) {
+    return hash(2, destinationSpec.hash());
   }
 
-  public static Hash createTupleAlgorithmHash(TupleType type) {
+  public static Hash createTupleAlgorithmHash(TupleSpec type) {
     return hash(3, type.hash());
   }
 

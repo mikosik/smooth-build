@@ -7,7 +7,7 @@ import org.smoothbuild.db.hashed.HashedDb;
 /**
  * This class is immutable.
  */
-public class Bool extends SObjectImpl {
+public class Bool extends RecordImpl {
   public Bool(MerkleRoot merkleRoot, HashedDb hashedDb) {
     super(merkleRoot, hashedDb);
   }
@@ -18,6 +18,6 @@ public class Bool extends SObjectImpl {
 
   @Override
   public String toString() {
-    return type().name() + "(" + jValue() + "):" + hash();
+    return spec().name() + "(" + jValue() + "):" + hash();
   }
 }

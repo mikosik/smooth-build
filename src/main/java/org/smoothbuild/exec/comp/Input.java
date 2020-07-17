@@ -3,21 +3,21 @@ package org.smoothbuild.exec.comp;
 import static com.google.common.collect.Streams.stream;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableList;
 
-public record Input(ImmutableList<SObject>objects, Hash hash) {
+public record Input(ImmutableList<Record>objects, Hash hash) {
 
-  public static Input input(Iterable<? extends SObject> objects) {
-    return new Input(ImmutableList.copyOf(objects));
+  public static Input input(Iterable<? extends Record> records) {
+    return new Input(ImmutableList.copyOf(records));
   }
 
-  private Input(ImmutableList<SObject> objects) {
-    this(objects, calculateHash(objects));
+  private Input(ImmutableList<Record> records) {
+    this(records, calculateHash(records));
   }
 
-  private static Hash calculateHash(Iterable<? extends SObject> objects) {
-    return Hash.of(stream(objects).map(SObject::hash).toArray(Hash[]::new));
+  private static Hash calculateHash(Iterable<? extends Record> records) {
+    return Hash.of(stream(records).map(Record::hash).toArray(Hash[]::new));
   }
 }

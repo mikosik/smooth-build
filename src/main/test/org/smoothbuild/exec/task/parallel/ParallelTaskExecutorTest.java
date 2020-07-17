@@ -38,9 +38,9 @@ import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.collect.ImmutableList;
@@ -150,10 +150,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
     Task task = task(valueAlgorithm("A"));
 
-    SObject sObject = parallelTaskExecutor.executeAll(list(task)).get(task);
+    Record record = parallelTaskExecutor.executeAll(list(task)).get(task);
 
     verify(reporter, only()).reportComputerException(same(task), same(exception));
-    assertThat(sObject).isNull();
+    assertThat(record).isNull();
   }
 
   private Task concat(Task... dependencies) {
@@ -224,11 +224,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private SObject executeSingleTask(Task task) throws InterruptedException {
+  private Record executeSingleTask(Task task) throws InterruptedException {
     return executeSingleTask(parallelTaskExecutor, task);
   }
 
-  private static SObject executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
+  private static Record executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
@@ -271,8 +271,8 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     @Override
-    public BinaryType type() {
-      return stringType();
+    public Spec type() {
+      return stringSpec();
     }
   }
 }

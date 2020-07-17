@@ -5,16 +5,16 @@ import java.util.function.Consumer;
 import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandler implements Consumer<Computed> {
   private final Task task;
-  private final Consumer<SObject> consumer;
+  private final Consumer<Record> consumer;
   private final ExecutionReporter reporter;
   private final SoftTerminationExecutor jobExecutor;
 
-  public ResultHandler(Task task, Consumer<SObject> consumer,
+  public ResultHandler(Task task, Consumer<Record> consumer,
       ExecutionReporter reporter, SoftTerminationExecutor jobExecutor) {
     this.task = task;
     this.consumer = consumer;

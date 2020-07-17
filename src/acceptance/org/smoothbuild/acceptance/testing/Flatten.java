@@ -4,17 +4,17 @@ import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.SObject;
-import org.smoothbuild.record.type.ArrayType;
-import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.base.Record;
+import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.Spec;
 
 public class Flatten {
   @SmoothFunction("testFlatten")
   public static Array testFlatten(NativeApi nativeApi, Array array) {
-    BinaryType resultArrayElemType = ((ArrayType) array.type().elemType()).elemType();
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemType);
+    Spec resultArrayElemSpec = ((ArraySpec) array.spec().elemSpec()).elemSpec();
+    ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemSpec);
     for (Array innerArray : array.asIterable(Array.class)) {
-      builder.addAll(innerArray.asIterable(SObject.class));
+      builder.addAll(innerArray.asIterable(Record.class));
     }
     return builder.build();
   }

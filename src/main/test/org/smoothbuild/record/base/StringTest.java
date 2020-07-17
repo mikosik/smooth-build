@@ -10,9 +10,9 @@ public class StringTest extends TestingContext {
   private final String otherString = "my string 2";
 
   @Test
-  public void type_of_sstring_is_sstring() {
-    assertThat(string(string).type())
-        .isEqualTo(stringType());
+  public void spec_of_sstring_is_sstring() {
+    assertThat(string(string).spec())
+        .isEqualTo(stringSpec());
   }
 
   @Test
@@ -66,14 +66,14 @@ public class StringTest extends TestingContext {
   @Test
   public void sstring_can_be_read_back_by_hash() {
     SString sstring = string(string);
-    assertThat(objectDbOther().get(sstring.hash()))
+    assertThat(recordDbOther().get(sstring.hash()))
         .isEqualTo(sstring);
   }
 
   @Test
   public void sstring_read_back_by_hash_has_same_javlue() {
     SString sstring = string(string);
-    assertThat(((SString) objectDbOther().get(sstring.hash())).jValue())
+    assertThat(((SString) recordDbOther().get(sstring.hash())).jValue())
         .isEqualTo(string);
   }
 

@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type.property;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Record;
 
 public interface TypeProperties {
   public boolean isArray();
@@ -18,5 +18,5 @@ public interface TypeProperties {
 
   public int hashCode(Type type);
 
-  public Class<? extends SObject> jType();
+  public Class<? extends Record> jType();
 }

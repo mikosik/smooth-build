@@ -299,7 +299,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains(
         "Function addElementOfWrongTypeToArray threw java exception from its native code.");
-    assertSysOutContains("Element type must be BLOB but was STRING.");
+    assertSysOutContains("Element spec must be BLOB but was STRING.");
   }
 
   @Test
