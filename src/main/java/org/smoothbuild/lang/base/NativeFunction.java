@@ -3,8 +3,8 @@ package org.smoothbuild.lang.base;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.parse.expr.Expression;
-import org.smoothbuild.parse.expr.NativeCallExpression;
+import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.NativeCallExpression;
 
 /**
  * Smooth Function implemented natively in java.

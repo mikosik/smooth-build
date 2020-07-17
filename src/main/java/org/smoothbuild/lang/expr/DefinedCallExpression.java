@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.expr;
+package org.smoothbuild.lang.expr;
 
 import java.util.List;
 

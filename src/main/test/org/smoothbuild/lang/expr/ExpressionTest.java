@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.expr;
+package org.smoothbuild.lang.expr;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.internal;

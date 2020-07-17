@@ -3,8 +3,8 @@ package org.smoothbuild.lang.base;
 import java.util.List;
 
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.parse.expr.AccessorCallExpression;
-import org.smoothbuild.parse.expr.Expression;
+import org.smoothbuild.lang.expr.AccessorCallExpression;
+import org.smoothbuild.lang.expr.Expression;
 
 public class Accessor extends Callable {
   private final int fieldIndex;

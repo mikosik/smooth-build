@@ -10,7 +10,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.parse.expr.Expression;
+import org.smoothbuild.lang.expr.Expression;
 
 public class SignatureTest {
   private Parameter parameter;

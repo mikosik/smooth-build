@@ -33,18 +33,18 @@ import org.smoothbuild.lang.base.type.ConcreteArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.expr.AccessorCallExpression;
+import org.smoothbuild.lang.expr.ArrayLiteralExpression;
+import org.smoothbuild.lang.expr.BoundValueExpression;
+import org.smoothbuild.lang.expr.ConstructorCallExpression;
+import org.smoothbuild.lang.expr.DefinedCallExpression;
+import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ExpressionVisitor;
+import org.smoothbuild.lang.expr.NativeCallExpression;
+import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.parse.ast.Named;
-import org.smoothbuild.parse.expr.AccessorCallExpression;
-import org.smoothbuild.parse.expr.ArrayLiteralExpression;
-import org.smoothbuild.parse.expr.BoundValueExpression;
-import org.smoothbuild.parse.expr.ConstructorCallExpression;
-import org.smoothbuild.parse.expr.DefinedCallExpression;
-import org.smoothbuild.parse.expr.Expression;
-import org.smoothbuild.parse.expr.ExpressionVisitor;
-import org.smoothbuild.parse.expr.NativeCallExpression;
-import org.smoothbuild.parse.expr.StringLiteralExpression;
 
 import com.google.common.collect.ImmutableList;
 

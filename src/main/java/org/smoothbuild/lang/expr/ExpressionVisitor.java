@@ -1,4 +1,4 @@
-package org.smoothbuild.parse.expr;
+package org.smoothbuild.lang.expr;
 
 public class ExpressionVisitor<T> {
   public T visit(AccessorCallExpression expression) {
