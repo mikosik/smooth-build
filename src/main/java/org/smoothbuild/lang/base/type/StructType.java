@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.Signature.signature;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Parameter;
-import org.smoothbuild.lang.base.type.compound.StructProperties;
+import org.smoothbuild.lang.base.type.property.StructProperties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

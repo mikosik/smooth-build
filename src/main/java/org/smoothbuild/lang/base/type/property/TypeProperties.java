@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type.compound;
+package org.smoothbuild.lang.base.type.property;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;

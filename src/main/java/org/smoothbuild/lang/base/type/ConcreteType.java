@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.TypeProperties;
+import org.smoothbuild.lang.base.type.property.TypeProperties;
 
 public abstract class ConcreteType extends Type {
   private final ConcreteType superType;

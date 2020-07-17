@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.type.compound;
+package org.smoothbuild.lang.base.type.property;
 
 import java.util.Objects;
 
