@@ -107,7 +107,7 @@ public class ObjectDb {
 
   public Tuple struct(TupleType tupleType, Iterable<? extends SObject> fields) {
     List<SObject> fieldList = ImmutableList.copyOf(fields);
-    var types = tupleType.fieldTypes();
+    var types = tupleType.elementTypes();
     if (types.size() != fieldList.size()) {
       throw new IllegalArgumentException("Type specifies " + types.size() +
           " fields but provided " + fieldList.size() + ".");

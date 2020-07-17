@@ -18,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Tuple extends SObjectImpl {
-  private ImmutableList<SObject> fields;
+  private ImmutableList<SObject> elements;
   private final ObjectDb objectDb;
 
   public Tuple(MerkleRoot merkleRoot, ObjectDb objectDb, HashedDb hashedDb) {
@@ -32,19 +32,19 @@ public class Tuple extends SObjectImpl {
   }
 
   public SObject get(int index) {
-    ImmutableList<SObject> fields = fields();
+    ImmutableList<SObject> fields = elements();
     checkIndex(index, fields.size());
     return fields.get(index);
   }
 
   public SObject superObject() {
-    ImmutableList<SObject> fields = fields();
+    ImmutableList<SObject> fields = elements();
     return fields.size() == 0 ? null : fields.iterator().next();
   }
 
-  private ImmutableList<SObject> fields() {
-    if (fields == null) {
-      var fieldTypes = type().fieldTypes();
+  private ImmutableList<SObject> elements() {
+    if (elements == null) {
+      var fieldTypes = type().elementTypes();
       var fieldHashes = readFieldHashes(fieldTypes);
       if (fieldTypes.size() != fieldHashes.size()) {
         throw new ObjectDbException(hash(), "Its type (Struct) specifies " + fieldTypes.size()
@@ -63,9 +63,9 @@ public class Tuple extends SObjectImpl {
               + " at that index.");
         }
       }
-      fields = builder.build();
+      elements = builder.build();
     }
-    return fields;
+    return elements;
   }
 
   private List<Hash> readFieldHashes(final ImmutableList<BinaryType> fieldTypes) {
