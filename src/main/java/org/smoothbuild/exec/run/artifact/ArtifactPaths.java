@@ -5,7 +5,7 @@ import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 
 public class ArtifactPaths {
   public static Path targetPath(SObject object) {

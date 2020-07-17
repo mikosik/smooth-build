@@ -8,9 +8,9 @@ import java.io.IOException;
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.Tuple;
 
 public class AFileFunction {
   @SmoothFunction(value = "aFile", cacheable = false)

@@ -2,7 +2,7 @@ package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
-import static org.smoothbuild.lang.object.base.Messages.containsErrors;
+import static org.smoothbuild.record.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.type.BinaryType;
 
 public class CallNativeAlgorithm implements Algorithm {
   private final BinaryType type;

@@ -8,7 +8,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;

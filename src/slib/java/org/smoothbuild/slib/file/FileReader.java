@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.Blob;
+import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.Tuple;
 
 import okio.BufferedSource;
 

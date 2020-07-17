@@ -14,7 +14,7 @@ import org.smoothbuild.exec.task.TaskModule;
 import org.smoothbuild.install.InstallationPathsModule;
 import org.smoothbuild.install.ProjectPathsModule;
 import org.smoothbuild.io.fs.FileSystemModule;
-import org.smoothbuild.lang.object.db.ObjectDbModule;
+import org.smoothbuild.record.db.ObjectDbModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

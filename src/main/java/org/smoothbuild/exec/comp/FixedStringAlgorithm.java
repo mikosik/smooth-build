@@ -7,10 +7,10 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.StringType;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.type.StringType;
 
 public class FixedStringAlgorithm implements Algorithm {
   private final StringType stringType;

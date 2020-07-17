@@ -5,13 +5,13 @@ import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.ArrayBuilder;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Tuple;
-import org.smoothbuild.lang.object.type.ArrayType;
-import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.ArrayBuilder;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.record.type.ArrayType;
+import org.smoothbuild.record.type.BinaryType;
 
 public class ConvertAlgorithm implements Algorithm {
   private final BinaryType destinationType;

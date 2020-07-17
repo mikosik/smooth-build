@@ -11,10 +11,10 @@ import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.ArrayType;
-import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.TupleType;
+import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.type.ArrayType;
+import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.type.TupleType;
 
 public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
   private final ObjectFactory objectFactory;
@@ -34,12 +34,12 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<BinaryType> {
   }
 
   @Override
-  public org.smoothbuild.lang.object.type.NothingType visit(NothingType type) {
+  public org.smoothbuild.record.type.NothingType visit(NothingType type) {
     return objectFactory.nothingType();
   }
 
   @Override
-  public org.smoothbuild.lang.object.type.StringType visit(StringType type) {
+  public org.smoothbuild.record.type.StringType visit(StringType type) {
     return objectFactory.stringType();
   }
 

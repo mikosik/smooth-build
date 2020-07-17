@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.junit;
 
-import static org.smoothbuild.lang.object.db.FileStruct.filePath;
+import static org.smoothbuild.record.db.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 
@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.Blob;
+import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.util.DuplicatesDetector;
 

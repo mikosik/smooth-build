@@ -7,8 +7,8 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
 import static org.smoothbuild.exec.task.base.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.task.base.Task.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.lang.object.base.Messages.level;
-import static org.smoothbuild.lang.object.base.Messages.text;
+import static org.smoothbuild.record.base.Messages.level;
+import static org.smoothbuild.record.base.Messages.text;
 
 import java.util.List;
 
@@ -20,8 +20,8 @@ import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.Tuple;
 
 import com.google.common.collect.Streams;
 

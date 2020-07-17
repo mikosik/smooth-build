@@ -11,7 +11,7 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.BufferedSource;

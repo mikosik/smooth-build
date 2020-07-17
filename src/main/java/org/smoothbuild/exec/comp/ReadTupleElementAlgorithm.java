@@ -7,10 +7,10 @@ import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Tuple;
-import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.record.type.BinaryType;
 
 import com.google.common.collect.ImmutableList;
 

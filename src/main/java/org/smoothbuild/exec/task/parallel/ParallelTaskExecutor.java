@@ -15,7 +15,7 @@ import org.smoothbuild.exec.comp.Input;
 import org.smoothbuild.exec.task.base.ComputableTask;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 

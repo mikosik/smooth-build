@@ -15,8 +15,8 @@ import org.smoothbuild.exec.comp.MaybeOutput;
 import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.task.base.Computed;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.SObject;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandlerTest {

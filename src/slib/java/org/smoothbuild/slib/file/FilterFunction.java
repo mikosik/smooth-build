@@ -1,18 +1,18 @@
 package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.object.db.FileStruct.filePath;
+import static org.smoothbuild.record.db.FileStruct.filePath;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
 import java.util.function.Predicate;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.ArrayBuilder;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.ArrayBuilder;
+import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class FilterFunction {

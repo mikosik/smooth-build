@@ -10,11 +10,11 @@ import javax.inject.Inject;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.db.ObjectFactory;
 import org.smoothbuild.lang.plugin.MessageLogger;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.db.ObjectFactory;
 
 /**
  * This class is NOT thread-safe.

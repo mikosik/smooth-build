@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type.property;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 
 public interface TypeProperties {
   public boolean isArray();

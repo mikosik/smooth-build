@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.SString;
 
 public class WithoutContainer {
   @SmoothFunction("function")

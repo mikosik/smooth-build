@@ -5,8 +5,8 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.SObject;
 
 public class ArrayProperties implements TypeProperties {
   @Override
