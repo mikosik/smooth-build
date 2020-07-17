@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.TestingTypes.string;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
@@ -21,48 +21,48 @@ public class ParameterTest {
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new Parameter(0, string, null, mock(Expression.class), internal()))
+    assertCall(() -> new Parameter(0, STRING, null, mock(Expression.class), internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void index_getter() {
-    parameter = new Parameter(33, string, name, mock(Expression.class), internal());
+    parameter = new Parameter(33, STRING, name, mock(Expression.class), internal());
     assertThat(parameter.index())
         .isEqualTo(33);
   }
 
   @Test
   public void type_getter() {
-    parameter = new Parameter(0, string, name, mock(Expression.class), internal());
+    parameter = new Parameter(0, STRING, name, mock(Expression.class), internal());
     assertThat(parameter.type())
-        .isEqualTo(string);
+        .isEqualTo(STRING);
   }
 
   @Test
   public void name_getter() {
-    parameter = new Parameter(0, string, name, mock(Expression.class), internal());
+    parameter = new Parameter(0, STRING, name, mock(Expression.class), internal());
     assertThat(parameter.name())
         .isEqualTo(name);
   }
 
   @Test
   public void parameter_without_default() {
-    parameter = new Parameter(0, string, name, null, internal());
+    parameter = new Parameter(0, STRING, name, null, internal());
     assertThat(parameter.hasDefaultValue())
         .isFalse();
   }
 
   @Test
   public void parameter_with_default_value() {
-    parameter = new Parameter(0, string, name, mock(Expression.class), internal());
+    parameter = new Parameter(0, STRING, name, mock(Expression.class), internal());
     assertThat(parameter.hasDefaultValue())
         .isTrue();
   }
 
   @Test
   public void to_string() {
-    parameter = new Parameter(0, string, name, mock(Expression.class), internal());
+    parameter = new Parameter(0, STRING, name, mock(Expression.class), internal());
     assertThat(parameter.toString())
         .isEqualTo("Param(String: name)");
   }

@@ -8,8 +8,8 @@ import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.lang.object.type.TestingTypes.person;
-import static org.smoothbuild.lang.object.type.TestingTypes.string;
+import static org.smoothbuild.lang.object.type.TestingTypes.PERSON;
+import static org.smoothbuild.lang.object.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -105,7 +105,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(person);
+    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("a3d5e4a7dac5d3e61fd9653753e30358253bf54b"));
@@ -113,7 +113,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(person);
+    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("163642381cdf78d703f6cc2df0331a7c83e42963"));
@@ -121,7 +121,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_constructor_call_algorithm_and_two_elements_input_is_stable() {
-    Algorithm algorithm = new CreateTupleAlgorithm(person);
+    Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("a025576b07cabb0e4a364b362a627f114dfe3505"));
@@ -129,14 +129,14 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_accessor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor(), string);
+    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor(), STRING);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("cb8da34f967f20f29c6216cd84ab979556b2b2ff"));
   }
 
   private Accessor accessor() {
-    return new Accessor(signature(org.smoothbuild.lang.base.type.TestingTypes.string,
+    return new Accessor(signature(org.smoothbuild.lang.base.type.TestingTypes.STRING,
         "accessor", list()), 0, internal());
   }
 

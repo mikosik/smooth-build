@@ -2,24 +2,24 @@ package org.smoothbuild.lang.object.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2Blob;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2Bool;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2Nothing;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2Person;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2String;
-import static org.smoothbuild.lang.object.type.TestingTypes.array2Type;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayBlob;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayBool;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayNothing;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayPerson;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayString;
-import static org.smoothbuild.lang.object.type.TestingTypes.arrayType;
-import static org.smoothbuild.lang.object.type.TestingTypes.blob;
-import static org.smoothbuild.lang.object.type.TestingTypes.bool;
-import static org.smoothbuild.lang.object.type.TestingTypes.nothing;
-import static org.smoothbuild.lang.object.type.TestingTypes.person;
-import static org.smoothbuild.lang.object.type.TestingTypes.string;
-import static org.smoothbuild.lang.object.type.TestingTypes.type;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_BLOB;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_BOOL;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_NOTHING;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_PERSON;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_STRING;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY2_TYPE;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_BLOB;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_BOOL;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_NOTHING;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_PERSON;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_STRING;
+import static org.smoothbuild.lang.object.type.TestingTypes.ARRAY_TYPE;
+import static org.smoothbuild.lang.object.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.object.type.TestingTypes.BOOL;
+import static org.smoothbuild.lang.object.type.TestingTypes.NOTHING;
+import static org.smoothbuild.lang.object.type.TestingTypes.PERSON;
+import static org.smoothbuild.lang.object.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.object.type.TestingTypes.TYPE;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -60,26 +60,26 @@ public class TypeTest {
 
   public static Stream<Arguments> names() {
     return Stream.of(
-        arguments(type, "TYPE"),
-        arguments(bool, "BOOL"),
-        arguments(string, "STRING"),
-        arguments(blob, "BLOB"),
-        arguments(nothing, "NOTHING"),
-        arguments(person, "TUPLE"),
+        arguments(TYPE, "TYPE"),
+        arguments(BOOL, "BOOL"),
+        arguments(STRING, "STRING"),
+        arguments(BLOB, "BLOB"),
+        arguments(NOTHING, "NOTHING"),
+        arguments(PERSON, "TUPLE"),
 
-        arguments(arrayType, "[TYPE]"),
-        arguments(arrayBool, "[BOOL]"),
-        arguments(arrayString, "[STRING]"),
-        arguments(arrayBlob, "[BLOB]"),
-        arguments(arrayNothing, "[NOTHING]"),
-        arguments(arrayPerson, "[TUPLE]"),
+        arguments(ARRAY_TYPE, "[TYPE]"),
+        arguments(ARRAY_BOOL, "[BOOL]"),
+        arguments(ARRAY_STRING, "[STRING]"),
+        arguments(ARRAY_BLOB, "[BLOB]"),
+        arguments(ARRAY_NOTHING, "[NOTHING]"),
+        arguments(ARRAY_PERSON, "[TUPLE]"),
 
-        arguments(array2Type, "[[TYPE]]"),
-        arguments(array2Bool, "[[BOOL]]"),
-        arguments(array2String, "[[STRING]]"),
-        arguments(array2Blob, "[[BLOB]]"),
-        arguments(array2Nothing, "[[NOTHING]]"),
-        arguments(array2Person, "[[TUPLE]]")
+        arguments(ARRAY2_TYPE, "[[TYPE]]"),
+        arguments(ARRAY2_BOOL, "[[BOOL]]"),
+        arguments(ARRAY2_STRING, "[[STRING]]"),
+        arguments(ARRAY2_BLOB, "[[BLOB]]"),
+        arguments(ARRAY2_NOTHING, "[[NOTHING]]"),
+        arguments(ARRAY2_PERSON, "[[TUPLE]]")
     );
   }
 
@@ -92,16 +92,16 @@ public class TypeTest {
 
   public static List<Arguments> jType_test_data() {
     return List.of(
-        arguments(type, BinaryType.class),
-        arguments(bool, Bool.class),
-        arguments(string, SString.class),
-        arguments(blob, Blob.class),
-        arguments(nothing, Nothing.class),
-        arguments(arrayType, Array.class),
-        arguments(arrayBool, Array.class),
-        arguments(arrayString, Array.class),
-        arguments(arrayBlob, Array.class),
-        arguments(arrayNothing, Array.class)
+        arguments(TYPE, BinaryType.class),
+        arguments(BOOL, Bool.class),
+        arguments(STRING, SString.class),
+        arguments(BLOB, Blob.class),
+        arguments(NOTHING, Nothing.class),
+        arguments(ARRAY_TYPE, Array.class),
+        arguments(ARRAY_BOOL, Array.class),
+        arguments(ARRAY_STRING, Array.class),
+        arguments(ARRAY_BLOB, Array.class),
+        arguments(ARRAY_NOTHING, Array.class)
     );
   }
 
@@ -114,25 +114,25 @@ public class TypeTest {
 
   public static List<Arguments> isArray_test_data() {
     return List.of(
-        arguments(type, false),
-        arguments(bool, false),
-        arguments(string, false),
-        arguments(blob, false),
-        arguments(nothing, false),
-        arguments(person, false),
+        arguments(TYPE, false),
+        arguments(BOOL, false),
+        arguments(STRING, false),
+        arguments(BLOB, false),
+        arguments(NOTHING, false),
+        arguments(PERSON, false),
 
-        arguments(arrayType, true),
-        arguments(arrayString, true),
-        arguments(arrayBool, true),
-        arguments(arrayBlob, true),
-        arguments(arrayNothing, true),
-        arguments(arrayPerson, true),
-        arguments(array2Type, true),
-        arguments(array2Bool, true),
-        arguments(array2String, true),
-        arguments(array2Blob, true),
-        arguments(array2Nothing, true),
-        arguments(array2Person, true)
+        arguments(ARRAY_TYPE, true),
+        arguments(ARRAY_STRING, true),
+        arguments(ARRAY_BOOL, true),
+        arguments(ARRAY_BLOB, true),
+        arguments(ARRAY_NOTHING, true),
+        arguments(ARRAY_PERSON, true),
+        arguments(ARRAY2_TYPE, true),
+        arguments(ARRAY2_BOOL, true),
+        arguments(ARRAY2_STRING, true),
+        arguments(ARRAY2_BLOB, true),
+        arguments(ARRAY2_NOTHING, true),
+        arguments(ARRAY2_PERSON, true)
     );
   }
 
@@ -145,42 +145,42 @@ public class TypeTest {
 
   public static List<Arguments> elemType_test_data() {
     return List.of(
-        arguments(arrayType, type),
-        arguments(arrayBool, bool),
-        arguments(arrayString, string),
-        arguments(arrayBlob, blob),
-        arguments(arrayPerson, person),
-        arguments(arrayNothing, nothing),
+        arguments(ARRAY_TYPE, TYPE),
+        arguments(ARRAY_BOOL, BOOL),
+        arguments(ARRAY_STRING, STRING),
+        arguments(ARRAY_BLOB, BLOB),
+        arguments(ARRAY_PERSON, PERSON),
+        arguments(ARRAY_NOTHING, NOTHING),
 
-        arguments(array2Type, arrayType),
-        arguments(array2Bool, arrayBool),
-        arguments(array2String, arrayString),
-        arguments(array2Blob, arrayBlob),
-        arguments(array2Person, arrayPerson),
-        arguments(array2Nothing, arrayNothing));
+        arguments(ARRAY2_TYPE, ARRAY_TYPE),
+        arguments(ARRAY2_BOOL, ARRAY_BOOL),
+        arguments(ARRAY2_STRING, ARRAY_STRING),
+        arguments(ARRAY2_BLOB, ARRAY_BLOB),
+        arguments(ARRAY2_PERSON, ARRAY_PERSON),
+        arguments(ARRAY2_NOTHING, ARRAY_NOTHING));
   }
 
   @Test
   public void equals_and_hashcode() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(type, type);
-    tester.addEqualityGroup(bool, bool);
-    tester.addEqualityGroup(string, string);
-    tester.addEqualityGroup(blob, blob);
-    tester.addEqualityGroup(nothing, nothing);
-    tester.addEqualityGroup(person, person);
+    tester.addEqualityGroup(TYPE, TYPE);
+    tester.addEqualityGroup(BOOL, BOOL);
+    tester.addEqualityGroup(STRING, STRING);
+    tester.addEqualityGroup(BLOB, BLOB);
+    tester.addEqualityGroup(NOTHING, NOTHING);
+    tester.addEqualityGroup(PERSON, PERSON);
 
-    tester.addEqualityGroup(arrayType, arrayType);
-    tester.addEqualityGroup(arrayBool, arrayBool);
-    tester.addEqualityGroup(arrayString, arrayString);
-    tester.addEqualityGroup(arrayBlob, arrayBlob);
-    tester.addEqualityGroup(arrayPerson, arrayPerson);
+    tester.addEqualityGroup(ARRAY_TYPE, ARRAY_TYPE);
+    tester.addEqualityGroup(ARRAY_BOOL, ARRAY_BOOL);
+    tester.addEqualityGroup(ARRAY_STRING, ARRAY_STRING);
+    tester.addEqualityGroup(ARRAY_BLOB, ARRAY_BLOB);
+    tester.addEqualityGroup(ARRAY_PERSON, ARRAY_PERSON);
 
-    tester.addEqualityGroup(array2Type, array2Type);
-    tester.addEqualityGroup(array2Bool, array2Bool);
-    tester.addEqualityGroup(array2String, array2String);
-    tester.addEqualityGroup(array2Blob, array2Blob);
-    tester.addEqualityGroup(array2Person, array2Person);
+    tester.addEqualityGroup(ARRAY2_TYPE, ARRAY2_TYPE);
+    tester.addEqualityGroup(ARRAY2_BOOL, ARRAY2_BOOL);
+    tester.addEqualityGroup(ARRAY2_STRING, ARRAY2_STRING);
+    tester.addEqualityGroup(ARRAY2_BLOB, ARRAY2_BLOB);
+    tester.addEqualityGroup(ARRAY2_PERSON, ARRAY2_PERSON);
     tester.testEquals();
   }
 }

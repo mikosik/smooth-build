@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.TestingTypes.string;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.Optional;
@@ -15,21 +15,21 @@ import org.smoothbuild.lang.base.type.Type;
 public class ArgNodeTest {
   @Test
   public void named_arg_has_name() {
-    ArgNode arg = new ArgNode("name", expr(string), internal());
+    ArgNode arg = new ArgNode("name", expr(STRING), internal());
     assertThat(arg.declaresName())
         .isTrue();
   }
 
   @Test
   public void nameless_arg_does_not_have_name() {
-    ArgNode arg = new ArgNode(null, expr(string), internal());
+    ArgNode arg = new ArgNode(null, expr(STRING), internal());
     assertThat(arg.declaresName())
         .isFalse();
   }
 
   @Test
   public void nameless_arg_throws_exception_when_asked_for_name() {
-    ArgNode arg = new ArgNode(null, expr(string), internal());
+    ArgNode arg = new ArgNode(null, expr(STRING), internal());
     assertCall(arg::name)
         .throwsException(IllegalStateException.class);
   }
@@ -50,16 +50,16 @@ public class ArgNodeTest {
 
   @Test
   public void type_and_name_of_named_argument() {
-    ArgNode arg = new ArgNode("name", expr(string), internal());
-    arg.setType(string);
+    ArgNode arg = new ArgNode("name", expr(STRING), internal());
+    arg.setType(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:" + "name");
   }
 
   @Test
   public void nameless_argument_to_string() {
-    ArgNode arg = new ArgNode(null, expr(string), internal());
-    arg.setType(string);
+    ArgNode arg = new ArgNode(null, expr(STRING), internal());
+    arg.setType(STRING);
     assertThat(arg.typeAndName())
         .isEqualTo("String:<nameless>");
   }

@@ -18,33 +18,33 @@ import java.util.List;
 import org.smoothbuild.lang.base.Location;
 
 public class TestingTypes {
-  public static final BoolType bool = bool();
-  public static final StringType string = string();
-  public static final BlobType blob = blob();
-  public static final NothingType nothing = nothing();
+  public static final BoolType BOOL = bool();
+  public static final StringType STRING = string();
+  public static final BlobType BLOB = blob();
+  public static final NothingType NOTHING = nothing();
   public static final Location FAKE_LOCATION =
       location(modulePath(USER, Path.of("fake/path"), "shortPath"), 1);
-  public static final StructType person = struct(
+  public static final StructType PERSON = struct(
       "Person", FAKE_LOCATION, List.of(
-          new Field(0, string, "firstName", internal()),
-          new Field(1, string, "lastName", internal())));
-  public static final GenericType a = generic("A");
-  public static final GenericType b = generic("B");
+          new Field(0, STRING, "firstName", internal()),
+          new Field(1, STRING, "lastName", internal())));
+  public static final GenericType A = generic("A");
+  public static final GenericType B = generic("B");
 
-  public static final ConcreteArrayType arrayBool = array(bool);
-  public static final ConcreteArrayType arrayString = array(string);
-  public static final ConcreteArrayType arrayBlob = array(blob);
-  public static final ConcreteArrayType arrayNothing = array(nothing);
-  public static final ConcreteArrayType arrayPerson = array(person);
-  public static final GenericArrayType arrayA = array(a);
-  public static final GenericArrayType arrayB = array(b);
+  public static final ConcreteArrayType ARRAY_BOOL = array(BOOL);
+  public static final ConcreteArrayType ARRAY_STRING = array(STRING);
+  public static final ConcreteArrayType ARRAY_BLOB = array(BLOB);
+  public static final ConcreteArrayType ARRAY_NOTHING = array(NOTHING);
+  public static final ConcreteArrayType ARRAY_PERSON = array(PERSON);
+  public static final GenericArrayType ARRAY_A = array(A);
+  public static final GenericArrayType ARRAY_B = array(B);
 
-  public static final ConcreteArrayType array2Bool = array(arrayBool);
-  public static final ConcreteArrayType array2String = array(arrayString);
-  public static final ConcreteArrayType array2Blob = array(arrayBlob);
-  public static final ConcreteArrayType array2Nothing = array(arrayNothing);
-  public static final ConcreteArrayType array2Person = array(arrayPerson);
-  public static final GenericArrayType array2A = array(arrayA);
-  public static final GenericArrayType array2B = array(arrayB);
+  public static final ConcreteArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
+  public static final ConcreteArrayType ARRAY2_STRING = array(ARRAY_STRING);
+  public static final ConcreteArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
+  public static final ConcreteArrayType ARRAY2_NOTHING = array(ARRAY_NOTHING);
+  public static final ConcreteArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
+  public static final GenericArrayType ARRAY2_A = array(ARRAY_A);
+  public static final GenericArrayType ARRAY2_B = array(ARRAY_B);
 }
 

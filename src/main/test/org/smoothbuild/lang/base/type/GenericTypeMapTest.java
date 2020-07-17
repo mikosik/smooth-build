@@ -2,22 +2,22 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.TestingTypes.a;
-import static org.smoothbuild.lang.base.type.TestingTypes.array2A;
-import static org.smoothbuild.lang.base.type.TestingTypes.array2B;
-import static org.smoothbuild.lang.base.type.TestingTypes.array2Nothing;
-import static org.smoothbuild.lang.base.type.TestingTypes.array2Person;
-import static org.smoothbuild.lang.base.type.TestingTypes.array2String;
-import static org.smoothbuild.lang.base.type.TestingTypes.arrayA;
-import static org.smoothbuild.lang.base.type.TestingTypes.arrayB;
-import static org.smoothbuild.lang.base.type.TestingTypes.arrayNothing;
-import static org.smoothbuild.lang.base.type.TestingTypes.arrayPerson;
-import static org.smoothbuild.lang.base.type.TestingTypes.arrayString;
-import static org.smoothbuild.lang.base.type.TestingTypes.b;
-import static org.smoothbuild.lang.base.type.TestingTypes.blob;
-import static org.smoothbuild.lang.base.type.TestingTypes.nothing;
-import static org.smoothbuild.lang.base.type.TestingTypes.person;
-import static org.smoothbuild.lang.base.type.TestingTypes.string;
+import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_B;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_PERSON;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_B;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_PERSON;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.B;
+import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
+import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -45,262 +45,262 @@ public class GenericTypeMapTest {
     return List.of(
         // concrete types
         arguments(
-            list(string),
-            list(string),
-            blob, blob),
+            list(STRING),
+            list(STRING),
+            BLOB, BLOB),
 
         // a <- string
         arguments(
-            list(a),
-            list(string),
-            a, string),
+            list(A),
+            list(STRING),
+            A, STRING),
         arguments(
-            list(a),
-            list(arrayString),
-            a, arrayString),
+            list(A),
+            list(ARRAY_STRING),
+            A, ARRAY_STRING),
         arguments(
-            list(a),
-            list(array2String),
-            a, array2String),
+            list(A),
+            list(ARRAY2_STRING),
+            A, ARRAY2_STRING),
 
         arguments(
-            list(arrayA),
-            list(string),
+            list(ARRAY_A),
+            list(STRING),
             null, null),
         arguments(
-            list(arrayA),
-            list(arrayString),
-            a, string),
+            list(ARRAY_A),
+            list(ARRAY_STRING),
+            A, STRING),
         arguments(
-            list(arrayA),
-            list(array2String),
-            a, arrayString),
+            list(ARRAY_A),
+            list(ARRAY2_STRING),
+            A, ARRAY_STRING),
 
         arguments(
-            list(array2A),
-            list(string),
+            list(ARRAY2_A),
+            list(STRING),
             null, null),
         arguments(
-            list(array2A),
-            list(arrayString),
+            list(ARRAY2_A),
+            list(ARRAY_STRING),
             null, null),
         arguments(
-            list(array2A),
-            list(array2String),
-            a, string),
+            list(ARRAY2_A),
+            list(ARRAY2_STRING),
+            A, STRING),
 
         // a <- struct (Person)
         arguments(
-            list(a),
-            list(person),
-            a, person),
+            list(A),
+            list(PERSON),
+            A, PERSON),
         arguments(
-            list(a),
-            list(arrayPerson),
-            a, arrayPerson),
+            list(A),
+            list(ARRAY_PERSON),
+            A, ARRAY_PERSON),
         arguments(
-            list(a),
-            list(array2Person),
-            a, array2Person),
+            list(A),
+            list(ARRAY2_PERSON),
+            A, ARRAY2_PERSON),
 
         arguments(
-            list(arrayA),
-            list(person),
+            list(ARRAY_A),
+            list(PERSON),
             null, null),
         arguments(
-            list(arrayA),
-            list(arrayPerson),
-            a, person),
+            list(ARRAY_A),
+            list(ARRAY_PERSON),
+            A, PERSON),
         arguments(
-            list(arrayA),
-            list(array2Person),
-            a, arrayPerson),
+            list(ARRAY_A),
+            list(ARRAY2_PERSON),
+            A, ARRAY_PERSON),
 
         arguments(
-            list(array2A),
-            list(person),
+            list(ARRAY2_A),
+            list(PERSON),
             null, null),
         arguments(
-            list(array2A),
-            list(arrayPerson),
+            list(ARRAY2_A),
+            list(ARRAY_PERSON),
             null, null),
         arguments(
-            list(array2A),
-            list(array2Person),
-            a, person),
+            list(ARRAY2_A),
+            list(ARRAY2_PERSON),
+            A, PERSON),
 
         // a <- Nothing
 
         arguments(
-            list(a),
-            list(nothing),
-            a, nothing),
+            list(A),
+            list(NOTHING),
+            A, NOTHING),
         arguments(
-            list(a),
-            list(arrayNothing),
-            a, arrayNothing),
+            list(A),
+            list(ARRAY_NOTHING),
+            A, ARRAY_NOTHING),
         arguments(
-            list(a),
-            list(array2Nothing),
-            a, array2Nothing),
+            list(A),
+            list(ARRAY2_NOTHING),
+            A, ARRAY2_NOTHING),
 
         arguments(
-            list(arrayA),
-            list(nothing),
-            a, nothing),
+            list(ARRAY_A),
+            list(NOTHING),
+            A, NOTHING),
         arguments(
-            list(arrayA),
-            list(arrayNothing),
-            a, nothing),
+            list(ARRAY_A),
+            list(ARRAY_NOTHING),
+            A, NOTHING),
         arguments(
-            list(arrayA),
-            list(array2Nothing),
-            a, arrayNothing),
+            list(ARRAY_A),
+            list(ARRAY2_NOTHING),
+            A, ARRAY_NOTHING),
 
         arguments(
-            list(array2A),
-            list(nothing),
-            a, nothing),
+            list(ARRAY2_A),
+            list(NOTHING),
+            A, NOTHING),
         arguments(
-            list(array2A),
-            list(arrayNothing),
-            a, nothing),
+            list(ARRAY2_A),
+            list(ARRAY_NOTHING),
+            A, NOTHING),
         arguments(
-            list(array2A),
-            list(array2Nothing),
-            a, nothing),
+            list(ARRAY2_A),
+            list(ARRAY2_NOTHING),
+            A, NOTHING),
 
         // a <- b
 
         arguments(
-            list(a),
-            list(b),
-            a, b),
+            list(A),
+            list(B),
+            A, B),
         arguments(
-            list(a),
-            list(arrayB),
-            a, arrayB),
+            list(A),
+            list(ARRAY_B),
+            A, ARRAY_B),
         arguments(
-            list(a),
-            list(array2B),
-            a, array2B),
+            list(A),
+            list(ARRAY2_B),
+            A, ARRAY2_B),
 
         arguments(
-            list(arrayA),
-            list(b),
+            list(ARRAY_A),
+            list(B),
             null, null),
         arguments(
-            list(arrayA),
-            list(arrayB),
-            a, b),
+            list(ARRAY_A),
+            list(ARRAY_B),
+            A, B),
         arguments(
-            list(arrayA),
-            list(array2B),
-            a, arrayB),
+            list(ARRAY_A),
+            list(ARRAY2_B),
+            A, ARRAY_B),
 
         arguments(
-            list(array2A),
-            list(b),
+            list(ARRAY2_A),
+            list(B),
             null, null),
         arguments(
-            list(array2A),
-            list(arrayB),
+            list(ARRAY2_A),
+            list(ARRAY_B),
             null, null),
         arguments(
-            list(array2A),
-            list(array2B),
-            a, b),
+            list(ARRAY2_A),
+            list(ARRAY2_B),
+            A, B),
 
         // a <- String, struct (Person); with conversions
 
         arguments(
-            list(a, a),
-            list(person, string),
-            a, string),
+            list(A, A),
+            list(PERSON, STRING),
+            A, STRING),
         arguments(
-            list(a, arrayA),
-            list(person, arrayString),
-            a, string),
+            list(A, ARRAY_A),
+            list(PERSON, ARRAY_STRING),
+            A, STRING),
         arguments(
-            list(a, arrayA),
-            list(string, arrayPerson),
-            a, string),
+            list(A, ARRAY_A),
+            list(STRING, ARRAY_PERSON),
+            A, STRING),
 
         // a <- Nothing, String; with conversions
 
         arguments(
-            list(a, a),
-            list(nothing, string),
-            a, string),
+            list(A, A),
+            list(NOTHING, STRING),
+            A, STRING),
         arguments(
-            list(a, arrayA),
-            list(string, arrayNothing),
-            a, string),
+            list(A, ARRAY_A),
+            list(STRING, ARRAY_NOTHING),
+            A, STRING),
         arguments(
-            list(a, arrayA),
-            list(nothing, arrayString),
-            a, string),
+            list(A, ARRAY_A),
+            list(NOTHING, ARRAY_STRING),
+            A, STRING),
         arguments(
-            list(arrayA, arrayA),
-            list(arrayString, arrayNothing),
-            a, string),
+            list(ARRAY_A, ARRAY_A),
+            list(ARRAY_STRING, ARRAY_NOTHING),
+            A, STRING),
         arguments(
-            list(a, a),
-            list(arrayString, nothing),
-            a, arrayString),
+            list(A, A),
+            list(ARRAY_STRING, NOTHING),
+            A, ARRAY_STRING),
 
         // a <- Nothing, String; with conversions
 
         arguments(
-            list(a, a),
-            list(nothing, person),
-            a, person),
+            list(A, A),
+            list(NOTHING, PERSON),
+            A, PERSON),
         arguments(
-            list(a, arrayA),
-            list(person, arrayNothing),
-            a, person),
+            list(A, ARRAY_A),
+            list(PERSON, ARRAY_NOTHING),
+            A, PERSON),
         arguments(
-            list(a, arrayA),
-            list(nothing, arrayPerson),
-            a, person),
+            list(A, ARRAY_A),
+            list(NOTHING, ARRAY_PERSON),
+            A, PERSON),
         arguments(
-            list(arrayA, arrayA),
-            list(arrayPerson, arrayNothing),
-            a, person),
+            list(ARRAY_A, ARRAY_A),
+            list(ARRAY_PERSON, ARRAY_NOTHING),
+            A, PERSON),
         arguments(
-            list(a, a),
-            list(arrayPerson, nothing),
-            a, arrayPerson),
+            list(A, A),
+            list(ARRAY_PERSON, NOTHING),
+            A, ARRAY_PERSON),
         arguments(
-            list(arrayA, arrayA),
-            list(arrayNothing, array2String),
-            a, arrayString),
+            list(ARRAY_A, ARRAY_A),
+            list(ARRAY_NOTHING, ARRAY2_STRING),
+            A, ARRAY_STRING),
 
         // a <- Nothing, a; with conversions
 
         arguments(
-            list(a, a),
-            list(nothing, a),
-            a, a),
+            list(A, A),
+            list(NOTHING, A),
+            A, A),
         arguments(
-            list(a, arrayA),
-            list(a, arrayNothing),
-            a, a),
+            list(A, ARRAY_A),
+            list(A, ARRAY_NOTHING),
+            A, A),
         arguments(
-            list(a, arrayA),
-            list(nothing, arrayA),
-            a, a),
+            list(A, ARRAY_A),
+            list(NOTHING, ARRAY_A),
+            A, A),
         arguments(
-            list(arrayA, arrayA),
-            list(arrayA, arrayNothing),
-            a, a),
+            list(ARRAY_A, ARRAY_A),
+            list(ARRAY_A, ARRAY_NOTHING),
+            A, A),
         arguments(
-            list(a, a),
-            list(arrayA, nothing),
-            a, arrayA),
+            list(A, A),
+            list(ARRAY_A, NOTHING),
+            A, ARRAY_A),
         arguments(
-            list(arrayA, arrayA),
-            list(arrayNothing, array2A),
-            a, arrayA));
+            list(ARRAY_A, ARRAY_A),
+            list(ARRAY_NOTHING, ARRAY2_A),
+            A, ARRAY_A));
   }
 }

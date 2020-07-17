@@ -4,30 +4,30 @@ import org.smoothbuild.lang.object.db.ObjectDb;
 import org.smoothbuild.testing.TestingContext;
 
 public class TestingTypes {
-  private static final TestingContext context = new TestingContext();
-  public static final ObjectDb objectDb = context.objectDb();
-  public static final BinaryType type = objectDb.typeType();
-  public static final BinaryType bool = objectDb.boolType();
-  public static final BinaryType string = objectDb.stringType();
-  public static final BinaryType blob = objectDb.blobType();
-  public static final BinaryType nothing = objectDb.nothingType();
-  public static final TupleType person = context.personType();
+  private static final TestingContext CONTEXT = new TestingContext();
+  public static final ObjectDb OBJECT_DB = CONTEXT.objectDb();
+  public static final BinaryType TYPE = OBJECT_DB.typeType();
+  public static final BinaryType BOOL = OBJECT_DB.boolType();
+  public static final BinaryType STRING = OBJECT_DB.stringType();
+  public static final BinaryType BLOB = OBJECT_DB.blobType();
+  public static final BinaryType NOTHING = OBJECT_DB.nothingType();
+  public static final TupleType PERSON = CONTEXT.personType();
 
-  public static final ArrayType arrayType = array(type);
-  public static final ArrayType arrayBool = array(bool);
-  public static final ArrayType arrayString = array(string);
-  public static final ArrayType arrayBlob = array(blob);
-  public static final ArrayType arrayNothing = array(nothing);
-  public static final ArrayType arrayPerson = array(person);
+  public static final ArrayType ARRAY_TYPE = array(TYPE);
+  public static final ArrayType ARRAY_BOOL = array(BOOL);
+  public static final ArrayType ARRAY_STRING = array(STRING);
+  public static final ArrayType ARRAY_BLOB = array(BLOB);
+  public static final ArrayType ARRAY_NOTHING = array(NOTHING);
+  public static final ArrayType ARRAY_PERSON = array(PERSON);
 
-  public static final ArrayType array2Type = array(arrayType);
-  public static final ArrayType array2Bool = array(arrayBool);
-  public static final ArrayType array2String = array(arrayString);
-  public static final ArrayType array2Blob = array(arrayBlob);
-  public static final ArrayType array2Nothing = array(arrayNothing);
-  public static final ArrayType array2Person = array(arrayPerson);
+  public static final ArrayType ARRAY2_TYPE = array(ARRAY_TYPE);
+  public static final ArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
+  public static final ArrayType ARRAY2_STRING = array(ARRAY_STRING);
+  public static final ArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
+  public static final ArrayType ARRAY2_NOTHING = array(ARRAY_NOTHING);
+  public static final ArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
 
   private static ArrayType array(BinaryType elemType) {
-    return objectDb.arrayType(elemType);
+    return OBJECT_DB.arrayType(elemType);
   }
 }
