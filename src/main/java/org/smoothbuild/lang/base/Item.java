@@ -8,7 +8,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.parse.ast.Named;
+import org.smoothbuild.lang.parse.ast.Named;
 
 /**
  * Item contains attributes common to both struct field and function parameter.

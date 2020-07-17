@@ -18,8 +18,8 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.run.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.parse.Definitions;
-import org.smoothbuild.parse.RuntimeController;
+import org.smoothbuild.lang.parse.Definitions;
+import org.smoothbuild.lang.parse.RuntimeController;
 
 public class BuildRunner {
   private final Console console;
