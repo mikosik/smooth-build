@@ -36,7 +36,7 @@ public abstract class Task {
     return type;
   }
 
-  public ImmutableList<Task> children() {
+  public ImmutableList<Task> dependencies() {
     return dependencies;
   }
 
