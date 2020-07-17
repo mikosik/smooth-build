@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.Compoundability;
+import org.smoothbuild.lang.base.type.compound.TypeProperties;
 
 public class GenericType extends Type {
-  public GenericType(String name, Location location, Compoundability compoundability) {
-    super(name, location, compoundability);
+  public GenericType(String name, Location location, TypeProperties properties) {
+    super(name, location, properties);
   }
 
   @Override
@@ -41,6 +41,6 @@ public class GenericType extends Type {
   }
 
   public <T extends Type> T actualCoreTypeWhenAssignedFrom(T source) {
-    return compoundability.actualCoreTypeWhenAssignedFrom(this, source);
+    return properties.actualCoreTypeWhenAssignedFrom(this, source);
   }
 }

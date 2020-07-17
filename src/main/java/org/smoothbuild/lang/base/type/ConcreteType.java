@@ -1,14 +1,14 @@
 package org.smoothbuild.lang.base.type;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.Compoundability;
+import org.smoothbuild.lang.base.type.compound.TypeProperties;
 
 public abstract class ConcreteType extends Type {
   private final ConcreteType superType;
 
   public ConcreteType(String name, Location location, ConcreteType superType,
-      Compoundability compoundability) {
-    super(name, location, compoundability);
+      TypeProperties properties) {
+    super(name, location, properties);
     this.superType = superType;
   }
 

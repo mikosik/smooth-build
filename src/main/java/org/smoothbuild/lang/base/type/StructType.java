@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.Signature.signature;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Parameter;
-import org.smoothbuild.lang.base.type.compound.StructCompoundability;
+import org.smoothbuild.lang.base.type.compound.StructProperties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -20,7 +20,7 @@ public class StructType extends ConcreteType {
   }
 
   public StructType(String name, Location location, ImmutableMap<String, Field> fields) {
-    super(name, location, calculateSuperType(fields), new StructCompoundability());
+    super(name, location, calculateSuperType(fields), new StructProperties());
     this.fields = fields;
   }
 

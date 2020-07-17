@@ -3,14 +3,14 @@ package org.smoothbuild.lang.base.type;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
+import org.smoothbuild.lang.base.type.compound.BasicProperties;
 import org.smoothbuild.lang.object.base.SObject;
 
 public class MissingType extends Type {
   private static final String NAME = "--Missing--";
 
   protected MissingType() {
-    super(NAME, null, new BasicCompoundability(SObject.class));
+    super(NAME, null, new BasicProperties(SObject.class));
   }
 
   @Override

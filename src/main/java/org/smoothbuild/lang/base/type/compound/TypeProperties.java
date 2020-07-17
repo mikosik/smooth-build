@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type.compound;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;
 
-public interface Compoundability {
+public interface TypeProperties {
   public boolean isArray();
 
   public Type coreType(Type type);
