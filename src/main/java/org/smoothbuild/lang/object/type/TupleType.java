@@ -14,12 +14,12 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class TupleType extends BinaryType {
-  private final ImmutableList<BinaryType> fieldTypes;
+  private final ImmutableList<BinaryType> elementTypes;
 
-  public TupleType(MerkleRoot merkleRoot, Iterable<? extends BinaryType> fieldTypes,
+  public TupleType(MerkleRoot merkleRoot, Iterable<? extends BinaryType> elementTypes,
       HashedDb hashedDb, ObjectDb objectDb) {
     super(merkleRoot, TUPLE, hashedDb, objectDb);
-    this.fieldTypes = ImmutableList.copyOf(fieldTypes);
+    this.elementTypes = ImmutableList.copyOf(elementTypes);
   }
 
   @Override
@@ -28,7 +28,7 @@ public class TupleType extends BinaryType {
     return new Tuple(merkleRoot, objectDb, hashedDb);
   }
 
-  public ImmutableList<BinaryType> fieldTypes() {
-    return fieldTypes;
+  public ImmutableList<BinaryType> elementTypes() {
+    return elementTypes;
   }
 }
