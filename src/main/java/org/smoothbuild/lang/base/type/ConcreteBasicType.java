@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
 
-import org.smoothbuild.lang.base.type.compound.BasicProperties;
+import org.smoothbuild.lang.base.type.property.BasicProperties;
 import org.smoothbuild.lang.object.base.SObject;
 
 public abstract class ConcreteBasicType extends ConcreteType {

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.TypeProperties;
+import org.smoothbuild.lang.base.type.property.TypeProperties;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.parse.ast.Named;
 

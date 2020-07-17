@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.TypeProperties;
+import org.smoothbuild.lang.base.type.property.TypeProperties;
 
 public class GenericType extends Type {
   public GenericType(String name, Location location, TypeProperties properties) {

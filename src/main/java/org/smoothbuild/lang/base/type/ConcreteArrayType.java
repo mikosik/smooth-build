@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
 
-import org.smoothbuild.lang.base.type.compound.ArrayProperties;
+import org.smoothbuild.lang.base.type.property.ArrayProperties;
 
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;

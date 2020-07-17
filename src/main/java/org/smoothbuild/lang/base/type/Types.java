@@ -5,7 +5,7 @@ import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.BasicProperties;
+import org.smoothbuild.lang.base.type.property.BasicProperties;
 import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
