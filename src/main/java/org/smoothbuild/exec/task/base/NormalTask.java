@@ -26,12 +26,12 @@ public class NormalTask extends ComputableTask {
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
     FeedingConsumer<SObject> result = new FeedingConsumer<>();
-    ImmutableList<Feeder<SObject>> childrenResults = children()
+    ImmutableList<Feeder<SObject>> dependencyResults = dependencies()
         .stream()
         .map(ch -> ch.startComputation(worker))
         .collect(toImmutableList());
-    runWhenAllAvailable(childrenResults,
-        () -> worker.enqueueComputation(this, toInput(childrenResults), result));
+    runWhenAllAvailable(dependencyResults,
+        () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;
   }
 

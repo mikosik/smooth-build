@@ -29,7 +29,7 @@ public class IfTask extends ComputableTask {
   @Override
   public Feeder<SObject> startComputation(Worker worker) {
     FeedingConsumer<SObject> ifResult = new FeedingConsumer<>();
-    Feeder<SObject> conditionResult = conditionChild().startComputation(worker);
+    Feeder<SObject> conditionResult = conditionTask().startComputation(worker);
     Consumer<SObject> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
     Consumer<SObject> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
     conditionResult.addConsumer(thenOrElseEnqueuer);
@@ -39,7 +39,7 @@ public class IfTask extends ComputableTask {
   private Consumer<SObject> thenOrElseEnqueuer(Worker worker, Consumer<SObject> ifEnqueuer) {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
-      Task thenOrElseTask = condition ? thenChild() : elseChild();
+      Task thenOrElseTask = condition ? thenTask() : elseTask();
       thenOrElseTask.startComputation(worker).addConsumer(ifEnqueuer);
     };
   }
@@ -56,15 +56,15 @@ public class IfTask extends ComputableTask {
     };
   }
 
-  private Task conditionChild() {
-    return children().get(0);
+  private Task conditionTask() {
+    return dependencies().get(0);
   }
 
-  private Task thenChild() {
-    return children().get(1);
+  private Task thenTask() {
+    return dependencies().get(1);
   }
 
-  private Task elseChild() {
-    return children().get(2);
+  private Task elseTask() {
+    return dependencies().get(2);
   }
 }

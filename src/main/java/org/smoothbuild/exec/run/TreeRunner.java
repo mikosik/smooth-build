@@ -67,7 +67,7 @@ public class TreeRunner {
 
     private void print(String indent, Task task) {
       reporter.printlnRaw(indent + task.description());
-      task.children().forEach(ch -> print(indent + "  ", ch));
+      task.dependencies().forEach(ch -> print(indent + "  ", ch));
     }
   }
 }
