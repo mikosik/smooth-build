@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.object.base.Tuple;
 
-public class StructCompoundability extends DefaultCompoundability {
+public class StructProperties extends DefaultProperties {
   @Override
   public boolean areEqual(Type type, Object object) {
     if (type == object) {

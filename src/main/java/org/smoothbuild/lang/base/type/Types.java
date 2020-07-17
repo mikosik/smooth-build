@@ -5,7 +5,7 @@ import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.BasicCompoundability;
+import org.smoothbuild.lang.base.type.compound.BasicProperties;
 import org.smoothbuild.lang.object.base.SObject;
 
 import com.google.common.collect.ImmutableList;
@@ -36,7 +36,7 @@ public class Types {
 
   public static GenericType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
-    return new GenericType(name, internal(), new BasicCompoundability(SObject.class));
+    return new GenericType(name, internal(), new BasicProperties(SObject.class));
   }
 
   public static BlobType blob() {

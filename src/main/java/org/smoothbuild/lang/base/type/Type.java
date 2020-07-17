@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.compound.Compoundability;
+import org.smoothbuild.lang.base.type.compound.TypeProperties;
 import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.parse.ast.Named;
 
@@ -16,13 +16,13 @@ import com.google.common.collect.ImmutableList;
 public abstract class Type implements Named {
   private final String name;
   private final Location location;
-  protected final Compoundability compoundability;
+  protected final TypeProperties properties;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(String name, Location location, Compoundability compoundability) {
+  protected Type(String name, Location location, TypeProperties properties) {
     this.name = name;
     this.location = location;
-    this.compoundability = compoundability;
+    this.properties = properties;
   }
 
   @Override
@@ -42,7 +42,7 @@ public abstract class Type implements Named {
   public abstract boolean isGeneric();
 
   public boolean isArray() {
-    return compoundability.isArray();
+    return properties.isArray();
   }
 
   public boolean isNothing() {
@@ -52,7 +52,7 @@ public abstract class Type implements Named {
   public abstract Type superType();
 
   public Type coreType() {
-    return compoundability.coreType(this);
+    return properties.coreType(this);
   }
 
   public <T extends Type> T replaceCoreType(T coreType) {
@@ -62,11 +62,11 @@ public abstract class Type implements Named {
   }
 
   public int coreDepth() {
-    return compoundability.coreDepth(this);
+    return properties.coreDepth(this);
   }
 
   public Type changeCoreDepthBy(int delta) {
-    return compoundability.changeCoreDepthBy(this, delta);
+    return properties.changeCoreDepthBy(this, delta);
   }
 
   public List<? extends Type> hierarchy() {
@@ -144,19 +144,19 @@ public abstract class Type implements Named {
   }
 
   public Class<? extends SObject> jType() {
-    return compoundability.jType();
+    return properties.jType();
   }
 
   public abstract <T> T visit(TypeVisitor<T> visitor);
 
   @Override
   public boolean equals(Object o) {
-    return compoundability.areEqual(this, o);
+    return properties.areEqual(this, o);
   }
 
   @Override
   public int hashCode() {
-    return compoundability.hashCode(this);
+    return properties.hashCode(this);
   }
 
   @Override

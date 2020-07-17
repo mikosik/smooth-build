@@ -3,14 +3,14 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
 
-import org.smoothbuild.lang.base.type.compound.ArrayCompoundability;
+import org.smoothbuild.lang.base.type.compound.ArrayProperties;
 
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
 
   public ConcreteArrayType(ConcreteType elemType) {
     super("[" +  elemType.name() + "]", internal(), calculateSuperType(elemType),
-        new ArrayCompoundability());
+        new ArrayProperties());
     this.elemType = requireNonNull(elemType);
   }
 

@@ -8,7 +8,7 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.Array;
 import org.smoothbuild.lang.object.base.SObject;
 
-public class ArrayCompoundability implements Compoundability {
+public class ArrayProperties implements TypeProperties {
   @Override
   public boolean isArray() {
     return true;
@@ -29,7 +29,7 @@ public class ArrayCompoundability implements Compoundability {
     if (delta < 0) {
       return elemType(type).changeCoreDepthBy(delta + 1);
     } else {
-      return CompoundabilityUtils.increaseCoreDepth(type, delta);
+      return PropertiesUtils.increaseCoreDepth(type, delta);
     }
   }
 

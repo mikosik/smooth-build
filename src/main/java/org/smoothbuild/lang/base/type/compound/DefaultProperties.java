@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type.compound;
 
 import org.smoothbuild.lang.base.type.Type;
 
-public abstract class DefaultCompoundability implements Compoundability {
+public abstract class DefaultProperties implements TypeProperties {
   @Override
   public boolean isArray() {
     return false;
@@ -24,7 +24,7 @@ public abstract class DefaultCompoundability implements Compoundability {
       throw new IllegalArgumentException(
           "It's not possible to reduce core depth of non array type.");
     }
-    return CompoundabilityUtils.increaseCoreDepth(type, delta);
+    return PropertiesUtils.increaseCoreDepth(type, delta);
   }
 
   @Override

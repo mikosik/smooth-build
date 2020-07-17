@@ -5,10 +5,10 @@ import java.util.Objects;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.object.base.SObject;
 
-public class BasicCompoundability extends DefaultCompoundability {
+public class BasicProperties extends DefaultProperties {
   private final Class<? extends SObject> jType;
 
-  public BasicCompoundability(Class<? extends SObject> jType) {
+  public BasicProperties(Class<? extends SObject> jType) {
     this.jType = jType;
   }
 
