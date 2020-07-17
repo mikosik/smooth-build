@@ -1,10 +1,10 @@
 package org.smoothbuild.slib.common;
 
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.ArrayBuilder;
-import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.ArrayBuilder;
+import org.smoothbuild.record.base.SObject;
 
 public class ConcatFunction {
   @SmoothFunction("concat")

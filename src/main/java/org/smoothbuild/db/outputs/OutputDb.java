@@ -3,9 +3,9 @@ package org.smoothbuild.db.outputs;
 import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
 import static org.smoothbuild.db.outputs.OutputDbException.outputDbException;
 import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
-import static org.smoothbuild.lang.object.base.Messages.containsErrors;
-import static org.smoothbuild.lang.object.base.Messages.isValidSeverity;
-import static org.smoothbuild.lang.object.base.Messages.severity;
+import static org.smoothbuild.record.base.Messages.containsErrors;
+import static org.smoothbuild.record.base.Messages.isValidSeverity;
+import static org.smoothbuild.record.base.Messages.severity;
 
 import java.io.IOException;
 
@@ -16,13 +16,13 @@ import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Tuple;
-import org.smoothbuild.lang.object.db.ObjectDb;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.ArrayType;
-import org.smoothbuild.lang.object.type.BinaryType;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.record.db.ObjectDb;
+import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.type.ArrayType;
+import org.smoothbuild.record.type.BinaryType;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

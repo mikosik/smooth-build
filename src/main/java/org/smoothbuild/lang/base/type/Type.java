@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.TypeProperties;
-import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.parse.ast.Named;
+import org.smoothbuild.record.base.SObject;
 
 import com.google.common.collect.ImmutableList;
 

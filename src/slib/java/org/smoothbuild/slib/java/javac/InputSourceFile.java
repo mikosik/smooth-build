@@ -1,15 +1,15 @@
 package org.smoothbuild.slib.java.javac;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
-import static org.smoothbuild.lang.object.db.FileStruct.filePath;
+import static org.smoothbuild.record.db.FileStruct.fileContent;
+import static org.smoothbuild.record.db.FileStruct.filePath;
 
 import java.net.URI;
 import java.util.Scanner;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.Tuple;
 
 public class InputSourceFile extends SimpleJavaFileObject {
   private final Tuple file;

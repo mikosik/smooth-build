@@ -3,13 +3,13 @@ package org.smoothbuild.exec.task.base;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.lang.object.base.Messages.severity;
-import static org.smoothbuild.lang.object.base.Messages.text;
+import static org.smoothbuild.record.base.Messages.severity;
+import static org.smoothbuild.record.base.Messages.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class ContainerTest extends TestingContext {

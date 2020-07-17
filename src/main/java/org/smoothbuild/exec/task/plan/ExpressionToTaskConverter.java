@@ -42,9 +42,9 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.TupleType;
 import org.smoothbuild.lang.parse.ast.Named;
+import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.type.TupleType;
 
 import com.google.common.collect.ImmutableList;
 

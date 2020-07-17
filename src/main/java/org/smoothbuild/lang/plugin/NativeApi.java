@@ -3,8 +3,8 @@ package org.smoothbuild.lang.plugin;
 import java.io.IOException;
 
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.db.ObjectFactory;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.db.ObjectFactory;
 import org.smoothbuild.util.CommandExecutor;
 
 /**

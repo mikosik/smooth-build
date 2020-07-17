@@ -4,7 +4,7 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.object.db.FileStruct.filePath;
+import static org.smoothbuild.record.db.FileStruct.filePath;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
@@ -16,13 +16,13 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.Blob;
-import org.smoothbuild.lang.object.base.SString;
-import org.smoothbuild.lang.object.base.Tuple;
 import org.smoothbuild.lang.plugin.AbortException;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.Blob;
+import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 

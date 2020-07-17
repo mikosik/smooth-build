@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import org.smoothbuild.lang.object.base.SString;
+import org.smoothbuild.record.base.SString;
 
 public class StringType extends ConcreteBasicType {
   public StringType() {

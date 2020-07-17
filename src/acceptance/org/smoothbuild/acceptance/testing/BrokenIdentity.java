@@ -1,8 +1,8 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.lang.object.base.SObject;
 import org.smoothbuild.lang.plugin.NativeApi;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.SObject;
 
 public class BrokenIdentity {
   @SmoothFunction("brokenIdentity")

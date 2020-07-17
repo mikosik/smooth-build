@@ -8,8 +8,8 @@ import static org.smoothbuild.exec.task.base.Computer.computationHash;
 import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.lang.object.type.TestingTypes.PERSON;
-import static org.smoothbuild.lang.object.type.TestingTypes.STRING;
+import static org.smoothbuild.record.type.TestingTypes.PERSON;
+import static org.smoothbuild.record.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,8 @@ import org.smoothbuild.exec.comp.Output;
 import org.smoothbuild.exec.comp.ReadTupleElementAlgorithm;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.BinaryType;
 import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.record.type.BinaryType;
 import org.smoothbuild.testing.TestingContext;
 
 public class ComputationHashTest extends TestingContext {

@@ -3,8 +3,8 @@ package org.smoothbuild.exec.comp;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.BinaryType;
-import org.smoothbuild.lang.object.type.TupleType;
+import org.smoothbuild.record.type.BinaryType;
+import org.smoothbuild.record.type.TupleType;
 
 public class AlgorithmHashes {
   public static Hash createArrayAlgorithmHash() {

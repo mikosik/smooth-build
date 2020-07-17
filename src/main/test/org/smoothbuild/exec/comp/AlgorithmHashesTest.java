@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.lang.object.type.TupleType;
+import org.smoothbuild.record.type.TupleType;
 import org.smoothbuild.testing.TestingContext;
 
 public class AlgorithmHashesTest extends TestingContext {

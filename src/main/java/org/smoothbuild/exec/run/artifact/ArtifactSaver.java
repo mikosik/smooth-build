@@ -4,8 +4,8 @@ import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.object.db.FileStruct.fileContent;
-import static org.smoothbuild.lang.object.db.FileStruct.filePath;
+import static org.smoothbuild.record.db.FileStruct.fileContent;
+import static org.smoothbuild.record.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,11 +15,11 @@ import javax.inject.Inject;
 
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Tuple;
-import org.smoothbuild.lang.object.db.ObjectFactory;
-import org.smoothbuild.lang.object.type.BinaryType;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.record.db.ObjectFactory;
+import org.smoothbuild.record.type.BinaryType;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**

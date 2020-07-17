@@ -19,7 +19,7 @@ import org.smoothbuild.exec.task.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.task.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 
 import com.google.common.collect.ImmutableMap;
 

@@ -4,8 +4,8 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.base.SObject;
-import org.smoothbuild.lang.object.base.Tuple;
+import org.smoothbuild.record.base.SObject;
+import org.smoothbuild.record.base.Tuple;
 
 public class StructProperties extends DefaultProperties {
   @Override

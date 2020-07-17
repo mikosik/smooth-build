@@ -11,10 +11,10 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.lang.object.base.Array;
-import org.smoothbuild.lang.object.base.ArrayBuilder;
-import org.smoothbuild.lang.object.base.SString;
 import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.ArrayBuilder;
+import org.smoothbuild.record.base.SString;
 
 public class FilesFunction {
   @SmoothFunction(value = "files", cacheable = false)

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type.property;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 
 public class BasicProperties extends DefaultProperties {
   private final Class<? extends SObject> jType;

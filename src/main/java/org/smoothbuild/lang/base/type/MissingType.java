@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.property.BasicProperties;
-import org.smoothbuild.lang.object.base.SObject;
+import org.smoothbuild.record.base.SObject;
 
 public class MissingType extends Type {
   private static final String NAME = "--Missing--";
