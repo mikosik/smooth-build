@@ -4,7 +4,7 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.parse.FindNatives.findNatives;
 import static org.smoothbuild.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.parse.FunctionLoader.loadFunction;
-import static org.smoothbuild.parse.InferTypesAndParamAssignment.inferTypesAndParamAssignment;
+import static org.smoothbuild.parse.InferTypesAndParamAssignments.inferTypesAndParamAssignment;
 import static org.smoothbuild.parse.ModuleParser.parseModule;
 import static org.smoothbuild.parse.ast.AstCreator.fromParseTree;
 
