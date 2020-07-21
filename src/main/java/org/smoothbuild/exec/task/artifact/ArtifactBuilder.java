@@ -1,9 +1,9 @@
-package org.smoothbuild.exec.run.artifact;
+package org.smoothbuild.exec.task.artifact;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.Map.Entry.comparingByKey;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
+import static org.smoothbuild.exec.task.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
 import java.io.IOException;
