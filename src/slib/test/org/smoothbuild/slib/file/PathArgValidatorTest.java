@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.plugin.AbortException;
+import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.testing.TestingContext;
 
 public class PathArgValidatorTest extends TestingContext {

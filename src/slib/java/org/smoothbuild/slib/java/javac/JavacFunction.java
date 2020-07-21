@@ -14,9 +14,9 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
-import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.SString;

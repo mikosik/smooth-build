@@ -16,9 +16,9 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.SString;

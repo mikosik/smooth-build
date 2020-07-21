@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 

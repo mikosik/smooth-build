@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.plugin;
+package org.smoothbuild.plugin;
 
 public interface MessageLogger {
   public void error(String message);

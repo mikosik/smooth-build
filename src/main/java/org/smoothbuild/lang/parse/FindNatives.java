@@ -24,8 +24,8 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 
 public class FindNatives {
   public static Natives findNatives(Path jarPath, Logger logger) {

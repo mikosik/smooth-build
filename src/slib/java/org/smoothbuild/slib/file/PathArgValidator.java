@@ -4,8 +4,8 @@ import static org.smoothbuild.io.fs.base.Path.path;
 
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.SString;
 
 public class PathArgValidator {

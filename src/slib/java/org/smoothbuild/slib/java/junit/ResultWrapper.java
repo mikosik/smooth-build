@@ -5,7 +5,7 @@ import static org.smoothbuild.slib.java.junit.ReflectionUtil.runReflexivelyAndCa
 
 import java.util.List;
 
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 
 public class ResultWrapper {
   private final NativeApi nativeApi;

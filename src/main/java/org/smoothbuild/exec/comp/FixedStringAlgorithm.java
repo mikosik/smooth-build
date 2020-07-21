@@ -7,7 +7,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.record.spec.StringSpec;

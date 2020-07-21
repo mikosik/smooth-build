@@ -4,7 +4,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 
 public class LoggingDiagnosticListener implements DiagnosticListener<JavaFileObject> {
   private final NativeApi nativeApi;

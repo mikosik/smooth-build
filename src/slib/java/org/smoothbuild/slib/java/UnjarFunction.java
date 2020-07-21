@@ -2,8 +2,8 @@ package org.smoothbuild.slib.java;
 
 import java.io.IOException;
 
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.slib.compress.UnzipFunction;

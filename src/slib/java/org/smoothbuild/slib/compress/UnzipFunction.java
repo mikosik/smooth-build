@@ -17,9 +17,9 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.smoothbuild.io.fs.base.IllegalPathException;
-import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.Blob;

@@ -2,7 +2,7 @@ package org.smoothbuild.slib.java.junit;
 
 import static org.smoothbuild.slib.java.junit.ReflectionUtil.runReflexivelyAndCast;
 
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 
 public class FailureWrapper {
   private final NativeApi nativeApi;
