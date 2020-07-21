@@ -1,8 +1,8 @@
-package org.smoothbuild.exec.run.artifact;
+package org.smoothbuild.exec.task.artifact;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.exec.run.artifact.ArtifactPaths.artifactPath;
-import static org.smoothbuild.exec.run.artifact.ArtifactPaths.targetPath;
+import static org.smoothbuild.exec.task.artifact.ArtifactPaths.artifactPath;
+import static org.smoothbuild.exec.task.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.record.db.FileStruct.fileContent;
 import static org.smoothbuild.record.db.FileStruct.filePath;
