@@ -17,7 +17,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
 

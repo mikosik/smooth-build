@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.Record;

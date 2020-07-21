@@ -37,7 +37,7 @@ import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.base.TaskKind;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.spec.Spec;

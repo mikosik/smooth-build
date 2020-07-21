@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.lang.plugin.NativeApi;
-import org.smoothbuild.lang.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.SString;
 
 public class TempFilePath {

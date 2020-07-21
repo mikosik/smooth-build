@@ -26,7 +26,7 @@ import org.smoothbuild.acceptance.testing.SameName2;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.acceptance.testing.WithoutContainer;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.SString;

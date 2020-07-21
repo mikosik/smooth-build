@@ -3,8 +3,8 @@ package org.smoothbuild.slib.java.junit;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import org.smoothbuild.lang.plugin.AbortException;
-import org.smoothbuild.lang.plugin.NativeApi;
+import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.plugin.NativeApi;
 
 public class ReflectionUtil {
   public static Object newInstance(NativeApi nativeApi, Class<?> clazz) {
