@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.parse;
+package org.smoothbuild.exec.run;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
@@ -16,6 +16,8 @@ import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.parse.Definitions;
+import org.smoothbuild.lang.parse.ModuleLoader;
 
 import com.google.common.collect.ImmutableMap;
 

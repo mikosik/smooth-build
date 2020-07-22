@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.parse.RuntimeController;
 
 public class ListRunner {
   private final Console console;
