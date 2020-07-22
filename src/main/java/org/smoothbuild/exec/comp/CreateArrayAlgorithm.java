@@ -1,10 +1,8 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.createArrayAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.spec.ArraySpec;
@@ -15,11 +13,6 @@ public class CreateArrayAlgorithm implements Algorithm {
 
   public CreateArrayAlgorithm(ArraySpec arraySpec) {
     this.arraySpec = arraySpec;
-  }
-
-  @Override
-  public TaskKind kind() {
-    return LITERAL;
   }
 
   @Override

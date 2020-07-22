@@ -1,14 +1,12 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.callNativeAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.record.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
@@ -60,11 +58,6 @@ public class CallNativeAlgorithm implements Algorithm {
             "Function " + function.name() + " threw java exception from its native code.", cause);
       }
     }
-  }
-
-  @Override
-  public TaskKind kind() {
-    return CALL;
   }
 
   private Output nullOutput(NativeApi nativeApi) {

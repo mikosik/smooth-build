@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.exec.task.base.Computer.computationHash;
-import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.record.spec.TestingSpecs.PERSON;
@@ -155,11 +154,6 @@ public class ComputationHashTest extends TestingContext {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         return null;
-      }
-
-      @Override
-      public TaskKind kind() {
-        return CALL;
       }
     };
   }

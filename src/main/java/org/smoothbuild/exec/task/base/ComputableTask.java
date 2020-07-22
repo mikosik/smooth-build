@@ -7,19 +7,21 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;
 
 public abstract class ComputableTask extends Task {
-  public final Algorithm algorithm;
-  public final boolean cacheable;
+  private final TaskKind kind;
+  private final Algorithm algorithm;
+  private final boolean cacheable;
 
-  public ComputableTask(ConcreteType type, String name, Algorithm algorithm,
+  public ComputableTask(TaskKind kind, ConcreteType type, String name, Algorithm algorithm,
       List<? extends Task> dependencies, Location location, boolean cacheable) {
     super(type, name, dependencies, location);
+    this.kind = kind;
     this.algorithm = algorithm;
     this.cacheable = cacheable;
   }
 
   @Override
   public TaskKind kind() {
-    return algorithm.kind();
+    return kind;
   }
 
   public Algorithm algorithm() {

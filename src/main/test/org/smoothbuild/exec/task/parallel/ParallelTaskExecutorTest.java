@@ -36,7 +36,6 @@ import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Record;
 import org.smoothbuild.record.base.SString;
@@ -238,7 +237,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(STRING, "task-name", algorithm, dependencies, internal(), true);
+    return new NormalTask(CALL, STRING, "task-name", algorithm, dependencies, internal(), true);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {
@@ -258,11 +257,6 @@ public class ParallelTaskExecutorTest extends TestingContext {
 
     protected TestAlgorithm(Hash hash) {
       this.hash = hash;
-    }
-
-    @Override
-    public TaskKind kind() {
-      return CALL;
     }
 
     @Override

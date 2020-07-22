@@ -2,6 +2,9 @@ package org.smoothbuild.exec.task.plan;
 
 import static org.smoothbuild.exec.task.base.IfTask.IF_FUNCTION_NAME;
 import static org.smoothbuild.exec.task.base.Task.taskTypes;
+import static org.smoothbuild.exec.task.base.TaskKind.CALL;
+import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
+import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -65,7 +68,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     Algorithm algorithm = new ReadTupleElementAlgorithm(accessor, type.visit(typeConverter));
     List<Task> children = childrenTasks(expression.children());
     return new NormalTask(
-        type, "." + accessor.name(), algorithm, children, accessor.location(), true);
+        CALL, type, "." + accessor.name(), algorithm, children, accessor.location(), true);
   }
 
   @Override
@@ -75,8 +78,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
 
     Algorithm algorithm = new CreateArrayAlgorithm(typeConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new NormalTask(
-        actualType, actualType.name(), algorithm, convertedElements, expression.location(), true);
+    return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
+        expression.location(), true);
   }
 
   private List<Task> convertedElements(ConcreteType type, List<Task> elements) {
@@ -103,7 +106,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     TupleSpec type = typeConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
-    return new NormalTask(constructor.type(), constructor.name(), algorithm, dependencies,
+    return new NormalTask(CALL, constructor.type(), constructor.name(), algorithm, dependencies,
         expression.location(), true);
   }
 
@@ -146,7 +149,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
       return new IfTask(actualResultType, algorithm, dependencies, expression.location(),
           nativeFunction.isCacheable());
     } else {
-      return new NormalTask(actualResultType, nativeFunction.name(), algorithm, dependencies,
+      return new NormalTask(CALL, actualResultType, nativeFunction.name(), algorithm, dependencies,
           expression.location(), nativeFunction.isCacheable());
     }
   }
@@ -165,8 +168,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(StringLiteralExpression expression) {
     var stringType = typeConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
-    return new NormalTask(string(), algorithm.shortedString(), algorithm, ImmutableList.of(),
-        expression.location(), true);
+    return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
+        ImmutableList.of(), expression.location(), true);
   }
 
   public List<Task> childrenTasks(List<Expression> children) {
@@ -181,7 +184,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
       Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(typeConverter));
       List<Task> dependencies = list(task);
       return new NormalTask(
-          requiredType, description, algorithm, dependencies, task.location(), true);
+          CONVERSION, requiredType, description, algorithm, dependencies, task.location(), true);
     }
   }
 }

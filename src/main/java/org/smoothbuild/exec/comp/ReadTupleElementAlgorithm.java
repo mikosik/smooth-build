@@ -2,10 +2,8 @@ package org.smoothbuild.exec.comp;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.ReadTupleElementAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Record;
@@ -39,10 +37,5 @@ public class ReadTupleElementAlgorithm implements Algorithm {
     checkArgument(records.size() == 1);
     Tuple tuple = (Tuple) records.get(0);
     return new Output(tuple.get(accessor.fieldIndex()), nativeApi.messages());
-  }
-
-  @Override
-  public TaskKind kind() {
-    return CALL;
   }
 }

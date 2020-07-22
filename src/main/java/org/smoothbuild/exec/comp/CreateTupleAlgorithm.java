@@ -1,10 +1,8 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.createTupleAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.CALL;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.record.spec.Spec;
@@ -31,10 +29,5 @@ public class CreateTupleAlgorithm implements Algorithm {
   public Output run(Input input, NativeApi nativeApi) {
     Tuple tuple = nativeApi.factory().tuple(constructedType, input.objects());
     return new Output(tuple, nativeApi.messages());
-  }
-
-  @Override
-  public TaskKind kind() {
-    return CALL;
   }
 }
