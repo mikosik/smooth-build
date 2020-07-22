@@ -17,7 +17,7 @@ public class Bool extends RecordImpl {
   }
 
   @Override
-  public String toString() {
-    return spec().name() + "(" + jValue() + "):" + hash();
+  public String valueToString() {
+    return Boolean.toString(jValue());
   }
 }

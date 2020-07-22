@@ -18,7 +18,7 @@ public class SString extends RecordImpl {
   }
 
   @Override
-  protected String valueToString() {
+  public String valueToString() {
     return escapedAndLimitedWithEllipsis(jValue(), 30);
   }
 }
