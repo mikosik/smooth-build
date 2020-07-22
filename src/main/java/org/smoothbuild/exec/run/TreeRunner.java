@@ -15,7 +15,6 @@ import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.exec.task.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.parse.Definitions;
-import org.smoothbuild.lang.parse.RuntimeController;
 
 public class TreeRunner {
   private final Console console;
