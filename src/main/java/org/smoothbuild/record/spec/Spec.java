@@ -45,8 +45,7 @@ public abstract class Spec implements Record {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof Spec
-        && Objects.equals(hash(), ((Spec) object).hash());
+    return (object instanceof Spec that) && Objects.equals(hash(), that.hash());
   }
 
   @Override
