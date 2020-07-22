@@ -1,12 +1,15 @@
 package org.smoothbuild.record.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.record.spec.Spec;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class is immutable.
@@ -36,6 +39,11 @@ public class RecordImpl implements Record {
   }
 
   @Override
+  public String valueToString() {
+    return "...";
+  }
+
+  @Override
   public boolean equals(Object object) {
     return (object instanceof Record that) && Objects.equals(hash(), that.hash());
   }
@@ -47,10 +55,10 @@ public class RecordImpl implements Record {
 
   @Override
   public String toString() {
-    return spec().name() + "(" + valueToString() + "):" + hash();
+    return valueToString() + ":" + hash();
   }
 
-  protected String valueToString() {
-    return "...";
+  public static String elementsToStringValues(ImmutableList<Record> records) {
+    return records.stream().map(Record::valueToString).collect(joining(","));
   }
 }

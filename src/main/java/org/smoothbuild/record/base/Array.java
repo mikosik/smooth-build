@@ -60,4 +60,9 @@ public class Array extends RecordImpl {
       throw new RecordDbException(hash(), e);
     }
   }
+
+  @Override
+  public String valueToString() {
+    return "[" + elementsToStringValues(elements()) + ']';
+  }
 }

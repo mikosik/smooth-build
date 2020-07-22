@@ -55,7 +55,12 @@ public abstract class Spec implements Record {
 
   @Override
   public String toString() {
-    return name() + ":" + hash();
+    return valueToString() + ":" + hash();
+  }
+
+  @Override
+  public String valueToString() {
+    return name();
   }
 
   public String name() {

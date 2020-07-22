@@ -38,7 +38,7 @@ public class NothingArrayTest extends TestingContext {
   public void nothing_array_to_string() {
     Array array = emptyArrayOf(nothingSpec());
     assertThat(array.toString())
-        .isEqualTo("[NOTHING](...):" + array.hash());
+        .isEqualTo("[]:" + array.hash());
   }
 
   private Array emptyArrayOf(NothingSpec elemSpec) {

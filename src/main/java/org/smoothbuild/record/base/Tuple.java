@@ -74,4 +74,9 @@ public class Tuple extends RecordImpl {
       throw new RecordDbException(hash(), "Error reading element hashes.", e);
     }
   }
+
+  @Override
+  public String valueToString() {
+    return "{" + elementsToStringValues(elements()) + '}';
+  }
 }

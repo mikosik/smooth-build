@@ -200,6 +200,7 @@ public class ArrayTest extends TestingContext {
         .add(sstring2)
         .build();
     assertThat(array.toString())
-        .isEqualTo("[STRING](...):" + array.hash());
+        .isEqualTo("""
+            ["abc","def"]:""" + array.hash());
   }
 }

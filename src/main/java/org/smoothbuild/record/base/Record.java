@@ -9,4 +9,6 @@ public interface Record {
   public Hash dataHash();
 
   public Spec spec();
+
+  public String valueToString();
 }

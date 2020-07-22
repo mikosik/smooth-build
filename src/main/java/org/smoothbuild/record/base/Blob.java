@@ -17,4 +17,10 @@ public class Blob extends RecordImpl {
   public BufferedSource source() {
     return wrapException(hash(), () -> hashedDb.source(dataHash()));
   }
+
+  @Override
+  public String valueToString() {
+    return "0x??";
+  }
 }
+

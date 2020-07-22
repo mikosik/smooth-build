@@ -97,6 +97,6 @@ public class BlobTest extends TestingContext {
   public void to_string() {
     Blob blob = blob(bytes);
     assertThat(blob.toString())
-        .isEqualTo("BLOB(...):" + blob.hash());
+        .isEqualTo("0x??:" + blob.hash());
   }
 }
