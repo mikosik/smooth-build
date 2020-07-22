@@ -37,8 +37,7 @@ public class RecordImpl implements Record {
 
   @Override
   public boolean equals(Object object) {
-    return object instanceof Record
-        && Objects.equals(hash(), ((Record) object).hash());
+    return (object instanceof Record that) && Objects.equals(hash(), that.hash());
   }
 
   @Override
