@@ -1,10 +1,8 @@
 package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
@@ -18,11 +16,6 @@ public class ConvertAlgorithm implements Algorithm {
 
   public ConvertAlgorithm(Spec destinationSpec) {
     this.destinationSpec = destinationSpec;
-  }
-
-  @Override
-  public TaskKind kind() {
-    return CONVERSION;
   }
 
   @Override

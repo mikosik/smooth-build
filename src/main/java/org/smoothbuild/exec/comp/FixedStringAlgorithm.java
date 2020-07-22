@@ -2,11 +2,9 @@ package org.smoothbuild.exec.comp;
 
 import static org.smoothbuild.exec.comp.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.exec.task.base.Task.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.exec.task.base.TaskKind;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.spec.Spec;
@@ -21,11 +19,6 @@ public class FixedStringAlgorithm implements Algorithm {
     this.stringSpec = stringSpec;
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
-  }
-
-  @Override
-  public TaskKind kind() {
-    return LITERAL;
   }
 
   public String shortedString() {
