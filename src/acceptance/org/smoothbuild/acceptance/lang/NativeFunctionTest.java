@@ -311,7 +311,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function emptyStringArray has faulty native implementation: "
-        + "Its actual result type is [BLOB] but it returned object of type [STRING].");
+        + "Its declared result spec == [BLOB] but it returned record with spec == [STRING].");
   }
 
   @Test
@@ -323,7 +323,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function brokenIdentity has faulty native implementation: "
-        + "Its actual result type is [NOTHING] but it returned object of type STRING.");
+        + "Its declared result spec == [NOTHING] but it returned record with spec == STRING.");
   }
 
   private String invalidFunctionProvidedBy(Class<?> clazz) {

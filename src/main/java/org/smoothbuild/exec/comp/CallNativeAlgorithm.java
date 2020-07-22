@@ -42,8 +42,8 @@ public class CallNativeAlgorithm implements Algorithm {
       }
       if (!spec.equals(result.spec())) {
         nativeApi.log().error("Function " + function.name()
-            + " has faulty native implementation: Its actual result type is " + spec.name()
-            + " but it returned object of type " + result.spec().name() + ".");
+            + " has faulty native implementation: Its declared result spec == " + spec.name()
+            + " but it returned record with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());

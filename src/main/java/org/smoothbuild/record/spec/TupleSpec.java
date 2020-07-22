@@ -1,6 +1,7 @@
 package org.smoothbuild.record.spec;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.stream.Collectors.joining;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.record.base.MerkleRoot;
@@ -25,6 +26,12 @@ public class TupleSpec extends Spec {
   public Tuple newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Tuple(merkleRoot, recordDb, hashedDb);
+  }
+
+  @Override
+  public String name() {
+    String elementNames = elementSpecs.stream().map(Spec::name).collect(joining(","));
+    return "{" + elementNames + "}";
   }
 
   public ImmutableList<Spec> elementSpecs() {

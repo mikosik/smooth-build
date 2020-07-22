@@ -155,7 +155,7 @@ public class TupleTest extends TestingContext {
   public void to_string() {
     Tuple person = johnDoePerson();
     assertThat(person.toString())
-        .isEqualTo("TUPLE(...):" + person.hash());
+        .isEqualTo("{STRING,STRING}(...):" + person.hash());
   }
 
   private Tuple johnDoePerson() {

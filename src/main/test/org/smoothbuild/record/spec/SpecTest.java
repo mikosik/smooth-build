@@ -65,21 +65,21 @@ public class SpecTest {
         arguments(STRING, "STRING"),
         arguments(BLOB, "BLOB"),
         arguments(NOTHING, "NOTHING"),
-        arguments(PERSON, "TUPLE"),
+        arguments(PERSON, "{STRING,STRING}"),
 
         arguments(ARRAY_SPEC, "[SPEC]"),
         arguments(ARRAY_BOOL, "[BOOL]"),
         arguments(ARRAY_STRING, "[STRING]"),
         arguments(ARRAY_BLOB, "[BLOB]"),
         arguments(ARRAY_NOTHING, "[NOTHING]"),
-        arguments(ARRAY_PERSON, "[TUPLE]"),
+        arguments(ARRAY_PERSON, "[{STRING,STRING}]"),
 
         arguments(ARRAY2_SPEC, "[[SPEC]]"),
         arguments(ARRAY2_BOOL, "[[BOOL]]"),
         arguments(ARRAY2_STRING, "[[STRING]]"),
         arguments(ARRAY2_BLOB, "[[BLOB]]"),
         arguments(ARRAY2_NOTHING, "[[NOTHING]]"),
-        arguments(ARRAY2_PERSON, "[[TUPLE]]")
+        arguments(ARRAY2_PERSON, "[[{STRING,STRING}]]")
     );
   }
 
