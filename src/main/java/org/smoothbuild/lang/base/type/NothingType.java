@@ -4,7 +4,7 @@ import org.smoothbuild.record.base.Nothing;
 
 public class NothingType extends ConcreteBasicType {
   public NothingType() {
-    super("Nothing", Nothing.class);
+    super(TypeNames.NOTHING, Nothing.class);
   }
 
   @Override
