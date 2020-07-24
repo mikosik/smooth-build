@@ -24,7 +24,7 @@ public abstract class Spec implements Record {
   }
 
   /**
-   * Creates new java object representing Binary Object represented by merkleRoot.
+   * Creates new java object Record represented by merkleRoot.
    */
   public abstract Record newJObject(MerkleRoot merkleRoot);
 
