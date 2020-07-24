@@ -32,7 +32,6 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.Nothing;
 import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 
@@ -55,7 +54,7 @@ public class MapTypeToJTypeTest {
         arguments(A, org.smoothbuild.record.base.Record.class),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
-        arguments(NOTHING, Nothing.class),
+        arguments(NOTHING, org.smoothbuild.record.base.Record.class),
         arguments(STRING, SString.class),
         arguments(PERSON, Tuple.class),
 
