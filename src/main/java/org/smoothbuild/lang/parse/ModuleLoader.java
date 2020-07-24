@@ -21,6 +21,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.nativ.Natives;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

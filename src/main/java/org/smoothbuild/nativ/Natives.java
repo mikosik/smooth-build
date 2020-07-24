@@ -1,6 +1,7 @@
-package org.smoothbuild.lang.parse;
+package org.smoothbuild.nativ;
 
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.nativ.MapTypeToJType.mapTypeToJType;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -14,6 +15,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
+import org.smoothbuild.record.base.Record;
 
 public class Natives {
   private final Map<String, Native> map;
@@ -47,10 +49,10 @@ public class Natives {
         Method method = nativ.method();
         Type resultType = func.type().get();
         Class<?> resultJType = method.getReturnType();
-        if (!resultType.jType().equals(resultJType)) {
+        if (!mapTypeToJType(resultType).equals(resultJType)) {
           logger.log(parseError(func, "Function '" + func.name() + "' has result type "
                   + resultType.q() + " so its native implementation result type must be "
-                  + resultType.jType().getCanonicalName() + " but it is "
+                  + mapTypeToJType(resultType).getCanonicalName() + " but it is "
                   + resultJType.getCanonicalName() + "."));
           return;
         }
@@ -67,11 +69,12 @@ public class Natives {
           Parameter nativeParam = nativeParams[i + 1];
           Type paramType = params.get(i).typeNode().type().get();
           Class<?> paramJType = nativeParam.getType();
-          if (!paramType.jType().equals(paramJType)) {
+          Class<? extends Record> expectedParamJType = mapTypeToJType(paramType);
+          if (!expectedParamJType.equals(paramJType)) {
             logger.log(parseError(func, "Function '" + func.name()
                 + "' parameter '" + declaredName + "' has type "
                 + paramType.name() + " so its native implementation type must be "
-                + paramType.jType().getCanonicalName() + " but it is "
+                + expectedParamJType.getCanonicalName() + " but it is "
                 + paramJType.getCanonicalName() + "."));
             return;
           }
