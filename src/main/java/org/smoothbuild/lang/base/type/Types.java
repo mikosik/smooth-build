@@ -6,7 +6,6 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.BasicProperties;
-import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -36,7 +35,7 @@ public class Types {
 
   public static GenericType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
-    return new GenericType(name, internal(), new BasicProperties(Record.class));
+    return new GenericType(name, internal(), new BasicProperties());
   }
 
   public static BlobType blob() {

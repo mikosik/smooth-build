@@ -4,13 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.property.BasicProperties;
-import org.smoothbuild.record.base.Record;
 
 public class MissingType extends Type {
   private static final String NAME = "--Missing--";
 
   protected MissingType() {
-    super(NAME, null, new BasicProperties(Record.class));
+    super(NAME, null, new BasicProperties());
   }
 
   @Override

@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.Tuple;
 
 public class StructProperties extends DefaultProperties {
   @Override
@@ -23,10 +21,5 @@ public class StructProperties extends DefaultProperties {
   @Override
   public int hashCode(Type type) {
     return Objects.hash(type.name());
-  }
-
-  @Override
-  public Class<? extends Record> jType() {
-    return Tuple.class;
   }
 }
