@@ -2,12 +2,14 @@ package org.smoothbuild.exec.run;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.base.Name.isLegalName;
+import static org.smoothbuild.util.Sets.map;
 
 import java.util.List;
 
 import org.smoothbuild.util.DuplicatesDetector;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class ValidateFunctionNames {
   public static List<String> validateFunctionNames(List<String> args) {
@@ -27,11 +29,10 @@ public class ValidateFunctionNames {
         .collect(toImmutableList());
   }
 
-  private static ImmutableList<String> duplicateFunctionNameErrors(
+  private static ImmutableSet<String> duplicateFunctionNameErrors(
       DuplicatesDetector<String> duplicatesDetector) {
-    return duplicatesDetector.getDuplicateValues()
-        .stream()
-        .map(name -> "Function '" + name + "' has been specified more than once.")
-        .collect(toImmutableList());
+    return map(
+        duplicatesDetector.getDuplicateValues(),
+        name -> "Function '" + name + "' has been specified more than once.");
   }
 }
