@@ -1,12 +1,14 @@
 package org.smoothbuild.util;
 
-import static java.util.stream.Collectors.toList;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import com.google.common.collect.ImmutableList;
 
 public class Lists {
   @SafeVarargs
@@ -20,18 +22,19 @@ public class Lists {
     return result;
   }
 
-  public static <E> List<E> filter(List<E> list, Predicate<? super E> predicate) {
+  public static <E> ImmutableList<E> filter(List<E> list, Predicate<? super E> predicate) {
     return list
         .stream()
         .filter(predicate)
-        .collect(toList());
+        .collect(toImmutableList());
   }
 
-  public static <E, R> List<R> map(List<E> list, Function<? super E, ? extends R> function) {
+  public static <E, R> ImmutableList<R> map(
+      List<E> list, Function<? super E, ? extends R> function) {
     return list
         .stream()
         .map(function)
-        .collect(toList());
+        .collect(toImmutableList());
   }
 
   public static <E> List<E> sane(List<E> list) {
