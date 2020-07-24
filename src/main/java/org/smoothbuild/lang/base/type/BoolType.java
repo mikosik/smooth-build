@@ -1,10 +1,8 @@
 package org.smoothbuild.lang.base.type;
 
-import org.smoothbuild.record.base.Bool;
-
 public class BoolType extends ConcreteBasicType {
   public BoolType() {
-    super(TypeNames.BOOL, Bool.class);
+    super(TypeNames.BOOL);
   }
 
   @Override
