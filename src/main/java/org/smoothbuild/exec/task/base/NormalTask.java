@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.task.base;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.exec.comp.Input.input;
+import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
@@ -26,20 +26,14 @@ public class NormalTask extends ComputableTask {
   @Override
   public Feeder<Record> startComputation(Worker worker) {
     FeedingConsumer<Record> result = new FeedingConsumer<>();
-    ImmutableList<Feeder<Record>> dependencyResults = dependencies()
-        .stream()
-        .map(ch -> ch.startComputation(worker))
-        .collect(toImmutableList());
+    ImmutableList<Feeder<Record>> dependencyResults =
+        map(dependencies(), ch -> ch.startComputation(worker));
     runWhenAllAvailable(dependencyResults,
         () -> worker.enqueueComputation(this, toInput(dependencyResults), result));
     return result;
   }
 
   private static Input toInput(List<Feeder<Record>> results) {
-    List<Record> childValues = results
-        .stream()
-        .map(Feeder::get)
-        .collect(toImmutableList());
-    return input(childValues);
+    return input(map(results, Feeder::get));
   }
 }

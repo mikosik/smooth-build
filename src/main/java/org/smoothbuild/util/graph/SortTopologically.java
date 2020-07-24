@@ -4,6 +4,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.util.Lists.filter;
+import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.BEING_PROCESSED;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.NOT_VISITED;
 import static org.smoothbuild.util.graph.SortTopologically.Node.State.PROCESSED;
@@ -147,9 +149,7 @@ public class SortTopologically {
 
   private static <K, N, E> TopologicalSortingResult<K, N, E> findCycleInUnprocessedNodes(
       ImmutableList<Node<K, N, E>> nodes) {
-    var notVisited = nodes.stream()
-        .filter(n -> n.state() == NOT_VISITED)
-        .collect(toImmutableList());
+    var notVisited = filter(nodes, n -> n.state() == NOT_VISITED);
     return sortTopologicallyImpl(notVisited);
   }
 
@@ -227,11 +227,7 @@ public class SortTopologically {
       List<GraphNode<K, N, E>>sorted,
       List<GraphEdge<E, K>> cycle) {
     public ImmutableList<N> valuesReversed() {
-      return sorted()
-          .stream()
-          .map(GraphNode::value)
-          .collect(toImmutableList())
-          .reverse();
+      return map(sorted(), GraphNode::value).reverse();
     }
   }
 }

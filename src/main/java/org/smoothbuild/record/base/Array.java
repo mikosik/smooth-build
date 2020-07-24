@@ -1,6 +1,6 @@
 package org.smoothbuild.record.base;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
+import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
@@ -51,11 +51,7 @@ public class Array extends RecordImpl {
 
   private ImmutableList<Record> elements() {
     try {
-      return hashedDb
-          .readHashes(dataHash())
-          .stream()
-          .map(recordDb::get)
-          .collect(toImmutableList());
+      return map(hashedDb.readHashes(dataHash()), recordDb::get);
     } catch (HashedDbException e) {
       throw new RecordDbException(hash(), e);
     }

@@ -1,7 +1,6 @@
 package org.smoothbuild.util.graph;
 
 import static com.google.common.collect.Collections2.permutations;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
@@ -332,9 +331,7 @@ public class SortTopologicallyTest {
   }
 
   private static GraphNode<Integer, String, String> node(Integer key, List<Integer> targetKeys) {
-    var edges = targetKeys.stream()
-        .map(k -> new GraphEdge<>("->" + k, k))
-        .collect(toImmutableList());
+    var edges = map(targetKeys, k -> new GraphEdge<>("->" + k, k));
     return new GraphNode<>(key, "node" + key, edges);
   }
 }

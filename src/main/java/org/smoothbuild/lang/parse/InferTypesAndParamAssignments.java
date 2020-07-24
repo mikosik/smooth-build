@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.parse;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Scope.scope;
@@ -10,6 +9,7 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +37,6 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
-import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
 
@@ -89,9 +88,9 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitCallable(CallableNode callable) {
         super.visitCallable(callable);
-        var infos = Lists.map(callable.params(), ItemNode::itemInfo);
+        var infos = map(callable.params(), ItemNode::itemInfo);
         if (infos.stream().noneMatch(Optional::isEmpty)) {
-           callable.setParameterInfos(infos.stream().map(Optional::get).collect(toImmutableList()));
+           callable.setParameterInfos(map(infos, Optional::get));
         }
       }
 
