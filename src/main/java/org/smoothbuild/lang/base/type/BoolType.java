@@ -4,7 +4,7 @@ import org.smoothbuild.record.base.Bool;
 
 public class BoolType extends ConcreteBasicType {
   public BoolType() {
-    super("Bool", Bool.class);
+    super(TypeNames.BOOL, Bool.class);
   }
 
   @Override

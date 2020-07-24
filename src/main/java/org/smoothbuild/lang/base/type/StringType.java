@@ -4,7 +4,7 @@ import org.smoothbuild.record.base.SString;
 
 public class StringType extends ConcreteBasicType {
   public StringType() {
-    super("String", SString.class);
+    super(TypeNames.STRING, SString.class);
   }
 
   @Override

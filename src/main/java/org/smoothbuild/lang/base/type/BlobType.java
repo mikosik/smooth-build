@@ -4,7 +4,7 @@ import org.smoothbuild.record.base.Blob;
 
 public class BlobType extends ConcreteBasicType {
   public BlobType() {
-    super("Blob", Blob.class);
+    super(TypeNames.BLOB, Blob.class);
   }
 
   @Override
