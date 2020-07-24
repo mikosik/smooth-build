@@ -24,6 +24,7 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
+import org.smoothbuild.nativ.Natives;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 
