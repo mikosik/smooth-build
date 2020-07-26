@@ -1,7 +1,20 @@
 package org.smoothbuild.acceptance.lang.struct;
 
+import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+import static org.smoothbuild.util.Sets.map;
+
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Types;
+
+import com.google.common.collect.ImmutableList;
 
 public class StructTest extends AcceptanceTestCase {
   @Test
@@ -126,19 +139,31 @@ public class StructTest extends AcceptanceTestCase {
         "  }                  ");
     runSmoothList();
     assertFinishedWithError();
-    assertSysOutContainsParseError(2, "Struct field cannot have 'Nothing' type.\n");
+    assertSysOutContainsParseError(2, "First field of struct cannot have 'Nothing' type.\n");
   }
 
-  @Test
-  public void non_first_field_with_nothing_type_causes_error() throws Exception {
+  @ParameterizedTest
+  @MethodSource("non_first_field_types")
+  public void non_first_field_can_have_type(Type type) throws Exception {
     createUserModule(
         "  MyStruct {               ",
-        "    String myField,        ",
-        "    Nothing genericField,  ",
+        "    String firstField,        ",
+        "    " + type.name() + " secondField,  ",
         "  }                        ");
     runSmoothList();
-    assertFinishedWithError();
-    assertSysOutContainsParseError(3, "Struct field cannot have 'Nothing' type.\n");
+    assertFinishedWithSuccess();
+  }
+
+  private static Stream<Arguments> non_first_field_types() {
+    var simpleTypes = BASIC_TYPES;
+    var arrayTypes = map(simpleTypes, Types::array);
+    var array2Types = map(arrayTypes, Types::array);
+
+    var builder = ImmutableList.<ConcreteType>builder();
+    builder.addAll(simpleTypes);
+    builder.addAll(arrayTypes);
+    builder.addAll(array2Types);
+    return builder.build().stream().map(Arguments::of);
   }
 
   @Test
