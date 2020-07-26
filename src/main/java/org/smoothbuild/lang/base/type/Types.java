@@ -21,7 +21,7 @@ public class Types {
   /**
    * Basic types available in smooth language.
    */
-  public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(
+  public static final ImmutableSet<ConcreteType> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
 
   public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()

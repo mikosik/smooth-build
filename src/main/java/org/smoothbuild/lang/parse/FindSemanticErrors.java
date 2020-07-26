@@ -236,13 +236,13 @@ public class FindSemanticErrors {
           if (type.isArray()) {
             logger.log(parseError(field, "First field of struct cannot have array type."));
           }
+          if (type.isNothing()) {
+            logger.log(parseError(field, "First field of struct cannot have 'Nothing' type."));
+          }
         }
         for (ItemNode field : fields) {
           if (isGenericTypeName(field.typeNode().name())) {
             logger.log(parseError(field, "Struct field cannot have a generic type.\n"));
-          }
-          if (field.typeNode().isNothing()) {
-            logger.log(parseError(field, "Struct field cannot have 'Nothing' type."));
           }
         }
       }
