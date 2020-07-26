@@ -22,7 +22,7 @@ public class MapTypeToJType {
       return switch (type.name()) {
         case TypeNames.BLOB -> Blob.class;
         case TypeNames.BOOL -> Bool.class;
-        case TypeNames.NOTHING -> org.smoothbuild.record.base.Record.class;
+        case TypeNames.NOTHING -> Record.class;
         case TypeNames.STRING -> SString.class;
         default -> throw new IllegalArgumentException("Unknown type: '" + type.name() + "'");
       };
