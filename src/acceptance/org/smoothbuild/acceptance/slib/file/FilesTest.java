@@ -61,7 +61,7 @@ public class FilesTest extends AcceptanceTestCase {
         "  result = files('dir');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file.txt", "abc", "subdir/file.txt", "def");
   }
 
@@ -73,7 +73,7 @@ public class FilesTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     String userModule = USER_MODULE_PATH.toString();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly(userModule, script, "dir/file.txt", "abc");
   }
 }

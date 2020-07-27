@@ -28,7 +28,7 @@ public class PipeTest extends AcceptanceTestCase {
         "  result = myIdentity('abc' | myIdentity);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 }

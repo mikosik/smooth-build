@@ -15,7 +15,7 @@ public class JarUnjarTest extends AcceptanceTestCase {
         "    | jar | unjar;                                                                     ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
   }
 

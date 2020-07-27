@@ -14,7 +14,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', 'else clause');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("then clause");
   }
 
@@ -24,7 +24,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), 'then clause', 'else clause');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("else clause");
   }
 
@@ -36,7 +36,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(false(), throwException(), 'else clause');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("else clause");
   }
 
@@ -48,7 +48,7 @@ public class IfTest extends AcceptanceTestCase {
         "  result = if(true(), 'then clause', throwException());  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("then clause");
   }
 
@@ -62,7 +62,7 @@ public class IfTest extends AcceptanceTestCase {
           "  result = if(true(), if(false(), throwException(), 'else clause'), 'ignored');  ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactFileContent("result"))
+      assertThat(artifactFileContentAsString("result"))
           .isEqualTo("else clause");
     }
 
@@ -75,7 +75,7 @@ public class IfTest extends AcceptanceTestCase {
           "  result = if(true(), if(true(), 'then clause', throwException()), 'ignored');  ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(artifactFileContent("result"))
+      assertThat(artifactFileContentAsString("result"))
           .isEqualTo("then clause");
     }
   }

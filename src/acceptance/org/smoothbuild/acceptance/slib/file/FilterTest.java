@@ -24,7 +24,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file') ] | filter('**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file", "abc");
   }
 
@@ -34,7 +34,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file.txt", "abc");
   }
 
@@ -44,7 +44,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -54,7 +54,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/subdir/file.txt", "abc");
   }
 
@@ -64,7 +64,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -74,7 +74,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -84,7 +84,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/def/file.txt') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/def/file.txt", "abc");
   }
 
@@ -94,7 +94,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'different/file.txt') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -105,7 +105,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -115,7 +115,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('**file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file.txt", "abc");
   }
 
@@ -125,7 +125,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**/file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -136,7 +136,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('**/file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/subdir/file.txt", "abc");
   }
 
@@ -146,7 +146,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file2.txt') ] | filter('**/file1.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -157,7 +157,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('**dir/file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -169,7 +169,7 @@ public class FilterTest extends AcceptanceTestCase {
         "    | filter('**/subdir/file.txt');                        ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/subdir/file.txt", "abc");
   }
 
@@ -179,7 +179,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file.txt", "abc");
   }
 
@@ -189,7 +189,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -199,7 +199,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*/file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -209,7 +209,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*/file.txt');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -220,7 +220,7 @@ public class FilterTest extends AcceptanceTestCase {
         "    | filter('*/subdir/file.txt');                         ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/subdir/file.txt", "abc");
   }
 
@@ -230,7 +230,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('dir/**');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -240,7 +240,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('dir/*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -250,7 +250,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/file.txt') ] | filter('*/*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file.txt", "abc");
   }
 
@@ -260,7 +260,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file.txt') ] | filter('*/*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -270,7 +270,7 @@ public class FilterTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'dir/subdir/file.txt') ] | filter('*/*');  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .isEmpty();
   }
 
@@ -281,7 +281,7 @@ public class FilterTest extends AcceptanceTestCase {
         "   | filter('src/**/*.java');                                 ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("src/com/comp/Main.java", "abc");
   }
 }

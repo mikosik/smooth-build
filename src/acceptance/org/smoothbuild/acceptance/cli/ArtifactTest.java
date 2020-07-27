@@ -29,7 +29,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -40,7 +40,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -51,7 +51,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file.txt", "abc");
   }
 
@@ -150,7 +150,7 @@ public class ArtifactTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 

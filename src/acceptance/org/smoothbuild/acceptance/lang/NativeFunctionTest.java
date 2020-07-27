@@ -41,7 +41,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = oneStringParameter('token');      ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("token");
   }
 
@@ -88,7 +88,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
         "  result = annotationName();  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 

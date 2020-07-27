@@ -16,7 +16,7 @@ public class ZipUnzipTest extends AcceptanceTestCase {
         "  result = [ aFile('dir/file1.txt'), aFile('file2.txt') ] | zip | unzip;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
   }
 

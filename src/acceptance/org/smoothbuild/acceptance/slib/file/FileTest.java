@@ -11,7 +11,7 @@ public class FileTest extends AcceptanceTestCase {
     createUserModule("result = file(toBlob('abc'), 'name.txt');");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("name.txt", "abc");
   }
 }
