@@ -7,6 +7,7 @@ import static org.smoothbuild.exec.task.base.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.task.base.TaskKind.LITERAL;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -21,6 +22,7 @@ import org.smoothbuild.exec.comp.CallNativeAlgorithm;
 import org.smoothbuild.exec.comp.ConvertAlgorithm;
 import org.smoothbuild.exec.comp.CreateArrayAlgorithm;
 import org.smoothbuild.exec.comp.CreateTupleAlgorithm;
+import org.smoothbuild.exec.comp.FixedBlobAlgorithm;
 import org.smoothbuild.exec.comp.FixedStringAlgorithm;
 import org.smoothbuild.exec.comp.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.task.base.IfTask;
@@ -38,6 +40,7 @@ import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
+import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.DefinedCallExpression;
@@ -169,6 +172,14 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     var stringType = typeConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
+        ImmutableList.of(), expression.location(), true);
+  }
+
+  @Override
+  public Task visit(BlobLiteralExpression expression) {
+    var blobSpec = typeConverter.visit(blob());
+    var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
+    return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
         ImmutableList.of(), expression.location(), true);
   }
 

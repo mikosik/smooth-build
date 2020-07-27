@@ -28,7 +28,8 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = MyStruct.field(myStruct('abc'));  ");
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContainsParseError(4, "mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING}");
+    assertSysOutContainsParseError(
+        4, "mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING, BLOB}");
   }
 
   @Test

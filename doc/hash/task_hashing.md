@@ -130,6 +130,16 @@ hash(
 )
 ```
 
+### Blob Literal Computation
+
+```
+BlobLiteralComputationHash =
+hash(
+  hash(0x06),
+  hash(blob),
+)
+```
+
 ### Input
 
 ```

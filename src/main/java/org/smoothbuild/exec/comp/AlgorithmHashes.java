@@ -6,6 +6,8 @@ import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.record.spec.TupleSpec;
 
+import okio.ByteString;
+
 public class AlgorithmHashes {
   public static Hash createArrayAlgorithmHash() {
     return hash(0);
@@ -29,6 +31,10 @@ public class AlgorithmHashes {
 
   public static Hash fixedStringAlgorithmHash(String string) {
     return hash(5, Hash.of(string));
+  }
+
+  public static Hash fixedBlobAlgorithmHash(ByteString byteString) {
+    return hash(6, Hash.of(byteString));
   }
 
   private static Hash hash(int id, Hash hash) {

@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.Types.array;
+import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -28,6 +29,7 @@ import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
+import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
@@ -258,9 +260,15 @@ public class InferTypesAndParamAssignments {
       }
 
       @Override
-      public void visitString(StringNode string) {
-        super.visitString(string);
+      public void visitStringLiteral(StringNode string) {
+        super.visitStringLiteral(string);
         string.setType(string());
+      }
+
+      @Override
+      public void visitBlobLiteral(BlobNode blob) {
+        super.visitBlobLiteral(blob);
+        blob.setType(blob());
       }
     }.visitAst(ast);
   }

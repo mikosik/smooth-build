@@ -8,6 +8,7 @@ import static org.smoothbuild.exec.comp.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.createArrayAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.createTupleAlgorithmHash;
+import static org.smoothbuild.exec.comp.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.comp.AlgorithmHashes.fixedStringAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
@@ -20,6 +21,8 @@ import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.record.spec.TupleSpec;
 import org.smoothbuild.testing.TestingContext;
+
+import okio.ByteString;
 
 public class AlgorithmHashesTest extends TestingContext {
   @Test
@@ -35,9 +38,10 @@ public class AlgorithmHashesTest extends TestingContext {
     hashes.add(createTupleAlgorithmHash(constructedType));
     hashes.add(ReadTupleElementAlgorithmHash(accessor));
     hashes.add(fixedStringAlgorithmHash("abc"));
+    hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
 
     assertThat(hashes.size())
-        .isEqualTo(6);
+        .isEqualTo(7);
   }
 
   @Test
@@ -77,6 +81,12 @@ public class AlgorithmHashesTest extends TestingContext {
   public void fixed_string_algorithm_has_different_hash_for_different_strings() {
     assertThat(fixedStringAlgorithmHash("abc"))
         .isNotEqualTo(fixedStringAlgorithmHash("def"));
+  }
+
+  @Test
+  public void fixed_blob_algorithm_has_different_hash_for_different_byte_strings() {
+    assertThat(fixedBlobAlgorithmHash(ByteString.of((byte) 1)))
+        .isNotEqualTo(fixedBlobAlgorithmHash(ByteString.of((byte) 2)));
   }
 
   private static Accessor accessor(int index) {

@@ -13,6 +13,8 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.record.db.RecordFactory;
 import org.smoothbuild.record.spec.ArraySpec;
+import org.smoothbuild.record.spec.BlobSpec;
+import org.smoothbuild.record.spec.BoolSpec;
 import org.smoothbuild.record.spec.NothingSpec;
 import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.record.spec.StringSpec;
@@ -26,12 +28,12 @@ public class TypeToBinaryTypeConverter extends TypeVisitor<Spec> {
   }
 
   @Override
-  public Spec visit(BlobType type) {
+  public BlobSpec visit(BlobType type) {
     return recordFactory.blobSpec();
   }
 
   @Override
-  public Spec visit(BoolType type) {
+  public BoolSpec visit(BoolType type) {
     return recordFactory.boolSpec();
   }
 
