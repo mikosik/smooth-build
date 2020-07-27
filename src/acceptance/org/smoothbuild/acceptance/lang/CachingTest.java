@@ -16,10 +16,10 @@ public class CachingTest extends AcceptanceTestCase {
         "  result = cacheableRandom;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String resultFromFirstRun = artifactFileContent("result");
+    String resultFromFirstRun = artifactFileContentAsString("result");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String resultFromSecondRun = artifactFileContent("result");
+    String resultFromSecondRun = artifactFileContentAsString("result");
 
     assertThat(resultFromSecondRun)
         .isEqualTo(resultFromFirstRun);
@@ -35,8 +35,8 @@ public class CachingTest extends AcceptanceTestCase {
     runSmoothBuild("resultA", "resultB");
     assertFinishedWithSuccess();
 
-    assertThat(artifactFileContent("resultA"))
-        .isEqualTo(artifactFileContent("resultB"));
+    assertThat(artifactFileContentAsString("resultA"))
+        .isEqualTo(artifactFileContentAsString("resultB"));
   }
 
   @Test
@@ -47,10 +47,10 @@ public class CachingTest extends AcceptanceTestCase {
         "  result = notCacheableRandom;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String resultFromFirstRun = artifactFileContent("result");
+    String resultFromFirstRun = artifactFileContentAsString("result");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    String resultFromSecondRun = artifactFileContent("result");
+    String resultFromSecondRun = artifactFileContentAsString("result");
 
     assertThat(resultFromSecondRun)
         .isNotEqualTo(resultFromFirstRun);

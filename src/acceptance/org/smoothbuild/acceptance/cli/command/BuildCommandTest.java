@@ -36,7 +36,7 @@ public class BuildCommandTest {
           "  result = tempFilePath();  ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
-      assertThat(new File(artifactFileContent("result")).exists())
+      assertThat(new File(artifactFileContentAsString("result")).exists())
           .isFalse();
     }
 

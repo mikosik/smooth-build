@@ -186,7 +186,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('def');         ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -197,7 +197,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');          ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -210,7 +210,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func(throwException());        ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -231,7 +231,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');    ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -243,7 +243,7 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func2('def');      ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("def");
   }
 }

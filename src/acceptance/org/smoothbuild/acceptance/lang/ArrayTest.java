@@ -98,7 +98,7 @@ public class ArrayTest extends AcceptanceTestCase {
         "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactTreeContent("result"))
+    assertThat(artifactTreeContentAsStrings("result"))
         .containsExactly("file1.txt", "abc", "file2.txt", "def");
   }
 

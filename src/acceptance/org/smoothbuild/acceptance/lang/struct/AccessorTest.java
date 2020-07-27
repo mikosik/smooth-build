@@ -15,7 +15,7 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = myStruct('abc').field;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 
@@ -58,7 +58,7 @@ public class AccessorTest extends AcceptanceTestCase {
         "  String result = s1(s2(s3('abc'))).f1.f2.f3;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 

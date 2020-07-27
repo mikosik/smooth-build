@@ -14,7 +14,7 @@ public class ToStringTest extends AcceptanceTestCase {
         "  result = file(toBlob('abc'), 'file1.txt').content | toString;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    assertThat(artifactFileContent("result"))
+    assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
   }
 }

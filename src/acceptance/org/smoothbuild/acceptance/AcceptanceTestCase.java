@@ -360,11 +360,11 @@ public abstract class AcceptanceTestCase {
     }
   }
 
-  public String artifactFileContent(String artifact) throws IOException {
-    return fileContent(artifactAbsolutePath(artifact));
+  public String artifactFileContentAsString(String artifact) throws IOException {
+    return fileContentAsString(artifactAbsolutePath(artifact));
   }
 
-  public Map<String, String> artifactTreeContent(String artifact) throws IOException {
+  public Map<String, String> artifactTreeContentAsStrings(String artifact) throws IOException {
     Path dir = artifactAbsolutePath(artifact);
     if (!Files.exists(dir)) {
       fail("No such artifact: " + artifact);
@@ -382,13 +382,13 @@ public abstract class AcceptanceTestCase {
         if (Files.isDirectory(path)) {
           addFilesToMap(rootDir, relative, result);
         } else {
-          result.put(relative.toString(), fileContent(path));
+          result.put(relative.toString(), fileContentAsString(path));
         }
       }
     }
   }
 
-  private static String fileContent(Path path) throws IOException {
+  private static String fileContentAsString(Path path) throws IOException {
     return readAndClose(buffer(source(path)), s -> s.readString(CHARSET));
   }
 
