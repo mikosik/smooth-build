@@ -21,8 +21,8 @@ import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.BlobBuilder;
 import org.smoothbuild.record.base.Bool;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.record.db.RecordDb;
 import org.smoothbuild.record.db.RecordFactory;
@@ -188,7 +188,7 @@ public class TestingContext {
     return recordDb().bool(value);
   }
 
-  public SString string(String string) {
+  public RString string(String string) {
     return recordDb().string(string);
   }
 
@@ -245,7 +245,7 @@ public class TestingContext {
   }
 
   public Tuple file(Path path, ByteString content) {
-    SString string = recordFactory().string(path.toString());
+    RString string = recordFactory().string(path.toString());
     Blob blob = blob(content);
     return recordFactory().file(string, blob);
   }

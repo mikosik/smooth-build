@@ -31,8 +31,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.Bool;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 
 import com.google.common.testing.EqualsTester;
 
@@ -94,7 +94,7 @@ public class SpecTest {
     return List.of(
         arguments(SPEC, Spec.class),
         arguments(BOOL, Bool.class),
-        arguments(STRING, SString.class),
+        arguments(STRING, RString.class),
         arguments(BLOB, Blob.class),
         arguments(NOTHING, Record.class),
         arguments(ARRAY_SPEC, Array.class),

@@ -12,8 +12,8 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.Bool;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.record.spec.ArraySpec;
 import org.smoothbuild.testing.TestingContext;
@@ -29,7 +29,7 @@ public class OutputDbTest extends TestingContext {
   private Tuple file;
   private Blob blob;
   private Bool boolValue;
-  private SString stringValue;
+  private RString stringValue;
   private final String string = "some string";
 
   @Test
@@ -111,7 +111,7 @@ public class OutputDbTest extends TestingContext {
     outputDb().write(hash, new Output(array, emptyMessageArray()));
     ArraySpec arraySpec = arraySpec(stringSpec());
 
-    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(SString.class))
+    assertThat(((Array) outputDb().read(hash, arraySpec).value()).asIterable(RString.class))
         .containsExactly(stringValue);
   }
 
@@ -146,7 +146,7 @@ public class OutputDbTest extends TestingContext {
   public void written_string_can_be_read_back() throws Exception {
     stringValue = string(string);
     outputDb().write(hash, new Output(stringValue, emptyMessageArray()));
-    assertThat(((SString) outputDb().read(hash, stringSpec()).value()).jValue())
+    assertThat(((RString) outputDb().read(hash, stringSpec()).value()).jValue())
         .isEqualTo(string);
   }
 }

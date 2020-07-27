@@ -9,12 +9,12 @@ import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 
 public class AFileFunction {
   @SmoothFunction(value = "aFile", cacheable = false)
-  public static Tuple file(Container container, SString path) throws IOException {
+  public static Tuple file(Container container, RString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
       container.log().error("Reading file from '.smooth' dir is not allowed.");

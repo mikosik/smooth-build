@@ -23,7 +23,7 @@ import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.util.DuplicatesDetector;
 
@@ -79,7 +79,7 @@ public class UnzipFunction {
       return null;
     }
 
-    SString path = nativeApi.factory().string(fileName);
+    RString path = nativeApi.factory().string(fileName);
     Blob content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
     return nativeApi.factory().file(path, content);
   }

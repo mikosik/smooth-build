@@ -14,11 +14,11 @@ import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 
 public class FilesFunction {
   @SmoothFunction(value = "files", cacheable = false)
-  public static Array files(Container container, SString dir) throws IOException {
+  public static Array files(Container container, RString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     FileSystem fileSystem = container.fileSystem();
 

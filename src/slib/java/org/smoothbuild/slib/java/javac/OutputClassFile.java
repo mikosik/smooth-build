@@ -10,7 +10,7 @@ import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.ArrayBuilder;
 import org.smoothbuild.record.base.BlobBuilder;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 
 import okio.ForwardingSink;
@@ -36,7 +36,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         super.close();
-        SString pathString = nativeApi.factory().string(path.toString());
+        RString pathString = nativeApi.factory().string(path.toString());
         Tuple file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }

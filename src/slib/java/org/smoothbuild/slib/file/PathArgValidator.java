@@ -6,10 +6,10 @@ import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 
 public class PathArgValidator {
-  public static Path validatedProjectPath(NativeApi nativeApi, String name, SString path) {
+  public static Path validatedProjectPath(NativeApi nativeApi, String name, RString path) {
     try {
       String value = path.jValue();
       return switch (value) {

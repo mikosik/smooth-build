@@ -14,8 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.record.base.Array;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.db.RecordDbException;
 
 import okio.ByteString;
@@ -41,8 +41,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                 )
             ));
     List<String> strings = stream(((Array) recordDb().get(recordHash))
-        .asIterable(SString.class))
-        .map(SString::jValue)
+        .asIterable(RString.class))
+        .map(RString::jValue)
         .collect(toList());
     assertThat(strings)
         .containsExactly("aaa", "bbb")
@@ -84,7 +84,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash(true)
                 )
             ));
-    assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(SString.class))
+    assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(RString.class))
         .throwsException(new RecordDbException(recordHash,
             "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
   }

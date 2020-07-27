@@ -3,8 +3,8 @@ package org.smoothbuild.record.spec;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.Bool;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 
 public enum SpecKind {
@@ -14,7 +14,7 @@ public enum SpecKind {
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
   BOOL((byte) 5, Bool.class),
-  STRING((byte) 6, SString.class);
+  STRING((byte) 6, RString.class);
 
   private final byte marker;
   private final Class<? extends Record> jType;
