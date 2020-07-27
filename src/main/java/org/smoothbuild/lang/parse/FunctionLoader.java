@@ -21,12 +21,14 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
+import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.AccessorNode;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
+import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
@@ -98,6 +100,9 @@ public class FunctionLoader {
         if (expr instanceof StringNode) {
           return createStringLiteral((StringNode) expr);
         }
+        if (expr instanceof BlobNode) {
+          return createBlobLiteral((BlobNode) expr);
+        }
         if (expr instanceof ArrayNode) {
           return createArray((ArrayNode) expr);
         }
@@ -143,6 +148,12 @@ public class FunctionLoader {
         return new StringLiteralExpression(
             string.unescapedValue(),
             string.location());
+      }
+
+      private Expression createBlobLiteral(BlobNode blob) {
+        return new BlobLiteralExpression(
+            blob.byteString(),
+            blob.location());
       }
 
       private Expression createArray(ArrayNode array) {

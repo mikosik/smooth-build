@@ -17,6 +17,7 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
+import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
@@ -26,13 +27,15 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
+import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 
 import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
   public static void findSemanticErrors(Definitions imported, Ast ast, Logger logger) {
-    unescapeStrings(logger, ast);
+    unescapeStringLiterals(logger, ast);
+    decodeBlobLiterals(logger, ast);
     parametersReferenceWithParentheses(logger, ast);
     undefinedReferences(logger, imported, ast);
     undefinedTypes(logger, imported, ast);
@@ -45,15 +48,29 @@ public class FindSemanticErrors {
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
   }
 
-  private static void unescapeStrings(Logger logger, Ast ast) {
+  private static void unescapeStringLiterals(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
-      public void visitString(StringNode string) {
-        super.visitString(string);
+      public void visitStringLiteral(StringNode string) {
+        super.visitStringLiteral(string);
         try {
           string.calculateUnescaped();
         } catch (UnescapingFailedException e) {
           logger.log(parseError(string, e.getMessage()));
+        }
+      }
+    }.visitAst(ast);
+  }
+
+  private static void decodeBlobLiterals(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitBlobLiteral(BlobNode blob) {
+        super.visitBlobLiteral(blob);
+        try {
+          blob.decodeByteString();
+        } catch (DecodingHexException e) {
+          logger.log(parseError(blob, "Illegal Blob literal. " + e.getMessage()));
         }
       }
     }.visitAst(ast);

@@ -4,6 +4,7 @@ Change Log
 Version 0.19.0 (????.??.??)
 ---------------------------
 
+ * added Blob literals to smooth language
  * changed smooth language to allow defining struct with `Nothing` field
  * added --project-dir command line option
  * only one smooth process can be run at the same time for given project (synchronized via ./smooth/lock)

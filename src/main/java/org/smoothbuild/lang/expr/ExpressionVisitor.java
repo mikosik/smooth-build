@@ -28,4 +28,8 @@ public class ExpressionVisitor<T> {
   public T visit(StringLiteralExpression expression) {
     return null;
   }
+
+  public T visit(BlobLiteralExpression expression) {
+    return null;
+  }
 }
