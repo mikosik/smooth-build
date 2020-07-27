@@ -392,6 +392,14 @@ public abstract class AcceptanceTestCase {
     return readAndClose(buffer(source(path)), s -> s.readString(CHARSET));
   }
 
+  public ByteString artifactFileContent(String artifact) throws IOException {
+    return fileContent(artifactAbsolutePath(artifact));
+  }
+
+  public static ByteString fileContent(Path path) throws IOException {
+    return readAndClose(buffer(source(path)), BufferedSource::readByteString);
+  }
+
   public Path smoothDirAbsolutePath() {
     return absolutePath(SMOOTH_DIR.toString());
   }
