@@ -29,7 +29,7 @@ import org.smoothbuild.acceptance.testing.WithoutContainer;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
@@ -137,7 +137,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains("Function 'oneStringParameter' has result type 'File' "
         + "so its native implementation result type must be " + Tuple.class.getCanonicalName() +
-        " but it is " + SString.class.getCanonicalName() + ".\n");
+        " but it is " + RString.class.getCanonicalName() + ".\n");
   }
 
   @Test
@@ -188,7 +188,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains("Function 'oneStringParameter' parameter 'string' has type [String] "
         + "so its native implementation type must be " + Array.class.getCanonicalName()
-        + " but it is " + SString.class.getCanonicalName() + ".\n");
+        + " but it is " + RString.class.getCanonicalName() + ".\n");
   }
 
   @Test

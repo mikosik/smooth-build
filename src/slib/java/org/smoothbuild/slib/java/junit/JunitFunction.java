@@ -21,14 +21,14 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
   @SmoothFunction("junit")
-  public static SString junit(NativeApi nativeApi, Blob tests, Array deps, SString include)
+  public static RString junit(NativeApi nativeApi, Blob tests, Array deps, RString include)
       throws IOException {
     Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
     Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
@@ -96,7 +96,7 @@ public class JunitFunction {
     }
   }
 
-  private static Predicate<Path> createFilter(NativeApi nativeApi, SString includeParam) {
+  private static Predicate<Path> createFilter(NativeApi nativeApi, RString includeParam) {
     try {
       return pathMatcher(includeParam.jValue());
     } catch (IllegalPathPatternException e) {

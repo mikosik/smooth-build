@@ -10,8 +10,8 @@ import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.BlobBuilder;
 import org.smoothbuild.record.base.Bool;
 import org.smoothbuild.record.base.Messages;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.record.spec.ArraySpec;
 import org.smoothbuild.record.spec.BlobSpec;
@@ -69,11 +69,11 @@ public class RecordFactory {
     return recordDb.bool(value);
   }
 
-  public Tuple file(SString path, Blob content) {
+  public Tuple file(RString path, Blob content) {
     return recordDb.tuple(fileSpec(), ImmutableList.of(content, path));
   }
 
-  public SString string(String string) {
+  public RString string(String string) {
     return recordDb.string(string);
   }
 

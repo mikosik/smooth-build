@@ -19,7 +19,7 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 
 public class JavacFunction {
@@ -94,8 +94,8 @@ public class JavacFunction {
     }
 
     private Iterable<String> options() {
-      return StreamSupport.stream(options.asIterable(SString.class).spliterator(), false)
-          .map(SString::jValue)
+      return StreamSupport.stream(options.asIterable(RString.class).spliterator(), false)
+          .map(RString::jValue)
           .collect(Collectors.toList());
     }
 

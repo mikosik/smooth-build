@@ -24,8 +24,8 @@ import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.BlobBuilder;
 import org.smoothbuild.record.base.Bool;
 import org.smoothbuild.record.base.MerkleRoot;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.record.spec.ArraySpec;
 import org.smoothbuild.record.spec.BlobSpec;
@@ -100,7 +100,7 @@ public class RecordDb {
     return Helpers.wrapException(() -> newBool(value));
   }
 
-  public SString string(String string) {
+  public RString string(String string) {
     return Helpers.wrapException(() -> newString(string));
   }
 
@@ -313,7 +313,7 @@ public class RecordDb {
     return boolSpec.newJObject(writeRoot(boolSpec, writeBoolData(value)));
   }
 
-  private SString newString(String string) throws HashedDbException {
+  private RString newString(String string) throws HashedDbException {
     return stringSpec.newJObject(writeRoot(stringSpec, writeStringData(string)));
   }
 

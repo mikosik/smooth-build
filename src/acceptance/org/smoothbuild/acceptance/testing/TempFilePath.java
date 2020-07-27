@@ -6,11 +6,11 @@ import java.io.IOException;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 
 public class TempFilePath {
   @SmoothFunction("tempFilePath")
-  public static SString tempFilePath(NativeApi nativeApi) throws IOException {
+  public static RString tempFilePath(NativeApi nativeApi) throws IOException {
     TempDir tempDir = nativeApi.createTempDir();
     String osPath = tempDir.rootOsPath() + "/file.txt";
     new File(osPath).mkdirs();

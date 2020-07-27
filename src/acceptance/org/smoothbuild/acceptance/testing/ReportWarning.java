@@ -2,11 +2,11 @@ package org.smoothbuild.acceptance.testing;
 
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 
 public class ReportWarning {
   @SmoothFunction("reportWarning")
-  public static SString reportWarning(NativeApi nativeApi, SString message) {
+  public static RString reportWarning(NativeApi nativeApi, RString message) {
     nativeApi.log().warning(message.jValue());
     return message;
   }

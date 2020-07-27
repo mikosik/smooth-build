@@ -11,13 +11,13 @@ import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.record.base.Array;
 import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class FilterFunction {
   @SmoothFunction("filter")
-  public static Array filter(NativeApi nativeApi, Array files, SString pattern) {
+  public static Array filter(NativeApi nativeApi, Array files, RString pattern) {
     Predicate<Path> filter;
     try {
       filter = pathMatcher(pattern.jValue());

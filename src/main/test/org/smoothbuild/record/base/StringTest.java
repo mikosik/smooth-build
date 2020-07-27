@@ -65,21 +65,21 @@ public class StringTest extends TestingContext {
 
   @Test
   public void sstring_can_be_read_back_by_hash() {
-    SString sstring = string(string);
+    RString sstring = string(string);
     assertThat(recordDbOther().get(sstring.hash()))
         .isEqualTo(sstring);
   }
 
   @Test
   public void sstring_read_back_by_hash_has_same_javlue() {
-    SString sstring = string(string);
-    assertThat(((SString) recordDbOther().get(sstring.hash())).jValue())
+    RString sstring = string(string);
+    assertThat(((RString) recordDbOther().get(sstring.hash())).jValue())
         .isEqualTo(string);
   }
 
   @Test
   public void to_string_contains_string_value() {
-    SString sstring = string(string);
+    RString sstring = string(string);
     assertThat(sstring.toString())
         .isEqualTo("""
             "my string":""" + sstring.hash());
@@ -87,7 +87,7 @@ public class StringTest extends TestingContext {
 
   @Test
   public void to_string_contains_shortened_string_value_for_long_strings() {
-    SString sstring = string("123456789012345678901234567890");
+    RString sstring = string("123456789012345678901234567890");
     assertThat(sstring.toString())
         .isEqualTo("""
             "1234567890123456789012345"...:""" + sstring.hash());
@@ -95,7 +95,7 @@ public class StringTest extends TestingContext {
 
   @Test
   public void to_string_contains_properly_escaped_special_characters() {
-    SString sstring = string("\t \b \n \r \f \" \\");
+    RString sstring = string("\t \b \n \r \f \" \\");
     assertThat(sstring.toString())
         .isEqualTo("""
             "\\t \\b \\n \\r \\f \\" \\\\":""" + sstring.hash());

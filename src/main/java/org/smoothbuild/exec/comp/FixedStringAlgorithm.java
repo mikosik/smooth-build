@@ -6,7 +6,7 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.record.spec.StringSpec;
 
@@ -37,7 +37,7 @@ public class FixedStringAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    SString sstring = nativeApi
+    RString sstring = nativeApi
         .factory()
         .string(string);
     return new Output(sstring, nativeApi.messages());

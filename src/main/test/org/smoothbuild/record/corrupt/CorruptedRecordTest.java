@@ -13,7 +13,7 @@ import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.db.RecordDbException;
 
 import okio.ByteString;
@@ -29,7 +29,7 @@ public class CorruptedRecordTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringSpec()),
             hash("aaa"));
-    assertThat(((SString) recordDb().get(recordHash)).jValue())
+    assertThat(((RString) recordDb().get(recordHash)).jValue())
         .isEqualTo("aaa");
   }
 

@@ -5,14 +5,14 @@ import static org.smoothbuild.exec.comp.Input.input;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.testing.TestingContext;
 
 public class InputTest extends TestingContext{
   private Input input1;
   private Input input2;
-  private SString sstring1;
-  private SString sstring2;
+  private RString sstring1;
+  private RString sstring2;
 
   @Test
   public void different_inputs_have_different_hashes() {

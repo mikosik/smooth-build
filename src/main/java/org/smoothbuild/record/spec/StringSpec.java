@@ -4,7 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.record.base.MerkleRoot;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.db.RecordDb;
 
 /**
@@ -16,8 +16,8 @@ public class StringSpec extends Spec {
   }
 
   @Override
-  public SString newJObject(MerkleRoot merkleRoot) {
+  public RString newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new SString(merkleRoot, hashedDb);
+    return new RString(merkleRoot, hashedDb);
   }
 }

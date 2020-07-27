@@ -2,11 +2,11 @@ package org.smoothbuild.acceptance.testing;
 
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.SString;
+import org.smoothbuild.record.base.RString;
 
 public class DifferentJavaName {
   @SmoothFunction("annotationName")
-  public static SString methodName(NativeApi nativeApi) {
+  public static RString methodName(NativeApi nativeApi) {
     return nativeApi.factory().string("abc");
   }
 }

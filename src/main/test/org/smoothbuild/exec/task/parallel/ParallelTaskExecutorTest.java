@@ -37,8 +37,8 @@ import org.smoothbuild.exec.task.base.NormalTask;
 import org.smoothbuild.exec.task.base.ResultSource;
 import org.smoothbuild.exec.task.base.Task;
 import org.smoothbuild.plugin.NativeApi;
+import org.smoothbuild.record.base.RString;
 import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.SString;
 import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
@@ -165,9 +165,9 @@ public class ParallelTaskExecutorTest extends TestingContext {
       public Output run(Input input, NativeApi nativeApi) {
         String joinedArgs = input.objects()
             .stream()
-            .map(o -> ((SString) o).jValue())
+            .map(o -> ((RString) o).jValue())
             .collect(joining(","));
-        SString result = nativeApi.factory().string("(" + joinedArgs + ")");
+        RString result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
     };
@@ -177,7 +177,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(Hash.of(2), Hash.of(value))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        SString result = nativeApi.factory().string(value);
+        RString result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
     };
