@@ -3,7 +3,7 @@ package org.smoothbuild.exec.run;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.RECORD_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
@@ -27,7 +27,7 @@ public class CleanRunner {
 
   public int run() {
     try {
-      fileSystem.delete(HASHED_DB_PATH);
+      fileSystem.delete(RECORD_DB_PATH);
       fileSystem.delete(OUTPUTS_DB_PATH);
       fileSystem.delete(ARTIFACTS_PATH);
       fileSystem.delete(TEMPORARY_PATH);
