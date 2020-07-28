@@ -5,7 +5,7 @@ import static java.nio.file.Files.createDirectories;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.RECORD_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
@@ -32,7 +32,7 @@ public class CleanCommandTest {
       createUserModule(
           "  result = 'abc';"
       );
-      createDirInProject(HASHED_DB_PATH);
+      createDirInProject(RECORD_DB_PATH);
       createDirInProject(OUTPUTS_DB_PATH);
       createDirInProject(ARTIFACTS_PATH);
       createDirInProject(TEMPORARY_PATH);

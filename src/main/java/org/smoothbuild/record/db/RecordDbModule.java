@@ -1,6 +1,6 @@
 package org.smoothbuild.record.db;
 
-import static org.smoothbuild.install.ProjectPaths.HASHED_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.RECORD_DB_PATH;
 
 import javax.inject.Singleton;
 
@@ -17,7 +17,7 @@ public class RecordDbModule extends AbstractModule {
 
   @Provides
   public HashedDb provideHashedDb(FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, HASHED_DB_PATH, tempManager);
+    return new HashedDb(fileSystem, RECORD_DB_PATH, tempManager);
   }
 
   @Provides
