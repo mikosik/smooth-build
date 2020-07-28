@@ -30,7 +30,7 @@ public class CreateArrayAlgorithm implements Algorithm {
     Array array = nativeApi
         .factory()
         .arrayBuilder(arraySpec.elemSpec())
-        .addAll(input.objects())
+        .addAll(input.records())
         .build();
     return new Output(array, nativeApi.messages());
   }

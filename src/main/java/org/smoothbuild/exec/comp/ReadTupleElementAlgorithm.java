@@ -33,7 +33,7 @@ public class ReadTupleElementAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    ImmutableList<Record> records = input.objects();
+    ImmutableList<Record> records = input.records();
     checkArgument(records.size() == 1);
     Tuple tuple = (Tuple) records.get(0);
     return new Output(tuple.get(accessor.fieldIndex()), nativeApi.messages());

@@ -163,7 +163,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = input.objects()
+        String joinedArgs = input.records()
             .stream()
             .map(o -> ((RString) o).jValue())
             .collect(joining(","));

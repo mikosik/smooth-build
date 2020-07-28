@@ -7,7 +7,7 @@ import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableList;
 
-public record Input(ImmutableList<Record>objects, Hash hash) {
+public record Input(ImmutableList<Record> records, Hash hash) {
 
   public static Input input(Iterable<? extends Record> records) {
     return new Input(ImmutableList.copyOf(records));

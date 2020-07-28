@@ -27,7 +27,7 @@ public class CreateTupleAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Tuple tuple = nativeApi.factory().tuple(constructedType, input.objects());
+    Tuple tuple = nativeApi.factory().tuple(constructedType, input.records());
     return new Output(tuple, nativeApi.messages());
   }
 }
