@@ -42,8 +42,8 @@ public class OutputDb {
     this.recordFactory = recordFactory;
   }
 
-  public synchronized void write(Hash taskHash, Output output) throws OutputDbException {
-    try (BufferedSink sink = fileSystem.sink(toPath(taskHash))) {
+  public synchronized void write(Hash computationHash, Output output) throws OutputDbException {
+    try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
       Array messages = output.messages();
       sink.write(messages.hash());
       if (!containsErrors(messages)) {
@@ -98,7 +98,7 @@ public class OutputDb {
     }
   }
 
-  static Path toPath(Hash taskHash) {
-    return OUTPUTS_DB_PATH.appendPart(taskHash.hex());
+  static Path toPath(Hash computationHash) {
+    return OUTPUTS_DB_PATH.appendPart(computationHash.hex());
   }
 }
