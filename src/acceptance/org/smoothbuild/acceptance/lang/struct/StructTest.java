@@ -1,8 +1,5 @@
 package org.smoothbuild.acceptance.lang.struct;
 
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
-import static org.smoothbuild.util.Sets.map;
-
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -10,11 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.Types;
-
-import com.google.common.collect.ImmutableList;
+import org.smoothbuild.acceptance.lang.assign.spec.TestedType;
+import org.smoothbuild.acceptance.testing.ReportError;
 
 public class StructTest extends AcceptanceTestCase {
   @Test
@@ -144,26 +138,22 @@ public class StructTest extends AcceptanceTestCase {
 
   @ParameterizedTest
   @MethodSource("non_first_field_types")
-  public void non_first_field_can_have_type(Type type) throws Exception {
+  public void non_first_field_can_have_type(TestedType testedType) throws Exception {
+    createNativeJar(ReportError.class);
     createUserModule(
+        testedType.declarations,
         "  MyStruct {               ",
         "    String firstField,        ",
-        "    " + type.name() + " secondField,  ",
+        "    " + testedType.name + " secondField,  ",
         "  }                        ");
     runSmoothList();
     assertFinishedWithSuccess();
   }
 
   private static Stream<Arguments> non_first_field_types() {
-    var simpleTypes = BASIC_TYPES;
-    var arrayTypes = map(simpleTypes, Types::array);
-    var array2Types = map(arrayTypes, Types::array);
-
-    var builder = ImmutableList.<ConcreteType>builder();
-    builder.addAll(simpleTypes);
-    builder.addAll(arrayTypes);
-    builder.addAll(array2Types);
-    return builder.build().stream().map(Arguments::of);
+    return TestedType.TESTED_TYPES
+        .stream()
+        .map(Arguments::of);
   }
 
   @Test
