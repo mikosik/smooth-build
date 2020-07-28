@@ -37,8 +37,8 @@ public class ArtifactSaver {
 
   public Path save(String name, Record record) throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
-    if (record instanceof Array) {
-      return saveArray(artifactPath, (Array) record);
+    if (record instanceof Array array) {
+      return saveArray(artifactPath, array);
     } else if (record.spec().equals(recordFactory.fileSpec())) {
       return saveFile(artifactPath, (Tuple) record);
     } else {

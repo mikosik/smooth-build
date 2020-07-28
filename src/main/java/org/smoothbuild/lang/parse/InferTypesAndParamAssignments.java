@@ -193,7 +193,7 @@ public class InferTypesAndParamAssignments {
         super.visitAccessor(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
-              if (t instanceof StructType && ((StructType) t).fields().containsKey(expr.fieldName())) {
+              if (t instanceof StructType st && st.fields().containsKey(expr.fieldName())) {
                 expr.setType(((StructType) t).fields().get(expr.fieldName()).type());
               } else {
                 expr.setType(empty());

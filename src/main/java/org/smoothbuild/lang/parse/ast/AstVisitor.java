@@ -58,18 +58,18 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof AccessorNode) {
-      visitAccessor((AccessorNode) expr);
-    } else if (expr instanceof ArrayNode) {
-      visitArray((ArrayNode) expr);
-    } else if (expr instanceof CallNode) {
-      visitCall((CallNode) expr);
-    } else if (expr instanceof RefNode) {
-      visitRef((RefNode) expr);
-    } else if (expr instanceof StringNode) {
-      visitStringLiteral((StringNode) expr);
-    } else if (expr instanceof BlobNode blob) {
-      visitBlobLiteral(blob);
+    if (expr instanceof AccessorNode accessorNode) {
+      visitAccessor(accessorNode);
+    } else if (expr instanceof ArrayNode arrayNode) {
+      visitArray(arrayNode);
+    } else if (expr instanceof CallNode callNode) {
+      visitCall(callNode);
+    } else if (expr instanceof RefNode refNode) {
+      visitRef(refNode);
+    } else if (expr instanceof StringNode stringNode) {
+      visitStringLiteral(stringNode);
+    } else if (expr instanceof BlobNode blobNode) {
+      visitBlobLiteral(blobNode);
     } else {
       throw new RuntimeException("Unknown node " + expr.getClass().getSimpleName());
     }

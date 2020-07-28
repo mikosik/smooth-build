@@ -33,8 +33,8 @@ public class ConvertAlgorithm implements Algorithm {
     assertThat(input.records().size() == 1);
     Record record = input.records().get(0);
     assertThat(!destinationSpec.equals(record.spec()));
-    if (record instanceof Array) {
-      return new Output(convertArray(nativeApi, (Array) record, destinationSpec), nativeApi.messages());
+    if (record instanceof Array array) {
+      return new Output(convertArray(nativeApi, array, destinationSpec), nativeApi.messages());
     }
     assertThat(!record.spec().isNothing());
     return new Output(convertStruct((Tuple) record, destinationSpec), nativeApi.messages());
@@ -44,8 +44,8 @@ public class ConvertAlgorithm implements Algorithm {
     Spec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemSpec);
     for (Record element : array.asIterable(Record.class)) {
-      if (element instanceof Array) {
-        builder.add(convertArray(nativeApi, (Array) element, elemSpec));
+      if (element instanceof Array arr) {
+        builder.add(convertArray(nativeApi, arr, elemSpec));
       } else {
         builder.add(convertStruct((Tuple) element, elemSpec));
       }
