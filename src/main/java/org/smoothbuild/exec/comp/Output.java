@@ -9,8 +9,7 @@ import org.smoothbuild.record.base.Record;
 public record Output(Record value, Array messages) {
 
   public Output {
-    this.value = value;
-    this.messages = checkNotNull(messages);
+    checkNotNull(messages);
   }
 
   public boolean hasValue() {
