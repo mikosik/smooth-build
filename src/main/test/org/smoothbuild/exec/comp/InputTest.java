@@ -11,15 +11,15 @@ import org.smoothbuild.testing.TestingContext;
 public class InputTest extends TestingContext{
   private Input input1;
   private Input input2;
-  private RString sstring1;
-  private RString sstring2;
+  private RString rstring1;
+  private RString rstring2;
 
   @Test
   public void different_inputs_have_different_hashes() {
-    sstring1 = string("abc");
-    sstring2 = string("def");
-    input1 = input(list(sstring1));
-    input2 = input(list(sstring2));
+    rstring1 = string("abc");
+    rstring2 = string("def");
+    input1 = input(list(rstring1));
+    input2 = input(list(rstring2));
 
     assertThat(input1.hash())
         .isNotEqualTo(input2.hash());
@@ -27,10 +27,10 @@ public class InputTest extends TestingContext{
 
   @Test
   public void inputs_with_same_values_but_in_different_order_have_different_hashes() {
-    sstring1 = string("abc");
-    sstring2 = string("def");
-    input1 = input(list(sstring1, sstring2));
-    input2 = input(list(sstring2, sstring1));
+    rstring1 = string("abc");
+    rstring2 = string("def");
+    input1 = input(list(rstring1, rstring2));
+    input2 = input(list(rstring2, rstring1));
 
     assertThat(input1.hash())
         .isNotEqualTo(input2.hash());
@@ -38,9 +38,9 @@ public class InputTest extends TestingContext{
 
   @Test
   public void equal_inputs_have_equal_hashes() {
-    sstring1 = string("abc");
-    input1 = input(list(sstring1));
-    input2 = input(list(sstring1));
+    rstring1 = string("abc");
+    input1 = input(list(rstring1));
+    input2 = input(list(rstring1));
 
     assertThat(input1.hash())
         .isEqualTo(input2.hash());
@@ -48,8 +48,8 @@ public class InputTest extends TestingContext{
 
   @Test
   public void input_with_no_values_has_hash_different_from_input_with_one_value() {
-    sstring1 = string("abc");
-    input1 = input(list(sstring1));
+    rstring1 = string("abc");
+    input1 = input(list(rstring1));
     input2 = input(list());
 
     assertThat(input1.hash())

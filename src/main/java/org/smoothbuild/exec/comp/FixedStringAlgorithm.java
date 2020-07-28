@@ -37,9 +37,9 @@ public class FixedStringAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    RString sstring = nativeApi
+    RString rstring = nativeApi
         .factory()
-        .string(string);
-    return new Output(sstring, nativeApi.messages());
+        .string(this.string);
+    return new Output(rstring, nativeApi.messages());
   }
 }

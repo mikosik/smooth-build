@@ -61,53 +61,53 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_contains_added_element_via_add_all_method() {
-    RString sstring = string("abc");
-    RString sstring2 = string("def");
+    RString rstring = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .addAll(list(sstring, sstring2))
+        .addAll(list(rstring, rstring2))
         .build();
     assertThat(array.asIterable(RString.class))
-        .containsExactly(sstring, sstring2)
+        .containsExactly(rstring, rstring2)
         .inOrder();
   }
 
   @Test
   public void array_contains_added_elements_in_order() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
-    RString sstring3 = string("ghi");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
+    RString rstring3 = string("ghi");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
-        .add(sstring3)
+        .add(rstring1)
+        .add(rstring2)
+        .add(rstring3)
         .build();
     assertThat(array.asIterable(RString.class))
-        .containsExactly(sstring1, sstring2, sstring3)
+        .containsExactly(rstring1, rstring2, rstring3)
         .inOrder();
   }
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
-    RString sstring = string("abc");
+    RString rstring = string("abc");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring)
-        .add(sstring)
+        .add(rstring)
+        .add(rstring)
         .build();
     assertThat(array.asIterable(RString.class))
-        .containsExactly(sstring, sstring);
+        .containsExactly(rstring, rstring);
   }
 
   @Test
   public void arrays_with_same_elements_have_same_hash() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     Array array2 = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(array.hash())
         .isEqualTo(array2.hash());
@@ -115,25 +115,25 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
-    RString sstring = string("abc");
+    RString rstring = string("abc");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring)
+        .add(rstring)
         .build();
     assertThat(array.hash())
-        .isNotEqualTo(sstring.hash());
+        .isNotEqualTo(rstring.hash());
   }
 
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     Array array2 = arrayBuilder(stringSpec())
-        .add(sstring2)
-        .add(sstring1)
+        .add(rstring2)
+        .add(rstring1)
         .build();
     assertThat(array.hash())
         .isNotEqualTo(array2.hash());
@@ -141,14 +141,14 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_with_one_more_element_have_different_hash() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
+        .add(rstring1)
         .build();
     Array array2 = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(array.hash())
         .isNotEqualTo(array2.hash());
@@ -156,11 +156,11 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_can_be_read_by_hash() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(recordDbOther().get(array.hash()))
         .isEqualTo(array);
@@ -168,24 +168,24 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_read_by_hash_contains_same_elements() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(((Array) recordDbOther().get(array.hash())).asIterable(RString.class))
-        .containsExactly(sstring1, sstring2)
+        .containsExactly(rstring1, rstring2)
         .inOrder();
   }
 
   @Test
   public void array_read_by_hash_has_same_hash() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(recordDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
@@ -193,11 +193,11 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void to_string() {
-    RString sstring1 = string("abc");
-    RString sstring2 = string("def");
+    RString rstring1 = string("abc");
+    RString rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
-        .add(sstring1)
-        .add(sstring2)
+        .add(rstring1)
+        .add(rstring2)
         .build();
     assertThat(array.toString())
         .isEqualTo("""
