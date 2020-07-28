@@ -16,13 +16,9 @@ public class RecordDbModule extends AbstractModule {
   protected void configure() {}
 
   @Provides
-  public HashedDb provideHashedDb(FileSystem fileSystem, TempManager tempManager) {
-    return new HashedDb(fileSystem, RECORD_DB_PATH, tempManager);
-  }
-
-  @Provides
   @Singleton
-  public RecordDb provideRecordDb(HashedDb hashedDb) {
+  public RecordDb provideRecordDb(FileSystem fileSystem, TempManager tempManager) {
+    HashedDb hashedDb = new HashedDb(fileSystem, RECORD_DB_PATH, tempManager);
     return RecordDb.recordDb(hashedDb);
   }
 }
