@@ -30,8 +30,8 @@ public class ConvertAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    assertThat(input.objects().size() == 1);
-    Record record = input.objects().get(0);
+    assertThat(input.records().size() == 1);
+    Record record = input.records().get(0);
     assertThat(!destinationSpec.equals(record.spec()));
     if (record instanceof Array) {
       return new Output(convertArray(nativeApi, (Array) record, destinationSpec), nativeApi.messages());

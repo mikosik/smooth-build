@@ -36,7 +36,7 @@ public class CallNativeAlgorithm implements Algorithm {
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
       Record result = (Record) function.nativ().method()
-          .invoke(null, createArguments(nativeApi, input.objects()));
+          .invoke(null, createArguments(nativeApi, input.records()));
       if (result == null) {
         return nullOutput(nativeApi);
       }
