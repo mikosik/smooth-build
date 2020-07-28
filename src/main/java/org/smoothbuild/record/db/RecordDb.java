@@ -2,6 +2,7 @@ package org.smoothbuild.record.db;
 
 import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
+import static org.smoothbuild.record.db.Helpers.wrapException;
 import static org.smoothbuild.record.spec.SpecKind.ARRAY;
 import static org.smoothbuild.record.spec.SpecKind.BLOB;
 import static org.smoothbuild.record.spec.SpecKind.BOOL;
@@ -93,15 +94,15 @@ public class RecordDb {
   }
 
   public BlobBuilder blobBuilder() {
-    return Helpers.wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
+    return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
   public Bool bool(boolean value) {
-    return Helpers.wrapException(() -> newBool(value));
+    return wrapException(() -> newBool(value));
   }
 
   public RString string(String string) {
-    return Helpers.wrapException(() -> newString(string));
+    return wrapException(() -> newString(string));
   }
 
   public Tuple tuple(TupleSpec tupleSpec, Iterable<? extends Record> elements) {
@@ -120,7 +121,7 @@ public class RecordDb {
             + " at that index.");
       }
     }
-    return Helpers.wrapException(() -> newTuple(tupleSpec, elementsList));
+    return wrapException(() -> newTuple(tupleSpec, elementsList));
   }
 
   public Record get(Hash hash) {
@@ -143,7 +144,7 @@ public class RecordDb {
   // methods for returning spec records
 
   public ArraySpec arraySpec(Spec elementSpec) {
-    return cacheSpec(Helpers.wrapException(() -> newArraySpec(elementSpec)));
+    return cacheSpec(wrapException(() -> newArraySpec(elementSpec)));
   }
 
   public BlobSpec blobSpec() {
@@ -163,7 +164,7 @@ public class RecordDb {
   }
 
   public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return cacheSpec(Helpers.wrapException(() -> newTupleSpec(elementSpecs)));
+    return cacheSpec(wrapException(() -> newTupleSpec(elementSpecs)));
   }
 
   public SpecSpec specSpec() {
