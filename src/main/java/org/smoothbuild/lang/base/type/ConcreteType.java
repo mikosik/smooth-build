@@ -33,13 +33,14 @@ public abstract class ConcreteType extends Type {
     if (type.isNothing()) {
       return true;
     }
-    if (this instanceof ConcreteArrayType && type instanceof ConcreteArrayType) {
-      ConcreteType thisElemType = ((ConcreteArrayType) this).elemType();
-      ConcreteType thatElemType = ((ConcreteArrayType) type).elemType();
+    if (this instanceof ConcreteArrayType thisConcreteType
+        && type instanceof ConcreteArrayType thatConcreteType) {
+      ConcreteType thisElemType = thisConcreteType.elemType();
+      ConcreteType thatElemType = thatConcreteType.elemType();
       return thisElemType.isAssignableFrom(thatElemType);
     }
-    if (type instanceof StructType) {
-      return isAssignableFrom(((StructType) type).superType());
+    if (type instanceof StructType structType) {
+      return isAssignableFrom(structType.superType());
     }
     return false;
   }

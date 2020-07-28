@@ -62,8 +62,8 @@ public class SandboxedJavaFileManager extends ForwardingJavaFileManager<Standard
 
   @Override
   public String inferBinaryName(Location location, JavaFileObject file) {
-    if (file instanceof InputClassFile) {
-      return ((InputClassFile) file).binaryName();
+    if (file instanceof InputClassFile inputClassFile) {
+      return inputClassFile.binaryName();
     } else {
       return super.inferBinaryName(location, file);
     }

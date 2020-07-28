@@ -88,23 +88,23 @@ public class FunctionLoader {
       }
 
       private Expression createExpression(ExprNode expr) {
-        if (expr instanceof AccessorNode) {
-          return createAccessor((AccessorNode) expr);
+        if (expr instanceof AccessorNode accessorNode) {
+          return createAccessor(accessorNode);
         }
-        if (expr instanceof CallNode) {
-          return createCall((CallNode) expr);
+        if (expr instanceof CallNode callNode) {
+          return createCall(callNode);
         }
-        if (expr instanceof RefNode) {
-          return createReference((RefNode) expr);
+        if (expr instanceof RefNode refNode) {
+          return createReference(refNode);
         }
-        if (expr instanceof StringNode) {
-          return createStringLiteral((StringNode) expr);
+        if (expr instanceof StringNode stringNode) {
+          return createStringLiteral(stringNode);
         }
-        if (expr instanceof BlobNode) {
-          return createBlobLiteral((BlobNode) expr);
+        if (expr instanceof BlobNode blobNode) {
+          return createBlobLiteral(blobNode);
         }
-        if (expr instanceof ArrayNode) {
-          return createArray((ArrayNode) expr);
+        if (expr instanceof ArrayNode arrayNode) {
+          return createArray(arrayNode);
         }
         throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
       }
