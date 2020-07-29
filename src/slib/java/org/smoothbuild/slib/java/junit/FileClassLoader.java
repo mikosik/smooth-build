@@ -1,11 +1,11 @@
 package org.smoothbuild.slib.java.junit;
 
-import static org.smoothbuild.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
 
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.db.record.base.Tuple;
 
 import okio.BufferedSource;
 

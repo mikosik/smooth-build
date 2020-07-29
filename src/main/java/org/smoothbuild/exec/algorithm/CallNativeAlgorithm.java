@@ -1,17 +1,17 @@
 package org.smoothbuild.exec.algorithm;
 
+import static org.smoothbuild.db.record.base.Messages.containsErrors;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
-import static org.smoothbuild.record.base.Messages.containsErrors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.spec.Spec;
 
 public class CallNativeAlgorithm implements Algorithm {
   private final Spec spec;

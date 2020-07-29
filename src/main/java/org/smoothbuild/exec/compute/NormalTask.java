@@ -6,12 +6,12 @@ import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
 
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 

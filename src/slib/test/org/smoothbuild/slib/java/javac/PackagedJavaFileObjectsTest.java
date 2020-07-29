@@ -8,9 +8,9 @@ import static org.smoothbuild.testing.common.JarTester.jar;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.AbortException;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 public class PackagedJavaFileObjectsTest extends TestingContext {

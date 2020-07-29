@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.record.db.FileStruct.fileContent;
-import static org.smoothbuild.record.db.FileStruct.filePath;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.binaryNameToPackage;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.db.record.base.Tuple;
 
 public class InputClassFile extends SimpleJavaFileObject {
   private final Tuple file;

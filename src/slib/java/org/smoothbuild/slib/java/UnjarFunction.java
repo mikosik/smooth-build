@@ -2,10 +2,10 @@ package org.smoothbuild.slib.java;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.slib.compress.UnzipFunction;
 
 public class UnjarFunction {

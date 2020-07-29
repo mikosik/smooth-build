@@ -10,11 +10,11 @@ import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.LoggerModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.cli.taskmatcher.TaskMatchers;
+import org.smoothbuild.db.record.RecordDbModule;
 import org.smoothbuild.exec.ExecuteModule;
 import org.smoothbuild.install.InstallationPathsModule;
 import org.smoothbuild.install.ProjectPathsModule;
 import org.smoothbuild.io.fs.FileSystemModule;
-import org.smoothbuild.record.db.RecordDbModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;

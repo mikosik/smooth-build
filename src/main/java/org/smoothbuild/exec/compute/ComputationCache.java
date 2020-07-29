@@ -1,28 +1,28 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.db.record.base.Messages.containsErrors;
+import static org.smoothbuild.db.record.base.Messages.isValidSeverity;
+import static org.smoothbuild.db.record.base.Messages.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.outputDbException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
-import static org.smoothbuild.record.base.Messages.containsErrors;
-import static org.smoothbuild.record.base.Messages.isValidSeverity;
-import static org.smoothbuild.record.base.Messages.severity;
 
 import java.io.IOException;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.record.db.RecordDb;
+import org.smoothbuild.db.record.db.RecordFactory;
+import org.smoothbuild.db.record.spec.ArraySpec;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.exec.algorithm.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.RecordDb;
-import org.smoothbuild.record.db.RecordFactory;
-import org.smoothbuild.record.spec.ArraySpec;
-import org.smoothbuild.record.spec.Spec;
 
 import okio.BufferedSink;
 import okio.BufferedSource;

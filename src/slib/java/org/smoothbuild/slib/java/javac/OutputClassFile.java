@@ -6,12 +6,12 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
+import org.smoothbuild.db.record.base.ArrayBuilder;
+import org.smoothbuild.db.record.base.BlobBuilder;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.BlobBuilder;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.base.Tuple;
 
 import okio.ForwardingSink;
 import okio.Okio;

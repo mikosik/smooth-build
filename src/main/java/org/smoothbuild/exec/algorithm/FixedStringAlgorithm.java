@@ -5,10 +5,10 @@ import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.record.spec.StringSpec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.spec.Spec;
-import org.smoothbuild.record.spec.StringSpec;
 
 public class FixedStringAlgorithm implements Algorithm {
   private final StringSpec stringSpec;

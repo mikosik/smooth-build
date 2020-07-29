@@ -3,10 +3,10 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createTupleAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.spec.Spec;
-import org.smoothbuild.record.spec.TupleSpec;
 
 public class CreateTupleAlgorithm implements Algorithm {
   private final TupleSpec constructedType;

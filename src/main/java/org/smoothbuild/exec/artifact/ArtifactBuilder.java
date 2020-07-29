@@ -14,12 +14,12 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.record.base.Record;
 
 import com.google.common.collect.ImmutableMap;
 

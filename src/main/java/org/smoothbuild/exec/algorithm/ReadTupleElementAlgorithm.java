@@ -4,11 +4,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.ReadTupleElementAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.spec.Spec;
 
 import com.google.common.collect.ImmutableList;
 

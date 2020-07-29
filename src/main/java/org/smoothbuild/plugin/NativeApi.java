@@ -2,9 +2,9 @@ package org.smoothbuild.plugin;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.db.RecordFactory;
 import org.smoothbuild.io.util.TempDir;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.db.RecordFactory;
 import org.smoothbuild.util.CommandExecutor;
 
 /**

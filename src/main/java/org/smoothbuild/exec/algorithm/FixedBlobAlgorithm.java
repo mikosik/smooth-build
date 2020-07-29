@@ -6,10 +6,10 @@ import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.spec.BlobSpec;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.spec.BlobSpec;
-import org.smoothbuild.record.spec.Spec;
 
 import okio.ByteString;
 
