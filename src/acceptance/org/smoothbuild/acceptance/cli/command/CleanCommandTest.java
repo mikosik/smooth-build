@@ -6,7 +6,7 @@ import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.RECORD_DB_PATH;
-import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
+import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_LOCK_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
@@ -33,7 +33,7 @@ public class CleanCommandTest {
           "  result = 'abc';"
       );
       createDirInProject(RECORD_DB_PATH);
-      createDirInProject(OUTPUTS_DB_PATH);
+      createDirInProject(COMPUTATION_CACHE_PATH);
       createDirInProject(ARTIFACTS_PATH);
       createDirInProject(TEMPORARY_PATH);
 

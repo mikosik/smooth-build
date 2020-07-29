@@ -1,8 +1,8 @@
 package org.smoothbuild.db.outputs;
 
-import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
-import static org.smoothbuild.db.outputs.OutputDbException.outputDbException;
-import static org.smoothbuild.install.ProjectPaths.OUTPUTS_DB_PATH;
+import static org.smoothbuild.db.outputs.ComputationCacheException.corruptedValueException;
+import static org.smoothbuild.db.outputs.ComputationCacheException.outputDbException;
+import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 import static org.smoothbuild.record.base.Messages.containsErrors;
 import static org.smoothbuild.record.base.Messages.isValidSeverity;
 import static org.smoothbuild.record.base.Messages.severity;
@@ -30,19 +30,20 @@ import okio.BufferedSource;
 /**
  * This class is thread-safe.
  */
-public class OutputDb {
+public class ComputationCache {
   private final FileSystem fileSystem;
   private final RecordDb recordDb;
   private final RecordFactory recordFactory;
 
   @Inject
-  public OutputDb(FileSystem fileSystem, RecordDb recordDb, RecordFactory recordFactory) {
+  public ComputationCache(FileSystem fileSystem, RecordDb recordDb, RecordFactory recordFactory) {
     this.fileSystem = fileSystem;
     this.recordDb = recordDb;
     this.recordFactory = recordFactory;
   }
 
-  public synchronized void write(Hash computationHash, Output output) throws OutputDbException {
+  public synchronized void write(Hash computationHash, Output output)
+      throws ComputationCacheException {
     try (BufferedSink sink = fileSystem.sink(toPath(computationHash))) {
       Array messages = output.messages();
       sink.write(messages.hash());
@@ -54,7 +55,7 @@ public class OutputDb {
     }
   }
 
-  public synchronized boolean contains(Hash taskHash) throws OutputDbException {
+  public synchronized boolean contains(Hash taskHash) throws ComputationCacheException {
     Path path = toPath(taskHash);
     PathState pathState = fileSystem.pathState(path);
     return switch (pathState) {
@@ -64,7 +65,7 @@ public class OutputDb {
     };
   }
 
-  public synchronized Output read(Hash taskHash, Spec spec) throws OutputDbException {
+  public synchronized Output read(Hash taskHash, Spec spec) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
       Record messagesObject = recordDb.get(Hash.read(source));
       ArraySpec messageArraySpec = recordFactory.arraySpec(recordFactory.messageSpec());
@@ -99,6 +100,6 @@ public class OutputDb {
   }
 
   static Path toPath(Hash computationHash) {
-    return OUTPUTS_DB_PATH.appendPart(computationHash.hex());
+    return COMPUTATION_CACHE_PATH.appendPart(computationHash.hex());
   }
 }
