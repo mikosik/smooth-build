@@ -2,7 +2,7 @@ package org.smoothbuild.slib.file;
 
 import java.io.IOException;
 
-import org.smoothbuild.exec.task.base.Container;
+import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.record.base.Blob;
 import org.smoothbuild.record.base.RString;

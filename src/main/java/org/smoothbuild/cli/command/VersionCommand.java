@@ -5,7 +5,7 @@ import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 import java.util.concurrent.Callable;
 
 import org.smoothbuild.cli.base.LoggingCommand;
-import org.smoothbuild.exec.run.VersionRunner;
+import org.smoothbuild.run.VersionRunner;
 
 import picocli.CommandLine.Command;
 

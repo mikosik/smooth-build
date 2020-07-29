@@ -3,7 +3,7 @@ package org.smoothbuild.cli.taskmatcher;
 import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.compute.Task;
 
 @FunctionalInterface
 public interface TaskMatcher {

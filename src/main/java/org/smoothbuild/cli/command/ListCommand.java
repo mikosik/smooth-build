@@ -5,7 +5,7 @@ import static org.smoothbuild.cli.base.CreateInjector.createInjector;
 import java.nio.file.Path;
 
 import org.smoothbuild.cli.base.ExclusiveCommand;
-import org.smoothbuild.exec.run.ListRunner;
+import org.smoothbuild.run.ListRunner;
 
 import picocli.CommandLine.Command;
 

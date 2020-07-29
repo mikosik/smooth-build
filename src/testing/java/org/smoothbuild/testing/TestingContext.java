@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.outputs.ComputationCache;
-import org.smoothbuild.exec.task.base.Computer;
-import org.smoothbuild.exec.task.base.Container;
+import org.smoothbuild.exec.compute.ComputationCache;
+import org.smoothbuild.exec.compute.Computer;
+import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.SynchronizedFileSystem;

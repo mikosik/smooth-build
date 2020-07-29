@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.exec.task.base.TaskKind;
+import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.lang.base.Space;
 
 import com.google.common.collect.ImmutableMap;

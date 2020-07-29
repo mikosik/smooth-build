@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.testing.TestingContext;
 
 @SuppressWarnings("ClassCanBeStatic")
