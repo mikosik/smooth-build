@@ -31,8 +31,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.exec.task.base.Task;
-import org.smoothbuild.exec.task.base.TaskKind;
+import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.lang.base.Space;
 
 import picocli.CommandLine.TypeConversionException;

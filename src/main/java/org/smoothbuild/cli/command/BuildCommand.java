@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.smoothbuild.cli.base.ExclusiveCommand;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
-import org.smoothbuild.exec.run.BuildRunner;
+import org.smoothbuild.run.BuildRunner;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.ITypeConverter;

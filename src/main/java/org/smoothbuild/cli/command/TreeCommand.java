@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.base.ExclusiveCommand;
-import org.smoothbuild.exec.run.TreeRunner;
+import org.smoothbuild.run.TreeRunner;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;

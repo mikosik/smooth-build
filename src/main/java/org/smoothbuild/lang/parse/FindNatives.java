@@ -21,7 +21,7 @@ import java.util.jar.JarInputStream;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.exec.task.base.Container;
+import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.nativ.Natives;

@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
-import org.smoothbuild.exec.task.base.Task;
+import org.smoothbuild.exec.compute.Task;
 
 import com.google.common.collect.ImmutableMap;
 
