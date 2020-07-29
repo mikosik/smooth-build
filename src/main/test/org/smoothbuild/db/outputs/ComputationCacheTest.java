@@ -1,7 +1,7 @@
 package org.smoothbuild.db.outputs;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.outputs.OutputDbException.corruptedValueException;
+import static org.smoothbuild.db.outputs.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -20,7 +20,7 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
 
-public class OutputDbTest extends TestingContext {
+public class ComputationCacheTest extends TestingContext {
   private final Hash hash = Hash.of("abc");
   private final ByteString bytes = ByteString.encodeUtf8("abc");
   private Path path = path("file/path");
@@ -33,21 +33,21 @@ public class OutputDbTest extends TestingContext {
   private final String string = "some string";
 
   @Test
-  public void outputdb_does_not_contain_not_written_result() throws Exception {
+  public void cache_does_not_contain_not_written_result() throws Exception {
     assertThat(outputDb().contains(hash))
         .isFalse();
   }
 
   @Test
-  public void outputdb_contains_written_result() throws Exception {
+  public void cache_contains_written_result() throws Exception {
     outputDb().write(hash, new Output(string("result"), emptyMessageArray()));
     assertThat(outputDb().contains(hash))
         .isTrue();
   }
 
   @Test
-  public void outputdb_is_corrupted_when_task_hash_points_to_directory() throws Exception {
-    path = OutputDb.toPath(hash);
+  public void cache_is_corrupted_when_task_hash_points_to_directory() throws Exception {
+    path = ComputationCache.toPath(hash);
     outputDbFileSystem().sink(path.appendPart("file"));
 
     assertCall(() -> outputDb().contains(hash))
@@ -57,7 +57,7 @@ public class OutputDbTest extends TestingContext {
   @Test
   public void reading_not_written_value_fails() {
     assertCall(() -> outputDb().read(hash, stringSpec()))
-        .throwsException(OutputDbException.class);
+        .throwsException(ComputationCacheException.class);
   }
 
   @Test

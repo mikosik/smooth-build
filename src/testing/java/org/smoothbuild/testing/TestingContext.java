@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.outputs.OutputDb;
+import org.smoothbuild.db.outputs.ComputationCache;
 import org.smoothbuild.exec.task.base.Computer;
 import org.smoothbuild.exec.task.base.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -44,7 +44,7 @@ public class TestingContext {
   private Computer computer;
   private Container container;
   private RecordFactory recordFactory;
-  private OutputDb outputDb;
+  private ComputationCache computationCache;
   private FileSystem outputDbFileSystem;
   private RecordDb recordDb;
   private HashedDb hashedDb;
@@ -89,11 +89,11 @@ public class TestingContext {
     return recordDb;
   }
 
-  public OutputDb outputDb() {
-    if (outputDb == null) {
-      outputDb = new OutputDb(outputDbFileSystem(), recordDb(), recordFactory());
+  public ComputationCache outputDb() {
+    if (computationCache == null) {
+      computationCache = new ComputationCache(outputDbFileSystem(), recordDb(), recordFactory());
     }
-    return outputDb;
+    return computationCache;
   }
 
   public FileSystem outputDbFileSystem() {
