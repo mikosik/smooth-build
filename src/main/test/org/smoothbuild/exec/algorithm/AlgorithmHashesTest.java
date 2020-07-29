@@ -17,9 +17,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.record.spec.TupleSpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

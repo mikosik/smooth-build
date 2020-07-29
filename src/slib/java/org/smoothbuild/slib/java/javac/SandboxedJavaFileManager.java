@@ -16,10 +16,10 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.ArrayBuilder;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.ArrayBuilder;
 
 public class SandboxedJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
   private final NativeApi nativeApi;

@@ -1,20 +1,20 @@
 package org.smoothbuild.slib.compress;
 
 import static okio.Okio.sink;
-import static org.smoothbuild.record.db.FileStruct.fileContent;
-import static org.smoothbuild.record.db.FileStruct.filePath;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.BlobBuilder;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.BlobBuilder;
-import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import okio.BufferedSource;

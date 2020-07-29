@@ -1,9 +1,9 @@
 package org.smoothbuild.slib.common;
 
+import org.smoothbuild.db.record.base.Bool;
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.Record;
 
 public class EqualFunction {
   @SmoothFunction("equal")

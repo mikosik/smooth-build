@@ -7,14 +7,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.db.RecordFactory;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.plugin.MessageLogger;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.db.RecordFactory;
 
 /**
  * This class is NOT thread-safe.

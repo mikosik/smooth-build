@@ -2,11 +2,11 @@ package org.smoothbuild.slib.file;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.base.Tuple;
 
 import okio.BufferedSource;
 

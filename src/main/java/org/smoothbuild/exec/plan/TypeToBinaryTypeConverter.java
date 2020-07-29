@@ -2,6 +2,14 @@ package org.smoothbuild.exec.plan;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+import org.smoothbuild.db.record.db.RecordFactory;
+import org.smoothbuild.db.record.spec.ArraySpec;
+import org.smoothbuild.db.record.spec.BlobSpec;
+import org.smoothbuild.db.record.spec.BoolSpec;
+import org.smoothbuild.db.record.spec.NothingSpec;
+import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.record.spec.StringSpec;
+import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
@@ -11,14 +19,6 @@ import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
-import org.smoothbuild.record.db.RecordFactory;
-import org.smoothbuild.record.spec.ArraySpec;
-import org.smoothbuild.record.spec.BlobSpec;
-import org.smoothbuild.record.spec.BoolSpec;
-import org.smoothbuild.record.spec.NothingSpec;
-import org.smoothbuild.record.spec.Spec;
-import org.smoothbuild.record.spec.StringSpec;
-import org.smoothbuild.record.spec.TupleSpec;
 
 public class TypeToBinaryTypeConverter extends TypeVisitor<Spec> {
   private final RecordFactory recordFactory;

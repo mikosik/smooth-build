@@ -3,16 +3,17 @@ package org.smoothbuild.exec.compute;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smoothbuild.db.record.spec.TestingSpecs.PERSON;
+import static org.smoothbuild.db.record.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.algorithm.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.record.spec.TestingSpecs.PERSON;
-import static org.smoothbuild.record.spec.TestingSpecs.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -24,7 +25,6 @@ import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
 public class ComputationHashTest extends TestingContext {

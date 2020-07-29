@@ -1,17 +1,17 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.record.db.FileStruct.filePath;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.slib.compress.UnzipFunction;
 
 public class PackagedJavaFileObjects {

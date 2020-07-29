@@ -4,8 +4,8 @@ import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.RECORD_DB_PATH;
 
 import org.smoothbuild.db.hashed.HashedDb;
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.record.base.Record;
 
 public class ArtifactPaths {
   public static Path targetPath(Record record) {

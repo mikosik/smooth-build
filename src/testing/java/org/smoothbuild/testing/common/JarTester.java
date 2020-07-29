@@ -1,15 +1,15 @@
 package org.smoothbuild.testing.common;
 
 import static okio.Okio.sink;
-import static org.smoothbuild.record.db.FileStruct.fileContent;
-import static org.smoothbuild.record.db.FileStruct.filePath;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.Tuple;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;

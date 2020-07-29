@@ -1,10 +1,10 @@
 package org.smoothbuild.exec.algorithm;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.record.spec.Spec;
-import org.smoothbuild.record.spec.TupleSpec;
 
 import okio.ByteString;
 

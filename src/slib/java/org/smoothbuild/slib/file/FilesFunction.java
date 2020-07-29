@@ -6,15 +6,15 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.ArrayBuilder;
+import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.RString;
 
 public class FilesFunction {
   @SmoothFunction(value = "files", cacheable = false)

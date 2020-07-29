@@ -2,10 +2,10 @@ package org.smoothbuild.exec.parallel;
 
 import java.util.function.Consumer;
 
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.algorithm.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandler implements Consumer<Computed> {

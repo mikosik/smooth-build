@@ -1,12 +1,12 @@
 package org.smoothbuild.acceptance.testing;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.ArrayBuilder;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.spec.ArraySpec;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.spec.ArraySpec;
-import org.smoothbuild.record.spec.Spec;
 
 public class Flatten {
   @SmoothFunction("testFlatten")

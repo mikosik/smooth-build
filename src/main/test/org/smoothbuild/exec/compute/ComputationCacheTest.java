@@ -7,15 +7,15 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.Bool;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.record.spec.ArraySpec;
 import org.smoothbuild.exec.algorithm.Output;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.Bool;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.spec.ArraySpec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;

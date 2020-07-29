@@ -1,11 +1,11 @@
 package org.smoothbuild.exec.artifact;
 
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.targetPath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.record.db.FileStruct.fileContent;
-import static org.smoothbuild.record.db.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,13 +13,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.record.db.RecordFactory;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Record;
-import org.smoothbuild.record.base.Tuple;
-import org.smoothbuild.record.db.RecordFactory;
-import org.smoothbuild.record.spec.Spec;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**

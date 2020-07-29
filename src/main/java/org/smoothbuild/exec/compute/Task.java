@@ -4,11 +4,11 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;

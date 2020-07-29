@@ -1,22 +1,22 @@
 package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.smoothbuild.db.record.db.FileStruct.fileContent;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.record.db.FileStruct.fileContent;
-import static org.smoothbuild.record.db.FileStruct.filePath;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.IOException;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.ArrayBuilder;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.Tuple;
 
 import okio.BufferedSource;
 

@@ -11,12 +11,12 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.algorithm.MaybeOutput;
 import org.smoothbuild.exec.algorithm.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 
 public class ResultHandlerTest {

@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.message;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.record.base.Messages.containsErrors;
+import static org.smoothbuild.db.record.base.Messages.containsErrors;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.record.base.Array;
+import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.testing.TestingContext;
 
 public class MessagesTest extends TestingContext {

@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.algorithm.Input.input;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.record.base.RString;
+import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.testing.TestingContext;
 
 public class InputTest extends TestingContext{

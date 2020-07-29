@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.RString;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.testing.TestingContext;
 
 public class OutputTest extends TestingContext {

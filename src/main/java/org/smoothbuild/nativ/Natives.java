@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
-import org.smoothbuild.record.base.Record;
 
 public class Natives {
   private final Map<String, Native> map;

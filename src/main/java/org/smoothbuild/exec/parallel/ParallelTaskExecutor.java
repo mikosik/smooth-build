@@ -11,11 +11,11 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.algorithm.Input;
 import org.smoothbuild.exec.compute.ComputableTask;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.record.base.Record;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
 

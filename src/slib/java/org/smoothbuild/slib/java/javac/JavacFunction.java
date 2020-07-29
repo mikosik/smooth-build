@@ -14,13 +14,13 @@ import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.base.Tuple;
 
 public class JavacFunction {
   @SmoothFunction("javac_")

@@ -5,10 +5,10 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
+import static org.smoothbuild.db.record.base.Messages.level;
+import static org.smoothbuild.db.record.base.Messages.text;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
-import static org.smoothbuild.record.base.Messages.level;
-import static org.smoothbuild.record.base.Messages.text;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.exec.algorithm.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Tuple;
 
 import com.google.common.collect.Streams;
 

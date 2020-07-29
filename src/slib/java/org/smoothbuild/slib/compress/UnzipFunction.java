@@ -3,8 +3,8 @@ package org.smoothbuild.slib.compress;
 import static java.io.File.createTempFile;
 import static okio.Okio.sink;
 import static okio.Okio.source;
+import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.record.db.FileStruct.filePath;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.File;
@@ -16,15 +16,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.ArrayBuilder;
+import org.smoothbuild.db.record.base.Blob;
+import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.ArrayBuilder;
-import org.smoothbuild.record.base.Blob;
-import org.smoothbuild.record.base.RString;
-import org.smoothbuild.record.base.Tuple;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {

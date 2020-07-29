@@ -17,6 +17,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.smoothbuild.db.record.db.RecordFactory;
+import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -49,8 +51,6 @@ import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.Named;
-import org.smoothbuild.record.db.RecordFactory;
-import org.smoothbuild.record.spec.TupleSpec;
 
 import com.google.common.collect.ImmutableList;
 

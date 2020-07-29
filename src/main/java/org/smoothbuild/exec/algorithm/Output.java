@@ -3,8 +3,8 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.base.Record;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.base.Record;
 
 public record Output(Record value, Array messages) {
 

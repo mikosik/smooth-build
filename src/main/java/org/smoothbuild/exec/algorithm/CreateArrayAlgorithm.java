@@ -3,10 +3,10 @@ package org.smoothbuild.exec.algorithm;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createArrayAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.record.spec.ArraySpec;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.record.base.Array;
-import org.smoothbuild.record.spec.ArraySpec;
-import org.smoothbuild.record.spec.Spec;
 
 public class CreateArrayAlgorithm implements Algorithm {
   private final ArraySpec arraySpec;
