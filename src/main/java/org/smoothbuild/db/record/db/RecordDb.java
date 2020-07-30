@@ -2,11 +2,12 @@ package org.smoothbuild.db.record.db;
 
 import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
+import static java.util.Objects.requireNonNullElseGet;
+import static org.smoothbuild.db.record.db.Helpers.wrapException;
 import static org.smoothbuild.db.record.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.record.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.record.spec.SpecKind.BOOL;
 import static org.smoothbuild.db.record.spec.SpecKind.NOTHING;
-import static org.smoothbuild.db.record.spec.SpecKind.SPEC;
 import static org.smoothbuild.db.record.spec.SpecKind.STRING;
 import static org.smoothbuild.db.record.spec.SpecKind.TUPLE;
 import static org.smoothbuild.db.record.spec.SpecKind.specKindMarkedWith;
@@ -14,6 +15,7 @@ import static org.smoothbuild.util.Iterables.map;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
@@ -33,7 +35,6 @@ import org.smoothbuild.db.record.spec.BoolSpec;
 import org.smoothbuild.db.record.spec.NothingSpec;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.db.record.spec.SpecKind;
-import org.smoothbuild.db.record.spec.SpecSpec;
 import org.smoothbuild.db.record.spec.StringSpec;
 import org.smoothbuild.db.record.spec.TupleSpec;
 
@@ -55,7 +56,6 @@ public class RecordDb {
   private BlobSpec blobSpec;
   private NothingSpec nothingSpec;
   private StringSpec stringSpec;
-  private SpecSpec specSpec;
 
   public static RecordDb recordDb(HashedDb hashedDb) {
       RecordDb recordDb = new RecordDb(hashedDb);
@@ -70,13 +70,11 @@ public class RecordDb {
 
   private void initialize() {
     try {
-      this.specSpec = new SpecSpec(writeSpecSpecRoot(), hashedDb, this);
-      this.blobSpec = new BlobSpec(writeBasicSpecRoot(specSpec, BLOB), hashedDb, this);
-      this.boolSpec = new BoolSpec(writeBasicSpecRoot(specSpec, BOOL), hashedDb, this);
-      this.nothingSpec = new NothingSpec(writeBasicSpecRoot(specSpec, NOTHING), hashedDb, this);
-      this.stringSpec = new StringSpec(writeBasicSpecRoot(specSpec, STRING), hashedDb, this);
+      this.blobSpec = new BlobSpec(writeBasicSpecRoot(BLOB), hashedDb, this);
+      this.boolSpec = new BoolSpec(writeBasicSpecRoot(BOOL), hashedDb, this);
+      this.nothingSpec = new NothingSpec(writeBasicSpecRoot(NOTHING), hashedDb, this);
+      this.stringSpec = new StringSpec(writeBasicSpecRoot(STRING), hashedDb, this);
 
-      cacheSpec(specSpec);
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
       cacheSpec(nothingSpec);
@@ -93,15 +91,15 @@ public class RecordDb {
   }
 
   public BlobBuilder blobBuilder() {
-    return Helpers.wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
+    return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
   public Bool bool(boolean value) {
-    return Helpers.wrapException(() -> newBool(value));
+    return wrapException(() -> newBool(value));
   }
 
   public RString string(String string) {
-    return Helpers.wrapException(() -> newString(string));
+    return wrapException(() -> newString(string));
   }
 
   public Tuple tuple(TupleSpec tupleSpec, Iterable<? extends Record> elements) {
@@ -120,30 +118,25 @@ public class RecordDb {
             + " at that index.");
       }
     }
-    return Helpers.wrapException(() -> newTuple(tupleSpec, elementsList));
+    return wrapException(() -> newTuple(tupleSpec, elementsList));
   }
 
   public Record get(Hash hash) {
     try {
-      List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
-      if (hashes.size() == 1) {
-          // If Merkle tree root has only one child then it must
-          // be SpecSpec record. getSpec() will verify it.
-          return getSpec(hash);
-      } else {
-        Spec spec = getSpecOrWrapException(hashes.get(0), hash);
-        Hash dataHash = hashes.get(1);
-        return spec.newJObject(new MerkleRoot(hash, spec, dataHash));
-      }
+      List<Hash> hashes = hashedDb.readHashes(hash, 2);
+      Spec spec = getSpecOrChainException(
+          hashes.get(0), e -> new CannotDecodeRecordException(hash, e));
+      Hash dataHash = hashes.get(1);
+      return spec.newJObject(new MerkleRoot(hash, spec, dataHash));
     } catch (HashedDbException e) {
-      throw new RecordDbException(hash, e);
+      throw new CannotDecodeRecordException(hash, e);
     }
   }
 
   // methods for returning spec records
 
   public ArraySpec arraySpec(Spec elementSpec) {
-    return cacheSpec(Helpers.wrapException(() -> newArraySpec(elementSpec)));
+    return cacheSpec(wrapException(() -> newArraySpec(elementSpec)));
   }
 
   public BlobSpec blobSpec() {
@@ -163,71 +156,32 @@ public class RecordDb {
   }
 
   public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return cacheSpec(Helpers.wrapException(() -> newTupleSpec(elementSpecs)));
+    return cacheSpec(wrapException(() -> newTupleSpec(elementSpecs)));
   }
 
-  public SpecSpec specSpec() {
-    return specSpec;
-  }
-
-  private Spec getSpecOrWrapException(Hash specHash, Hash parentHash) {
+  private Spec getSpecOrChainException(
+      Hash specHash, Function<Exception, RuntimeException> exceptionChainer) {
     try {
       return getSpec(specHash);
     } catch (RecordDbException e) {
-      throw new RecordDbException(parentHash, e);
+      throw exceptionChainer.apply(e);
     }
   }
 
-  public Spec getSpec(MerkleRoot merkleRoot) {
-    Spec spec = specCache.get(merkleRoot.hash());
-    if (spec != null) {
-      return spec;
-    } else {
-      return readSpec(merkleRoot.hash(), merkleRoot.dataHash());
-    }
+  public Spec getSpec(Hash hash) {
+    return requireNonNullElseGet(specCache.get(hash), () -> readSpec(hash));
   }
 
-  private Spec getSpec(Hash hash) {
-    Spec spec = specCache.get(hash);
-    if (spec != null) {
-      return spec;
-    } else {
-      try {
-        List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
-        if (hashes.size() == 1) {
-          if (!specSpec.hash().equals(hash)) {
-            throw new RecordDbException(hash, "Expected record which spec == SPEC."
-                + " Its Merkle tree has only one child (so the record itself should be == SPEC) "
-                + "but it has a different hash.");
-          }
-          return specSpec;
-        } else {
-          Hash specHash = hashes.get(0);
-          if (!specSpec.hash().equals(specHash)) {
-            throw new RecordDbException(hash, "Expected record which spec == SPEC"
-                + " but its Merkle tree's first child is not SPEC.");
-          }
-          Hash dataHash = hashes.get(1);
-          return readSpec(hash, dataHash);
-        }
-      } catch (HashedDbException e) {
-        throw new RecordDbException(hash, e);
-      }
-    }
-  }
-
-  private Spec readSpec(Hash hash, Hash dataHash) {
+  private Spec readSpec(Hash hash) {
     try {
-      List<Hash> hashes = hashedDb.readHashes(dataHash, 1, 2);
+      List<Hash> hashes = hashedDb.readHashes(hash, 1, 2);
       byte marker = hashedDb.readByte(hashes.get(0));
       SpecKind specKind = specKindMarkedWith(marker);
       if (specKind == null) {
-        throw new RecordDbException(hash,
-            "Its spec == SPEC but its data has illegal SpecKind marker = " + marker + ".");
+        throw new CannotDecodeSpecException(hash,
+            "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
-        case SPEC -> throw new RuntimeException(
-            "Shouldn't happen. SPEC case is handled in method that called us.");
         case BOOL -> {
           assertSize(hash, BOOL, hashes, 1);
           yield boolSpec;
@@ -246,25 +200,26 @@ public class RecordDb {
         }
         case ARRAY -> {
           assertSize(hash, ARRAY, hashes, 2);
-          Spec elementSpec = getSpecOrWrapException(hashes.get(1), hash);
-          yield cacheSpec(newArraySpec(elementSpec, dataHash));
+          Spec elementSpec = getSpecOrChainException(
+              hashes.get(1), e -> new CannotDecodeSpecException(hash));
+          yield cacheSpec(newArraySpec(hash, elementSpec));
         }
         case TUPLE -> {
           assertSize(hash, TUPLE, hashes, 2);
           ImmutableList<Spec> elements = readTupleSpecElementSpecs(hashes.get(1), hash);
-          yield cacheSpec(newTupleSpec(elements, dataHash));
+          yield cacheSpec(newTupleSpec(hash, elements));
         }
       };
     } catch (HashedDbException e) {
-      throw new RecordDbException(hash, e);
+      throw new CannotDecodeSpecException(hash, e);
     }
   }
 
   private static void assertSize(Hash hash, SpecKind specKind, List<Hash> hashes,
       int expectedSize) {
     if (hashes.size() != expectedSize) {
-      throw new RecordDbException(hash,
-          "Its spec == SPEC and specKind == " + specKind + " but its dataHash has "
+      throw new CannotDecodeSpecException(hash,
+          "Its specKind == " + specKind + " but its merkle root has "
               + hashes.size() + " children when " + expectedSize + " is expected.");
     }
   }
@@ -276,7 +231,7 @@ public class RecordDb {
       try {
         builder.add(getSpec(elementSpecHashes.get(i)));
       } catch (RecordDbException e) {
-        throw new RecordDbException(parentHash, "Its spec == SPEC, its specKind == TUPLE "
+        throw new CannotDecodeSpecException(parentHash, "Its specKind == TUPLE "
             + "but reading element spec at index " + i + " caused error.", e);
       }
     }
@@ -287,8 +242,8 @@ public class RecordDb {
     try {
       return hashedDb.readHashes(hash);
     } catch (HashedDbException e) {
-      throw new RecordDbException(parentHash,
-          "Its spec == SPEC, its specKind == TUPLE but reading its element specs caused error.", e);
+      throw new CannotDecodeSpecException(parentHash,
+          "Its specKind == TUPLE but reading its element specs caused error.", e);
     }
   }
 
@@ -321,39 +276,25 @@ public class RecordDb {
     return spec.newJObject(writeRoot(spec, writeTupleData(records)));
   }
 
-  private ArraySpec newArraySpec(Spec elementSpec) throws
-      HashedDbException {
-    Hash dataHash = writeArraySpecData(elementSpec);
-    return newArraySpec(elementSpec, dataHash);
+  private ArraySpec newArraySpec(Spec elementSpec) throws HashedDbException {
+    Hash hash = writeArraySpecRoot(elementSpec);
+    return newArraySpec(hash, elementSpec);
   }
 
-  private ArraySpec newArraySpec(Spec elementSpec, Hash dataHash) throws
-      HashedDbException {
-    return new ArraySpec(writeRoot(specSpec, dataHash), elementSpec, hashedDb, this);
+  private ArraySpec newArraySpec(Hash hash, Spec elementSpec) {
+    return new ArraySpec(hash, elementSpec, hashedDb, this);
   }
 
   private TupleSpec newTupleSpec(Iterable<? extends Spec> elementSpecs) throws HashedDbException {
-    Hash dataHash = writeTupleSpecData(elementSpecs);
-    return newTupleSpec(elementSpecs, dataHash);
+    Hash hash = writeTupleSpecRoot(elementSpecs);
+    return newTupleSpec(hash, elementSpecs);
   }
 
-  private TupleSpec newTupleSpec(Iterable<? extends Spec> elementSpecs, Hash dataHash)
-      throws HashedDbException {
-    return new TupleSpec(writeRoot(specSpec, dataHash), elementSpecs, hashedDb, this);
+  private TupleSpec newTupleSpec(Hash hash, Iterable<? extends Spec> elementSpecs) {
+    return new TupleSpec(hash, elementSpecs, hashedDb, this);
   }
 
   // methods for writing Merkle node(s) to HashedDb
-
-  private MerkleRoot writeBasicSpecRoot(SpecSpec specSpec, SpecKind specKind) throws
-      HashedDbException {
-    return writeRoot(specSpec, writeBasicSpecData(specKind));
-  }
-
-  private MerkleRoot writeSpecSpecRoot() throws HashedDbException {
-    Hash dataHash = writeBasicSpecData(SPEC);
-    Hash hash = hashedDb.writeHashes(dataHash);
-    return new MerkleRoot(hash, null, dataHash);
-  }
 
   private MerkleRoot writeRoot(Spec spec, Hash dataHash) throws HashedDbException {
     Hash hash = hashedDb.writeHashes(spec.hash(), dataHash);
@@ -383,21 +324,21 @@ public class RecordDb {
     return hashedDb.writeHashes(hashes);
   }
 
-  private Hash writeArraySpecData(Spec elementSpec) throws HashedDbException {
-    return writeNonBasicSpecData(ARRAY, elementSpec.hash());
+  private Hash writeArraySpecRoot(Spec elementSpec) throws HashedDbException {
+    return writeNonBasicSpecRoot(ARRAY, elementSpec.hash());
   }
 
-  private Hash writeTupleSpecData(Iterable<? extends Spec> elementSpecs)
+  private Hash writeTupleSpecRoot(Iterable<? extends Spec> elementSpecs)
       throws HashedDbException {
     Hash elementsHash = hashedDb.writeHashes(map(elementSpecs, Spec::hash));
-    return writeNonBasicSpecData(TUPLE, elementsHash);
+    return writeNonBasicSpecRoot(TUPLE, elementsHash);
   }
 
-  private Hash writeNonBasicSpecData(SpecKind specKind, Hash elements) throws HashedDbException {
+  private Hash writeNonBasicSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()), elements);
   }
 
-  private Hash writeBasicSpecData(SpecKind specKind) throws HashedDbException {
+  private Hash writeBasicSpecRoot(SpecKind specKind) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()));
   }
 }

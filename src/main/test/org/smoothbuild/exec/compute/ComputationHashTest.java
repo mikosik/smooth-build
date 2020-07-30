@@ -75,7 +75,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateArrayAlgorithm(arraySpec(stringSpec()));
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("a45fc25de1f36f700edd0a7a6fbfbde52a52796c"));
+        .isEqualTo(Hash.decode("26014fc98929cdf79a7b7c96ecbc56d495d595fe"));
   }
 
   @Test
@@ -91,7 +91,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNativeFunction());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("556691e768974b206168183cee2224cb0b09fb90"));
+        .isEqualTo(Hash.decode("7343a909cf87b4465ffdd09a0ab48d6ddc9b1757"));
   }
 
   @Test
@@ -99,7 +99,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ConvertAlgorithm(stringSpec());
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("8f4c9864950191a3fd2fc6ef4dff00c6ffe8b21b"));
+        .isEqualTo(Hash.decode("f8f5cf59eec8d5ee4833d1086e21c8aa3f585234"));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("a3d5e4a7dac5d3e61fd9653753e30358253bf54b"));
+        .isEqualTo(Hash.decode("b9f0b6c1b4fbdfb9547d1d258e01e651c387a41b"));
   }
 
   @Test
@@ -115,7 +115,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("163642381cdf78d703f6cc2df0331a7c83e42963"));
+        .isEqualTo(Hash.decode("b83ff59d3701bbafe020d6ce781c6379457c1a68"));
   }
 
   @Test
@@ -123,7 +123,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new CreateTupleAlgorithm(PERSON);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("a025576b07cabb0e4a364b362a627f114dfe3505"));
+        .isEqualTo(Hash.decode("8e2cc0db36ad999d771099123fad07e0b48a75ae"));
   }
 
   @Test
@@ -131,7 +131,7 @@ public class ComputationHashTest extends TestingContext {
     Algorithm algorithm = new ReadTupleElementAlgorithm(accessor(), STRING);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("cb8da34f967f20f29c6216cd84ab979556b2b2ff"));
+        .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
   }
 
   private Accessor accessor() {

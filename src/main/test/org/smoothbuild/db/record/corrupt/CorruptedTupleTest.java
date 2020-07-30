@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 
 public class CorruptedTupleTest extends AbstractCorruptedTestCase {
   @Test
@@ -36,7 +36,7 @@ public class CorruptedTupleTest extends AbstractCorruptedTestCase {
             elementValuesHash);
     Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new RecordDbException(tupleHash, errorReadingElementHashes()))
+        .throwsException(new CannotDecodeRecordException(tupleHash, errorReadingElementHashes()))
         .withCause(new DecodingHashSequenceException(elementValuesHash, 2, 1));
   }
 
@@ -53,7 +53,7 @@ public class CorruptedTupleTest extends AbstractCorruptedTestCase {
             elementValuesHash);
     Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new RecordDbException(tupleHash, errorReadingElementHashes()))
+        .throwsException(new CannotDecodeRecordException(tupleHash, errorReadingElementHashes()))
         .withCause(new DecodingHashSequenceException(elementValuesHash, 2, 3));
   }
 
@@ -67,8 +67,9 @@ public class CorruptedTupleTest extends AbstractCorruptedTestCase {
                 hash(bool(true))));
     Tuple tuple = (Tuple) recordDb().get(tupleHash);
     assertCall(() -> tuple.get(0))
-        .throwsException(new RecordDbException(tupleHash, "Its TUPLE spec declares element 1 " +
-            "to have STRING spec but its data has record with BOOL spec at that index."));
+        .throwsException(new CannotDecodeRecordException(tupleHash,
+            "Its TUPLE spec declares element 1 to have STRING spec but its data has record"
+                + " with BOOL spec at that index."));
   }
 
   private static String errorReadingElementHashes() {

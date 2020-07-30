@@ -1,6 +1,6 @@
 package org.smoothbuild.db.record.base;
 
-import static org.smoothbuild.db.record.db.Helpers.wrapException;
+import static org.smoothbuild.db.record.db.Helpers.wrapDecodingRecordException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 
@@ -13,7 +13,7 @@ public class Bool extends RecordImpl {
   }
 
   public boolean jValue() {
-    return wrapException(hash(), () -> hashedDb.readBoolean(dataHash()));
+    return wrapDecodingRecordException(hash(), () -> hashedDb.readBoolean(dataHash()));
   }
 
   @Override

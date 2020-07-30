@@ -14,7 +14,7 @@ import org.smoothbuild.db.hashed.DecodingBooleanException;
 import org.smoothbuild.db.hashed.DecodingByteException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Bool;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 
 import com.google.common.truth.Truth;
 
@@ -44,7 +44,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
             hash(boolSpec()),
             dataHash);
     assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
@@ -56,7 +56,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
             hash(boolSpec()),
             dataHash);
     assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingBooleanException(dataHash, new DecodingByteException(dataHash)));
   }
 
@@ -79,7 +79,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
             hash(boolSpec()),
             dataHash);
     assertCall(() -> ((Bool) recordDb().get(recordHash)).jValue())
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingBooleanException(dataHash));
   }
 }

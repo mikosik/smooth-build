@@ -7,8 +7,8 @@ import java.util.List;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 import org.smoothbuild.db.record.db.RecordDb;
-import org.smoothbuild.db.record.db.RecordDbException;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.db.record.spec.TupleSpec;
 
@@ -47,7 +47,8 @@ public class Tuple extends RecordImpl {
       var elementSpecs = spec().elementSpecs();
       var elementHashes = readElementHashes(elementSpecs);
       if (elementSpecs.size() != elementHashes.size()) {
-        throw new RecordDbException(hash(), "Its TUPLE spec declares " + elementSpecs.size()
+        throw new CannotDecodeRecordException(
+            hash(), "Its TUPLE spec declares " + elementSpecs.size()
             + " elements but its data points to" + elementHashes.size() + "  elements.");
       }
       var builder = ImmutableList.<Record>builder();
@@ -57,7 +58,7 @@ public class Tuple extends RecordImpl {
         if (spec.equals(record.spec())) {
           builder.add(record);
         } else {
-          throw new RecordDbException(hash(), "Its TUPLE spec declares element " + i
+          throw new CannotDecodeRecordException(hash(), "Its TUPLE spec declares element " + i
               + " to have " + spec.name() + " spec but its data has record with " +
               record.spec().name() + " spec at that index.");
         }
@@ -71,7 +72,7 @@ public class Tuple extends RecordImpl {
     try {
       return hashedDb.readHashes(dataHash(), elementSpecs.size());
     } catch (HashedDbException e) {
-      throw new RecordDbException(hash(), "Error reading element hashes.", e);
+      throw new CannotDecodeRecordException(hash(), "Error reading element hashes.", e);
     }
   }
 

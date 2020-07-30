@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 
 import com.google.common.truth.Truth;
 
@@ -36,7 +36,7 @@ public class CorruptedBlobTest  extends AbstractCorruptedTestCase {
             hash(blobSpec()),
             dataHash);
     assertCall(() -> ((Blob) recordDb().get(recordHash)).source())
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new NoSuchDataException(dataHash));
   }
 }

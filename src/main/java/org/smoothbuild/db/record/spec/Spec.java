@@ -8,14 +8,14 @@ import org.smoothbuild.db.record.base.MerkleRoot;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.db.RecordDb;
 
-public abstract class Spec implements Record {
-  private final MerkleRoot merkleRoot;
+public abstract class Spec {
+  private final Hash hash;
   private final SpecKind kind;
   protected final HashedDb hashedDb;
   protected final RecordDb recordDb;
 
-  protected Spec(MerkleRoot merkleRoot, SpecKind kind, HashedDb hashedDb, RecordDb recordDb) {
-    this.merkleRoot = merkleRoot;
+  protected Spec(Hash hash, SpecKind kind, HashedDb hashedDb, RecordDb recordDb) {
+    this.hash = hash;
     this.kind = kind;
     this.hashedDb = hashedDb;
     this.recordDb = recordDb;
@@ -26,19 +26,8 @@ public abstract class Spec implements Record {
    */
   public abstract Record newJObject(MerkleRoot merkleRoot);
 
-  @Override
   public Hash hash() {
-    return merkleRoot.hash();
-  }
-
-  @Override
-  public Hash dataHash() {
-    return merkleRoot.dataHash();
-  }
-
-  @Override
-  public Spec spec() {
-    return merkleRoot.spec();
+    return hash;
   }
 
   @Override
@@ -53,12 +42,7 @@ public abstract class Spec implements Record {
 
   @Override
   public String toString() {
-    return valueToString() + ":" + hash();
-  }
-
-  @Override
-  public String valueToString() {
-    return name();
+    return name() + ":" + hash();
   }
 
   public String name() {

@@ -15,7 +15,6 @@ public class CorruptedNothingTest extends AbstractCorruptedTestCase {
             hash(nothingSpec()),
             hash("aaa"));
     assertCall(() -> ((RString) recordDb().get(recordHash)).jValue())
-        .throwsException(new RecordDbException(
-            recordHash, "Cannot create java object for 'NOTHING' spec."));
+        .throwsException(new RecordDbException("Cannot create java object for 'NOTHING' spec."));
   }
 }

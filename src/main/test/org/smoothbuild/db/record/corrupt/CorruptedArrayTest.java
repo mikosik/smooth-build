@@ -16,7 +16,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 
 import okio.ByteString;
 
@@ -65,7 +65,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
             notHashOfHashSequence
         );
     assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(Record.class))
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingHashSequenceException(notHashOfHashSequence));
   }
 
@@ -85,7 +85,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                 )
             ));
     assertCall(() -> ((Array) recordDb().get(recordHash)).asIterable(RString.class))
-        .throwsException(new RecordDbException(recordHash,
+        .throwsException(new CannotDecodeRecordException(recordHash,
             "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
   }
 }

@@ -12,11 +12,11 @@ public class Helpers {
     }
   }
 
-  public static <T> T wrapException(Hash hash, HashedDbCallable<T> callable) {
+  public static <T> T wrapDecodingRecordException(Hash hash, HashedDbCallable<T> callable) {
     try {
       return callable.call();
     } catch (HashedDbException e) {
-      throw new RecordDbException(hash, e);
+      throw new CannotDecodeRecordException(hash, e);
     }
   }
 

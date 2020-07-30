@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 
 import okio.ByteString;
 
@@ -34,7 +34,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
             hash(stringSpec()),
             notStringHash);
     assertCall(() -> ((RString) recordDb().get(recordHash)).jValue())
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingStringException(notStringHash, null));
   }
 }
