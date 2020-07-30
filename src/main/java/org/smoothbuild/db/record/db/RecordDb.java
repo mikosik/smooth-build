@@ -84,7 +84,7 @@ public class RecordDb {
     }
   }
 
-  // methods for creating non-spec records or its builders
+  // methods for creating records or record builders
 
   public ArrayBuilder arrayBuilder(Spec elementSpec) {
     return new ArrayBuilder(arraySpec(elementSpec), this);
@@ -133,7 +133,7 @@ public class RecordDb {
     }
   }
 
-  // methods for returning spec records
+  // methods for returning specs
 
   public ArraySpec arraySpec(Spec elementSpec) {
     return cacheSpec(wrapException(() -> newArraySpec(elementSpec)));
@@ -253,7 +253,7 @@ public class RecordDb {
     return result;
   }
 
-  // methods for creating spec's records
+  // methods for creating spec instances
 
   public Array newArray(ArraySpec spec, Iterable<? extends Record> elements)
       throws HashedDbException {
