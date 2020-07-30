@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.record.db.RecordDb;
 import org.smoothbuild.testing.TestingContext;
 
-public class RecordSpecCachingTest extends TestingContext {
+public class SpecCachingTest extends TestingContext {
 
   @Test
   public void creating_array_spec_reuses_cached_instance() {
