@@ -1,6 +1,6 @@
 package org.smoothbuild.db.record.base;
 
-import static org.smoothbuild.db.record.db.Helpers.wrapException;
+import static org.smoothbuild.db.record.db.Helpers.wrapDecodingRecordException;
 
 import org.smoothbuild.db.hashed.HashedDb;
 
@@ -15,7 +15,7 @@ public class Blob extends RecordImpl {
   }
 
   public BufferedSource source() {
-    return wrapException(hash(), () -> hashedDb.source(dataHash()));
+    return wrapDecodingRecordException(hash(), () -> hashedDb.source(dataHash()));
   }
 
   @Override

@@ -22,7 +22,6 @@ import org.smoothbuild.db.record.spec.BlobSpec;
 import org.smoothbuild.db.record.spec.BoolSpec;
 import org.smoothbuild.db.record.spec.NothingSpec;
 import org.smoothbuild.db.record.spec.Spec;
-import org.smoothbuild.db.record.spec.SpecSpec;
 import org.smoothbuild.db.record.spec.StringSpec;
 import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
@@ -141,10 +140,6 @@ public class TestingContext {
       fullFileSystem = new SynchronizedFileSystem(new MemoryFileSystem());
     }
     return fullFileSystem;
-  }
-
-  public SpecSpec specSpec() {
-    return recordDb().specSpec();
   }
 
   public BoolSpec boolSpec() {

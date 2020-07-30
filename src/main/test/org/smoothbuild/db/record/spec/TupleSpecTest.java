@@ -31,12 +31,6 @@ public class TupleSpecTest extends AbstractRecordSpecTestCase {
   }
 
   @Test
-  public void two_level_deep_tuple_spec_can_be_read_back() {
-    TupleSpec spec = tupleSpec(List.of(stringSpec(), stringSpec()));
-    assertSpecsAreDeeplyEqual((Spec) recordDbOther().get(spec.hash()), spec);
-  }
-
-  @Test
   public void creating_same_tuple_twice_is_possible() {
     tupleSpec(List.of(stringSpec()));
     tupleSpec(List.of(stringSpec()));

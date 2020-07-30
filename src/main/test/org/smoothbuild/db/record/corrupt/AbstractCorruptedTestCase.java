@@ -6,6 +6,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.HashingBufferedSink;
 import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -37,6 +38,10 @@ public abstract class AbstractCorruptedTestCase extends TestingContext {
 
   protected Hash hash(Record record) {
     return record.hash();
+  }
+
+  protected Hash hash(Spec spec) {
+    return spec.hash();
   }
 
   protected Hash hash(Hash... hashes) throws HashedDbException {

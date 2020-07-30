@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.smoothbuild.db.record.spec.SpecKind.ARRAY;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.MerkleRoot;
@@ -15,9 +16,8 @@ import org.smoothbuild.db.record.db.RecordDb;
 public class ArraySpec extends Spec {
   private final Spec elemSpec;
 
-  public ArraySpec(MerkleRoot merkleRoot, Spec elemSpec, HashedDb hashedDb,
-      RecordDb recordDb) {
-    super(merkleRoot, ARRAY, hashedDb, recordDb);
+  public ArraySpec(Hash hash, Spec elemSpec, HashedDb hashedDb, RecordDb recordDb) {
+    super(hash, ARRAY, hashedDb, recordDb);
     this.elemSpec = checkNotNull(elemSpec);
   }
 

@@ -14,7 +14,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.db.RecordDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
+import org.smoothbuild.db.record.db.CannotDecodeSpecException;
 
 import okio.ByteString;
 
@@ -45,7 +46,7 @@ public class CorruptedRecordTest extends AbstractCorruptedTestCase {
     Hash recordHash =
         hash(ByteString.of(new byte[byteCount]));
     assertCall(() -> recordDb().get(recordHash))
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new DecodingHashSequenceException(recordHash));
   }
 
@@ -57,15 +58,15 @@ public class CorruptedRecordTest extends AbstractCorruptedTestCase {
             specHash,
             hash("aaa"));
     assertCall(() -> recordDb().get(recordHash))
-        .throwsException(new RecordDbException(recordHash))
-        .withCause(new RecordDbException(specHash));
+        .throwsException(new CannotDecodeRecordException(recordHash))
+        .withCause(new CannotDecodeSpecException(specHash));
   }
 
   @Test
   public void reading_elements_from_not_stored_object_throws_exception() {
     Hash recordHash = Hash.of(33);
     assertCall(() -> recordDb().get(recordHash))
-        .throwsException(new RecordDbException(recordHash))
+        .throwsException(new CannotDecodeRecordException(recordHash))
         .withCause(new NoSuchDataException(recordHash));
   }
 }

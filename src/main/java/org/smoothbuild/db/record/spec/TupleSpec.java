@@ -2,7 +2,9 @@ package org.smoothbuild.db.record.spec;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.db.record.spec.SpecKind.TUPLE;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.record.base.MerkleRoot;
 import org.smoothbuild.db.record.base.Tuple;
@@ -16,9 +18,9 @@ import com.google.common.collect.ImmutableList;
 public class TupleSpec extends Spec {
   private final ImmutableList<Spec> elementSpecs;
 
-  public TupleSpec(MerkleRoot merkleRoot, Iterable<? extends Spec> elementSpecs,
-      HashedDb hashedDb, RecordDb recordDb) {
-    super(merkleRoot, SpecKind.TUPLE, hashedDb, recordDb);
+  public TupleSpec(Hash hash, Iterable<? extends Spec> elementSpecs, HashedDb hashedDb,
+      RecordDb recordDb) {
+    super(hash, TUPLE, hashedDb, recordDb);
     this.elementSpecs = ImmutableList.copyOf(elementSpecs);
   }
 

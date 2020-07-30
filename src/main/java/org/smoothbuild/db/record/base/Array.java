@@ -4,8 +4,8 @@ import static org.smoothbuild.util.Lists.map;
 
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.record.db.CannotDecodeRecordException;
 import org.smoothbuild.db.record.db.RecordDb;
-import org.smoothbuild.db.record.db.RecordDbException;
 import org.smoothbuild.db.record.spec.ArraySpec;
 import org.smoothbuild.db.record.spec.Spec;
 
@@ -32,7 +32,7 @@ public class Array extends RecordImpl {
     ImmutableList<Record> elements = elements();
     for (Record record : elements) {
       if (!record.spec().equals(spec().elemSpec())) {
-        throw new RecordDbException(hash(), "It is array which spec == " + spec().name()
+        throw new CannotDecodeRecordException(hash(), "It is array which spec == " + spec().name()
             + " but one of its elements has spec == " + record.spec().name());
       }
     }
@@ -53,7 +53,7 @@ public class Array extends RecordImpl {
     try {
       return map(hashedDb.readHashes(dataHash()), recordDb::get);
     } catch (HashedDbException e) {
-      throw new RecordDbException(hash(), e);
+      throw new CannotDecodeRecordException(hash(), e);
     }
   }
 

@@ -20,7 +20,7 @@ public class RecordSpecCachingTest extends TestingContext {
   public void reading_array_spec_reuses_cached_instance() {
     Spec spec = arraySpec(stringSpec());
     RecordDb recordDbOther = recordDbOther();
-    assertReturnsSameInstanceEachTime(() -> recordDbOther.get(spec.hash()));
+    assertReturnsSameInstanceEachTime(() -> recordDbOther.getSpec(spec.hash()));
   }
 
   @Test
@@ -33,7 +33,7 @@ public class RecordSpecCachingTest extends TestingContext {
     Spec spec = tupleSpec(List.of(stringSpec()));
     RecordDb recordDbOther = recordDbOther();
 
-    assertReturnsSameInstanceEachTime(() -> recordDbOther.get(spec.hash()));
+    assertReturnsSameInstanceEachTime(() -> recordDbOther.getSpec(spec.hash()));
   }
 
   private static void assertReturnsSameInstanceEachTime(Supplier<Object> supplier) {
