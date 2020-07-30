@@ -17,7 +17,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public class Tuple extends RecordImpl {
+public class Tuple extends Record {
   private ImmutableList<Record> elements;
   private final RecordDb recordDb;
 
