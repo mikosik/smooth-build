@@ -8,7 +8,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.db.RecordDb;
 import org.smoothbuild.testing.TestingContext;
 
-public class RecordSpecStableHashTest extends TestingContext {
+public class SpecStableHashTest extends TestingContext {
   @Test
   public void hashes_of_specs_are_stable() {
     assertHash(boolSpec(), "cf1a0a6c0b2bd3fb9bc6dd67c6c2497cf94cdedf");
