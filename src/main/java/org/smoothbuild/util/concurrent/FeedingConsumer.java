@@ -71,7 +71,7 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
   @Override
   public <U> Feeder<U> chain(Function<T, U> function) {
     FeedingConsumer<U> chained = new FeedingConsumer<>();
-    this.addConsumer(v -> chained.accept(function.apply(v)));
+    addConsumer(v -> chained.accept(function.apply(v)));
     return chained;
   }
 }
