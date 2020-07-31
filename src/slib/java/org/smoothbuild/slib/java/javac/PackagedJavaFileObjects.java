@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.java.javac;
 
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.slib.compress.UnzipFunction.unzip;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 

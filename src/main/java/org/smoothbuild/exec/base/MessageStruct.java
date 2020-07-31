@@ -1,4 +1,4 @@
-package org.smoothbuild.db.record.db;
+package org.smoothbuild.exec.base;
 
 import static com.google.common.collect.Streams.stream;
 import static org.smoothbuild.cli.console.Level.ERROR;

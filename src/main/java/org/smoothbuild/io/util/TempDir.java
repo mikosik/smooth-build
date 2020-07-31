@@ -1,8 +1,8 @@
 package org.smoothbuild.io.util;
 
 import static com.google.common.base.Preconditions.checkState;
-import static org.smoothbuild.db.record.db.FileStruct.fileContent;
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
+import static org.smoothbuild.exec.base.FileStruct.fileContent;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
 import static org.smoothbuild.util.io.Okios.copyAllAndClose;

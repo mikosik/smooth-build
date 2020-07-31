@@ -1,10 +1,10 @@
 package org.smoothbuild.exec.artifact;
 
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.db.record.db.FileStruct.fileContent;
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.artifactPath;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.targetPath;
+import static org.smoothbuild.exec.base.FileStruct.fileContent;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 
 import java.io.IOException;
