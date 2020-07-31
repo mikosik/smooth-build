@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.db.record.base.Messages.containsErrors;
-import static org.smoothbuild.db.record.base.Messages.isValidSeverity;
-import static org.smoothbuild.db.record.base.Messages.severity;
+import static org.smoothbuild.db.record.db.MessageStruct.containsErrors;
+import static org.smoothbuild.db.record.db.MessageStruct.isValidSeverity;
+import static org.smoothbuild.db.record.db.MessageStruct.severity;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.outputDbException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
