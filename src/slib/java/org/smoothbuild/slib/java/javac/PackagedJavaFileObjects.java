@@ -12,7 +12,6 @@ import java.util.zip.ZipException;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PackagedJavaFileObjects {
@@ -24,9 +23,9 @@ public class PackagedJavaFileObjects {
       for (Tuple file : files.asIterable(Tuple.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);
         if (result.contains(inputClassFile)) {
-          nativeApi.log().error("File " + filePath(file)
+          nativeApi.log().error("File " + filePath(file).jValue()
               + " is contained by two different library jar files.");
-          throw new AbortException();
+          return null;
         } else {
           result.add(inputClassFile);
         }
