@@ -7,6 +7,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.exec.base.Input;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.plugin.NativeApi;
 

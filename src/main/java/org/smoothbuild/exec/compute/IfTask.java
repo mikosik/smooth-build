@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.algorithm.Input.input;
+import static org.smoothbuild.exec.base.Input.input;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import org.smoothbuild.db.record.base.Bool;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.exec.algorithm.Algorithm;
-import org.smoothbuild.exec.algorithm.Input;
+import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ConcreteType;

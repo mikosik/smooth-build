@@ -19,7 +19,7 @@ import org.smoothbuild.db.record.db.RecordDb;
 import org.smoothbuild.db.record.db.RecordFactory;
 import org.smoothbuild.db.record.spec.ArraySpec;
 import org.smoothbuild.db.record.spec.Spec;
-import org.smoothbuild.exec.algorithm.Output;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathState;

@@ -9,6 +9,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.spec.BlobSpec;
 import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.exec.base.Input;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 import okio.ByteString;

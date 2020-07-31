@@ -3,7 +3,7 @@ package org.smoothbuild.exec.parallel;
 import java.util.function.Consumer;
 
 import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.exec.algorithm.MaybeOutput;
+import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
