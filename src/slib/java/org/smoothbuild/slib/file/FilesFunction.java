@@ -20,6 +20,9 @@ public class FilesFunction {
   @SmoothFunction(value = "files", cacheable = false)
   public static Array files(Container container, RString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
+    if (path == null) {
+      return null;
+    }
     FileSystem fileSystem = container.fileSystem();
 
     if (path.startsWith(SMOOTH_DIR)) {
