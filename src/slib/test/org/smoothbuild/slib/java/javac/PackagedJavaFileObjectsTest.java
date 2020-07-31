@@ -3,14 +3,12 @@ package org.smoothbuild.slib.java.javac;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.slib.java.javac.PackagedJavaFileObjects.classesFromJars;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.JarTester.jar;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.testing.TestingContext;
 
 public class PackagedJavaFileObjectsTest extends TestingContext {
@@ -24,10 +22,14 @@ public class PackagedJavaFileObjectsTest extends TestingContext {
   }
 
   @Test
-  public void duplicateClassFileException() throws Exception {
-    Tuple file1 = file(path("my/package/MyKlass.class"));
+  public void duplicate_class_file_exception() throws Exception {
+    String name = "my/package/MyKlass.class";
+    Tuple file1 = file(path(name));
     Blob jar = jar(file1);
-    assertCall(() -> classesFromJars(nativeApi(), list(jar, jar)))
-        .throwsException(AbortException.class);
+    assertThat(classesFromJars(nativeApi(), list(jar, jar)))
+        .isNull();
+    assertThat(nativeApi().messages())
+        .isEqualTo(array(errorMessage(
+            "File " + name + " is contained by two different library jar files.")));
   }
 }

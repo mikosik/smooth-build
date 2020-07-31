@@ -19,7 +19,6 @@ import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 
@@ -53,7 +52,7 @@ public class JavacFunction {
       if (compiler == null) {
         nativeApi.log().error("Couldn't find JavaCompiler implementation. "
             + "You have to run Smooth tool using JDK (not JVM). Only JDK contains java compiler.");
-        throw new AbortException();
+        return null;
       }
       return compile(srcs);
     }
@@ -64,7 +63,14 @@ public class JavacFunction {
       StringWriter additionalCompilerOutput = new StringWriter();
       LoggingDiagnosticListener diagnostic = new LoggingDiagnosticListener(nativeApi);
       Iterable<String> options = options();
-      try (SandboxedJavaFileManager fileManager = fileManager(diagnostic)) {
+      StandardJavaFileManager fileManager1 =
+          compiler.getStandardFileManager(diagnostic, null, defaultCharset());
+      var libsClasses = classesFromJars(nativeApi, libs.asIterable(Blob.class));
+      if (libsClasses == null) {
+        return null;
+      }
+      try (SandboxedJavaFileManager fileManager = new SandboxedJavaFileManager(
+          fileManager1, nativeApi, libsClasses)) {
         Iterable<InputSourceFile> inputSourceFiles = toJavaFiles(files.asIterable(Tuple.class));
 
         /*
@@ -101,15 +107,6 @@ public class JavacFunction {
       return StreamSupport.stream(options.asIterable(RString.class).spliterator(), false)
           .map(RString::jValue)
           .collect(Collectors.toList());
-    }
-
-    private SandboxedJavaFileManager fileManager(LoggingDiagnosticListener diagnostic)
-        throws IOException {
-      StandardJavaFileManager fileManager =
-          compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Iterable<InputClassFile> libsClasses =
-          classesFromJars(nativeApi, libs.asIterable(Blob.class));
-      return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 
     private static Iterable<InputSourceFile> toJavaFiles(Iterable<Tuple> sourceFiles) {
