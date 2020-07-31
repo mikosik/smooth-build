@@ -12,7 +12,6 @@ import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.BlobBuilder;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -29,7 +28,7 @@ public class ZipFunction {
         String path = filePath(file).jValue();
         if (duplicatesDetector.addValue(path)) {
           nativeApi.log().error("Cannot zip two files with the same path = " + path);
-          throw new AbortException();
+          return null;
         }
         zipFile(file, zipOutputStream);
       }
