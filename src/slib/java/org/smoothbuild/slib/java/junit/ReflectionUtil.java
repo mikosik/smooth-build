@@ -1,39 +1,35 @@
 package org.smoothbuild.slib.java.junit;
 
+import static org.smoothbuild.slib.java.junit.JunitException.brokenJunitImplementation;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
-import org.smoothbuild.plugin.AbortException;
-import org.smoothbuild.plugin.NativeApi;
-
 public class ReflectionUtil {
-  public static Object newInstance(NativeApi nativeApi, Class<?> clazz) {
+  public static Object newInstance(Class<?> clazz) throws JunitException {
     try {
       return clazz.getDeclaredConstructor().newInstance();
     } catch (InstantiationException | IllegalAccessException | NoSuchMethodException
         | InvocationTargetException e) {
-      reportJunitError(nativeApi, "Cannot instantiate " + clazz.getCanonicalName());
-      throw new AbortException();
+      throw brokenJunitImplementation("Cannot instantiate " + clazz.getCanonicalName());
     }
   }
 
-  public static <T> T runReflexivelyAndCast(NativeApi nativeApi, Class<T> resultType, Object object,
-      String method, Object... args) {
-    Object result = runReflexively(nativeApi, object, method, args);
+  public static <T> T runReflexivelyAndCast(Class<T> resultType, Object object,
+      String method, Object... args) throws JunitException {
+    Object result = runReflexively(object, method, args);
     if (resultType.isInstance(result)) {
       @SuppressWarnings("unchecked")
       T castResult = (T) result;
       return castResult;
     }
-    reportJunitError(nativeApi, "Call to " + fullMethodName(object, method)
-        + " did not return instance of "
-        + resultType.getCanonicalName() + " but instance of "
+    throw brokenJunitImplementation("Call to " + fullMethodName(object, method)
+        + " did not return instance of " + resultType.getCanonicalName() + " but instance of "
         + result.getClass().getCanonicalName());
-    throw new AbortException();
   }
 
-  public static Object runReflexively(NativeApi nativeApi, Object object, String method,
-      Object... args) {
+  public static Object runReflexively(Object object, String method,
+      Object... args) throws JunitException {
     try {
       Class<?>[] paramTypes = Arrays.stream(args)
           .map(Object::getClass)
@@ -43,18 +39,14 @@ public class ReflectionUtil {
           .getMethod(method, paramTypes)
           .invoke(object, args);
     } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-      reportJunitError(nativeApi, "Cannot invoke " + fullMethodName(object, method) + ": "
-          + className(e) + " " + e.getMessage());
-      throw new AbortException();
+      throw brokenJunitImplementation(
+          "Cannot invoke " + fullMethodName(object, method) + ": " + className(e) + " ", e);
     } catch (InvocationTargetException e) {
-      reportJunitError(nativeApi, "Invocation of " + fullMethodName(object, method)
-          + " failed with "
-          + e.getCause());
-      throw new AbortException();
+      throw brokenJunitImplementation(
+          "Invocation of " + fullMethodName(object, method) + " failed with: " + e.getMessage(), e);
     } catch (NoSuchMethodException e) {
-      reportJunitError(nativeApi, className(object) + " doesn't have " + fullMethodName(object,
-          method) + " method.");
-      throw new AbortException();
+      throw brokenJunitImplementation(
+          className(object) + " doesn't have " + fullMethodName(object, method) + " method.", e);
     }
   }
 
@@ -64,9 +56,5 @@ public class ReflectionUtil {
 
   private static String className(Object object) {
     return object.getClass().getName();
-  }
-
-  public static void reportJunitError(NativeApi nativeApi, String message) {
-    nativeApi.log().error("JUnit implementation seems invalid: " + message);
   }
 }

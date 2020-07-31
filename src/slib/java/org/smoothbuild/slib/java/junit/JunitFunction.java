@@ -5,8 +5,10 @@ import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
 import static org.smoothbuild.db.record.db.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
+import static org.smoothbuild.slib.compress.UnzipFunction.unzip;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 import static org.smoothbuild.slib.java.junit.BinaryNameToClassFile.binaryNameToClassFile;
+import static org.smoothbuild.slib.java.junit.JUnitCoreWrapper.newInstance;
 import static org.smoothbuild.slib.java.util.JavaNaming.isClassFilePredicate;
 import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 
@@ -21,100 +23,104 @@ import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
-import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
   @SmoothFunction("junit")
   public static RString junit(NativeApi nativeApi, Blob tests, Array deps, RString include)
       throws IOException {
-    Array unzipped = null;
+
     try {
-      unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
-    } catch (ZipException e) {
-      nativeApi.log().error("Cannot read archive. Corrupted data?");
+      Array unzipped = unzipTestFiles(nativeApi, tests);
+      Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
+          .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
+      Map<String, Tuple> allFiles = buildNameFileMap(nativeApi, deps, testFiles);
+
+      FileClassLoader classLoader = new FileClassLoader(allFiles);
+      ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(classLoader);
+      try {
+        JUnitCoreWrapper jUnitCore = createJUnitCore(nativeApi, allFiles, classLoader);
+        Predicate<Path> filter = createFilter(include);
+        int testCount = 0;
+        for (String binaryName : testFiles.keySet()) {
+          Path filePath = path(filePath(testFiles.get(binaryName)).jValue());
+          if (filter.test(filePath)) {
+            testCount++;
+            Class<?> testClass = loadClass(classLoader, binaryName);
+            ResultWrapper result = jUnitCore.run(testClass);
+            if (!result.wasSuccessful()) {
+              for (FailureWrapper failure : result.getFailures()) {
+                nativeApi.log().error(
+                    "test failed: " + failure.toString() + "\n" + failure.getTrace());
+              }
+              return nativeApi.factory().string("FAILURE");
+            }
+          }
+        }
+        if (testCount == 0) {
+          nativeApi.log().warning("No junit tests found.");
+        }
+        return nativeApi.factory().string("SUCCESS");
+      } finally {
+        Thread.currentThread().setContextClassLoader(origClassLoader);
+      }
+    } catch (JunitException e) {
+      nativeApi.log().error(e.getMessage());
       return null;
     }
-    Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
-        .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
-    Map<String, Tuple> allFiles;
-    try {
-      allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
-    } catch (ZipException e) {
-      nativeApi.log().error("Cannot read archive. Corrupted data?");
-      return null;
-    }
+  }
+
+  private static Map<String, Tuple> buildNameFileMap(NativeApi nativeApi, Array deps,
+      Map<String, Tuple> testFiles) throws IOException, JunitException {
+    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
     for (Entry<String, Tuple> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
-        nativeApi.log().error("Both 'tests' and 'deps' contains class " + entry.getValue());
-        return null;
+        throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
       } else {
         allFiles.put(entry.getKey(), entry.getValue());
       }
     }
+    return allFiles;
+  }
 
-    FileClassLoader classLoader = new FileClassLoader(allFiles);
-    ClassLoader origClassLoader = Thread.currentThread().getContextClassLoader();
-    Thread.currentThread().setContextClassLoader(classLoader);
+  private static Array unzipTestFiles(NativeApi nativeApi, Blob tests) throws IOException,
+      JunitException {
     try {
-      JUnitCoreWrapper jUnitCore = createJUnitCore(nativeApi, allFiles, classLoader);
-      Predicate<Path> filter = createFilter(nativeApi, include);
-      int testCount = 0;
-      for (String binaryName : testFiles.keySet()) {
-        Path filePath = path(filePath(testFiles.get(binaryName)).jValue());
-        if (filter.test(filePath)) {
-          testCount++;
-          Class<?> testClass = loadClass(nativeApi, classLoader, binaryName);
-          ResultWrapper result = jUnitCore.run(testClass);
-          if (!result.wasSuccessful()) {
-            for (FailureWrapper failure : result.getFailures()) {
-              nativeApi.log().error(
-                  "test failed: " + failure.toString() + "\n" + failure.getTrace());
-            }
-            return nativeApi.factory().string("FAILURE");
-          }
-        }
-      }
-      if (testCount == 0) {
-        nativeApi.log().warning("No junit tests found.");
-      }
-      return nativeApi.factory().string("SUCCESS");
-    } finally {
-      Thread.currentThread().setContextClassLoader(origClassLoader);
+      return unzip(nativeApi, tests, isClassFilePredicate());
+    } catch (ZipException e) {
+      throw new JunitException("Cannot read archive from 'tests' param. Corrupted data?");
     }
   }
 
   private static JUnitCoreWrapper createJUnitCore(NativeApi nativeApi,
-      Map<String, Tuple> binaryNameToClassFile, FileClassLoader classLoader) {
+      Map<String, Tuple> binaryNameToClassFile, FileClassLoader classLoader) throws
+      JunitException {
     if (binaryNameToClassFile.containsKey("org.junit.runner.JUnitCore")) {
-      return JUnitCoreWrapper.newInstance(nativeApi,
-          loadClass(nativeApi, classLoader, "org.junit.runner.JUnitCore"));
+      return newInstance(
+          nativeApi, loadClass(classLoader, "org.junit.runner.JUnitCore"));
     } else {
-      nativeApi.log().error(
+      throw new JunitException(
           "Cannot find org.junit.runner.JUnitCore. Is junit.jar added to 'deps'?");
-      throw new AbortException();
     }
   }
 
-  private static Class<?> loadClass(NativeApi nativeApi, FileClassLoader classLoader,
-      String binaryName) {
+  private static Class<?> loadClass(FileClassLoader classLoader, String binaryName)
+      throws JunitException {
     try {
       return classLoader.loadClass(binaryName);
     } catch (ClassNotFoundException e) {
-      nativeApi.log().error("Couldn't find class for binaryName = " + binaryName);
-      throw new AbortException();
+      throw new JunitException("Couldn't find class for binaryName = " + binaryName);
     }
   }
 
-  private static Predicate<Path> createFilter(NativeApi nativeApi, RString includeParam) {
+  private static Predicate<Path> createFilter(RString includeParam) throws JunitException {
     try {
       return pathMatcher(includeParam.jValue());
     } catch (IllegalPathPatternException e) {
-      nativeApi.log().error("Parameter 'include' has illegal value. " + e.getMessage());
-      throw new AbortException();
+      throw new JunitException("Parameter 'include' has illegal value. " + e.getMessage());
     }
   }
 }

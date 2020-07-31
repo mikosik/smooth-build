@@ -5,26 +5,22 @@ import static org.smoothbuild.slib.java.junit.ReflectionUtil.runReflexivelyAndCa
 
 import java.util.List;
 
-import org.smoothbuild.plugin.NativeApi;
-
 public class ResultWrapper {
-  private final NativeApi nativeApi;
   private final Object result;
 
-  public ResultWrapper(NativeApi nativeApi, Object result) {
-    this.nativeApi = nativeApi;
+  public ResultWrapper(Object result) {
     this.result = result;
   }
 
-  public boolean wasSuccessful() {
-    return runReflexivelyAndCast(nativeApi, Boolean.class, result, "wasSuccessful");
+  public boolean wasSuccessful() throws JunitException {
+    return runReflexivelyAndCast(Boolean.class, result, "wasSuccessful");
   }
 
-  public List<FailureWrapper> getFailures() {
-    List<?> failures = runReflexivelyAndCast(nativeApi, List.class, result, "getFailures");
+  public List<FailureWrapper> getFailures() throws JunitException {
+    List<?> failures = runReflexivelyAndCast(List.class, result, "getFailures");
     return failures
         .stream()
-        .map(f -> new FailureWrapper(nativeApi, f))
+        .map(FailureWrapper::new)
         .collect(toList());
   }
 }

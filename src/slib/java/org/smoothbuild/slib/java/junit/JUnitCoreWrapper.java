@@ -8,8 +8,9 @@ public class JUnitCoreWrapper {
   private final NativeApi nativeApi;
   private final Object jUnitCore;
 
-  public static JUnitCoreWrapper newInstance(NativeApi nativeApi, Class<?> clazz) {
-    return new JUnitCoreWrapper(nativeApi, ReflectionUtil.newInstance(nativeApi, clazz));
+  public static JUnitCoreWrapper newInstance(NativeApi nativeApi, Class<?> clazz)
+      throws JunitException {
+    return new JUnitCoreWrapper(nativeApi, ReflectionUtil.newInstance(clazz));
   }
 
   public JUnitCoreWrapper(NativeApi nativeApi, Object jUnitCore) {
@@ -17,8 +18,8 @@ public class JUnitCoreWrapper {
     this.jUnitCore = jUnitCore;
   }
 
-  public ResultWrapper run(Class<?> testClass) {
-    return new ResultWrapper(nativeApi, runReflexively(nativeApi, jUnitCore, "run",
-        new Object[] {new Class<?>[] {testClass}}));
+  public ResultWrapper run(Class<?> testClass) throws JunitException {
+    return new ResultWrapper(
+        runReflexively(jUnitCore, "run", new Object[] {new Class<?>[] {testClass}}));
   }
 }
