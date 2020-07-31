@@ -6,6 +6,8 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.spec.ArraySpec;
 import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.exec.base.Input;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CreateArrayAlgorithm implements Algorithm {

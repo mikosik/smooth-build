@@ -14,7 +14,7 @@ import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.db.record.spec.ArraySpec;
-import org.smoothbuild.exec.algorithm.Output;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 

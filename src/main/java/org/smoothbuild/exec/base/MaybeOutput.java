@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.algorithm;
+package org.smoothbuild.exec.base;
 
 public record MaybeOutput(Output output, Exception exception) {
 

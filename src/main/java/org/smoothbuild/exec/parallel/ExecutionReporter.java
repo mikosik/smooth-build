@@ -18,7 +18,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.exec.algorithm.MaybeOutput;
+import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;

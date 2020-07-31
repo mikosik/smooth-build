@@ -10,9 +10,9 @@ import javax.inject.Provider;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.SandboxHash;
 import org.smoothbuild.exec.algorithm.Algorithm;
-import org.smoothbuild.exec.algorithm.Input;
-import org.smoothbuild.exec.algorithm.MaybeOutput;
-import org.smoothbuild.exec.algorithm.Output;
+import org.smoothbuild.exec.base.Input;
+import org.smoothbuild.exec.base.MaybeOutput;
+import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 /**
