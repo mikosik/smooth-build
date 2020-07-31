@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.zip.ZipException;
 
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
@@ -30,10 +31,22 @@ public class JunitFunction {
   @SmoothFunction("junit")
   public static RString junit(NativeApi nativeApi, Blob tests, Array deps, RString include)
       throws IOException {
-    Array unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
+    Array unzipped = null;
+    try {
+      unzipped = UnzipFunction.unzip(nativeApi, tests, isClassFilePredicate());
+    } catch (ZipException e) {
+      nativeApi.log().error("Cannot read archive. Corrupted data?");
+      return null;
+    }
     Map<String, Tuple> testFiles = stream(unzipped.asIterable(Tuple.class).spliterator(), false)
         .collect(toMap(f -> toBinaryName(filePath(f).jValue()), identity()));
-    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
+    Map<String, Tuple> allFiles;
+    try {
+      allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
+    } catch (ZipException e) {
+      nativeApi.log().error("Cannot read archive. Corrupted data?");
+      return null;
+    }
     for (Entry<String, Tuple> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
         nativeApi.log().error("Both 'tests' and 'deps' contains class " + entry.getValue());

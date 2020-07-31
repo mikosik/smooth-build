@@ -22,7 +22,6 @@ import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.IllegalPathException;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.SmoothFunction;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -30,37 +29,38 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class UnzipFunction {
   @SmoothFunction("unzip")
   public static Array unzip(NativeApi nativeApi, Blob blob) throws IOException {
-    return unzip(nativeApi, blob, x -> true);
+    try {
+      return unzip(nativeApi, blob, x -> true);
+    } catch (ZipException e) {
+      nativeApi.log().error("Cannot read archive. Corrupted data?");
+      return null;
+    }
   }
 
   public static Array unzip(NativeApi nativeApi, Blob blob, Predicate<String> filter)
-      throws IOException {
+      throws IOException, ZipException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     ArrayBuilder fileArrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().fileSpec());
-    try {
-      File tempFile = copyToTempFile(blob);
-      try (ZipFile zipFile = new ZipFile(tempFile)) {
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-          ZipEntry entry = entries.nextElement();
-          String name = entry.getName();
-          if (!name.endsWith("/") && filter.test(name)) {
-            Tuple unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+    File tempFile = copyToTempFile(blob);
+    try (ZipFile zipFile = new ZipFile(tempFile)) {
+      Enumeration<? extends ZipEntry> entries = zipFile.entries();
+      while (entries.hasMoreElements()) {
+        ZipEntry entry = entries.nextElement();
+        String name = entry.getName();
+        if (!name.endsWith("/") && filter.test(name)) {
+          Tuple unzippedEntry = unzipEntry(nativeApi, zipFile.getInputStream(entry), entry);
+          if (unzippedEntry != null) {
             String fileName = filePath(unzippedEntry).jValue();
             if (duplicatesDetector.addValue(fileName)) {
-              nativeApi.log().error("archive contains two files with the same path = " + fileName);
-              throw new AbortException();
+              nativeApi.log().warning(
+                  "Archive contains two files with the same path = " + fileName);
             }
-
             fileArrayBuilder.add(unzippedEntry);
           }
         }
       }
-      return fileArrayBuilder.build();
-    } catch (ZipException e) {
-      nativeApi.log().error("Cannot read archive. Corrupted data?");
-      throw new AbortException();
     }
+    return fileArrayBuilder.build();
   }
 
   private static File copyToTempFile(Blob blob) throws IOException {
