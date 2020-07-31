@@ -1,22 +1,22 @@
 package org.smoothbuild.db.record.base;
 
 import static com.google.common.collect.Streams.stream;
+import static org.smoothbuild.cli.console.Level.ERROR;
+import static org.smoothbuild.cli.console.Level.INFO;
+import static org.smoothbuild.cli.console.Level.WARNING;
 import static org.smoothbuild.db.record.db.MessageStruct.messageSeverity;
 import static org.smoothbuild.db.record.db.MessageStruct.messageText;
 
+import java.util.Set;
+
 import org.smoothbuild.cli.console.Level;
 
-import com.google.common.collect.ImmutableSet;
-
 public class Messages {
-  public static final String INFO = "INFO";
-  public static final String WARNING = "WARNING";
-  public static final String ERROR = "ERROR";
-  private static final ImmutableSet<String> SEVERITIES = ImmutableSet.of(ERROR, WARNING, INFO);
+  private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
 
   public static boolean containsErrors(Array messages) {
     return stream(messages.asIterable(Tuple.class))
-        .anyMatch(m -> severity(m).equals(ERROR));
+        .anyMatch(m -> severity(m).equals(ERROR.name()));
   }
 
   public static boolean isValidSeverity(String severity) {
