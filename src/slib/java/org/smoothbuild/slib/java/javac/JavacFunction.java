@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import java.util.zip.ZipException;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -90,6 +91,9 @@ public class JavacFunction {
           nativeApi.log().warning(additionalInfo);
         }
         return fileManager.resultClassfiles();
+      } catch (ZipException e) {
+        nativeApi.log().error("Cannot read archive. Corrupted data?");
+        return null;
       }
     }
 
@@ -103,8 +107,8 @@ public class JavacFunction {
         throws IOException {
       StandardJavaFileManager fileManager =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      Iterable<InputClassFile> libsClasses = classesFromJars(nativeApi, libs.asIterable(
-          Blob.class));
+      Iterable<InputClassFile> libsClasses =
+          classesFromJars(nativeApi, libs.asIterable(Blob.class));
       return new SandboxedJavaFileManager(fileManager, nativeApi, libsClasses);
     }
 

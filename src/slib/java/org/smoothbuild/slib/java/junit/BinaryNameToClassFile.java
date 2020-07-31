@@ -7,6 +7,7 @@ import static org.smoothbuild.slib.java.util.JavaNaming.toBinaryName;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipException;
 
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
@@ -19,7 +20,7 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class BinaryNameToClassFile {
 
   public static Map<String, Tuple> binaryNameToClassFile(NativeApi nativeApi,
-      Iterable<Blob> libraryJars) throws IOException {
+      Iterable<Blob> libraryJars) throws IOException, ZipException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, Tuple> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
