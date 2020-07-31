@@ -3,7 +3,7 @@ package org.smoothbuild.slib.java.junit;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.slib.compress.UnzipFunction.unzip;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;

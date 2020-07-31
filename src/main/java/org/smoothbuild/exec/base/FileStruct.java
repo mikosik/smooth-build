@@ -1,4 +1,4 @@
-package org.smoothbuild.db.record.db;
+package org.smoothbuild.exec.base;
 
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;

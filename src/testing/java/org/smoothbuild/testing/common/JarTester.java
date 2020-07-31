@@ -1,8 +1,8 @@
 package org.smoothbuild.testing.common;
 
 import static okio.Okio.sink;
-import static org.smoothbuild.db.record.db.FileStruct.fileContent;
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
+import static org.smoothbuild.exec.base.FileStruct.fileContent;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 
 import java.io.IOException;
 import java.util.jar.JarEntry;

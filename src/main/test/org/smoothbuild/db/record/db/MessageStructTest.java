@@ -1,7 +1,7 @@
 package org.smoothbuild.db.record.db;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.record.db.MessageStruct.containsErrors;
+import static org.smoothbuild.exec.base.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.record.base.Array;

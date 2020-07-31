@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.file;
 
-import static org.smoothbuild.db.record.db.FileStruct.filePath;
+import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.slib.file.match.PathMatcher.pathMatcher;
 
