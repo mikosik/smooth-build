@@ -1,5 +1,9 @@
 package org.smoothbuild.db.record.db;
 
+import static org.smoothbuild.cli.console.Level.ERROR;
+import static org.smoothbuild.cli.console.Level.INFO;
+import static org.smoothbuild.cli.console.Level.WARNING;
+
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.record.base.Messages;
 import org.smoothbuild.testing.TestingContext;
@@ -20,19 +24,19 @@ public class RecordFactoryTest extends TestingContext {
   @Test
   public void error_severity_is_error() {
     Truth.assertThat(Messages.severity(recordFactory().errorMessage("text")))
-        .isEqualTo(Messages.ERROR);
+        .isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() {
     Truth.assertThat(Messages.severity(recordFactory().warningMessage("text")))
-        .isEqualTo(Messages.WARNING);
+        .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() {
     Truth.assertThat(Messages.severity(recordFactory().infoMessage("text")))
-        .isEqualTo(Messages.INFO);
+        .isEqualTo(INFO.name());
   }
 
   @Test

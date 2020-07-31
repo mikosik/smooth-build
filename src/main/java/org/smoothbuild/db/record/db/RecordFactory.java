@@ -1,5 +1,9 @@
 package org.smoothbuild.db.record.db;
 
+import static org.smoothbuild.cli.console.Level.ERROR;
+import static org.smoothbuild.cli.console.Level.INFO;
+import static org.smoothbuild.cli.console.Level.WARNING;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -9,7 +13,6 @@ import org.smoothbuild.db.record.base.ArrayBuilder;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.BlobBuilder;
 import org.smoothbuild.db.record.base.Bool;
-import org.smoothbuild.db.record.base.Messages;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.base.Tuple;
@@ -114,15 +117,15 @@ public class RecordFactory {
   }
 
   public Tuple errorMessage(String text) {
-    return message(Messages.ERROR, text);
+    return message(ERROR.name(), text);
   }
 
   public Tuple warningMessage(String text) {
-    return message(Messages.WARNING, text);
+    return message(WARNING.name(), text);
   }
 
   public Tuple infoMessage(String text) {
-    return message(Messages.INFO, text);
+    return message(INFO.name(), text);
   }
 
   private Tuple message(String severity, String text) {
