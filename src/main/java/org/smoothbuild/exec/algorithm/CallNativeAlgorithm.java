@@ -10,7 +10,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.lang.base.NativeFunction;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm implements Algorithm {
@@ -38,7 +37,11 @@ public class CallNativeAlgorithm implements Algorithm {
       Record result = (Record) function.nativ().method()
           .invoke(null, createArguments(nativeApi, input.records()));
       if (result == null) {
-        return nullOutput(nativeApi);
+        if (!containsErrors(nativeApi.messages())) {
+          nativeApi.log().error("Function " + function.name()
+              + " has faulty native implementation: it returned 'null' but logged no error.");
+        }
+        return new Output(null, nativeApi.messages());
       }
       if (!spec.equals(result.spec())) {
         nativeApi.log().error("Function " + function.name()
@@ -50,22 +53,9 @@ public class CallNativeAlgorithm implements Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      Throwable cause = e.getCause();
-      if (cause instanceof AbortException) {
-        return nullOutput(nativeApi);
-      } else {
-        throw new NativeCallException(
-            "Function " + function.name() + " threw java exception from its native code.", cause);
-      }
+      throw new NativeCallException("Function " + function.name()
+          + " threw java exception from its native code.", e.getCause());
     }
-  }
-
-  private Output nullOutput(NativeApi nativeApi) {
-    if (!containsErrors(nativeApi.messages())) {
-      nativeApi.log().error("Function " + function.name()
-          + " has faulty native implementation: it returned 'null' but logged no error.");
-    }
-    return new Output(null, nativeApi.messages());
   }
 
   private static Object[] createArguments(NativeApi nativeApi, List<Record> arguments) {
