@@ -5,8 +5,8 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.cli.console.Log.fatal;
-import static org.smoothbuild.db.record.base.Messages.level;
-import static org.smoothbuild.db.record.base.Messages.text;
+import static org.smoothbuild.db.record.db.MessageStruct.level;
+import static org.smoothbuild.db.record.db.MessageStruct.text;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 

@@ -1,13 +1,13 @@
-package org.smoothbuild.lang.message;
+package org.smoothbuild.db.record.db;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.db.record.base.Messages.containsErrors;
+import static org.smoothbuild.db.record.db.MessageStruct.containsErrors;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.testing.TestingContext;
 
-public class MessagesTest extends TestingContext {
+public class MessageStructTest extends TestingContext {
   private Array messages;
 
   @Test
@@ -18,7 +18,7 @@ public class MessagesTest extends TestingContext {
   }
 
   @Test
-  public void list_with_info_messsage_contains_no_errors() {
+  public void list_with_info_message_contains_no_errors() {
     messages = array(infoMessage("info message"));
     assertThat(containsErrors(messages))
         .isFalse();
