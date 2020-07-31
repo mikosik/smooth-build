@@ -1,13 +1,17 @@
 package org.smoothbuild.slib.file;
 
+import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.cli.console.Level.ERROR;
+import static org.smoothbuild.db.record.db.MessageStruct.messageSeverity;
+import static org.smoothbuild.db.record.db.MessageStruct.messageText;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.plugin.AbortException;
+import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
 public class PathArgValidatorTest extends TestingContext {
@@ -38,8 +42,17 @@ public class PathArgValidatorTest extends TestingContext {
   @ParameterizedTest
   @MethodSource("listOfInvalidProjectPaths")
   public void illegal_project_paths_are_reported(String path) {
-    assertCall(() -> validatedProjectPath(container(), "name", string(path)))
-        .throwsException(AbortException.class);
+    Path name = validatedProjectPath(container(), "name", string(path));
+    assertThat(name)
+        .isNull();
+    container().messages()
+        .asIterable(Tuple.class)
+        .forEach(s -> {
+          assertThat(messageText(s).jValue())
+              .startsWith("Param 'name' has illegal value.");
+          assertThat(messageSeverity(s).jValue())
+              .isEqualTo(ERROR.name());
+        });
   }
 
   public static Stream<String> listOfInvalidProjectPaths() {

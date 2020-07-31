@@ -16,6 +16,9 @@ public class AFileFunction {
   @SmoothFunction(value = "aFile", cacheable = false)
   public static Tuple file(Container container, RString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
+    if (validatedPath == null) {
+      return null;
+    }
     if (!validatedPath.isRoot() && validatedPath.firstPart().equals(SMOOTH_DIR)) {
       container.log().error("Reading file from '.smooth' dir is not allowed.");
       return null;
