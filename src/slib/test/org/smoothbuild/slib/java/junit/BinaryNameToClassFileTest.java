@@ -15,7 +15,7 @@ import org.smoothbuild.testing.common.JarTester;
 
 public class BinaryNameToClassFileTest extends TestingContext {
   @Test
-  public void binary_names_are_mapped_to_proper_class_files() throws IOException {
+  public void binary_names_are_mapped_to_proper_class_files() throws IOException, JunitException {
     Tuple file1 = file(path("a/Klass.class"));
     Tuple file2 = file(path("b/Klass.class"));
     Blob blob = JarTester.jar(file1, file2);
@@ -24,7 +24,7 @@ public class BinaryNameToClassFileTest extends TestingContext {
   }
 
   @Test
-  public void non_class_files_are_not_mapped() throws IOException {
+  public void non_class_files_are_not_mapped() throws IOException, JunitException {
     Tuple file1 = file(path("a/Klass.txt"));
     Tuple file2 = file(path("b/Klass.java"));
     Blob blob = JarTester.jar(file1, file2);

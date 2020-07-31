@@ -12,7 +12,6 @@ import java.util.zip.ZipException;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.plugin.AbortException;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.slib.compress.UnzipFunction;
 import org.smoothbuild.util.DuplicatesDetector;
@@ -20,18 +19,22 @@ import org.smoothbuild.util.DuplicatesDetector;
 public class BinaryNameToClassFile {
 
   public static Map<String, Tuple> binaryNameToClassFile(NativeApi nativeApi,
-      Iterable<Blob> libraryJars) throws IOException, ZipException {
+      Iterable<Blob> libraryJars) throws IOException, JunitException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     Map<String, Tuple> binaryNameToClassFile = new HashMap<>();
     for (Blob jarBlob : libraryJars) {
-      Array fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
+      Array fileArray;
+      try {
+        fileArray = UnzipFunction.unzip(nativeApi, jarBlob, isClassFilePredicate());
+      } catch (ZipException e) {
+        throw new JunitException("Cannot read archive. Corrupted data?", e);
+      }
       for (Tuple classFile : fileArray.asIterable(Tuple.class)) {
         String classFilePath = (filePath(classFile)).jValue();
         String binaryName = toBinaryName(classFilePath);
         if (duplicatesDetector.addValue(classFilePath)) {
-          nativeApi.log().error("File " + classFilePath
-              + " is contained by two different library jar files.");
-          throw new AbortException();
+          throw new JunitException(
+              "File " + classFilePath + " is contained by two different library jar files.");
         } else {
           binaryNameToClassFile.put(binaryName, classFile);
         }
