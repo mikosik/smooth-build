@@ -147,7 +147,14 @@ String welcomeString = "Hello World";
 
 ##### _Blob_
 Blob is a sequence of bytes.
-There's no literal for creating Blobs (yet).
+Blob value can be defined in-line using Blob literal,
+which is sequence of hexadecimal digits prefixed with `0x`.
+Number of digits has to be even.
+It is allowed to use both capital and small letters.
+
+```
+Blob binaryData = 0x48656C6C6F;
+```
 
 ##### _Nothing_
 Nothing is a type that is convertible to any type.
