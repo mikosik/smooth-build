@@ -41,44 +41,6 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void duplicate_function_causes_error() throws Exception {
-    createUserModule(
-        "  function1 = 'abc';  ",
-        "  function1 = 'def';  ");
-    runSmoothBuild("function1");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(2, "'function1' is already defined at build.smooth:1.\n");
-  }
-
-  @Test
-  public void function_with_same_name_as_constructor_causes_error() throws Exception {
-    createUserModule(
-        "  MyStruct {}        ",
-        "  myStruct = 'def';  ");
-    runSmoothBuild("myStruct");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(2, "'myStruct' is already defined at build.smooth:1.");
-  }
-
-  @Test
-  public void function_with_same_name_as_constructor_of_slib_struct_causes_error() throws Exception {
-    createUserModule(
-        "  file = 'def';  ");
-    runSmoothBuild("myStruct");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "'file' is already defined at {slib}/slib.smooth:");
-  }
-
-  @Test
-  public void overriding_core_function_causes_error() throws Exception {
-    createUserModule(
-        "  aFile = 'abc';  ");
-    runSmoothBuild("aFile");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "'aFile' is already defined at");
-  }
-
-  @Test
   public void direct_function_recursion_causes_error() throws IOException {
     createUserModule(
         "  function1 = function1;  ");

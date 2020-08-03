@@ -71,38 +71,6 @@ public class StructTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void two_structs_with_same_name_causes_error() throws Exception {
-    createUserModule(
-        "  MyStruct {}      ",
-        "  MyStruct {}      ",
-        "  result = 'abc';  ");
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(2, "'MyStruct' is already defined at build.smooth:1.\n");
-  }
-
-  @Test
-  public void struct_with_same_name_as_basic_type_causes_error() throws Exception {
-    createUserModule(
-        "  String {}        ",
-        "  result = 'abc';  ");
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "'String' is already defined.\n");
-  }
-
-  @Test
-  public void struct_with_same_name_as_struct_type_from_standard_library_causes_error()
-      throws Exception {
-    createUserModule(
-        "  File {}          ",
-        "  result = 'abc';  ");
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "'File' is already defined");
-  }
-
-  @Test
   public void field_with_unknown_type_causes_error() throws Exception {
     createUserModule(
         "  MyStruct {           ",
