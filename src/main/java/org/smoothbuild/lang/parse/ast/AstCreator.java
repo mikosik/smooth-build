@@ -28,6 +28,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModulePath;
 
@@ -178,18 +179,18 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeContext type) {
-        if (type.TYPE_IDENTIFIER() != null) {
-          return createType(type.TYPE_IDENTIFIER());
+        if (type instanceof TypeIdentifierContext typeIdentifier) {
+          return createType(typeIdentifier);
         }
-        if (type.arrayType() != null) {
-          return createArrayType(type.arrayType());
+        if (type instanceof ArrayTypeContext arrayType) {
+          return createArrayType(arrayType);
         }
         throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
             + " without children.");
       }
 
-      private TypeNode createType(TerminalNode type) {
-        return new TypeNode(type.getText(), locationOf(path, type.getSymbol()));
+      private TypeNode createType(TypeIdentifierContext type) {
+        return new TypeNode(type.getText(), locationOf(path, type.TYPE_IDENTIFIER().getSymbol()));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {

@@ -19,9 +19,9 @@ argList     : arg ( ',' arg )* ','? ;
 arg         : ( name '=' )? pipe ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
 accessor    : '.' name ;
-type        : TYPE_IDENTIFIER
-            | arrayType ;
-arrayType   : '[' type ']' ;
+type        : TYPE_IDENTIFIER      # typeIdentifier
+            | '[' type ']'         # arrayType
+            ;
 name        : IDENTIFIER ;
 
 IDENTIFIER        : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
