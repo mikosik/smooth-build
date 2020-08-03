@@ -114,7 +114,7 @@ public class AstCreator {
         List<CallContext> calls = pipe.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
-          // nameless piped argument's location is set to the pipe character '|'
+          // Location of nameless piped argument is set to the location of pipe character '|'.
           Location location = locationOf(path, pipe.p.get(i));
           List<ArgNode> args = new ArrayList<>();
           args.add(new ArgNode(null, result, location));
