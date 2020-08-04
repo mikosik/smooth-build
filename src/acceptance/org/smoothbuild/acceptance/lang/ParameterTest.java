@@ -2,11 +2,146 @@ package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class ParameterTest extends AcceptanceTestCase {
+  @Nested
+  class declaring_parameter_of_type {
+    @Test
+    public void bool() throws Exception {
+      createUserModule(
+          "  oneParameter(Bool bool) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void string() throws Exception {
+      createUserModule(
+          "  oneParameter(String string) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void blob() throws Exception {
+      createUserModule(
+          "  oneParameter(Blob blob) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void file() throws Exception {
+      createUserModule(
+          "  oneParameter(File file) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void nothing() throws Exception {
+      createUserModule(
+          "  oneParameter(Nothing nothing) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void value() throws Exception {
+      createUserModule(
+          "  oneParameter(Value value) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithError();
+      assertSysOutContainsParseError(1, "Undefined type 'Value'.\n");
+    }
+
+    @Test
+    public void generic() throws Exception {
+      createUserModule(
+          "  oneParameter(A param) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void undefined() throws Exception {
+      createUserModule(
+          "  oneParameter(Undefined undefined) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithError();
+      assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
+    }
+
+    @Test
+    public void bool_array() throws Exception {
+      createUserModule(
+          "  oneParameter([Bool] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void string_array() throws Exception {
+      createUserModule(
+          "  oneParameter([String] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void blob_array() throws Exception {
+      createUserModule(
+          "  oneParameter([Blob] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void file_array() throws Exception {
+      createUserModule(
+          "  oneParameter([File] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void nothing_array() throws Exception {
+      createUserModule(
+          "  oneParameter([Nothing] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void generic_array() throws Exception {
+      createUserModule(
+          "  oneParameter([A] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void array_of_unknown_type() throws Exception {
+      createUserModule(
+          "  oneParameter([Undefined] param) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithError();
+      assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
+    }
+
+    @Test
+    public void string_array2() throws Exception {
+      createUserModule(
+          "  oneParameter([[String]] array) = 'abc';  ");
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+  }
+
   @Test
   public void no_parameters() throws Exception {
     createUserModule(
@@ -15,136 +150,6 @@ public class ParameterTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
   }
 
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_bool() throws Exception {
-    createUserModule(
-        "  oneParameter(Bool bool) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_string() throws Exception {
-    createUserModule(
-        "  oneParameter(String string) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_blob() throws Exception {
-    createUserModule(
-        "  oneParameter(Blob blob) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_file() throws Exception {
-    createUserModule(
-        "  oneParameter(File file) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_nothing() throws Exception {
-    createUserModule(
-        "  oneParameter(Nothing nothing) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_not_possible_to_declare_parameter_of_type_value() throws Exception {
-    createUserModule(
-        "  oneParameter(Value value) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "Undefined type 'Value'.\n");
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_generic_type() throws Exception {
-    createUserModule(
-        "  oneParameter(A param) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_not_possible_to_declare_parameter_of_undefined_type() throws Exception {
-    createUserModule(
-        "  oneParameter(Undefined undefined) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_bool_array() throws Exception {
-    createUserModule(
-        "  oneParameter([Bool] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_string_array() throws Exception {
-    createUserModule(
-        "  oneParameter([String] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_blob_array() throws Exception {
-    createUserModule(
-        "  oneParameter([Blob] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_file_array() throws Exception {
-    createUserModule(
-        "  oneParameter([File] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_nothing_array() throws Exception {
-    createUserModule(
-        "  oneParameter([Nothing] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_generic_array() throws Exception {
-    createUserModule(
-        "  oneParameter([A] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
-
-  @Test
-  public void it_is_not_possible_to_declare_parameter_of_array_of_unknown_type() throws Exception {
-    createUserModule(
-        "  oneParameter([Undefined] param) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithError();
-    assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
-  }
-
-  @Test
-  public void it_is_possible_to_declare_parameter_of_type_string_array2() throws Exception {
-    createUserModule(
-        "  oneParameter([[String]] array) = 'abc';  ");
-    runSmoothList();
-    assertFinishedWithSuccess();
-  }
 
   @Test
   public void it_is_possible_to_declare_parameter_with_trailing_comma() throws Exception {
