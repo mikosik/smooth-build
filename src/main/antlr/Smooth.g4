@@ -6,7 +6,7 @@ fieldList   : field ( ',' field )* ','? ;
 field       : type name ;
 func        : type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
 paramList   : param ( ',' param )* ','? ;
-param       : type name ( '=' expr )? ;
+param       : type name ( '=' pipe )? ;
 pipe        : expr ( p+='|' call )* ;
 expr        : expr accessor
             | call

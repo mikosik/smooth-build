@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,7 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class ParameterTest extends AcceptanceTestCase {
   @Nested
-  class declaring_parameter_of_type {
+  class parameter_of_type {
     @Test
     public void bool() throws Exception {
       createUserModule(
@@ -139,6 +140,20 @@ public class ParameterTest extends AcceptanceTestCase {
           "  oneParameter([[String]] array) = 'abc';  ");
       runSmoothList();
       assertFinishedWithSuccess();
+    }
+  }
+
+  @Nested
+  class default_value_from {
+    @Test
+    public void pipe() throws Exception {
+      createUserModule(
+          "  oneParameter(String value = true() | if('abc', 'def')) = value;  ",
+          "  result = oneParameter();                                         ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("abc");
     }
   }
 
