@@ -251,6 +251,14 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void array_with_leading_comma_causes_error() throws Exception {
+    createUserModule(
+        "  result = [ , 'abc' ];  ");
+    runSmoothBuild("result");
+    assertFinishedWithError();
+  }
+
+  @Test
   public void array_with_elements_of_the_same_type() throws Exception {
     createUserModule(
         "  result = [ 'abc', 'def' ];  ");
