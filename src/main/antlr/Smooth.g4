@@ -17,7 +17,7 @@ expr        : expr accessor
 call        : name ( p='(' argList? ')' )? ;
 argList     : arg ( ',' arg )* ','? ;
 arg         : ( name '=' )? pipe ;
-array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
+array       : '[' ( pipe (',' pipe)* (',')? )?  ']' ;
 accessor    : '.' name ;
 type        : TYPE_IDENTIFIER      # typeIdentifier
             | '[' type ']'         # arrayType
