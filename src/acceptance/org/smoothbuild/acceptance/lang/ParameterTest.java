@@ -1,12 +1,13 @@
 package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.ThrowException;
+
+import okio.ByteString;
 
 public class ParameterTest extends AcceptanceTestCase {
   @Nested
@@ -145,6 +146,52 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Nested
   class default_value_from {
+    @Test
+    public void string_literal() throws Exception {
+      createUserModule(
+          "  oneParameter(String value = 'abc') = value;                      ",
+          "  result = oneParameter();                                         ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("abc");
+    }
+
+    @Test
+    public void blob_literal() throws Exception {
+      createUserModule(
+          "  oneParameter(Blob value = 0xAB) = value;                         ",
+          "  result = oneParameter();                                         ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContent("result"))
+          .isEqualTo(ByteString.of((byte) 0xAB));
+    }
+
+    @Test
+    public void field_read() throws Exception {
+      createUserModule(
+          "  MyStruct { String field }                                        ",
+          "  value = myStruct('abc');                                         ",
+          "  oneParameter(String value = value.field) = value;                ",
+          "  result = oneParameter();                                         ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("abc");
+    }
+
+    @Test
+    public void call() throws Exception {
+      createUserModule(
+          "  oneParameter(Bool value = true()) = value;                       ",
+          "  result = oneParameter();                                         ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContent("result"))
+          .isEqualTo(ByteString.of((byte) 1));
+    }
+
     @Test
     public void pipe() throws Exception {
       createUserModule(
