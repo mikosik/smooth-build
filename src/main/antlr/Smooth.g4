@@ -4,11 +4,11 @@ module      : ( struct | func )* EOF ;
 struct      : TYPE_IDENTIFIER '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
 field       : type name ;
-func        : type? name ( '(' paramList? ')' )? ('=' pipe)? ';' ;
+func        : type? name ( '(' paramList? ')' )? ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
-param       : type name ( '=' pipe )? ;
-pipe        : expr ( p+='|' call )* ;
-expr        : expr accessor
+param       : type name ( '=' expr )? ;
+expr        : nonPipeExpr ( p+='|' call )* ;
+nonPipeExpr : nonPipeExpr accessor
             | call
             | STRING
             | BLOB
@@ -16,8 +16,8 @@ expr        : expr accessor
             ;
 call        : name ( p='(' argList? ')' )? ;
 argList     : arg ( ',' arg )* ','? ;
-arg         : ( name '=' )? pipe ;
-array       : '[' ( pipe (',' pipe)* (',')? )?  ']' ;
+arg         : ( name '=' )? expr ;
+array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
 accessor    : '.' name ;
 type        : TYPE_IDENTIFIER      # typeIdentifier
             | '[' type ']'         # arrayType

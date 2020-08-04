@@ -22,9 +22,9 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NameContext;
+import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
-import org.smoothbuild.antlr.lang.SmoothParser.PipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
@@ -73,7 +73,7 @@ public class AstCreator {
         String name = nameContext.getText();
         List<ItemNode> params = createParams(func.paramList());
         visibleParams = paramNames(params);
-        ExprNode pipe = func.pipe() == null ? null : createPipe(func.pipe());
+        ExprNode pipe = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
         visibleParams = new HashSet<>();
         nodes.add(new FuncNode(type, name, params, pipe, locationOf(path, nameContext)));
@@ -102,15 +102,15 @@ public class AstCreator {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
         Location location = locationOf(path, param);
-        ExprNode defaultValue = param.pipe() != null
-            ? createPipe(param.pipe())
+        ExprNode defaultValue = param.expr() != null
+            ? createExpr(param.expr())
             : null;
         return new ItemNode(index, type, name, defaultValue, location);
       }
 
-      private ExprNode createPipe(PipeContext pipe) {
-        ExprContext initialExpression = pipe.expr();
-        ExprNode result = createExpr(initialExpression);
+      private ExprNode createExpr(ExprContext pipe) {
+        NonPipeExprContext initialExpression = pipe.nonPipeExpr();
+        ExprNode result = createNonPipeExpr(initialExpression);
         List<CallContext> calls = pipe.call();
         for (int i = 0; i < calls.size(); i++) {
           CallContext call = calls.get(i);
@@ -125,15 +125,15 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode createExpr(ExprContext expr) {
+      private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
         if (expr.accessor() != null) {
-          ExprNode structExpr = createExpr(expr.expr());
+          ExprNode structExpr = createNonPipeExpr(expr.nonPipeExpr());
           AccessorContext accessor = expr.accessor();
           String name = accessor.name().getText();
           return new AccessorNode(structExpr, name, locationOf(path, accessor));
         }
         if (expr.array() != null) {
-          List<ExprNode> elements = map(expr.array().pipe(), this::createPipe);
+          List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
           return new ArrayNode(elements, locationOf(path, expr));
         }
         if (expr.call() != null) {
@@ -157,7 +157,7 @@ public class AstCreator {
           return new BlobNode(
               expr.BLOB().getText().substring(2), locationOf(path, expr));
         }
-        throw new RuntimeException("Illegal parse tree: " + ExprContext.class.getSimpleName()
+        throw new RuntimeException("Illegal parse tree: " + NonPipeExprContext.class.getSimpleName()
             + " without children.");
       }
 
@@ -167,10 +167,10 @@ public class AstCreator {
           List<ArgContext> args = argList.arg();
           for (int i = 0; i < args.size(); i++) {
             ArgContext arg = args.get(i);
-            PipeContext pipe = arg.pipe();
+            ExprContext pipe = arg.expr();
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
-            ExprNode exprNode = createPipe(pipe);
+            ExprNode exprNode = createExpr(pipe);
             result.add(new ArgNode(name, exprNode, locationOf(path, arg)));
           }
         }
