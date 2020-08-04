@@ -165,8 +165,7 @@ public class AstCreator {
         List<ArgNode> result = new ArrayList<>();
         if (argList != null) {
           List<ArgContext> args = argList.arg();
-          for (int i = 0; i < args.size(); i++) {
-            ArgContext arg = args.get(i);
+          for (ArgContext arg : args) {
             ExprContext pipe = arg.expr();
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
