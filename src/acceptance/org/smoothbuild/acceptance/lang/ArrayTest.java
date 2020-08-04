@@ -7,199 +7,211 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class ArrayTest extends AcceptanceTestCase {
-  @Test
-  public void empty_array_of_nothings() throws Exception {
-    createUserModule(
-        "  result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
+  @Nested
+  class empty_array_of {
+    @Test
+    public void blobs() throws Exception {
+      createUserModule(
+          "  [Blob] result = [];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void bools() throws Exception {
+      createUserModule(
+          "  [Bool] result = [];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void nothings() throws Exception {
+      createUserModule(
+          "  result = [];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void strings() throws Exception {
+      createUserModule(
+          "  [String] result = [];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list());
+    }
+
+    @Test
+    public void files() throws Exception {
+      createUserModule(
+          "  [File] result = [];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list());
+    }
+
+    @Nested
+    class arrays_of {
+      @Test
+      public void nothings() throws Exception {
+        createUserModule(
+            "  [[Nothing]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+
+      @Test
+      public void bools() throws Exception {
+        createUserModule(
+            "  [[Bool]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+
+      @Test
+      public void strings() throws Exception {
+        createUserModule(
+            "  [[String]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+
+      @Test
+      public void blobs() throws Exception {
+        createUserModule(
+            "  [[Blob]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+
+      @Test
+      public void files() throws Exception {
+        createUserModule(
+            "  [[File]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+
+      @Test
+      public void arrays_of_nothings() throws Exception {
+        createUserModule(
+            "  [[[Nothing]]] result = [];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list());
+      }
+    }
   }
 
-  @Test
-  public void empty_array_of_bools() throws Exception {
-    createUserModule(
-        "  [Bool] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
+  @Nested
+  class array_of {
+    @Test
+    public void blobs() throws Exception {
+      createUserModule(
+          "  result = [ toBlob('abc'), toBlob('def') ];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("abc", "def"));
+    }
 
-  @Test
-  public void empty_array_of_strings() throws Exception {
-    createUserModule(
-        "  [String] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
+    @Test
+    public void bools() throws Exception {
+      createUserModule(
+          "  result = [ true(), false() ];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactAsByteStrings("result"))
+          .isEqualTo(list(trueByteString(), falseByteString()));
+    }
 
-  @Test
-  public void empty_array_of_blobs() throws Exception {
-    createUserModule(
-        "  [Blob] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
+    @Test
+    public void strings() throws Exception {
+      createUserModule(
+          "  result = [ 'abc', 'def' ];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("abc", "def"));
+    }
 
-  @Test
-  public void empty_array_of_files() throws Exception {
-    createUserModule(
-        "  [File] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
+    @Test
+    public void files() throws Exception {
+      createUserModule(
+          "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactTreeContentAsStrings("result"))
+          .containsExactly("file1.txt", "abc", "file2.txt", "def");
+    }
 
-  }
+    @Nested
+    class arrays_of {
+      @Test
+      public void nothings_with_one_element() throws Exception {
+        createUserModule(
+            "  [[Nothing]] result = [ [] ];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list(list()));
+      }
 
-  @Test
-  public void array_of_bools() throws Exception {
-    createUserModule(
-        "  result = [ true(), false() ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsByteStrings("result"))
-        .isEqualTo(list(trueByteString(), falseByteString()));
-  }
+      @Test
+      public void nothings_with_two_elements() throws Exception {
+        createUserModule(
+            "  [[Nothing]] result = [ [], [] ];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list(list(), list()));
+      }
 
-  @Test
-  public void array_of_strings() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', 'def' ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list("abc", "def"));
-  }
+      @Test
+      public void strings() throws Exception {
+        createUserModule(
+            "  [[String]] result = [ [], [ 'abc' ], [ 'def', 'ghi' ] ];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list(list(), list("abc"), list("def", "ghi")));
+      }
 
-  @Test
-  public void array_of_blobs() throws Exception {
-    createUserModule(
-        "  result = [ toBlob('abc'), toBlob('def') ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list("abc", "def"));
-  }
-
-  @Test
-  public void array_of_files() throws Exception {
-    createUserModule(
-        "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file1.txt", "abc", "file2.txt", "def");
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_nothings() throws Exception {
-    createUserModule(
-        "  [[Nothing]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void array_of_arrays_of_nothings_with_one_element() throws Exception {
-    createUserModule(
-        "  [[Nothing]] result = [ [] ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list(list()));
-  }
-
-  @Test
-  public void array_of_arrays_of_nothings_with_two_elements() throws Exception {
-    createUserModule(
-        "  [[Nothing]] result = [ [], [] ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list(list(), list()));
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_bools() throws Exception {
-    createUserModule(
-        "  [[Bool]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_strings() throws Exception {
-    createUserModule(
-        "  [[String]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_blobs() throws Exception {
-    createUserModule(
-        "  [[Blob]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_files() throws Exception {
-    createUserModule(
-        "  [[File]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void array_of_arrays_of_strings() throws Exception {
-    createUserModule(
-        "  [[String]] result = [ [], [ 'abc' ], [ 'def', 'ghi' ] ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list(list(), list("abc"), list("def", "ghi")));
-  }
-
-  @Test
-  public void empty_array_of_arrays_of_arrays_of_nothings() throws Exception {
-    createUserModule(
-        "  [[[Nothing]]] result = [];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list());
-  }
-
-  @Test
-  public void array_of_arrays_of_arrays_of_strings() throws Exception {
-    createUserModule(
-        "  [[[String]]] result = [ [ [] ], [ [ 'abc' ], [ 'def', 'ghi' ] ] ];  ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list(list(list()), list(list("abc"), list("def", "ghi"))));
+      @Test
+      public void arrays_of_strings() throws Exception {
+        createUserModule(
+            "  [[[String]]] result = [ [ [] ], [ [ 'abc' ], [ 'def', 'ghi' ] ] ];  ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(stringifiedArtifact("result"))
+            .isEqualTo(list(list(list()), list(list("abc"), list("def", "ghi"))));
+      }
+    }
   }
 
   @Test
