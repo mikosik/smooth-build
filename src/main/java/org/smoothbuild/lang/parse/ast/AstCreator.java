@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
@@ -103,8 +102,8 @@ public class AstCreator {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
         Location location = locationOf(path, param);
-        ExprNode defaultValue = param.expr() != null
-            ? createExpr(param.expr())
+        ExprNode defaultValue = param.pipe() != null
+            ? createPipe(param.pipe())
             : null;
         return new ItemNode(index, type, name, defaultValue, location);
       }
