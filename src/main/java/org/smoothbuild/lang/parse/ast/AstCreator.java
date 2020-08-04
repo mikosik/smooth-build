@@ -134,7 +134,7 @@ public class AstCreator {
           return new AccessorNode(structExpr, name, locationOf(path, accessor));
         }
         if (expr.array() != null) {
-          List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
+          List<ExprNode> elements = map(expr.array().pipe(), this::createPipe);
           return new ArrayNode(elements, locationOf(path, expr));
         }
         if (expr.call() != null) {

@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 0.20.0 (??????????)
+
+ * changed smooth language to allow pipe as element of array literal
+
 Version 0.19.0 (2020.08.03)
 ---------------------------
 

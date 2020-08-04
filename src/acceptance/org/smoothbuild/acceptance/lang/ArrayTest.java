@@ -214,6 +214,61 @@ public class ArrayTest extends AcceptanceTestCase {
     }
   }
 
+  @Nested
+  class array_with {
+    @Test
+    public void string_literal() throws Exception {
+      createUserModule(
+          "  result = [ 'abc' ]; ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("abc"));
+    }
+
+    @Test
+    public void blob_literal() throws Exception {
+      createUserModule(
+          "  result = [ 0x41 ]; ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("A"));
+    }
+
+    @Test
+    public void field_read() throws Exception {
+      createUserModule(
+          "  MyStruct { String field }",
+          "  value = myStruct('abc');",
+          "  result = [ value.field ]; ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("abc"));
+    }
+
+    @Test
+    public void pipe() throws Exception {
+      createUserModule(
+          "  result = [ true() | if('then', 'else') ]; ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("then"));
+    }
+
+    @Test
+    public void call() throws Exception {
+      createUserModule(
+          "  result = [ if(true(), 'then', 'else') ]; ");
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(stringifiedArtifact("result"))
+          .isEqualTo(list("then"));
+    }
+  }
+
   @Test
   public void empty_array_with_comma_causes_error() throws Exception {
     createUserModule(
