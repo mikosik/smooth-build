@@ -215,21 +215,6 @@ public class ArrayTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
-    createUserModule(
-        "  myFile = file(toBlob('abc'), 'file.txt');  ",
-        "  result = [ myFile, myFile ];                 ");
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains(
-        "Saving artifact(s)",
-        "  result -> ???",
-        "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
-        "       'file.txt'",
-        "");
-  }
-
-  @Test
   public void empty_array_with_comma_causes_error() throws Exception {
     createUserModule(
         "  result = [,];  ");
