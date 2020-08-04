@@ -7,14 +7,18 @@ field       : type name ;
 func        : type? name ( '(' paramList? ')' )? ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type name ( '=' expr )? ;
-expr        : nonPipeExpr ( p+='|' call )* ;
+expr        : nonPipeExpr ( p+='|' callInPipe )* ;
 nonPipeExpr : nonPipeExpr accessor
             | call
+            | name
             | STRING
             | BLOB
             | array
             ;
-call        : name ( p='(' argList? ')' )? ;
+callInPipe  : call
+            | name
+            ;
+call        : name p='(' argList? ')' ;
 argList     : arg ( ',' arg )* ','? ;
 arg         : ( name '=' )? expr ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;

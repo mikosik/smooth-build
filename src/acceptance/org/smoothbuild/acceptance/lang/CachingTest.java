@@ -11,9 +11,10 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void result_from_cacheable_function_is_cached() throws Exception {
     createNativeJar(CacheableRandom.class);
-    createUserModule(
-        "  String cacheableRandom();  ",
-        "  result = cacheableRandom;  ");
+    createUserModule("""
+            String cacheableRandom();
+            result = cacheableRandom();
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     String resultFromFirstRun = artifactFileContentAsString("result");
@@ -28,10 +29,11 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void result_from_not_cacheable_function_is_cached_within_single_run() throws Exception {
     createNativeJar(NotCacheableRandom.class);
-    createUserModule(
-        "  String notCacheableRandom();   ",
-        "  resultA = notCacheableRandom;  ",
-        "  resultB = notCacheableRandom;  ");
+    createUserModule("""
+            String notCacheableRandom();
+            resultA = notCacheableRandom();
+            resultB = notCacheableRandom();
+            """);
     runSmoothBuild("resultA", "resultB");
     assertFinishedWithSuccess();
 
@@ -42,9 +44,10 @@ public class CachingTest extends AcceptanceTestCase {
   @Test
   public void result_from_not_cacheable_function_is_not_cached_between_runs() throws Exception {
     createNativeJar(NotCacheableRandom.class);
-    createUserModule(
-        "  String notCacheableRandom();  ",
-        "  result = notCacheableRandom;  ");
+    createUserModule("""
+            String notCacheableRandom();
+            result = notCacheableRandom();
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     String resultFromFirstRun = artifactFileContentAsString("result");

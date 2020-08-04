@@ -238,10 +238,13 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void field_read() throws Exception {
-      createUserModule(
-          "  MyStruct { String field }",
-          "  value = myStruct('abc');",
-          "  result = [ value.field ]; ");
+      createUserModule("""
+              MyStruct {
+                String field,
+              }
+              value = myStruct('abc');
+              result = [ value().field ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -325,9 +328,10 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_elements_of_compatible_types() throws Exception {
-    createUserModule(
-        "  myFile = file(toBlob('abc'), 'file.txt');  ",
-        "  result = [ myFile, toBlob('def') ];          ");
+    createUserModule("""
+            myFile = file(toBlob('abc'), 'file.txt');
+            result = [ myFile(), toBlob('def') ];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))

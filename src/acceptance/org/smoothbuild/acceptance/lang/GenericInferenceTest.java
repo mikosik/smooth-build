@@ -176,13 +176,14 @@ public class GenericInferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_append_function_3() throws Exception {
     createNativeJar(Append.class);
-    createUserModule(
-        "  [A] testAppend([A] array, A element);                                          ",
-        "  StringStruct {                                                                 ",
-        "    String value                                                                 ",
-        "  }                                                                              ",
-        "  [String] emptyStringArray = [];                                                ",
-        "  result = testAppend(array = emptyStringArray, element = stringStruct('bbb'));  ");
+    createUserModule("""
+            [A] testAppend([A] array, A element);
+            StringStruct {
+              String value
+            }
+            [String] emptyStringArray = [];
+            result = testAppend(array = emptyStringArray(), element = stringStruct("bbb"));
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
