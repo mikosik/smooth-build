@@ -1,21 +1,20 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.CallContext;
+import org.smoothbuild.antlr.lang.SmoothParser.CallInPipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
@@ -31,13 +30,13 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModulePath;
 
+import com.google.common.collect.ImmutableList;
+
 public class AstCreator {
   public static Ast fromParseTree(ModulePath path, ModuleContext module) {
     List<FuncNode> nodes = new ArrayList<>();
     List<StructNode> structs = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
-      private Set<String> visibleParams = new HashSet<>();
-
       @Override
       public Void visitStruct(StructContext struct) {
         String name = struct.TYPE_IDENTIFIER().getText();
@@ -72,19 +71,10 @@ public class AstCreator {
         NameContext nameContext = func.name();
         String name = nameContext.getText();
         List<ItemNode> params = createParams(func.paramList());
-        visibleParams = paramNames(params);
         ExprNode pipe = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
-        visibleParams = new HashSet<>();
         nodes.add(new FuncNode(type, name, params, pipe, locationOf(path, nameContext)));
         return null;
-      }
-
-      private Set<String> paramNames(List<ItemNode> params) {
-        return params
-            .stream()
-            .map(NamedNode::name)
-            .collect(toSet());
       }
 
       private List<ItemNode> createParams(ParamListContext paramList) {
@@ -111,18 +101,30 @@ public class AstCreator {
       private ExprNode createExpr(ExprContext pipe) {
         NonPipeExprContext initialExpression = pipe.nonPipeExpr();
         ExprNode result = createNonPipeExpr(initialExpression);
-        List<CallContext> calls = pipe.call();
-        for (int i = 0; i < calls.size(); i++) {
-          CallContext call = calls.get(i);
-          // Location of nameless piped argument is set to the location of pipe character '|'.
-          Location location = locationOf(path, pipe.p.get(i));
-          List<ArgNode> args = new ArrayList<>();
-          args.add(new ArgNode(null, result, location));
-          args.addAll(createArgList(call.argList()));
-          String name = call.name().getText();
-          result = new CallNode(name, args, locationOf(path, call.name()));
+        List<CallInPipeContext> callsInPipe = pipe.callInPipe();
+        for (int i = 0; i < callsInPipe.size(); i++) {
+          CallInPipeContext callInPipe = callsInPipe.get(i);
+          if (callInPipe.call() != null) {
+            CallContext call = callInPipe.call();
+            result = createCallInPipe(result, pipe, i, call.name(), createArgList(call.argList()));
+          } else if (callInPipe.name() != null) {
+            NameContext call = callInPipe.name();
+            result = createCallInPipe(result, pipe, i, call, ImmutableList.of());
+          } else {
+            throw new RuntimeException("ExprContext without 'call' nor 'name'.");
+          }
         }
         return result;
+      }
+
+      private ExprNode createCallInPipe(ExprNode result, ExprContext pipe, int i,
+          ParserRuleContext calledName, List<ArgNode> argList) {
+        // Location of nameless piped argument is set to the location of pipe character '|'.
+        Location location = locationOf(path, pipe.p.get(i));
+        List<ArgNode> args = new ArrayList<>();
+        args.add(new ArgNode(null, result, location));
+        args.addAll(argList);
+        return new CallNode(calledName.getText(), args, locationOf(path, calledName));
       }
 
       private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
@@ -138,15 +140,13 @@ public class AstCreator {
         }
         if (expr.call() != null) {
           CallContext call = expr.call();
-          String name = call.name().getText();
-          Location location = locationOf(path, call.name());
-          if (visibleParams.contains(name)) {
-            boolean hasParentheses = call.p != null;
-            return new RefNode(name, hasParentheses, location);
-          } else {
-            List<ArgNode> args = createArgList(call.argList());
-            return new CallNode(name, args, location);
-          }
+          Location location = locationOf(path, call);
+          List<ArgNode> args = createArgList(call.argList());
+          return new CallNode(call.name().getText(), args, location);
+        }
+        if (expr.name() != null) {
+          NameContext name = expr.name();
+          return new RefNode(name.getText(), locationOf(path, name));
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();

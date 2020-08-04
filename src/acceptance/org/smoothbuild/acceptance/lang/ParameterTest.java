@@ -170,11 +170,14 @@ public class ParameterTest extends AcceptanceTestCase {
 
     @Test
     public void field_read() throws Exception {
-      createUserModule(
-          "  MyStruct { String field }                                        ",
-          "  value = myStruct('abc');                                         ",
-          "  oneParameter(String value = value.field) = value;                ",
-          "  result = oneParameter();                                         ");
+      createUserModule("""
+              MyStruct {
+                String field,
+              }
+              value = myStruct('abc');
+              oneParameter(String value = value().field) = value;
+              result = oneParameter();
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -288,7 +291,8 @@ public class ParameterTest extends AcceptanceTestCase {
         "  result = func('abc');          ");
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContainsParseError(1, "Parameter 'param' cannot be called as it is not a function.\n");
+    assertSysOutContainsParseError(
+        1, "Parameter 'param' cannot be called as it is not a function.");
   }
 
   @Test

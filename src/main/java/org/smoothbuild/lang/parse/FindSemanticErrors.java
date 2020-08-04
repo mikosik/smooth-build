@@ -1,6 +1,8 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toSet;
+import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
@@ -14,6 +16,7 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -36,7 +39,6 @@ public class FindSemanticErrors {
   public static void findSemanticErrors(Definitions imported, Ast ast, Logger logger) {
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
-    parametersReferenceWithParentheses(logger, ast);
     undefinedReferences(logger, imported, ast);
     undefinedTypes(logger, imported, ast);
     duplicateGlobalNames(logger, imported, ast);
@@ -76,30 +78,46 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void parametersReferenceWithParentheses(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitRef(RefNode ref) {
-        super.visitRef(ref);
-        if (ref.hasParentheses()) {
-          logger.log(parseError(ref, "Parameter '" + ref.name()
-              + "' cannot be called as it is not a function."));
-        }
-      }
-    }.visitAst(ast);
-  }
-
   private static void undefinedReferences(Logger logger, Definitions imported, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
         .addAll(imported.callables().keySet())
         .addAll(ast.callableNames())
         .build();
     new AstVisitor() {
+      Scope<String> scope = scope();
+      @Override
+      public void visitFunc(FuncNode func) {
+        func.visitType(this);
+        Scope<String> innerScope = scope(scope);
+        func.params().stream()
+            .map(NamedNode::name)
+            .collect(toSet())
+            .forEach(n -> innerScope.add(n, null));
+
+        scope = innerScope;
+        func.visitExpr(this);
+        scope = scope.outerScope();
+
+        visitCallable(func);
+      }
+
+      @Override
+      public void visitRef(RefNode ref) {
+        super.visitRef(ref);
+        if (!scope.contains(ref.name())) {
+          logger.log(parseError(ref.location(), "'" + ref.name() + "' is undefined."));
+        }
+      }
+
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        if (!all.contains(call.calledName())) {
-          logger.log(parseError(call.location(), "'" + call.calledName() + "' is undefined."));
+        String name = call.calledName();
+        if (scope.contains(name)) {
+          logger.log(parseError(call.location(), "Parameter '" + name
+              + "' cannot be called as it is not a function."));
+        } else if (!all.contains(name)) {
+          logger.log(parseError(call.location(), "'" + name + "' is undefined."));
         }
       }
     }.visitAst(ast);

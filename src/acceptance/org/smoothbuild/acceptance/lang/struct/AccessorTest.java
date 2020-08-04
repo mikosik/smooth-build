@@ -65,12 +65,12 @@ public class AccessorTest extends AcceptanceTestCase {
 
   @Test
   public void applying_accessor_to_string_object_causes_error() throws Exception {
-    createUserModule(
-        "  value = 'abc';                 ",
-        "  result = value.accessedField;  ");
+    createUserModule("""
+            result = "abc".accessedField;
+            """);
     runSmoothList();
     assertFinishedWithError();
-    assertSysOutContainsParseError(2, "Type 'String' doesn't have field 'accessedField'.");
+    assertSysOutContainsParseError(1, "Type 'String' doesn't have field 'accessedField'.");
   }
 
   @Test

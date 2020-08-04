@@ -49,9 +49,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   public void native_declaration_without_native_implementation_causes_error()
       throws Exception {
     createNativeJar(OneStringParameter.class);
-    createUserModule(
-        "  String function;    ",
-        "  result = function;  ");
+    createUserModule("""
+            String function;
+            result = function();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function 'function' is native but does not have native implementation.\n");
@@ -118,9 +119,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_without_declared_result_type_causes_error() throws Exception {
     createNativeJar(OneStringParameter.class);
-    createUserModule(
-        "  oneStringParameter;           ",
-        "  result = oneStringParameter;  ");
+    createUserModule("""
+            oneStringParameter();
+            result = oneStringParameter();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
@@ -155,9 +157,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_with_too_many_parameters_causes_error() throws Exception {
     createNativeJar(OneStringParameter.class);
-    createUserModule(
-        "  String oneStringParameter;    ",
-        "  result = oneStringParameter;  ");
+    createUserModule("""
+            String oneStringParameter;
+            result = oneStringParameter();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
@@ -208,9 +211,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void exception_from_native_is_reported_as_error() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule(
-        "  Nothing throwException();  ",
-        "  result = throwException;   ");
+    createUserModule("""
+            Nothing throwException();
+            result = throwException();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function throwException threw java exception from its native code.");
@@ -233,9 +237,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void error_wrapping_exception_from_native_is_not_cached() throws Exception {
     createNativeJar(ThrowRandomException.class);
-    createUserModule(
-        "  String throwRandomException();  ",
-        "  result = throwRandomException;  ");
+    createUserModule("""
+            String throwRandomException();
+            result = throwRandomException();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     String timestamp1 = fetchTimestamp(sysOut());
@@ -292,9 +297,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_adds_element_of_wrong_type_to_array_causes_error() throws Exception {
     createNativeJar(AddElementOfWrongTypeToArray.class);
-    createUserModule(
-        "  [Blob] addElementOfWrongTypeToArray();  ",
-        "  result = addElementOfWrongTypeToArray;  ");
+    createUserModule("""
+            [Blob] addElementOfWrongTypeToArray();
+            result = addElementOfWrongTypeToArray();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
@@ -305,9 +311,10 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_that_returns_array_of_wrong_type_causes_error() throws Exception {
     createNativeJar(EmptyStringArray.class);
-    createUserModule(
-        "  [Blob] emptyStringArray();  ",
-        "  result = emptyStringArray;  ");
+    createUserModule("""
+            [Blob] emptyStringArray();
+            result = emptyStringArray();
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Function emptyStringArray has faulty native implementation: "

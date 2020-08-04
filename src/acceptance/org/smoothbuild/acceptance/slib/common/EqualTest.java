@@ -117,21 +117,21 @@ public class EqualTest extends AcceptanceTestCase {
   @Test
   public void struct_cannot_be_compared_to_different_struct_when_their_first_field_types_are_not_equal()
       throws Exception {
-    createUserModule(
-        "  Person {                                                      ",
-        "    String firstName,                                           ",
-        "    String secondName,                                          ",
-        "  }                                                             ",
-        "  Person2 {                                                     ",
-        "    Bool   firstName,                                           ",
-        "    String secondName,                                          ",
-        "  }                                                             ",
-        "                                                                ",
-        "  result = equal(person('aaa', 'bbb'), person2(true, 'bbb'));   ");
+    createUserModule("""
+            Person {
+              String firstName,
+              String secondName,
+            }
+            Person2 {
+              Bool firstName,
+              String secondName,
+            }
+            result = equal(person("aaa", "bbb"), person2(true(), "bbb"));
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(
-        10, "Cannot infer actual type(s) for generic parameter(s) in call to 'equal'.");
+        9, "Cannot infer actual type(s) for generic parameter(s) in call to 'equal'.");
   }
 
   @Test
@@ -156,10 +156,11 @@ public class EqualTest extends AcceptanceTestCase {
 
   @Test
   public void empty_nothing_arrays_is_equal_to_empty_string_array() throws Exception {
-    createUserModule(
-        "  [Nothing] nothingArray = [];                ",
-        "  [String] stringArray = [];                  ",
-        "  result = equal(nothingArray, stringArray);  ");
+    createUserModule("""
+            [Nothing] nothingArray = [];
+            [String] stringArray = [];
+            result = equal(nothingArray(), stringArray());
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
