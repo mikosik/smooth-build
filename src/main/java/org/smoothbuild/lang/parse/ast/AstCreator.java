@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(ModulePath path, ModuleContext module) {
-    List<FuncNode> nodes = new ArrayList<>();
+    List<FuncNode> funcs = new ArrayList<>();
     List<StructNode> structs = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
@@ -73,7 +73,7 @@ public class AstCreator {
         List<ItemNode> params = createParams(func.paramList());
         ExprNode pipe = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
-        nodes.add(new FuncNode(type, name, params, pipe, locationOf(path, nameContext)));
+        funcs.add(new FuncNode(type, name, params, pipe, locationOf(path, nameContext)));
         return null;
       }
 
@@ -196,6 +196,6 @@ public class AstCreator {
         return new ArrayTypeNode(elementType, locationOf(path, arrayType));
       }
     }.visit(module);
-    return new Ast(structs, nodes);
+    return new Ast(structs, funcs);
   }
 }
