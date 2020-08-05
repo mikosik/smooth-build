@@ -27,6 +27,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
+import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModulePath;
 
@@ -34,8 +35,8 @@ import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(ModulePath path, ModuleContext module) {
-    List<FuncNode> funcs = new ArrayList<>();
     List<StructNode> structs = new ArrayList<>();
+    List<EvaluableNode> evaluables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -66,14 +67,25 @@ public class AstCreator {
       }
 
       @Override
+      public Void visitValue(ValueContext value) {
+        TypeNode type = value.type() == null ? null : createType(value.type());
+        NameContext nameContext = value.name();
+        String name = nameContext.getText();
+        ExprNode expr = value.expr() == null ? null : createExpr(value.expr());
+        visitChildren(value);
+        evaluables.add(new ValueNode(type, name, expr, locationOf(path, nameContext)));
+        return null;
+      }
+
+      @Override
       public Void visitFunc(FuncContext func) {
         TypeNode type = func.type() == null ? null : createType(func.type());
         NameContext nameContext = func.name();
         String name = nameContext.getText();
         List<ItemNode> params = createParams(func.paramList());
-        ExprNode pipe = func.expr() == null ? null : createExpr(func.expr());
+        ExprNode expr = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
-        funcs.add(new FuncNode(type, name, params, pipe, locationOf(path, nameContext)));
+        evaluables.add(new FuncNode(type, name, params, expr, locationOf(path, nameContext)));
         return null;
       }
 
@@ -98,18 +110,18 @@ public class AstCreator {
         return new ItemNode(index, type, name, defaultValue, location);
       }
 
-      private ExprNode createExpr(ExprContext pipe) {
-        NonPipeExprContext initialExpression = pipe.nonPipeExpr();
+      private ExprNode createExpr(ExprContext expr) {
+        NonPipeExprContext initialExpression = expr.nonPipeExpr();
         ExprNode result = createNonPipeExpr(initialExpression);
-        List<CallInPipeContext> callsInPipe = pipe.callInPipe();
+        List<CallInPipeContext> callsInPipe = expr.callInPipe();
         for (int i = 0; i < callsInPipe.size(); i++) {
           CallInPipeContext callInPipe = callsInPipe.get(i);
           if (callInPipe.call() != null) {
             CallContext call = callInPipe.call();
-            result = createCallInPipe(result, pipe, i, call.name(), createArgList(call.argList()));
+            result = createCallInPipe(result, expr, i, call.name(), createArgList(call.argList()));
           } else if (callInPipe.name() != null) {
             NameContext call = callInPipe.name();
-            result = createCallInPipe(result, pipe, i, call, ImmutableList.of());
+            result = createCallInPipe(result, expr, i, call, ImmutableList.of());
           } else {
             throw new RuntimeException("ExprContext without 'call' nor 'name'.");
           }
@@ -117,10 +129,10 @@ public class AstCreator {
         return result;
       }
 
-      private ExprNode createCallInPipe(ExprNode result, ExprContext pipe, int i,
+      private ExprNode createCallInPipe(ExprNode result, ExprContext expr, int i,
           ParserRuleContext calledName, List<ArgNode> argList) {
         // Location of nameless piped argument is set to the location of pipe character '|'.
-        Location location = locationOf(path, pipe.p.get(i));
+        Location location = locationOf(path, expr.p.get(i));
         List<ArgNode> args = new ArrayList<>();
         args.add(new ArgNode(null, result, location));
         args.addAll(argList);
@@ -166,10 +178,10 @@ public class AstCreator {
         if (argList != null) {
           List<ArgContext> args = argList.arg();
           for (ArgContext arg : args) {
-            ExprContext pipe = arg.expr();
+            ExprContext expr = arg.expr();
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
-            ExprNode exprNode = createExpr(pipe);
+            ExprNode exprNode = createExpr(expr);
             result.add(new ArgNode(name, exprNode, locationOf(path, arg)));
           }
         }
@@ -196,6 +208,6 @@ public class AstCreator {
         return new ArrayTypeNode(elementType, locationOf(path, arrayType));
       }
     }.visit(module);
-    return new Ast(structs, funcs);
+    return new Ast(structs, evaluables);
   }
 }

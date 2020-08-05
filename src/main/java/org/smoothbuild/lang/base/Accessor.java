@@ -15,6 +15,11 @@ public class Accessor extends Callable {
   }
 
   @Override
+  public String extendedName() {
+    return "." + signature().name();
+  }
+
+  @Override
   public ConcreteType type() {
     return (ConcreteType) signature().type();
   }

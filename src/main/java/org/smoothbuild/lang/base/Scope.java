@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.base;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -50,5 +52,19 @@ public class Scope<E> {
       throw new IllegalStateException("This is top level scope. It doesn't have outer scope.");
     }
     return outerScope;
+  }
+
+  @Override
+  public String toString() {
+    String outer = outerScope == null ? "" : outerScope.toString() + "\n";
+    String inner = bindings.entrySet().stream()
+        .map(Object::toString)
+        .map(s -> indent() + s)
+        .collect(joining("\n"));
+    return outer + inner;
+  }
+
+  private String indent() {
+    return outerScope == null ? "" : outerScope.indent() + "  ";
   }
 }

@@ -182,7 +182,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
               String value
             }
             [String] emptyStringArray = [];
-            result = testAppend(array = emptyStringArray(), element = stringStruct("bbb"));
+            result = testAppend(array = emptyStringArray, element = stringStruct("bbb"));
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

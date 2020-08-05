@@ -158,7 +158,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     createUserModule("""
             myFile = file(toBlob("abc"), "file.txt");
-            result = [ myFile(), myFile() ];
+            result = [ myFile, myFile ];
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

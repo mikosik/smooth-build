@@ -243,7 +243,7 @@ public class ArrayTest extends AcceptanceTestCase {
                 String field,
               }
               value = myStruct('abc');
-              result = [ value().field ];
+              result = [ value.field ];
               """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -330,7 +330,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void array_with_elements_of_compatible_types() throws Exception {
     createUserModule("""
             myFile = file(toBlob('abc'), 'file.txt');
-            result = [ myFile(), toBlob('def') ];
+            result = [ myFile, toBlob('def') ];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -353,7 +353,7 @@ public class ArrayTest extends AcceptanceTestCase {
   public void first_element_expression_error_doesnt_suppress_second_element_expression_error()
       throws IOException {
     createUserModule(
-        "  function1 = 'abc';                                            ",
+        "  function1() = 'abc';                                            ",
         "  result = [ function1(unknown1=''), function1(unknown2='') ];  ");
     runSmoothBuild("result");
     assertFinishedWithError();

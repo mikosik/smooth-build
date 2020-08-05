@@ -135,4 +135,20 @@ public class ScopeTest {
     assertThat(outerScope.contains("name"))
         .isFalse();
   }
+
+  @Test
+  public void to_string() {
+    outerScope = scope();
+    outerScope.add("valueAbc", "abc");
+    outerScope.add("valueDef", "def");
+    scope = scope(outerScope);
+    scope.add("valueGhi", "ghi");
+    scope.add("valueJkl", "jkl");
+    assertThat(scope.toString())
+        .isEqualTo("""
+            valueAbc=abc
+            valueDef=def
+              valueGhi=ghi
+              valueJkl=jkl""");
+  }
 }

@@ -56,7 +56,7 @@ public class FunctionTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
-      assertSysOutContains("Function call graph contains cycle");
+      assertSysOutContains("Call graph contains cycle");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FunctionTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
-      assertSysOutContains("Function call graph contains cycle");
+      assertSysOutContains("Call graph contains cycle");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class FunctionTest extends AcceptanceTestCase {
               """);
       runSmoothBuild("function1");
       assertFinishedWithError();
-      assertSysOutContains("Function call graph contains cycle");
+      assertSysOutContains("Call graph contains cycle");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class FunctionTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
-      assertSysOutContains("Function call graph contains cycle");
+      assertSysOutContains("Call graph contains cycle");
     }
   }
 
@@ -122,12 +122,13 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void outside_pipe_causes_error() throws IOException {
       createUserModule("""
-            function1 = "abc";
+            function1() = "abc";
             result    = function1;
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContainsParseError(2, "'function1' is undefined.");
+      assertSysOutContainsParseError(
+          2, "'function1' is a function and cannot be accessed as a value.");
     }
 
     @Test
@@ -263,7 +264,7 @@ public class FunctionTest extends AcceptanceTestCase {
     public void function_with_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
         throws IOException {
       createUserModule("""
-              [A] result = [];
+              [A] result() = [];
               """);
       runSmoothList();
       assertFinishedWithError();
@@ -306,7 +307,7 @@ public class FunctionTest extends AcceptanceTestCase {
     public void function_result_cannot_be_assigned_to_non_convertible_type_even_when_function_expression_is_convertible()
         throws IOException {
       createUserModule("""
-              Blob func = file(toBlob("abc"), "file.txt");
+              Blob func() = file(toBlob("abc"), "file.txt");
               File result = func();
               """);
       runSmoothBuild("result");

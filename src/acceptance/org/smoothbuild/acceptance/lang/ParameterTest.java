@@ -175,7 +175,7 @@ public class ParameterTest extends AcceptanceTestCase {
                 String field,
               }
               value = myStruct('abc');
-              oneParameter(String value = value().field) = value;
+              oneParameter(String value = value.field) = value;
               result = oneParameter();
               """);
       runSmoothBuild("result");

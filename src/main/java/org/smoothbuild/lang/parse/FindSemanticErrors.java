@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
@@ -22,6 +20,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
+import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.Named;
@@ -30,16 +29,15 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
+import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.UnescapingFailedException;
-
-import com.google.common.collect.ImmutableSet;
 
 public class FindSemanticErrors {
   public static void findSemanticErrors(Definitions imported, Ast ast, Logger logger) {
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
-    undefinedReferences(logger, imported, ast);
+    resolveReferences(logger, imported, ast);
     undefinedTypes(logger, imported, ast);
     duplicateGlobalNames(logger, imported, ast);
     duplicateFieldNames(logger, ast);
@@ -78,21 +76,19 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void undefinedReferences(Logger logger, Definitions imported, Ast ast) {
-    Set<String> all = ImmutableSet.<String>builder()
-        .addAll(imported.callables().keySet())
-        .addAll(ast.callablesMap().keySet())
-        .build();
+  private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
+    Scope<Named> importedScope = scope();
+    imported.evaluables().forEach(importedScope::add);
+    Scope<Named> localScope = scope(importedScope);
+    ast.evaluablesMap().forEach(localScope::add);
+
     new AstVisitor() {
-      Scope<String> scope = scope();
+      Scope<Named> scope = localScope;
       @Override
       public void visitFunc(FuncNode func) {
         func.visitType(this);
-        Scope<String> innerScope = scope(scope);
-        func.params().stream()
-            .map(NamedNode::name)
-            .collect(toSet())
-            .forEach(n -> innerScope.add(n, null));
+        var innerScope = scope(scope);
+        func.params().forEach(p -> innerScope.addOrReplace(p.name(), p));
 
         scope = innerScope;
         func.visitExpr(this);
@@ -104,8 +100,22 @@ public class FindSemanticErrors {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        if (!scope.contains(ref.name())) {
-          logger.log(parseError(ref.location(), "'" + ref.name() + "' is undefined."));
+        String name = ref.name();
+        if (scope.contains(name)) {
+          Named named = scope.get(name);
+          if (named instanceof ValueNode value) {
+            ref.setTarget(value);
+          } else if (named instanceof ItemNode item) {
+            ref.setTarget(item);
+          } else if (named instanceof CallableNode){
+            logger.log(parseError(ref.location(), "'" + name + "' is a function and cannot be " +
+                "accessed as a value."));
+          } else {
+            throw new RuntimeException("unexpected case");
+          }
+        } else {
+          logger.log(parseError(ref.location(), "'" + name + "' is undefined."));
+          logger.log(parseError(ref.location(), "Available names: " + scope.toString()));
         }
       }
 
@@ -114,10 +124,14 @@ public class FindSemanticErrors {
         super.visitCall(call);
         String name = call.calledName();
         if (scope.contains(name)) {
-          logger.log(parseError(call.location(), "Parameter '" + name
-              + "' cannot be called as it is not a function."));
-        } else if (!all.contains(name)) {
+          Named named = scope.get(name);
+          if (named instanceof ItemNode) {
+            logger.log(parseError(call.location(), "Parameter '" + name
+                + "' cannot be called as it is not a function."));
+          }
+        } else {
           logger.log(parseError(call.location(), "'" + name + "' is undefined."));
+          logger.log(parseError(call.location(), "Available names: " + scope.toString()));
         }
       }
     }.visitAst(ast);
@@ -131,6 +145,14 @@ public class FindSemanticErrors {
         super.visitFunc(func);
         if (func.declaresType()) {
           assertTypeIsDefined(func.typeNode());
+        }
+      }
+
+      @Override
+      public void visitValue(ValueNode value) {
+        super.visitValue(value);
+        if (value.declaresType()) {
+          assertTypeIsDefined(value.typeNode());
         }
       }
 
@@ -164,12 +186,12 @@ public class FindSemanticErrors {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(map(ast.structs(), StructNode::constructor));
-    nameds.addAll(ast.funcs());
+    nameds.addAll(ast.evaluables());
     nameds.sort(comparing(n -> n.location().line()));
 
     for (Named named : nameds) {
       logIfDuplicate(logger, imported.types(), named);
-      logIfDuplicate(logger, imported.callables(), named);
+      logIfDuplicate(logger, imported.evaluables(), named);
     }
     Map<String, Named> checked = new HashMap<>();
     for (Named named : nameds) {

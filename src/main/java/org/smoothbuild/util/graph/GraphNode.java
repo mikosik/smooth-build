@@ -15,6 +15,6 @@ public record GraphNode<K, N, E> (K key, N value, ImmutableList<GraphEdge<E, K>>
   @Override
   public String toString() {
     String edges = join(",", map(this.edges, e -> e.targetKey().toString()));
-    return key.toString() + "{" + edges + "}";
+    return key.toString() + "->{" + edges + "}";
   }
 }

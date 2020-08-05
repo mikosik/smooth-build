@@ -19,7 +19,8 @@ import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.parse.Definitions;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -40,10 +41,10 @@ public class ArtifactBuilder {
     this.reporter = reporter;
   }
 
-  public void buildArtifacts(List<Callable> callables) {
+  public void buildArtifacts(Definitions definitions, List<Value> values) {
     var builder = ImmutableMap.<String, Task>builder();
-    for (Callable callable : callables) {
-      builder.put(callable.name(), planFor(callable));
+    for (Value value : values) {
+      builder.put(value.name(), planFor(definitions, value));
     }
     ImmutableMap<String, Task> namedTasks = builder.build();
     try {
@@ -61,9 +62,9 @@ public class ArtifactBuilder {
     }
   }
 
-  private Task planFor(Callable callable) {
+  private Task planFor(Definitions definitions, Value value) {
     return executionPlanner
-        .createPlan(callable.createAgrlessCallExpression(commandLineLocation()));
+        .createPlan(definitions, value.createAgrlessEvaluationExpression(commandLineLocation()));
   }
 
   private void save(String name, Record record) {

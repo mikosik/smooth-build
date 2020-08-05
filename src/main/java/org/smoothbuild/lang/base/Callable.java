@@ -7,35 +7,24 @@ import java.util.List;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class Callable implements Named {
+public abstract class Callable extends Evaluable {
+  public static final String PARENTHESES = "()";
   private final Signature signature;
-  private final Location location;
 
   public Callable(Signature signature, Location location) {
+    super(signature.type(), signature.name(), location);
     this.signature = checkNotNull(signature);
-    this.location = checkNotNull(location);
+  }
+
+  protected String nameWithParentheses() {
+    return signature().name() + PARENTHESES;
   }
 
   public Signature signature() {
     return signature;
-  }
-
-  @Override
-  public Location location() {
-    return location;
-  }
-
-  public Type type() {
-    return signature.type();
-  }
-
-  @Override
-  public String name() {
-    return signature.name();
   }
 
   public ImmutableList<Parameter> parameters() {
@@ -51,7 +40,8 @@ public abstract class Callable implements Named {
         .allMatch(Item::hasDefaultValue);
   }
 
-  public Expression createAgrlessCallExpression(Location location) {
+  @Override
+  public Expression createAgrlessEvaluationExpression(Location location) {
     ImmutableList<Expression> defaultArguments =
         map(signature.parameters(), Parameter::defaultValueExpression);
     return createCallExpression(defaultArguments, location);

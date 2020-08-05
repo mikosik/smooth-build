@@ -107,7 +107,7 @@ public class InferCallTypeAndParamAssignment {
 
       private List<? extends Item> callableParameters() {
         String name = call.calledName();
-        Callable callable = imported.callables().get(name);
+        Callable callable = (Callable) imported.evaluables().get(name);
         if (callable != null) {
           return callable.signature().parameters();
         }
@@ -147,7 +147,7 @@ public class InferCallTypeAndParamAssignment {
 
       private Optional<Type> callableType() {
         String name = call.calledName();
-        Callable callable = imported.callables().get(name);
+        Callable callable = (Callable) imported.evaluables().get(name);
         if (callable != null) {
           return Optional.of(callable.signature().type());
         }

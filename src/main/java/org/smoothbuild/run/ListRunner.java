@@ -5,7 +5,8 @@ import static org.smoothbuild.lang.base.Space.USER;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Value;
 
 public class ListRunner {
   private final Console console;
@@ -19,12 +20,12 @@ public class ListRunner {
 
   public int run() {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
-        .callables()
+        .evaluables()
         .values()
         .stream()
         .filter(f -> f.location().module().space().equals(USER))
-        .filter(f -> f.parameters().size() == 0)
-        .map(Callable::name)
+        .filter(Value.class::isInstance)
+        .map(Evaluable::name)
         .sorted()
         .forEach(console::println));
   }

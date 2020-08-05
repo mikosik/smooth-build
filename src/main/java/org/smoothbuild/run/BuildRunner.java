@@ -4,6 +4,7 @@ import static com.google.common.base.Throwables.getStackTraceAsString;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
 import static org.smoothbuild.install.ProjectPaths.TEMPORARY_PATH;
+import static org.smoothbuild.run.FindValues.findValues;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -66,8 +67,8 @@ public class BuildRunner {
 
     public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Building");
-      FindCallables.findCallables(reporter, definitions, names)
-          .ifPresent(artifactBuilder::buildArtifacts);
+      findValues(reporter, definitions, names)
+          .ifPresent((callables) -> artifactBuilder.buildArtifacts(definitions, callables));
     }
   }
 }

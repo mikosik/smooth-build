@@ -1,10 +1,11 @@
 grammar Smooth;
 
-module      : ( struct | func )* EOF ;
+module      : ( struct | value | func )* EOF ;
 struct      : TYPE_IDENTIFIER '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
 field       : type name ;
-func        : type? name ( '(' paramList? ')' )? ('=' expr)? ';' ;
+value       : type? name '=' expr ';' ;
+func        : type? name '(' paramList? ')' ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type name ( '=' expr )? ;
 expr        : nonPipeExpr ( p+='|' callInPipe )* ;
