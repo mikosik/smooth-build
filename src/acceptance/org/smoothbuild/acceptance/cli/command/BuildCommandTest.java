@@ -144,13 +144,16 @@ public class BuildCommandTest {
     @Nested
     class call_matcher extends AcceptanceTestCase {
       private static final String CALL_TASK_HEADER =
-          "result                                   command line                   group";
+          "myFunction()                             build.smooth:2                 group";
       private static final String NATIVE_CALL_TASK_HEADER =
-          "concat                                   build.smooth:1";
+          "concat()                                 build.smooth:1";
 
       @Test
       public void shows_call_when_enabled() throws IOException {
-        createUserModule("result = 'myLiteral';");
+        createUserModule("""
+            myFunction() = 'myLiteral';
+            result = myFunction();
+            """);
         runSmooth(buildCommand("--show-tasks=call", "result"));
         assertFinishedWithSuccess();
         assertSysOutContains(CALL_TASK_HEADER);

@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.lang.parse.FunctionLoader.loadFunction;
+import static org.smoothbuild.lang.parse.FunctionLoader.loadValue;
 import static org.smoothbuild.lang.parse.InferTypesAndParamAssignments.inferTypesAndParamAssignment;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
@@ -13,14 +14,18 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.ModulePath;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.nativ.Natives;
 
 import com.google.common.collect.ImmutableList;
@@ -54,22 +59,29 @@ public class ModuleLoader {
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    var declaredFunctions = loadFunctions(imported, sortedAst);
+    var declaredFunctions = loadCodes(imported, sortedAst);
     var declaredTypes = sortedAst.structs().stream()
         .map(structNode -> structNode.type().get())
         .collect(toImmutableMap(Type::name, t -> t));
     return new Definitions(declaredTypes, declaredFunctions);
   }
 
-  private static ImmutableMap<String, Callable> loadFunctions(Definitions imported, Ast ast) {
-    var localFunctions = new HashMap<String, Callable>();
+  private static ImmutableMap<String, Evaluable> loadCodes(Definitions imported, Ast ast) {
+    var localFunctions = new HashMap<String, Evaluable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
     }
-    for (FuncNode func : ast.funcs()) {
-      Callable function = loadFunction(func, imported.callables(), localFunctions);
-      localFunctions.put(function.name(), function);
+    for (EvaluableNode evaluable : ast.evaluables()) {
+      if (evaluable instanceof FuncNode func) {
+        Callable function = loadFunction(func, imported.evaluables(), localFunctions);
+        localFunctions.put(function.name(), function);
+      } else if (evaluable instanceof ValueNode valueNode) {
+        Value value = loadValue(valueNode, imported.evaluables(), localFunctions);
+        localFunctions.put(value.name(), value);
+      } else {
+        throw new RuntimeException("Unexpected case: " + evaluable.getClass().getCanonicalName());
+      }
     }
     return ImmutableMap.copyOf(localFunctions);
   }

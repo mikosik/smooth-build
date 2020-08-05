@@ -17,7 +17,11 @@ public class StructTest extends AcceptanceTestCase {
         "  myStruct {}  ");
     runSmoothList();
     assertFinishedWithError();
-    assertSysOutContainsParseError(1, "mismatched input '{' expecting {'(', '=', ';'}\n");
+    assertSysOutContainsParseError(1, """
+        no viable alternative at input 'myStruct{'
+               myStruct {} \s
+                        ^
+        """);
   }
 
   @Test

@@ -159,7 +159,7 @@ public class EqualTest extends AcceptanceTestCase {
     createUserModule("""
             [Nothing] nothingArray = [];
             [String] stringArray = [];
-            result = equal(nothingArray(), stringArray());
+            result = equal(nothingArray, stringArray);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

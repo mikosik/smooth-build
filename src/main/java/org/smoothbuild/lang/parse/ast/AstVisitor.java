@@ -1,12 +1,17 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static org.smoothbuild.util.Lists.map;
+
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitFuncs(ast.funcs());
+    visitEvaluables(ast.evaluables());
+    visitEvaluables(map(ast.structs(), StructNode::constructor));
   }
 
   public void visitStructs(List<StructNode> structs) {
@@ -15,10 +20,9 @@ public class AstVisitor {
 
   public void visitStruct(StructNode struct) {
     visitFields(struct.fields());
-    visitConstructor(struct.constructor());
   }
 
-  public void visitConstructor(CallableNode constructor) {
+  public void visitConstructor(ConstructorNode constructor) {
     visitCallable(constructor);
   }
 
@@ -34,8 +38,26 @@ public class AstVisitor {
     visitType(field.typeNode());
   }
 
-  public void visitFuncs(List<FuncNode> funcs) {
-    funcs.forEach(this::visitFunc);
+  public void visitEvaluables(List<EvaluableNode> evaluable) {
+    evaluable.forEach(this::visitEvaluable);
+  }
+
+  public void visitEvaluable(EvaluableNode evaluable) {
+    if (evaluable instanceof FuncNode func) {
+      visitFunc(func);
+    } else if (evaluable instanceof ValueNode value) {
+      visitValue(value);
+    } else if (evaluable instanceof ConstructorNode constructor) {
+      visitConstructor(constructor);
+    } else {
+      throw new RuntimeException(
+          "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
+    }
+  }
+
+  public void visitValue(ValueNode value) {
+    value.visitType(this);
+    value.visitExpr(this);
   }
 
   public void visitFunc(FuncNode func) {

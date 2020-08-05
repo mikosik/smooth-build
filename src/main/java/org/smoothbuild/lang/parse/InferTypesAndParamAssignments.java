@@ -33,6 +33,7 @@ import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
+import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
@@ -40,6 +41,7 @@ import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
+import org.smoothbuild.lang.parse.ast.ValueNode;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,7 +49,7 @@ public class InferTypesAndParamAssignments {
   public static void inferTypesAndParamAssignment(
       Ast ast, Definitions imported, LoggerImpl logger) {
     new AstVisitor() {
-      Scope<Type> scope;
+      Scope<Type> scope = scope();
 
       @Override
       public void visitStruct(StructNode struct) {
@@ -65,6 +67,7 @@ public class InferTypesAndParamAssignments {
           builder.add(field);
         }
         struct.setType(struct(struct.name(), struct.location(), builder.build()));
+        struct.constructor().initializeParameterInfos();
       }
 
       @Override
@@ -79,13 +82,19 @@ public class InferTypesAndParamAssignments {
       public void visitFunc(FuncNode func) {
         visitParams(func.params());
 
-        scope = scope();
+        scope = scope(scope);
         func.params().forEach(p -> scope.add(p.name(), p.type().get()));
         func.visitExpr(this);
-        scope = null;
+        scope = scope.outerScope();
 
-        func.setType(funcType(func));
+        func.setType(codeType(func));
         visitCallable(func);
+      }
+
+      @Override
+      public void visitValue(ValueNode value) {
+        value.visitExpr(this);
+        value.setType(codeType(value));
       }
 
       @Override
@@ -97,31 +106,31 @@ public class InferTypesAndParamAssignments {
         }
       }
 
-      private Optional<Type> funcType(FuncNode func) {
-        if (func.isNative()) {
-          return typeOfNativeFunction(func);
+      private Optional<Type> codeType(EvaluableNode evaluable) {
+        if (evaluable.isNative()) {
+          return typeOfNativeCode(evaluable);
         } else {
-          return typeOfDeclaredFunction(func);
+          return typeOfDeclaredCode(evaluable);
         }
       }
 
-      private Optional<Type> typeOfNativeFunction(FuncNode func) {
-        if (func.declaresType()) {
-          return createType(func.typeNode());
+      private Optional<Type> typeOfNativeCode(EvaluableNode evaluable) {
+        if (evaluable.declaresType()) {
+          return createType(evaluable.typeNode());
         } else {
-          logger.log(parseError(func, "Function '" + func.name()
+          logger.log(parseError(evaluable, "Function '" + evaluable.name()
               + "' is native so should have declared result type."));
           return empty();
         }
       }
 
-      private Optional<Type> typeOfDeclaredFunction(FuncNode func) {
-        Optional<Type> exprType = func.expr().type();
-        if (func.declaresType()) {
-          Optional<Type> type = createType(func.typeNode());
+      private Optional<Type> typeOfDeclaredCode(EvaluableNode evaluable) {
+        Optional<Type> exprType = evaluable.expr().type();
+        if (evaluable.declaresType()) {
+          Optional<Type> type = createType(evaluable.typeNode());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
-              logger.log(parseError(func, "Function '" + func.name()
+              logger.log(parseError(evaluable, "Function '" + evaluable.name()
                   + "' has body which type is " + et.q()
                   + " and it is not convertible to function's declared result type " + t.q()
                   + "."));
@@ -250,7 +259,7 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        ref.setType(scope.get(ref.name()));
+        ref.setType(ref.target().type());
       }
 
       @Override

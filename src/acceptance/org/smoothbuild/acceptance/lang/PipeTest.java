@@ -12,7 +12,7 @@ public class PipeTest extends AcceptanceTestCase {
   public void regression_test_error_in_expression_of_argument_of_not_first_element_of_pipe()
       throws IOException {
     createUserModule(
-        "  function1 = 'abc';                                   ",
+        "  function1() = 'abc';                                   ",
         "  String myIdentity(String value) = value;             ",
         "  result = 'abc' | myIdentity(function1(unknown=''));  ");
     runSmoothBuild("result");

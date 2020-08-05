@@ -1,13 +1,13 @@
 package org.smoothbuild.lang.parse;
 
-import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
     ImmutableMap<String, Type> types,
-    ImmutableMap<String, Callable> callables) {
+    ImmutableMap<String, Evaluable> evaluables) {
 
   public static Definitions empty() {
     return new Definitions(ImmutableMap.of(), ImmutableMap.of());
@@ -19,9 +19,9 @@ public record Definitions(
             .putAll(first.types)
             .putAll(second.types)
             .build(),
-        ImmutableMap.<String, Callable>builder()
-            .putAll(first.callables)
-            .putAll(second.callables)
+        ImmutableMap.<String, Evaluable>builder()
+            .putAll(first.evaluables())
+            .putAll(second.evaluables())
             .build()
     );
   }

@@ -50,10 +50,9 @@ public class NativeFunctionTest extends AcceptanceTestCase {
       throws Exception {
     createNativeJar(OneStringParameter.class);
     createUserModule("""
-            String function;
-            result = function();
+            String function();
             """);
-    runSmoothBuild("result");
+    runSmoothBuild("function");
     assertFinishedWithError();
     assertSysOutContains("Function 'function' is native but does not have native implementation.\n");
   }
@@ -158,7 +157,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   public void native_with_too_many_parameters_causes_error() throws Exception {
     createNativeJar(OneStringParameter.class);
     createUserModule("""
-            String oneStringParameter;
+            String oneStringParameter();
             result = oneStringParameter();
             """);
     runSmoothBuild("result");

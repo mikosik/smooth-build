@@ -32,4 +32,8 @@ public class ExpressionVisitor<T> {
   public T visit(BlobLiteralExpression expression) {
     return null;
   }
+
+  public T visit(ConvertExpression convertExpression) {
+    return null;
+  }
 }

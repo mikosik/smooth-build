@@ -48,7 +48,7 @@ public class DefaultObjectTest extends AcceptanceTestCase {
   public void default_value_expression_can_be_a_call()
       throws Exception {
     createUserModule("""
-            value = "abc";
+            value() = "abc";
             func(String withDefault = value()) = withDefault;
             result = func();
             """);

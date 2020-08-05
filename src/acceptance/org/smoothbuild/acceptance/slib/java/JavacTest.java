@@ -67,7 +67,7 @@ public class JavacTest extends AcceptanceTestCase {
     createFile("srclib/library/LibraryClass.java", librarySource.toString());
     createUserModule("""
             libraryJar = files("srclib") | javac | jar;
-            result = files("src") | javac(libs = [ libraryJar() ])
+            result = files("src") | javac(libs = [ libraryJar ])
                 | concat(array2 = javac(files("srclib")));
             """);
     runSmoothBuild("result");
@@ -85,7 +85,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void duplicate_java_files_cause_error() throws Exception {
     createUserModule("""
             classFile = file(toBlob("public class MyClass {}"), "MyClass.java");
-            result = [ classFile(), classFile() ] | javac;
+            result = [ classFile, classFile ] | javac;
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

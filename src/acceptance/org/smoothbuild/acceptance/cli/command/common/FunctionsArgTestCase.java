@@ -6,7 +6,7 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 
 public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   @Test
-  public void missing_function_argument_causes_error() throws Exception {
+  public void missing_value_argument_causes_error() throws Exception {
     createUserModule(
         "  result = 'abc';  ");
     runSmooth(new CommandWithArgs(commandName()));
@@ -17,21 +17,21 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void nonexistent_function_argument_causes_error() throws Exception {
+  public void nonexistent_value_argument_causes_error() throws Exception {
     createUserModule(
         "  result = 'abc';  ");
-    runSmooth(new CommandWithArgs(commandName(), "nonexistentFunction"));
+    runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     assertFinishedWithError();
     assertSysOutContains(
         sectionName(),
         "  Validating arguments",
-        "   + ERROR: Unknown function 'nonexistentFunction'.",
-        "     Try 'smooth list' to see all available functions.",
+        "   + ERROR: Unknown value 'unknownValue'.",
+        "     Try 'smooth list' to see all available values that can be calculated.",
         "");
   }
 
   @Test
-  public void function_specified_twice_causes_error() throws Exception {
+  public void value_specified_twice_causes_error() throws Exception {
     createUserModule(
         "  result = 'abc';  ");
     runSmooth(new CommandWithArgs(commandName(), "result", "result"));
@@ -40,7 +40,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void many_functions_specified_twice_causes_error_for_each_one()
+  public void many_values_specified_twice_causes_error_for_each_one()
       throws Exception {
     createUserModule(
         "  result = 'abc';  ");
@@ -51,7 +51,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void illegal_function_name_causes_error() throws Exception {
+  public void illegal_value_name_causes_error() throws Exception {
     createUserModule(
         "  result = 'abc';  ");
     runSmooth(new CommandWithArgs(commandName(), "illegal^name"));
@@ -60,7 +60,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void illegal_function_names_causes_error_for_each_one()
+  public void illegal_value_names_causes_error_for_each_one()
       throws Exception {
     createUserModule(
         "  result = 'abc';  ");
@@ -71,7 +71,7 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void build_command_with_function_that_requires_arguments_prints_error() throws Exception {
+  public void function_that_requires_arguments_prints_error() throws Exception {
     createUserModule(
         "  String testStringIdentity(String value) = value;  ");
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
@@ -79,19 +79,26 @@ public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
     assertSysOutContains(
         sectionName(),
         "  Validating arguments",
-        "   + ERROR: Function 'testStringIdentity' cannot be invoked from command line as it requires arguments.",
+        "   + ERROR: 'testStringIdentity' cannot be calculated as it is not a value but a function.",
         "Summary",
         "  1 error",
         "");
   }
 
   @Test
-  public void build_command_with_function_which_all_params_are_optional_is_allowed()
+  public void function_which_all_params_are_optional_prints_error()
       throws Exception {
     createUserModule(
         "  String testStringIdentity(String value = 'default') = value;  ");
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
-    assertFinishedWithSuccess();
+    assertFinishedWithError();
+    assertSysOutContains(
+        sectionName(),
+        "  Validating arguments",
+        "   + ERROR: 'testStringIdentity' cannot be calculated as it is not a value but a function.",
+        "Summary",
+        "  1 error",
+        "");
   }
 
   protected abstract String commandName();

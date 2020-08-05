@@ -24,6 +24,11 @@ public class NativeFunction extends Callable {
     this.isCacheable = isCacheable;
   }
 
+  @Override
+  public String extendedName() {
+    return nameWithParentheses();
+  }
+
   public Native nativ() {
     return nativ;
   }

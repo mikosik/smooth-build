@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.base.Input.input;
+import static org.smoothbuild.lang.base.Callable.PARENTHESES;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -23,7 +24,8 @@ public class IfTask extends ComputableTask {
 
   public IfTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
       Location location, boolean cacheable) {
-    super(TaskKind.CALL, type, IF_FUNCTION_NAME, algorithm, dependencies, location, cacheable);
+    super(TaskKind.CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location,
+        cacheable);
   }
 
   @Override

@@ -36,6 +36,7 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
@@ -45,22 +46,26 @@ import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
+import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.parse.Definitions;
 import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
 public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
+  private final Definitions definitions;
   private final TypeToBinaryTypeConverter typeConverter;
   private Scope<Task> scope;
 
   @Inject
-  public ExpressionToTaskConverter(RecordFactory recordFactory) {
+  public ExpressionToTaskConverter(Definitions definitions, RecordFactory recordFactory) {
     this.typeConverter = new TypeToBinaryTypeConverter(recordFactory);
+    this.definitions = definitions;
     this.scope = scope();
   }
 
@@ -100,7 +105,14 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
 
   @Override
   public Task visit(BoundValueExpression expression) {
-    return scope.get(expression.name());
+    String name = expression.name();
+    if (scope.contains(name)) {
+      return scope.get(name);
+    } else {
+      Value value = (Value) definitions.evaluables().get(name);
+      Task task = value.body().visit(this);
+      return new VirtualTask(value.extendedName(), task, value.location());
+    }
   }
 
   @Override
@@ -109,8 +121,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     TupleSpec type = typeConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
-    return new NormalTask(CALL, constructor.type(), constructor.name(), algorithm, dependencies,
-        expression.location(), true);
+    return new NormalTask(CALL, constructor.type(), constructor.extendedName(), algorithm,
+        dependencies, expression.location(), true);
   }
 
   @Override
@@ -127,7 +139,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     scope = scope.outerScope();
 
     Task task = convertIfNeeded(definedCallTask, actualResultType);
-    return new VirtualTask(function.name(), task, expression.location());
+    return new VirtualTask(function.extendedName(), task, expression.location());
   }
 
   private static void addArgumentsToScope(Scope<Task> scope, List<? extends Named> names,
@@ -152,8 +164,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
       return new IfTask(actualResultType, algorithm, dependencies, expression.location(),
           nativeFunction.isCacheable());
     } else {
-      return new NormalTask(CALL, actualResultType, nativeFunction.name(), algorithm, dependencies,
-          expression.location(), nativeFunction.isCacheable());
+      return new NormalTask(CALL, actualResultType, nativeFunction.extendedName(), algorithm,
+          dependencies, expression.location(), nativeFunction.isCacheable());
     }
   }
 
@@ -183,6 +195,12 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
         ImmutableList.of(), expression.location(), true);
   }
 
+  @Override
+  public Task visit(ConvertExpression convertExpression) {
+    List<Task> children = childrenTasks(convertExpression.children());
+    return convert(convertExpression.type(), children.get(0));
+  }
+
   public List<Task> childrenTasks(List<Expression> children) {
     return map(children, ch -> ch.visit(this));
   }
@@ -191,11 +209,15 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     if (task.type().equals(requiredType)) {
       return task;
     } else {
-      String description = requiredType.name() + "<-" + task.type().name();
-      Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(typeConverter));
-      List<Task> dependencies = list(task);
-      return new NormalTask(
-          CONVERSION, requiredType, description, algorithm, dependencies, task.location(), true);
+      return convert(requiredType, task);
     }
+  }
+
+  private NormalTask convert(ConcreteType requiredType, Task task) {
+    String description = requiredType.name() + "<-" + task.type().name();
+    Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(typeConverter));
+    List<Task> dependencies = list(task);
+    return new NormalTask(
+        CONVERSION, requiredType, description, algorithm, dependencies, task.location(), true);
   }
 }
