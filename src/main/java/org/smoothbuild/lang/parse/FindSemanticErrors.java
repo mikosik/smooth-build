@@ -81,7 +81,7 @@ public class FindSemanticErrors {
   private static void undefinedReferences(Logger logger, Definitions imported, Ast ast) {
     Set<String> all = ImmutableSet.<String>builder()
         .addAll(imported.callables().keySet())
-        .addAll(ast.callableNames())
+        .addAll(ast.callablesMap().keySet())
         .build();
     new AstVisitor() {
       Scope<String> scope = scope();
