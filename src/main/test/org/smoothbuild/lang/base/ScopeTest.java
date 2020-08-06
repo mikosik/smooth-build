@@ -35,11 +35,45 @@ public class ScopeTest {
   }
 
   @Test
+  public void scope_contains_replaced_binding_when_it_was_not_present_before_replacement() {
+    scope = scope();
+    scope.addOrReplace("name", "bound");
+    assertThat(scope.contains("name"))
+        .isTrue();
+  }
+
+  @Test
+  public void scope_contains_replaced_binding_when_it_was_present_before_replacement() {
+    scope = scope();
+    scope.add("name", "bound");
+    scope.addOrReplace("name", "bound");
+    assertThat(scope.contains("name"))
+        .isTrue();
+  }
+
+  @Test
   public void added_binding_can_be_retrieved() {
     scope = scope();
     scope.add("name", "bound");
     assertThat(scope.get("name"))
         .isEqualTo("bound");
+  }
+
+  @Test
+  public void replaced_binding_can_be_retrieved_when_it_was_not_present_before_replacement() {
+    scope = scope();
+    scope.addOrReplace("name", "bound");
+    assertThat(scope.get("name"))
+        .isEqualTo("bound");
+  }
+
+  @Test
+  public void replaced_binding_can_be_retrieved_when_it_was_present_before_replacement() {
+    scope = scope();
+    scope.add("name", "bound");
+    scope.addOrReplace("name", "bound2");
+    assertThat(scope.get("name"))
+        .isEqualTo("bound2");
   }
 
   @Test
@@ -82,5 +116,23 @@ public class ScopeTest {
     scope = scope(outerScope);
     assertThat(scope.outerScope())
         .isSameInstanceAs(outerScope);
+  }
+
+  @Test
+  public void outer_scope_is_not_overwritten_by_adding_binding_in_inner_scope() {
+    outerScope = scope();
+    scope = scope(outerScope);
+    scope.add("name", "binding");
+    assertThat(outerScope.contains("name"))
+        .isFalse();
+  }
+
+  @Test
+  public void outer_scope_is_not_overwritten_by_replacing_binding_in_inner_scope() {
+    outerScope = scope();
+    scope = scope(outerScope);
+    scope.addOrReplace("name", "binding");
+    assertThat(outerScope.contains("name"))
+        .isFalse();
   }
 }

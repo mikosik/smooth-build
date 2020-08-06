@@ -38,6 +38,10 @@ public class Scope<E> {
     if (bindings.containsKey(name)) {
       throw new IllegalStateException("Name " + name + " is already bound in current scope.");
     }
+    addOrReplace(name, element);
+  }
+
+  public void addOrReplace(String name, E element) {
     bindings.put(name, element);
   }
 
