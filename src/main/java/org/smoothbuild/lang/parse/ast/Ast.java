@@ -5,6 +5,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,18 +39,6 @@ public class Ast {
     return structs;
   }
 
-  public Set<String> callableNames() {
-    var builder = ImmutableSet.<String>builder();
-    new AstVisitor() {
-      @Override
-      public void visitCallable(CallableNode callable) {
-        super.visitCallable(callable);
-        builder.add(callable.name());
-      }
-    }.visitAst(this);
-    return builder.build();
-  }
-
   public ImmutableMap<String, CallableNode> callablesMap() {
     if (callablesMap == null) {
       callablesMap = createCallablesMap();
@@ -58,15 +47,17 @@ public class Ast {
   }
 
   private ImmutableMap<String, CallableNode> createCallablesMap() {
-    var builder = ImmutableMap.<String, CallableNode>builder();
+    var result = new HashMap<String, CallableNode>();
     new AstVisitor() {
       @Override
       public void visitCallable(CallableNode callable) {
         super.visitCallable(callable);
-        builder.put(callable.name(), callable);
+        if (!result.containsKey(callable.name())) {
+          result.put(callable.name(), callable);
+        }
       }
     }.visitAst(this);
-    return builder.build();
+    return ImmutableMap.copyOf(result);
   }
 
 
