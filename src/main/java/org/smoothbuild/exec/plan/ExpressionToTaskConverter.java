@@ -127,7 +127,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     scope = scope.outerScope();
 
     Task task = convertIfNeeded(definedCallTask, actualResultType);
-    return new VirtualTask(function.name(), actualResultType, task, expression.location());
+    return new VirtualTask(function.name(), task, expression.location());
   }
 
   private static void addArgumentsToScope(Scope<Task> scope, List<? extends Named> names,
