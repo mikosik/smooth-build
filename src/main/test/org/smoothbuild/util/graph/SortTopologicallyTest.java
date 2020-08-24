@@ -2,7 +2,6 @@ package org.smoothbuild.util.graph;
 
 import static com.google.common.collect.Collections2.permutations;
 import static com.google.common.truth.Truth.assertWithMessage;
-import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -197,11 +196,22 @@ public class SortTopologicallyTest {
   @Nested
   class detects_cycle {
     @Test
-    public void from_single_node_to_itself() {
+    public void to_itself() {
       var n1 = node(1, List.of(1));
       assertCycleDetected(
           List.of(n1),
           List.of(n1));
+    }
+
+    @Test
+    public void to_itself_when_it_has_also_dangling_node() {
+      var n1 = node(1);
+      var n2 = node(2, List.of(1, 2));
+
+      assertCycleDetected(
+          List.of(n1, n2),
+          List.of(n2)
+      );
     }
 
     @Test
@@ -258,9 +268,16 @@ public class SortTopologicallyTest {
 
     private List<GraphEdge<String, Integer>> buildCycle(
         List<GraphNode<Integer, String, String>> nodes) {
-      return nodes.stream()
-          .map(n -> n.edges().get(0))
-          .collect(toList());
+      ArrayList<GraphEdge<String, Integer>> result = new ArrayList<>();
+      for (int i = 0; i < nodes.size(); i++) {
+        Integer nextNodeKey = nodes.get((i + 1) % nodes.size()).key();
+        var edge = nodes.get(i).edges().stream()
+            .filter(e -> e.targetKey().equals(nextNodeKey))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("nodes doesn't form a cycle"));
+        result.add(edge);
+      }
+      return result;
     }
   }
 

@@ -27,7 +27,21 @@ public class SortTopologically {
     ImmutableList<Node<K, N, E>> wrappedNodes = nodes.stream()
         .map(Node::new)
         .collect(toImmutableList());
+    assertAllEdgesPointToExistingNodes(wrappedNodes);
     return sortTopologicallyImpl(wrappedNodes);
+  }
+
+  private static <K, N, E> void assertAllEdgesPointToExistingNodes(
+      ImmutableList<Node<K, N, E>> nodes) {
+    Set<K> kyes = nodes.stream().map(Node::key).collect(toSet());
+    for (var node : nodes) {
+      for (var edge : node.edges()) {
+        if (!kyes.contains(edge.targetKey())) {
+          throw new IllegalArgumentException("Node '" + node.key()
+              + "' has edge pointing to node '" + edge.targetKey() + "' which does not exist.");
+        }
+      }
+    }
   }
 
   public static <K, N, E> TopologicalSortingResult<K, N, E> sortTopologicallyImpl(
@@ -40,7 +54,7 @@ public class SortTopologically {
     // VISITING sub-algorithm:
     //   (1) Mark current node as BEING-PROCESSED.
     //   (2) Add current node to the end of `currentPath`.
-    //   (3) For each node reachable via direct edge from that node:
+    //   (3) For each node reachable via direct edge from that node AND present in input nodes:
     //      IF current node is marked as BEING-PROCESSED
     //        THEN End algorithm and return current  node and all nodes that succeed it in
     //             `currentPath` as a cycle.
@@ -56,9 +70,8 @@ public class SortTopologically {
     //
     // If algorithm completes and all nodes are marked as PROCESSED then `currentPath` contains
     // topologically sorted nodes.
-    // If some nodes are not marked as PROCESSED then they form an island (or many islands)
-    // that doesn't have root node thus contains a cycle(s). Running algorithm just for those
-    // nodes will detect that cycle.
+    // If some nodes are not marked as PROCESSED then our graph contains cycle.
+    // Running algorithm just for those not-PROCESSED nodes will detect that cycle.
 
     var rootKeys = findRootNodes(nodes);
     if (rootKeys.isEmpty()) {
@@ -72,19 +85,21 @@ public class SortTopologically {
     for (K rootKey : rootKeys) {
       addToPath(currentPath, keyToNode.get(rootKey));
       while (!currentPath.isEmpty()) {
-        var pathEnd = currentPath.peekLast();
-        int edgeIndex = pathEnd.incrementAndGetEdgeIndex();
-        if (edgeIndex < pathEnd.node().edges().size()) {
-          K targetKey = pathEnd.node().edges().get(edgeIndex).targetKey();
+        var last = currentPath.peekLast();
+        int edgeIndex = last.incrementAndGetEdgeIndex();
+        if (edgeIndex < last.node().edges().size()) {
+          K targetKey = last.node().edges().get(edgeIndex).targetKey();
           var targetNode = keyToNode.get(targetKey);
-          switch (targetNode.state()) {
-            case NOT_VISITED:
-              addToPath(currentPath, targetNode);
-              break;
-            case BEING_PROCESSED:
-              return createCycleResult(currentPath, targetKey);
-            case PROCESSED:
-              break;
+          if (targetNode != null) {
+            switch (targetNode.state()) {
+              case NOT_VISITED:
+                addToPath(currentPath, targetNode);
+                break;
+              case BEING_PROCESSED:
+                return createCycleResult(currentPath, targetKey);
+              case PROCESSED:
+                break;
+            }
           }
         } else {
           var processedNode = currentPath.removeLast().node();
@@ -103,25 +118,12 @@ public class SortTopologically {
 
   private static <K, N, E> Set<K> findRootNodes(Collection<Node<K, N, E>> nodes) {
     var result = nodes.stream().map(Node::key).collect(toSet());
-    assertAllEdgesPointToExistingNodes(nodes, result);
     for (var node : nodes) {
       for (var edge : node.edges()) {
         result.remove(edge.targetKey());
       }
     }
     return result;
-  }
-
-  private static <K, N, E> void assertAllEdgesPointToExistingNodes(
-      Collection<Node<K, N, E>> nodes, Set<K> keys) {
-    for (var node : nodes) {
-      for (var edge : node.edges()) {
-        if (!keys.contains(edge.targetKey())) {
-          throw new IllegalArgumentException("Node '" + node.key()
-              + "' has edge pointing to node '" + edge.targetKey() + "' which does not exist.");
-        }
-      }
-    }
   }
 
   private static <K, N, E> void addToPath(LinkedList<PathElem<K, N, E>> currentPath,
