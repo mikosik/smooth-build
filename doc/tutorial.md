@@ -14,7 +14,7 @@ and performs following tasks:
 
  * Invokes `files` function that takes all files (recursively)
  from `src` directory located at project's root.
- Project root is a directory in which given build .smooth file is located.
+ Project root is a directory containing `build.smooth` file.
  * Passes them to `javac` function that compiles those files.
  * Passes compiled files to `jar` function that packs them into jar binary.
 
