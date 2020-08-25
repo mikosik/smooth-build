@@ -12,7 +12,7 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.parse.Definitions;
 
 public class TreeRunner {
@@ -54,9 +54,9 @@ public class TreeRunner {
           .ifPresent(values -> values.forEach(v -> print(treeOf(definitions, v))));
     }
 
-    private Task treeOf(Definitions definitions, Evaluable evaluable) {
+    private Task treeOf(Definitions definitions, Value value) {
       return executionPlanner.createPlan(
-          definitions, evaluable.createArglessEvaluationExpression(commandLineLocation()));
+          definitions, value.createArglessEvaluationExpression(commandLineLocation()));
     }
 
     private void print(Task task) {

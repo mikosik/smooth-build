@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
@@ -38,13 +37,6 @@ public abstract class Callable extends Evaluable {
   public boolean canBeCalledArgless() {
     return signature.parameters().stream()
         .allMatch(Item::hasDefaultValue);
-  }
-
-  @Override
-  public Expression createArglessEvaluationExpression(Location location) {
-    ImmutableList<Expression> defaultArguments =
-        map(signature.parameters(), Parameter::defaultValueExpression);
-    return createCallExpression(defaultArguments, location);
   }
 
   public abstract Expression createCallExpression(List<? extends Expression> arguments,

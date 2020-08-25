@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.lang.expr.Expression;
 
 public class Accessor extends Evaluable {
   private final int fieldIndex;
@@ -19,11 +18,6 @@ public class Accessor extends Evaluable {
   @Override
   public String extendedName() {
     return "." + name();
-  }
-
-  @Override
-  public Expression createArglessEvaluationExpression(Location location) {
-    throw new UnsupportedOperationException();
   }
 
   public int fieldIndex() {
