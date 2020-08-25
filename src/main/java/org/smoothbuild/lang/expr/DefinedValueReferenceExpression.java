@@ -2,10 +2,10 @@ package org.smoothbuild.lang.expr;
 
 import org.smoothbuild.lang.base.Location;
 
-public class BoundValueExpression extends Expression {
+public class DefinedValueReferenceExpression extends Expression {
   private final String name;
 
-  public BoundValueExpression(String name, Location location) {
+  public DefinedValueReferenceExpression(String name, Location location) {
     super(location);
     this.name = name;
   }

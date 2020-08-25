@@ -10,7 +10,7 @@ import org.smoothbuild.lang.expr.NativeCallExpression;
  *
  * @see DefinedFunction
  */
-public class NativeFunction extends Callable {
+public class NativeFunction extends Callable implements NativeWrapper {
   private final Native nativ;
   private final boolean isCacheable;
 
@@ -25,6 +25,7 @@ public class NativeFunction extends Callable {
     return nameWithParentheses();
   }
 
+  @Override
   public Native nativ() {
     return nativ;
   }

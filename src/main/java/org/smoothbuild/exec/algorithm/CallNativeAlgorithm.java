@@ -11,21 +11,21 @@ import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.NativeWrapper;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm implements Algorithm {
   private final Spec spec;
-  private final NativeFunction function;
+  private final NativeWrapper nativeWrapper;
 
-  public CallNativeAlgorithm(Spec spec, NativeFunction function) {
+  public CallNativeAlgorithm(Spec spec, NativeWrapper nativeWrapper) {
     this.spec = spec;
-    this.function = function;
+    this.nativeWrapper = nativeWrapper;
   }
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(function.nativ());
+    return callNativeAlgorithmHash(nativeWrapper.nativ());
   }
 
   @Override
@@ -36,18 +36,18 @@ public class CallNativeAlgorithm implements Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
-      Record result = (Record) function.nativ().method()
+      Record result = (Record) nativeWrapper.nativ().method()
           .invoke(null, createArguments(nativeApi, input.records()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("Function " + function.name()
-              + " has faulty native implementation: it returned 'null' but logged no error.");
+          nativeApi.log().error("`" + nativeWrapper.name()
+              + "` has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!spec.equals(result.spec())) {
-        nativeApi.log().error("Function " + function.name()
-            + " has faulty native implementation: Its declared result spec == " + spec.name()
+        nativeApi.log().error("`" + nativeWrapper.name()
+            + "` has faulty native implementation: Its declared result spec == " + spec.name()
             + " but it returned record with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
       }
@@ -55,8 +55,8 @@ public class CallNativeAlgorithm implements Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("Function " + function.name()
-          + " threw java exception from its native code.", e.getCause());
+      throw new NativeCallException("`" + nativeWrapper.name()
+          + "` threw java exception from its native code.", e.getCause());
     }
   }
 

@@ -9,7 +9,15 @@ public class ExpressionVisitor<T> {
     return null;
   }
 
-  public T visit(BoundValueExpression expression) {
+  public T visit(DefinedValueReferenceExpression expression) {
+    return null;
+  }
+
+  public T visit(NativeValueReferenceExpression expression) {
+    return null;
+  }
+
+  public T visit(ParameterReferenceExpression expression) {
     return null;
   }
 

@@ -6,8 +6,8 @@ import org.smoothbuild.plugin.SmoothFunction;
 
 public class ReportWarningAndReturnNull {
   @SmoothFunction("reportWarning")
-  public static RString reportWarning(NativeApi nativeApi, RString message) {
-    nativeApi.log().warning(message.jValue());
+  public static RString reportWarning(NativeApi nativeApi) {
+    nativeApi.log().warning("some warning message");
     return null;
   }
 }

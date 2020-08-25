@@ -12,9 +12,11 @@ import java.util.List;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.DefinedFunction;
+import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
@@ -25,9 +27,9 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.AccessorNode;
 import org.smoothbuild.lang.parse.ast.ArgNode;
@@ -41,6 +43,7 @@ import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.lang.parse.ast.ValueTarget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -82,7 +85,7 @@ public class FunctionLoader {
 
     public Value getValue() {
       if (evaluable.isNative()) {
-        throw new RuntimeException("Native values are not supported.");
+        return nativeValue();
       } else {
         return definedValue();
       }
@@ -96,13 +99,13 @@ public class FunctionLoader {
     }
 
     private Value definedValue() {
-      Type type = evaluable.type().get();
+      ConcreteType type = (ConcreteType) evaluable.type().get();
       Type exprType = evaluable.expr().type().get();
       Expression expression = createExpression(evaluable.expr());
       if (!type.equals(exprType)) {
-        expression = new ConvertExpression((ConcreteType) type, expression, evaluable.location());
+        expression = new ConvertExpression(type, expression, evaluable.location());
       }
-      return new Value(type, evaluable.name(), expression, evaluable.location());
+      return new DefinedValue(type, evaluable.name(), expression, evaluable.location());
     }
 
     private Callable nativeFunction() {
@@ -124,6 +127,12 @@ public class FunctionLoader {
           ? createExpression(param.defaultValue())
           : null;
       return new Parameter(param.index(), type, name, defaultValue, param.location());
+    }
+
+    private Value nativeValue() {
+      Native nativ = evaluable.nativ();
+      return new NativeValue((ConcreteType) evaluable.type().get(), evaluable.name(), nativ,
+          evaluable.location(), nativ.cacheable());
     }
 
     private Expression createExpression(ExprNode expr) {
@@ -157,9 +166,12 @@ public class FunctionLoader {
 
     private Expression createReference(RefNode ref) {
       if (ref.target() instanceof ItemNode) {
-        return new BoundValueExpression(ref.name(), ref.location());
+        return new ParameterReferenceExpression(ref.name(), ref.location());
       } else if (ref.target() instanceof ValueNode) {
-        return new BoundValueExpression(ref.name(), ref.location());
+        Value value = (Value) find(ref.name());
+        return value.createReferenceExpression(ref.location());
+      } else if (ref.target() instanceof ValueTarget valueTarget) {
+        return  valueTarget.value().createReferenceExpression(ref.location());
       } else {
         throw new RuntimeException("Unexpected case: " + ref.getClass().getCanonicalName());
       }
@@ -175,8 +187,7 @@ public class FunctionLoader {
       return requireNonNullElseGet(localEvaluables.get(name), () -> importedEvaluables.get(name));
     }
 
-    private List<Expression> createArgumentExpressions(CallNode call,
-        Callable callable) {
+    private List<Expression> createArgumentExpressions(CallNode call, Callable callable) {
       ImmutableList<Parameter> parameters = callable.parameters();
       ArrayList<Expression> result = new ArrayList<>(parameters.size());
       List<ArgNode> args = call.assignedArgs();

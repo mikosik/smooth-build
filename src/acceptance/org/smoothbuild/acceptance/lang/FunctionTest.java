@@ -52,7 +52,7 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void direct_causes_error() throws IOException {
       createUserModule("""
-            function1 = function1();
+            function1() = function1();
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
@@ -62,8 +62,8 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void indirect_with_two_steps_causes_error() throws IOException {
       createUserModule("""
-            function1 = function2();
-            function2 = function1();
+            function1() = function2();
+            function2() = function1();
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
@@ -73,7 +73,7 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void indirect_via_argument_causes_error() throws IOException {
       createUserModule("""
-              String function1 = myIdentity(function1());
+              String function1() = myIdentity(function1());
               String myIdentity(String s) = s;
               """);
       runSmoothBuild("function1");
@@ -84,9 +84,9 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void indirect_with_three_steps_causes_error() throws IOException {
       createUserModule("""
-            function1 = function2();
-            function2 = function3();
-            function3 = function1();
+            function1() = function2();
+            function2() = function3();
+            function3() = function1();
             """);
       runSmoothBuild("function1");
       assertFinishedWithError();
@@ -95,52 +95,69 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class call_to_undefined_function {
-    @Test
-    public void without_arguments_causes_error() throws IOException {
-      createUserModule("""
-              function1 = undefinedFunction();
-              """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
+  class call {
+    @Nested
+    class to_value {
+      @Test
+      public void defined_in_local_module_causes_error() throws IOException {
+        createUserModule("""
+            String myValue = "abc";
+            result = myValue();
+            """);
+        runSmoothBuild("result");
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, "`myValue` cannot be called as it is a value.");
+      }
     }
 
-    @Test
-    public void with_argument_causes_error() throws IOException {
-      createUserModule("""
-              function1 = undefinedFunction("a");
-              """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
-    }
-  }
+    @Nested
+    class to_undefined_function {
+      @Test
+      public void without_arguments_causes_error() throws IOException {
+        createUserModule("""
+            function1 = undefinedFunction();
+            """);
+        runSmoothBuild("function1");
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
+      }
 
-  @Nested
-  class call_without_parentheses {
-    @Test
-    public void outside_pipe_causes_error() throws IOException {
-      createUserModule("""
+      @Test
+      public void with_argument_causes_error() throws IOException {
+        createUserModule("""
+            function1 = undefinedFunction("a");
+            """);
+        runSmoothBuild("function1");
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
+      }
+    }
+
+    @Nested
+    class without_parentheses {
+      @Test
+      public void outside_pipe_causes_error() throws IOException {
+        createUserModule("""
             function1() = "abc";
             result    = function1;
             """);
-      runSmoothBuild("result");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(
-          2, "'function1' is a function and cannot be accessed as a value.");
-    }
+        runSmoothBuild("result");
+        assertFinishedWithError();
+        assertSysOutContainsParseError(
+            2, "'function1' is a function and cannot be accessed as a value.");
+      }
 
-    @Test
-    public void inside_pipe_is_allowed() throws IOException {
-      createUserModule("""
+      @Test
+      public void inside_pipe_is_allowed() throws IOException {
+        createUserModule("""
               myIdentity(A value) = value;
               result = "abc" | myIdentity;
               """);
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("abc");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
     }
   }
 

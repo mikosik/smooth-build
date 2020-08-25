@@ -3,6 +3,7 @@ Change Log
 
 Version 0.20.0 (??????????)
 
+ * changed smooth language by introducing global values
  * changed smooth language so function call outside pipe must always have parentheses
  * changed smooth language to allow pipe as default value of parameter
  * changed smooth language to allow pipe as element of array literal
