@@ -64,7 +64,7 @@ public class ArtifactBuilder {
 
   private Task planFor(Definitions definitions, Value value) {
     return executionPlanner
-        .createPlan(definitions, value.createAgrlessEvaluationExpression(commandLineLocation()));
+        .createPlan(definitions, value.createArglessEvaluationExpression(commandLineLocation()));
   }
 
   private void save(String name, Record record) {

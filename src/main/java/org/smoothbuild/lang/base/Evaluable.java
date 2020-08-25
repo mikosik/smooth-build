@@ -35,5 +35,5 @@ public abstract class Evaluable implements Named {
     return name();
   }
 
-  public abstract Expression createAgrlessEvaluationExpression(Location location);
+  public abstract Expression createArglessEvaluationExpression(Location location);
 }

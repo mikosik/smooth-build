@@ -41,7 +41,7 @@ public abstract class Callable extends Evaluable {
   }
 
   @Override
-  public Expression createAgrlessEvaluationExpression(Location location) {
+  public Expression createArglessEvaluationExpression(Location location) {
     ImmutableList<Expression> defaultArguments =
         map(signature.parameters(), Parameter::defaultValueExpression);
     return createCallExpression(defaultArguments, location);
