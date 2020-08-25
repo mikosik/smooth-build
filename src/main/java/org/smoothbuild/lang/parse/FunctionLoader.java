@@ -23,6 +23,7 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.BoundValueExpression;
@@ -153,11 +154,11 @@ public class FunctionLoader {
       throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
     }
 
-    private Expression createAccessor(AccessorNode accessor) {
-      StructType type = (StructType) accessor.expr().type().get();
-      Accessor accessorFunction = type.accessor(accessor.fieldName());
-      return accessorFunction.createCallExpression(
-          list(createExpression(accessor.expr())), accessor.location());
+    private Expression createAccessor(AccessorNode accessorNode) {
+      StructType type = (StructType) accessorNode.expr().type().get();
+      Accessor accessor = type.accessor(accessorNode.fieldName());
+      Expression expression = createExpression(accessorNode.expr());
+      return new AccessorCallExpression(accessor, list(expression), accessorNode.location());
     }
 
     private Expression createReference(RefNode ref) {

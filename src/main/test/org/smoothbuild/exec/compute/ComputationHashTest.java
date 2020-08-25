@@ -8,7 +8,6 @@ import static org.smoothbuild.db.record.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -135,8 +134,8 @@ public class ComputationHashTest extends TestingContext {
   }
 
   private Accessor accessor() {
-    return new Accessor(signature(org.smoothbuild.lang.base.type.TestingTypes.STRING,
-        "accessor", list()), 0, internal());
+    return new Accessor(
+        org.smoothbuild.lang.base.type.TestingTypes.STRING, "accessor", 0, internal());
   }
 
   private static Algorithm computation(Hash hash) {
