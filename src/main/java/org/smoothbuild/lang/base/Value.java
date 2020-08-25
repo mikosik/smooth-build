@@ -18,7 +18,6 @@ public class Value extends Evaluable {
     return body;
   }
 
-  @Override
   public Expression createArglessEvaluationExpression(Location location) {
     return new BoundValueExpression(name(), location);
   }

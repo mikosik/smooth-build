@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.parse.ast.Named;
 
 public abstract class Evaluable implements Named {
@@ -34,6 +33,4 @@ public abstract class Evaluable implements Named {
   public String extendedName() {
     return name();
   }
-
-  public abstract Expression createArglessEvaluationExpression(Location location);
 }
