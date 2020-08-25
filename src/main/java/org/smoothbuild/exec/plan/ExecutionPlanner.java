@@ -14,8 +14,8 @@ public class ExecutionPlanner {
     this.converterProvider = converterProvider;
   }
 
-  public Task createPlan(Definitions definitions, Expression agrlessCallExpression) {
+  public Task createPlan(Definitions definitions, Expression expression) {
     ExpressionToTaskConverter converter = converterProvider.get(definitions);
-    return agrlessCallExpression.visit(converter);
+    return expression.visit(converter);
   }
 }

@@ -4,7 +4,7 @@ import org.smoothbuild.lang.base.Location;
 
 public class RefNode extends ExprNode {
   private final String name;
-  private NamedNode target;
+  private RefTarget target;
 
   public RefNode(String name, Location location) {
     super(location);
@@ -15,11 +15,11 @@ public class RefNode extends ExprNode {
     return name;
   }
 
-  public void setTarget(NamedNode named) {
-    this.target = named;
+  public void setTarget(RefTarget target) {
+    this.target = target;
   }
 
-  public NamedNode target() {
+  public RefTarget target() {
     return target;
   }
 }

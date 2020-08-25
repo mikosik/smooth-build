@@ -96,7 +96,7 @@ public class FindNatives {
   }
 
   private static Log error(JarFile jarFile, Method method, String message) {
-    return Log.error("Invalid function native implementation in " + jarFile.path() + " provided by "
+    return Log.error("Invalid native implementation in " + jarFile.path() + " provided by "
         + canonicalName(method) + ": " + message);
   }
 

@@ -34,9 +34,10 @@ import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.DefinedFunction;
+import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Scope;
-import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
@@ -44,13 +45,15 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.BoundValueExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.DefinedCallExpression;
+import org.smoothbuild.lang.expr.DefinedValueReferenceExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.NativeCallExpression;
+import org.smoothbuild.lang.expr.NativeValueReferenceExpression;
+import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.Definitions;
 import org.smoothbuild.lang.parse.ast.Named;
@@ -104,15 +107,27 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(BoundValueExpression expression) {
+  public Task visit(DefinedValueReferenceExpression expression) {
     String name = expression.name();
-    if (scope.contains(name)) {
-      return scope.get(name);
-    } else {
-      Value value = (Value) definitions.evaluables().get(name);
-      Task task = value.body().visit(this);
-      return new VirtualTask(value.extendedName(), task, value.location());
-    }
+    DefinedValue value = (DefinedValue) definitions.evaluables().get(name);
+    Task task = value.body().visit(this);
+    Task convertedTask = convertIfNeeded(task, value.type());
+    return new VirtualTask(value.extendedName(), convertedTask, value.location());
+  }
+
+  @Override
+  public Task visit(NativeValueReferenceExpression expression) {
+    NativeValue nativeFunction = expression.nativeValue();
+    Algorithm algorithm = new CallNativeAlgorithm(
+        nativeFunction.type().visit(typeConverter), nativeFunction);
+    // TODO fix CALL to ???
+    return new NormalTask(CALL, nativeFunction.type(), nativeFunction.extendedName(), algorithm,
+          ImmutableList.of(), expression.location(), nativeFunction.isCacheable());
+  }
+
+  @Override
+  public Task visit(ParameterReferenceExpression expression) {
+    return scope.get(expression.name());
   }
 
   @Override

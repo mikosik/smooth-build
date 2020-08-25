@@ -15,6 +15,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -30,6 +31,7 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.lang.parse.ast.ValueTarget;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 
@@ -105,13 +107,15 @@ public class FindSemanticErrors {
           Named named = scope.get(name);
           if (named instanceof ValueNode value) {
             ref.setTarget(value);
+          } else if (named instanceof Value value) {
+            ref.setTarget(new ValueTarget(value));
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
-          } else if (named instanceof CallableNode){
+          } else if (named instanceof CallableNode) {
             logger.log(parseError(ref.location(), "'" + name + "' is a function and cannot be " +
                 "accessed as a value."));
           } else {
-            throw new RuntimeException("unexpected case");
+            throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
           }
         } else {
           logger.log(parseError(ref.location(), "'" + name + "' is undefined."));
@@ -128,6 +132,9 @@ public class FindSemanticErrors {
           if (named instanceof ItemNode) {
             logger.log(parseError(call.location(), "Parameter '" + name
                 + "' cannot be called as it is not a function."));
+          } else if (named instanceof ValueNode || named instanceof Value) {
+            logger.log(parseError(call.location(), "`" + name
+                + "` cannot be called as it is a value."));
           }
         } else {
           logger.log(parseError(call.location(), "'" + name + "' is undefined."));

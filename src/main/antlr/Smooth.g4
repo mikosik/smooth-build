@@ -4,7 +4,7 @@ module      : ( struct | value | func )* EOF ;
 struct      : TYPE_IDENTIFIER '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
 field       : type name ;
-value       : type? name '=' expr ';' ;
+value       : type? name ('=' expr)? ';' ;
 func        : type? name '(' paramList? ')' ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type name ( '=' expr )? ;

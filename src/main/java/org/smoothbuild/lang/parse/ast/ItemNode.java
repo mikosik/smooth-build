@@ -4,8 +4,9 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.Type;
 
-public class ItemNode extends NamedNode {
+public class ItemNode extends NamedNode implements RefTarget {
   private final int index;
   private final TypeNode typeNode;
   private final ExprNode defaultValue;
@@ -41,5 +42,10 @@ public class ItemNode extends NamedNode {
 
   public void setItemInfo(Optional<Item> itemInfo) {
     this.itemInfo = itemInfo;
+  }
+
+  @Override
+  public Optional<Type> inferredType() {
+    return type();
   }
 }

@@ -109,8 +109,8 @@ public class InferTypesAndParamAssignments {
         if (evaluable.declaresType()) {
           return createType(evaluable.typeNode());
         } else {
-          logger.log(parseError(evaluable, "Function '" + evaluable.name()
-              + "' is native so should have declared result type."));
+          logger.log(parseError(evaluable, "'" + evaluable.name()
+              + "' is native so it should have type declaration."));
           return empty();
         }
       }
@@ -250,7 +250,7 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        ref.setType(ref.target().type());
+        ref.setType(ref.target().inferredType());
       }
 
       @Override

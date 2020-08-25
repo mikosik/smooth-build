@@ -6,9 +6,9 @@ import org.smoothbuild.plugin.SmoothFunction;
 
 public class ReportTwoErrors {
   @SmoothFunction("reportTwoErrors")
-  public static RString reportTwoErrors(NativeApi nativeApi, RString message1, RString message2) {
-    nativeApi.log().error(message1.jValue());
-    nativeApi.log().error(message2.jValue());
+  public static RString reportTwoErrors(NativeApi nativeApi) {
+    nativeApi.log().error("first error");
+    nativeApi.log().error("second error");
     return null;
   }
 }

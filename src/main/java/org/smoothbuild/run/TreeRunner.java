@@ -56,7 +56,7 @@ public class TreeRunner {
 
     private Task treeOf(Definitions definitions, Value value) {
       return executionPlanner.createPlan(
-          definitions, value.createArglessEvaluationExpression(commandLineLocation()));
+          definitions, value.createReferenceExpression(commandLineLocation()));
     }
 
     private void print(Task task) {
