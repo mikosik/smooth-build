@@ -1,35 +1,32 @@
 package org.smoothbuild.lang.base;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.Expression;
 
-public class Accessor extends Callable {
+public class Accessor extends Evaluable {
   private final int fieldIndex;
 
-  public Accessor(Signature signature, int fieldIndex, Location location) {
-    super(signature, location);
+  public Accessor(ConcreteType type, String name, int fieldIndex, Location location) {
+    super(type, name, location);
     this.fieldIndex = fieldIndex;
   }
 
   @Override
-  public String extendedName() {
-    return "." + signature().name();
+  public ConcreteType type() {
+    return (ConcreteType) super.type();
   }
 
   @Override
-  public ConcreteType type() {
-    return (ConcreteType) signature().type();
+  public String extendedName() {
+    return "." + name();
+  }
+
+  @Override
+  public Expression createArglessEvaluationExpression(Location location) {
+    throw new UnsupportedOperationException();
   }
 
   public int fieldIndex() {
     return fieldIndex;
-  }
-
-  @Override
-  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
-    return new AccessorCallExpression(this, arguments, location);
   }
 }
