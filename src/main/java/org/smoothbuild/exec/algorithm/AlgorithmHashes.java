@@ -4,7 +4,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.Native;
 
 import okio.ByteString;
 
@@ -13,8 +13,8 @@ public class AlgorithmHashes {
     return hash(0);
   }
 
-  public static Hash callNativeAlgorithmHash(NativeFunction function) {
-    return hash(1, function.hash());
+  public static Hash callNativeAlgorithmHash(Native nativ) {
+    return hash(1, nativ.hash());
   }
 
   public static Hash convertAlgorithmHash(Spec destinationSpec) {

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.DefinedFunction;
@@ -109,18 +108,13 @@ public class FunctionLoader {
     private Callable nativeFunction() {
       Native nativ = evaluable.nativ();
       Signature signature = createSignature();
-      Hash hash = createNativeFunctionHash(nativ.jarFile().hash(), signature);
       boolean isCacheable = nativ.cacheable();
-      return new NativeFunction(nativ, signature, evaluable.location(), isCacheable, hash);
+      return new NativeFunction(nativ, signature, evaluable.location(), isCacheable);
     }
 
     private Signature createSignature() {
       List<Parameter> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
       return signature(evaluable.type().get(), evaluable.name(), parameters);
-    }
-
-    private Hash createNativeFunctionHash(Hash jarHash, Signature signature) {
-      return Hash.of(jarHash, Hash.of(signature.name()));
     }
 
     private Parameter createParameter(ItemNode param) {

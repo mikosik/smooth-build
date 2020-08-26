@@ -22,6 +22,7 @@ import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.Accessor;
+import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
@@ -158,9 +159,12 @@ public class ComputationHashTest extends TestingContext {
   }
 
   private static NativeFunction mockNativeFunction() {
+    Native nativ = mock(Native.class);
+    when(nativ.hash()).thenReturn(Hash.of(33));
+
     NativeFunction nativeFunction = mock(NativeFunction.class);
-    when(nativeFunction.hash()).thenReturn(Hash.of(33));
-    when(nativeFunction.name()).thenReturn("name");
+    when(nativeFunction.nativ()).thenReturn(nativ);
+
     return nativeFunction;
   }
 }
