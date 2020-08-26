@@ -25,7 +25,7 @@ public class CallNativeAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(function);
+    return callNativeAlgorithmHash(function.nativ());
   }
 
   @Override

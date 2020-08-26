@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.lang.base.Accessor;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -28,12 +28,12 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    NativeFunction function = nativeFunctionWithHash(Hash.of(0));
+    Native nativ = nativeWithHash(Hash.of(0));
     TupleSpec constructedType = tupleSpec(list());
     Accessor accessor = accessor(0);
 
     hashes.add(createArrayAlgorithmHash());
-    hashes.add(callNativeAlgorithmHash(function));
+    hashes.add(callNativeAlgorithmHash(nativ));
     hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(createTupleAlgorithmHash(constructedType));
     hashes.add(ReadTupleElementAlgorithmHash(accessor));
@@ -45,12 +45,12 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void call_native_algorithm_has_different_hash_for_different_functions() {
-    NativeFunction function = nativeFunctionWithHash(Hash.of(1));
-    NativeFunction function2 = nativeFunctionWithHash(Hash.of(2));
+  public void call_native_algorithm_has_different_hash_for_different_natives() {
+    Native native1 = nativeWithHash(Hash.of(1));
+    Native native2 = nativeWithHash(Hash.of(2));
 
-    assertThat(callNativeAlgorithmHash(function))
-        .isNotEqualTo(callNativeAlgorithmHash(function2));
+    assertThat(callNativeAlgorithmHash(native1))
+        .isNotEqualTo(callNativeAlgorithmHash(native2));
   }
 
   @Test
@@ -95,9 +95,9 @@ public class AlgorithmHashesTest extends TestingContext {
     return accessor;
   }
 
-  private static NativeFunction nativeFunctionWithHash(Hash hash) {
-    NativeFunction function = mock(NativeFunction.class);
-    when(function.hash()).thenReturn(hash);
-    return function;
+  private static Native nativeWithHash(Hash hash) {
+    Native nativ = mock(Native.class);
+    when(nativ.hash()).thenReturn(hash);
+    return nativ;
   }
 }
