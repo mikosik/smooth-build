@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
@@ -18,7 +17,6 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.Field;
 import org.smoothbuild.lang.base.type.StructType;
@@ -49,8 +47,6 @@ public class InferTypesAndParamAssignments {
   public static void inferTypesAndParamAssignment(
       Ast ast, Definitions imported, LoggerImpl logger) {
     new AstVisitor() {
-      Scope<Type> scope = scope();
-
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
@@ -81,12 +77,7 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitFunc(FuncNode func) {
         visitParams(func.params());
-
-        scope = scope(scope);
-        func.params().forEach(p -> scope.add(p.name(), p.type().get()));
         func.visitExpr(this);
-        scope = scope.outerScope();
-
         func.setType(codeType(func));
         visitCallable(func);
       }
