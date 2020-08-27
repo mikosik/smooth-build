@@ -12,7 +12,7 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void false_and_false_returns_false() throws IOException {
     createUserModule(
-        "  result = and(false(), false());  ");
+        "  result = and(false, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -22,7 +22,7 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void false_and_true_returns_false() throws IOException {
     createUserModule(
-        "  result = and(false(), true());  ");
+        "  result = and(false, true);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -32,7 +32,7 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void true_and_false_returns_false() throws IOException {
     createUserModule(
-        "  result = and(true(), false());  ");
+        "  result = and(true, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -42,7 +42,7 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void true_and_true_returns_true() throws IOException {
     createUserModule(
-        "  result = and(true(), true());  ");
+        "  result = and(true, true);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -54,7 +54,7 @@ public class AndTest extends AcceptanceTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(
         "  Nothing throwException();                 ",
-        "  result = and(false(), throwException());  ");
+        "  result = and(false, throwException());  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

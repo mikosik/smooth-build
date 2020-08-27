@@ -13,7 +13,7 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void false_or_false_returns_false() throws IOException {
     createUserModule(
-        "  result = or(false(), false());  ");
+        "  result = or(false, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -23,7 +23,7 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void false_or_true_returns_true() throws IOException {
     createUserModule(
-        "  result = or(false(), true());  ");
+        "  result = or(false, true);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -33,7 +33,7 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void true_or_false_returns_true() throws IOException {
     createUserModule(
-        "  result = or(true(), false());  ");
+        "  result = or(true, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -43,7 +43,7 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void true_or_true_returns_true() throws IOException {
     createUserModule(
-        "  result = or(true(), true());  ");
+        "  result = or(true, true);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -55,7 +55,7 @@ public class OrTest extends AcceptanceTestCase {
     createNativeJar(ThrowException.class);
     createUserModule(
         "  Nothing throwException();               ",
-        "  result = or(true(), throwException());  ");
+        "  result = or(true, throwException());  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

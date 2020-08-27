@@ -108,6 +108,16 @@ public class FunctionTest extends AcceptanceTestCase {
         assertFinishedWithError();
         assertSysOutContainsParseError(2, "`myValue` cannot be called as it is a value.");
       }
+
+      @Test
+      public void defined_in_imported_module_causes_error() throws IOException {
+        createUserModule("""
+            result = true();
+            """);
+        runSmoothBuild("result");
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, "`true` cannot be called as it is a value.");
+      }
     }
 
     @Nested

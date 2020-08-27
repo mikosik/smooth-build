@@ -11,7 +11,7 @@ public class TrueTest extends AcceptanceTestCase {
   @Test
   public void true_function() throws IOException {
     createUserModule(
-        "  result = true();  ");
+        "  result = true;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

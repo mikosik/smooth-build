@@ -9,9 +9,9 @@ Message {
   String severity,
 }
 
-Bool true();
+Bool true;
 
-Bool false();
+Bool false;
 
 Bool not(
   Bool value,
@@ -20,12 +20,12 @@ Bool not(
 Bool and(
   Bool first,
   Bool second,
-) = if(first, second, false());
+) = if(first, second, false);
 
 Bool or(
   Bool first,
   Bool second,
-) = if (first, true(), second);
+) = if (first, true, second);
 
 Bool equal(
   A first,

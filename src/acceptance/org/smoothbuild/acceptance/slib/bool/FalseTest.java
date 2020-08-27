@@ -11,7 +11,7 @@ public class FalseTest extends AcceptanceTestCase {
   @Test
   public void false_function() throws IOException {
     createUserModule(
-        "  result = false();  ");
+        "  result = false;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
