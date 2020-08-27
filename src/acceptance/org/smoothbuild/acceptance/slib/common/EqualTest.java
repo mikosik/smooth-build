@@ -49,7 +49,7 @@ public class EqualTest extends AcceptanceTestCase {
   @Test
   public void false_bool_values_are_equal() throws Exception {
     createUserModule(
-        "  result = equal(false(), false());  ");
+        "  result = equal(false, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -59,7 +59,7 @@ public class EqualTest extends AcceptanceTestCase {
   @Test
   public void true_is_not_equal_to_false() throws Exception {
     createUserModule(
-        "  result = equal(true(), false());  ");
+        "  result = equal(true, false);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -126,7 +126,7 @@ public class EqualTest extends AcceptanceTestCase {
               Bool firstName,
               String secondName,
             }
-            result = equal(person("aaa", "bbb"), person2(true(), "bbb"));
+            result = equal(person("aaa", "bbb"), person2(true, "bbb"));
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

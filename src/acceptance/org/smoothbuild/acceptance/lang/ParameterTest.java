@@ -187,7 +187,7 @@ public class ParameterTest extends AcceptanceTestCase {
     @Test
     public void call() throws Exception {
       createUserModule(
-          "  oneParameter(Bool value = true()) = value;                       ",
+          "  oneParameter(Bool value = true) = value;                       ",
           "  result = oneParameter();                                         ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -198,7 +198,7 @@ public class ParameterTest extends AcceptanceTestCase {
     @Test
     public void pipe() throws Exception {
       createUserModule(
-          "  oneParameter(String value = true() | if('abc', 'def')) = value;  ",
+          "  oneParameter(String value = true | if('abc', 'def')) = value;  ",
           "  result = oneParameter();                                         ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();

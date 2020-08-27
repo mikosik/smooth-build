@@ -18,7 +18,7 @@ public class TestedType {
   );
   public static final TestedType BOOL = new TestedType(
       bool().name(),
-      "true()",
+      "true",
       new String(new byte[] {1})
   );
   public static final TestedType NOTHING = new TestedType(
@@ -38,7 +38,7 @@ public class TestedType {
       "Data{ Blob value }");
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
       "Flag",
-      "flag(true())",
+      "flag(true)",
       null,
       "Flag{ Bool value }");
   public static final TestedType STRUCT_WITH_STRING = new TestedType(

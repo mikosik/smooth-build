@@ -143,7 +143,7 @@ public class ArrayTest extends AcceptanceTestCase {
     @Test
     public void bools() throws Exception {
       createUserModule(
-          "  result = [ true(), false() ];  ");
+          "  result = [ true, false ];  ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactAsByteStrings("result"))
@@ -254,7 +254,7 @@ public class ArrayTest extends AcceptanceTestCase {
     @Test
     public void pipe() throws Exception {
       createUserModule(
-          "  result = [ true() | if('then', 'else') ]; ");
+          "  result = [ true | if('then', 'else') ]; ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -264,7 +264,7 @@ public class ArrayTest extends AcceptanceTestCase {
     @Test
     public void call() throws Exception {
       createUserModule(
-          "  result = [ if(true(), 'then', 'else') ]; ");
+          "  result = [ if(true, 'then', 'else') ]; ");
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))

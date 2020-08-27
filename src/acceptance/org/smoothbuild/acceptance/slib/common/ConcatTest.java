@@ -12,7 +12,7 @@ public class ConcatTest extends AcceptanceTestCase {
   @Test
   public void concatenate_bool_arrays_function() throws Exception {
     createUserModule(
-        "  result = concat([true()], [false()]);  ");
+        "  result = concat([true], [false]);  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsByteStrings("result"))

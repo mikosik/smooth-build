@@ -14,7 +14,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_bool_artifact() throws Exception {
     createUserModule(
-        "  result = true();  ");
+        "  result = true;  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -69,7 +69,7 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_array_of_bools_artifact() throws Exception {
     createUserModule(
-        "  result = [ true(), false() ];  ");
+        "  result = [ true, false ];  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");

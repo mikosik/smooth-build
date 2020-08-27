@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
@@ -107,9 +108,9 @@ public class InferCallTypeAndParamAssignment {
 
       private List<? extends Item> callableParameters() {
         String name = call.calledName();
-        Callable callable = (Callable) imported.evaluables().get(name);
-        if (callable != null) {
-          return callable.signature().parameters();
+        Evaluable evaluable = imported.evaluables().get(name);
+        if (evaluable != null) {
+          return ((Callable) evaluable).signature().parameters();
         }
         CallableNode node = callables.get(name);
         if (node != null) {
