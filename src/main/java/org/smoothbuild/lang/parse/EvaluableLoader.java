@@ -6,8 +6,8 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Callable;
@@ -46,56 +46,40 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.lang.parse.ast.ValueTarget;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
-public class FunctionLoader {
-  public static Callable loadFunction(
-      FuncNode func,
-      ImmutableMap<String, Evaluable> importedEvaluables,
-      HashMap<String, Evaluable> localEvaluables) {
-    return new CallableSupplier(func, localEvaluables, importedEvaluables).getFunction();
-  }
-
+public class EvaluableLoader {
   public static Value loadValue(
       ValueNode value,
-      ImmutableMap<String, Evaluable> importedEvaluables,
-      HashMap<String, Evaluable> localEvaluables) {
-    return new CallableSupplier(value, localEvaluables, importedEvaluables).getValue();
+      Map<String, Evaluable> importedEvaluables,
+      Map<String, Evaluable> localEvaluables) {
+    return new CallableSupplier(value, localEvaluables, importedEvaluables).loadValue();
+  }
+
+  public static Callable loadFunction(
+      FuncNode func,
+      Map<String, Evaluable> importedEvaluables,
+      Map<String, Evaluable> localEvaluables) {
+    return new CallableSupplier(func, localEvaluables, importedEvaluables).loadFunction();
   }
 
   private static class CallableSupplier {
     private final EvaluableNode evaluable;
-    private final HashMap<String, Evaluable> localEvaluables;
-    private final ImmutableMap<String, Evaluable> importedEvaluables;
+    private final Map<String, Evaluable> localEvaluables;
+    private final Map<String, Evaluable> importedEvaluables;
 
-    public CallableSupplier(EvaluableNode evaluable, HashMap<String, Evaluable> localEvaluables,
-        ImmutableMap<String, Evaluable> importedEvaluables) {
+    public CallableSupplier(EvaluableNode evaluable, Map<String, Evaluable> localEvaluables,
+        Map<String, Evaluable> importedEvaluables) {
       this.evaluable = evaluable;
       this.localEvaluables = localEvaluables;
       this.importedEvaluables = importedEvaluables;
     }
 
-    public Callable getFunction() {
-      if (evaluable.isNative()) {
-        return nativeFunction();
-      } else {
-        return definedFunction();
-      }
-    }
-
-    public Value getValue() {
+    public Value loadValue() {
       if (evaluable.isNative()) {
         return nativeValue();
       } else {
         return definedValue();
       }
-    }
-
-    private DefinedFunction definedFunction() {
-      return new DefinedFunction(
-          createSignature(),
-          evaluable.location(),
-          createExpression(evaluable.expr()));
     }
 
     private Value definedValue() {
@@ -106,6 +90,27 @@ public class FunctionLoader {
         expression = new ConvertExpression(type, expression, evaluable.location());
       }
       return new DefinedValue(type, evaluable.name(), expression, evaluable.location());
+    }
+
+    private Value nativeValue() {
+      Native nativ = evaluable.nativ();
+      return new NativeValue((ConcreteType) evaluable.type().get(), evaluable.name(), nativ,
+          evaluable.location(), nativ.cacheable());
+    }
+
+    public Callable loadFunction() {
+      if (evaluable.isNative()) {
+        return nativeFunction();
+      } else {
+        return definedFunction();
+      }
+    }
+
+    private DefinedFunction definedFunction() {
+      return new DefinedFunction(
+          createSignature(),
+          evaluable.location(),
+          createExpression(evaluable.expr()));
     }
 
     private Callable nativeFunction() {
@@ -127,12 +132,6 @@ public class FunctionLoader {
           ? createExpression(param.defaultValue())
           : null;
       return new Parameter(param.index(), type, name, defaultValue, param.location());
-    }
-
-    private Value nativeValue() {
-      Native nativ = evaluable.nativ();
-      return new NativeValue((ConcreteType) evaluable.type().get(), evaluable.name(), nativ,
-          evaluable.location(), nativ.cacheable());
     }
 
     private Expression createExpression(ExprNode expr) {

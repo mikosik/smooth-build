@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.lang.parse.EvaluableLoader.loadFunction;
+import static org.smoothbuild.lang.parse.EvaluableLoader.loadValue;
 import static org.smoothbuild.lang.parse.FindSemanticErrors.findSemanticErrors;
-import static org.smoothbuild.lang.parse.FunctionLoader.loadFunction;
-import static org.smoothbuild.lang.parse.FunctionLoader.loadValue;
 import static org.smoothbuild.lang.parse.InferTypesAndParamAssignments.inferTypesAndParamAssignment;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
