@@ -11,7 +11,7 @@ import picocli.CommandLine.Command;
 
 @Command(
     name = ListCommand.NAME,
-    description = "Print arg-less user defined functions"
+    description = "Print user defined values that can be evaluated and stored as artifact"
 )
 public class ListCommand extends ExclusiveCommand {
   public static final String NAME = "list";

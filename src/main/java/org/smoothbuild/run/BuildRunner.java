@@ -35,7 +35,7 @@ public class BuildRunner {
   }
 
   public int run(List<String> names) {
-    List<String> errors = ValidateFunctionNames.validateFunctionNames(names);
+    List<String> errors = ValidateValueNames.validateValueNames(names);
     if (!errors.isEmpty()) {
       console.errors(errors);
       return EXIT_CODE_ERROR;
@@ -68,7 +68,7 @@ public class BuildRunner {
     public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Building");
       findValues(reporter, definitions, names)
-          .ifPresent((callables) -> artifactBuilder.buildArtifacts(definitions, callables));
+          .ifPresent((values) -> artifactBuilder.buildArtifacts(definitions, values));
     }
   }
 }

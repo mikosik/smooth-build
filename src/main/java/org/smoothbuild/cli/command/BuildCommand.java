@@ -17,7 +17,7 @@ import picocli.CommandLine.Parameters;
 
 @Command(
     name = BuildCommand.NAME,
-    description = "Build artifact(s) by running specified function(s)"
+    description = "Evaluate specified value(s) and store them as artifact(s) "
 )
 public class BuildCommand extends ExclusiveCommand {
   public static final String NAME = "build";
@@ -69,15 +69,15 @@ public class BuildCommand extends ExclusiveCommand {
   }
 
   @Parameters(
-      paramLabel = "<function>",
+      paramLabel = "<value>",
       arity = "1..*",
-      description = "function(s) which results are saved as artifacts")
-  List<String> functions;
+      description = "value(s) to evaluate and store as artifact(s)")
+  List<String> values;
 
   @Override
   protected Integer executeCommand(Path projectDir) {
     return createInjector(projectDir, installationDir(), out(), logLevel, showTasks)
         .getInstance(BuildRunner.class)
-        .run(functions);
+        .run(values);
   }
 }

@@ -20,12 +20,13 @@ public class HelpCommandTest extends AcceptanceTestCase {
         More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md
         
         Commands:
-          build    Build artifact(s) by running specified function(s)
+          build    Evaluate specified value(s) and store them as artifact(s)
           clean    Remove all cached objects and artifacts calculated during all
                      previous builds
           help     Displays help information about the specified command
-          list     Print arg-less user defined functions
-          tree     Print execution tree for specified function(s)
+          list     Print user defined values that can be evaluated and stored as
+                     artifact
+          tree     Print execution tree for specified value(s)
           version  Print version information
         """);
   }
@@ -36,13 +37,13 @@ public class HelpCommandTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth build [-d=<projectDir>] [-l=<level>] [-s=<filter>] <function>...
+        smooth build [-d=<projectDir>] [-l=<level>] [-s=<filter>] <value>...
                    
         Description:
-        Build artifact(s) by running specified function(s)
+        Evaluate specified value(s) and store them as artifact(s)
                    
         Parameters:
-              <function>...         function(s) which results are saved as artifacts
+              <value>...            value(s) to evaluate and store as artifact(s)
                    
         Options:
           -d, --project-dir=<projectDir>
@@ -133,7 +134,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
         smooth list [-d=<projectDir>] [-l=<level>]
                 
         Description:
-        Print arg-less user defined functions
+        Print user defined values that can be evaluated and stored as artifact
                 
         Options:
           -d, --project-dir=<projectDir>
@@ -157,13 +158,13 @@ public class HelpCommandTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth tree [-d=<projectDir>] [-l=<level>] <function>...
+        smooth tree [-d=<projectDir>] [-l=<level>] <value>...
                 
         Description:
-        Print execution tree for specified function(s)
+        Print execution tree for specified value(s)
                 
         Parameters:
-              <function>...         function(s) which execution tree is printed
+              <value>...            value(s) which execution tree is printed
                 
         Options:
           -d, --project-dir=<projectDir>
