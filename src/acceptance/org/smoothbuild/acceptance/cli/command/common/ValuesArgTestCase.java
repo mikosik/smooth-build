@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.CommandWithArgs;
 
-public abstract class FunctionsArgTestCase extends AcceptanceTestCase {
+public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   @Test
   public void missing_value_argument_causes_error() throws Exception {
     createUserModule(
