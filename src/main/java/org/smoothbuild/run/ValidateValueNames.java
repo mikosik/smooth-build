@@ -11,28 +11,28 @@ import org.smoothbuild.util.DuplicatesDetector;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class ValidateFunctionNames {
-  public static List<String> validateFunctionNames(List<String> args) {
+public class ValidateValueNames {
+  public static List<String> validateValueNames(List<String> args) {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     args.forEach(duplicatesDetector::addValue);
     return ImmutableList.<String>builder()
-        .addAll(illegalFunctionNameErrors(args))
-        .addAll(duplicateFunctionNameErrors(duplicatesDetector))
+        .addAll(illegalValueNameErrors(args))
+        .addAll(duplicateValueNameErrors(duplicatesDetector))
         .build();
   }
 
-  private static ImmutableList<String> illegalFunctionNameErrors(List<String> args) {
+  private static ImmutableList<String> illegalValueNameErrors(List<String> args) {
     return args
         .stream()
         .filter(a -> !isLegalName(a))
-        .map(a -> "Illegal function name '" + a + "' passed in command line.")
+        .map(a -> "Illegal value name '" + a + "' passed in command line.")
         .collect(toImmutableList());
   }
 
-  private static ImmutableSet<String> duplicateFunctionNameErrors(
+  private static ImmutableSet<String> duplicateValueNameErrors(
       DuplicatesDetector<String> duplicatesDetector) {
     return map(
         duplicatesDetector.getDuplicateValues(),
-        name -> "Function '" + name + "' has been specified more than once.");
+        name -> "Value '" + name + "' has been specified more than once.");
   }
 }

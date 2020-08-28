@@ -29,7 +29,7 @@ public class TreeRunner {
   }
 
   public int run(List<String> names) {
-    List<String> errors = ValidateFunctionNames.validateFunctionNames(names);
+    List<String> errors = ValidateValueNames.validateValueNames(names);
     if (!errors.isEmpty()) {
       console.errors(errors);
       return EXIT_CODE_ERROR;

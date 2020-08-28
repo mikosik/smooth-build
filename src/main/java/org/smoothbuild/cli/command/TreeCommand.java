@@ -13,21 +13,21 @@ import picocli.CommandLine.Parameters;
 
 @Command(
     name = TreeCommand.NAME,
-    description = "Print execution tree for specified function(s)"
+    description = "Print execution tree for specified value(s)"
 )
 public class TreeCommand extends ExclusiveCommand {
   public static final String NAME = "tree";
 
   @Parameters(
-      paramLabel = "<function>",
+      paramLabel = "<value>",
       arity = "1..*",
-      description = "function(s) which execution tree is printed")
-  List<String> functions;
+      description = "value(s) which execution tree is printed")
+  List<String> values;
 
   @Override
   protected Integer executeCommand(Path projectDir) {
     return createInjector(projectDir, installationDir(), out(), logLevel)
         .getInstance(TreeRunner.class)
-        .run(functions);
+        .run(values);
   }
 }
