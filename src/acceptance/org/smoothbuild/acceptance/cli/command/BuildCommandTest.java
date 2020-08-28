@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.CommandWithArgs;
 import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
-import org.smoothbuild.acceptance.cli.command.common.FunctionsArgTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
+import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
 import org.smoothbuild.acceptance.testing.ReportError;
 import org.smoothbuild.acceptance.testing.ReportInfo;
 import org.smoothbuild.acceptance.testing.ReportWarning;
@@ -82,7 +82,7 @@ public class BuildCommandTest {
   }
 
   @Nested
-  class FunctionArgs extends FunctionsArgTestCase {
+  class FunctionArgs extends ValuesArgTestCase {
     @Override
     protected String commandName() {
       return BuildCommand.NAME;
