@@ -5,98 +5,247 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class NameClashTest extends AcceptanceTestCase {
-
   @Nested
-  class user_function_clashes_with {
+  class user_value_clashes_with {
     @Nested
     class slib {
       @Test
-      public void struct_constructor() throws Exception {
-        createUserModule(
-            "  file = 'def';  ");
-        runSmoothBuild("myStruct");
+      public void value() throws Exception {
+        createUserModule("""
+                true = "abc";
+                """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(1, "'file' is already defined at {slib}/slib.smooth:");
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("true"));
       }
 
       @Test
-      public void slib_function() throws Exception {
-        createUserModule(
-            "  aFile = 'abc';  ");
-        runSmoothBuild("aFile");
+      public void function() throws Exception {
+        createUserModule("""
+                and = "abc";
+                """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(1, "'aFile' is already defined at");
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("and"));
+      }
+
+      @Test
+      public void constructor() throws Exception {
+        createUserModule("""
+                file = "abc";
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("file"));
       }
     }
 
     @Nested
     class user {
       @Test
-      public void struct_constructor() throws Exception {
-        createUserModule(
-            "  MyStruct {}        ",
-            "  myStruct = 'def';  ");
-        runSmoothBuild("myStruct");
+      public void value() throws Exception {
+        createUserModule("""
+                myValue = "abc";
+                myValue = "def";
+                """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(2, "'myStruct' is already defined at build.smooth:1.");
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myValue"));
       }
 
       @Test
-      public void other_function() throws Exception {
-        createUserModule(
-            "  function1 = 'abc';  ",
-            "  function1 = 'def';  ");
-        runSmoothBuild("function1");
+      public void function() throws Exception {
+        createUserModule("""
+                myName() = "abc";
+                myName = "def";
+                """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(2, "'function1' is already defined at build.smooth:1.\n");
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myName"));
+      }
+
+      @Test
+      public void constructor() throws Exception {
+        createUserModule("""
+                MyStruct {}
+                myStruct = 'abc';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myStruct"));
       }
     }
   }
 
   @Nested
-  class user_struct {
+  class user_function_clashes_with {
     @Nested
-    class clashes_with_slib {
+    class slib {
+      @Test
+      public void value() throws Exception {
+        createUserModule("""
+                true() = 'abc';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("true"));
+      }
+
+      @Test
+      public void constructor() throws Exception {
+        createUserModule("""
+                file() = 'def';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("file"));
+      }
+
+      @Test
+      public void function() throws Exception {
+        createUserModule("""
+                and() = 'abc';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("and"));
+      }
+    }
+
+    @Nested
+    class user {
+      @Test
+      public void value() throws Exception {
+        createUserModule("""
+                myName = 'abc';
+                myName() = 'def';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myName"));
+      }
+
+      @Test
+      public void constructor() throws Exception {
+        createUserModule("""
+                MyStruct {}
+                myStruct() = 'def';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myStruct"));
+      }
+
+      @Test
+      public void function() throws Exception {
+        createUserModule("""
+                myFunction() = 'abc';
+                myFunction() = 'def';
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myFunction"));
+      }
+    }
+  }
+
+  @Nested
+  class user_struct_clashes_with {
+    @Nested
+    class slib {
       @Test
       public void basic_type() throws Exception {
-        createUserModule(
-            "  String {}        ",
-            "  result = 'abc';  ");
-        runSmoothBuild("result");
+        createUserModule("""
+              String {}
+              """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(1, "'String' is already defined.\n");
+        assertSysOutContainsParseError(1, "'String' is already defined.");
       }
 
       @Test
       public void struct()
           throws Exception {
-        createUserModule(
-            "  File {}          ",
-            "  result = 'abc';  ");
-        runSmoothBuild("result");
+        createUserModule("""
+              File {}
+              """);
+        runSmoothList();
         assertFinishedWithError();
-        assertSysOutContainsParseError(1, "'File' is already defined");
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("File"));
       }
     }
 
-    @Test
-    public void clashes_with_other_user_struct() throws Exception {
-      createUserModule(
-          "  MyStruct {}      ",
-          "  MyStruct {}      ",
-          "  result = 'abc';  ");
-      runSmoothBuild("result");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(2, "'MyStruct' is already defined at build.smooth:1.\n");
+    @Nested
+    class user {
+      @Test
+      public void struct() throws Exception {
+        createUserModule("""
+              MyStruct {}
+              MyStruct {}
+              """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("MyStruct"));
+      }
+    }
+  }
+
+  @Nested
+  class user_constructor_clashes_with {
+    @Nested
+    class slib {
+      @Test
+      public void value() throws Exception {
+        createUserModule("""
+                True {}
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("true"));
+      }
+
+      @Test
+      public void function() throws Exception {
+        createUserModule("""
+                And {}
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(1, alreadyDefinedInSlibModule("and"));
+      }
     }
 
-    @Test
-    public void constructor_clashes_with_slib_function() throws Exception {
-      createUserModule(
-          "  AFile {}   ");
-      runSmoothBuild("myStruct");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "'aFile' is already defined at {slib}/slib.smooth:");
+    @Nested
+    class user {
+      @Test
+      public void value() throws Exception {
+        createUserModule("""
+                myName = "abc";
+                MyName {}
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myName"));
+      }
+
+      @Test
+      public void function() throws Exception {
+        createUserModule("""
+                myName() = "abc";
+                MyName {}
+                """);
+        runSmoothList();
+        assertFinishedWithError();
+        assertSysOutContainsParseError(2, alreadyDefinedInUserModule("myName"));
+      }
     }
+  }
+
+  private static String alreadyDefinedInUserModule(String name) {
+    return "'" + name + "' is already defined at build.smooth:1.\n";
+  }
+
+  private static String alreadyDefinedInSlibModule(String name) {
+    return "'" + name + "' is already defined at {slib}/slib.smooth:";
   }
 }
