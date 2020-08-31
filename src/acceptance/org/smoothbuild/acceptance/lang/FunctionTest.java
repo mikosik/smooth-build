@@ -16,10 +16,9 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void that_is_illegal_causes_error() throws Exception {
       createUserModule("""
-              function^ = "abc"
-              result = "abc";
+              function^() = "abc";
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(1, "token recognition error at: '^'");
     }
@@ -27,70 +26,21 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void starting_with_large_letter_causes_error() throws Exception {
       createUserModule("""
-              FunctionName = "abc";
-              result = "abc";
+              FunctionName() = "abc";
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'FunctionName='");
+      assertSysOutContainsParseError(1, "no viable alternative at input 'FunctionName('");
     }
 
     @Test
     public void with_one_large_letter_causes_error() throws Exception {
       createUserModule("""
-              F = "abc"
-              result = "abc";
+              F() = "abc";
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'F='");
-    }
-  }
-
-  @Nested
-  class recursion {
-    @Test
-    public void direct_causes_error() throws IOException {
-      createUserModule("""
-            function1() = function1();
-            """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
-    }
-
-    @Test
-    public void indirect_with_two_steps_causes_error() throws IOException {
-      createUserModule("""
-            function1() = function2();
-            function2() = function1();
-            """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
-    }
-
-    @Test
-    public void indirect_via_argument_causes_error() throws IOException {
-      createUserModule("""
-              String function1() = myIdentity(function1());
-              String myIdentity(String s) = s;
-              """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
-    }
-
-    @Test
-    public void indirect_with_three_steps_causes_error() throws IOException {
-      createUserModule("""
-            function1() = function2();
-            function2() = function3();
-            function3() = function1();
-            """);
-      runSmoothBuild("function1");
-      assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContainsParseError(1, "no viable alternative at input 'F('");
     }
   }
 
@@ -104,7 +54,7 @@ public class FunctionTest extends AcceptanceTestCase {
             String myValue = "abc";
             result = myValue();
             """);
-        runSmoothBuild("result");
+        runSmoothList();
         assertFinishedWithError();
         assertSysOutContainsParseError(2, "`myValue` cannot be called as it is a value.");
       }
@@ -114,7 +64,7 @@ public class FunctionTest extends AcceptanceTestCase {
         createUserModule("""
             result = true();
             """);
-        runSmoothBuild("result");
+        runSmoothList();
         assertFinishedWithError();
         assertSysOutContainsParseError(1, "`true` cannot be called as it is a value.");
       }
@@ -127,7 +77,7 @@ public class FunctionTest extends AcceptanceTestCase {
         createUserModule("""
             function1 = undefinedFunction();
             """);
-        runSmoothBuild("function1");
+        runSmoothList();
         assertFinishedWithError();
         assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
       }
@@ -137,7 +87,7 @@ public class FunctionTest extends AcceptanceTestCase {
         createUserModule("""
             function1 = undefinedFunction("a");
             """);
-        runSmoothBuild("function1");
+        runSmoothList();
         assertFinishedWithError();
         assertSysOutContainsParseError(1, "'undefinedFunction' is undefined.");
       }
@@ -151,7 +101,7 @@ public class FunctionTest extends AcceptanceTestCase {
             function1() = "abc";
             result    = function1;
             """);
-        runSmoothBuild("result");
+        runSmoothList();
         assertFinishedWithError();
         assertSysOutContainsParseError(
             2, "'function1' is a function and cannot be accessed as a value.");
@@ -177,9 +127,8 @@ public class FunctionTest extends AcceptanceTestCase {
     public void builtin_function_makes_that_function_inaccessible() throws IOException {
       createUserModule("""
               function1(String zip) = zip();
-              result = function1("abc");
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(1, "Parameter 'zip' cannot be called as it is not a function.");
     }
@@ -187,11 +136,10 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void user_function_makes_that_function_inaccessible() throws IOException {
       createUserModule("""
-              function1 = "abc";
+              function1() = "abc";
               function2(String function1) = function1();
-              result = function2("def");
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(2,
           "Parameter 'function1' cannot be called as it is not a function.");
@@ -204,9 +152,9 @@ public class FunctionTest extends AcceptanceTestCase {
     public void function_expression_type_not_convertible_to_function_type_causes_error()
         throws IOException {
       createUserModule("""
-              String result = [];
+              String result() = [];
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(1, "Function 'result' has body which type is '[Nothing]' and it is " +
           "not convertible to function's declared result type 'String'.");
@@ -215,7 +163,8 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void function_with_declared_result_type() throws IOException {
       createUserModule("""
-              String result = "abc";
+              String myFunction() = "abc";
+              result = myFunction();
               """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -226,9 +175,9 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void function_with_result_which_type_is_undefined_causes_error() throws IOException {
       createUserModule("""
-              Undefined result = "abc";
+              Undefined result() = "abc";
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
     }
@@ -313,7 +262,7 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void function_with_nothing_array_result_type_is_allowed() throws IOException {
       createUserModule("""
-              [Nothing] result = [];
+              [Nothing] result() = [];
               """);
       runSmoothList();
       assertFinishedWithSuccess();
@@ -323,10 +272,9 @@ public class FunctionTest extends AcceptanceTestCase {
     public void function_with_result_type_which_is_supertype_of_function_expression()
         throws IOException {
       createUserModule("""
-              Blob func = file(toBlob("abc"), "file.txt");
-              result = "abc";
+              Blob myFunction() = file(toBlob("abc"), "file.txt");
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithSuccess();
     }
 
@@ -337,7 +285,7 @@ public class FunctionTest extends AcceptanceTestCase {
               Blob func() = file(toBlob("abc"), "file.txt");
               File result = func();
               """);
-      runSmoothBuild("result");
+      runSmoothList();
       assertFinishedWithError();
       assertSysOutContainsParseError(2, "Function 'result' has body which type is 'Blob' and it is not " +
           "convertible to function's declared result type 'File'.");
