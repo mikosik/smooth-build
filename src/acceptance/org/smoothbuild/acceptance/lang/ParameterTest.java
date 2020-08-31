@@ -11,7 +11,6 @@ import okio.ByteString;
 
 public class ParameterTest extends AcceptanceTestCase {
   @Nested
-
   class parameter_of_type {
     @Test
     public void bool() throws Exception {
