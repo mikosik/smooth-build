@@ -122,31 +122,6 @@ public class FunctionTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class parameter_shadowing {
-    @Test
-    public void builtin_function_makes_that_function_inaccessible() throws IOException {
-      createUserModule("""
-              function1(String zip) = zip();
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Parameter 'zip' cannot be called as it is not a function.");
-    }
-
-    @Test
-    public void user_function_makes_that_function_inaccessible() throws IOException {
-      createUserModule("""
-              function1() = "abc";
-              function2(String function1) = function1();
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(2,
-          "Parameter 'function1' cannot be called as it is not a function.");
-    }
-  }
-
-  @Nested
   class types {
     @Test
     public void function_expression_type_not_convertible_to_function_type_causes_error()
