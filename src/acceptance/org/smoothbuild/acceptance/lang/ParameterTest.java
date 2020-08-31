@@ -2,6 +2,8 @@ package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
@@ -204,6 +206,47 @@ public class ParameterTest extends AcceptanceTestCase {
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
           .isEqualTo("abc");
+    }
+  }
+
+  @Nested
+  class parameter_that_shadows {
+    @Test
+    public void slib_value_makes_it_inaccessible() throws IOException {
+      createUserModule("""
+              String function1(String true) = true;
+              """);
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void slib_function_makes_it_inaccessible() throws IOException {
+      createUserModule("""
+              String function1(String and) = and;
+              """);
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void user_function_makes_it_inaccessible() throws IOException {
+      createUserModule("""
+              function1() = true;
+              String function2(String function1) = function1;
+              """);
+      runSmoothList();
+      assertFinishedWithSuccess();
+    }
+
+    @Test
+    public void user_value_makes_it_inaccessible() throws IOException {
+      createUserModule("""
+              myValue = true;
+              String function2(String myValue) = myValue;
+              """);
+      runSmoothList();
+      assertFinishedWithSuccess();
     }
   }
 
