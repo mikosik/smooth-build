@@ -1,10 +1,7 @@
 package org.smoothbuild.util;
 
 import static com.google.common.base.Strings.repeat;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.lang.Math.max;
-
-import java.util.List;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -25,12 +22,7 @@ public class Antlr {
   }
 
   public static String errorLine(Recognizer<?, ?> recognizer, int lineNumber) {
-    List<String> lines = extractSourceCode(recognizer).lines().collect(toImmutableList());
-    if (lines.isEmpty()) {
-      return "";
-    } else {
-      return lines.get(lineNumber - 1);
-    }
+    return extractSourceCode(recognizer).split("(\r\n|\r|\n)", -1)[lineNumber - 1];
   }
 
   public static String extractSourceCode(Recognizer<?, ?> recognizer) {
