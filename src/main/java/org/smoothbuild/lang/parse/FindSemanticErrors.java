@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
@@ -111,7 +112,7 @@ public class FindSemanticErrors {
             ref.setTarget(new ValueTarget(value));
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
-          } else if (named instanceof CallableNode) {
+          } else if (named instanceof CallableNode || named instanceof Callable) {
             logger.log(parseError(ref.location(), "'" + name + "' is a function and cannot be " +
                 "accessed as a value."));
           } else {
