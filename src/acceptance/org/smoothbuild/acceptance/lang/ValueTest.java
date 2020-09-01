@@ -7,16 +7,16 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.GenericResult;
 import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.acceptance.testing.ValueWithGenericType;
 
-public class FunctionTest extends AcceptanceTestCase {
+public class ValueTest extends AcceptanceTestCase {
   @Nested
   class name {
     @Test
     public void that_is_illegal_causes_error() throws Exception {
       createUserModule("""
-              function^() = "abc";
+              myValue^ = "abc";
               """);
       runSmoothList();
       assertFinishedWithError();
@@ -26,21 +26,21 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void starting_with_large_letter_causes_error() throws Exception {
       createUserModule("""
-              FunctionName() = "abc";
+              MyValue = "abc";
               """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'FunctionName('");
+      assertSysOutContainsParseError(1, "no viable alternative at input 'MyValue='");
     }
 
     @Test
     public void with_one_large_letter_causes_error() throws Exception {
       createUserModule("""
-              F() = "abc";
+              F = "abc";
               """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'F('");
+      assertSysOutContainsParseError(1, "no viable alternative at input 'F='");
     }
   }
 
@@ -50,7 +50,7 @@ public class FunctionTest extends AcceptanceTestCase {
     public void expression_type_not_convertible_to_declared_type_causes_error()
         throws IOException {
       createUserModule("""
-              String result() = [];
+              String result = [];
               """);
       runSmoothList();
       assertFinishedWithError();
@@ -61,8 +61,7 @@ public class FunctionTest extends AcceptanceTestCase {
     @Test
     public void declared_result_type() throws IOException {
       createUserModule("""
-              String myFunction() = "abc";
-              result = myFunction();
+              String result = "abc";
               """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
@@ -71,9 +70,9 @@ public class FunctionTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declaring_result_type_which_is_undefined_causes_error() throws IOException {
+    public void undefined_declared_result_type_causes_error() throws IOException {
       createUserModule("""
-              Undefined result() = "abc";
+              Undefined result = "abc";
               """);
       runSmoothList();
       assertFinishedWithError();
@@ -81,62 +80,18 @@ public class FunctionTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declaring_generic_result_type_when_some_param_has_such_type_is_allowed()
-        throws Exception {
+    public void generic_declared_result_type_causes_error() throws Exception {
+      createNativeJar(ValueWithGenericType.class);
       createUserModule("""
-              A testIdentity(A value) = value;
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_generic_result_type_when_some_param_has_such_core_type_is_allowed()
-        throws Exception {
-      createNativeJar(GenericResult.class);
-      createUserModule("""
-              A genericResult([A] array);
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_generic_array_result_type_when_some_param_has_such_type_is_allowed()
-        throws Exception {
-      createUserModule("""
-              [A] testArrayIdentity(A value) = [value];
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_generic_array_result_type_when_some_param_has_such_core_type_is_allowed()
-        throws Exception {
-      createUserModule("""
-              [A] testArrayIdentity([A] value) = value;
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_generic_result_type_when_no_param_has_such_core_type_causes_error()
-        throws Exception {
-      createNativeJar(GenericResult.class);
-      createUserModule("""
-              A genericResult([B] array);
+              A valueWithGenericType;
               """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Undefined generic type 'A'. "
-          + "Only generic types used in declaration of function parameters can be used here.");
+      assertSysOutContainsParseError(1, "Value cannot have generic type.");
     }
 
     @Test
-    public void declaring_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
-        throws IOException {
+    public void generic_declared_array_result_type_causes_error() throws IOException {
       createUserModule("""
               [A] result() = [];
               """);
@@ -147,30 +102,30 @@ public class FunctionTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declaring_nothing_result_type_is_allowed()
-        throws Exception {
+    public void declared_nothing_result_type_is_allowed() throws Exception {
       createNativeJar(ReportError.class);
       createUserModule("""
               Nothing reportError(String message);
+              Nothing myValue = reportError("abc");
               """);
       runSmoothList();
       assertFinishedWithSuccess();
     }
 
     @Test
-    public void declaring_nothing_array_result_type_is_allowed() throws IOException {
+    public void declared_function_with_nothing_array_result_type_is_allowed() throws IOException {
       createUserModule("""
-              [Nothing] result() = [];
+              [Nothing] result = [];
               """);
       runSmoothList();
       assertFinishedWithSuccess();
     }
 
     @Test
-    public void declaring_result_type_which_is_supertype_of_function_expression()
+    public void declared_result_type_which_is_supertype_of_expression()
         throws IOException {
       createUserModule("""
-              Blob myFunction() = file(toBlob("abc"), "file.txt");
+              Blob myValue = file(toBlob("abc"), "file.txt");
               """);
       runSmoothList();
       assertFinishedWithSuccess();
@@ -180,8 +135,8 @@ public class FunctionTest extends AcceptanceTestCase {
     public void result_cannot_be_assigned_to_non_convertible_type_even_when_expression_is_convertible()
         throws IOException {
       createUserModule("""
-              Blob func() = file(toBlob("abc"), "file.txt");
-              File result = func();
+              Blob myValue = file(toBlob("abc"), "file.txt");
+              File result = myValue;
               """);
       runSmoothList();
       assertFinishedWithError();
