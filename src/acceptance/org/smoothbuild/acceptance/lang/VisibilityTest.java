@@ -9,6 +9,18 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class VisibilityTest extends AcceptanceTestCase {
+  @Test
+  public void reference_in_default_value_expression_to_other_parameter_causes_error()
+      throws Exception {
+    createUserModule("""
+            func(String param, String withDefault = param) = param;
+            result = "abc";
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContainsParseError(1, "'param' is undefined.");
+  }
+
   @Nested
   class reference {
     @Nested
