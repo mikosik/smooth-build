@@ -16,8 +16,9 @@ public class ArrayTest extends AcceptanceTestCase {
   class empty_array_of {
     @Test
     public void blobs() throws Exception {
-      createUserModule(
-          "  [Blob] result = [];  ");
+      createUserModule("""
+              [Blob] result = [];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -26,8 +27,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void bools() throws Exception {
-      createUserModule(
-          "  [Bool] result = [];  ");
+      createUserModule("""
+              [Bool] result = [];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -36,8 +38,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void nothings() throws Exception {
-      createUserModule(
-          "  result = [];  ");
+      createUserModule("""
+              result = [];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -46,8 +49,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void strings() throws Exception {
-      createUserModule(
-          "  [String] result = [];  ");
+      createUserModule("""
+              [String] result = [];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -56,8 +60,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void files() throws Exception {
-      createUserModule(
-          "  [File] result = [];  ");
+      createUserModule("""
+              [File] result = [];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -68,8 +73,9 @@ public class ArrayTest extends AcceptanceTestCase {
     class arrays_of {
       @Test
       public void nothings() throws Exception {
-        createUserModule(
-            "  [[Nothing]] result = [];  ");
+        createUserModule("""
+              [[Nothing]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -78,8 +84,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void bools() throws Exception {
-        createUserModule(
-            "  [[Bool]] result = [];  ");
+        createUserModule("""
+              [[Bool]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -88,8 +95,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void strings() throws Exception {
-        createUserModule(
-            "  [[String]] result = [];  ");
+        createUserModule("""
+              [[String]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -98,8 +106,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void blobs() throws Exception {
-        createUserModule(
-            "  [[Blob]] result = [];  ");
+        createUserModule("""
+              [[Blob]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -108,8 +117,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void files() throws Exception {
-        createUserModule(
-            "  [[File]] result = [];  ");
+        createUserModule("""
+              [[File]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -118,8 +128,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void arrays_of_nothings() throws Exception {
-        createUserModule(
-            "  [[[Nothing]]] result = [];  ");
+        createUserModule("""
+              [[[Nothing]]] result = [];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -132,8 +143,9 @@ public class ArrayTest extends AcceptanceTestCase {
   class array_of {
     @Test
     public void blobs() throws Exception {
-      createUserModule(
-          "  result = [ toBlob('abc'), toBlob('def') ];  ");
+      createUserModule("""
+              result = [ toBlob("abc"), toBlob("def") ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -142,8 +154,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void bools() throws Exception {
-      createUserModule(
-          "  result = [ true, false ];  ");
+      createUserModule("""
+              result = [ true, false ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactAsByteStrings("result"))
@@ -152,8 +165,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void strings() throws Exception {
-      createUserModule(
-          "  result = [ 'abc', 'def' ];  ");
+      createUserModule("""
+              result = [ "abc", "def" ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -162,8 +176,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void files() throws Exception {
-      createUserModule(
-          "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
+      createUserModule("""
+              result = [ file(toBlob("abc"), "file1.txt"), file(toBlob("def"), "file2.txt") ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactTreeContentAsStrings("result"))
@@ -174,8 +189,9 @@ public class ArrayTest extends AcceptanceTestCase {
     class arrays_of {
       @Test
       public void nothings_with_one_element() throws Exception {
-        createUserModule(
-            "  [[Nothing]] result = [ [] ];  ");
+        createUserModule("""
+              [[Nothing]] result = [ [] ];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -184,8 +200,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void nothings_with_two_elements() throws Exception {
-        createUserModule(
-            "  [[Nothing]] result = [ [], [] ];  ");
+        createUserModule("""
+              [[Nothing]] result = [ [], [] ];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -194,8 +211,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void strings() throws Exception {
-        createUserModule(
-            "  [[String]] result = [ [], [ 'abc' ], [ 'def', 'ghi' ] ];  ");
+        createUserModule("""
+              [[String]] result = [ [], [ "abc" ], [ "def", 'ghi' ] ];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -204,8 +222,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
       @Test
       public void arrays_of_strings() throws Exception {
-        createUserModule(
-            "  [[[String]]] result = [ [ [] ], [ [ 'abc' ], [ 'def', 'ghi' ] ] ];  ");
+        createUserModule("""
+              [[[String]]] result = [ [ [] ], [ [ "abc" ], [ "def", 'ghi' ] ] ];
+              """);
         runSmoothBuild("result");
         assertFinishedWithSuccess();
         assertThat(stringifiedArtifact("result"))
@@ -218,8 +237,9 @@ public class ArrayTest extends AcceptanceTestCase {
   class array_with {
     @Test
     public void string_literal() throws Exception {
-      createUserModule(
-          "  result = [ 'abc' ]; ");
+      createUserModule("""
+              result = [ "abc" ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -228,8 +248,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void blob_literal() throws Exception {
-      createUserModule(
-          "  result = [ 0x41 ]; ");
+      createUserModule("""
+              result = [ 0x41 ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -242,7 +263,7 @@ public class ArrayTest extends AcceptanceTestCase {
               MyStruct {
                 String field,
               }
-              value = myStruct('abc');
+              value = myStruct("abc");
               result = [ value.field ];
               """);
       runSmoothBuild("result");
@@ -253,8 +274,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void pipe() throws Exception {
-      createUserModule(
-          "  result = [ true | if('then', 'else') ]; ");
+      createUserModule("""
+              result = [ true | if('then', 'else') ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -263,8 +285,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
     @Test
     public void call() throws Exception {
-      createUserModule(
-          "  result = [ if(true, 'then', 'else') ]; ");
+      createUserModule("""
+              result = [ if(true, 'then', 'else') ];
+              """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(stringifiedArtifact("result"))
@@ -274,16 +297,18 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void empty_array_with_comma_causes_error() throws Exception {
-    createUserModule(
-        "  result = [,];  ");
+    createUserModule("""
+              result = [,];
+              """);
     runSmoothBuild("result");
     assertFinishedWithError();
   }
 
   @Test
   public void array_with_one_element() throws Exception {
-    createUserModule(
-        "  result = [ 'abc' ];  ");
+    createUserModule("""
+              result = [ "abc" ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -292,8 +317,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_trailing_comma() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', ];  ");
+    createUserModule("""
+              result = [ "abc", ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -302,24 +328,27 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_two_trailing_commas_causes_error() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', , ];  ");
+    createUserModule("""
+              result = [ "abc", , ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithError();
   }
 
   @Test
   public void array_with_leading_comma_causes_error() throws Exception {
-    createUserModule(
-        "  result = [ , 'abc' ];  ");
+    createUserModule("""
+              result = [ , "abc" ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithError();
   }
 
   @Test
   public void array_with_elements_of_the_same_type() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', 'def' ];  ");
+    createUserModule("""
+              result = [ "abc", "def" ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -329,8 +358,8 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void array_with_elements_of_compatible_types() throws Exception {
     createUserModule("""
-            myFile = file(toBlob('abc'), 'file.txt');
-            result = [ myFile, toBlob('def') ];
+            myFile = file(toBlob("abc"), "file.txt");
+            result = [ myFile, toBlob("def") ];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -340,8 +369,9 @@ public class ArrayTest extends AcceptanceTestCase {
 
   @Test
   public void array_with_elements_of_incompatible_types() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', toBlob('abc') ];  ");
+    createUserModule("""
+              result = [ "abc", toBlob("abc") ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(1,
@@ -352,9 +382,10 @@ public class ArrayTest extends AcceptanceTestCase {
   @Test
   public void first_element_expression_error_doesnt_suppress_second_element_expression_error()
       throws IOException {
-    createUserModule(
-        "  function1() = 'abc';                                            ",
-        "  result = [ function1(unknown1=''), function1(unknown2='') ];  ");
+    createUserModule("""
+              function1() = "abc";
+              result = [ function1(unknown1=''), function1(unknown2='') ];
+              """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("In call to `function1`: Unknown parameter 'unknown1'.");

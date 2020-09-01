@@ -28,9 +28,9 @@ public class CleanCommandTest {
   class clean_command extends AcceptanceTestCase {
     @Test
     public void deletes_content_of_smooth_dir_except_lock_file() throws IOException {
-      createUserModule(
-          "  result = 'abc';"
-      );
+      createUserModule("""
+              result = "abc";
+              """);
       createDirInProject(RECORD_DB_PATH);
       createDirInProject(COMPUTATION_CACHE_PATH);
       createDirInProject(ARTIFACTS_PATH);
@@ -58,8 +58,9 @@ public class CleanCommandTest {
 
     @Test
     public void with_arguments_prints_error() throws Exception {
-      createUserModule(
-          "  result = 'abc';  ");
+      createUserModule("""
+              result = "abc";
+              """);
       runSmoothClean("some", "arguments");
       assertFinishedWithError();
       assertSysErrContains("Unmatched arguments from index");

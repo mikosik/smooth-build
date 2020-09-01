@@ -12,8 +12,9 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void false_or_false_returns_false() throws IOException {
-    createUserModule(
-        "  result = or(false, false);  ");
+    createUserModule("""
+            result = or(false, false);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -22,8 +23,9 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void false_or_true_returns_true() throws IOException {
-    createUserModule(
-        "  result = or(false, true);  ");
+    createUserModule("""
+            result = or(false, true);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -32,8 +34,9 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void true_or_false_returns_true() throws IOException {
-    createUserModule(
-        "  result = or(true, false);  ");
+    createUserModule("""
+            result = or(true, false);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -42,8 +45,9 @@ public class OrTest extends AcceptanceTestCase {
 
   @Test
   public void true_or_true_returns_true() throws IOException {
-    createUserModule(
-        "  result = or(true, true);  ");
+    createUserModule("""
+            result = or(true, true);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -53,9 +57,10 @@ public class OrTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_true() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule(
-        "  Nothing throwException();               ",
-        "  result = or(true, throwException());  ");
+    createUserModule("""
+            Nothing throwException();
+            result = or(true, throwException());
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

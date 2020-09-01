@@ -11,8 +11,9 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 public class AndTest extends AcceptanceTestCase {
   @Test
   public void false_and_false_returns_false() throws IOException {
-    createUserModule(
-        "  result = and(false, false);  ");
+    createUserModule("""
+            result = and(false, false);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -21,8 +22,9 @@ public class AndTest extends AcceptanceTestCase {
 
   @Test
   public void false_and_true_returns_false() throws IOException {
-    createUserModule(
-        "  result = and(false, true);  ");
+    createUserModule("""
+            result = and(false, true);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -31,8 +33,9 @@ public class AndTest extends AcceptanceTestCase {
 
   @Test
   public void true_and_false_returns_false() throws IOException {
-    createUserModule(
-        "  result = and(true, false);  ");
+    createUserModule("""
+            result = and(true, false);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -41,8 +44,9 @@ public class AndTest extends AcceptanceTestCase {
 
   @Test
   public void true_and_true_returns_true() throws IOException {
-    createUserModule(
-        "  result = and(true, true);  ");
+    createUserModule("""
+            result = and(true, true);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))
@@ -52,9 +56,10 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_false() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule(
-        "  Nothing throwException();                 ",
-        "  result = and(false, throwException());  ");
+    createUserModule("""
+            Nothing throwException();
+            result = and(false, throwException());
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

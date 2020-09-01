@@ -10,7 +10,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public abstract class LogLevelOptionTestCase extends AcceptanceTestCase {
   @Test
   public void illegal_log_level_value_causes_error() throws IOException {
-    createUserModule("result = 'abc';");
+    createUserModule("""
+            result = "abc";
+            """);
     whenSmoothCommandWithOption("--log-level=wrong_value");
     assertFinishedWithError();
     assertSysErrContains(unlines(

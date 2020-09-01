@@ -11,8 +11,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ConcatTest extends AcceptanceTestCase {
   @Test
   public void concatenate_bool_arrays_function() throws Exception {
-    createUserModule(
-        "  result = concat([true], [false]);  ");
+    createUserModule("""
+            result = concat([true], [false]);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsByteStrings("result"))
@@ -21,8 +22,9 @@ public class ConcatTest extends AcceptanceTestCase {
 
   @Test
   public void concatenate_string_arrays_function() throws Exception {
-    createUserModule(
-        "  result = concat(['abc'], ['def']);  ");
+    createUserModule("""
+            result = concat(["abc"], ["def"]);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -31,11 +33,12 @@ public class ConcatTest extends AcceptanceTestCase {
 
   @Test
   public void concatenate_file_arrays() throws Exception {
-    createUserModule(
-        "  result = concat(                    ",
-        "    [ file(toBlob('abc'), 'file1.txt') ],  ",
-        "    [ file(toBlob('def'), 'file2.txt') ],  ",
-        "  );                                       ");
+    createUserModule("""
+            result = concat(
+              [ file(toBlob("abc"), "file1.txt") ],
+              [ file(toBlob("def"), "file2.txt") ],
+            );
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
@@ -46,8 +49,9 @@ public class ConcatTest extends AcceptanceTestCase {
   public void concatenate_blob_arrays_function() throws Exception {
     createFile("0", "abc");
     createFile("1", "def");
-    createUserModule(
-        "  result = concat([ aFile('0') ], [ aFile('1') ]);  ");
+    createUserModule("""
+            result = concat([ aFile('0') ], [ aFile('1') ]);
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))

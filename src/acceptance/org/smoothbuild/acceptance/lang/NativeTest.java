@@ -15,7 +15,7 @@ public class NativeTest extends AcceptanceTestCase {
   public void native_jar_with_two_functions_with_same_name_causes_error() throws Exception {
     createNativeJar(SameName.class, SameName2.class);
     createUserModule("""
-            result = 'abc';
+            result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -28,7 +28,7 @@ public class NativeTest extends AcceptanceTestCase {
   public void native_with_illegal_name_causes_error() throws Exception {
     createNativeJar(IllegalName.class);
     createUserModule("""
-            result = 'abc';
+            result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -40,7 +40,7 @@ public class NativeTest extends AcceptanceTestCase {
   public void native_provided_by_non_public_method_causes_error() throws Exception {
     createNativeJar(NonPublicMethod.class);
     createUserModule("""
-            result = 'abc';
+            result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -52,7 +52,7 @@ public class NativeTest extends AcceptanceTestCase {
   public void native_provided_by_non_static_method_causes_error() throws Exception {
     createNativeJar(NonStaticMethod.class);
     createUserModule("""
-            result = 'abc';
+            result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -64,7 +64,7 @@ public class NativeTest extends AcceptanceTestCase {
   public void native_without_container_parameter_causes_error() throws Exception {
     createNativeJar(WithoutContainer.class);
     createUserModule("""
-            result = 'abc';
+            result = "abc";
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

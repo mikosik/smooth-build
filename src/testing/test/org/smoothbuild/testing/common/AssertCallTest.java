@@ -87,9 +87,10 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "value of: thrownException.getMessage()\n" +
-                    "expected: desired message\n" +
-                    "but was : real message");
+                """
+                    value of: thrownException.getMessage()
+                    expected: desired message
+                    but was : real message""");
         return;
       }
       fail("assertCall() should report failure");
@@ -117,9 +118,10 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was exception without cause");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with cause            : java.lang.IllegalArgumentException
+                    but was exception without cause""");
         return;
       }
       fail("assertCall() should report failure");
@@ -137,9 +139,10 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was cause         : java.lang.ArithmeticException");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with cause            : java.lang.IllegalArgumentException
+                    but was cause         : java.lang.ArithmeticException""");
         return;
       }
       fail("assertCall() should report failure");
@@ -174,10 +177,11 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with message          : main message\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was exception without cause");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with message          : main message
+                    with cause            : java.lang.IllegalArgumentException
+                    but was exception without cause""");
         return;
       }
       fail("assertCall() should report failure");
@@ -195,10 +199,11 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with message          : main message\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was cause         : java.lang.ArithmeticException");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with message          : main message
+                    with cause            : java.lang.IllegalArgumentException
+                    but was cause         : java.lang.ArithmeticException""");
         return;
       }
       fail("assertCall() should report failure");
@@ -232,9 +237,10 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was no cause");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with cause            : java.lang.IllegalArgumentException
+                    but was no cause""");
         return;
       }
       fail("assertCall() should report failure");
@@ -252,9 +258,10 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was cause         : java.lang.ArithmeticException");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with cause            : java.lang.IllegalArgumentException
+                    but was cause         : java.lang.ArithmeticException""");
         return;
       }
       fail("assertCall() should report failure");
@@ -272,10 +279,11 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "with message          : cause message\n" +
-                "but was message       : wrong message");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with cause            : java.lang.IllegalArgumentException
+                    with message          : cause message
+                    but was message       : wrong message""");
         return;
       }
       fail("assertCall() should report failure");
@@ -309,10 +317,11 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with message          : main message\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "but was no cause");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with message          : main message
+                    with cause            : java.lang.IllegalArgumentException
+                    but was no cause""");
         return;
       }
       fail("assertCall() should report failure");
@@ -351,11 +360,12 @@ public class AssertCallTest {
       } catch (AssertionError e) {
         assertThat(e.getMessage())
             .isEqualTo(
-                "expected call to throw: java.lang.IllegalStateException\n" +
-                "with message          : main message\n" +
-                "with cause            : java.lang.IllegalArgumentException\n" +
-                "with message          : cause message\n" +
-                "but was message       : wrong message");
+                """
+                    expected call to throw: java.lang.IllegalStateException
+                    with message          : main message
+                    with cause            : java.lang.IllegalArgumentException
+                    with message          : cause message
+                    but was message       : wrong message""");
         return;
       }
       fail("assertCall() should report failure");

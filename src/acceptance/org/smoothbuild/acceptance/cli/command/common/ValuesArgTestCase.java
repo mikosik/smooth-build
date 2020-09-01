@@ -7,8 +7,9 @@ import org.smoothbuild.acceptance.CommandWithArgs;
 public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   @Test
   public void missing_value_argument_causes_error() throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName()));
     assertFinishedWithError();
     assertSysErrContains(
@@ -18,8 +19,9 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
 
   @Test
   public void nonexistent_value_argument_causes_error() throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName(), "unknownValue"));
     assertFinishedWithError();
     assertSysOutContains(
@@ -32,18 +34,19 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
 
   @Test
   public void value_specified_twice_causes_error() throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName(), "result", "result"));
     assertFinishedWithError();
     assertSysOutContains("error: Value 'result' has been specified more than once.\n");
   }
 
   @Test
-  public void many_values_specified_twice_causes_error_for_each_one()
-      throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+  public void many_values_specified_twice_causes_error_for_each_one() throws Exception {
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName(), "result", "result", "other", "other"));
     assertFinishedWithError();
     assertSysOutContains("error: Value 'result' has been specified more than once.\n");
@@ -52,18 +55,19 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
 
   @Test
   public void illegal_value_name_causes_error() throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name"));
     assertFinishedWithError();
     assertSysOutContains("error: Illegal value name 'illegal^name' passed in command line.\n");
   }
 
   @Test
-  public void illegal_value_names_causes_error_for_each_one()
-      throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+  public void illegal_value_names_causes_error_for_each_one() throws Exception {
+    createUserModule("""
+            result = "abc";
+            """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name", "other^name"));
     assertFinishedWithError();
     assertSysOutContains("error: Illegal value name 'illegal^name' passed in command line.\n");
@@ -72,8 +76,9 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
 
   @Test
   public void function_that_requires_arguments_prints_error() throws Exception {
-    createUserModule(
-        "  String testStringIdentity(String value) = value;  ");
+    createUserModule("""
+            String testStringIdentity(String value) = value;
+            """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains(
@@ -86,10 +91,10 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
   }
 
   @Test
-  public void function_which_all_params_are_optional_prints_error()
-      throws Exception {
-    createUserModule(
-        "  String testStringIdentity(String value = 'default') = value;  ");
+  public void function_which_all_params_are_optional_prints_error() throws Exception {
+    createUserModule("""
+            String testStringIdentity(String value = "default") = value;
+            """);
     runSmooth(new CommandWithArgs(commandName(), "testStringIdentity"));
     assertFinishedWithError();
     assertSysOutContains(

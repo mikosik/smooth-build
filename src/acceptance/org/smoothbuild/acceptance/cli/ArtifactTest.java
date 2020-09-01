@@ -13,8 +13,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_bool_artifact() throws Exception {
-    createUserModule(
-        "  result = true;  ");
+    createUserModule("""
+            result = true;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -24,8 +25,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_string_artifact() throws Exception {
-    createUserModule(
-        "  result = 'abc';  ");
+    createUserModule("""
+            result = "abc";
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -35,8 +37,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_blob_artifact() throws Exception {
-    createUserModule(
-        "  result = toBlob('abc');  ");
+    createUserModule("""
+            result = toBlob("abc");
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -46,8 +49,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_file_artifact() throws Exception {
-    createUserModule(
-        "  result = file(toBlob('abc'), 'file.txt');  ");
+    createUserModule("""
+            result = file(toBlob("abc"), "file.txt");
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
@@ -57,8 +61,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_empty_array_of_bools_artifact() throws Exception {
-    createUserModule(
-        "  [Bool] result = [];  ");
+    createUserModule("""
+            [Bool] result = [];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -68,8 +73,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_bools_artifact() throws Exception {
-    createUserModule(
-        "  result = [ true, false ];  ");
+    createUserModule("""
+            result = [ true, false ];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -79,8 +85,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_empty_array_of_strings_artifact() throws Exception {
-    createUserModule(
-        "  [String] result = [];  ");
+    createUserModule("""
+            [String] result = [];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -90,8 +97,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_strings_artifact() throws Exception {
-    createUserModule(
-        "  result = [ 'abc', 'def' ];  ");
+    createUserModule("""
+            result = [ "abc", "def" ];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -101,8 +109,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_empty_array_of_nothings_artifact() throws Exception {
-    createUserModule(
-        "  result = [];  ");
+    createUserModule("""
+            result = [];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -112,8 +121,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_empty_array_of_blobs_artifact() throws Exception {
-    createUserModule(
-        "  [Blob] result = [];  ");
+    createUserModule("""
+            [Blob] result = [];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -123,8 +133,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_blobs_artifact() throws Exception {
-    createUserModule(
-        "  result = [ toBlob('abc'), toBlob('def') ];  ");
+    createUserModule("""
+            result = [ toBlob("abc"), toBlob("def") ];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -134,8 +145,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_empty_array_of_files_artifact() throws Exception {
-    createUserModule(
-        "  [File] result = [];  ");
+    createUserModule("""
+            [File] result = [];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -145,8 +157,9 @@ public class ArtifactTest extends AcceptanceTestCase {
 
   @Test
   public void store_array_of_files_artifact() throws Exception {
-    createUserModule(
-        "  result = [ file(toBlob('abc'), 'file1.txt'), file(toBlob('def'), 'file2.txt') ];  ");
+    createUserModule("""
+            result = [ file(toBlob("abc"), "file1.txt"), file(toBlob("def"), "file2.txt") ];
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
@@ -162,12 +175,12 @@ public class ArtifactTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains(
-        "Saving artifact(s)",
-        "  result -> ???",
-        "   + ERROR: Can't store array of Files as it contains files with duplicated paths:",
-        "       'file.txt'",
-        "");
+    assertSysOutContains("""
+        Saving artifact(s)
+          result -> ???
+           + ERROR: Can't store array of Files as it contains files with duplicated paths:
+               'file.txt'
+            """);
     assertThat(Files.exists(artifactAbsolutePath("result")))
         .isFalse();
   }
@@ -175,17 +188,18 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void info_about_stored_artifacts_is_printed_to_console_in_alphabetical_order()
       throws Exception {
-    createUserModule(
-        "  result1 = 'abc';  ",
-        "  result2 = 'abc';  ",
-        "  result3 = 'abc';  ");
+    createUserModule("""
+        result1 = "abc";
+        result2 = "abc";
+        result3 = "abc";
+            """);
     runSmoothBuild("result2", "result3", "result1");
     assertFinishedWithSuccess();
-    assertSysOutContains(
-        "Saving artifact(s)",
-        "  result1 -> '.smooth/artifacts/result1'",
-        "  result2 -> '.smooth/artifacts/result2'",
-        "  result3 -> '.smooth/artifacts/result3'",
-        "");
+    assertSysOutContains("""
+        Saving artifact(s)
+          result1 -> '.smooth/artifacts/result1'
+          result2 -> '.smooth/artifacts/result2'
+          result3 -> '.smooth/artifacts/result3'
+            """);
   }
 }

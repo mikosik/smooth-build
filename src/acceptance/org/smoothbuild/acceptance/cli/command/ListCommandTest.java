@@ -15,18 +15,19 @@ public class ListCommandTest {
   class basic extends AcceptanceTestCase {
     @Test
     public void list_command_lists_all_available_functions() throws Exception {
-      createUserModule(
-          "  bFunction = 'abc';  ",
-          "  aFunction = 'abc';  ",
-          "  dFunction = 'abc';  ",
-          "  cFunction = 'abc';  ");
+      createUserModule("""
+            bValue = "abc";
+            aValue = "abc";
+            dValue = "abc";
+            cValue = "abc";
+              """);
       runSmoothList();
       assertFinishedWithSuccess();
       assertSysOutContains(
-          "aFunction",
-          "bFunction",
-          "cFunction",
-          "dFunction",
+          "aValue",
+          "bValue",
+          "cValue",
+          "dValue",
           "");
     }
   }
