@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.testing.TestingContext;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class ReporterTest extends TestingContext {
   private static final String HEADER = "TASK NAME";
   private static final Log FATAL_LOG = fatal("message");

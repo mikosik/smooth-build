@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class FeedersTest {
   @Nested
   class run_when_all_available {

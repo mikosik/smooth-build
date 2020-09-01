@@ -10,7 +10,6 @@ import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class ListCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {

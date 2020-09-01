@@ -10,7 +10,6 @@ import java.util.HashSet;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class SetsTest {
   @Nested
   class create {

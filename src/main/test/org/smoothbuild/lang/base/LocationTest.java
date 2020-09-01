@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class LocationTest {
   @Test
   public void line_returns_value_passed_during_construction() {

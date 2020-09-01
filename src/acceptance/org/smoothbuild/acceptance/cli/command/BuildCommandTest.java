@@ -24,7 +24,6 @@ import org.smoothbuild.acceptance.testing.ReportWarning;
 import org.smoothbuild.acceptance.testing.TempFilePath;
 import org.smoothbuild.cli.command.BuildCommand;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class BuildCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {

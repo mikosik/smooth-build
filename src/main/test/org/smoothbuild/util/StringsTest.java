@@ -24,7 +24,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import com.google.common.collect.ImmutableMap;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class StringsTest {
   @Nested
   @DisplayName("unline()")

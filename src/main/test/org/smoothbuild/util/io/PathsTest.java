@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class PathsTest {
   @Nested
   class change_extension {

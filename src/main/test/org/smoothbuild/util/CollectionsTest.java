@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class CollectionsTest {
   @Nested
   class toMap {
