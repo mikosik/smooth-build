@@ -12,8 +12,9 @@ public class ZipUnzipTest extends AcceptanceTestCase {
   public void zip_unzip() throws IOException {
     createFile("dir/file1.txt", "abc");
     createFile("file2.txt", "def");
-    createUserModule(
-        "  result = [ aFile('dir/file1.txt'), aFile('file2.txt') ] | zip | unzip;  ");
+    createUserModule("""
+            result = [ aFile("dir/file1.txt"), aFile("file2.txt") ] | zip | unzip;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
@@ -22,8 +23,9 @@ public class ZipUnzipTest extends AcceptanceTestCase {
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
-    createUserModule(
-        "  result = toBlob('random junk') | unzip;  ");
+    createUserModule("""
+            result = toBlob('random junk') | unzip;
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Cannot read archive. Corrupted data?");

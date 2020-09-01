@@ -1,7 +1,6 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
-import static org.smoothbuild.util.Strings.unlines;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,44 +17,49 @@ public class TreeCommandTest {
   class basic extends AcceptanceTestCase {
     @Test
     public void with_parameter_and_array () throws Exception {
-      createUserModule(
-          "  mySingleton(String element) = [element, 'def'];  ",
-          "  result = mySingleton('abc');                     ");
+      createUserModule("""
+              mySingleton(String element) = [element, "def"];
+              result = mySingleton("abc");
+              """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
-      assertSysOutContains(quotesX2(unlines(
-          "[String] result",
-          "  [String] mySingleton()",
-          "    [String] [String]",
-          "      String 'abc'",
-          "      String 'def'")));
+      assertSysOutContains("""
+          [String] result
+            [String] mySingleton()
+              [String] [String]
+                String "abc"
+                String "def"
+              """);
     }
 
     @Test
     public void with_long_string_literal () throws Exception {
-      createUserModule(
-          "  result = '01234567890123456789012345678901234567890123456789';  ");
+      createUserModule("""
+              result = '01234567890123456789012345678901234567890123456789';
+              """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
-      assertSysOutContains(quotesX2(unlines(
-          "String result",
-          "  String '01234567890123456789012345678901234'...",
-          "")));
+      assertSysOutContains("""
+              String result
+                String "01234567890123456789012345678901234"...
+              """);
     }
 
     @Test
-    public void with_convert_computation () throws Exception {
-      createUserModule(
-          "  Blob result = file(toBlob('abc'), 'name.txt');  ");
+    public void with_convert_computation() throws Exception {
+      createUserModule("""
+              Blob result = file(toBlob("abc"), "name.txt");
+              """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
-      assertSysOutContains(quotesX2(unlines(
-          "Blob result",
-          "  Blob Blob<-File",
-          "    File file()",
-          "      Blob toBlob()",
-          "        String 'abc'",
-          "      String 'name.txt'")));
+      assertSysOutContains("""
+              Blob result
+                Blob Blob<-File
+                  File file()
+                    Blob toBlob()
+                      String "abc"
+                    String "name.txt"
+              """);
     }
   }
 

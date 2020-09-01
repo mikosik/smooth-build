@@ -17,10 +17,10 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
   public void command_fails_when_lock_file_is_already_acquired() throws IOException,
       InterruptedException {
     createNativeJar(Sleep3s.class);
-    createUserModule(
-        "  String sleep3s();    ",
-        "  result = sleep3s();  "
-    );
+    createUserModule("""
+            String sleep3s();
+            result = sleep3s();
+            """);
 
     AcceptanceTestCase otherTest = new AcceptanceTestCase() {};
     otherTest.init(projectDirAbsolutePath());

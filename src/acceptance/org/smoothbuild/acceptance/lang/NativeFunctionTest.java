@@ -80,7 +80,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     createNativeJar(OneStringParameter.class);
     createUserModule("""
             File oneStringParameter(String string);
-            result = oneStringParameter('abc');
+            result = oneStringParameter("abc");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -108,7 +108,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     createNativeJar(OneStringParameter.class);
     createUserModule("""
             String oneStringParameter(String a, String b);
-            result = oneStringParameter(a='abc', b='abc');
+            result = oneStringParameter(a="abc", b="abc");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -137,7 +137,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     createNativeJar(FileParameter.class);
     createUserModule("""
             File fileParameter(Blob file);
-            result = fileParameter(file(toBlob('abc'), 'file.txt'));
+            result = fileParameter(file(toBlob("abc"), "file.txt"));
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

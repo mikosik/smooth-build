@@ -12,8 +12,9 @@ import okio.ByteString;
 public class BlobLiteralTest extends AcceptanceTestCase {
   @Test
   public void zero_digits_is_acceptable() throws Exception {
-    createUserModule(
-        "  result = 0x;  ");
+    createUserModule("""
+            result = 0x;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
@@ -22,8 +23,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void one_digit_causes_error() throws Exception {
-    createUserModule(
-        "  result = 0x1;  ");
+    createUserModule("""
+            result = 0x1;
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(
@@ -32,8 +34,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void two_digits_literal() throws IOException {
-    createUserModule(
-        "  result = 0x0102;  ");
+    createUserModule("""
+            result = 0x0102;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
@@ -42,8 +45,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void odd_number_of_digits_causes_error() throws Exception {
-    createUserModule(
-        "  result = 0x123;  ");
+    createUserModule("""
+            result = 0x123;
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(
@@ -52,8 +56,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void many_digits_literal() throws IOException {
-    createUserModule(
-        "  result = 0x010203;  ");
+    createUserModule("""
+            result = 0x010203;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
@@ -62,8 +67,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void non_digit_char_causes_error() throws Exception {
-    createUserModule(
-        "  result = 0xGG;  ");
+    createUserModule("""
+            result = 0xGG;
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(
@@ -72,8 +78,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void large_letters_are_decoded() throws IOException {
-    createUserModule(
-        "  result = 0xABCDEF;  ");
+    createUserModule("""
+            result = 0xABCDEF;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))
@@ -82,8 +89,9 @@ public class BlobLiteralTest extends AcceptanceTestCase {
 
   @Test
   public void small_letters_are_decoded() throws IOException {
-    createUserModule(
-        "  result = 0xabcdef;  ");
+    createUserModule("""
+            result = 0xabcdef;
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContent("result"))

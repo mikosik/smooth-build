@@ -11,8 +11,9 @@ public class ToBlobTest extends AcceptanceTestCase {
   @Test
   public void to_blob_function() throws IOException {
     createFile("file.txt", "abc");
-    createUserModule(
-        "  result = toBlob('abc');  ");
+    createUserModule("""
+            result = toBlob("abc");
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))

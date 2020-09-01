@@ -68,7 +68,7 @@ public class NameClashTest extends AcceptanceTestCase {
       public void constructor() throws Exception {
         createUserModule("""
                 MyStruct {}
-                myStruct = 'abc';
+                myStruct = "abc";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -84,7 +84,7 @@ public class NameClashTest extends AcceptanceTestCase {
       @Test
       public void value() throws Exception {
         createUserModule("""
-                true() = 'abc';
+                true() = "abc";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -94,7 +94,7 @@ public class NameClashTest extends AcceptanceTestCase {
       @Test
       public void constructor() throws Exception {
         createUserModule("""
-                file() = 'def';
+                file() = "def";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -104,7 +104,7 @@ public class NameClashTest extends AcceptanceTestCase {
       @Test
       public void function() throws Exception {
         createUserModule("""
-                and() = 'abc';
+                and() = "abc";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -117,8 +117,8 @@ public class NameClashTest extends AcceptanceTestCase {
       @Test
       public void value() throws Exception {
         createUserModule("""
-                myName = 'abc';
-                myName() = 'def';
+                myName = "abc";
+                myName() = "def";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -129,7 +129,7 @@ public class NameClashTest extends AcceptanceTestCase {
       public void constructor() throws Exception {
         createUserModule("""
                 MyStruct {}
-                myStruct() = 'def';
+                myStruct() = "def";
                 """);
         runSmoothList();
         assertFinishedWithError();
@@ -139,8 +139,8 @@ public class NameClashTest extends AcceptanceTestCase {
       @Test
       public void function() throws Exception {
         createUserModule("""
-                myFunction() = 'abc';
-                myFunction() = 'def';
+                myFunction() = "abc";
+                myFunction() = "def";
                 """);
         runSmoothList();
         assertFinishedWithError();

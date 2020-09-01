@@ -10,8 +10,9 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 public class IfTest extends AcceptanceTestCase {
   @Test
   public void if_returns_first_value_when_condition_is_true() throws Exception {
-    createUserModule(
-        "  result = if(true, 'then clause', 'else clause');  ");
+    createUserModule("""
+            result = if(true, 'then clause', 'else clause');
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -20,8 +21,9 @@ public class IfTest extends AcceptanceTestCase {
 
   @Test
   public void if_returns_second_value_when_condition_is_false() throws Exception {
-    createUserModule(
-        "  result = if(false, 'then clause', 'else clause');  ");
+    createUserModule("""
+            result = if(false, 'then clause', 'else clause');
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -31,9 +33,10 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule(
-        "  Nothing throwException();                               ",
-        "  result = if(false, throwException(), 'else clause');  ");
+    createUserModule("""
+            Nothing throwException();
+            result = if(false, throwException(), 'else clause');
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -43,9 +46,10 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule(
-        "  Nothing throwException();                              ",
-        "  result = if(true, 'then clause', throwException());  ");
+    createUserModule("""
+            Nothing throwException();
+            result = if(true, 'then clause', throwException());
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -57,9 +61,10 @@ public class IfTest extends AcceptanceTestCase {
     @Test
     public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
       createNativeJar(ThrowException.class);
-      createUserModule(
-          "  Nothing throwException();                                                      ",
-          "  result = if(true, if(false, throwException(), 'else clause'), 'ignored');  ");
+      createUserModule("""
+            Nothing throwException();
+            result = if(true, if(false, throwException(), 'else clause'), 'ignored');
+            """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -70,9 +75,10 @@ public class IfTest extends AcceptanceTestCase {
     public void second_value_should_not_be_evaluated_when_condition_is_true()
         throws Exception {
       createNativeJar(ThrowException.class);
-      createUserModule(
-          "  Nothing throwException();                                                     ",
-          "  result = if(true, if(true, 'then clause', throwException()), 'ignored');  ");
+      createUserModule("""
+            Nothing throwException();
+            result = if(true, if(true, 'then clause', throwException()), 'ignored');
+            """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))

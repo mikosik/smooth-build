@@ -9,8 +9,9 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
-    createUserModule(
-        "  result = files('.smooth');  ");
+    createUserModule("""
+            result = files('.smooth');
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Listing files from '.smooth' dir is not allowed.");
@@ -18,8 +19,9 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void listing_files_from_smooth_dir_subdir_causes_error() throws Exception {
-    createUserModule(
-        "  result = files('.smooth/subdir/file.txt');  ");
+    createUserModule("""
+            result = files(".smooth/subdir/file.txt");
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Listing files from '.smooth' dir is not allowed.");
@@ -27,8 +29,9 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void illegal_path_causes_error() throws Exception {
-    createUserModule(
-        "  result = files('..');  ");
+    createUserModule("""
+            result = files('..');
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Param 'dir' has illegal value. Path cannot contain '..'.");
@@ -36,8 +39,9 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void nonexistent_path_causes_error() throws Exception {
-    createUserModule(
-        "  result = files('nonexistent/path.txt');  ");
+    createUserModule("""
+            result = files("nonexistent/path.txt");
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Dir 'nonexistent/path.txt' doesn't exist.");
@@ -46,8 +50,9 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void non_dir_path_causes_error() throws Exception {
     createFile("file.txt", "abc");
-    createUserModule(
-        "  result = files('file.txt');  ");
+    createUserModule("""
+            result = files("file.txt");
+            """);
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("Dir 'file.txt' doesn't exist. It is a file.");
@@ -57,8 +62,9 @@ public class FilesTest extends AcceptanceTestCase {
   public void files_from_dir_are_returned() throws Exception {
     createFile("dir/file.txt", "abc");
     createFile("dir/subdir/file.txt", "def");
-    createUserModule(
-        "  result = files('dir');  ");
+    createUserModule("""
+            result = files('dir');
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))

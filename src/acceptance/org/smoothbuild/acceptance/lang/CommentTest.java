@@ -10,9 +10,10 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 public class CommentTest extends AcceptanceTestCase {
   @Test
   public void full_line_comment() throws IOException {
-    createUserModule(
-        "  # ((( full line comment '  ",
-        "  result = '';               ");
+    createUserModule("""
+            # ((( full line comment "
+            result = "";
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -21,8 +22,9 @@ public class CommentTest extends AcceptanceTestCase {
 
   @Test
   public void trailing_comment() throws IOException {
-    createUserModule(
-        "  result = '' ;  # comment at the end of line  ");
+    createUserModule("""
+            result = "" ;  # comment at the end of line
+            """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
