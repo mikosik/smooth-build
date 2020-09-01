@@ -130,8 +130,8 @@ public class FindSemanticErrors {
         if (scope.contains(name)) {
           Named named = scope.get(name);
           if (named instanceof ItemNode) {
-            logger.log(parseError(call.location(), "Parameter '" + name
-                + "' cannot be called as it is not a function."));
+            logger.log(parseError(call.location(), "Parameter `" + name
+                + "` cannot be called as it is not a function."));
           } else if (named instanceof ValueNode || named instanceof Value) {
             logger.log(parseError(call.location(), "`" + name
                 + "` cannot be called as it is a value."));
