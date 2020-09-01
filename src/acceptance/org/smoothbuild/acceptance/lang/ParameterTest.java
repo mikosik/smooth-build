@@ -147,12 +147,90 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Nested
-  class default_value_from {
+  class default_value {
+    @Nested
+    class expression_defined_as {
+      @Test
+      public void string_literal() throws Exception {
+        createUserModule(
+            "  oneParameter(String value = 'abc') = value;                      ",
+            "  result = oneParameter();                                         ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void blob_literal() throws Exception {
+        createUserModule(
+            "  oneParameter(Blob value = 0xAB) = value;                         ",
+            "  result = oneParameter();                                         ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContent("result"))
+            .isEqualTo(ByteString.of((byte) 0xAB));
+      }
+
+      @Test
+      public void field_read() throws Exception {
+        createUserModule("""
+            MyStruct {
+              String field,
+            }
+            value = myStruct('abc');
+            oneParameter(String value = value.field) = value;
+            result = oneParameter();
+            """);
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void call() throws Exception {
+        createUserModule("""
+                myFunction() = "abc";
+                otherFunction(String value = myFunction()) = value;
+                result = otherFunction();
+                """);
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void pipe() throws Exception {
+        createUserModule(
+            "  oneParameter(String value = true | if('abc', 'def')) = value;  ",
+            "  result = oneParameter();                                         ");
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+    }
+
     @Test
-    public void string_literal() throws Exception {
-      createUserModule(
-          "  oneParameter(String value = 'abc') = value;                      ",
-          "  result = oneParameter();                                         ");
+    public void with_type_not_assignable_to_declared_parameter_type_causes_error() throws Exception {
+      createUserModule("""
+          func([String] withDefault = "abc") = withDefault;
+          result = func();
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContainsParseError(1, "Parameter 'withDefault' is of type '[String]' so"
+          + " it cannot have default value of type 'String'.");
+    }
+
+    @Test
+    public void can_have_type_convertible_to_declared_parameter_type() throws Exception {
+      createUserModule("""
+          func(Blob param = file(toBlob("abc"), "file.txt")) = param;
+          result = func();
+          """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -160,52 +238,62 @@ public class ParameterTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void blob_literal() throws Exception {
-      createUserModule(
-          "  oneParameter(Blob value = 0xAB) = value;                         ",
-          "  result = oneParameter();                                         ");
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContent("result"))
-          .isEqualTo(ByteString.of((byte) 0xAB));
+    public void with_declared_generic_type_causes_error() throws Exception {
+      createUserModule("""
+              A testIdentity(A value = 'aaa') = value;
+              """);
+      runSmoothList();
+      assertFinishedWithError();
+      assertSysOutContainsParseError(
+          1, "Parameter 'value' is of type 'A' so it cannot have default value of type 'String'.");
     }
 
     @Test
-    public void field_read() throws Exception {
+    public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
       createUserModule("""
-              MyStruct {
-                String field,
-              }
-              value = myStruct('abc');
-              oneParameter(String value = value.field) = value;
-              result = oneParameter();
+          func(String withDefault = "abc") = withDefault;
+          result = func();
+          """);
+      runSmoothBuild("result");
+      assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("abc");
+    }
+
+    @Test
+    public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
+      createUserModule("""
+              func(String withDefault = "abc") = withDefault;
+              result = func("def");
               """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("abc");
+          .isEqualTo("def");
     }
 
     @Test
-    public void call() throws Exception {
-      createUserModule(
-          "  oneParameter(Bool value = true) = value;                       ",
-          "  result = oneParameter();                                         ");
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat(artifactFileContent("result"))
-          .isEqualTo(ByteString.of((byte) 1));
-    }
-
-    @Test
-    public void pipe() throws Exception {
-      createUserModule(
-          "  oneParameter(String value = true | if('abc', 'def')) = value;  ",
-          "  result = oneParameter();                                         ");
+    public void is_not_evaluated_when_not_needed() throws Exception {
+      createNativeJar(ThrowException.class);
+      createUserModule("""
+          Nothing throwException();
+          func(String withDefault = throwException()) = withDefault;
+          result = func("def");
+          """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
-          .isEqualTo("abc");
+          .isEqualTo("def");
+    }
+
+    @Test
+    public void expression_cannot_reference_other_parameter() throws Exception {
+      createUserModule(
+          "  func(String param, String withDefault = param) = param;  ",
+          "  result = 'abc';                                          ");
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContainsParseError(1, "'param' is undefined.");
     }
   }
 
