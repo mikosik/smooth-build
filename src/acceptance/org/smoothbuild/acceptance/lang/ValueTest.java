@@ -80,7 +80,7 @@ public class ValueTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void generic_declared_result_type_causes_error() throws Exception {
+    public void declaring_generic_result_type_causes_error() throws Exception {
       createNativeJar(ValueWithGenericType.class);
       createUserModule("""
               A valueWithGenericType;
@@ -91,7 +91,7 @@ public class ValueTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void generic_declared_array_result_type_causes_error() throws IOException {
+    public void declaring_generic_array_result_type_causes_error() throws IOException {
       createUserModule("""
               [A] result() = [];
               """);
@@ -102,7 +102,7 @@ public class ValueTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declared_nothing_result_type_is_allowed() throws Exception {
+    public void declaring_nothing_result_type_is_allowed() throws Exception {
       createNativeJar(ReportError.class);
       createUserModule("""
               Nothing reportError(String message);
@@ -113,7 +113,7 @@ public class ValueTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declared_function_with_nothing_array_result_type_is_allowed() throws IOException {
+    public void declaring_function_with_nothing_array_result_type_is_allowed() throws IOException {
       createUserModule("""
               [Nothing] result = [];
               """);
@@ -122,7 +122,7 @@ public class ValueTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declared_result_type_which_is_supertype_of_expression()
+    public void declaring_result_type_which_is_supertype_of_expression()
         throws IOException {
       createUserModule("""
               Blob myValue = file(toBlob("abc"), "file.txt");
