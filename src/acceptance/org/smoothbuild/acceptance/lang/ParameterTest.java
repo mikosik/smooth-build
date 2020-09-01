@@ -328,17 +328,6 @@ public class ParameterTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void calling_parameter_as_function_causes_error() throws Exception {
-    createUserModule(
-        "  func(String param) = param();  ",
-        "  result = func('abc');          ");
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(
-        1, "Parameter 'param' cannot be called as it is not a function.");
-  }
-
-  @Test
   public void parameter_can_shadow_builtin_function() throws Exception {
     createUserModule(
         "  func(String zip) = zip;  ",
