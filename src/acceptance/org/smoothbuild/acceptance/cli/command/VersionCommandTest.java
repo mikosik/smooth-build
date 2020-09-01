@@ -9,7 +9,6 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.install.BuildVersion;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class VersionCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {

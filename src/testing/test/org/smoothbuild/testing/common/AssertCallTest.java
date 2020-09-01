@@ -7,7 +7,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class AssertCallTest {
   @Nested
   class expected_exception_by_class {

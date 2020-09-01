@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class LockFileTest {
   private final PrintWriter writer = new PrintWriter(nullWriter());
 

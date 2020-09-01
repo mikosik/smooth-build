@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class FeedingConsumerTest {
   private FeedingConsumer<String> feedingConsumer = new FeedingConsumer<>();
 

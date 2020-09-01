@@ -37,7 +37,6 @@ import org.smoothbuild.lang.base.Space;
 
 import picocli.CommandLine.TypeConversionException;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class MatcherCreatorTest {
   @ParameterizedTest
   @MethodSource("provideArguments")

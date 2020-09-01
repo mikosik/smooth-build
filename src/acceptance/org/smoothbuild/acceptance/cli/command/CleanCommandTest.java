@@ -23,7 +23,6 @@ import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.io.fs.base.Path;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class CleanCommandTest {
   @Nested
   class clean_command extends AcceptanceTestCase {

@@ -13,7 +13,6 @@ import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
 import org.smoothbuild.cli.command.TreeCommand;
 
-@SuppressWarnings("ClassCanBeStatic")
 public class TreeCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {
