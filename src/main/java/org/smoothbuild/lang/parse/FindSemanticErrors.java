@@ -49,6 +49,7 @@ public class FindSemanticErrors {
     structNameWithSingleCapitalLetter(logger, ast);
     firstFieldWithForbiddenType(logger, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
+    valueTypeIsGeneric(logger, ast);
   }
 
   private static void unescapeStringLiterals(Logger logger, Ast ast) {
@@ -314,8 +315,7 @@ public class FindSemanticErrors {
     }.visitAst(ast);
   }
 
-  private static void functionResultTypeIsNotCoreTypeOfAnyParameter(Logger logger,
-      Ast ast) {
+  private static void functionResultTypeIsNotCoreTypeOfAnyParameter(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {
@@ -335,6 +335,18 @@ public class FindSemanticErrors {
         return func.params()
             .stream()
             .anyMatch(p -> p.typeNode().coreType().name().equals(name));
+      }
+    }.visitAst(ast);
+  }
+
+  private static void valueTypeIsGeneric(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitValue(ValueNode value) {
+        super.visitValue(value);
+        if (value.declaresType() && value.typeNode().isGeneric()) {
+          logger.log(parseError(value.typeNode(), "Value cannot have generic type."));
+        }
       }
     }.visitAst(ast);
   }
