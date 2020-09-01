@@ -211,42 +211,60 @@ public class ParameterTest extends AcceptanceTestCase {
 
   @Nested
   class parameter_that_shadows {
-    @Test
-    public void slib_value_makes_it_inaccessible() throws IOException {
-      createUserModule("""
-              String function1(String true) = true;
+    @Nested
+    class imported {
+      @Test
+      public void value_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              String myFunction(String true) = true;
+              result = myFunction("abc");
               """);
-      runSmoothList();
-      assertFinishedWithSuccess();
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void function_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              String myFunction(String and) = and;
+              result = myFunction("abc");
+              """);
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
     }
 
-    @Test
-    public void slib_function_makes_it_inaccessible() throws IOException {
-      createUserModule("""
-              String function1(String and) = and;
+    @Nested
+    class local {
+      @Test
+      public void value_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              localValue = true;
+              String myFunction(String localValue) = localValue;
+              result = myFunction("abc");
               """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
 
-    @Test
-    public void user_function_makes_it_inaccessible() throws IOException {
-      createUserModule("""
-              function1() = true;
-              String function2(String function1) = function1;
+      @Test
+      public void function_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              localFunction() = true;
+              String myFunction(String localFunction) = localFunction;
+              result = myFunction("abc");
               """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void user_value_makes_it_inaccessible() throws IOException {
-      createUserModule("""
-              myValue = true;
-              String function2(String myValue) = myValue;
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
     }
   }
 
@@ -257,7 +275,6 @@ public class ParameterTest extends AcceptanceTestCase {
     runSmoothList();
     assertFinishedWithSuccess();
   }
-
 
   @Test
   public void it_is_possible_to_declare_parameter_with_trailing_comma() throws Exception {
@@ -325,28 +342,5 @@ public class ParameterTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
         .isEqualTo("abc");
-  }
-
-  @Test
-  public void parameter_can_shadow_builtin_function() throws Exception {
-    createUserModule(
-        "  func(String zip) = zip;  ",
-        "  result = func('abc');    ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
-        .isEqualTo("abc");
-  }
-
-  @Test
-  public void parameter_can_shadow_function() throws Exception {
-    createUserModule(
-        "  func1 = 'abc';              ",
-        "  func2(String func) = func;  ",
-        "  result = func2('def');      ");
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactFileContentAsString("result"))
-        .isEqualTo("def");
   }
 }
