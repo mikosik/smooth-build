@@ -285,16 +285,6 @@ public class ParameterTest extends AcceptanceTestCase {
       assertThat(artifactFileContentAsString("result"))
           .isEqualTo("def");
     }
-
-    @Test
-    public void expression_cannot_reference_other_parameter() throws Exception {
-      createUserModule(
-          "  func(String param, String withDefault = param) = param;  ",
-          "  result = 'abc';                                          ");
-      runSmoothBuild("result");
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "'param' is undefined.");
-    }
   }
 
   @Nested
