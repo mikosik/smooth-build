@@ -16,7 +16,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -26,7 +26,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
   }
 
@@ -40,7 +40,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -51,7 +51,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -62,7 +62,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
   }
 
@@ -88,7 +88,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -100,7 +100,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -112,7 +112,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
 
     @Test
@@ -124,7 +124,7 @@ public class RecursionTest extends AcceptanceTestCase {
         """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContains("Call graph contains cycle");
+      assertSysOutContains("Dependency graph contains cycle");
     }
   }
 }

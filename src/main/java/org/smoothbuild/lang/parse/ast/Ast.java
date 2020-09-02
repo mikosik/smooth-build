@@ -109,7 +109,7 @@ public class Ast {
     }
     var sortedEvaluables = sortEvaluableByDependencies();
     if (sortedEvaluables.sorted() == null) {
-      reportCycle(logger, "Call graph", sortedEvaluables.cycle());
+      reportCycle(logger, "Dependency graph", sortedEvaluables.cycle());
       return null;
     }
     return new Ast(sortedTypes.valuesReversed(), sortedEvaluables.valuesReversed());
