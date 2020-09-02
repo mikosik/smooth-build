@@ -54,8 +54,8 @@ public class FunctionTest extends AcceptanceTestCase {
               """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Function 'result' has body which type is '[Nothing]' and it is " +
-          "not convertible to function's declared result type 'String'.");
+      assertSysOutContainsParseError(1, "`result` has body which type is '[Nothing]' and it is " +
+          "not convertible to its declared type 'String'.");
     }
 
     @Test
@@ -185,8 +185,8 @@ public class FunctionTest extends AcceptanceTestCase {
               """);
       runSmoothList();
       assertFinishedWithError();
-      assertSysOutContainsParseError(2, "Function 'result' has body which type is 'Blob' and it is not " +
-          "convertible to function's declared result type 'File'.");
+      assertSysOutContainsParseError(2, "`result` has body which type is 'Blob' and it is not " +
+          "convertible to its declared type 'File'.");
     }
   }
 }

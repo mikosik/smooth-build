@@ -121,9 +121,9 @@ public class InferTypesAndParamAssignments {
           Optional<Type> type = createType(evaluable.typeNode());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
-              logger.log(parseError(evaluable, "Function '" + evaluable.name()
-                  + "' has body which type is " + et.q()
-                  + " and it is not convertible to function's declared result type " + t.q()
+              logger.log(parseError(evaluable, "`" + evaluable.name()
+                  + "` has body which type is " + et.q()
+                  + " and it is not convertible to its declared type " + t.q()
                   + "."));
             }
           }));
