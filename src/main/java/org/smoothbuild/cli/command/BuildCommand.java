@@ -32,7 +32,7 @@ public class BuildCommand extends ExclusiveCommand {
           "",
           "Filter is a boolean expression made up of matchers (listed below), " +
               "boolean operators '&', '|', grouping brackets '(', ')'.",
-          "Default value is '(user&call)|info'",
+          "Default value is 'info|(user&(call|value))'",
           "",
           "For each matched tasks its name and properties are printed together with logs that " +
               "match filter specified with --log-level option. " +
@@ -43,7 +43,7 @@ public class BuildCommand extends ExclusiveCommand {
           "",
           "Available task matchers:",
           "  all              - all tasks",
-          "  default          - shortcut for '(user&call)|info'",
+          "  default          - shortcut for 'info|(user&(call|value))'",
           "  none             - no tasks",
           "",
           "  f, fatal         - contains a log with fatal level",
@@ -56,7 +56,8 @@ public class BuildCommand extends ExclusiveCommand {
           "",
           "  c, call          - evaluates function call",
           "  conv, conversion - evaluates automatic conversion",
-          "  l, literal       - evaluates compile time literal"
+          "  l, literal       - evaluates compile time literal",
+          "  v, value         - evaluates value expression"
       }
   )
   TaskMatcher showTasks;

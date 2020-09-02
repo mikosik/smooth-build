@@ -29,8 +29,9 @@ public class TaskMatchers {
   static final TaskMatcher CALL = kindMatcher(TaskKind.CALL);
   static final TaskMatcher CONVERSION = kindMatcher(TaskKind.CONVERSION);
   static final TaskMatcher LITERAL = kindMatcher(TaskKind.LITERAL);
+  static final TaskMatcher VALUE = kindMatcher(TaskKind.VALUE);
 
-  static final TaskMatcher DEFAULT = or(and(USER, CALL), AT_LEAST_INFO);
+  static final TaskMatcher DEFAULT = or(AT_LEAST_INFO, and(USER, or(CALL, VALUE)));
 
   private static final ImmutableMap<String, TaskMatcher> MAP =
       ImmutableMap.<String, TaskMatcher>builder()
@@ -58,6 +59,8 @@ public class TaskMatchers {
           .put("conv", CONVERSION)
           .put("literal", LITERAL)
           .put("l", LITERAL)
+          .put("value", VALUE)
+          .put("v", VALUE)
 
           .build();
 
