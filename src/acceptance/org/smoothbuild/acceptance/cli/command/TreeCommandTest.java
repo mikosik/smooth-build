@@ -46,6 +46,19 @@ public class TreeCommandTest {
     }
 
     @Test
+    public void with_long_blob_literal () throws Exception {
+      createUserModule("""
+              result = 0x01234567890123456789012345678901234567890123456789;
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+              Blob result
+                Blob 0x01234567890123456789012345678901234...
+              """);
+    }
+
+    @Test
     public void with_convert_computation() throws Exception {
       createUserModule("""
               Blob result = file(toBlob("abc"), "name.txt");

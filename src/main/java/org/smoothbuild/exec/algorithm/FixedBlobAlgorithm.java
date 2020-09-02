@@ -27,7 +27,7 @@ public class FixedBlobAlgorithm implements Algorithm {
   }
 
   private static String toStringLimitedWithEllipsis(ByteString byteString, int limit) {
-    String string = "0x" + byteString.toString();
+    String string = "0x" + byteString.hex();
     if (string.length() <= limit) {
       return string;
     } else {
