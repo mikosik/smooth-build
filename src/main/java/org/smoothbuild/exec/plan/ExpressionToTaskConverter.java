@@ -5,6 +5,7 @@ import static org.smoothbuild.exec.compute.Task.taskTypes;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
+import static org.smoothbuild.exec.compute.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.base.type.Types.blob;
@@ -112,7 +113,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     DefinedValue value = (DefinedValue) definitions.evaluables().get(name);
     Task task = value.body().visit(this);
     Task convertedTask = convertIfNeeded(task, value.type());
-    return new VirtualTask(value.extendedName(), convertedTask, value.location());
+    return new VirtualTask(value.extendedName(), convertedTask, VALUE, expression.location());
   }
 
   @Override
@@ -120,8 +121,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     NativeValue nativeFunction = expression.nativeValue();
     Algorithm algorithm = new CallNativeAlgorithm(
         nativeFunction.type().visit(typeConverter), nativeFunction);
-    // TODO fix CALL to ???
-    return new NormalTask(CALL, nativeFunction.type(), nativeFunction.extendedName(), algorithm,
+    return new NormalTask(VALUE, nativeFunction.type(), nativeFunction.extendedName(), algorithm,
           ImmutableList.of(), expression.location(), nativeFunction.isCacheable());
   }
 
@@ -154,7 +154,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     scope = scope.outerScope();
 
     Task task = convertIfNeeded(definedCallTask, actualResultType);
-    return new VirtualTask(function.extendedName(), task, expression.location());
+    return new VirtualTask(function.extendedName(), task, CALL, expression.location());
   }
 
   private static void addArgumentsToScope(Scope<Task> scope, List<? extends Named> names,

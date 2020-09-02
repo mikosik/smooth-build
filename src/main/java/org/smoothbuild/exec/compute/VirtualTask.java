@@ -1,7 +1,5 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.exec.compute.TaskKind.CALL;
-
 import java.util.List;
 
 import org.smoothbuild.db.record.base.Record;
@@ -14,10 +12,12 @@ import com.google.common.collect.ImmutableList;
 
 public class VirtualTask extends Task {
   private final Task task;
+  private final TaskKind kind;
 
-  public VirtualTask(String name, Task task, Location location) {
+  public VirtualTask(String name, Task task, TaskKind kind, Location location) {
     super(task.type(), name, ImmutableList.of(task), location);
     this.task = task;
+    this.kind = kind;
   }
 
   @Override
@@ -33,6 +33,6 @@ public class VirtualTask extends Task {
 
   @Override
   public TaskKind kind() {
-    return CALL;
+    return kind;
   }
 }
