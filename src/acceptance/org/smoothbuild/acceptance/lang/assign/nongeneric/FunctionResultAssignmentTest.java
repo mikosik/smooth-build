@@ -2,11 +2,12 @@ package org.smoothbuild.acceptance.lang.assign.nongeneric;
 
 import static org.smoothbuild.util.Strings.unlines;
 
-public class ResultAssignmentTest extends AbstractAssignmentTestCase {
+public class FunctionResultAssignmentTest extends AbstractAssignmentTestCase {
   @Override
   protected String createTestScript(AssignmentTestSpec testSpec) {
     return unlines(
-        testSpec.target.name + " result = " + testSpec.source.literal + ";",
+        testSpec.target.name + " myFunction() = " + testSpec.source.literal + ";",
+        "result = myFunction();",
         testSpec.declarations()
     );
   }
@@ -14,7 +15,7 @@ public class ResultAssignmentTest extends AbstractAssignmentTestCase {
   @Override
   protected void assertAssignmentError(String targetType, String sourceType) {
     assertSysOutContainsParseError(1,
-        "Function 'result' has body which type is '" + sourceType +
-            "' and it is not convertible to function's declared result type '" + targetType + "'.");
+        "`myFunction` has body which type is '" + sourceType +
+            "' and it is not convertible to its declared type '" + targetType + "'.");
   }
 }
