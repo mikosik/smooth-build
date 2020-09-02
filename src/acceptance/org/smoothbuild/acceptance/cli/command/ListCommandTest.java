@@ -14,7 +14,7 @@ public class ListCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {
     @Test
-    public void list_command_lists_all_available_functions() throws Exception {
+    public void list_command_lists_all_available_values() throws Exception {
       createUserModule("""
             bValue = "abc";
             aValue = "abc";
