@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class AccessorTest extends AcceptanceTestCase {
+public class FieldReadTest extends AcceptanceTestCase {
   @Test
-  public void struct_field_can_be_accessed_via_accessor() throws Exception {
+  public void struct_field_can_be_accessed_via_field_read() throws Exception {
     createUserModule("""
             MyStruct {
               String field,
@@ -21,7 +21,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void accessor_cannot_be_called_as_normal_function() throws Exception {
+  public void field_cannot_be_called_as_normal_function() throws Exception {
     createUserModule("""
             MyStruct {
               String field,
@@ -35,7 +35,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void accessor_with_parentheses_causes_error() throws Exception {
+  public void field_read_with_parentheses_causes_error() throws Exception {
     createUserModule("""
             MyStruct {
               String field,
@@ -48,7 +48,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void accessors_can_be_chained() throws Exception {
+  public void field_reading_can_be_chained() throws Exception {
     createUserModule("""
             S1 {
               S2 f1,
@@ -68,7 +68,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void applying_accessor_to_string_object_causes_error() throws Exception {
+  public void field_reading_from_string_value_causes_error() throws Exception {
     createUserModule("""
             result = "abc".accessedField;
             """);
@@ -78,7 +78,7 @@ public class AccessorTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void applying_accessor_to_struct_without_given_field_causes_error() throws Exception {
+  public void reading_field_that_does_not_exist_causes_error() throws Exception {
     createUserModule("""
             MyStruct {
               String field,

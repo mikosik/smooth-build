@@ -18,7 +18,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.spec.TupleSpec;
-import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.testing.TestingContext;
 
@@ -30,13 +29,12 @@ public class AlgorithmHashesTest extends TestingContext {
     Set<Hash> hashes = new HashSet<>();
     Native nativ = nativeWithHash(Hash.of(0));
     TupleSpec constructedType = tupleSpec(list());
-    Accessor accessor = accessor(0);
 
     hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash(nativ));
     hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(tupleAlgorithmHash(constructedType));
-    hashes.add(readTupleElementAlgorithmHash(accessor));
+    hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
 
@@ -70,11 +68,8 @@ public class AlgorithmHashesTest extends TestingContext {
 
   @Test
   public void read_tuple_element_algorithm_has_different_hash_for_different_field_indexes() {
-    Accessor accessor = accessor(0);
-    Accessor accessor2 = accessor(1);
-
-    assertThat(readTupleElementAlgorithmHash(accessor))
-        .isNotEqualTo(readTupleElementAlgorithmHash(accessor2));
+    assertThat(readTupleElementAlgorithmHash(0))
+        .isNotEqualTo(readTupleElementAlgorithmHash(1));
   }
 
   @Test
@@ -87,12 +82,6 @@ public class AlgorithmHashesTest extends TestingContext {
   public void fixed_blob_algorithm_has_different_hash_for_different_byte_strings() {
     assertThat(fixedBlobAlgorithmHash(ByteString.of((byte) 1)))
         .isNotEqualTo(fixedBlobAlgorithmHash(ByteString.of((byte) 2)));
-  }
-
-  private static Accessor accessor(int index) {
-    Accessor accessor = mock(Accessor.class);
-    when(accessor.fieldIndex()).thenReturn(index);
-    return accessor;
   }
 
   private static Native nativeWithHash(Hash hash) {

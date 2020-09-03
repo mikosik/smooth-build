@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
-import org.smoothbuild.antlr.lang.SmoothParser.AccessorContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
@@ -18,6 +17,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.CallInPipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
+import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NameContext;
@@ -140,11 +140,11 @@ public class AstCreator {
       }
 
       private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
-        if (expr.accessor() != null) {
+        if (expr.fieldRead() != null) {
           ExprNode structExpr = createNonPipeExpr(expr.nonPipeExpr());
-          AccessorContext accessor = expr.accessor();
+          FieldReadContext accessor = expr.fieldRead();
           String name = accessor.name().getText();
-          return new AccessorNode(structExpr, name, locationOf(path, accessor));
+          return new FieldReadNode(structExpr, name, locationOf(path, accessor));
         }
         if (expr.array() != null) {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);

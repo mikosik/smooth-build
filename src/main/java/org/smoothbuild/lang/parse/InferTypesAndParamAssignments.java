@@ -22,7 +22,6 @@ import org.smoothbuild.lang.base.type.Field;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
-import org.smoothbuild.lang.parse.ast.AccessorNode;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -33,6 +32,7 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
+import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
@@ -190,8 +190,8 @@ public class InferTypesAndParamAssignments {
       }
 
       @Override
-      public void visitAccessor(AccessorNode expr) {
-        super.visitAccessor(expr);
+      public void visitFieldRead(FieldReadNode expr) {
+        super.visitFieldRead(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
               if (t instanceof StructType st && st.fields().containsKey(expr.fieldName())) {
