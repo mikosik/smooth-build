@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.ReadTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Record;
@@ -25,7 +25,7 @@ public class ReadTupleElementAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return ReadTupleElementAlgorithmHash(accessor);
+    return readTupleElementAlgorithmHash(accessor);
   }
 
   @Override
