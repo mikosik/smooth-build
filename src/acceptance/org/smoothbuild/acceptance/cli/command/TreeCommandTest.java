@@ -35,7 +35,7 @@ public class TreeCommandTest {
     @Test
     public void with_long_string_literal () throws Exception {
       createUserModule("""
-              result = '01234567890123456789012345678901234567890123456789';
+              result = "01234567890123456789012345678901234567890123456789";
               """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
