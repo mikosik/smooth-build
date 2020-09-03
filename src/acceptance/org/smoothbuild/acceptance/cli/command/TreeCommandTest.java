@@ -10,30 +10,139 @@ import org.smoothbuild.acceptance.cli.command.common.DefaultModuleTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LockFileTestCase;
 import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
+import org.smoothbuild.acceptance.testing.OneStringParameter;
+import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.cli.command.TreeCommand;
 
 public class TreeCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {
     @Test
-    public void with_parameter_and_array () throws Exception {
+    public void defined_value_reference() throws Exception {
       createUserModule("""
-              mySingleton(String element) = [element, "def"];
-              result = mySingleton("abc");
+              myValue = "abc";
+              result = myValue;
               """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-          [String] result
-            [String] mySingleton()
-              [String] [String]
+          String result
+            String myValue
+              String "abc"
+          """);
+    }
+
+    @Test
+    public void native_value_reference() throws Exception {
+      this.createNativeJar(ReturnAbc.class);
+      createUserModule("""
+              String returnAbc;
+              result = returnAbc;
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          String result
+            String returnAbc
+          """);
+    }
+
+    @Test
+    public void defined_function_call_with_argument() throws Exception {
+      createUserModule("""
+              myFunction(String element) = element;
+              result = myFunction("abc");
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          String result
+            String myFunction()
+              String "abc"
+          """);
+    }
+
+    @Test
+    public void native_function_call_with_argument() throws Exception {
+      this.createNativeJar(OneStringParameter.class);
+      createUserModule("""
+              String oneStringParameter(String value);
+              result = oneStringParameter("abc");
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          String result
+            String oneStringParameter()
+              String "abc"
+          """);
+    }
+
+    @Test
+    public void constructor_call() throws Exception {
+      createUserModule("""
+              MyStruct {
+                String field
+              }
+              result = myStruct("abc");
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          MyStruct result
+            MyStruct myStruct()
+              String "abc"
+          """);
+    }
+
+    @Test
+    public void field_read() throws Exception {
+      createUserModule("""
+              MyStruct {
+                String field
+              }
+              result = myStruct("abc").field;
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+          String result
+            String .field
+              MyStruct myStruct()
                 String "abc"
-                String "def"
+          """);
+    }
+
+    @Test
+    public void array_literal () throws Exception {
+      createUserModule("""
+              result = [ "abc", "def"];
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+              [String] result
+                [String] [String]
+                  String "abc"
+                  String "def"
               """);
     }
 
     @Test
-    public void with_long_string_literal () throws Exception {
+    public void string_literal() throws Exception {
+      createUserModule("""
+              result = "abc";
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+              String result
+                String "abc"
+              """);
+    }
+
+    @Test
+    public void long_string_literal() throws Exception {
       createUserModule("""
               result = "01234567890123456789012345678901234567890123456789";
               """);
@@ -46,20 +155,33 @@ public class TreeCommandTest {
     }
 
     @Test
-    public void with_long_blob_literal () throws Exception {
+    public void blob_literal() throws Exception {
       createUserModule("""
-              result = 0x01234567890123456789012345678901234567890123456789;
+              result = 0x01;
               """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               Blob result
-                Blob 0x01234567890123456789012345678901234...
+                Blob 0x01
               """);
     }
 
     @Test
-    public void with_convert_computation() throws Exception {
+    public void long_blob_literal() throws Exception {
+      createUserModule("""
+              result = 0x01234567890ABCDEF789012345678901234567890123456789;
+              """);
+      runSmoothTree("result");
+      assertFinishedWithSuccess();
+      assertSysOutContains("""
+              Blob result
+                Blob 0x01234567890abcdef789012345678901234...
+              """);
+    }
+
+    @Test
+    public void convert_computation() throws Exception {
       createUserModule("""
               Blob result = file(toBlob("abc"), "name.txt");
               """);
