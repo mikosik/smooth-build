@@ -147,7 +147,7 @@ public class ComputationHashTest extends TestingContext {
       }
 
       @Override
-      public Spec type() {
+      public Spec outputSpec() {
         return null;
       }
 

@@ -9,7 +9,7 @@ import org.smoothbuild.plugin.NativeApi;
 public interface Algorithm {
   public Hash hash();
 
-  public Spec type();
+  public Spec outputSpec();
 
   public Output run(Input input, NativeApi nativeApi) throws Exception;
 }

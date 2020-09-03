@@ -45,7 +45,7 @@ public class FixedBlobAlgorithm implements Algorithm {
   }
 
   @Override
-  public Spec type() {
+  public Spec outputSpec() {
     return blobSpec;
   }
 

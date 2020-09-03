@@ -23,7 +23,7 @@ public class CreateTupleAlgorithm implements Algorithm {
   }
 
   @Override
-  public Spec type() {
+  public Spec outputSpec() {
     return constructedType;
   }
 

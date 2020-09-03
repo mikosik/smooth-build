@@ -29,7 +29,7 @@ public class ReadTupleElementAlgorithm implements Algorithm {
   }
 
   @Override
-  public Spec type() {
+  public Spec outputSpec() {
     return spec;
   }
 
