@@ -20,10 +20,10 @@ import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 
-public class TypeToBinaryTypeConverter extends TypeVisitor<Spec> {
+public class TypeToSpecConverter extends TypeVisitor<Spec> {
   private final RecordFactory recordFactory;
 
-  public TypeToBinaryTypeConverter(RecordFactory recordFactory) {
+  public TypeToSpecConverter(RecordFactory recordFactory) {
     this.recordFactory = recordFactory;
   }
 

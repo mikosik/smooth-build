@@ -63,12 +63,12 @@ import com.google.common.collect.ImmutableList;
 
 public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   private final Definitions definitions;
-  private final TypeToBinaryTypeConverter typeConverter;
+  private final TypeToSpecConverter toSpecConverter;
   private Scope<Task> scope;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, RecordFactory recordFactory) {
-    this.typeConverter = new TypeToBinaryTypeConverter(recordFactory);
+    this.toSpecConverter = new TypeToSpecConverter(recordFactory);
     this.definitions = definitions;
     this.scope = scope();
   }
@@ -77,7 +77,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(AccessorCallExpression expression) {
     Accessor accessor = expression.accessor();
     ConcreteType type = accessor.type();
-    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor, type.visit(typeConverter));
+    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor, type.visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.children());
     return new NormalTask(
         CALL, type, "." + accessor.name(), algorithm, children, accessor.location(), true);
@@ -88,7 +88,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     List<Task> elements = childrenTasks(expression.children());
     ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
 
-    Algorithm algorithm = new CreateArrayAlgorithm(typeConverter.visit(actualType));
+    Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
         expression.location(), true);
@@ -120,7 +120,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public Task visit(NativeValueReferenceExpression expression) {
     NativeValue nativeFunction = expression.nativeValue();
     Algorithm algorithm = new CallNativeAlgorithm(
-        nativeFunction.type().visit(typeConverter), nativeFunction);
+        nativeFunction.type().visit(toSpecConverter), nativeFunction);
     return new NormalTask(VALUE, nativeFunction.type(), nativeFunction.extendedName(), algorithm,
           ImmutableList.of(), expression.location(), nativeFunction.isCacheable());
   }
@@ -133,7 +133,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   @Override
   public Task visit(ConstructorCallExpression expression) {
     Constructor constructor = expression.constructor();
-    TupleSpec type = typeConverter.visit(constructor.type());
+    TupleSpec type = toSpecConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
     return new NormalTask(CALL, constructor.type(), constructor.extendedName(), algorithm,
@@ -173,7 +173,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
 
     Algorithm algorithm = new CallNativeAlgorithm(
-        actualResultType.visit(typeConverter), nativeFunction);
+        actualResultType.visit(toSpecConverter), nativeFunction);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
     if (nativeFunction.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, expression.location(),
@@ -196,7 +196,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
 
   @Override
   public Task visit(StringLiteralExpression expression) {
-    var stringType = typeConverter.visit(string());
+    var stringType = toSpecConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
         ImmutableList.of(), expression.location(), true);
@@ -204,7 +204,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
 
   @Override
   public Task visit(BlobLiteralExpression expression) {
-    var blobSpec = typeConverter.visit(blob());
+    var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
         ImmutableList.of(), expression.location(), true);
@@ -230,7 +230,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
 
   private NormalTask convert(ConcreteType requiredType, Task task) {
     String description = requiredType.name() + "<-" + task.type().name();
-    Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(typeConverter));
+    Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
     List<Task> dependencies = list(task);
     return new NormalTask(
         CONVERSION, requiredType, description, algorithm, dependencies, task.location(), true);
