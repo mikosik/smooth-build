@@ -107,7 +107,7 @@ public class Ast {
       reportCycle(logger,"Type hierarchy" , sortedTypes.cycle());
       return null;
     }
-    var sortedEvaluables = sortEvaluableByDependencies();
+    var sortedEvaluables = sortEvaluablesByDependencies();
     if (sortedEvaluables.sorted() == null) {
       reportCycle(logger, "Dependency graph", sortedEvaluables.cycle());
       return null;
@@ -115,7 +115,7 @@ public class Ast {
     return new Ast(sortedTypes.valuesReversed(), sortedEvaluables.valuesReversed());
   }
 
-  private TopologicalSortingResult<String, EvaluableNode, Location> sortEvaluableByDependencies() {
+  private TopologicalSortingResult<String, EvaluableNode, Location> sortEvaluablesByDependencies() {
     HashSet<String> names = new HashSet<>();
     evaluables.forEach(v -> names.add(v.name()));
 
