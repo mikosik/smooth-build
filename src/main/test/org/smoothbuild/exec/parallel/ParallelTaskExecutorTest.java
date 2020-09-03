@@ -133,7 +133,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
         .isNull();
     verify(reporter).report(
         eq(task),
-        eq("task-name                                smooth internal               "),
+        eq("task-name                                smooth internal"),
         eq(List.of(error("Execution failed with:\n" + getStackTraceAsString(exception)))));
   }
 
