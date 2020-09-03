@@ -6,10 +6,10 @@ import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.db.record.db.RecordFactory;
 import org.smoothbuild.db.record.spec.TupleSpec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class ReturnStringTuple {
-  @SmoothFunction("returnStringTuple")
+  @NativeImplementation("returnStringTuple")
   public static Tuple returnStringTuple(NativeApi nativeApi) {
     RecordFactory factory = nativeApi.factory();
     TupleSpec tupleSpec = factory.tupleSpec(List.of(factory.stringSpec()));

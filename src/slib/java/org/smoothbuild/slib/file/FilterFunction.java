@@ -12,11 +12,11 @@ import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class FilterFunction {
-  @SmoothFunction("filter")
+  @NativeImplementation("filter")
   public static Array filter(NativeApi nativeApi, Array files, RString pattern) {
     Predicate<Path> filter;
     try {

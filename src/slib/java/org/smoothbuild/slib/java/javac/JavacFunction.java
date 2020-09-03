@@ -20,10 +20,10 @@ import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class JavacFunction {
-  @SmoothFunction("javac_")
+  @NativeImplementation("javac_")
   public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options)
       throws IOException {
     return new Worker(nativeApi, srcs, libs, options).execute();

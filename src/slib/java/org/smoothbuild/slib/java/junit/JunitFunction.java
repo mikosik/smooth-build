@@ -24,11 +24,11 @@ import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
-  @SmoothFunction("junit")
+  @NativeImplementation("junit")
   public static RString junit(NativeApi nativeApi, Blob tests, Array deps, RString include)
       throws IOException {
 

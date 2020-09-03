@@ -7,10 +7,10 @@ import java.io.IOException;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class ToBlobFunction {
-  @SmoothFunction("toBlob")
+  @NativeImplementation("toBlob")
   public static Blob toBlob(NativeApi nativeApi, RString string) throws IOException {
     return stringToBlob(nativeApi, string);
   }

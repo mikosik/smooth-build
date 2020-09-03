@@ -26,7 +26,7 @@ import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.nativ.Natives;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class FindNatives {
   public static Natives findNatives(Path jarPath, Logger logger) {
@@ -59,9 +59,9 @@ public class FindNatives {
               + "'.");
         } else {
           for (Method method : clazz.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(SmoothFunction.class)) {
-              SmoothFunction smoothFunctionAnnotation = method.getAnnotation(SmoothFunction.class);
-              String name = smoothFunctionAnnotation.value();
+            if (method.isAnnotationPresent(NativeImplementation.class)) {
+              NativeImplementation annotation = method.getAnnotation(NativeImplementation.class);
+              String name = annotation.value();
               if (isLegalName(name)) {
                 if (result.containsKey(name)) {
                   logger.log(error(jarFile, method,
@@ -77,7 +77,7 @@ public class FindNatives {
                           + NativeApi.class.getCanonicalName() + "."));
                 } else {
                   result.put(name,
-                      new Native(method, smoothFunctionAnnotation.cacheable(), jarFile));
+                      new Native(method, annotation.cacheable(), jarFile));
                 }
               } else {
                 logger.log(error(jarFile, method, "Name '" + method.getName() + "' is illegal."));

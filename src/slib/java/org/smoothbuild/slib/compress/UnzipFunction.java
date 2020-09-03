@@ -23,11 +23,11 @@ import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.util.DuplicatesDetector;
 
 public class UnzipFunction {
-  @SmoothFunction("unzip")
+  @NativeImplementation("unzip")
   public static Array unzip(NativeApi nativeApi, Blob blob) throws IOException {
     try {
       return unzip(nativeApi, blob, x -> true);

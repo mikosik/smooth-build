@@ -6,10 +6,10 @@ import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.db.record.spec.ArraySpec;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class Flatten {
-  @SmoothFunction("testFlatten")
+  @NativeImplementation("testFlatten")
   public static Array testFlatten(NativeApi nativeApi, Array array) {
     Spec resultArrayElemSpec = ((ArraySpec) array.spec().elemSpec()).elemSpec();
     ArrayBuilder builder = nativeApi.factory().arrayBuilder(resultArrayElemSpec);

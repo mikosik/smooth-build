@@ -17,14 +17,14 @@ import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.BlobBuilder;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
 
 public class JarFunction {
-  @SmoothFunction("jar")
+  @NativeImplementation("jar")
   public static Blob jar(NativeApi nativeApi, Array files, Blob manifest) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();

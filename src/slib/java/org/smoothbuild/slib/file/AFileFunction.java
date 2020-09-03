@@ -10,10 +10,10 @@ import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class AFileFunction {
-  @SmoothFunction(value = "aFile", cacheable = false)
+  @NativeImplementation(value = "aFile", cacheable = false)
   public static Tuple file(Container container, RString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
