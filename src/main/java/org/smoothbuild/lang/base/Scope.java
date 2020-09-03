@@ -4,7 +4,9 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class Scope<E> {
   private final Scope<E> outerScope;
@@ -54,14 +56,24 @@ public class Scope<E> {
     return outerScope;
   }
 
+  public String namesToString() {
+    String outer = outerScope == null ? "" : outerScope.namesToString() + "\n";
+    String inner = prettyPrint(bindings.keySet());
+    return outer + inner;
+  }
+
   @Override
   public String toString() {
     String outer = outerScope == null ? "" : outerScope.toString() + "\n";
-    String inner = bindings.entrySet().stream()
+    String inner = prettyPrint(bindings.entrySet());
+    return outer + inner;
+  }
+
+  private String prettyPrint(Set<?> set) {
+    return set.stream()
         .map(Object::toString)
         .map(s -> indent() + s)
         .collect(joining("\n"));
-    return outer + inner;
   }
 
   private String indent() {
