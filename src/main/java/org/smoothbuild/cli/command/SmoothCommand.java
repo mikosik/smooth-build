@@ -8,11 +8,14 @@ import picocli.CommandLine.HelpCommand;
 
 @Command(
     name = "smooth",
-    description = "smooth-build is a build tool with strongly and statically typed, " +
-        "purely functional language. It features fine-grained, aggressive caching " +
-        "that will make sure no computation happens twice on the same machine, " +
-        "decreasing build times significantly.\n" +
-        "More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md",
+    description =
+        """
+        smooth-build is a build tool with strongly and statically typed, \
+        purely functional language. It features fine-grained, aggressive caching \
+        that will make sure no computation happens twice on the same machine, \
+        decreasing build times significantly.
+        More info at https://github.com/mikosik/smooth-build/blob/master/doc/tutorial.md\
+        """,
     subcommands = {
         BuildCommand.class,
         CleanCommand.class,
