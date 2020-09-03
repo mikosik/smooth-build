@@ -140,10 +140,10 @@ public class InferTypesAndParamAssignments {
         param.setType(type);
         type.ifPresentOrElse(t -> {
               var info = new Item(
-                  index, t, param.name(), param.declaresDefaultValue(), param.location());
+                  index, t, param.name(), param.defaultValue().isPresent(), param.location());
               param.setItemInfo(Optional.of(info));
-              if (param.declaresDefaultValue()) {
-                Optional<Type> defaultValueType = param.defaultValue().type();
+              if (param.defaultValue().isPresent()) {
+                Optional<Type> defaultValueType = param.defaultValue().get().type();
                 defaultValueType.ifPresent(dt -> {
                   if (!t.isAssignableFrom(dt)) {
                     logger.log(parseError(param, "Parameter '" + param.name()

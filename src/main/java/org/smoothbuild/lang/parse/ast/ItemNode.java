@@ -9,10 +9,10 @@ import org.smoothbuild.lang.base.type.Type;
 public class ItemNode extends NamedNode implements RefTarget {
   private final int index;
   private final TypeNode typeNode;
-  private final ExprNode defaultValue;
+  private final Optional<ExprNode> defaultValue;
   private Optional<Item> itemInfo;
 
-  public ItemNode(int index, TypeNode typeNode, String name, ExprNode defaultValue,
+  public ItemNode(int index, TypeNode typeNode, String name, Optional<ExprNode> defaultValue,
       Location location) {
     super(name, location);
     this.index = index;
@@ -28,12 +28,8 @@ public class ItemNode extends NamedNode implements RefTarget {
     return typeNode;
   }
 
-  public ExprNode defaultValue() {
+  public Optional<ExprNode> defaultValue() {
     return defaultValue;
-  }
-
-  public boolean declaresDefaultValue() {
-    return defaultValue != null;
   }
 
   public Optional<Item> itemInfo() {

@@ -9,6 +9,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.expr.Expression;
@@ -68,7 +69,7 @@ public class CallableTest extends TestingContext {
   }
 
   private Parameter paramWithDefault() {
-    return new Parameter(0, STRING, "a", mock(Expression.class), internal());
+    return new Parameter(0, STRING, "a", Optional.of(mock(Expression.class)), internal());
   }
 
   private Parameter paramWithoutDefault() {
