@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.algorithm;
 
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createArrayAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Array;
@@ -19,7 +19,7 @@ public class CreateArrayAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return createArrayAlgorithmHash();
+    return arrayAlgorithmHash();
   }
 
   @Override

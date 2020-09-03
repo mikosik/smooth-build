@@ -1,6 +1,6 @@
 package org.smoothbuild.exec.algorithm;
 
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createTupleAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.base.Tuple;
@@ -19,7 +19,7 @@ public class CreateTupleAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return createTupleAlgorithmHash(constructedType);
+    return tupleAlgorithmHash(constructedType);
   }
 
   @Override

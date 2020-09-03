@@ -3,13 +3,13 @@ package org.smoothbuild.exec.algorithm;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.ReadTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createArrayAlgorithmHash;
-import static org.smoothbuild.exec.algorithm.AlgorithmHashes.createTupleAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.HashSet;
@@ -32,11 +32,11 @@ public class AlgorithmHashesTest extends TestingContext {
     TupleSpec constructedType = tupleSpec(list());
     Accessor accessor = accessor(0);
 
-    hashes.add(createArrayAlgorithmHash());
+    hashes.add(arrayAlgorithmHash());
     hashes.add(callNativeAlgorithmHash(nativ));
     hashes.add(convertAlgorithmHash(stringSpec()));
-    hashes.add(createTupleAlgorithmHash(constructedType));
-    hashes.add(ReadTupleElementAlgorithmHash(accessor));
+    hashes.add(tupleAlgorithmHash(constructedType));
+    hashes.add(readTupleElementAlgorithmHash(accessor));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
 
@@ -64,8 +64,8 @@ public class AlgorithmHashesTest extends TestingContext {
     TupleSpec constructedType = tupleSpec(list(stringSpec()));
     TupleSpec constructedType2 = tupleSpec(list(blobSpec()));
 
-    assertThat(createTupleAlgorithmHash(constructedType))
-        .isNotEqualTo(createTupleAlgorithmHash(constructedType2));
+    assertThat(tupleAlgorithmHash(constructedType))
+        .isNotEqualTo(tupleAlgorithmHash(constructedType2));
   }
 
   @Test
@@ -73,8 +73,8 @@ public class AlgorithmHashesTest extends TestingContext {
     Accessor accessor = accessor(0);
     Accessor accessor2 = accessor(1);
 
-    assertThat(ReadTupleElementAlgorithmHash(accessor))
-        .isNotEqualTo(ReadTupleElementAlgorithmHash(accessor2));
+    assertThat(readTupleElementAlgorithmHash(accessor))
+        .isNotEqualTo(readTupleElementAlgorithmHash(accessor2));
   }
 
   @Test

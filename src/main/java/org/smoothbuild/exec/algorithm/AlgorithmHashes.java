@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.Native;
 import okio.ByteString;
 
 public class AlgorithmHashes {
-  public static Hash createArrayAlgorithmHash() {
+  public static Hash arrayAlgorithmHash() {
     return hash(0);
   }
 
@@ -21,11 +21,11 @@ public class AlgorithmHashes {
     return hash(2, destinationSpec.hash());
   }
 
-  public static Hash createTupleAlgorithmHash(TupleSpec type) {
+  public static Hash tupleAlgorithmHash(TupleSpec type) {
     return hash(3, type.hash());
   }
 
-  public static Hash ReadTupleElementAlgorithmHash(Accessor accessor) {
+  public static Hash readTupleElementAlgorithmHash(Accessor accessor) {
     return hash(4, Hash.of(accessor.fieldIndex()));
   }
 
