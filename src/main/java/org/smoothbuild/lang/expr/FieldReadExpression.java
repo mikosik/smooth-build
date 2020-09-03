@@ -2,8 +2,8 @@ package org.smoothbuild.lang.expr;
 
 import java.util.List;
 
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.Field;
 
 public class FieldReadExpression extends Expression {
   private final Field field;

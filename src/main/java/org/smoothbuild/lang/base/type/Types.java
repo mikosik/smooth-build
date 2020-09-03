@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
 import static org.smoothbuild.lang.base.Location.internal;
 
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.BasicProperties;
 

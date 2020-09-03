@@ -15,6 +15,7 @@ import static org.smoothbuild.lang.base.type.Types.struct;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
 
 public class TestingTypes {

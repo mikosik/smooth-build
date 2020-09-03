@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base;
 
 import org.smoothbuild.lang.base.type.ConcreteType;
-import org.smoothbuild.lang.base.type.Field;
 
 public class FieldRead extends Evaluable {
   private final Field field;
