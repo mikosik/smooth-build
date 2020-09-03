@@ -36,8 +36,8 @@ import org.smoothbuild.lang.parse.ast.ValueTarget;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.UnescapingFailedException;
 
-public class FindSemanticErrors {
-  public static void findSemanticErrors(Definitions imported, Ast ast, Logger logger) {
+public class AnalyzeSemantically {
+  public static void analyzeSemantically(Definitions imported, Ast ast, Logger logger) {
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
     resolveReferences(logger, imported, ast);

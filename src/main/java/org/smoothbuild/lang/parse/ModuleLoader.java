@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.EvaluableLoader.loadFunction;
 import static org.smoothbuild.lang.parse.EvaluableLoader.loadValue;
-import static org.smoothbuild.lang.parse.FindSemanticErrors.findSemanticErrors;
 import static org.smoothbuild.lang.parse.InferTypesAndParamAssignments.inferTypesAndParamAssignment;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
@@ -43,7 +43,7 @@ public class ModuleLoader {
       return Definitions.empty();
     }
     Ast ast = fromParseTree(modulePath, moduleContext);
-    findSemanticErrors(imported, ast, logger);
+    analyzeSemantically(imported, ast, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
