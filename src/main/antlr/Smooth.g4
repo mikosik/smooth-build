@@ -9,7 +9,7 @@ func        : type? name '(' paramList? ')' ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type name ( '=' expr )? ;
 expr        : nonPipeExpr ( p+='|' callInPipe )* ;
-nonPipeExpr : nonPipeExpr accessor
+nonPipeExpr : nonPipeExpr fieldRead
             | call
             | name
             | STRING
@@ -23,7 +23,7 @@ call        : name p='(' argList? ')' ;
 argList     : arg ( ',' arg )* ','? ;
 arg         : ( name '=' )? expr ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
-accessor    : '.' name ;
+fieldRead   : '.' name ;
 type        : TYPE_IDENTIFIER      # typeIdentifier
             | '[' type ']'         # arrayType
             ;

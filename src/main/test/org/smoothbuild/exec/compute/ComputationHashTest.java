@@ -7,7 +7,6 @@ import static org.smoothbuild.db.record.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.record.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.plugin.NativeApi;
@@ -127,16 +125,11 @@ public class ComputationHashTest extends TestingContext {
   }
 
   @Test
-  public void hash_of_computation_with_accessor_call_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor(), STRING);
+  public void hash_of_computation_with_read_tuple_element_algorithm_and_one_element_input_is_stable() {
+    Algorithm algorithm = new ReadTupleElementAlgorithm(0, STRING);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
-  }
-
-  private Accessor accessor() {
-    return new Accessor(
-        org.smoothbuild.lang.base.type.TestingTypes.STRING, "accessor", 0, internal());
   }
 
   private static Algorithm computation(Hash hash) {

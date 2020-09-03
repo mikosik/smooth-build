@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
@@ -22,22 +21,23 @@ import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Field;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
-import org.smoothbuild.lang.parse.ast.AccessorNode;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
+import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
@@ -135,8 +135,8 @@ public class EvaluableLoader {
     }
 
     private Expression createExpression(ExprNode expr) {
-      if (expr instanceof AccessorNode accessorNode) {
-        return createAccessor(accessorNode);
+      if (expr instanceof FieldReadNode fieldReadNode) {
+        return createFieldRead(fieldReadNode);
       }
       if (expr instanceof CallNode callNode) {
         return createCall(callNode);
@@ -156,11 +156,11 @@ public class EvaluableLoader {
       throw new RuntimeException("Unknown AST node: " + expr.getClass().getSimpleName() + ".");
     }
 
-    private Expression createAccessor(AccessorNode accessorNode) {
-      StructType type = (StructType) accessorNode.expr().type().get();
-      Accessor accessor = type.accessor(accessorNode.fieldName());
-      Expression expression = createExpression(accessorNode.expr());
-      return new AccessorCallExpression(accessor, list(expression), accessorNode.location());
+    private Expression createFieldRead(FieldReadNode fieldReadNode) {
+      StructType type = (StructType) fieldReadNode.expr().type().get();
+      Field field = type.fields().get(fieldReadNode.fieldName());
+      Expression expression = createExpression(fieldReadNode.expr());
+      return new FieldReadExpression(field, list(expression), fieldReadNode.location());
     }
 
     private Expression createReference(RefNode ref) {

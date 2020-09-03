@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
-import org.smoothbuild.lang.base.Accessor;
+import org.smoothbuild.lang.base.FieldRead;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.StructProperties;
 
@@ -42,13 +42,13 @@ public class StructType extends ConcreteType {
     return fields;
   }
 
-  public Accessor accessor(String fieldName) {
+  public FieldRead fieldRead(String fieldName) {
     Field field = fields.get(fieldName);
     if (field == null) {
       throw new IllegalArgumentException("Struct " + name() + " doesn't have field " + fieldName);
     }
     var location = field.location();
-    return new Accessor(field.type(), field.name(), field.index(), location);
+    return new FieldRead(field, location);
   }
 
   @Override

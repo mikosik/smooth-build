@@ -80,8 +80,8 @@ public class AstVisitor {
   public void visitType(TypeNode type) {}
 
   public void visitExpr(ExprNode expr) {
-    if (expr instanceof AccessorNode accessorNode) {
-      visitAccessor(accessorNode);
+    if (expr instanceof FieldReadNode fieldReadNode) {
+      visitFieldRead(fieldReadNode);
     } else if (expr instanceof ArrayNode arrayNode) {
       visitArray(arrayNode);
     } else if (expr instanceof CallNode callNode) {
@@ -97,7 +97,7 @@ public class AstVisitor {
     }
   }
 
-  public void visitAccessor(AccessorNode expr) {
+  public void visitFieldRead(FieldReadNode expr) {
     visitExpr(expr.expr());
   }
 

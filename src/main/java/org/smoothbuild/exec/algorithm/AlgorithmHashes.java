@@ -3,7 +3,6 @@ package org.smoothbuild.exec.algorithm;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.record.spec.Spec;
 import org.smoothbuild.db.record.spec.TupleSpec;
-import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Native;
 
 import okio.ByteString;
@@ -25,8 +24,8 @@ public class AlgorithmHashes {
     return hash(3, type.hash());
   }
 
-  public static Hash readTupleElementAlgorithmHash(Accessor accessor) {
-    return hash(4, Hash.of(accessor.fieldIndex()));
+  public static Hash readTupleElementAlgorithmHash(int elementIndex) {
+    return hash(4, Hash.of(elementIndex));
   }
 
   public static Hash fixedStringAlgorithmHash(String string) {

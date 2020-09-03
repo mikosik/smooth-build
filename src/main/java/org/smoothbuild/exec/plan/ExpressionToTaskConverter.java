@@ -32,7 +32,6 @@ import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.VirtualTask;
-import org.smoothbuild.lang.base.Accessor;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
@@ -41,9 +40,9 @@ import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Field;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.AccessorCallExpression;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
@@ -52,6 +51,7 @@ import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.DefinedValueReferenceExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
+import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.NativeValueReferenceExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
@@ -74,13 +74,13 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(AccessorCallExpression expression) {
-    Accessor accessor = expression.accessor();
-    ConcreteType type = accessor.type();
-    Algorithm algorithm = new ReadTupleElementAlgorithm(accessor, type.visit(toSpecConverter));
+  public Task visit(FieldReadExpression expression) {
+    Field field = expression.field();
+    Algorithm algorithm = new ReadTupleElementAlgorithm(
+        field.index(), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.children());
     return new NormalTask(
-        CALL, type, "." + accessor.name(), algorithm, children, accessor.location(), true);
+        CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);
   }
 
   @Override

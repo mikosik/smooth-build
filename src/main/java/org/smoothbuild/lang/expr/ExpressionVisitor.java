@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
 public class ExpressionVisitor<T> {
-  public T visit(AccessorCallExpression expression) {
+  public T visit(FieldReadExpression expression) {
     return null;
   }
 
