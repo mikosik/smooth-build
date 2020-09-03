@@ -8,6 +8,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.DefinedFunction;
@@ -128,9 +129,8 @@ public class EvaluableLoader {
     private Parameter createParameter(ItemNode param) {
       Type type = param.typeNode().type().get();
       String name = param.name();
-      Expression defaultValue = param.declaresDefaultValue()
-          ? createExpression(param.defaultValue())
-          : null;
+      Optional<Expression> defaultValue = param.defaultValue()
+          .map(this::createExpression);
       return new Parameter(param.index(), type, name, defaultValue, param.location());
     }
 
@@ -192,7 +192,7 @@ public class EvaluableLoader {
       List<ArgNode> args = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {
         if (args.get(i) == null) {
-          result.add(parameters.get(i).defaultValueExpression());
+          result.add(parameters.get(i).defaultValueExpression().get());
         } else {
           result.add(createExpression(args.get(i).expr()));
         }

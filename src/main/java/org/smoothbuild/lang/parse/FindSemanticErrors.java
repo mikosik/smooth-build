@@ -265,7 +265,7 @@ public class FindSemanticErrors {
         super.visitParams(params);
         boolean foundParamWithDefaultValue = false;
         for (ItemNode param : params) {
-          if (param.declaresDefaultValue()) {
+          if (param.defaultValue().isPresent()) {
             foundParamWithDefaultValue = true;
           } else if (foundParamWithDefaultValue) {
             logger.log(parseError(param,

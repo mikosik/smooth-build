@@ -2,18 +2,21 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Strings.padEnd;
 
+import java.util.Optional;
+
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
 public class Parameter extends Item {
-  private final Expression defaultValue;
+  private final Optional<Expression> defaultValue;
 
-  public Parameter(int index, Type type, String name, Expression defaultValue, Location location) {
+  public Parameter(int index, Type type, String name, Optional<Expression> defaultValue,
+      Location location) {
     super(index, type, name, defaultValue != null, location);
     this.defaultValue = defaultValue;
   }
 
-  public Expression defaultValueExpression() {
+  public Optional<Expression> defaultValueExpression() {
     return defaultValue;
   }
 

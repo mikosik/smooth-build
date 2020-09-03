@@ -72,9 +72,7 @@ public class AstVisitor {
 
   public void visitParam(int index, ItemNode param) {
     visitType(param.typeNode());
-    if (param.declaresDefaultValue()) {
-      visitExpr(param.defaultValue());
-    }
+    param.defaultValue().ifPresent(this::visitExpr);
   }
 
   public void visitType(TypeNode type) {}

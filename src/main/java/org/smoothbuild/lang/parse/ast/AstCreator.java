@@ -6,6 +6,7 @@ import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
@@ -63,7 +64,7 @@ public class AstCreator {
         NameContext nameContext = field.name();
         String name = nameContext.getText();
         Location location = locationOf(path, nameContext);
-        return new ItemNode(index, type, name, null, location);
+        return new ItemNode(index, type, name, Optional.empty(), location);
       }
 
       @Override
@@ -104,9 +105,7 @@ public class AstCreator {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
         Location location = locationOf(path, param);
-        ExprNode defaultValue = param.expr() != null
-            ? createExpr(param.expr())
-            : null;
+        Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
         return new ItemNode(index, type, name, defaultValue, location);
       }
 
