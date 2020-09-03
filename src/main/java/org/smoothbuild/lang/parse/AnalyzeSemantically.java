@@ -121,7 +121,7 @@ public class AnalyzeSemantically {
           }
         } else {
           logger.log(parseError(ref.location(), "'" + name + "' is undefined."));
-          logger.log(parseError(ref.location(), "Available names: " + scope.toString()));
+          logger.log(parseError(ref.location(), "Available names: " + scope.namesToString()));
         }
       }
 
@@ -140,7 +140,7 @@ public class AnalyzeSemantically {
           }
         } else {
           logger.log(parseError(call.location(), "'" + name + "' is undefined."));
-          logger.log(parseError(call.location(), "Available names: " + scope.toString()));
+          logger.log(parseError(call.location(), "Available names: " + scope.namesToString()));
         }
       }
     }.visitAst(ast);
