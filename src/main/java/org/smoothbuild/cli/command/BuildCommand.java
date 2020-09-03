@@ -27,38 +27,39 @@ public class BuildCommand extends ExclusiveCommand {
       defaultValue = "default",
       paramLabel = "<filter>",
       converter = ShowTasksConverter.class,
-      description = {
-          "Show executed build tasks that match filter.",
-          "",
-          "Filter is a boolean expression made up of matchers (listed below), " +
-              "boolean operators '&', '|', grouping brackets '(', ')'.",
-          "Default value is 'info|(user&(call|value))'",
-          "",
-          "For each matched tasks its name and properties are printed together with logs that " +
-              "match filter specified with --log-level option. " +
-              "Note that you can filter tasks by one log level and its logs by other level. " +
-              "For example setting '--show-tasks=error --log-level=warning' prints tasks that " +
-              "have a log with at least error level and for each such a task all logs with at " +
-              "least warning level.",
-          "",
-          "Available task matchers:",
-          "  all              - all tasks",
-          "  default          - shortcut for 'info|(user&(call|value))'",
-          "  none             - no tasks",
-          "",
-          "  f, fatal         - contains a log with fatal level",
-          "  e, error         - contains a log with at least error level",
-          "  w, warning       - contains a log with at least warning level",
-          "  i, info          - contains any log",
-          "",
-          "  u, user          - evaluates expression from user module",
-          "  s, slib          - evaluates expression from smooth standard library module",
-          "",
-          "  c, call          - evaluates function call",
-          "  conv, conversion - evaluates automatic conversion",
-          "  l, literal       - evaluates compile time literal",
-          "  v, value         - evaluates value expression"
-      }
+      description =
+          """
+          Show executed build tasks that match filter.
+          
+          Filter is a boolean expression made up of matchers (listed below), \
+          boolean operators '&', '|', grouping brackets '(', ')'.
+          Default value is 'info|(user&(call|value))'
+          
+          For each matched tasks its name and properties are printed together with logs that \
+          match filter specified with --log-level option. \
+          Note that you can filter tasks by one log level and its logs by other level. \
+          For example setting '--show-tasks=error --log-level=warning' prints tasks that \
+          have a log with at least error level and for each such a task all logs with at \
+          least warning level.
+          
+          Available task matchers:
+            all              - all tasks
+            default          - shortcut for 'info|(user&(call|value))'
+            none             - no tasks
+          
+            f, fatal         - contains a log with fatal level
+            e, error         - contains a log with at least error level
+            w, warning       - contains a log with at least warning level
+            i, info          - contains any log
+          
+            u, user          - evaluates expression from user module
+            s, slib          - evaluates expression from smooth standard library module
+          
+            c, call          - evaluates function call
+            conv, conversion - evaluates automatic conversion
+            l, literal       - evaluates compile time literal
+            v, value         - evaluates value expression
+          """
   )
   TaskMatcher showTasks;
 
