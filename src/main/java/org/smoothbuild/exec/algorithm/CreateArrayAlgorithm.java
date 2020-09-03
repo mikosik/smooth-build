@@ -23,7 +23,7 @@ public class CreateArrayAlgorithm implements Algorithm {
   }
 
   @Override
-  public Spec type() {
+  public Spec outputSpec() {
     return arraySpec;
   }
 

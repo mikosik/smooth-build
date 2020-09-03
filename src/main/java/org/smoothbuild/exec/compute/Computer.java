@@ -46,7 +46,7 @@ public class Computer {
     } else {
       newFeeder.addConsumer(consumer);
       if (computationCache.contains(hash)) {
-        Output output = computationCache.read(hash, algorithm.type());
+        Output output = computationCache.read(hash, algorithm.outputSpec());
         newFeeder.accept(new Computed(new MaybeOutput(output), ResultSource.CACHE));
         feeders.remove(hash);
       } else {

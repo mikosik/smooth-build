@@ -33,7 +33,7 @@ public class FixedStringAlgorithm implements Algorithm {
   }
 
   @Override
-  public Spec type() {
+  public Spec outputSpec() {
     return stringSpec;
   }
 

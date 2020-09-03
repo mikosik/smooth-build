@@ -265,7 +265,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     @Override
-    public Spec type() {
+    public Spec outputSpec() {
       return stringSpec();
     }
   }
