@@ -3,10 +3,10 @@ package org.smoothbuild.acceptance.testing;
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.db.record.base.Record;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class Concat {
-  @SmoothFunction("testConcat")
+  @NativeImplementation("testConcat")
   public static Array testConcat(NativeApi nativeApi, Array first, Array second) {
     return nativeApi.factory()
         .arrayBuilder(first.spec().elemSpec())

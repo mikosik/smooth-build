@@ -13,13 +13,13 @@ import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.BlobBuilder;
 import org.smoothbuild.db.record.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.util.DuplicatesDetector;
 
 import okio.BufferedSource;
 
 public class ZipFunction {
-  @SmoothFunction("zip")
+  @NativeImplementation("zip")
   public static Blob zip(NativeApi nativeApi, Array files) throws IOException {
     DuplicatesDetector<String> duplicatesDetector = new DuplicatesDetector<>();
     BlobBuilder blobBuilder = nativeApi.factory().blobBuilder();

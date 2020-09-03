@@ -7,12 +7,12 @@ import java.io.IOException;
 import org.smoothbuild.db.record.base.Blob;
 import org.smoothbuild.db.record.base.RString;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 import okio.BufferedSource;
 
 public class ToStringFunction {
-  @SmoothFunction("toString")
+  @NativeImplementation("toString")
   public static RString toString(NativeApi nativeApi, Blob blob) throws IOException {
     try (BufferedSource source = blob.source()) {
       return nativeApi.factory().string(source.readString(CHARSET));

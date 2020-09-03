@@ -2,10 +2,10 @@ package org.smoothbuild.acceptance.testing;
 
 import org.smoothbuild.db.record.base.Array;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.SmoothFunction;
+import org.smoothbuild.plugin.NativeImplementation;
 
 public class EmptyStringArray {
-  @SmoothFunction("emptyStringArray")
+  @NativeImplementation("emptyStringArray")
   public static Array emptyStringArray(NativeApi nativeApi) {
     return nativeApi.factory().arrayBuilder(nativeApi.factory().stringSpec()).build();
   }
