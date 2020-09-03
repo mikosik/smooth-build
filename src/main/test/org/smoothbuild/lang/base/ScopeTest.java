@@ -137,6 +137,22 @@ public class ScopeTest {
   }
 
   @Test
+  public void names_to_string() {
+    outerScope = scope();
+    outerScope.add("valueAbc", "abc");
+    outerScope.add("valueDef", "def");
+    scope = scope(outerScope);
+    scope.add("valueGhi", "ghi");
+    scope.add("valueJkl", "jkl");
+    assertThat(scope.namesToString())
+        .isEqualTo("""
+            valueAbc
+            valueDef
+              valueGhi
+              valueJkl""");
+  }
+
+  @Test
   public void to_string() {
     outerScope = scope();
     outerScope.add("valueAbc", "abc");
