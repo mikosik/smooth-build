@@ -1,7 +1,6 @@
-package org.smoothbuild.lang.base.type;
+package org.smoothbuild.lang.base;
 
-import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.ConcreteType;
 
 public class Field extends Item {
   public Field(int index, ConcreteType type, String name, Location location) {

@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.Streams.stream;
 
+import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.FieldRead;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.StructProperties;
