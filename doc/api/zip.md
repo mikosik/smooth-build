@@ -12,5 +12,5 @@ Returns __Blob__ containing compressed files.
 
 Zips all files from "src" directory.
 ```
-File files_zip = files("src") | zip ;
+File files_zip = projectFiles("src") | zip ;
 ```

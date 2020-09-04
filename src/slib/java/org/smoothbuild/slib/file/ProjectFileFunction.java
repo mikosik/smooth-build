@@ -12,9 +12,9 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeImplementation;
 
-public class AFileFunction {
-  @NativeImplementation(value = "aFile", cacheable = false)
-  public static Tuple file(Container container, RString path) throws IOException {
+public class ProjectFileFunction {
+  @NativeImplementation(value = "projectFile", cacheable = false)
+  public static Tuple projectFile(Container container, RString path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;

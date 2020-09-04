@@ -13,5 +13,5 @@ Returns __Blob__ containing compressed files.
 
 Jars all files from "src" directory.
 ```
-Blob app_jar = files("src") | jar ;
+Blob app_jar = projectFiles("src") | jar ;
 ```

@@ -43,11 +43,11 @@ A if(
   [A] array2,
 );
 
-File aFile(
+File projectFile(
   String path,
 );
 
-[File] files(
+[File] projectFiles(
   String dir,
 );
 

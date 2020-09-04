@@ -50,7 +50,7 @@ public class ConcatTest extends AcceptanceTestCase {
     createFile("0", "abc");
     createFile("1", "def");
     createUserModule("""
-            result = concat([ aFile('0') ], [ aFile('1') ]);
+            result = concat([ projectFile("0") ], [ projectFile("1") ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

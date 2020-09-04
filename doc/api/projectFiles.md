@@ -1,4 +1,4 @@
-## files
+## projectFiles
 
 Returns all files read recursively from the directory specified by `dir` parameter.
 
@@ -12,5 +12,5 @@ Returns __[File]__ read from directory specified by `dir` parameter.
 
 Returns all files located in 'src' directory or its subdirectories.
 ```
-[File] sources = files("src") ;
+[File] sources = projectFiles("src") ;
 ```
