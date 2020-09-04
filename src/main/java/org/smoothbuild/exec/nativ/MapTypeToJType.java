@@ -1,4 +1,4 @@
-package org.smoothbuild.nativ;
+package org.smoothbuild.exec.nativ;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;

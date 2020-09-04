@@ -1,7 +1,6 @@
 package org.smoothbuild.run;
 
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
-import static org.smoothbuild.lang.base.Location.commandLineLocation;
 import static org.smoothbuild.run.FindValues.findValues;
 
 import java.util.List;
@@ -49,14 +48,14 @@ public class PlanRunner {
     }
 
     public void execute(Definitions definitions, List<String> names) {
-      reporter.startNewPhase("Generating tree");
+      reporter.startNewPhase("Creating execution plan");
       findValues(reporter, definitions, names)
-          .ifPresent(values -> values.forEach(v -> print(planFor(definitions, v))));
+          .ifPresent(values -> printPlans(definitions, values));
     }
 
-    private Task planFor(Definitions definitions, Value value) {
-      return executionPlanner.createPlan(
-          definitions, value.createReferenceExpression(commandLineLocation()));
+    private void printPlans(Definitions definitions, List<Value> values) {
+      executionPlanner.createPlans(definitions, values)
+          .forEach(this::print);
     }
 
     private void print(Task task) {

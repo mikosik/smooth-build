@@ -15,7 +15,6 @@ import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.NativeFunction;
 import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Parameter;
@@ -94,9 +93,8 @@ public class EvaluableLoader {
     }
 
     private Value nativeValue() {
-      Native nativ = evaluable.nativ();
-      return new NativeValue((ConcreteType) evaluable.type().get(), evaluable.name(), nativ,
-          evaluable.location(), nativ.cacheable());
+      return new NativeValue(
+          (ConcreteType) evaluable.type().get(), evaluable.name(), evaluable.location());
     }
 
     public Callable loadFunction() {
@@ -115,10 +113,7 @@ public class EvaluableLoader {
     }
 
     private Callable nativeFunction() {
-      Native nativ = evaluable.nativ();
-      Signature signature = createSignature();
-      boolean isCacheable = nativ.cacheable();
-      return new NativeFunction(nativ, signature, evaluable.location(), isCacheable);
+      return new NativeFunction(createSignature(), evaluable.location());
     }
 
     private Signature createSignature() {

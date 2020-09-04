@@ -32,5 +32,5 @@ public abstract class Expression {
     return location;
   }
 
-  public abstract <T> T visit(ExpressionVisitor<T> visitor);
+  public abstract <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException;
 }

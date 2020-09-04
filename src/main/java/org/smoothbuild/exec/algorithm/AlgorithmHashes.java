@@ -3,7 +3,7 @@ package org.smoothbuild.exec.algorithm;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.TupleSpec;
-import org.smoothbuild.lang.base.Native;
+import org.smoothbuild.exec.nativ.Native;
 
 import okio.ByteString;
 

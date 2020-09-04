@@ -10,28 +10,14 @@ import org.smoothbuild.lang.expr.NativeCallExpression;
  *
  * @see DefinedFunction
  */
-public class NativeFunction extends Callable implements NativeWrapper {
-  private final Native nativ;
-  private final boolean isCacheable;
-
-  public NativeFunction(Native nativ, Signature signature, Location location, boolean isCacheable) {
+public class NativeFunction extends Callable {
+  public NativeFunction(Signature signature, Location location) {
     super(signature, location);
-    this.nativ = nativ;
-    this.isCacheable = isCacheable;
   }
 
   @Override
   public String extendedName() {
     return nameWithParentheses();
-  }
-
-  @Override
-  public Native nativ() {
-    return nativ;
-  }
-
-  public boolean isCacheable() {
-    return isCacheable;
   }
 
   @Override

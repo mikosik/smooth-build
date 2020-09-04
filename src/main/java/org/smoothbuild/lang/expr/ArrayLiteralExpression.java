@@ -19,7 +19,7 @@ public class ArrayLiteralExpression extends Expression {
   }
 
   @Override
-  public <T> T visit(ExpressionVisitor<T> visitor) {
+  public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
     return visitor.visit(this);
   }
 }

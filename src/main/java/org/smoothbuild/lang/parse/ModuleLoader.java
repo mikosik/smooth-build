@@ -26,7 +26,6 @@ import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.nativ.Natives;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,10 +33,6 @@ import com.google.common.collect.ImmutableMap;
 public class ModuleLoader {
   public static Definitions loadModule(Definitions imported, ModulePath modulePath,
       LoggerImpl logger) {
-    Natives natives = FindNatives.findNatives(modulePath.nativ().path(), logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
-    }
     ModuleContext moduleContext = ModuleParser.parseModule(modulePath, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
@@ -52,10 +47,6 @@ public class ModuleLoader {
       return Definitions.empty();
     }
     inferTypesAndParamAssignment(sortedAst, imported, logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
-    }
-    natives.assignNatives(sortedAst, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }

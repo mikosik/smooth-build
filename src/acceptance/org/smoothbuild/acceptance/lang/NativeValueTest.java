@@ -40,12 +40,27 @@ public class NativeValueTest extends AcceptanceTestCase {
   @Test
   public void native_declaration_without_native_implementation_causes_error()
       throws Exception {
+    createNativeJar(ReturnAbc.class);
     createUserModule("""
             String myValue;
             """);
     runSmoothBuild("myValue");
     assertFinishedWithError();
-    assertSysOutContains("'myValue' is native but does not have native implementation.\n");
+    assertSysOutContains("Error loading native implementation for `myValue`. Jar '"
+        + projectDirOption().resolve("build.jar").normalize()
+        + "' does not contain implementation for `myValue`. It contains {returnAbc}.");
+  }
+
+  @Test
+  public void native_declaration_without_native_jar_file_causes_error()
+      throws Exception {
+    createUserModule("""
+            String myValue;
+            """);
+    runSmoothBuild("myValue");
+    assertFinishedWithError();
+    assertSysOutContains("Error loading native implementation for `myValue`. Cannot find '"
+        + projectDirOption().resolve("build.jar").normalize() + "'.");
   }
 
   @Test
