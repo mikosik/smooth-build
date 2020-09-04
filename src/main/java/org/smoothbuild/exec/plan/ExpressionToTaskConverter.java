@@ -6,7 +6,6 @@ import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
-import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -15,6 +14,7 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -60,6 +60,8 @@ import org.smoothbuild.lang.parse.Definitions;
 import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   private final Definitions definitions;
@@ -70,7 +72,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   public ExpressionToTaskConverter(Definitions definitions, RecordFactory recordFactory) {
     this.toSpecConverter = new TypeToSpecConverter(recordFactory);
     this.definitions = definitions;
-    this.scope = scope();
+    this.scope = new Scope<>(Map.of());
   }
 
   @Override
@@ -148,8 +150,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
         inferMapping(function.parameterTypes(), taskTypes(arguments))
             .applyTo(function.signature().type());
 
-    scope = scope(scope);
-    addArgumentsToScope(scope, function.parameters(), arguments);
+    scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     Task definedCallTask = function.body().visit(this);
     scope = scope.outerScope();
 
@@ -157,11 +158,13 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     return new VirtualTask(function.extendedName(), task, CALL, expression.location());
   }
 
-  private static void addArgumentsToScope(Scope<Task> scope, List<? extends Named> names,
+  private static ImmutableMap<String, Task> nameToArgumentMap(List<? extends Named> names,
       List<Task> arguments) {
+    Builder<String, Task> builder = ImmutableMap.builder();
     for (int i = 0; i < arguments.size(); i++) {
-      scope.add(names.get(i).name(), arguments.get(i));
+      builder.put(names.get(i).name(), arguments.get(i));
     }
+    return builder.build();
   }
 
   @Override

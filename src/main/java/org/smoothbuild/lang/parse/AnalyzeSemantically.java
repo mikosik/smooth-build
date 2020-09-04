@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.Scope.scope;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
@@ -81,20 +81,19 @@ public class AnalyzeSemantically {
   }
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    Scope<Named> importedScope = scope();
-    imported.evaluables().forEach(importedScope::add);
-    Scope<Named> localScope = scope(importedScope);
-    ast.evaluablesMap().forEach(localScope::add);
+    var importedScope = new Scope<Named>(imported.evaluables());
+    Scope<Named> localScope = new Scope<>(importedScope, ast.evaluablesMap());
 
     new AstVisitor() {
       Scope<Named> scope = localScope;
       @Override
       public void visitFunc(FuncNode func) {
         func.visitType(this);
-        var innerScope = scope(scope);
-        func.params().forEach(p -> innerScope.addOrReplace(p.name(), p));
 
-        scope = innerScope;
+        var nameToParam = func.params()
+            .stream()
+            .collect(toImmutableMap(NamedNode::name, p -> p, (a, b) -> a));
+        scope = new Scope<>(scope, nameToParam);
         func.visitExpr(this);
         scope = scope.outerScope();
 

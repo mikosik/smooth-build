@@ -9,18 +9,25 @@ import java.util.Set;
 
 public class Scope<E> {
   private final Scope<E> outerScope;
-  private final Map<String, E> bindings = new HashMap<>();
+  private final Map<String, ? extends E> bindings;
 
+  @Deprecated
   public static <E> Scope<E> scope() {
-    return new Scope<>(null);
+    return new Scope<>(null, new HashMap<>());
   }
 
+  @Deprecated
   public static <E> Scope<E> scope(Scope<E> outerScope) {
-    return new Scope<>(outerScope);
+    return new Scope<>(outerScope, new HashMap<>());
   }
 
-  public Scope(Scope<E> outerScope) {
+  public Scope(Map<String, ? extends E> bindings) {
+    this(null, bindings);
+  }
+
+  public Scope(Scope<E> outerScope, Map<String, ? extends E> bindings) {
     this.outerScope = outerScope;
+    this.bindings = bindings;
   }
 
   public boolean contains(String name) {
@@ -35,17 +42,6 @@ public class Scope<E> {
       return outerScope.get(name);
     }
     throw new NoSuchElementException(name);
-  }
-
-  public void add(String name, E element) {
-    if (bindings.containsKey(name)) {
-      throw new IllegalStateException("Name " + name + " is already bound in current scope.");
-    }
-    addOrReplace(name, element);
-  }
-
-  public void addOrReplace(String name, E element) {
-    bindings.put(name, element);
   }
 
   public Scope<E> outerScope() {
