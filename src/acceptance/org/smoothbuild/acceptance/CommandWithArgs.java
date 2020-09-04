@@ -6,7 +6,7 @@ import static java.util.Objects.requireNonNull;
 import org.smoothbuild.cli.command.BuildCommand;
 import org.smoothbuild.cli.command.CleanCommand;
 import org.smoothbuild.cli.command.ListCommand;
-import org.smoothbuild.cli.command.TreeCommand;
+import org.smoothbuild.cli.command.PlanCommand;
 import org.smoothbuild.cli.command.VersionCommand;
 
 public class CommandWithArgs {
@@ -35,7 +35,7 @@ public class CommandWithArgs {
   }
 
   public static CommandWithArgs treeCommand(String... args) {
-    return new CommandWithArgs(TreeCommand.NAME, args);
+    return new CommandWithArgs(PlanCommand.NAME, args);
   }
 
   public static CommandWithArgs versionCommand(String... args) {
