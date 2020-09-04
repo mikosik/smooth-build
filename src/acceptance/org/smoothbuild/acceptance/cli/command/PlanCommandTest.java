@@ -223,7 +223,7 @@ public class PlanCommandTest {
 
     @Override
     protected String sectionName() {
-      return "Generating tree";
+      return "Creating execution plan";
     }
   }
 

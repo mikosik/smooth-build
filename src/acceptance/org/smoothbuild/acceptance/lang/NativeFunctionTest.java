@@ -16,6 +16,7 @@ import org.smoothbuild.acceptance.testing.FileParameter;
 import org.smoothbuild.acceptance.testing.OneStringParameter;
 import org.smoothbuild.acceptance.testing.ReportFixedError;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
+import org.smoothbuild.acceptance.testing.ReturnAbc;
 import org.smoothbuild.acceptance.testing.ReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnStringTuple;
 import org.smoothbuild.acceptance.testing.ThrowException;
@@ -42,12 +43,29 @@ public class NativeFunctionTest extends AcceptanceTestCase {
   @Test
   public void native_declaration_without_native_implementation_causes_error()
       throws Exception {
+    createNativeJar(ReturnAbc.class);
     createUserModule("""
-            String function();
+            String myFunction();
+            result = myFunction();
             """);
-    runSmoothBuild("function");
+    runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("'function' is native but does not have native implementation.\n");
+    assertSysOutContains("Error loading native implementation for `myFunction`. Jar '"
+        + projectDirOption().resolve("build.jar").normalize()
+        + "' does not contain implementation for `myFunction`. It contains {returnAbc}.");
+  }
+
+  @Test
+  public void native_declaration_without_native_jar_file_causes_error()
+      throws Exception {
+    createUserModule("""
+            String myFunction();
+            result = myFunction();
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithError();
+    assertSysOutContains("Error loading native implementation for `myFunction`. Cannot find '"
+        + projectDirOption().resolve("build.jar").normalize() + "'.");
   }
 
   @Test

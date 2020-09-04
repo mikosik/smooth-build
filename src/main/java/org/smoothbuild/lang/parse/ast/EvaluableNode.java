@@ -1,12 +1,10 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Native;
 
 public class EvaluableNode extends NamedNode {
   private final TypeNode typeNode;
   private final ExprNode expr;
-  private Native nativ;
 
   public EvaluableNode(TypeNode typeNode, String name, ExprNode expr, Location location) {
     super(name, location);
@@ -40,14 +38,6 @@ public class EvaluableNode extends NamedNode {
 
   public ExprNode expr() {
     return expr;
-  }
-
-  public Native nativ() {
-    return nativ;
-  }
-
-  public void setNative(Native nativ) {
-    this.nativ = nativ;
   }
 
   @Override

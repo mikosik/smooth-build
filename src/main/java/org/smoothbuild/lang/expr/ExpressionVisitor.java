@@ -1,47 +1,47 @@
 package org.smoothbuild.lang.expr;
 
 public class ExpressionVisitor<T> {
-  public T visit(FieldReadExpression expression) {
+  public T visit(FieldReadExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(ArrayLiteralExpression expression) {
+  public T visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(DefinedValueReferenceExpression expression) {
+  public T visit(DefinedValueReferenceExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(NativeValueReferenceExpression expression) {
+  public T visit(NativeValueReferenceExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(ParameterReferenceExpression expression) {
+  public T visit(ParameterReferenceExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(ConstructorCallExpression expression) {
+  public T visit(ConstructorCallExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(DefinedCallExpression expression) {
+  public T visit(DefinedCallExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(NativeCallExpression expression) {
+  public T visit(NativeCallExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(StringLiteralExpression expression) {
+  public T visit(StringLiteralExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(BlobLiteralExpression expression) {
+  public T visit(BlobLiteralExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
-  public T visit(ConvertExpression convertExpression) {
+  public T visit(ConvertExpression convertExpression) throws ExpressionVisitorException {
     return null;
   }
 }

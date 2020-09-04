@@ -20,8 +20,7 @@ import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.Native;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -78,7 +77,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNativeFunction());
+    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNative());
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("d66663fdde3d70dda784d5b035578cbd7bd6c184"));
@@ -86,7 +85,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNativeFunction());
+    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), mockNative());
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("7343a909cf87b4465ffdd09a0ab48d6ddc9b1757"));
@@ -151,13 +150,9 @@ public class ComputationHashTest extends TestingContext {
     };
   }
 
-  private static NativeFunction mockNativeFunction() {
+  private static Native mockNative() {
     Native nativ = mock(Native.class);
     when(nativ.hash()).thenReturn(Hash.of(33));
-
-    NativeFunction nativeFunction = mock(NativeFunction.class);
-    when(nativeFunction.nativ()).thenReturn(nativ);
-
-    return nativeFunction;
+    return nativ;
   }
 }

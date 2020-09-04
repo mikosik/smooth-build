@@ -1,10 +1,9 @@
 package org.smoothbuild.exec.artifact;
 
 import static com.google.common.base.Throwables.getStackTraceAsString;
-import static java.util.Map.Entry.comparingByKey;
+import static java.util.Comparator.comparing;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.artifact.ArtifactPaths.artifactPath;
-import static org.smoothbuild.lang.base.Location.commandLineLocation;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +20,6 @@ import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.parse.Definitions;
-
-import com.google.common.collect.ImmutableMap;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";
@@ -42,29 +39,23 @@ public class ArtifactBuilder {
   }
 
   public void buildArtifacts(Definitions definitions, List<Value> values) {
-    var builder = ImmutableMap.<String, Task>builder();
-    for (Value value : values) {
-      builder.put(value.name(), planFor(definitions, value));
+    List<Task> plans = executionPlanner.createPlans(definitions, values);
+    if (reporter.isProblemReported()) {
+      return;
     }
-    ImmutableMap<String, Task> namedTasks = builder.build();
     try {
-      Map<Task, Obj> artifacts = parallelExecutor.executeAll(namedTasks.values());
+      Map<Task, Obj> artifacts = parallelExecutor.executeAll(plans);
       if (!artifacts.containsValue(null)) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
-        namedTasks.entrySet()
+        artifacts.entrySet()
             .stream()
-            .sorted(comparingByKey())
-            .forEach(e -> save(e.getKey(), artifacts.get(e.getValue())));
+            .sorted(comparing(e -> e.getKey().name()))
+            .forEach(e -> save(e.getKey().name(), e.getValue()));
       }
     } catch (InterruptedException e) {
       reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
       reporter.printlnRaw("Build process has been interrupted.");
     }
-  }
-
-  private Task planFor(Definitions definitions, Value value) {
-    return executionPlanner
-        .createPlan(definitions, value.createReferenceExpression(commandLineLocation()));
   }
 
   private void save(String name, Obj object) {

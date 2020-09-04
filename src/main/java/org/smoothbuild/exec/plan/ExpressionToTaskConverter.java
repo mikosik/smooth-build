@@ -32,6 +32,9 @@ import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.VirtualTask;
+import org.smoothbuild.exec.nativ.LoadingNativeImplException;
+import org.smoothbuild.exec.nativ.Native;
+import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
@@ -51,6 +54,7 @@ import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.DefinedValueReferenceExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
+import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.NativeCallExpression;
 import org.smoothbuild.lang.expr.NativeValueReferenceExpression;
@@ -66,17 +70,20 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
+  private final NativeImplLoader nativeImplLoader;
   private Scope<Task> scope;
 
   @Inject
-  public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory) {
+  public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
+      NativeImplLoader nativeImplLoader) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
     this.scope = new Scope<>(Map.of());
+    this.nativeImplLoader = nativeImplLoader;
   }
 
   @Override
-  public Task visit(FieldReadExpression expression) {
+  public Task visit(FieldReadExpression expression) throws ExpressionVisitorException {
     Field field = expression.field();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
         field.index(), field.type().visit(toSpecConverter));
@@ -86,7 +93,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ArrayLiteralExpression expression) {
+  public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
     List<Task> elements = childrenTasks(expression.children());
     ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
 
@@ -110,7 +117,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(DefinedValueReferenceExpression expression) {
+  public Task visit(DefinedValueReferenceExpression expression) throws ExpressionVisitorException {
     String name = expression.name();
     DefinedValue value = (DefinedValue) definitions.evaluables().get(name);
     Task task = value.body().visit(this);
@@ -119,12 +126,21 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(NativeValueReferenceExpression expression) {
-    NativeValue nativeFunction = expression.nativeValue();
+  public Task visit(NativeValueReferenceExpression expression) throws ExpressionVisitorException {
+    NativeValue nativeValue = expression.nativeValue();
+    Native nativ = loadNative(nativeValue);
     Algorithm algorithm = new CallNativeAlgorithm(
-        nativeFunction.type().visit(toSpecConverter), nativeFunction);
-    return new NormalTask(VALUE, nativeFunction.type(), nativeFunction.extendedName(), algorithm,
-          ImmutableList.of(), expression.location(), nativeFunction.isCacheable());
+        nativeValue.type().visit(toSpecConverter), nativ);
+    return new NormalTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
+          ImmutableList.of(), expression.location(), nativ.cacheable());
+  }
+
+  private Native loadNative(NativeValue value) throws ExpressionVisitorException {
+    try {
+      return nativeImplLoader.loadNative(value);
+    } catch (LoadingNativeImplException e) {
+      throw new ExpressionVisitorException(e.getMessage(), e);
+    }
   }
 
   @Override
@@ -133,7 +149,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ConstructorCallExpression expression) {
+  public Task visit(ConstructorCallExpression expression) throws ExpressionVisitorException {
     Constructor constructor = expression.constructor();
     TupleSpec type = toSpecConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
@@ -143,7 +159,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(DefinedCallExpression expression) {
+  public Task visit(DefinedCallExpression expression) throws ExpressionVisitorException {
     List<Task> arguments = childrenTasks(expression.children());
     DefinedFunction function = expression.function();
     ConcreteType actualResultType =
@@ -168,22 +184,30 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(NativeCallExpression expression) {
+  public Task visit(NativeCallExpression expression) throws ExpressionVisitorException {
     List<Task> arguments = childrenTasks(expression.children());
     NativeFunction nativeFunction = expression.nativeFunction();
     List<Type> parameterTypes = nativeFunction.parameterTypes();
     GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
     ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
 
-    Algorithm algorithm = new CallNativeAlgorithm(
-        actualResultType.visit(toSpecConverter), nativeFunction);
+    Native nativ = loadNative(nativeFunction);
+    Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
     List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
     if (nativeFunction.name().equals(IF_FUNCTION_NAME)) {
-      return new IfTask(actualResultType, algorithm, dependencies, expression.location(),
-          nativeFunction.isCacheable());
+      return new IfTask(
+          actualResultType, algorithm, dependencies, expression.location(), nativ.cacheable());
     } else {
       return new NormalTask(CALL, actualResultType, nativeFunction.extendedName(), algorithm,
-          dependencies, expression.location(), nativeFunction.isCacheable());
+          dependencies, expression.location(), nativ.cacheable());
+    }
+  }
+
+  private Native loadNative(NativeFunction function) throws ExpressionVisitorException {
+    try {
+      return nativeImplLoader.loadNative(function);
+    } catch (LoadingNativeImplException e) {
+      throw new ExpressionVisitorException(e.getMessage(), e);
     }
   }
 
@@ -214,16 +238,20 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ConvertExpression convertExpression) {
+  public Task visit(ConvertExpression convertExpression) throws ExpressionVisitorException {
     List<Task> children = childrenTasks(convertExpression.children());
     return convert(convertExpression.type(), children.get(0));
   }
 
-  public List<Task> childrenTasks(List<Expression> children) {
-    return map(children, ch -> ch.visit(this));
+  private List<Task> childrenTasks(List<Expression> children) throws ExpressionVisitorException {
+    ImmutableList.Builder<Task> builder = ImmutableList.builder();
+    for (Expression child : children) {
+      builder.add(child.visit(this));
+    }
+    return builder.build();
   }
 
-  public Task convertIfNeeded(Task task, ConcreteType requiredType) {
+  private Task convertIfNeeded(Task task, ConcreteType requiredType) {
     if (task.type().equals(requiredType)) {
       return task;
     } else {

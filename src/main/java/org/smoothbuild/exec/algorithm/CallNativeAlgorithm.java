@@ -11,21 +11,21 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.lang.base.NativeWrapper;
+import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm implements Algorithm {
   private final Spec spec;
-  private final NativeWrapper nativeWrapper;
+  private final Native nativ;
 
-  public CallNativeAlgorithm(Spec spec, NativeWrapper nativeWrapper) {
+  public CallNativeAlgorithm(Spec spec, Native nativ) {
     this.spec = spec;
-    this.nativeWrapper = nativeWrapper;
+    this.nativ = nativ;
   }
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(nativeWrapper.nativ());
+    return callNativeAlgorithmHash(nativ);
   }
 
   @Override
@@ -36,17 +36,17 @@ public class CallNativeAlgorithm implements Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
-      Obj result = (Obj) nativeWrapper.nativ().method()
+      Obj result = (Obj) nativ.method()
           .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("`" + nativeWrapper.name()
+          nativeApi.log().error("`" + nativ.name()
               + "` has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!spec.equals(result.spec())) {
-        nativeApi.log().error("`" + nativeWrapper.name()
+        nativeApi.log().error("`" + nativ.name()
             + "` has faulty native implementation: Its declared result spec == " + spec.name()
             + " but it returned object with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
@@ -55,7 +55,7 @@ public class CallNativeAlgorithm implements Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("`" + nativeWrapper.name()
+      throw new NativeCallException("`" + nativ.name()
           + "` threw java exception from its native code.", e.getCause());
     }
   }
