@@ -5,7 +5,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.testing.TestingContext;
 
@@ -110,7 +110,7 @@ public class OutputTest extends TestingContext {
     return messageArrayWithOneError();
   }
 
-  private RString aString() {
+  private Str aString() {
     return string("abc");
   }
 }

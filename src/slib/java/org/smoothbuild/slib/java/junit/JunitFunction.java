@@ -20,7 +20,7 @@ import java.util.zip.ZipException;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
@@ -29,7 +29,7 @@ import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class JunitFunction {
   @NativeImplementation("junit")
-  public static RString junit(NativeApi nativeApi, Blob tests, Array deps, RString include)
+  public static Str junit(NativeApi nativeApi, Blob tests, Array deps, Str include)
       throws IOException {
 
     try {
@@ -116,7 +116,7 @@ public class JunitFunction {
     }
   }
 
-  private static Predicate<Path> createFilter(RString includeParam) throws JunitException {
+  private static Predicate<Path> createFilter(Str includeParam) throws JunitException {
     try {
       return pathMatcher(includeParam.jValue());
     } catch (IllegalPathPatternException e) {

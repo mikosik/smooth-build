@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -18,7 +18,7 @@ import org.smoothbuild.plugin.NativeImplementation;
 
 public class ProjectFilesFunction {
   @NativeImplementation(value = "projectFiles", cacheable = false)
-  public static Array projectFiles(Container container, RString dir) throws IOException {
+  public static Array projectFiles(Container container, Str dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;

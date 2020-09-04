@@ -10,7 +10,7 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
 public class MessageStruct {
@@ -43,11 +43,11 @@ public class MessageStruct {
     return messageText((Tuple) message).jValue();
   }
 
-  public static RString messageText(Tuple message) {
-    return (RString) message.get(TEXT_INDEX);
+  public static Str messageText(Tuple message) {
+    return (Str) message.get(TEXT_INDEX);
   }
 
-  public static RString messageSeverity(Tuple message) {
-    return (RString) message.get(SEVERITY_INDEX);
+  public static Str messageSeverity(Tuple message) {
+    return (Str) message.get(SEVERITY_INDEX);
   }
 }

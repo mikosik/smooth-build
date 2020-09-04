@@ -22,7 +22,7 @@ import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
 public class NativeFunctionTest extends AcceptanceTestCase {
@@ -86,7 +86,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains("'oneStringParameter' declares type 'File' "
         + "so its native implementation result type must be " + Tuple.class.getCanonicalName() +
-        " but it is " + RString.class.getCanonicalName() + ".\n");
+        " but it is " + Str.class.getCanonicalName() + ".\n");
   }
 
   @Test
@@ -128,7 +128,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains("Function 'oneStringParameter' parameter 'string' has type [String] "
         + "so its native implementation type must be " + Array.class.getCanonicalName()
-        + " but it is " + RString.class.getCanonicalName() + ".\n");
+        + " but it is " + Str.class.getCanonicalName() + ".\n");
   }
 
   @Test

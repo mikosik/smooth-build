@@ -17,7 +17,7 @@ import javax.tools.ToolProvider;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
@@ -104,8 +104,8 @@ public class JavacFunction {
     }
 
     private Iterable<String> options() {
-      return StreamSupport.stream(options.asIterable(RString.class).spliterator(), false)
-          .map(RString::jValue)
+      return StreamSupport.stream(options.asIterable(Str.class).spliterator(), false)
+          .map(Str::jValue)
           .collect(Collectors.toList());
     }
 

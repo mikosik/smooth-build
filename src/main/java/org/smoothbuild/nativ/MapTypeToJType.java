@@ -4,7 +4,7 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -23,7 +23,7 @@ public class MapTypeToJType {
         case TypeNames.BLOB -> Blob.class;
         case TypeNames.BOOL -> Bool.class;
         case TypeNames.NOTHING -> Obj.class;
-        case TypeNames.STRING -> RString.class;
+        case TypeNames.STRING -> Str.class;
         default -> throw new IllegalArgumentException("Unknown type: '" + type.name() + "'");
       };
     }

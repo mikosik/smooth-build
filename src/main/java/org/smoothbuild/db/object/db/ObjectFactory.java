@@ -14,7 +14,7 @@ import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
@@ -72,11 +72,11 @@ public class ObjectFactory {
     return objectDb.bool(value);
   }
 
-  public Tuple file(RString path, Blob content) {
+  public Tuple file(Str path, Blob content) {
     return objectDb.tuple(fileSpec(), ImmutableList.of(content, path));
   }
 
-  public RString string(String string) {
+  public Str string(String string) {
     return objectDb.string(string);
   }
 

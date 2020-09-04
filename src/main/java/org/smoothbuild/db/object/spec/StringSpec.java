@@ -6,7 +6,7 @@ import static org.smoothbuild.db.object.spec.SpecKind.STRING;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.object.base.MerkleRoot;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.db.ObjectDb;
 
 /**
@@ -18,8 +18,8 @@ public class StringSpec extends Spec {
   }
 
   @Override
-  public RString newJObject(MerkleRoot merkleRoot) {
+  public Str newJObject(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
-    return new RString(merkleRoot, hashedDb);
+    return new Str(merkleRoot, hashedDb);
   }
 }

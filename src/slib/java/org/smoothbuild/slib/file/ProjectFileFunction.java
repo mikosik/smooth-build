@@ -5,7 +5,7 @@ import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
@@ -14,7 +14,7 @@ import org.smoothbuild.plugin.NativeImplementation;
 
 public class ProjectFileFunction {
   @NativeImplementation(value = "projectFile", cacheable = false)
-  public static Tuple projectFile(Container container, RString path) throws IOException {
+  public static Tuple projectFile(Container container, Str path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {
       return null;

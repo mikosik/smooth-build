@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.exec.base.Input;
@@ -39,7 +39,7 @@ public class FixedStringAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    RString rstring = nativeApi
+    Str rstring = nativeApi
         .factory()
         .string(this.string);
     return new Output(rstring, nativeApi.messages());

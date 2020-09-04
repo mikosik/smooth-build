@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.db.ObjectDb;
 import org.smoothbuild.db.object.db.ObjectFactory;
@@ -183,7 +183,7 @@ public class TestingContext {
     return objectDb().bool(value);
   }
 
-  public RString string(String string) {
+  public Str string(String string) {
     return objectDb().string(string);
   }
 
@@ -240,7 +240,7 @@ public class TestingContext {
   }
 
   public Tuple file(Path path, ByteString content) {
-    RString string = objectFactory().string(path.toString());
+    Str string = objectFactory().string(path.toString());
     Blob blob = blob(content);
     return objectFactory().file(string, blob);
   }

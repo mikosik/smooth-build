@@ -29,7 +29,7 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 
 import com.google.common.testing.EqualsTester;
 
@@ -87,7 +87,7 @@ public class SpecTest {
   public static List<Arguments> jType_test_data() {
     return List.of(
         arguments(BOOL, Bool.class),
-        arguments(STRING, RString.class),
+        arguments(STRING, Str.class),
         arguments(BLOB, Blob.class),
         arguments(NOTHING, Obj.class),
         arguments(ARRAY_BOOL, Array.class),
