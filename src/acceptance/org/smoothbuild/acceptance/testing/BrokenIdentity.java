@@ -1,12 +1,12 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 
 public class BrokenIdentity {
   @NativeImplementation("brokenIdentity")
-  public static Record brokenIdentity(NativeApi nativeApi, Record value) {
+  public static Obj brokenIdentity(NativeApi nativeApi, Obj value) {
     return nativeApi.factory().string("abc");
   }
 }

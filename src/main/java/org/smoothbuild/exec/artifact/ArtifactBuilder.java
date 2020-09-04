@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
@@ -48,7 +48,7 @@ public class ArtifactBuilder {
     }
     ImmutableMap<String, Task> namedTasks = builder.build();
     try {
-      Map<Task, Record> artifacts = parallelExecutor.executeAll(namedTasks.values());
+      Map<Task, Obj> artifacts = parallelExecutor.executeAll(namedTasks.values());
       if (!artifacts.containsValue(null)) {
         reporter.startNewPhase(SAVING_ARTIFACT_PHASE);
         namedTasks.entrySet()
@@ -67,9 +67,9 @@ public class ArtifactBuilder {
         .createPlan(definitions, value.createReferenceExpression(commandLineLocation()));
   }
 
-  private void save(String name, Record record) {
+  private void save(String name, Obj object) {
     try {
-      Path path = artifactSaver.save(name, record);
+      Path path = artifactSaver.save(name, object);
       reportSuccess(name, path);
     } catch (IOException e) {
       reportFailure(name,

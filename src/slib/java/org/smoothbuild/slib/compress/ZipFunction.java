@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.BlobBuilder;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.BlobBuilder;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.util.DuplicatesDetector;

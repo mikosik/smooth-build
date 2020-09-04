@@ -12,10 +12,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.BlobBuilder;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.BlobBuilder;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.util.DuplicatesDetector;

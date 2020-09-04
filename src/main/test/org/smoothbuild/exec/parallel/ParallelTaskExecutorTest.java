@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
@@ -149,10 +149,10 @@ public class ParallelTaskExecutorTest extends TestingContext {
     parallelTaskExecutor = new ParallelTaskExecutor(computer, reporter);
     Task task = task(valueAlgorithm("A"));
 
-    Record record = parallelTaskExecutor.executeAll(list(task)).get(task);
+    Obj object = parallelTaskExecutor.executeAll(list(task)).get(task);
 
     verify(reporter, only()).reportComputerException(same(task), same(exception));
-    assertThat(record).isNull();
+    assertThat(object).isNull();
   }
 
   private Task concat(Task... dependencies) {
@@ -163,7 +163,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(1)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        String joinedArgs = input.records()
+        String joinedArgs = input.objects()
             .stream()
             .map(o -> ((RString) o).jValue())
             .collect(joining(","));
@@ -223,11 +223,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
     };
   }
 
-  private Record executeSingleTask(Task task) throws InterruptedException {
+  private Obj executeSingleTask(Task task) throws InterruptedException {
     return executeSingleTask(parallelTaskExecutor, task);
   }
 
-  private static Record executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
+  private static Obj executeSingleTask(ParallelTaskExecutor parallelTaskExecutor, Task task)
       throws InterruptedException {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }

@@ -1,8 +1,8 @@
 package org.smoothbuild.exec.base;
 
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Tuple;
 
 public class FileStruct {
   private static final int CONTENT_INDEX = 0;

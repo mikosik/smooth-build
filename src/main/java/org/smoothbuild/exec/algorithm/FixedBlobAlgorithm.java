@@ -6,9 +6,9 @@ import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.spec.BlobSpec;
-import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.spec.BlobSpec;
+import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

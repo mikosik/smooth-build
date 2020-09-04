@@ -6,10 +6,10 @@ import java.net.URI;
 
 import javax.tools.SimpleJavaFileObject;
 
-import org.smoothbuild.db.record.base.ArrayBuilder;
-import org.smoothbuild.db.record.base.BlobBuilder;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.ArrayBuilder;
+import org.smoothbuild.db.object.base.BlobBuilder;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 

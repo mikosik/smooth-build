@@ -20,8 +20,8 @@ import org.smoothbuild.acceptance.testing.ReturnNull;
 import org.smoothbuild.acceptance.testing.ReturnStringTuple;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.RString;
 
 public class NativeValueTest extends AcceptanceTestCase {
   @Test
@@ -214,7 +214,7 @@ public class NativeValueTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-        + "Its declared result spec == [BLOB] but it returned record with spec == [STRING].");
+        + "Its declared result spec == [BLOB] but it returned object with spec == [STRING].");
   }
 
   @Test
@@ -231,6 +231,6 @@ public class NativeValueTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains("`returnStringTuple` has faulty native implementation: Its declared " +
-        "result spec == {STRING,STRING} but it returned record with spec == {STRING}.");
+        "result spec == {STRING,STRING} but it returned object with spec == {STRING}.");
   }
 }

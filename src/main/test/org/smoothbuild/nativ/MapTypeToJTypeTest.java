@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.Bool;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.lang.base.type.Type;
 
 public class MapTypeToJTypeTest {
@@ -52,10 +52,10 @@ public class MapTypeToJTypeTest {
 
   private static Stream<Arguments> map_type_to_jtype_test_data() {
     return Stream.of(
-        arguments(A, Record.class),
+        arguments(A, Obj.class),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
-        arguments(NOTHING, Record.class),
+        arguments(NOTHING, Obj.class),
         arguments(STRING, RString.class),
         arguments(PERSON, Tuple.class),
 

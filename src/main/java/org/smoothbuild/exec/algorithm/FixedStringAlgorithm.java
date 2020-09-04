@@ -5,9 +5,9 @@ import static org.smoothbuild.exec.compute.Task.NAME_LENGTH_LIMIT;
 import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.spec.Spec;
-import org.smoothbuild.db.record.spec.StringSpec;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;

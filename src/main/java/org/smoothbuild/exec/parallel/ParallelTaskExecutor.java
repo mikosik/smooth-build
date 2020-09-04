@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.compute.ComputableTask;
 import org.smoothbuild.exec.compute.Computer;
@@ -43,7 +43,7 @@ public class ParallelTaskExecutor {
     this.threadCount = threadCount;
   }
 
-  public Map<Task, Record> executeAll(Iterable<Task> tasks) throws InterruptedException {
+  public Map<Task, Obj> executeAll(Iterable<Task> tasks) throws InterruptedException {
     SoftTerminationExecutor executor = new SoftTerminationExecutor(threadCount);
     return new Worker(computer, reporter, executor).executeAll(tasks);
   }
@@ -65,8 +65,8 @@ public class ParallelTaskExecutor {
       return reporter;
     }
 
-    public Map<Task, Record> executeAll(Iterable<Task> tasks) throws InterruptedException {
-      List<Feeder<Record>> results = Streams.stream(tasks)
+    public Map<Task, Obj> executeAll(Iterable<Task> tasks) throws InterruptedException {
+      List<Feeder<Obj>> results = Streams.stream(tasks)
           .map(t -> t.startComputation(this))
           .collect(toList());
       runWhenAllAvailable(results, jobExecutor::terminate);
@@ -75,17 +75,17 @@ public class ParallelTaskExecutor {
       return toMap(tasks, results);
     }
 
-    private static HashMap<Task, Record> toMap(
-        Iterable<Task> tasks, List<Feeder<Record>> results) {
-      HashMap<Task, Record> result = new HashMap<>();
-      Iterator<Feeder<Record>> it = results.iterator();
+    private static HashMap<Task, Obj> toMap(
+        Iterable<Task> tasks, List<Feeder<Obj>> results) {
+      HashMap<Task, Obj> result = new HashMap<>();
+      Iterator<Feeder<Obj>> it = results.iterator();
       for (Task task : tasks) {
         result.put(task, it.next().get());
       }
       return result;
     }
 
-    public void enqueueComputation(ComputableTask task, Input input, Consumer<Record> consumer) {
+    public void enqueueComputation(ComputableTask task, Input input, Consumer<Obj> consumer) {
       jobExecutor.enqueue(() -> {
         try {
           ResultHandler resultHandler = new ResultHandler(task, consumer, reporter, jobExecutor);

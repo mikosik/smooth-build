@@ -10,7 +10,7 @@ import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.LoggerModule;
 import org.smoothbuild.cli.taskmatcher.TaskMatcher;
 import org.smoothbuild.cli.taskmatcher.TaskMatchers;
-import org.smoothbuild.db.record.RecordDbModule;
+import org.smoothbuild.db.object.ObjectDbModule;
 import org.smoothbuild.exec.ExecuteModule;
 import org.smoothbuild.install.InstallationPathsModule;
 import org.smoothbuild.install.ProjectPathsModule;
@@ -29,7 +29,7 @@ public class CreateInjector {
       Level logLevel, TaskMatcher taskMatcher) {
     return Guice.createInjector(PRODUCTION,
         new ExecuteModule(),
-        new RecordDbModule(),
+        new ObjectDbModule(),
         new FileSystemModule(projectDir),
         new ProjectPathsModule(projectDir),
         new InstallationPathsModule(installationDir),

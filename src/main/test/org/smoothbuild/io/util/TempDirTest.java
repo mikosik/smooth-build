@@ -8,9 +8,9 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.testing.TestingContext;
 
