@@ -43,5 +43,5 @@ Returns __[File]__ matching glob pattern.
 Takes all files (recursively) from "pictures" directory and filters only those that end with "jpg" extension.
 
 ```
-[File] jpgFiles = files("pictures") | filter("**.jpg");
+[File] jpgFiles = projectFiles("pictures") | filter("**.jpg");
 ```

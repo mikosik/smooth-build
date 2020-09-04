@@ -13,7 +13,7 @@ Returns __[a]__ containing all elements from first and second array.
 
 Returns array of all files from 'src/common' and 'src/main' directory.
 ```
-[File] commonSource = files("src/common");
-[File] mainSource = files("src/main");
+[File] commonSource = projectFiles("src/common");
+[File] mainSource = projectFiles("src/main");
 [File] allSource = concat(commonSource, mainSource);
 ```

@@ -16,9 +16,9 @@ import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
 import org.smoothbuild.plugin.NativeImplementation;
 
-public class FilesFunction {
-  @NativeImplementation(value = "files", cacheable = false)
-  public static Array files(Container container, RString dir) throws IOException {
+public class ProjectFilesFunction {
+  @NativeImplementation(value = "projectFiles", cacheable = false)
+  public static Array projectFiles(Container container, RString dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {
       return null;

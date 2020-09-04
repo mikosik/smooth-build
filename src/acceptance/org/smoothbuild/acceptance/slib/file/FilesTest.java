@@ -10,7 +10,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
     createUserModule("""
-            result = files('.smooth');
+            result = projectFiles(".smooth");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -20,7 +20,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_subdir_causes_error() throws Exception {
     createUserModule("""
-            result = files(".smooth/subdir/file.txt");
+            result = projectFiles(".smooth/subdir/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -30,7 +30,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void illegal_path_causes_error() throws Exception {
     createUserModule("""
-            result = files('..');
+            result = projectFiles("..");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -40,7 +40,7 @@ public class FilesTest extends AcceptanceTestCase {
   @Test
   public void nonexistent_path_causes_error() throws Exception {
     createUserModule("""
-            result = files("nonexistent/path.txt");
+            result = projectFiles("nonexistent/path.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -51,7 +51,7 @@ public class FilesTest extends AcceptanceTestCase {
   public void non_dir_path_causes_error() throws Exception {
     createFile("file.txt", "abc");
     createUserModule("""
-            result = files("file.txt");
+            result = projectFiles("file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -63,7 +63,7 @@ public class FilesTest extends AcceptanceTestCase {
     createFile("dir/file.txt", "abc");
     createFile("dir/subdir/file.txt", "def");
     createUserModule("""
-            result = files('dir');
+            result = projectFiles("dir");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -73,7 +73,7 @@ public class FilesTest extends AcceptanceTestCase {
 
   @Test
   public void files_from_project_root_are_returned_except_content_of_smooth_dir() throws Exception {
-    String script = "result = files(\".\");";
+    String script = "result = projectFiles(\".\");";
     createUserModule(script);
     createFile("dir/file.txt", "abc");
     runSmoothBuild("result");
