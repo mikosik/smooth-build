@@ -8,7 +8,7 @@ import javax.tools.SimpleJavaFileObject;
 
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.BlobBuilder;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
@@ -36,7 +36,7 @@ public class OutputClassFile extends SimpleJavaFileObject {
       @Override
       public void close() throws IOException {
         super.close();
-        RString pathString = nativeApi.factory().string(path.toString());
+        Str pathString = nativeApi.factory().string(path.toString());
         Tuple file = nativeApi.factory().file(pathString, contentBuilder.build());
         fileArrayBuilder.add(file);
       }

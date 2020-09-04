@@ -13,7 +13,7 @@ import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDbException;
 import org.smoothbuild.db.hashed.NoSuchDataException;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
 import org.smoothbuild.db.object.db.CannotDecodeSpecException;
 
@@ -30,7 +30,7 @@ public class CorruptedObjectTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringSpec()),
             hash("aaa"));
-    assertThat(((RString) objectDb().get(objectHash)).jValue())
+    assertThat(((Str) objectDb().get(objectHash)).jValue())
         .isEqualTo("aaa");
   }
 

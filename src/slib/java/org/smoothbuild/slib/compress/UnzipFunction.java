@@ -19,7 +19,7 @@ import java.util.zip.ZipFile;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.IllegalPathException;
 import org.smoothbuild.plugin.NativeApi;
@@ -79,7 +79,7 @@ public class UnzipFunction {
       return null;
     }
 
-    RString path = nativeApi.factory().string(fileName);
+    Str path = nativeApi.factory().string(fileName);
     Blob content = nativeApi.factory().blob(sink -> sink.writeAll(source(inputStream)));
     return nativeApi.factory().file(path, content);
   }

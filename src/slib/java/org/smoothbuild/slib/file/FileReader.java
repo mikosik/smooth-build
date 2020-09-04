@@ -3,7 +3,7 @@ package org.smoothbuild.slib.file;
 import java.io.IOException;
 
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.Path;
@@ -21,7 +21,7 @@ public class FileReader {
     return container.factory().file(createPath(path), createContent(projectPath));
   }
 
-  private RString createPath(Path path) {
+  private Str createPath(Path path) {
     return container.factory().string(path.toString());
   }
 

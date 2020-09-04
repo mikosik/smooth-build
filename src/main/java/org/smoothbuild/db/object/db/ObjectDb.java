@@ -27,7 +27,7 @@ import org.smoothbuild.db.object.base.BlobBuilder;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
@@ -98,7 +98,7 @@ public class ObjectDb {
     return wrapException(() -> newBool(value));
   }
 
-  public RString string(String string) {
+  public Str string(String string) {
     return wrapException(() -> newString(string));
   }
 
@@ -268,7 +268,7 @@ public class ObjectDb {
     return boolSpec.newJObject(writeRoot(boolSpec, writeBoolData(value)));
   }
 
-  private RString newString(String string) throws HashedDbException {
+  private Str newString(String string) throws HashedDbException {
     return stringSpec.newJObject(writeRoot(stringSpec, writeStringData(string)));
   }
 

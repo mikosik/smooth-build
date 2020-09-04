@@ -28,7 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
@@ -165,9 +165,9 @@ public class ParallelTaskExecutorTest extends TestingContext {
       public Output run(Input input, NativeApi nativeApi) {
         String joinedArgs = input.objects()
             .stream()
-            .map(o -> ((RString) o).jValue())
+            .map(o -> ((Str) o).jValue())
             .collect(joining(","));
-        RString result = nativeApi.factory().string("(" + joinedArgs + ")");
+        Str result = nativeApi.factory().string("(" + joinedArgs + ")");
         return new Output(result, nativeApi.messages());
       }
     };
@@ -177,7 +177,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(Hash.of(2), Hash.of(value))) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        RString result = nativeApi.factory().string(value);
+        Str result = nativeApi.factory().string(value);
         return new Output(result, nativeApi.messages());
       }
     };

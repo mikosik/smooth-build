@@ -4,7 +4,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.db.ObjectDbException;
 
 public class CorruptedNothingTest extends AbstractCorruptedTestCase {
@@ -14,7 +14,7 @@ public class CorruptedNothingTest extends AbstractCorruptedTestCase {
         hash(
             hash(nothingSpec()),
             hash("aaa"));
-    assertCall(() -> ((RString) objectDb().get(objectHash)).jValue())
+    assertCall(() -> ((Str) objectDb().get(objectHash)).jValue())
         .throwsException(new ObjectDbException("Cannot create java object for 'NOTHING' spec."));
   }
 }

@@ -6,7 +6,7 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.DecodingStringException;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
 
 import okio.ByteString;
@@ -22,7 +22,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringSpec()),
             hash("aaa"));
-    assertThat(((RString) objectDb().get(objectHash)).jValue())
+    assertThat(((Str) objectDb().get(objectHash)).jValue())
         .isEqualTo("aaa");
   }
 
@@ -33,7 +33,7 @@ public class CorruptedStringTest extends AbstractCorruptedTestCase {
         hash(
             hash(stringSpec()),
             notStringHash);
-    assertCall(() -> ((RString) objectDb().get(objectHash)).jValue())
+    assertCall(() -> ((Str) objectDb().get(objectHash)).jValue())
         .throwsException(new CannotDecodeObjectException(objectHash))
         .withCause(new DecodingStringException(notStringHash, null));
   }

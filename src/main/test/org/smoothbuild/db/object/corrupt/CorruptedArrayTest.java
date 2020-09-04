@@ -15,7 +15,7 @@ import org.smoothbuild.db.hashed.DecodingHashSequenceException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
 
 import okio.ByteString;
@@ -41,8 +41,8 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                 )
             ));
     List<String> strings = stream(((Array) objectDb().get(objectHash))
-        .asIterable(RString.class))
-        .map(RString::jValue)
+        .asIterable(Str.class))
+        .map(Str::jValue)
         .collect(toList());
     assertThat(strings)
         .containsExactly("aaa", "bbb")
@@ -84,7 +84,7 @@ public class CorruptedArrayTest extends AbstractCorruptedTestCase {
                     hash(true)
                 )
             ));
-    assertCall(() -> ((Array) objectDb().get(objectHash)).asIterable(RString.class))
+    assertCall(() -> ((Array) objectDb().get(objectHash)).asIterable(Str.class))
         .throwsException(new CannotDecodeObjectException(objectHash,
             "It is array which spec == [STRING] but one of its elements has spec == BOOL"));
   }

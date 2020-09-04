@@ -21,7 +21,7 @@ import org.smoothbuild.acceptance.testing.ReturnStringTuple;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.db.object.base.Blob;
-import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Str;
 
 public class NativeValueTest extends AcceptanceTestCase {
   @Test
@@ -84,7 +84,7 @@ public class NativeValueTest extends AcceptanceTestCase {
     assertFinishedWithError();
     assertSysOutContains("'returnAbc' declares type 'Blob' "
         + "so its native implementation result type must be " + Blob.class.getCanonicalName() +
-        " but it is " + RString.class.getCanonicalName() + ".\n");
+        " but it is " + Str.class.getCanonicalName() + ".\n");
   }
 
   @Test

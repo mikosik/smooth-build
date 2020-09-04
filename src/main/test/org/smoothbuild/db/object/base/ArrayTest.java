@@ -34,7 +34,7 @@ public class ArrayTest extends TestingContext {
   public void empty_array_is_empty() {
     Array array = arrayBuilder(stringSpec())
         .build();
-    assertThat(array.asIterable(RString.class))
+    assertThat(array.asIterable(Str.class))
         .isEmpty();
   }
 
@@ -57,52 +57,52 @@ public class ArrayTest extends TestingContext {
     Array array = arrayBuilder(stringSpec())
         .add(string("abc"))
         .build();
-    assertThat(array.asIterable(RString.class))
+    assertThat(array.asIterable(Str.class))
         .containsExactly(string("abc"));
   }
 
   @Test
   public void array_contains_added_element_via_add_all_method() {
-    RString rstring = string("abc");
-    RString rstring2 = string("def");
+    Str rstring = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .addAll(list(rstring, rstring2))
         .build();
-    assertThat(array.asIterable(RString.class))
+    assertThat(array.asIterable(Str.class))
         .containsExactly(rstring, rstring2)
         .inOrder();
   }
 
   @Test
   public void array_contains_added_elements_in_order() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
-    RString rstring3 = string("ghi");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
+    Str rstring3 = string("ghi");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
         .add(rstring3)
         .build();
-    assertThat(array.asIterable(RString.class))
+    assertThat(array.asIterable(Str.class))
         .containsExactly(rstring1, rstring2, rstring3)
         .inOrder();
   }
 
   @Test
   public void adding_same_element_twice_builds_array_with_two_elements() {
-    RString rstring = string("abc");
+    Str rstring = string("abc");
     Array array = arrayBuilder(stringSpec())
         .add(rstring)
         .add(rstring)
         .build();
-    assertThat(array.asIterable(RString.class))
+    assertThat(array.asIterable(Str.class))
         .containsExactly(rstring, rstring);
   }
 
   @Test
   public void arrays_with_same_elements_have_same_hash() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
@@ -117,7 +117,7 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void one_element_array_hash_is_different_than_its_element_hash() {
-    RString rstring = string("abc");
+    Str rstring = string("abc");
     Array array = arrayBuilder(stringSpec())
         .add(rstring)
         .build();
@@ -127,8 +127,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void arrays_with_same_elements_but_in_different_order_have_different_hashes() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
@@ -143,8 +143,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_with_one_more_element_have_different_hash() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .build();
@@ -158,8 +158,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_can_be_read_by_hash() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
@@ -170,21 +170,21 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void array_read_by_hash_contains_same_elements() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
         .build();
-    assertThat(((Array) objectDbOther().get(array.hash())).asIterable(RString.class))
+    assertThat(((Array) objectDbOther().get(array.hash())).asIterable(Str.class))
         .containsExactly(rstring1, rstring2)
         .inOrder();
   }
 
   @Test
   public void array_read_by_hash_has_same_hash() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
@@ -195,8 +195,8 @@ public class ArrayTest extends TestingContext {
 
   @Test
   public void to_string() {
-    RString rstring1 = string("abc");
-    RString rstring2 = string("def");
+    Str rstring1 = string("abc");
+    Str rstring2 = string("def");
     Array array = arrayBuilder(stringSpec())
         .add(rstring1)
         .add(rstring2)
