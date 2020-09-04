@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;

@@ -7,7 +7,7 @@ import static org.smoothbuild.exec.base.MessageStruct.severity;
 import static org.smoothbuild.exec.base.MessageStruct.text;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.util.TempDir;
 import org.smoothbuild.io.util.TempManager;
 import org.smoothbuild.testing.TestingContext;

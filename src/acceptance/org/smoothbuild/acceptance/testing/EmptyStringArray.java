@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import org.smoothbuild.db.record.base.Array;
+import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 

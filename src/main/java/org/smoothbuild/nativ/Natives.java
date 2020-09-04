@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -92,7 +92,7 @@ public class Natives {
           Parameter nativeParam = nativeParams[i + 1];
           Type paramType = params.get(i).typeNode().type().get();
           Class<?> paramJType = nativeParam.getType();
-          Class<? extends Record> expectedParamJType = mapTypeToJType(paramType);
+          Class<? extends Obj> expectedParamJType = mapTypeToJType(paramType);
           if (!expectedParamJType.equals(paramJType)) {
             logger.log(parseError(func, "Function '" + func.name()
                 + "' parameter '" + declaredName + "' has type "

@@ -1,6 +1,6 @@
 package org.smoothbuild.slib.bool;
 
-import org.smoothbuild.db.record.base.Bool;
+import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 

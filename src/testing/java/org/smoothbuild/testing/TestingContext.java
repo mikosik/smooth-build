@@ -7,23 +7,23 @@ import java.io.IOException;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.ArrayBuilder;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.BlobBuilder;
-import org.smoothbuild.db.record.base.Bool;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.db.record.db.RecordDb;
-import org.smoothbuild.db.record.db.RecordFactory;
-import org.smoothbuild.db.record.spec.ArraySpec;
-import org.smoothbuild.db.record.spec.BlobSpec;
-import org.smoothbuild.db.record.spec.BoolSpec;
-import org.smoothbuild.db.record.spec.NothingSpec;
-import org.smoothbuild.db.record.spec.Spec;
-import org.smoothbuild.db.record.spec.StringSpec;
-import org.smoothbuild.db.record.spec.TupleSpec;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.ArrayBuilder;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.BlobBuilder;
+import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.spec.ArraySpec;
+import org.smoothbuild.db.object.spec.BlobSpec;
+import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.NothingSpec;
+import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.compute.ComputationCache;
 import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.Container;
@@ -42,10 +42,10 @@ import okio.ByteString;
 public class TestingContext {
   private Computer computer;
   private Container container;
-  private RecordFactory recordFactory;
+  private ObjectFactory objectFactory;
   private ComputationCache computationCache;
   private FileSystem outputDbFileSystem;
-  private RecordDb recordDb;
+  private ObjectDb objectDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
   private FileSystem fullFileSystem;
@@ -71,26 +71,26 @@ public class TestingContext {
   }
 
   private Container newContainer() {
-    return new Container(fullFileSystem(), recordFactory(), tempManager());
+    return new Container(fullFileSystem(), objectFactory(), tempManager());
   }
 
-  public RecordFactory recordFactory() {
-    if (recordFactory == null) {
-      recordFactory = new RecordFactory(recordDb());
+  public ObjectFactory objectFactory() {
+    if (objectFactory == null) {
+      objectFactory = new ObjectFactory(objectDb());
     }
-    return recordFactory;
+    return objectFactory;
   }
 
-  public RecordDb recordDb() {
-    if (recordDb == null) {
-      recordDb = RecordDb.recordDb(hashedDb());
+  public ObjectDb objectDb() {
+    if (objectDb == null) {
+      objectDb = ObjectDb.objectDb(hashedDb());
     }
-    return recordDb;
+    return objectDb;
   }
 
   public ComputationCache outputDb() {
     if (computationCache == null) {
-      computationCache = new ComputationCache(outputDbFileSystem(), recordDb(), recordFactory());
+      computationCache = new ComputationCache(outputDbFileSystem(), objectDb(), objectFactory());
     }
     return computationCache;
   }
@@ -102,8 +102,8 @@ public class TestingContext {
     return outputDbFileSystem;
   }
 
-  public RecordDb recordDbOther() {
-    return RecordDb.recordDb(hashedDb());
+  public ObjectDb objectDbOther() {
+    return ObjectDb.objectDb(hashedDb());
   }
 
   public HashedDb hashedDb() {
@@ -143,27 +143,27 @@ public class TestingContext {
   }
 
   public BoolSpec boolSpec() {
-    return recordDb().boolSpec();
+    return objectDb().boolSpec();
   }
 
   public StringSpec stringSpec() {
-    return recordDb().stringSpec();
+    return objectDb().stringSpec();
   }
 
   public BlobSpec blobSpec() {
-    return recordDb().blobSpec();
+    return objectDb().blobSpec();
   }
 
   public NothingSpec nothingSpec() {
-    return recordDb().nothingSpec();
+    return objectDb().nothingSpec();
   }
 
   public ArraySpec arraySpec(Spec elementSpec) {
-    return recordDb().arraySpec(elementSpec);
+    return objectDb().arraySpec(elementSpec);
   }
 
   public TupleSpec tupleSpec(Iterable<? extends Spec> elementSpecs) {
-    return recordDb().tupleSpec(elementSpecs);
+    return objectDb().tupleSpec(elementSpecs);
   }
 
   public TupleSpec emptySpec() {
@@ -180,23 +180,23 @@ public class TestingContext {
   }
 
   public Bool bool(boolean value) {
-    return recordDb().bool(value);
+    return objectDb().bool(value);
   }
 
   public RString string(String string) {
-    return recordDb().string(string);
+    return objectDb().string(string);
   }
 
   public BlobBuilder blobBuilder() {
-    return recordDb().blobBuilder();
+    return objectDb().blobBuilder();
   }
 
   public ArrayBuilder arrayBuilder(Spec elemSpec) {
-    return recordDb().arrayBuilder(elemSpec);
+    return objectDb().arrayBuilder(elemSpec);
   }
 
-  public Tuple tuple(TupleSpec spec, Iterable<? extends Record> elements) {
-    return recordDb().tuple(spec, elements);
+  public Tuple tuple(TupleSpec spec, Iterable<? extends Obj> elements) {
+    return objectDb().tuple(spec, elements);
   }
 
   public Tuple empty() {
@@ -208,31 +208,31 @@ public class TestingContext {
   }
 
   public Array messageArrayWithOneError() {
-    return array(recordFactory().errorMessage("error message"));
+    return array(objectFactory().errorMessage("error message"));
   }
 
   public Array emptyMessageArray() {
-    return array(recordFactory().messageSpec());
+    return array(objectFactory().messageSpec());
   }
 
-  public Array array(Record... elements) {
+  public Array array(Obj... elements) {
     return array(elements[0].spec(), elements);
   }
 
-  public Array array(Spec elementSpec, Record... elements) {
-    return recordDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
+  public Array array(Spec elementSpec, Obj... elements) {
+    return objectDb().arrayBuilder(elementSpec).addAll(list(elements)).build();
   }
 
-  public Record errorMessage(String text) {
-    return recordFactory().errorMessage(text);
+  public Obj errorMessage(String text) {
+    return objectFactory().errorMessage(text);
   }
 
-  public Record warningMessage(String text) {
-    return recordFactory().warningMessage(text);
+  public Obj warningMessage(String text) {
+    return objectFactory().warningMessage(text);
   }
 
-  public Record infoMessage(String text) {
-    return recordFactory().infoMessage(text);
+  public Obj infoMessage(String text) {
+    return objectFactory().infoMessage(text);
   }
 
   public Tuple file(Path path) {
@@ -240,14 +240,14 @@ public class TestingContext {
   }
 
   public Tuple file(Path path, ByteString content) {
-    RString string = recordFactory().string(path.toString());
+    RString string = objectFactory().string(path.toString());
     Blob blob = blob(content);
-    return recordFactory().file(string, blob);
+    return objectFactory().file(string, blob);
   }
 
   public Blob blob(ByteString bytes) {
     try {
-      return recordFactory().blob(sink -> sink.write(bytes));
+      return objectFactory().blob(sink -> sink.write(bytes));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

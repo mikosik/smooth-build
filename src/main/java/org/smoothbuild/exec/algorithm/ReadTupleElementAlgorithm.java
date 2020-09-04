@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -34,9 +34,9 @@ public class ReadTupleElementAlgorithm implements Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    ImmutableList<Record> records = input.records();
-    checkArgument(records.size() == 1);
-    Tuple tuple = (Tuple) records.get(0);
+    ImmutableList<Obj> objects = input.objects();
+    checkArgument(objects.size() == 1);
+    Tuple tuple = (Tuple) objects.get(0);
     return new Output(tuple.get(elementIndex), nativeApi.messages());
   }
 }

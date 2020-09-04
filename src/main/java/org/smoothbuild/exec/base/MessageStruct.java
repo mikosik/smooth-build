@@ -8,10 +8,10 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Level;
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.RString;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.RString;
+import org.smoothbuild.db.object.base.Tuple;
 
 public class MessageStruct {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
@@ -31,15 +31,15 @@ public class MessageStruct {
     return !messages.asIterable(Tuple.class).iterator().hasNext();
   }
 
-  public static Level level(Record message) {
+  public static Level level(Obj message) {
     return Level.valueOf(severity(message));
   }
 
-  public static String severity(Record message) {
+  public static String severity(Obj message) {
     return messageSeverity((Tuple) message).jValue();
   }
 
-  public static String text(Record message) {
+  public static String text(Obj message) {
     return messageText((Tuple) message).jValue();
   }
 

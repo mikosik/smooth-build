@@ -18,8 +18,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.record.db.RecordFactory;
-import org.smoothbuild.db.record.spec.TupleSpec;
+import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -69,8 +69,8 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   private Scope<Task> scope;
 
   @Inject
-  public ExpressionToTaskConverter(Definitions definitions, RecordFactory recordFactory) {
-    this.toSpecConverter = new TypeToSpecConverter(recordFactory);
+  public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory) {
+    this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
     this.scope = new Scope<>(Map.of());
   }

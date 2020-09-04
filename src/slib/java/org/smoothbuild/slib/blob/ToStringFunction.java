@@ -4,8 +4,8 @@ import static org.smoothbuild.SmoothConstants.CHARSET;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.RString;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.RString;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 

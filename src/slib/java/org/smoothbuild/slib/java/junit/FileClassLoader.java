@@ -5,7 +5,7 @@ import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import java.io.IOException;
 import java.util.Map;
 
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Tuple;
 
 import okio.BufferedSource;
 

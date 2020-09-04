@@ -9,10 +9,10 @@ import static org.smoothbuild.util.io.Okios.copyAllAndClose;
 
 import java.io.IOException;
 
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.ArrayBuilder;
-import org.smoothbuild.db.record.base.Blob;
-import org.smoothbuild.db.record.base.Tuple;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.ArrayBuilder;
+import org.smoothbuild.db.object.base.Blob;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;

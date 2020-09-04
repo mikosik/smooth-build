@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.smoothbuild.db.record.base.Bool;
-import org.smoothbuild.db.record.base.Record;
+import org.smoothbuild.db.object.base.Bool;
+import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
@@ -29,16 +29,16 @@ public class IfTask extends ComputableTask {
   }
 
   @Override
-  public Feeder<Record> startComputation(Worker worker) {
-    FeedingConsumer<Record> ifResult = new FeedingConsumer<>();
-    Feeder<Record> conditionResult = conditionTask().startComputation(worker);
-    Consumer<Record> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
-    Consumer<Record> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
+  public Feeder<Obj> startComputation(Worker worker) {
+    FeedingConsumer<Obj> ifResult = new FeedingConsumer<>();
+    Feeder<Obj> conditionResult = conditionTask().startComputation(worker);
+    Consumer<Obj> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
+    Consumer<Obj> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
     conditionResult.addConsumer(thenOrElseEnqueuer);
     return ifResult;
   }
 
-  private Consumer<Record> thenOrElseEnqueuer(Worker worker, Consumer<Record> ifEnqueuer) {
+  private Consumer<Obj> thenOrElseEnqueuer(Worker worker, Consumer<Obj> ifEnqueuer) {
     return conditionValue -> {
       boolean condition = ((Bool) conditionValue).jValue();
       Task thenOrElseTask = condition ? thenTask() : elseTask();
@@ -46,10 +46,10 @@ public class IfTask extends ComputableTask {
     };
   }
 
-  private Consumer<Record> ifEnqueuer(Worker worker, Consumer<Record> ifResultConsumer,
-      Supplier<Record> conditionResult) {
+  private Consumer<Obj> ifEnqueuer(Worker worker, Consumer<Obj> ifResultConsumer,
+      Supplier<Obj> conditionResult) {
     return thenOrElseResult -> {
-      Record conditionValue = conditionResult.get();
+      Obj conditionValue = conditionResult.get();
 
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.

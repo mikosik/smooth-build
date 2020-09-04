@@ -2,18 +2,18 @@ package org.smoothbuild.exec.plan;
 
 import javax.inject.Inject;
 
-import org.smoothbuild.db.record.db.RecordFactory;
+import org.smoothbuild.db.object.db.ObjectFactory;
 import org.smoothbuild.lang.parse.Definitions;
 
 public class ExpressionToTaskConverterProvider {
-  private final RecordFactory recordFactory;
+  private final ObjectFactory objectFactory;
 
   @Inject
-  public ExpressionToTaskConverterProvider(RecordFactory recordFactory) {
-    this.recordFactory = recordFactory;
+  public ExpressionToTaskConverterProvider(ObjectFactory objectFactory) {
+    this.objectFactory = objectFactory;
   }
 
   public ExpressionToTaskConverter get(Definitions definitions) {
-    return new ExpressionToTaskConverter(definitions, recordFactory);
+    return new ExpressionToTaskConverter(definitions, objectFactory);
   }
 }

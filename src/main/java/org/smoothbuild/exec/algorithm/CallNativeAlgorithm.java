@@ -7,8 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.lang.base.NativeWrapper;
@@ -36,8 +36,8 @@ public class CallNativeAlgorithm implements Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     try {
-      Record result = (Record) nativeWrapper.nativ().method()
-          .invoke(null, createArguments(nativeApi, input.records()));
+      Obj result = (Obj) nativeWrapper.nativ().method()
+          .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + nativeWrapper.name()
@@ -48,7 +48,7 @@ public class CallNativeAlgorithm implements Algorithm {
       if (!spec.equals(result.spec())) {
         nativeApi.log().error("`" + nativeWrapper.name()
             + "` has faulty native implementation: Its declared result spec == " + spec.name()
-            + " but it returned record with spec == " + result.spec().name() + ".");
+            + " but it returned object with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
       }
       return new Output(result, nativeApi.messages());
@@ -60,7 +60,7 @@ public class CallNativeAlgorithm implements Algorithm {
     }
   }
 
-  private static Object[] createArguments(NativeApi nativeApi, List<Record> arguments) {
+  private static Object[] createArguments(NativeApi nativeApi, List<Obj> arguments) {
     Object[] nativeArguments = new Object[1 + arguments.size()];
     nativeArguments[0] = nativeApi;
     for (int i = 0; i < arguments.size(); i++) {

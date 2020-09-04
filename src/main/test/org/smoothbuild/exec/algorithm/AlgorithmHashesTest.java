@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.spec.TupleSpec;
+import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.lang.base.Native;
 import org.smoothbuild.testing.TestingContext;
 

@@ -2,14 +2,14 @@ package org.smoothbuild.exec.plan;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-import org.smoothbuild.db.record.db.RecordFactory;
-import org.smoothbuild.db.record.spec.ArraySpec;
-import org.smoothbuild.db.record.spec.BlobSpec;
-import org.smoothbuild.db.record.spec.BoolSpec;
-import org.smoothbuild.db.record.spec.NothingSpec;
-import org.smoothbuild.db.record.spec.Spec;
-import org.smoothbuild.db.record.spec.StringSpec;
-import org.smoothbuild.db.record.spec.TupleSpec;
+import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.spec.ArraySpec;
+import org.smoothbuild.db.object.spec.BlobSpec;
+import org.smoothbuild.db.object.spec.BoolSpec;
+import org.smoothbuild.db.object.spec.NothingSpec;
+import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.StringSpec;
+import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
@@ -21,30 +21,30 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 
 public class TypeToSpecConverter extends TypeVisitor<Spec> {
-  private final RecordFactory recordFactory;
+  private final ObjectFactory objectFactory;
 
-  public TypeToSpecConverter(RecordFactory recordFactory) {
-    this.recordFactory = recordFactory;
+  public TypeToSpecConverter(ObjectFactory objectFactory) {
+    this.objectFactory = objectFactory;
   }
 
   @Override
   public BlobSpec visit(BlobType type) {
-    return recordFactory.blobSpec();
+    return objectFactory.blobSpec();
   }
 
   @Override
   public BoolSpec visit(BoolType type) {
-    return recordFactory.boolSpec();
+    return objectFactory.boolSpec();
   }
 
   @Override
   public NothingSpec visit(NothingType type) {
-    return recordFactory.nothingSpec();
+    return objectFactory.nothingSpec();
   }
 
   @Override
   public StringSpec visit(StringType type) {
-    return recordFactory.stringSpec();
+    return objectFactory.stringSpec();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
         type.fields().values().stream()
             .map(f -> f.type().visit(this))
             .collect(toImmutableList());
-    return recordFactory.tupleSpec(fieldTypes);
+    return objectFactory.tupleSpec(fieldTypes);
   }
 
   @Override
@@ -63,7 +63,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   @Override
   public ArraySpec visit(ConcreteArrayType type) {
-    return recordFactory.arraySpec(type.elemType().visit(this));
+    return objectFactory.arraySpec(type.elemType().visit(this));
   }
 
   @Override

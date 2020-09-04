@@ -12,13 +12,13 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.db.record.base.Array;
-import org.smoothbuild.db.record.base.Record;
-import org.smoothbuild.db.record.base.Tuple;
-import org.smoothbuild.db.record.db.RecordDb;
-import org.smoothbuild.db.record.db.RecordFactory;
-import org.smoothbuild.db.record.spec.ArraySpec;
-import org.smoothbuild.db.record.spec.Spec;
+import org.smoothbuild.db.object.base.Array;
+import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.db.ObjectDb;
+import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.spec.ArraySpec;
+import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
@@ -32,14 +32,14 @@ import okio.BufferedSource;
  */
 public class ComputationCache {
   private final FileSystem fileSystem;
-  private final RecordDb recordDb;
-  private final RecordFactory recordFactory;
+  private final ObjectDb objectDb;
+  private final ObjectFactory objectFactory;
 
   @Inject
-  public ComputationCache(FileSystem fileSystem, RecordDb recordDb, RecordFactory recordFactory) {
+  public ComputationCache(FileSystem fileSystem, ObjectDb objectDb, ObjectFactory objectFactory) {
     this.fileSystem = fileSystem;
-    this.recordDb = recordDb;
-    this.recordFactory = recordFactory;
+    this.objectDb = objectDb;
+    this.objectFactory = objectFactory;
   }
 
   public synchronized void write(Hash computationHash, Output output)
@@ -67,8 +67,8 @@ public class ComputationCache {
 
   public synchronized Output read(Hash taskHash, Spec spec) throws ComputationCacheException {
     try (BufferedSource source = fileSystem.source(toPath(taskHash))) {
-      Record messagesObject = recordDb.get(Hash.read(source));
-      ArraySpec messageArraySpec = recordFactory.arraySpec(recordFactory.messageSpec());
+      Obj messagesObject = objectDb.get(Hash.read(source));
+      ArraySpec messageArraySpec = objectFactory.arraySpec(objectFactory.messageSpec());
       if (!messagesObject.spec().equals(messageArraySpec)) {
         throw corruptedValueException(taskHash, "Expected " + messageArraySpec
             + " as first child of its Merkle root, but got " + messagesObject.spec());
@@ -86,13 +86,13 @@ public class ComputationCache {
       if (containsErrors(messages)) {
         return new Output(null, messages);
       } else {
-        Hash resultRecordHash = Hash.read(source);
-        Record record = recordDb.get(resultRecordHash);
-        if (!spec.equals(record.spec())) {
+        Hash resultObjectHash = Hash.read(source);
+        Obj object = objectDb.get(resultObjectHash);
+        if (!spec.equals(object.spec())) {
           throw corruptedValueException(taskHash, "Expected value of type " + spec
-              + " as second child of its Merkle root, but got " + record.spec());
+              + " as second child of its Merkle root, but got " + object.spec());
         }
-        return new Output(record, messages);
+        return new Output(object, messages);
       }
     } catch (IOException e) {
       throw outputDbException(e);
