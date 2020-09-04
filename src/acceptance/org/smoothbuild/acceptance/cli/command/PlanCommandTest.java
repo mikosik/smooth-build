@@ -12,9 +12,9 @@ import org.smoothbuild.acceptance.cli.command.common.LogLevelOptionTestCase;
 import org.smoothbuild.acceptance.cli.command.common.ValuesArgTestCase;
 import org.smoothbuild.acceptance.testing.OneStringParameter;
 import org.smoothbuild.acceptance.testing.ReturnAbc;
-import org.smoothbuild.cli.command.TreeCommand;
+import org.smoothbuild.cli.command.PlanCommand;
 
-public class TreeCommandTest {
+public class PlanCommandTest {
   @Nested
   class basic extends AcceptanceTestCase {
     @Test
@@ -218,7 +218,7 @@ public class TreeCommandTest {
   class FunctionArgs extends ValuesArgTestCase {
     @Override
     protected String commandName() {
-      return TreeCommand.NAME;
+      return PlanCommand.NAME;
     }
 
     @Override

@@ -15,17 +15,17 @@ import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.parse.Definitions;
 
-public class TreeRunner {
+public class PlanRunner {
   private final Console console;
   private final RuntimeController runtimeController;
-  private final TreeExecutor treeExecutor;
+  private final PlanExecutor planExecutor;
 
   @Inject
-  public TreeRunner(Console console, RuntimeController runtimeController,
-      TreeExecutor treeExecutor) {
+  public PlanRunner(Console console, RuntimeController runtimeController,
+      PlanExecutor planExecutor) {
     this.console = console;
     this.runtimeController = runtimeController;
-    this.treeExecutor = treeExecutor;
+    this.planExecutor = planExecutor;
   }
 
   public int run(List<String> names) {
@@ -35,15 +35,15 @@ public class TreeRunner {
       return EXIT_CODE_ERROR;
     }
     return runtimeController.setUpRuntimeAndRun(
-        (definitions) -> treeExecutor.execute(definitions, names));
+        (definitions) -> planExecutor.execute(definitions, names));
   }
 
-  public static class TreeExecutor {
+  public static class PlanExecutor {
     private final Reporter reporter;
     private final ExecutionPlanner executionPlanner;
 
     @Inject
-    public TreeExecutor(Reporter reporter, ExecutionPlanner executionPlanner) {
+    public PlanExecutor(Reporter reporter, ExecutionPlanner executionPlanner) {
       this.reporter = reporter;
       this.executionPlanner = executionPlanner;
     }

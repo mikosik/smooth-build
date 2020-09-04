@@ -2,6 +2,11 @@ package org.smoothbuild.acceptance.cli.command;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
+import org.smoothbuild.cli.command.BuildCommand;
+import org.smoothbuild.cli.command.CleanCommand;
+import org.smoothbuild.cli.command.ListCommand;
+import org.smoothbuild.cli.command.PlanCommand;
+import org.smoothbuild.cli.command.VersionCommand;
 
 public class HelpCommandTest extends AcceptanceTestCase {
   @Test
@@ -26,14 +31,14 @@ public class HelpCommandTest extends AcceptanceTestCase {
           help     Displays help information about the specified command
           list     Print user defined values that can be evaluated and stored as
                      artifact
-          tree     Print execution tree for specified value(s)
+          plan     Print execution plan for specified value(s)
           version  Print version information
         """);
   }
 
   @Test
   public void help_build() {
-    runSmoothHelp("build");
+    runSmoothHelp(BuildCommand.NAME);
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
@@ -102,7 +107,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_clean() {
-    runSmoothHelp("clean");
+    runSmoothHelp(CleanCommand.NAME);
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
@@ -129,7 +134,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_list() {
-    runSmoothHelp("list");
+    runSmoothHelp(ListCommand.NAME);
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
@@ -155,18 +160,18 @@ public class HelpCommandTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void help_tree() {
-    runSmoothHelp("tree");
+  public void help_plan() {
+    runSmoothHelp(PlanCommand.NAME);
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
-        smooth tree [-d=<projectDir>] [-l=<level>] <value>...
+        smooth plan [-d=<projectDir>] [-l=<level>] <value>...
                 
         Description:
-        Print execution tree for specified value(s)
+        Print execution plan for specified value(s)
                 
         Parameters:
-              <value>...            value(s) which execution tree is printed
+              <value>...            value(s) which execution plan is printed
                 
         Options:
           -d, --project-dir=<projectDir>
@@ -186,7 +191,7 @@ public class HelpCommandTest extends AcceptanceTestCase {
 
   @Test
   public void help_version() {
-    runSmoothHelp("version");
+    runSmoothHelp(VersionCommand.NAME);
     assertFinishedWithSuccess();
     assertSysOutContains("""
         Usage:
