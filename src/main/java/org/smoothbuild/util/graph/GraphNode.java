@@ -7,8 +7,8 @@ import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
 
-public record GraphNode<K, N, E> (K key, N value, ImmutableList<GraphEdge<E, K>>edges) {
-  public GraphNode(K key, N value, Collection<GraphEdge<E, K>> edges) {
+public record GraphNode<K, V, E> (K key, V value, ImmutableList<GraphEdge<E, K>>edges) {
+  public GraphNode(K key, V value, Collection<GraphEdge<E, K>> edges) {
     this(key, value, ImmutableList.copyOf(edges));
   }
 

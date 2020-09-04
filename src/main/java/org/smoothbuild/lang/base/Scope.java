@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ public class Scope<E> {
   private final Map<String, E> bindings = new HashMap<>();
 
   public static <E> Scope<E> scope() {
-    return new Scope<E>(null);
+    return new Scope<>(null);
   }
 
   public static <E> Scope<E> scope(Scope<E> outerScope) {
