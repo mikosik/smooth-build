@@ -296,14 +296,12 @@ public abstract class AcceptanceTestCase {
         if (value.size() != 1) {
           throw new RuntimeException("Expected boolean artifact but got " + value.toString());
         }
-        switch (value.getByte(0)) {
-          case 0:
-            return false;
-          case 1:
-            return true;
-          default:
-            throw new RuntimeException("Expected boolean artifact but got " + value.toString());
-        }
+        return switch (value.getByte(0)) {
+          case 0 -> false;
+          case 1 -> true;
+          default -> throw new RuntimeException(
+              "Expected boolean artifact but got " + value.toString());
+        };
       });
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -349,15 +347,10 @@ public abstract class AcceptanceTestCase {
    * It may be "." when current dir is equal to {@link #projectDirAbsolutePath()}.
    */
   public Path projectDirOption() {
-    switch (AcceptanceUtils.TEST_MODE) {
-      case SINGLE_JVM:
-        return projectDir;
-      case FULL_BINARY:
-        return Path.of(".");
-      default:
-        fail("Unknown mode: " + AcceptanceUtils.TEST_MODE);
-        return null;
-    }
+    return switch (AcceptanceUtils.TEST_MODE) {
+      case SINGLE_JVM -> projectDir;
+      case FULL_BINARY -> Path.of(".");
+    };
   }
 
   public String artifactFileContentAsString(String artifact) throws IOException {
