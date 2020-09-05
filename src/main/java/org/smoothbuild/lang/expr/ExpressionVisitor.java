@@ -25,11 +25,7 @@ public class ExpressionVisitor<T> {
     return null;
   }
 
-  public T visit(DefinedCallExpression expression) throws ExpressionVisitorException {
-    return null;
-  }
-
-  public T visit(NativeCallExpression expression) throws ExpressionVisitorException {
+  public T visit(FunctionCallExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
