@@ -51,10 +51,10 @@ public class PlanRunner {
     public void execute(Definitions definitions, List<String> names) {
       reporter.startNewPhase("Generating tree");
       findValues(reporter, definitions, names)
-          .ifPresent(values -> values.forEach(v -> print(treeOf(definitions, v))));
+          .ifPresent(values -> values.forEach(v -> print(planFor(definitions, v))));
     }
 
-    private Task treeOf(Definitions definitions, Value value) {
+    private Task planFor(Definitions definitions, Value value) {
       return executionPlanner.createPlan(
           definitions, value.createReferenceExpression(commandLineLocation()));
     }
