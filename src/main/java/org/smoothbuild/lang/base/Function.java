@@ -3,19 +3,18 @@ package org.smoothbuild.lang.base;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.Expression;
+import org.smoothbuild.lang.expr.FunctionCallExpression;
 
 /**
- * Smooth function defined in smooth language via smooth expression.
- *
- * @see NativeFunction
+ * Smooth function declared in a smooth file.
  */
-public class DefinedFunction extends Callable {
-  private final Expression body;
+public class Function extends Callable {
+  private final Optional<Expression> body;
 
-  public DefinedFunction(Signature signature, Location location, Expression body) {
+  public Function(Signature signature, Location location, Optional<Expression> body) {
     super(signature, location);
     this.body = checkNotNull(body);
   }
@@ -25,12 +24,12 @@ public class DefinedFunction extends Callable {
     return nameWithParentheses();
   }
 
-  public Expression body() {
+  public Optional<Expression> body() {
     return body;
   }
 
   @Override
   public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
-    return new DefinedCallExpression(this, arguments, location);
+    return new FunctionCallExpression(this, arguments, location);
   }
 }

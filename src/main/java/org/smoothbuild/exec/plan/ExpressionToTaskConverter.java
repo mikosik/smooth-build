@@ -36,10 +36,9 @@ import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
@@ -50,13 +49,12 @@ import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
 import org.smoothbuild.lang.expr.ConvertExpression;
-import org.smoothbuild.lang.expr.DefinedCallExpression;
 import org.smoothbuild.lang.expr.DefinedValueReferenceExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
-import org.smoothbuild.lang.expr.NativeCallExpression;
+import org.smoothbuild.lang.expr.FunctionCallExpression;
 import org.smoothbuild.lang.expr.NativeValueReferenceExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
@@ -159,19 +157,33 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(DefinedCallExpression expression) throws ExpressionVisitorException {
+  public Task visit(FunctionCallExpression expression) throws ExpressionVisitorException {
     List<Task> arguments = childrenTasks(expression.children());
-    DefinedFunction function = expression.function();
+    Function function = expression.function();
+    GenericTypeMap<ConcreteType> mapping =
+        inferMapping(function.parameterTypes(), taskTypes(arguments));
     ConcreteType actualResultType =
-        inferMapping(function.parameterTypes(), taskTypes(arguments))
-            .applyTo(function.signature().type());
+        mapping.applyTo(function.signature().type());
 
-    scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    Task definedCallTask = function.body().visit(this);
-    scope = scope.outerScope();
+    if (function.body().isPresent()) {
+      scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
+      Task definedCallTask = function.body().get().visit(this);
+      scope = scope.outerScope();
 
-    Task task = convertIfNeeded(definedCallTask, actualResultType);
-    return new VirtualTask(function.extendedName(), task, CALL, expression.location());
+      Task task = convertIfNeeded(definedCallTask, actualResultType);
+      return new VirtualTask(function.extendedName(), task, CALL, expression.location());
+    } else {
+      Native nativ = loadNative(function);
+      Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
+      List<Task> dependencies = convertedArguments(mapping.applyTo(function.parameterTypes()), arguments);
+      if (function.name().equals(IF_FUNCTION_NAME)) {
+        return new IfTask(
+            actualResultType, algorithm, dependencies, expression.location(), nativ.cacheable());
+      } else {
+        return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
+            dependencies, expression.location(), nativ.cacheable());
+      }
+    }
   }
 
   private static ImmutableMap<String, Task> nameToArgumentMap(List<? extends Named> names,
@@ -183,27 +195,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     return builder.build();
   }
 
-  @Override
-  public Task visit(NativeCallExpression expression) throws ExpressionVisitorException {
-    List<Task> arguments = childrenTasks(expression.children());
-    NativeFunction nativeFunction = expression.nativeFunction();
-    List<Type> parameterTypes = nativeFunction.parameterTypes();
-    GenericTypeMap<ConcreteType> mapping = inferMapping(parameterTypes, taskTypes(arguments));
-    ConcreteType actualResultType = mapping.applyTo(nativeFunction.signature().type());
-
-    Native nativ = loadNative(nativeFunction);
-    Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
-    List<Task> dependencies = convertedArguments(mapping.applyTo(parameterTypes), arguments);
-    if (nativeFunction.name().equals(IF_FUNCTION_NAME)) {
-      return new IfTask(
-          actualResultType, algorithm, dependencies, expression.location(), nativ.cacheable());
-    } else {
-      return new NormalTask(CALL, actualResultType, nativeFunction.extendedName(), algorithm,
-          dependencies, expression.location(), nativ.cacheable());
-    }
-  }
-
-  private Native loadNative(NativeFunction function) throws ExpressionVisitorException {
+  private Native loadNative(Function function) throws ExpressionVisitorException {
     try {
       return nativeImplLoader.loadNative(function);
     } catch (LoadingNativeImplException e) {

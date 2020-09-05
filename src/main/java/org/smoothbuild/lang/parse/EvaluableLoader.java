@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Objects.requireNonNullElseGet;
+import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
@@ -11,11 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.DefinedFunction;
 import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.base.NativeFunction;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
@@ -98,22 +98,11 @@ public class EvaluableLoader {
     }
 
     public Callable loadFunction() {
-      if (evaluable.isNative()) {
-        return nativeFunction();
-      } else {
-        return definedFunction();
-      }
+      return new Function(createSignature(), evaluable.location(), bodyExpression());
     }
 
-    private DefinedFunction definedFunction() {
-      return new DefinedFunction(
-          createSignature(),
-          evaluable.location(),
-          createExpression(evaluable.expr()));
-    }
-
-    private Callable nativeFunction() {
-      return new NativeFunction(createSignature(), evaluable.location());
+    private Optional<Expression> bodyExpression() {
+      return evaluable.isNative() ? empty() : Optional.of(createExpression(evaluable.expr()));
     }
 
     private Signature createSignature() {
