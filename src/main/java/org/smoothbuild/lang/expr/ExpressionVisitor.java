@@ -9,11 +9,7 @@ public class ExpressionVisitor<T> {
     return null;
   }
 
-  public T visit(DefinedValueReferenceExpression expression) throws ExpressionVisitorException {
-    return null;
-  }
-
-  public T visit(NativeValueReferenceExpression expression) throws ExpressionVisitorException {
+  public T visit(ValueReferenceExpression expression) throws ExpressionVisitorException {
     return null;
   }
 
@@ -34,10 +30,6 @@ public class ExpressionVisitor<T> {
   }
 
   public T visit(BlobLiteralExpression expression) throws ExpressionVisitorException {
-    return null;
-  }
-
-  public T visit(ConvertExpression convertExpression) throws ExpressionVisitorException {
     return null;
   }
 }
