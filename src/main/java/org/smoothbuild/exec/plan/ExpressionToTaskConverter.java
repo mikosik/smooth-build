@@ -36,11 +36,10 @@ import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Scope;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
 import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
@@ -48,16 +47,14 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.ConstructorCallExpression;
-import org.smoothbuild.lang.expr.ConvertExpression;
-import org.smoothbuild.lang.expr.DefinedValueReferenceExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.FunctionCallExpression;
-import org.smoothbuild.lang.expr.NativeValueReferenceExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.expr.ValueReferenceExpression;
 import org.smoothbuild.lang.parse.Definitions;
 import org.smoothbuild.lang.parse.ast.Named;
 
@@ -115,25 +112,21 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(DefinedValueReferenceExpression expression) throws ExpressionVisitorException {
-    String name = expression.name();
-    DefinedValue value = (DefinedValue) definitions.evaluables().get(name);
-    Task task = value.body().visit(this);
-    Task convertedTask = convertIfNeeded(task, value.type());
-    return new VirtualTask(value.extendedName(), convertedTask, VALUE, expression.location());
-  }
-
-  @Override
-  public Task visit(NativeValueReferenceExpression expression) throws ExpressionVisitorException {
-    NativeValue nativeValue = expression.nativeValue();
-    Native nativ = loadNative(nativeValue);
-    Algorithm algorithm = new CallNativeAlgorithm(
-        nativeValue.type().visit(toSpecConverter), nativ);
-    return new NormalTask(VALUE, nativeValue.type(), nativeValue.extendedName(), algorithm,
+  public Task visit(ValueReferenceExpression expression) throws ExpressionVisitorException {
+    Value value = (Value) definitions.evaluables().get(expression.name());
+    if (value.body().isPresent()) {
+      Task task = value.body().get().visit(this);
+      Task convertedTask = convertIfNeeded(task, value.type());
+      return new VirtualTask(value.extendedName(), convertedTask, VALUE, expression.location());
+    } else {
+      Native nativ = loadNative(value);
+      Algorithm algorithm = new CallNativeAlgorithm(value.type().visit(toSpecConverter), nativ);
+      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
           ImmutableList.of(), expression.location(), nativ.cacheable());
+    }
   }
 
-  private Native loadNative(NativeValue value) throws ExpressionVisitorException {
+  private Native loadNative(Value value) throws ExpressionVisitorException {
     try {
       return nativeImplLoader.loadNative(value);
     } catch (LoadingNativeImplException e) {
@@ -227,12 +220,6 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
         ImmutableList.of(), expression.location(), true);
-  }
-
-  @Override
-  public Task visit(ConvertExpression convertExpression) throws ExpressionVisitorException {
-    List<Task> children = childrenTasks(convertExpression.children());
-    return convert(convertExpression.type(), children.get(0));
   }
 
   private List<Task> childrenTasks(List<Expression> children) throws ExpressionVisitorException {

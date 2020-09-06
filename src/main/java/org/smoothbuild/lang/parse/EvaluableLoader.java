@@ -12,11 +12,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.DefinedValue;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.NativeValue;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
@@ -26,7 +24,6 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.ConvertExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
@@ -52,22 +49,22 @@ public class EvaluableLoader {
       ValueNode value,
       Map<String, Evaluable> importedEvaluables,
       Map<String, Evaluable> localEvaluables) {
-    return new CallableSupplier(value, localEvaluables, importedEvaluables).loadValue();
+    return new EvaluableSupplier(value, localEvaluables, importedEvaluables).loadValue();
   }
 
   public static Callable loadFunction(
       FuncNode func,
       Map<String, Evaluable> importedEvaluables,
       Map<String, Evaluable> localEvaluables) {
-    return new CallableSupplier(func, localEvaluables, importedEvaluables).loadFunction();
+    return new EvaluableSupplier(func, localEvaluables, importedEvaluables).loadFunction();
   }
 
-  private static class CallableSupplier {
+  private static class EvaluableSupplier {
     private final EvaluableNode evaluable;
     private final Map<String, Evaluable> localEvaluables;
     private final Map<String, Evaluable> importedEvaluables;
 
-    public CallableSupplier(EvaluableNode evaluable, Map<String, Evaluable> localEvaluables,
+    public EvaluableSupplier(EvaluableNode evaluable, Map<String, Evaluable> localEvaluables,
         Map<String, Evaluable> importedEvaluables) {
       this.evaluable = evaluable;
       this.localEvaluables = localEvaluables;
@@ -75,26 +72,8 @@ public class EvaluableLoader {
     }
 
     public Value loadValue() {
-      if (evaluable.isNative()) {
-        return nativeValue();
-      } else {
-        return definedValue();
-      }
-    }
-
-    private Value definedValue() {
-      ConcreteType type = (ConcreteType) evaluable.type().get();
-      Type exprType = evaluable.expr().type().get();
-      Expression expression = createExpression(evaluable.expr());
-      if (!type.equals(exprType)) {
-        expression = new ConvertExpression(type, expression, evaluable.location());
-      }
-      return new DefinedValue(type, evaluable.name(), expression, evaluable.location());
-    }
-
-    private Value nativeValue() {
-      return new NativeValue(
-          (ConcreteType) evaluable.type().get(), evaluable.name(), evaluable.location());
+      return new Value((ConcreteType) evaluable.type().get(), evaluable.name(),
+          bodyExpression(), evaluable.location());
     }
 
     public Callable loadFunction() {

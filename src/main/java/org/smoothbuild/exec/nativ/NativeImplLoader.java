@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.NativeValue;
+import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
 
 @Singleton
@@ -30,7 +30,7 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  public synchronized Native loadNative(NativeValue value) throws LoadingNativeImplException {
+  public synchronized Native loadNative(Value value) throws LoadingNativeImplException {
     Native nativ = loadNativeImpl(value);
     nativeResultMatchesDeclared(value, nativ);
     nativeHasOneParameter(nativ, value);
@@ -107,7 +107,7 @@ public class NativeImplLoader {
     }
   }
 
-  private void nativeHasOneParameter(Native nativ, NativeValue value) throws
+  private void nativeHasOneParameter(Native nativ, Value value) throws
       LoadingNativeImplException {
     int paramCount = nativ.method().getParameters().length;
     if (paramCount != 1) {
