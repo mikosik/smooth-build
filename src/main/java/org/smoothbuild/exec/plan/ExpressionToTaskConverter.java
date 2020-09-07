@@ -28,6 +28,7 @@ import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
+import org.smoothbuild.exec.compute.ComputableTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
@@ -38,6 +39,7 @@ import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ConcreteArrayType;
@@ -155,27 +157,37 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     Function function = expression.function();
     GenericTypeMap<ConcreteType> mapping =
         inferMapping(function.parameterTypes(), taskTypes(arguments));
-    ConcreteType actualResultType =
-        mapping.applyTo(function.signature().type());
+    ConcreteType actualResultType = mapping.applyTo(function.signature().type());
 
     if (function.body().isPresent()) {
-      scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-      Task definedCallTask = function.body().get().visit(this);
-      scope = scope.outerScope();
-
-      Task task = convertIfNeeded(definedCallTask, actualResultType);
-      return new VirtualTask(function.extendedName(), task, CALL, expression.location());
+      return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
     } else {
-      Native nativ = loadNative(function);
-      Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
-      List<Task> dependencies = convertedArguments(mapping.applyTo(function.parameterTypes()), arguments);
-      if (function.name().equals(IF_FUNCTION_NAME)) {
-        return new IfTask(
-            actualResultType, algorithm, dependencies, expression.location(), nativ.cacheable());
-      } else {
-        return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
-            dependencies, expression.location(), nativ.cacheable());
-      }
+      return taskForNativeFunction(arguments, function, mapping, actualResultType,
+          expression.location());
+    }
+  }
+
+  private VirtualTask taskForDefinedFunction(ConcreteType actualResultType, Function function,
+      List<Task> arguments, Location location) throws ExpressionVisitorException {
+    scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
+    Task definedCallTask = function.body().get().visit(this);
+    scope = scope.outerScope();
+    Task task = convertIfNeeded(definedCallTask, actualResultType);
+    return new VirtualTask(function.extendedName(), task, CALL, location);
+  }
+
+  private ComputableTask taskForNativeFunction(List<Task> arguments, Function function,
+      GenericTypeMap<ConcreteType> mapping, ConcreteType actualResultType, Location location)
+      throws ExpressionVisitorException {
+    Native nativ = loadNative(function);
+    Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
+    List<Task> dependencies =
+        convertedArguments(mapping.applyTo(function.parameterTypes()), arguments);
+    if (function.name().equals(IF_FUNCTION_NAME)) {
+      return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cacheable());
+    } else {
+      return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
+          dependencies, location, nativ.cacheable());
     }
   }
 
