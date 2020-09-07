@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.type.Type;
 
@@ -24,5 +27,11 @@ public record Definitions(
             .putAll(second.evaluables())
             .build()
     );
+  }
+
+  public static Definitions basicTypeDefinitions() {
+    return new Definitions(
+        BASIC_TYPES.stream().collect(toImmutableMap(Type::name, t -> t)),
+        ImmutableMap.of());
   }
 }
