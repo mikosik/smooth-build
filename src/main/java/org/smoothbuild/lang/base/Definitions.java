@@ -1,9 +1,8 @@
-package org.smoothbuild.lang.parse;
+package org.smoothbuild.lang.base;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
 
-import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableMap;

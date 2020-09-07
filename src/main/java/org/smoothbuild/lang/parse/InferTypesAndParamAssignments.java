@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.ConcreteType;

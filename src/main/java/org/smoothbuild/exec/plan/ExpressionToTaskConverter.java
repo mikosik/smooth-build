@@ -37,6 +37,7 @@ import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
@@ -56,7 +57,6 @@ import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.expr.ValueReferenceExpression;
-import org.smoothbuild.lang.parse.Definitions;
 import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;

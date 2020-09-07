@@ -15,6 +15,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.ModuleInfo;
 import org.smoothbuild.lang.base.Parameter;

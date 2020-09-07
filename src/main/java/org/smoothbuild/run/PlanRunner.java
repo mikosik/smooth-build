@@ -11,8 +11,8 @@ import org.smoothbuild.cli.console.Console;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.parse.Definitions;
 
 public class PlanRunner {
   private final Console console;
