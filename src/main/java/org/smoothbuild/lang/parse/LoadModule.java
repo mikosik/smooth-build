@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.console.LoggerImpl;
+import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Evaluable;
@@ -32,30 +32,34 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static Definitions loadModule(Definitions imports, String sourceCode,
-      ModuleInfo moduleInfo, LoggerImpl logger) {
-    ModuleContext moduleContext = parseModule(moduleInfo, logger, sourceCode);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
+  public static ValueWithLogs<Definitions> loadModule(Definitions imports, ModuleInfo moduleInfo,
+      String sourceCode) {
+    var result = new ValueWithLogs<Definitions>();
+
+    ModuleContext moduleContext = parseModule(moduleInfo, result, sourceCode);
+    if (result.hasProblems()) {
+      return result;
     }
+
     Ast ast = fromParseTree(moduleInfo, moduleContext);
-    analyzeSemantically(imports, ast, logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
+    analyzeSemantically(imports, ast, result);
+    if (result.hasProblems()) {
+      return result;
     }
-    Ast sortedAst = ast.sortedByDependencies(logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
+    Ast sortedAst = ast.sortedByDependencies(result);
+    if (result.hasProblems()) {
+      return result;
     }
-    inferTypesAndParamAssignment(sortedAst, imports, logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
+    inferTypesAndParamAssignment(sortedAst, imports, result);
+    if (result.hasProblems()) {
+      return result;
     }
     var declaredFunctions = loadCodes(imports, sortedAst);
     var declaredTypes = sortedAst.structs().stream()
         .map(structNode -> structNode.type().get())
         .collect(toImmutableMap(Type::name, t -> t));
-    return new Definitions(declaredTypes, declaredFunctions);
+    result.setValue(new Definitions(declaredTypes, declaredFunctions));
+    return result;
   }
 
   private static ImmutableMap<String, Evaluable> loadCodes(Definitions imports, Ast ast) {
