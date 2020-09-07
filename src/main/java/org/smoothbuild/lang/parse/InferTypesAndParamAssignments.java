@@ -15,7 +15,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.cli.console.LoggerImpl;
+import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.ConcreteType;
@@ -45,7 +45,7 @@ import com.google.common.collect.ImmutableList;
 
 public class InferTypesAndParamAssignments {
   public static void inferTypesAndParamAssignment(
-      Ast ast, Definitions imported, LoggerImpl logger) {
+      Ast ast, Definitions imported, Logger logger) {
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {

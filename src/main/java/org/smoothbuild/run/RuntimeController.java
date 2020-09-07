@@ -18,9 +18,8 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothConstants;
-import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModuleInfo;
@@ -47,17 +46,18 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions definitions = basicTypeDefinitions();
+    Definitions allDefinitions = basicTypeDefinitions();
     for (ModuleInfo module : modules()) {
-      try (LoggerImpl logger = new LoggerImpl(module.smooth().shorted(), reporter)) {
-        definitions = Definitions.union(definitions, load(module, definitions, logger));
-      }
+      ValueWithLogs<Definitions> definitions = load(module, allDefinitions);
+      reporter.report(module.smooth().shorted(), definitions.logs());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
         return EXIT_CODE_ERROR;
+      } else {
+        allDefinitions = Definitions.union(allDefinitions, definitions.value());
       }
     }
-    runner.accept(definitions);
+    runner.accept(allDefinitions);
     reporter.printSummary();
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
@@ -72,28 +72,28 @@ public class RuntimeController {
     return concat(installationPaths.slibModules(), projectPaths.userModule());
   }
 
-  private Definitions load(ModuleInfo info, Definitions imports, LoggerImpl logger) {
-    String sourceCode = readFileContent(info.smooth().path(), logger);
-    if (logger.hasProblems()) {
-      return Definitions.empty();
+  private ValueWithLogs<Definitions> load(ModuleInfo info, Definitions imports) {
+    var sourceCode = readFileContent(info.smooth().path());
+    if (sourceCode.hasProblems()) {
+      return new ValueWithLogs<>(sourceCode);
     } else {
-      return loadModule(imports, sourceCode, info, logger);
+      return loadModule(imports, info, sourceCode.value());
     }
   }
 
-  private static String readFileContent(Path filePath, Logger logger) {
+  private static ValueWithLogs<String> readFileContent(Path filePath) {
+    var result = new ValueWithLogs<String>();
     try {
-      return readFileContent(filePath);
+      result.setValue(readFileContentImpl(filePath));
     } catch (NoSuchFileException e) {
-      logger.error("'" + filePath + "' doesn't exist.");
-      return null;
+      result.error("'" + filePath + "' doesn't exist.");
     } catch (IOException e) {
-      logger.error("Cannot read build script file '" + filePath + "'.");
-      return null;
+      result.error("Cannot read build script file '" + filePath + "'.");
     }
+    return result;
   }
 
-  private static String readFileContent(Path filePath) throws IOException {
+  private static String readFileContentImpl(Path filePath) throws IOException {
     try (BufferedSource source = buffer(source(filePath))) {
       return source.readString(SmoothConstants.CHARSET);
     }
