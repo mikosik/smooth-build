@@ -1,11 +1,9 @@
 package org.smoothbuild.run;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 import static org.smoothbuild.util.Lists.concat;
 
@@ -23,10 +21,7 @@ import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
 import org.smoothbuild.lang.base.ModuleInfo;
-import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.Definitions;
-
-import com.google.common.collect.ImmutableMap;
 
 import okio.BufferedSource;
 
@@ -46,7 +41,7 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions allDefinitions = basicTypeDefinitions();
+    Definitions allDefinitions = Definitions.basicTypeDefinitions();
     for (ModuleInfo module : modules()) {
       ValueWithLogs<Definitions> definitions = load(module, allDefinitions);
       reporter.report(module.smooth().shorted(), definitions.logs());
@@ -60,12 +55,6 @@ public class RuntimeController {
     runner.accept(allDefinitions);
     reporter.printSummary();
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
-  }
-
-  private Definitions basicTypeDefinitions() {
-    return new Definitions(
-        BASIC_TYPES.stream().collect(toImmutableMap(Type::name, t -> t)),
-        ImmutableMap.of());
   }
 
   private List<ModuleInfo> modules() {
