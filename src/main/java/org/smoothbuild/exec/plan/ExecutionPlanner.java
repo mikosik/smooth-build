@@ -11,10 +11,10 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
-import org.smoothbuild.lang.parse.Definitions;
 
 public class ExecutionPlanner {
   private final ExpressionToTaskConverterProvider converterProvider;

@@ -20,8 +20,8 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.install.InstallationPaths;
 import org.smoothbuild.install.ProjectPaths;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleInfo;
-import org.smoothbuild.lang.parse.Definitions;
 
 import okio.BufferedSource;
 

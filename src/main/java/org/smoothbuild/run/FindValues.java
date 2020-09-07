@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.parse.Definitions;
 
 public class FindValues {
   public static Optional<List<Value>> findValues(Reporter reporter, Definitions definitions,

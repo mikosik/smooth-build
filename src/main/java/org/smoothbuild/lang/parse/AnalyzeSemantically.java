@@ -14,6 +14,7 @@ import java.util.Map;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;

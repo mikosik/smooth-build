@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
