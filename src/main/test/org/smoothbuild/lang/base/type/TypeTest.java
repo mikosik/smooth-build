@@ -25,12 +25,11 @@ import static org.smoothbuild.lang.base.type.TestingTypes.FAKE_LOCATION;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.lang.base.type.Types.ALL_TYPES;
+import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
 import static org.smoothbuild.lang.base.type.Types.generic;
-import static org.smoothbuild.lang.base.type.Types.missing;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
@@ -55,8 +54,8 @@ public class TypeTest {
 
   @Test
   public void verify_all_basic_types_are_tested() {
-    assertThat(ALL_TYPES)
-        .hasSize(5);
+    assertThat(BASIC_TYPES)
+        .hasSize(4);
   }
 
   @ParameterizedTest
@@ -1497,9 +1496,6 @@ public class TypeTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(
-            missing(),
-            missing())
         .addEqualityGroup(
             generic("A"),
             generic("A"))
