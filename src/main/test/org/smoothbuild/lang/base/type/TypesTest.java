@@ -1,19 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
-import static org.smoothbuild.lang.base.type.Types.missing;
 
 import org.junit.jupiter.api.Test;
 
 public class TypesTest {
-  @Test
-  public void array_of_missing_type_is_missing_type() {
-    assertThat(array(missing()))
-        .isEqualTo(missing());
-  }
-
   @Test
   public void empty_string_is_not_generic_type_name() {
     assertThat(isGenericTypeName(""))

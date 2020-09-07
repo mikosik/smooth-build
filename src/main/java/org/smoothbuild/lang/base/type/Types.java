@@ -12,8 +12,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
-  private static final MissingType MISSING = new MissingType();
-
   private static final BlobType BLOB = new BlobType();
   private static final BoolType BOOL = new BoolType();
   private static final NothingType NOTHING = new NothingType();
@@ -24,15 +22,6 @@ public class Types {
    */
   public static final ImmutableSet<ConcreteType> BASIC_TYPES = ImmutableSet.of(
       BLOB, BOOL, NOTHING, STRING);
-
-  public static final ImmutableSet<Type> ALL_TYPES = ImmutableSet.<Type>builder()
-      .addAll(BASIC_TYPES)
-      .add(MISSING)
-      .build();
-
-  public static Type missing() {
-    return MISSING;
-  }
 
   public static GenericType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
@@ -60,16 +49,12 @@ public class Types {
   }
 
   public static Type array(Type elemType) {
-    if (MISSING.equals(elemType)) {
-      return MISSING;
+    if (elemType instanceof GenericType genericElemType) {
+      return array(genericElemType);
+    } else if (elemType instanceof ConcreteType concreteElemType) {
+      return array(concreteElemType);
     } else {
-      if (elemType instanceof GenericType genericElemType) {
-        return array(genericElemType);
-      } else if (elemType instanceof ConcreteType concreteElemType) {
-        return array(concreteElemType);
-      } else {
-        throw new RuntimeException("Unexpected class: " + elemType.getClass().getCanonicalName());
-      }
+      throw new RuntimeException("Unexpected class: " + elemType.getClass().getCanonicalName());
     }
   }
 
