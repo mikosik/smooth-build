@@ -63,7 +63,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
+public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final NativeImplLoader nativeImplLoader;
@@ -86,30 +86,6 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     List<Task> children = childrenTasks(expression.children());
     return new NormalTask(
         CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);
-  }
-
-  @Override
-  public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
-    List<Task> elements = childrenTasks(expression.children());
-    ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
-
-    Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
-    List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
-    return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
-        expression.location(), true);
-  }
-
-  private List<Task> convertedElements(ConcreteType type, List<Task> elements) {
-    return map(elements, t -> convertIfNeeded(t, type));
-  }
-
-  private ConcreteArrayType arrayType(List<Task> elements, Type arrayType) {
-    return (ConcreteArrayType) elements
-        .stream()
-        .map(t -> (Type) t.type())
-        .reduce((type, type2) -> type.commonSuperType(type2).get())
-        .map(t -> t.changeCoreDepthBy(1))
-        .orElse(arrayType);
   }
 
   @Override
@@ -223,11 +199,27 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(StringLiteralExpression expression) {
-    var stringType = toSpecConverter.visit(string());
-    var algorithm = new FixedStringAlgorithm(stringType, expression.string());
-    return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
-        ImmutableList.of(), expression.location(), true);
+  public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
+    List<Task> elements = childrenTasks(expression.children());
+    ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
+
+    Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
+    List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
+    return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
+        expression.location(), true);
+  }
+
+  private List<Task> convertedElements(ConcreteType type, List<Task> elements) {
+    return map(elements, t -> convertIfNeeded(t, type));
+  }
+
+  private ConcreteArrayType arrayType(List<Task> elements, Type arrayType) {
+    return (ConcreteArrayType) elements
+        .stream()
+        .map(t -> (Type) t.type())
+        .reduce((type, type2) -> type.commonSuperType(type2).get())
+        .map(t -> t.changeCoreDepthBy(1))
+        .orElse(arrayType);
   }
 
   @Override
@@ -235,6 +227,14 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
+        ImmutableList.of(), expression.location(), true);
+  }
+
+  @Override
+  public Task visit(StringLiteralExpression expression) {
+    var stringType = toSpecConverter.visit(string());
+    var algorithm = new FixedStringAlgorithm(stringType, expression.string());
+    return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
         ImmutableList.of(), expression.location(), true);
   }
 
