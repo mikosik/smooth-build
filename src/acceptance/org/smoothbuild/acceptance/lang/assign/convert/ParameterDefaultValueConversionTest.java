@@ -6,7 +6,7 @@ public class ParameterDefaultValueConversionTest extends AbstractConversionTestC
   @Override
   protected String createTestScript(ConversionTestSpec testSpec) {
     return unlines(
-        "  fun(" + testSpec.target.name + " param = " + testSpec.source.literal + ") = param; ",
+        "  fun(" + testSpec.target.name() + " param = " + testSpec.source.literal() + ") = param; ",
         "  result = fun();  ",
         testSpec.declarations()
     );

@@ -70,7 +70,7 @@ public class InferCallTypeAndParamAssignment {
                   + "Unknown parameter '" + arg.name() + "'."));
             } else if (assignedArgs.get(param.index()) != null) {
               result.log(parseError(arg,
-                  inCallToPrefix(call) + "Argument '" + arg.name() + "' is already assigned."));
+                  inCallToPrefix(call) + "`" + arg.name() + "` is already assigned."));
             } else {
               assignedArgs.set(param.index(), arg);
             }

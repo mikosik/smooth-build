@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class CommandExecutorTest {
@@ -15,6 +16,7 @@ public class CommandExecutorTest {
    * free file descriptors which prevent JVM from loading bytecode of appropriate exception class.
    */
   @Test
+  @Disabled("lasts around 40 seconds")
   public void execution_closes_all_opened_streams() throws Exception {
     /*
      * This command should complete without errors on any OS.
