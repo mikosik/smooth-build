@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
-import static okio.Okio.buffer;
-import static okio.Okio.source;
 import static org.smoothbuild.lang.base.Location.location;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -10,13 +8,9 @@ import static org.smoothbuild.util.Antlr.errorLine;
 import static org.smoothbuild.util.Antlr.markingLine;
 import static org.smoothbuild.util.Strings.unlines;
 
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.util.BitSet;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
@@ -32,24 +26,10 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModuleInfo;
 
-import okio.BufferedSource;
-
-public class ModuleParser {
-  public static ModuleContext parseModule(ModuleInfo info, Logger logger) {
-    CharStream charStream;
-    Path filePath = info.smooth().path();
-    try {
-      charStream = charStream(filePath);
-    } catch (NoSuchFileException e) {
-      logger.error("'" + filePath + "' doesn't exist.");
-      return null;
-    } catch (IOException e) {
-      logger.error("Cannot read build script file '" + filePath + "'.");
-      return null;
-    }
-
+public class ParseModule {
+  public static ModuleContext parseModule(ModuleInfo info, Logger logger, String sourceCode) {
     ErrorListener errorListener = new ErrorListener(info, logger);
-    SmoothLexer lexer = new SmoothLexer(charStream);
+    SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
 
@@ -57,12 +37,6 @@ public class ModuleParser {
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
     return parser.module();
-  }
-
-  private static CharStream charStream(Path scriptFile) throws IOException {
-    try (BufferedSource source = buffer(source(scriptFile))) {
-      return CharStreams.fromStream(source.inputStream());
-    }
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
