@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.FunctionCallExpression;
 
 /**
  * Smooth function declared in a smooth file.
@@ -30,6 +30,6 @@ public class Function extends Callable {
 
   @Override
   public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
-    return new FunctionCallExpression(this, arguments, location);
+    return new CallExpression(this, arguments, location);
   }
 }

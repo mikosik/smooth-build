@@ -28,7 +28,6 @@ import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
-import org.smoothbuild.exec.compute.ComputableTask;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
@@ -36,6 +35,7 @@ import org.smoothbuild.exec.compute.VirtualTask;
 import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
@@ -48,12 +48,11 @@ import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
-import org.smoothbuild.lang.expr.ConstructorCallExpression;
+import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
-import org.smoothbuild.lang.expr.FunctionCallExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.expr.ValueReferenceExpression;
@@ -142,8 +141,29 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ConstructorCallExpression expression) throws ExpressionVisitorException {
-    Constructor constructor = expression.constructor();
+  public Task visit(CallExpression expression) throws ExpressionVisitorException {
+    Callable callable = expression.callable();
+    if (callable instanceof Function function) {
+      List<Task> arguments = childrenTasks(expression.children());
+      GenericTypeMap<ConcreteType> mapping =
+          inferMapping(function.parameterTypes(), taskTypes(arguments));
+      ConcreteType actualResultType = mapping.applyTo(function.signature().type());
+
+      if (function.body().isPresent()) {
+        return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
+      } else {
+        return taskForNativeFunction(arguments, function, mapping, actualResultType,
+            expression.location());
+      }
+    } else if (callable instanceof Constructor constructor) {
+      return taskForConstructorCall(constructor, expression);
+    } else {
+      throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
+    }
+  }
+
+  private Task taskForConstructorCall(Constructor constructor, CallExpression expression)
+      throws ExpressionVisitorException {
     TupleSpec type = toSpecConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.children());
@@ -151,23 +171,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
         dependencies, expression.location(), true);
   }
 
-  @Override
-  public Task visit(FunctionCallExpression expression) throws ExpressionVisitorException {
-    List<Task> arguments = childrenTasks(expression.children());
-    Function function = expression.function();
-    GenericTypeMap<ConcreteType> mapping =
-        inferMapping(function.parameterTypes(), taskTypes(arguments));
-    ConcreteType actualResultType = mapping.applyTo(function.signature().type());
-
-    if (function.body().isPresent()) {
-      return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
-    } else {
-      return taskForNativeFunction(arguments, function, mapping, actualResultType,
-          expression.location());
-    }
-  }
-
-  private VirtualTask taskForDefinedFunction(ConcreteType actualResultType, Function function,
+  private Task taskForDefinedFunction(ConcreteType actualResultType, Function function,
       List<Task> arguments, Location location) throws ExpressionVisitorException {
     scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     Task definedCallTask = function.body().get().visit(this);
@@ -176,7 +180,7 @@ public class ExpressionToTaskConverter extends ExpressionVisitor<Task> {
     return new VirtualTask(function.extendedName(), task, CALL, location);
   }
 
-  private ComputableTask taskForNativeFunction(List<Task> arguments, Function function,
+  private Task taskForNativeFunction(List<Task> arguments, Function function,
       GenericTypeMap<ConcreteType> mapping, ConcreteType actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
