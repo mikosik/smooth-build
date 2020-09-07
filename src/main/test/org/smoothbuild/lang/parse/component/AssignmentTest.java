@@ -1,52 +1,180 @@
-package org.smoothbuild.acceptance.lang.assign.nongeneric;
+package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.NOTHING;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.NOTHING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.NOTHING_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_BOOL;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_BOOL_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_BOOL_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
+import static org.smoothbuild.util.Strings.unlines;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.assign.spec.TestSpec;
-import org.smoothbuild.acceptance.lang.assign.spec.TestedType;
-import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.lang.base.type.TestedAssignment;
+import org.smoothbuild.lang.base.type.TestedType;
 
-public abstract class AbstractAssignmentTestCase extends AcceptanceTestCase {
+public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("assignment_test_specs")
-  public void assignment_is_verified(AssignmentTestSpec testSpec) throws IOException {
-    createNativeJar(ReportError.class);
-    createUserModule(createTestScript(testSpec));
-    runSmoothList();
+  public void value_body_type_must_be_assignable_to_declared_type(AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        target.name() + " result = " + source.literal() + ";",
+        testSpec.declarations(),
+        "Bool true;");
     if (testSpec.allowed) {
-      assertFinishedWithSuccess();
+      module(sourceCode)
+          .loadsSuccessfully();
     } else {
-      assertFinishedWithError();
-      assertAssignmentError(testSpec.target.name, testSpec.source.name);
+      module(sourceCode)
+          .loadsWithError(1, "`result` has body which type is '" + source.name()
+               + "' and it is not convertible to its declared type '" + target.name() + "'.");
     }
   }
 
-  protected abstract String createTestScript(AssignmentTestSpec testSpec);
+  @ParameterizedTest
+  @MethodSource("assignment_test_specs")
+  public void function_body_type_must_be_assignable_to_declared_type(AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        target.name() + " myFunction() = " + source.literal() + ";",
+        testSpec.declarations(),
+        "Bool true;");
+    if (testSpec.allowed) {
+      module(sourceCode)
+          .loadsSuccessfully();
+    } else {
+      module(sourceCode)
+          .loadsWithError(1, "`myFunction` has body which type is '" + source.name()
+               + "' and it is not convertible to its declared type '" + target.name() + "'.");
+    }
+  }
 
-  protected abstract void assertAssignmentError(String targetType, String sourceType);
+  @ParameterizedTest
+  @MethodSource("assignment_test_specs")
+  public void argument_type_must_be_assignable_to_assigned_parameter_type(
+      AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        "myFunction(" + target.name() + " param) = param;",
+        "result = myFunction(" + source.literal() + ");",
+        testSpec.declarations(),
+        "Bool true;");
+    if (testSpec.allowed) {
+      module(sourceCode)
+          .loadsSuccessfully();
+    } else {
+      module(sourceCode)
+          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type '" + source.name()
+               + "' to parameter 'param' of type '" + target.name() + "'.");
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("assignment_test_specs")
+  public void argument_type_must_be_assignable_to_assigned_named_parameter_type(
+      AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        "myFunction(" + target.name() + " param) = param;",
+        "result = myFunction(param=" + source.literal() + ");",
+        testSpec.declarations(),
+        "Bool true;");
+    if (testSpec.allowed) {
+      module(sourceCode)
+          .loadsSuccessfully();
+    } else {
+      module(sourceCode)
+          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type '" + source.name()
+               + "' to parameter 'param' of type '" + target.name() + "'.");
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("assignment_test_specs")
+  public void default_value_type_must_be_assignable_to_parameter_type(AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        "myFunction(" + target.name() + " param = " + source.literal() + ") = param; ",
+        testSpec.declarations(),
+        "Bool true;");
+    if (testSpec.allowed) {
+      module(sourceCode)
+          .loadsSuccessfully();
+    } else {
+      module(sourceCode)
+          .loadsWithError(1, "Parameter 'param' is of type '" + target.name()
+               + "' so it cannot have default value of type '" + source.name() + "'.");
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("array_element_assignment_test_specs")
+  public void array_literal_element_types_must_be_assignable_to_common_super_type(
+      AssignmentTestSpec testSpec) {
+    TestedType target = testSpec.target;
+    TestedType source = testSpec.source;
+    String sourceCode = unlines(
+        "result = [" + source.literal() + ", " + target.literal() + "];",
+        testSpec.declarations(),
+        "Bool true;");
+    if (testSpec.allowed) {
+      module(sourceCode)
+          .loadsSuccessfully();
+    } else {
+      module(sourceCode)
+          .loadsWithError(1,
+              "Array cannot contain elements of incompatible types. First element has type '" +
+               source.name() + "' while element at index 1 has type '" + target.name() + "'.");
+    }
+  }
+
+  /**
+   * Type compatibility between two array literal elements is satisfied when type of any of those
+   * elements is assignable to the type of the other.
+   */
+  public static Stream<AssignmentTestSpec> array_element_assignment_test_specs() {
+    var map = new HashMap<TestedType, Map<TestedType, AssignmentTestSpec>>();
+    assignment_test_specs().forEach(spec -> {
+      map.computeIfAbsent(spec.source, testedType -> new HashMap<>());
+      map.get(spec.source).put(spec.target, spec);
+    });
+
+    var result = new ArrayList<AssignmentTestSpec>();
+    assignment_test_specs().forEach(spec -> {
+      AssignmentTestSpec reversed = map.get(spec.target).get(spec.source);
+      boolean reversedAllowed = reversed != null && reversed.allowed;
+      if (!spec.allowed && reversedAllowed) {
+        result.add(new AssignmentTestSpec(spec, true));
+      } else {
+        result.add(spec);
+      }
+    });
+    return result.stream();
+  }
 
   public static Stream<AssignmentTestSpec> assignment_test_specs() {
     return Stream.of(
@@ -357,8 +485,13 @@ public abstract class AbstractAssignmentTestCase extends AcceptanceTestCase {
     return new AssignmentTestSpec(target, source, false);
   }
 
-  public static class AssignmentTestSpec extends TestSpec {
+  public static class AssignmentTestSpec extends TestedAssignment {
     public final boolean allowed;
+
+    private AssignmentTestSpec(TestedAssignment assignment, boolean allowed) {
+      super(assignment.target, assignment.source);
+      this.allowed = allowed;
+    }
 
     private AssignmentTestSpec(TestedType target, TestedType source, boolean allowed) {
       super(target, source);

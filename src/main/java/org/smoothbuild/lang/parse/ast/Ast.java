@@ -1,10 +1,13 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static java.lang.String.join;
+import static java.util.Collections.rotate;
 import static java.util.stream.Collectors.toSet;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.graph.SortTopologically.sortTopologically;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -180,19 +183,31 @@ public class Ast {
 
   private static void reportCycle(Logger logger, String name,
       List<GraphEdge<Location, String>> cycle) {
-    StringBuilder builder = new StringBuilder();
+    // Choosing edge with lowest line number and printing a cycle starting from that edge
+    // is a way to make report deterministic and (as a result) to make testing those reports simple.
+    int edgeIndex = chooseEdgeWithLowestLineNumber(cycle);
+    rotate(cycle, -edgeIndex);
+
     String previous = cycle.get(cycle.size() - 1).targetKey();
+    var lines = new ArrayList<String>();
     for (var current : cycle) {
-      Location location = current.value();
       String dependency = current.targetKey();
-      builder.append(location);
-      builder.append(": ");
-      builder.append(previous);
-      builder.append(" -> ");
-      builder.append(dependency);
-      builder.append("\n");
+      lines.add(current.value() + ": " + previous + " -> " + dependency);
       previous = dependency;
     }
-    logger.log(error(name + " contains cycle:\n" + builder.toString()));
+    logger.log(error(name + " contains cycle:\n" + join("\n", lines)));
+  }
+
+  private static int chooseEdgeWithLowestLineNumber(List<GraphEdge<Location, String>> cycle) {
+    int lowestLineNumber = Integer.MAX_VALUE;
+    int result = 0;
+    for (int i = 0; i < cycle.size(); i++) {
+      int line = cycle.get(i).value().line();
+      if (line < lowestLineNumber) {
+        lowestLineNumber = line;
+        result = i;
+      }
+    }
+    return result;
   }
 }

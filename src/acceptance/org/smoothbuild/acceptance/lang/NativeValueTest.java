@@ -6,6 +6,7 @@ import static java.util.regex.Pattern.DOTALL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.AddElementOfWrongTypeToArray;
@@ -179,63 +180,38 @@ public class NativeValueTest extends AcceptanceTestCase {
     assertSysOutContains("some error message");
   }
 
-  @Test
-  public void returning_null_without_logging_error_causes_error() throws Exception {
-    createNativeJar(ReturnNull.class);
-    createUserModule("""
+  @Nested
+  class error_is_caused_by_native_returning {
+    @Test
+    public void null_without_logging_error() throws Exception {
+      createNativeJar(ReturnNull.class);
+      createUserModule("""
             String returnNull;
             result = returnNull;
             """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains("`returnNull` has faulty native implementation: "
-        + "it returned `null` but logged no error.");
-  }
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContains("`returnNull` has faulty native implementation: "
+          + "it returned `null` but logged no error.");
+    }
 
-  @Test
-  public void returning_null_and_logs_only_warning_causes_error() throws Exception {
-    createNativeJar(ReportWarningAndReturnNull.class);
-    createUserModule("""
+    @Test
+    public void null_and_logs_only_warning() throws Exception {
+      createNativeJar(ReportWarningAndReturnNull.class);
+      createUserModule("""
             String reportWarning;
             result = reportWarning;
             """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains("`reportWarning` has faulty native implementation: "
-        + "it returned `null` but logged no error.");
-  }
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContains("`reportWarning` has faulty native implementation: "
+          + "it returned `null` but logged no error.");
+    }
 
-  @Test
-  public void native_that_adds_element_of_wrong_type_to_array_causes_error() throws Exception {
-    createNativeJar(AddElementOfWrongTypeToArray.class);
-    createUserModule("""
-            [Blob] addElementOfWrongTypeToArray;
-            result = addElementOfWrongTypeToArray;
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains(
-        "`addElementOfWrongTypeToArray` threw java exception from its native code.");
-    assertSysOutContains("Element spec must be BLOB but was STRING.");
-  }
-
-  @Test
-  public void native_that_returns_array_of_wrong_type_causes_error() throws Exception {
-    createNativeJar(EmptyStringArray.class);
-    createUserModule("""
-            [Blob] emptyStringArray;
-            result = emptyStringArray;
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains("`emptyStringArray` has faulty native implementation: "
-        + "Its declared result spec == [BLOB] but it returned object with spec == [STRING].");
-  }
-
-  @Test
-  public void native_that_returns_struct_of_wrong_type_causes_error() throws Exception {
-    createNativeJar(ReturnStringTuple.class);
-    createUserModule("""
+    @Test
+    public void struct_of_wrong_type() throws Exception {
+      createNativeJar(ReturnStringTuple.class);
+      createUserModule("""
             Person {
               String firstName,
               String lastName,
@@ -243,9 +219,37 @@ public class NativeValueTest extends AcceptanceTestCase {
             Person returnStringTuple;
             result = returnStringTuple;
             """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains("`returnStringTuple` has faulty native implementation: Its declared " +
-        "result spec == {STRING,STRING} but it returned object with spec == {STRING}.");
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContains("`returnStringTuple` has faulty native implementation: Its declared " +
+          "result spec == {STRING,STRING} but it returned object with spec == {STRING}.");
+    }
+
+    @Test
+    public void array_of_wrong_type() throws Exception {
+      createNativeJar(EmptyStringArray.class);
+      createUserModule("""
+            [Blob] emptyStringArray;
+            result = emptyStringArray;
+            """);
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContains("`emptyStringArray` has faulty native implementation: "
+          + "Its declared result spec == [BLOB] but it returned object with spec == [STRING].");
+    }
+
+    @Test
+    public void array_with_added_element_of_wrong_type() throws Exception {
+      createNativeJar(AddElementOfWrongTypeToArray.class);
+      createUserModule("""
+            [Blob] addElementOfWrongTypeToArray;
+            result = addElementOfWrongTypeToArray;
+            """);
+      runSmoothBuild("result");
+      assertFinishedWithError();
+      assertSysOutContains(
+          "`addElementOfWrongTypeToArray` threw java exception from its native code.");
+      assertSysOutContains("Element spec must be BLOB but was STRING.");
+    }
   }
 }

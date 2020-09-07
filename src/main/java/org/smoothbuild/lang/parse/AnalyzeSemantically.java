@@ -31,6 +31,7 @@ import org.smoothbuild.lang.parse.ast.NamedNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
+import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.lang.parse.ast.ValueTarget;
@@ -114,8 +115,8 @@ public class AnalyzeSemantically {
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
           } else if (named instanceof CallableNode || named instanceof Callable) {
-            logger.log(parseError(ref.location(), "'" + name + "' is a function and cannot be " +
-                "accessed as a value."));
+            logger.log(parseError(ref.location(), "'" + name
+                + "' is a function and cannot be accessed as a value."));
           } else {
             throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
           }
@@ -208,20 +209,13 @@ public class AnalyzeSemantically {
   }
 
   private static void logIfDuplicate(
-      Logger logger, Map<String, ? extends Named> types, Named named) {
+      Logger logger, Map<String, ? extends Named> others, Named named) {
     String name = named.name();
-    if (types.containsKey(name)) {
-      Named otherDefinition = types.get(name);
+    if (others.containsKey(name)) {
+      Named otherDefinition = others.get(name);
       Location location = otherDefinition.location();
-      String atLocation = location.equals(Location.internal())
-          ? ""
-          : " at " + location;
-      logger.log(alreadyDefinedError(named, name, atLocation));
+      logger.log(alreadyDefinedError(named, location));
     }
-  }
-
-  private static Log alreadyDefinedError(Named named, String name, String atLocation) {
-    return parseError(named.location(), "'" + name + "' is already defined" + atLocation + ".");
   }
 
   private static void duplicateFieldNames(Logger logger, Ast ast) {
@@ -241,6 +235,13 @@ public class AnalyzeSemantically {
         super.visitParams(params);
         findDuplicateNames(logger, params);
       }
+
+      @Override
+      public void visitConstructor(ConstructorNode constructor) {
+        // intentionally empty to avoid calling visitParams() as synthetic constructor
+        // should not be analyzed for semantic problems. Such problems are reported for
+        // struct fields.
+      }
     }.visitAst(ast);
   }
 
@@ -249,8 +250,7 @@ public class AnalyzeSemantically {
     for (NamedNode named : nodes) {
       String name = named.name();
       if (alreadyDefined.containsKey(name)) {
-        logger.log(parseError(named, "'" + name + "' is already defined at "
-            + alreadyDefined.get(name) + "."));
+        logger.log(alreadyDefinedError(named, alreadyDefined.get(name)));
       }
       alreadyDefined.put(name, named.location());
     }
@@ -268,7 +268,7 @@ public class AnalyzeSemantically {
           } else if (foundParamWithDefaultValue) {
             logger.log(parseError(param,
                 "parameter with default value must be placed after all parameters " +
-                    "which don't have default value.\n"));
+                    "which don't have default value."));
           }
         }
       }
@@ -306,7 +306,7 @@ public class AnalyzeSemantically {
         }
         for (ItemNode field : fields) {
           if (isGenericTypeName(field.typeNode().name())) {
-            logger.log(parseError(field, "Struct field cannot have a generic type.\n"));
+            logger.log(parseError(field, "Struct field cannot have a generic type."));
           }
         }
       }
@@ -347,5 +347,13 @@ public class AnalyzeSemantically {
         }
       }
     }.visitAst(ast);
+  }
+
+  private static Log alreadyDefinedError(Named named, Location location) {
+    String atLocation = location.equals(Location.internal())
+        ? ""
+        : " at " + location;
+    return parseError(
+        named.location(), "'" + named.name() + "' is already defined" + atLocation + ".");
   }
 }

@@ -7,63 +7,17 @@ import java.io.IOException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.GenericResult;
-import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.acceptance.testing.ThrowException;
 
 public class FunctionTest extends AcceptanceTestCase {
   @Nested
-  class name {
+  class parameter_default_value {
     @Test
-    public void that_is_illegal_causes_error() throws Exception {
+    public void is_used_when_parameter_has_no_value_assigned_in_call() throws Exception {
       createUserModule("""
-              function^() = "abc";
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "token recognition error at: '^'");
-    }
-
-    @Test
-    public void starting_with_large_letter_causes_error() throws Exception {
-      createUserModule("""
-              FunctionName() = "abc";
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'FunctionName('");
-    }
-
-    @Test
-    public void with_one_large_letter_causes_error() throws Exception {
-      createUserModule("""
-              F() = "abc";
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "no viable alternative at input 'F('");
-    }
-  }
-
-  @Nested
-  class types {
-    @Test
-    public void expression_type_not_convertible_to_declared_type_causes_error()
-        throws IOException {
-      createUserModule("""
-              String result() = [];
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "`result` has body which type is '[Nothing]' and it is " +
-          "not convertible to its declared type 'String'.");
-    }
-
-    @Test
-    public void declared_result_type() throws IOException {
-      createUserModule("""
-              String myFunction() = "abc";
-              result = myFunction();
-              """);
+          func(String withDefault = "abc") = withDefault;
+          result = func();
+          """);
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -71,122 +25,126 @@ public class FunctionTest extends AcceptanceTestCase {
     }
 
     @Test
-    public void declaring_result_type_which_is_undefined_causes_error() throws IOException {
+    public void is_ignored_when_parameter_is_assigned_in_a_call() throws Exception {
       createUserModule("""
-              Undefined result() = "abc";
+              func(String withDefault = "abc") = withDefault;
+              result = func("def");
               """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Undefined type 'Undefined'.\n");
-    }
-
-    @Test
-    public void declaring_generic_result_type_when_some_param_has_such_type_is_allowed()
-        throws Exception {
-      createUserModule("""
-              A testIdentity(A value) = value;
-              """);
-      runSmoothList();
+      runSmoothBuild("result");
       assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("def");
     }
 
     @Test
-    public void declaring_generic_result_type_when_some_param_has_such_core_type_is_allowed()
-        throws Exception {
-      createNativeJar(GenericResult.class);
+    public void is_not_evaluated_when_not_needed() throws Exception {
+      createNativeJar(ThrowException.class);
       createUserModule("""
-              A genericResult([A] array);
-              """);
-      runSmoothList();
+          Nothing throwException();
+          func(String withDefault = throwException()) = withDefault;
+          result = func("def");
+          """);
+      runSmoothBuild("result");
       assertFinishedWithSuccess();
+      assertThat(artifactFileContentAsString("result"))
+          .isEqualTo("def");
+    }
+  }
+
+  @Nested
+  class parameter_that_shadows {
+    @Nested
+    class imported {
+      @Test
+      public void value_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              String myFunction(String true) = true;
+              result = myFunction("abc");
+              """);
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
+
+      @Test
+      public void function_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              String myFunction(String and) = and;
+              result = myFunction("abc");
+              """);
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
     }
 
-    @Test
-    public void declaring_generic_array_result_type_when_some_param_has_such_type_is_allowed()
-        throws Exception {
-      createUserModule("""
-              [A] testArrayIdentity(A value) = [value];
+    @Nested
+    class local {
+      @Test
+      public void value_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              localValue = true;
+              String myFunction(String localValue) = localValue;
+              result = myFunction("abc");
               """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
 
-    @Test
-    public void declaring_generic_array_result_type_when_some_param_has_such_core_type_is_allowed()
-        throws Exception {
-      createUserModule("""
-              [A] testArrayIdentity([A] value) = value;
+      @Test
+      public void function_makes_it_inaccessible() throws IOException {
+        createUserModule("""
+              localFunction() = true;
+              String myFunction(String localFunction) = localFunction;
+              result = myFunction("abc");
               """);
-      runSmoothList();
-      assertFinishedWithSuccess();
+        runSmoothBuild("result");
+        assertFinishedWithSuccess();
+        assertThat(artifactFileContentAsString("result"))
+            .isEqualTo("abc");
+      }
     }
+  }
 
-    @Test
-    public void declaring_generic_result_type_when_no_param_has_such_core_type_causes_error()
-        throws Exception {
-      createNativeJar(GenericResult.class);
-      createUserModule("""
-              A genericResult([B] array);
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Undefined generic type 'A'. "
-          + "Only generic types used in declaration of function parameters can be used here.");
-    }
+  @Test
+  public void calling_defined_function_with_one_parameter() throws Exception {
+    createUserModule("""
+            func(String string) = "abc";
+            result = func("def");
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContentAsString("result"))
+        .isEqualTo("abc");
+  }
 
-    @Test
-    public void declaring_generic_array_result_type_when_no_param_has_such_core_type_causes_error()
-        throws IOException {
-      createUserModule("""
-              [A] result() = [];
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(1, "Undefined generic type 'A'. "
-          + "Only generic types used in declaration of function parameters can be used here.");
-    }
+  @Test
+  public void calling_defined_function_that_returns_parameter() throws Exception {
+    createUserModule("""
+            func(String string) = string;
+            result = func("abc");
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContentAsString("result"))
+        .isEqualTo("abc");
+  }
 
-    @Test
-    public void declaring_nothing_result_type_is_allowed()
-        throws Exception {
-      createNativeJar(ReportError.class);
-      createUserModule("""
-              Nothing reportError(String message);
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_nothing_array_result_type_is_allowed() throws IOException {
-      createUserModule("""
-              [Nothing] result() = [];
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void declaring_result_type_which_is_supertype_of_function_expression()
-        throws IOException {
-      createUserModule("""
-              Blob myFunction() = file(toBlob("abc"), "file.txt");
-              """);
-      runSmoothList();
-      assertFinishedWithSuccess();
-    }
-
-    @Test
-    public void result_cannot_be_assigned_to_non_convertible_type_even_when_expression_is_convertible()
-        throws IOException {
-      createUserModule("""
-              Blob func() = file(toBlob("abc"), "file.txt");
-              File result = func();
-              """);
-      runSmoothList();
-      assertFinishedWithError();
-      assertSysOutContainsParseError(2, "`result` has body which type is 'Blob' and it is not " +
-          "convertible to its declared type 'File'.");
-    }
+  @Test
+  public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
+    createNativeJar(ThrowException.class);
+    createUserModule("""
+            Nothing throwException();
+            func(String notUsedParameter) = "abc";
+            result = func(throwException());
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(artifactFileContentAsString("result"))
+        .isEqualTo("abc");
   }
 }

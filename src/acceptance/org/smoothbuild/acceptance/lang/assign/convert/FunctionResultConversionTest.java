@@ -6,7 +6,7 @@ public class FunctionResultConversionTest extends AbstractConversionTestCase {
   @Override
   protected String createTestScript(ConversionTestSpec testSpec) {
     return unlines(
-        testSpec.target.name + " myFunction() = " + testSpec.source.literal + ";",
+        testSpec.target.name() + " myFunction() = " + testSpec.source.literal() + ";",
         "result = myFunction();",
         testSpec.declarations()
     );

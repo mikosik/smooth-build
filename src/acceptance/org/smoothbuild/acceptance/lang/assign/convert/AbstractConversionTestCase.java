@@ -1,20 +1,20 @@
 package org.smoothbuild.acceptance.lang.assign.convert;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BLOB_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.BOOL_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.NOTHING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.NOTHING_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRING_ARRAY2;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING_ARRAY;
-import static org.smoothbuild.acceptance.lang.assign.spec.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
 import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.lang.assign.spec.TestSpec;
-import org.smoothbuild.acceptance.lang.assign.spec.TestedType;
 import org.smoothbuild.acceptance.testing.ReportError;
+import org.smoothbuild.lang.base.type.TestedAssignment;
+import org.smoothbuild.lang.base.type.TestedType;
 
 public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
   @ParameterizedTest
@@ -111,13 +111,12 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY),
 
         allowedConversion(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY2),
-        allowedConversion(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2,
-            STRUCT_WITH_STRING_ARRAY2.value)
+        allowedConversion(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2)
     );
   }
 
   public static ConversionTestSpec allowedConversion(TestedType target, TestedType source) {
-    return new ConversionTestSpec(target, source, source.value);
+    return new ConversionTestSpec(target, source, source.value());
   }
 
   public static ConversionTestSpec allowedConversion(TestedType target, TestedType source,
@@ -125,7 +124,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
     return new ConversionTestSpec(target, source, expectedResult);
   }
 
-  public static class ConversionTestSpec extends TestSpec {
+  public static class ConversionTestSpec extends TestedAssignment {
     public final Object expectedResult;
 
     private ConversionTestSpec(TestedType target, TestedType source, Object expectedResult) {

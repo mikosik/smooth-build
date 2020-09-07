@@ -80,7 +80,7 @@ public class InferTypesAndParamAssignments {
         visitParams(func.params());
         func.visitExpr(this);
         func.setType(codeType(func));
-        visitCallable(func);
+        setParametersInfo(func);
       }
 
       @Override
@@ -92,6 +92,10 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitCallable(CallableNode callable) {
         super.visitCallable(callable);
+        setParametersInfo(callable);
+      }
+
+      private void setParametersInfo(CallableNode callable) {
         var infos = map(callable.params(), ItemNode::itemInfo);
         if (infos.stream().noneMatch(Optional::isEmpty)) {
            callable.setParameterInfos(map(infos, Optional::get));
@@ -232,7 +236,7 @@ public class InferTypesAndParamAssignments {
           Optional<Type> common = elemType.commonSuperType(type.get());
           if (common.isEmpty()) {
             logger.log(parseError(array,
-                "Array cannot contain elements of incompatible types.\n"
+                "Array cannot contain elements of incompatible types. "
                     + "First element has type " + firstType.get().q()
                     + " while element at index " + i + " has type " + type.get().q() + "."));
             return empty();

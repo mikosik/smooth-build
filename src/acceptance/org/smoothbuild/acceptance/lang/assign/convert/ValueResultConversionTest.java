@@ -6,7 +6,7 @@ public class ValueResultConversionTest extends AbstractConversionTestCase {
   @Override
   protected String createTestScript(ConversionTestSpec testSpec) {
     return unlines(
-        testSpec.target.name + " value = " + testSpec.source.literal + ";",
+        testSpec.target.name() + " value = " + testSpec.source.literal() + ";",
         "result = value;",
         testSpec.declarations()
     );
