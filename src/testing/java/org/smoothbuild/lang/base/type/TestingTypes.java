@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Location.location;
-import static org.smoothbuild.lang.base.ModulePath.modulePath;
+import static org.smoothbuild.lang.base.ModuleInfo.moduleInfo;
 import static org.smoothbuild.lang.base.Space.USER;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
@@ -24,7 +24,7 @@ public class TestingTypes {
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
   public static final Location FAKE_LOCATION =
-      location(modulePath(USER, Path.of("fake/path"), "shortPath"), 1);
+      location(moduleInfo(USER, Path.of("fake/path"), "shortPath"), 1);
   public static final StructType PERSON = struct(
       "Person", FAKE_LOCATION, List.of(
           new Field(0, STRING, "firstName", internal()),

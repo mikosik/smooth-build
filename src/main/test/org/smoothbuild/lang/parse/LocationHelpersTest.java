@@ -12,7 +12,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 
 public class LocationHelpersTest {
   @Test
@@ -20,7 +20,7 @@ public class LocationHelpersTest {
     ParserRuleContext parserRuleContext = mock(ParserRuleContext.class);
     Token token = token(13);
     when(parserRuleContext.getStart()).thenReturn(token);
-    Location location = locationOf(modulePath(), parserRuleContext);
+    Location location = locationOf(moduleInfo(), parserRuleContext);
     assertThat(location.line())
         .isEqualTo(13);
   }
@@ -28,7 +28,7 @@ public class LocationHelpersTest {
   @Test
   public void location_of_token() {
     Token token = token(13);
-    Location location = locationOf(modulePath(), token);
+    Location location = locationOf(moduleInfo(), token);
     assertThat(location.line())
         .isEqualTo(13);
   }
@@ -39,7 +39,7 @@ public class LocationHelpersTest {
     return token;
   }
 
-  private static ModulePath modulePath() {
-    return ModulePath.modulePath(USER, Path.of("script.smooth"), "{u}/script.smooth");
+  private static ModuleInfo moduleInfo() {
+    return ModuleInfo.moduleInfo(USER, Path.of("script.smooth"), "{u}/script.smooth");
   }
 }

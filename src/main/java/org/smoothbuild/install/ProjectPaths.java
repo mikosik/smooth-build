@@ -1,11 +1,11 @@
 package org.smoothbuild.install;
 
 import static org.smoothbuild.io.fs.base.Path.path;
-import static org.smoothbuild.lang.base.ModulePath.modulePath;
+import static org.smoothbuild.lang.base.ModuleInfo.moduleInfo;
 import static org.smoothbuild.lang.base.Space.USER;
 
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 
 public class ProjectPaths {
   public static final Path SMOOTH_DIR = path(".smooth");
@@ -23,8 +23,8 @@ public class ProjectPaths {
     this.projectDir = projectDir;
   }
 
-  public ModulePath userModule() {
-    return modulePath(
+  public ModuleInfo userModule() {
+    return moduleInfo(
         USER,
         projectDir.resolve(USER_MODULE_PATH.toString()),
         USER_MODULE_PATH.toString());

@@ -17,20 +17,20 @@ import com.google.common.testing.EqualsTester;
 public class LocationTest {
   @Test
   public void line_returns_value_passed_during_construction() {
-    Location location = location(modulePath("abc"), 13);
+    Location location = location(moduleInfo("abc"), 13);
     assertThat(location.line())
         .isEqualTo(13);
   }
 
   @Test
   public void zero_line_is_forbidden() {
-    assertCall(() -> location(modulePath("abc"), 0))
+    assertCall(() -> location(moduleInfo("abc"), 0))
         .throwsException(IllegalArgumentException.class);
   }
 
   @Test
   public void negative_line_is_forbidden() {
-    assertCall(() -> location(modulePath("abc"), -1))
+    assertCall(() -> location(moduleInfo("abc"), -1))
         .throwsException(IllegalArgumentException.class);
   }
 
@@ -40,9 +40,9 @@ public class LocationTest {
 
     tester.addEqualityGroup(internal(), internal());
     tester.addEqualityGroup(commandLineLocation(), commandLineLocation());
-    tester.addEqualityGroup(location(modulePath("abc"), 7), location(modulePath("abc"), 7));
-    tester.addEqualityGroup(location(modulePath("abc"), 11), location(modulePath("abc"), 11));
-    tester.addEqualityGroup(location(modulePath("def"), 11), location(modulePath("def"), 11));
+    tester.addEqualityGroup(location(moduleInfo("abc"), 7), location(moduleInfo("abc"), 7));
+    tester.addEqualityGroup(location(moduleInfo("abc"), 11), location(moduleInfo("abc"), 11));
+    tester.addEqualityGroup(location(moduleInfo("def"), 11), location(moduleInfo("def"), 11));
 
     tester.testEquals();
   }
@@ -51,7 +51,7 @@ public class LocationTest {
   class to_string {
     @Test
     public void file() {
-      Location location = location(ModulePath.modulePath(USER, Path.of("abc"), "shortPath"), 2);
+      Location location = location(ModuleInfo.moduleInfo(USER, Path.of("abc"), "shortPath"), 2);
       assertThat(location.toString())
           .isEqualTo("shortPath:2");
     }
@@ -70,7 +70,7 @@ public class LocationTest {
     }
   }
 
-  private static ModulePath modulePath(String name) {
-    return ModulePath.modulePath(USER, Path.of(name), "{SL}/" + name);
+  private static ModuleInfo moduleInfo(String name) {
+    return ModuleInfo.moduleInfo(USER, Path.of(name), "{SL}/" + name);
   }
 }

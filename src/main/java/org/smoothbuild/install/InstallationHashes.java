@@ -9,7 +9,7 @@ import java.util.Properties;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 
 import com.google.common.collect.ImmutableList;
 
@@ -53,15 +53,15 @@ public class InstallationHashes {
   }
 
   private HashNode standardLibsNode() throws IOException {
-    List<ModulePath> modules = installationPaths.slibModules();
+    List<ModuleInfo> modules = installationPaths.slibModules();
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    for (ModulePath module : modules) {
+    for (ModuleInfo module : modules) {
       builder.add(moduleNode(module));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private static HashNode moduleNode(ModulePath module) throws IOException {
+  private static HashNode moduleNode(ModuleInfo module) throws IOException {
     HashNode smoothFile = new HashNode(module.smooth().shorted(), Hash.of(module.smooth().path()));
     Path nativeJar = module.nativ().path();
     String name = module.name() + " module";
