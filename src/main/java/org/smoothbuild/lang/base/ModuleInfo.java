@@ -6,10 +6,10 @@ import java.nio.file.Path;
 
 import org.smoothbuild.util.io.Paths;
 
-public record ModulePath(Space space, ShortablePath smooth, ShortablePath nativ) {
+public record ModuleInfo(Space space, ShortablePath smooth, ShortablePath nativ) {
 
-  public static ModulePath modulePath(Space space, Path fullPath, String shortPath) {
-    return new ModulePath(
+  public static ModuleInfo moduleInfo(Space space, Path fullPath, String shortPath) {
+    return new ModuleInfo(
         space,
         new ShortablePath(fullPath, shortPath),
         new ShortablePath(

@@ -15,7 +15,7 @@ import org.smoothbuild.cli.console.LoggerImpl;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Evaluable;
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
@@ -31,13 +31,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class ModuleLoader {
-  public static Definitions loadModule(Definitions imported, ModulePath modulePath,
+  public static Definitions loadModule(Definitions imported, ModuleInfo moduleInfo,
       LoggerImpl logger) {
-    ModuleContext moduleContext = ModuleParser.parseModule(modulePath, logger);
+    ModuleContext moduleContext = ModuleParser.parseModule(moduleInfo, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();
     }
-    Ast ast = fromParseTree(modulePath, moduleContext);
+    Ast ast = fromParseTree(moduleInfo, moduleContext);
     analyzeSemantically(imported, ast, logger);
     if (logger.hasProblems()) {
       return Definitions.empty();

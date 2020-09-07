@@ -1,12 +1,12 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.lang.base.ModulePath.modulePath;
+import static org.smoothbuild.lang.base.ModuleInfo.moduleInfo;
 import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
 
 import java.nio.file.Path;
 import java.util.List;
 
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 
 public class InstallationPaths {
   private static final String LIB_DIR_NAME = "lib";
@@ -18,9 +18,9 @@ public class InstallationPaths {
     this.installationDir = installationDir;
   }
 
-  public List<ModulePath> slibModules() {
+  public List<ModuleInfo> slibModules() {
     String file = SLIB_MODULE_FILE;
-    return List.of(modulePath(STANDARD_LIBRARY, libDir().resolve(file), "{slib}/" + file));
+    return List.of(moduleInfo(STANDARD_LIBRARY, libDir().resolve(file), "{slib}/" + file));
   }
 
   private Path libDir() {

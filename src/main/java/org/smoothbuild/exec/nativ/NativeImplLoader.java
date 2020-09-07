@@ -38,7 +38,7 @@ public class NativeImplLoader {
   }
 
   private Native loadNativeImpl(Evaluable evaluable) throws LoadingNativeImplException {
-    Path path = evaluable.location().modulePath().nativ().path();
+    Path path = evaluable.location().moduleInfo().nativ().path();
     Map<String, Native> natives = nativesInJar(path, evaluable.name());
     Native nativ = natives.get(evaluable.name());
     if (nativ == null) {

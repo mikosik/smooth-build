@@ -30,14 +30,14 @@ import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModulePath;
+import org.smoothbuild.lang.base.ModuleInfo;
 
 import okio.BufferedSource;
 
 public class ModuleParser {
-  public static ModuleContext parseModule(ModulePath path, Logger logger) {
+  public static ModuleContext parseModule(ModuleInfo info, Logger logger) {
     CharStream charStream;
-    Path filePath = path.smooth().path();
+    Path filePath = info.smooth().path();
     try {
       charStream = charStream(filePath);
     } catch (NoSuchFileException e) {
@@ -48,7 +48,7 @@ public class ModuleParser {
       return null;
     }
 
-    ErrorListener errorListener = new ErrorListener(path, logger);
+    ErrorListener errorListener = new ErrorListener(info, logger);
     SmoothLexer lexer = new SmoothLexer(charStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -66,11 +66,11 @@ public class ModuleParser {
   }
 
   public static class ErrorListener implements ANTLRErrorListener {
-    private final ModulePath path;
+    private final ModuleInfo moduleInfo;
     private final Logger logger;
 
-    public ErrorListener(ModulePath path, Logger logger) {
-      this.path = path;
+    public ErrorListener(ModuleInfo moduleInfo, Logger logger) {
+      this.moduleInfo = moduleInfo;
       this.logger = logger;
     }
 
@@ -87,9 +87,9 @@ public class ModuleParser {
 
     private Location createLocation(Object offendingSymbol, int line) {
       if (offendingSymbol == null) {
-        return location(path, line);
+        return location(moduleInfo, line);
       } else {
-        return locationOf(path, (Token) offendingSymbol);
+        return locationOf(moduleInfo, (Token) offendingSymbol);
       }
     }
 
@@ -98,7 +98,7 @@ public class ModuleParser {
         int stopIndex, boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
       String message = join("\n",
           "Found ambiguity in grammar.",
-          "Report this as a bug together with file: " + path.smooth().path() + ", details:",
+          "Report this as a bug together with file: " + moduleInfo.smooth().path() + ", details:",
           "startIndex=" + startIndex,
           "stopiIndex=" + stopIndex,
           "exact=" + exact,
@@ -122,7 +122,7 @@ public class ModuleParser {
 
     private void reportError(Parser recognizer, int startIndex, String message) {
       Token token = recognizer.getTokenStream().get(startIndex);
-      logger.log(parseError(locationOf(path, token), message));
+      logger.log(parseError(locationOf(moduleInfo, token), message));
     }
   }
 }
