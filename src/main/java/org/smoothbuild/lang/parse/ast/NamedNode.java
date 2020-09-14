@@ -15,7 +15,7 @@ public class NamedNode extends Node implements Named {
     return name;
   }
 
-  public String qName() {
+  public String q() {
     return "`" + name() + "`";
   }
 

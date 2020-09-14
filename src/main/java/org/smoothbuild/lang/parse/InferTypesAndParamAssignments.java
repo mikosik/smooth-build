@@ -114,8 +114,8 @@ public class InferTypesAndParamAssignments {
         if (evaluable.declaresType()) {
           return createType(evaluable.typeNode());
         } else {
-          logger.log(parseError(evaluable, evaluable.qName()
-              + " is native so it should have type declaration."));
+          logger.log(parseError(
+              evaluable, evaluable.q() + " is native so it should have type declaration."));
           return empty();
         }
       }
@@ -151,9 +151,8 @@ public class InferTypesAndParamAssignments {
                 Optional<Type> defaultValueType = param.defaultValue().get().type();
                 defaultValueType.ifPresent(dt -> {
                   if (!t.isAssignableFrom(dt)) {
-                    logger.log(parseError(param, "Parameter " + param.qName()
-                        + " is of type " + t.q() + " so it cannot have default value of type "
-                        + dt.q() + "."));
+                    logger.log(parseError(param, "Parameter " + param.q() + " is of type " + t.q()
+                        + " so it cannot have default value of type " + dt.q() + "."));
                   }
                 });
               }

@@ -30,7 +30,7 @@ public abstract class Evaluable implements Named {
     return name;
   }
 
-  public String qName() {
+  public String q() {
     return "`" + name() + "`";
   }
 

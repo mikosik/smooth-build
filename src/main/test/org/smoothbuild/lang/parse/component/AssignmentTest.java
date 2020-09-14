@@ -46,8 +46,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`result` has body which type is " + source.qName()
-               + " and it is not convertible to its declared type " + target.qName() + ".");
+          .loadsWithError(1, "`result` has body which type is " + source.q()
+               + " and it is not convertible to its declared type " + target.q() + ".");
     }
   }
 
@@ -65,8 +65,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`myFunction` has body which type is " + source.qName()
-               + " and it is not convertible to its declared type " + target.qName() + ".");
+          .loadsWithError(1, "`myFunction` has body which type is " + source.q()
+               + " and it is not convertible to its declared type " + target.q() + ".");
     }
   }
 
@@ -87,7 +87,7 @@ public class AssignmentTest {
     } else {
       module(sourceCode)
           .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
-              + source.qName() + " to parameter `param` of type " + target.qName() + ".");
+              + source.q() + " to parameter `param` of type " + target.q() + ".");
     }
   }
 
@@ -108,7 +108,7 @@ public class AssignmentTest {
     } else {
       module(sourceCode)
           .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
-              + source.qName() + " to parameter `param` of type " + target.qName() + ".");
+              + source.q() + " to parameter `param` of type " + target.q() + ".");
     }
   }
 
@@ -126,8 +126,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "Parameter `param` is of type " + target.qName()
-               + " so it cannot have default value of type " + source.qName() + ".");
+          .loadsWithError(1, "Parameter `param` is of type " + target.q()
+               + " so it cannot have default value of type " + source.q() + ".");
     }
   }
 
@@ -148,7 +148,7 @@ public class AssignmentTest {
       module(sourceCode)
           .loadsWithError(1,
               "Array cannot contain elements of incompatible types. First element has type " +
-               source.qName() + " while element at index 1 has type " + target.qName() + ".");
+               source.q() + " while element at index 1 has type " + target.q() + ".");
     }
   }
 
