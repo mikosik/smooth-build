@@ -149,6 +149,13 @@ public class AnalyzeSemantically {
     List<String> structNames = map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
+      public void visitConstructor(ConstructorNode constructor) {
+        // intentionally empty to avoid calling visitParams() as synthetic constructor
+        // should not be analyzed for semantic problems. Such problems are reported for
+        // struct fields.
+      }
+
+      @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
         if (func.declaresType()) {

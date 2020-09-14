@@ -1,9 +1,6 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.err;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
-
-import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -282,10 +279,7 @@ public class VisibilityTest {
                Undefined field
              }
              """)
-          .loadsWithErrors(List.of(
-              err(2, "Undefined type 'Undefined'."),
-              err(2, "Undefined type 'Undefined'.")
-          ));
+          .loadsWithError(2, "Undefined type 'Undefined'.");
     }
   }
 }
