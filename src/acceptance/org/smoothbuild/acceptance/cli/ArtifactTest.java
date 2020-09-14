@@ -38,25 +38,25 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_blob_artifact() throws Exception {
     createUserModule("""
-            result = toBlob("abc");
+            result = 0x41;
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactFileContentAsString("result"))
-        .isEqualTo("abc");
+        .isEqualTo("A");
   }
 
   @Test
   public void store_file_artifact() throws Exception {
     createUserModule("""
-            result = file(toBlob("abc"), "file.txt");
+            result = file(0x41, "file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result/file.txt'");
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "abc");
+        .containsExactly("file.txt", "A");
   }
 
   @Test
@@ -134,13 +134,13 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_array_of_blobs_artifact() throws Exception {
     createUserModule("""
-            result = [ toBlob("abc"), toBlob("def") ];
+            result = [ 0x41, 0x42 ];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list("abc", "def"));
+        .isEqualTo(list("A", "B"));
   }
 
   @Test
@@ -158,19 +158,19 @@ public class ArtifactTest extends AcceptanceTestCase {
   @Test
   public void store_array_of_files_artifact() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file1.txt"), file(toBlob("def"), "file2.txt") ];
+            result = [ file(0x41, "file1.txt"), file(0x42, "file2.txt") ];
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertSysOutContains("result -> '.smooth/artifacts/result'");
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file1.txt", "abc", "file2.txt", "def");
+        .containsExactly("file1.txt", "A", "file2.txt", "B");
   }
 
   @Test
   public void cannot_store_array_of_files_with_duplicated_paths() throws Exception {
     createUserModule("""
-            myFile = file(toBlob("abc"), "file.txt");
+            myFile = file(0x41, "file.txt");
             result = [ myFile, myFile ];
             """);
     runSmoothBuild("result");

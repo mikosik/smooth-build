@@ -11,11 +11,11 @@ public class ToStringTest extends AcceptanceTestCase {
   @Test
   public void to_string_function() throws IOException {
     createUserModule("""
-            result = file(toBlob("abc"), "file1.txt").content | toString;
+            result = toString(0x41);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
-        .isEqualTo("abc");
+        .isEqualTo("A");
   }
 }

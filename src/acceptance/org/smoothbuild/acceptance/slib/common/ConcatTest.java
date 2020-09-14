@@ -35,14 +35,14 @@ public class ConcatTest extends AcceptanceTestCase {
   public void concatenate_file_arrays() throws Exception {
     createUserModule("""
             result = concat(
-              [ file(toBlob("abc"), "file1.txt") ],
-              [ file(toBlob("def"), "file2.txt") ],
+              [ file(0x41, "file1.txt") ],
+              [ file(0x42, "file2.txt") ],
             );
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file1.txt", "abc", "file2.txt", "def");
+        .containsExactly("file1.txt", "A", "file2.txt", "B");
   }
 
   @Test

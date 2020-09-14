@@ -11,19 +11,20 @@ public class JarUnjarTest extends AcceptanceTestCase {
   @Test
   public void jar_unjar() throws IOException {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file1.txt"), file(toBlob("def"), "file2.txt") ]
+            result = [ file(0x41, "dir/file1.txt"), file(0x42, "file2.txt") ]
               | jar | unjar;
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file1.txt", "abc", "file2.txt", "def");
+        .containsExactly("dir/file1.txt", "A", "file2.txt", "B");
   }
 
   @Test
   public void corrupted_archive_causes_error() throws IOException {
     createUserModule("""
-            result = toBlob("random junk") | unjar;
+            randomJunk = 0x123456;
+            result =  unjar(randomJunk);
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
