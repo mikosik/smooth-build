@@ -3,7 +3,6 @@ package org.smoothbuild.lang.parse;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Signature.signature;
-import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
@@ -123,7 +122,7 @@ public class EvaluableLoader {
       StructType type = (StructType) fieldReadNode.expr().type().get();
       Field field = type.fields().get(fieldReadNode.fieldName());
       Expression expression = createExpression(fieldReadNode.expr());
-      return new FieldReadExpression(field, list(expression), fieldReadNode.location());
+      return new FieldReadExpression(field, expression, fieldReadNode.location());
     }
 
     private Expression createReference(RefNode ref) {
