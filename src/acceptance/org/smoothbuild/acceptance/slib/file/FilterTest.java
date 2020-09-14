@@ -22,84 +22,84 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void double_star_matches_file_without_extension() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file") ] | filter("**");
+            result = [ file(0x41, "file") ] | filter("**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file", "abc");
+        .containsExactly("file", "A");
   }
 
   @Test
   public void double_star_matches_file_with_extension() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("**");
+            result = [ file(0x41, "file.txt") ] | filter("**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "abc");
+        .containsExactly("file.txt", "A");
   }
 
   @Test
   public void double_star_matches_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("**");
+            result = [ file(0x41, "dir/file.txt") ] | filter("**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void double_star_matches_file_inside_dir_tree() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/subdir/file.txt") ] | filter("**");
+            result = [ file(0x41, "dir/subdir/file.txt") ] | filter("**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/subdir/file.txt", "abc");
+        .containsExactly("dir/subdir/file.txt", "A");
   }
 
   @Test
   public void double_star_after_dir_matches_path_with_dir_prefix() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("dir/**");
+            result = [ file(0x41, "dir/file.txt") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void double_star_after_dir_matches_file_inside_this_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("dir/**");
+            result = [ file(0x41, "dir/file.txt") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void double_star_after_dir_matches_file_inside_this_dir_subdir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/def/file.txt") ] | filter("dir/**");
+            result = [ file(0x41, "dir/def/file.txt") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/def/file.txt", "abc");
+        .containsExactly("dir/def/file.txt", "A");
   }
 
   @Test
   public void double_star_after_dir_doesnt_match_file_inside_different_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "different/file.txt") ] | filter("dir/**");
+            result = [ file(0x41, "different/file.txt") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -111,7 +111,7 @@ public class FilterTest extends AcceptanceTestCase {
   public void double_star_after_dir_doesnt_match_file_with_the_same_name_as_that_dir()
       throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir") ] | filter("dir/**");
+            result = [ file(0x41, "dir") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -122,41 +122,41 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void leading_double_star_with_file_matches_that_file() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("**file.txt");
+            result = [ file(0x41, "file.txt") ] | filter("**file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "abc");
+        .containsExactly("file.txt", "A");
   }
 
   @Test
   public void leading_double_star_with_file_matches_that_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("**/file.txt");
+            result = [ file(0x41, "dir/file.txt") ] | filter("**/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void leading_double_star_with_file_matches_that_file_inside_dir_tree()
       throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/subdir/file.txt") ] | filter("**/file.txt");
+            result = [ file(0x41, "dir/subdir/file.txt") ] | filter("**/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/subdir/file.txt", "abc");
+        .containsExactly("dir/subdir/file.txt", "A");
   }
 
   @Test
   public void leading_double_star_with_file_doesnt_match_different_file() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file2.txt") ] | filter("**/file1.txt");
+            result = [ file(0x41, "file2.txt") ] | filter("**/file1.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -168,42 +168,42 @@ public class FilterTest extends AcceptanceTestCase {
   public void leading_double_star_with_file_inside_dir_matches_such_file_inside_dir()
       throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("**dir/file.txt");
+            result = [ file(0x41, "dir/file.txt") ] | filter("**dir/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void leading_double_star_with_file_inside_dir_matches_such_file_inside_dir_tree()
       throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/subdir/file.txt") ]
+            result = [ file(0x41, "dir/subdir/file.txt") ]
               | filter("**/subdir/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/subdir/file.txt", "abc");
+        .containsExactly("dir/subdir/file.txt", "A");
   }
 
   @Test
   public void single_star_matches_file() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("*");
+            result = [ file(0x41, "file.txt") ] | filter("*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("file.txt", "abc");
+        .containsExactly("file.txt", "A");
   }
 
   @Test
   public void single_star_doesnt_match_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("*");
+            result = [ file(0x41, "dir/file.txt") ] | filter("*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -214,18 +214,18 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void star_slash_file_matches_that_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("*/file.txt");
+            result = [ file(0x41, "dir/file.txt") ] | filter("*/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void star_slash_file_doesnt_match_file_without_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("*/file.txt");
+            result = [ file(0x41, "file.txt") ] | filter("*/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -236,30 +236,30 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void star_slash_dir_file_matches_that_file_inside_dir_tree() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/subdir/file.txt") ]
+            result = [ file(0x41, "dir/subdir/file.txt") ]
               | filter("*/subdir/file.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/subdir/file.txt", "abc");
+        .containsExactly("dir/subdir/file.txt", "A");
   }
 
   @Test
   public void dir_slash_star_matches_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("dir/**");
+            result = [ file(0x41, "dir/file.txt") ] | filter("dir/**");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void dir_slash_star_doesnt_match_file_without_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("dir/*");
+            result = [ file(0x41, "file.txt") ] | filter("dir/*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -270,18 +270,18 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void star_slash_star_matches_file_inside_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/file.txt") ] | filter("*/*");
+            result = [ file(0x41, "dir/file.txt") ] | filter("*/*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("dir/file.txt", "abc");
+        .containsExactly("dir/file.txt", "A");
   }
 
   @Test
   public void star_slash_star_doesnt_match_file_without_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "file.txt") ] | filter("*/*");
+            result = [ file(0x41, "file.txt") ] | filter("*/*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -292,7 +292,7 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void star_slash_star_doesnt_match_file_inside_two_dirs() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "dir/subdir/file.txt") ] | filter("*/*");
+            result = [ file(0x41, "dir/subdir/file.txt") ] | filter("*/*");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -303,12 +303,12 @@ public class FilterTest extends AcceptanceTestCase {
   @Test
   public void all_java_files_in_src_dir() throws Exception {
     createUserModule("""
-            result = [ file(toBlob("abc"), "src/com/comp/Main.java") ]
+            result = [ file(0x41, "src/com/comp/Main.java") ]
               | filter("src/**/*.java");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("src/com/comp/Main.java", "abc");
+        .containsExactly("src/com/comp/Main.java", "A");
   }
 }

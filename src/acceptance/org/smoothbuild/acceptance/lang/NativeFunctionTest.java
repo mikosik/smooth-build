@@ -144,7 +144,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     createNativeJar(FileParameter.class);
     createUserModule("""
             File fileParameter(Blob file);
-            result = fileParameter(file(toBlob("abc"), "file.txt"));
+            result = fileParameter(file(0x41, "file.txt"));
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

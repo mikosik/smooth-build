@@ -9,11 +9,11 @@ public class FileTest extends AcceptanceTestCase {
   @Test
   public void file_constructor() throws Exception {
     createUserModule("""
-            result = file(toBlob("abc"), "name.txt");
+            result = file(0x41, "name.txt");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactTreeContentAsStrings("result"))
-        .containsExactly("name.txt", "abc");
+        .containsExactly("name.txt", "A");
   }
 }

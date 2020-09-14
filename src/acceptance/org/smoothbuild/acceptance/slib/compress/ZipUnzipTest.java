@@ -24,7 +24,8 @@ public class ZipUnzipTest extends AcceptanceTestCase {
   @Test
   public void corrupted_archive_causes_error() throws IOException {
     createUserModule("""
-            result = toBlob('random junk') | unzip;
+            randomJunk = 0x123456;
+            result = unzip(randomJunk);
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

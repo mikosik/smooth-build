@@ -183,7 +183,7 @@ public class PlanCommandTest {
     @Test
     public void convert_computation() throws Exception {
       createUserModule("""
-              Blob result = file(toBlob("abc"), "name.txt");
+              Blob result = file(0x41, "name.txt");
               """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
@@ -191,8 +191,7 @@ public class PlanCommandTest {
               Blob result
                 Blob Blob<-File
                   File file()
-                    Blob toBlob()
-                      String "abc"
+                    Blob 0x41
                     String "name.txt"
               """);
     }
