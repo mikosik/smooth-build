@@ -27,7 +27,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     assertSysOutContains(
         sectionName(),
         "  Validating arguments",
-        "   + ERROR: Unknown value 'unknownValue'.",
+        "   + ERROR: Unknown value `unknownValue`.",
         "     Try 'smooth list' to see all available values that can be calculated.",
         "");
   }
@@ -39,7 +39,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "result", "result"));
     assertFinishedWithError();
-    assertSysOutContains("error: Value 'result' has been specified more than once.\n");
+    assertSysOutContains("error: Value `result` has been specified more than once.\n");
   }
 
   @Test
@@ -49,8 +49,8 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "result", "result", "other", "other"));
     assertFinishedWithError();
-    assertSysOutContains("error: Value 'result' has been specified more than once.\n");
-    assertSysOutContains("error: Value 'other' has been specified more than once.\n");
+    assertSysOutContains("error: Value `result` has been specified more than once.\n");
+    assertSysOutContains("error: Value `other` has been specified more than once.\n");
   }
 
   @Test
@@ -60,7 +60,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name"));
     assertFinishedWithError();
-    assertSysOutContains("error: Illegal value name 'illegal^name' passed in command line.\n");
+    assertSysOutContains("error: Illegal value name `illegal^name` passed in command line.\n");
   }
 
   @Test
@@ -70,8 +70,8 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
             """);
     runSmooth(new CommandWithArgs(commandName(), "illegal^name", "other^name"));
     assertFinishedWithError();
-    assertSysOutContains("error: Illegal value name 'illegal^name' passed in command line.\n");
-    assertSysOutContains("error: Illegal value name 'other^name' passed in command line.\n");
+    assertSysOutContains("error: Illegal value name `illegal^name` passed in command line.\n");
+    assertSysOutContains("error: Illegal value name `other^name` passed in command line.\n");
   }
 
   @Test
@@ -84,7 +84,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     assertSysOutContains(
         sectionName(),
         "  Validating arguments",
-        "   + ERROR: 'testStringIdentity' cannot be calculated as it is not a value but a function.",
+        "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
         "Summary",
         "  1 error",
         "");
@@ -100,7 +100,7 @@ public abstract class ValuesArgTestCase extends AcceptanceTestCase {
     assertSysOutContains(
         sectionName(),
         "  Validating arguments",
-        "   + ERROR: 'testStringIdentity' cannot be calculated as it is not a value but a function.",
+        "   + ERROR: `testStringIdentity` cannot be calculated as it is not a value but a function.",
         "Summary",
         "  1 error",
         "");

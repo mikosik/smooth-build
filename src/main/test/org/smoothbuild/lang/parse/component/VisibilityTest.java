@@ -12,7 +12,7 @@ public class VisibilityTest {
     module("""
         func(String param, String withDefault = param) = param;
         """)
-        .loadsWithError(1, "'param' is undefined.");
+        .loadsWithError(1, "`param` is undefined.");
   }
 
   @Nested
@@ -43,7 +43,7 @@ public class VisibilityTest {
                String myFunction();
                result = myFunction;
                """)
-            .loadsWithError(2, "'myFunction' is a function and cannot be accessed as a value.");
+            .loadsWithError(2, "`myFunction` is a function and cannot be accessed as a value.");
       }
 
       @Test
@@ -52,7 +52,7 @@ public class VisibilityTest {
                MyStruct {}
                result = myStruct;
                """)
-            .loadsWithError(2, "'myStruct' is a function and cannot be accessed as a value.");
+            .loadsWithError(2, "`myStruct` is a function and cannot be accessed as a value.");
       }
     }
 
@@ -82,7 +82,7 @@ public class VisibilityTest {
                 """)
             .withImported(imported)
             .loadsWithError(1,
-                "'otherModuleFunction' is a function and cannot be accessed as a value.");
+                "`otherModuleFunction` is a function and cannot be accessed as a value.");
       }
 
       @Test
@@ -96,7 +96,7 @@ public class VisibilityTest {
                 """)
             .withImported(imported)
             .loadsWithError(1,
-                "'otherModuleStruct' is a function and cannot be accessed as a value.");
+                "`otherModuleStruct` is a function and cannot be accessed as a value.");
       }
     }
 
@@ -118,7 +118,7 @@ public class VisibilityTest {
         module("""
                result = undefinedValue;
                """)
-            .loadsWithError(1, "'undefinedValue' is undefined.");
+            .loadsWithError(1, "`undefinedValue` is undefined.");
       }
     }
   }
@@ -233,7 +233,7 @@ public class VisibilityTest {
         module("""
                result = undefinedFunction();
                """)
-            .loadsWithError(1, "'undefinedFunction' is undefined.");
+            .loadsWithError(1, "`undefinedFunction` is undefined.");
       }
 
       @Test
@@ -241,7 +241,7 @@ public class VisibilityTest {
         module("""
                result = undefinedFunction("abc");
                """)
-            .loadsWithError(1, "'undefinedFunction' is undefined.");
+            .loadsWithError(1, "`undefinedFunction` is undefined.");
       }
     }
   }
@@ -253,7 +253,7 @@ public class VisibilityTest {
       module("""
              Undefined myValue;
              """)
-          .loadsWithError(1, "Undefined type 'Undefined'.");
+          .loadsWithError(1, "Undefined type `Undefined`.");
     }
 
     @Test
@@ -261,7 +261,7 @@ public class VisibilityTest {
       module("""
              Undefined myFunction();
              """)
-          .loadsWithError(1, "Undefined type 'Undefined'.");
+          .loadsWithError(1, "Undefined type `Undefined`.");
     }
 
     @Test
@@ -269,7 +269,7 @@ public class VisibilityTest {
       module("""
              String myFunction(Undefined param);
              """)
-          .loadsWithError(1, "Undefined type 'Undefined'.");
+          .loadsWithError(1, "Undefined type `Undefined`.");
     }
 
     @Test
@@ -279,7 +279,7 @@ public class VisibilityTest {
                Undefined field
              }
              """)
-          .loadsWithError(2, "Undefined type 'Undefined'.");
+          .loadsWithError(2, "Undefined type `Undefined`.");
     }
   }
 }

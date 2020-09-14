@@ -162,8 +162,8 @@ public class TypeTest {
            String myValue = myStruct("abc");
            MyStruct result = myValue;
          """)
-          .loadsWithError(5, "`result` has body which type is 'String' and it is not "
-              + "convertible to its declared type 'MyStruct'.");
+          .loadsWithError(5, "`result` has body which type is `String` and it is not "
+              + "convertible to its declared type `MyStruct`.");
     }
   }
 
@@ -217,7 +217,7 @@ public class TypeTest {
         module("""
             A genericResult([B] param);
             """)
-            .loadsWithError(1, "Undefined generic type 'A'. "
+            .loadsWithError(1, "Undefined generic type `A`. "
                 +
                 "Only generic types used in declaration of function parameters can be used here.");
       }
@@ -227,7 +227,7 @@ public class TypeTest {
         module("""
             [A] result([B] param);
             """)
-            .loadsWithError(1, "Undefined generic type 'A'. "
+            .loadsWithError(1, "Undefined generic type `A`. "
                 +
                 "Only generic types used in declaration of function parameters can be used here.");
       }
@@ -252,8 +252,8 @@ public class TypeTest {
             String myFunction() = myStruct("abc");
             MyStruct result = myFunction();
             """)
-            .loadsWithError(5, "`result` has body which type is 'String' and it is not "
-                + "convertible to its declared type 'MyStruct'.");
+            .loadsWithError(5, "`result` has body which type is `String` and it is not "
+                + "convertible to its declared type `MyStruct`.");
       }
     }
 

@@ -29,7 +29,7 @@ public class ArgumentTest {
            myIdentity(String param) = param;
            result = myIdentity(wrongName="abc");
            """)
-        .loadsWithError(2, "In call to `myIdentity`: Unknown parameter 'wrongName'.");
+        .loadsWithError(2, "In call to `myIdentity`: Unknown parameter `wrongName`.");
   }
 
   @Test

@@ -15,6 +15,10 @@ public class NamedNode extends Node implements Named {
     return name;
   }
 
+  public String qName() {
+    return "`" + name() + "`";
+  }
+
   @Override
   public boolean equals(Object object) {
     if (object == null) {

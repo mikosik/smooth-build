@@ -25,10 +25,10 @@ public class FindValues {
           callablesToRun.add(value);
         } else {
           logs.add(error(
-              "'" + name + "' cannot be calculated as it is not a value but a function."));
+              "`" + name + "` cannot be calculated as it is not a value but a function."));
         }
       } else {
-        logs.add(error("Unknown value '" + name + "'.\n"
+        logs.add(error("Unknown value `" + name + "`.\n"
             + "Try 'smooth list' to see all available values that can be calculated."));
       }
     }

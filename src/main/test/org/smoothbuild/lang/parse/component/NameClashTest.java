@@ -191,7 +191,7 @@ public class NameClashTest {
         module("""
                String {}
                """)
-            .loadsWithError(1, "'" + "String" + "' is already defined.");
+            .loadsWithError(1, "`" + "String" + "` is already defined.");
       }
 
       @Test
@@ -302,7 +302,7 @@ public class NameClashTest {
   }
 
   private static String alreadyDefinedIn(ModuleInfo moduleInfo, int line, String name) {
-    return "'" + name + "' is already defined at " + moduleInfo.smooth().shorted()
+    return "`" + name + "` is already defined at " + moduleInfo.smooth().shorted()
         + ":" + line + ".";
   }
 }

@@ -14,13 +14,13 @@ public class PathArgValidator {
       case ".":
         return Path.root();
       case "":
-        nativeApi.log().error("Param '" + name + "' has illegal value. Path cannot be empty.");
+        nativeApi.log().error("Param `" + name + "` has illegal value. Path cannot be empty.");
         return null;
       default:
         try {
           return path(value);
         } catch (IllegalPathException e) {
-          nativeApi.log().error("Param '" + name + "' has illegal value. " + e.getMessage());
+          nativeApi.log().error("Param `" + name + "` has illegal value. " + e.getMessage());
           return null;
         }
     }

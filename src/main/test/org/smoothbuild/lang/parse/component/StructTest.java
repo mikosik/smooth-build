@@ -79,7 +79,7 @@ public class StructTest {
           """
           result = "abc".accessedField;
           """)
-          .loadsWithError(1, "Type 'String' doesn't have field 'accessedField'.");
+          .loadsWithError(1, "Type `String` doesn't have field `accessedField`.");
     }
 
     @Test
@@ -90,7 +90,7 @@ public class StructTest {
           }
           result = myStruct("abc").otherField;
           """)
-          .loadsWithError(4, "Type 'MyStruct' doesn't have field 'otherField'.");
+          .loadsWithError(4, "Type `MyStruct` doesn't have field `otherField`.");
     }
 
     @Test

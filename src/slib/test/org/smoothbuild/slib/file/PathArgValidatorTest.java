@@ -49,7 +49,7 @@ public class PathArgValidatorTest extends TestingContext {
         .asIterable(Tuple.class)
         .forEach(s -> {
           assertThat(messageText(s).jValue())
-              .startsWith("Param 'name' has illegal value.");
+              .startsWith("Param `name` has illegal value.");
           assertThat(messageSeverity(s).jValue())
               .isEqualTo(ERROR.name());
         });

@@ -86,7 +86,7 @@ public class NativeValueTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("'oneStringParameter' is native so it should have type declaration.\n");
+    assertSysOutContains("`oneStringParameter` is native so it should have type declaration.\n");
   }
 
   @Test
@@ -98,7 +98,7 @@ public class NativeValueTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("'returnAbc' declares type 'Blob' "
+    assertSysOutContains("`returnAbc` declares type `Blob` "
         + "so its native implementation result type must be " + Blob.class.getCanonicalName() +
         " but it is " + Str.class.getCanonicalName() + ".\n");
   }
@@ -113,7 +113,7 @@ public class NativeValueTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
-        "'oneStringParameter' has native implementation that has too many parameter(s) = 2");
+        "`oneStringParameter` has native implementation that has too many parameter(s) = 2");
   }
 
   @Test
