@@ -42,10 +42,10 @@ public class Item implements Named {
   }
 
   /**
-   * @return single quoted name of this Parameter.
+   * @return name of this parameter inside backtics.
    */
   public String q() {
-    return "'" + name() + "'";
+    return "`" + name() + "`";
   }
 
   public boolean hasDefaultValue() {
