@@ -67,7 +67,7 @@ public class InferCallTypeAndParamAssignment {
             Item param = parametersMap.get(arg.name());
             if (param == null) {
               result.log(parseError(arg, inCallToPrefix(call)
-                  + "Unknown parameter '" + arg.name() + "'."));
+                  + "Unknown parameter " + arg.qName() + "."));
             } else if (assignedArgs.get(param.index()) != null) {
               result.log(parseError(arg,
                   inCallToPrefix(call) + "`" + arg.name() + "` is already assigned."));
@@ -102,8 +102,8 @@ public class InferCallTypeAndParamAssignment {
             Type argType = arg.type().get();
             if (!param.type().isParamAssignableFrom(argType)) {
               result.log(parseError(arg, inCallToPrefix(call)
-                  + "Cannot assign argument of type " + argType.q() + " to parameter '"
-                  + param.name() + "' of type " + param.type().q() + "."));
+                  + "Cannot assign argument of type " + argType.q() + " to parameter "
+                  + param.q() + " of type " + param.type().q() + "."));
             }
           }
         }
@@ -125,7 +125,7 @@ public class InferCallTypeAndParamAssignment {
         if (node != null) {
           return node.parameterInfos();
         }
-        throw new RuntimeException("Couldn't find '" + call.calledName() + "' function.");
+        throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
       }
 
       private GenericTypeMap<Type> inferActualTypesOfGenericParameters(
@@ -145,8 +145,8 @@ public class InferCallTypeAndParamAssignment {
           return inferMapping(genericTypes, actualTypes);
         } catch (IllegalArgumentException e) {
           logger.log(
-              parseError(call, "Cannot infer actual type(s) for generic parameter(s) in call to '"
-                  + call.calledName() + "'."));
+              parseError(call, "Cannot infer actual type(s) for generic parameter(s) in call to `"
+                  + call.calledName() + "`."));
           return null;
         }
       }
@@ -165,7 +165,7 @@ public class InferCallTypeAndParamAssignment {
         if (node != null) {
           return node.type();
         }
-        throw new RuntimeException("Couldn't find '" + call.calledName() + "' function.");
+        throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
       }
     }.run();
   }

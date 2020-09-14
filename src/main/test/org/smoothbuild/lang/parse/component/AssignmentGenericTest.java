@@ -42,8 +42,8 @@ public class AssignmentGenericTest {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
-          "In call to `innerFunction`: Cannot assign argument of type '" + source + "' to " +
-              "parameter 'target' of type '" + target + "'.");
+          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.qName()
+              + " to parameter `target` of type " + targetType.qName() + ".");
     }
   }
 

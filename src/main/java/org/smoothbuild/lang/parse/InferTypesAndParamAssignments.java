@@ -114,8 +114,8 @@ public class InferTypesAndParamAssignments {
         if (evaluable.declaresType()) {
           return createType(evaluable.typeNode());
         } else {
-          logger.log(parseError(evaluable, "'" + evaluable.name()
-              + "' is native so it should have type declaration."));
+          logger.log(parseError(evaluable, evaluable.qName()
+              + " is native so it should have type declaration."));
           return empty();
         }
       }
@@ -151,8 +151,8 @@ public class InferTypesAndParamAssignments {
                 Optional<Type> defaultValueType = param.defaultValue().get().type();
                 defaultValueType.ifPresent(dt -> {
                   if (!t.isAssignableFrom(dt)) {
-                    logger.log(parseError(param, "Parameter '" + param.name()
-                        + "' is of type " + t.q() + " so it cannot have default value of type "
+                    logger.log(parseError(param, "Parameter " + param.qName()
+                        + " is of type " + t.q() + " so it cannot have default value of type "
                         + dt.q() + "."));
                   }
                 });
@@ -187,10 +187,10 @@ public class InferTypesAndParamAssignments {
         StructNode structNode = ast.structsMap().get(name);
         if (structNode == null) {
           throw new RuntimeException(
-              "Cannot find type '" + name + "'. Available types = " + ast.structsMap());
+              "Cannot find type `" + name + "`. Available types = " + ast.structsMap());
         } else {
           return structNode.type().orElseThrow(() -> new RuntimeException(
-              "Cannot find type '" + name + "'. Available types = " + ast.structsMap()));
+              "Cannot find type `" + name + "`. Available types = " + ast.structsMap()));
         }
       }
 
@@ -204,7 +204,7 @@ public class InferTypesAndParamAssignments {
               } else {
                 expr.setType(empty());
                 logger.log(parseError(expr.location(), "Type " + t.q()
-                    + " doesn't have field '" + expr.fieldName() + "'."));
+                    + " doesn't have field `" + expr.fieldName() + "`."));
               }
             },
             () -> expr.setType(empty())

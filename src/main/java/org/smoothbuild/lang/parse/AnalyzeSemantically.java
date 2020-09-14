@@ -115,13 +115,13 @@ public class AnalyzeSemantically {
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
           } else if (named instanceof CallableNode || named instanceof Callable) {
-            logger.log(parseError(ref.location(), "'" + name
-                + "' is a function and cannot be accessed as a value."));
+            logger.log(parseError(ref.location(), "`" + name
+                + "` is a function and cannot be accessed as a value."));
           } else {
             throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
           }
         } else {
-          logger.log(parseError(ref.location(), "'" + name + "' is undefined."));
+          logger.log(parseError(ref.location(), "`" + name + "` is undefined."));
         }
       }
 
@@ -139,7 +139,7 @@ public class AnalyzeSemantically {
                 + "` cannot be called as it is a value."));
           }
         } else {
-          logger.log(parseError(call.location(), "'" + name + "' is undefined."));
+          logger.log(parseError(call.location(), "`" + name + "` is undefined."));
         }
       }
     }.visitAst(ast);
@@ -185,7 +185,7 @@ public class AnalyzeSemantically {
         if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
         } else if (!isDefinedType(type)) {
-          logger.log(parseError(type.location(), "Undefined type '" + type.name() + "'."));
+          logger.log(parseError(type.location(), "Undefined type " + type.qName() + "."));
         }
       }
 
@@ -289,7 +289,7 @@ public class AnalyzeSemantically {
         String name = struct.name();
         if (isGenericTypeName(name)) {
           logger.log(parseError(struct.location(),
-              "'" + name + "' is illegal struct name. It must have at least two characters."));
+              "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
       }
     }.visitAst(ast);
@@ -328,9 +328,9 @@ public class AnalyzeSemantically {
         if (func.declaresType()
             && func.typeNode().isGeneric()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          logger.log(parseError(func.typeNode(), "Undefined generic type '"
-              + func.typeNode().coreType().name()
-              + "'. Only generic types used in declaration of function parameters "
+          logger.log(parseError(func.typeNode(), "Undefined generic type "
+              + func.typeNode().coreType().qName()
+              + ". Only generic types used in declaration of function parameters "
               + "can be used here."));
         }
       }
@@ -361,6 +361,6 @@ public class AnalyzeSemantically {
         ? ""
         : " at " + location;
     return parseError(
-        named.location(), "'" + named.name() + "' is already defined" + atLocation + ".");
+        named.location(), "`" + named.name() + "` is already defined" + atLocation + ".");
   }
 }

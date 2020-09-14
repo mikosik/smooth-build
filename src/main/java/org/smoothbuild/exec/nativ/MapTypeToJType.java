@@ -24,7 +24,7 @@ public class MapTypeToJType {
         case TypeNames.BOOL -> Bool.class;
         case TypeNames.NOTHING -> Obj.class;
         case TypeNames.STRING -> Str.class;
-        default -> throw new IllegalArgumentException("Unknown type: '" + type.name() + "'");
+        default -> throw new IllegalArgumentException("Unknown type: " + type.q());
       };
     }
   }

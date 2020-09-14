@@ -25,7 +25,7 @@ public class ValidateValueNames {
     return args
         .stream()
         .filter(a -> !isLegalName(a))
-        .map(a -> "Illegal value name '" + a + "' passed in command line.")
+        .map(a -> "Illegal value name `" + a + "` passed in command line.")
         .collect(toImmutableList());
   }
 
@@ -33,6 +33,6 @@ public class ValidateValueNames {
       DuplicatesDetector<String> duplicatesDetector) {
     return map(
         duplicatesDetector.getDuplicateValues(),
-        name -> "Value '" + name + "' has been specified more than once.");
+        name -> "Value `" + name + "` has been specified more than once.");
   }
 }

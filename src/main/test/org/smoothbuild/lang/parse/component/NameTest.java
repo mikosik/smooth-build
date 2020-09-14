@@ -175,7 +175,7 @@ public class NameTest {
       module("""
              A{}
              """)
-          .loadsWithError(1, "'A' is illegal struct name. It must have at least two characters.");
+          .loadsWithError(1, "`A` is illegal struct name. It must have at least two characters.");
     }
   }
 

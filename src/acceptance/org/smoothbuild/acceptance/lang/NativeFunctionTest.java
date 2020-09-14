@@ -91,7 +91,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("'oneStringParameter' declares type 'File' "
+    assertSysOutContains("`oneStringParameter` declares type `File` "
         + "so its native implementation result type must be " + Tuple.class.getCanonicalName() +
         " but it is " + Str.class.getCanonicalName() + ".\n");
   }
@@ -106,7 +106,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
-        "Function 'oneStringParameter' has 0 parameter(s) but its native implementation "
+        "Function `oneStringParameter` has 0 parameter(s) but its native implementation "
             + "has 1 parameter(s).\n");
   }
 
@@ -120,7 +120,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContains(
-        "Function 'oneStringParameter' has 2 parameter(s) but its native implementation "
+        "Function `oneStringParameter` has 2 parameter(s) but its native implementation "
             + "has 1 parameter(s).\n");
   }
 
@@ -133,7 +133,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Function 'oneStringParameter' parameter 'string' has type [String] "
+    assertSysOutContains("Function `oneStringParameter` parameter `string` has type `[String]` "
         + "so its native implementation type must be " + Array.class.getCanonicalName()
         + " but it is " + Str.class.getCanonicalName() + ".\n");
   }
@@ -148,7 +148,7 @@ public class NativeFunctionTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Function 'fileParameter' parameter 'file' has type Blob "
+    assertSysOutContains("Function `fileParameter` parameter `file` has type `Blob` "
         + "so its native implementation type must be " + Blob.class.getCanonicalName()
         + " but it is " + Tuple.class.getCanonicalName() + ".\n");
   }

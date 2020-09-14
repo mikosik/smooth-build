@@ -8,6 +8,6 @@ public class NativeTest {
   @Test
   public void native_without_declared_result_type_causes_error() {
     module("myFunction();")
-        .loadsWithError(1, "'myFunction' is native so it should have type declaration.");
+        .loadsWithError(1, "`myFunction` is native so it should have type declaration.");
   }
 }

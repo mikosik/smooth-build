@@ -133,4 +133,8 @@ public record TestedType(String name, String literal, Object value, String decla
   public TestedType(String name, String literal, Object value) {
     this(name, literal, value, "");
   }
+
+  public String qName() {
+    return "`" + name + "`";
+  }
 }

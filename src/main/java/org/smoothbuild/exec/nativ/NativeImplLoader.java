@@ -74,7 +74,7 @@ public class NativeImplLoader {
     Type resultType = evaluable.type();
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
-      throw newException(evaluable, "'" + evaluable.name() + "' declares type " + resultType.q()
+      throw newException(evaluable, evaluable.qName() + " declares type " + resultType.q()
           + " so its native implementation result type must be "
           + mapTypeToJType(resultType).getCanonicalName() + " but it is "
           + resultJType.getCanonicalName() + ".");
@@ -87,7 +87,7 @@ public class NativeImplLoader {
     List<org.smoothbuild.lang.base.Parameter> params =
         function.parameters();
     if (params.size() != nativeParams.length - 1) {
-      throw newException(function, "Function '" + function.name() + "' has "
+      throw newException(function, "Function " + function.qName() + " has "
           + params.size() + " parameter(s) but its native implementation has "
           + (nativeParams.length - 1) + " parameter(s).");
     }
@@ -98,9 +98,9 @@ public class NativeImplLoader {
       Class<?> paramJType = nativeParam.getType();
       Class<? extends Obj> expectedParamJType = mapTypeToJType(paramType);
       if (!expectedParamJType.equals(paramJType)) {
-        throw newException(function, "Function '" + function.name()
-            + "' parameter '" + declaredName + "' has type "
-            + paramType.name() + " so its native implementation type must be "
+        throw newException(function, "Function " + function.qName()
+            + " parameter `" + declaredName + "` has type "
+            + paramType.q() + " so its native implementation type must be "
             + expectedParamJType.getCanonicalName() + " but it is "
             + paramJType.getCanonicalName() + ".");
       }
@@ -111,8 +111,8 @@ public class NativeImplLoader {
       LoadingNativeImplException {
     int paramCount = nativ.method().getParameters().length;
     if (paramCount != 1) {
-      throw newException(value, "'" + value.name()
-          + "' has native implementation that has too many parameter(s) = " + paramCount);
+      throw newException(value, value.qName()
+          + " has native implementation that has too many parameter(s) = " + paramCount);
     }
   }
 

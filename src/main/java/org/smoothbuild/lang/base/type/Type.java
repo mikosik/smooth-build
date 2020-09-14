@@ -35,7 +35,7 @@ public abstract class Type implements Named {
   }
 
   public String q() {
-    return "'" + name + "'";
+    return "`" + name + "`";
   }
 
   public abstract boolean isGeneric();

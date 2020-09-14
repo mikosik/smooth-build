@@ -46,8 +46,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`result` has body which type is '" + source.name()
-               + "' and it is not convertible to its declared type '" + target.name() + "'.");
+          .loadsWithError(1, "`result` has body which type is " + source.qName()
+               + " and it is not convertible to its declared type " + target.qName() + ".");
     }
   }
 
@@ -65,8 +65,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`myFunction` has body which type is '" + source.name()
-               + "' and it is not convertible to its declared type '" + target.name() + "'.");
+          .loadsWithError(1, "`myFunction` has body which type is " + source.qName()
+               + " and it is not convertible to its declared type " + target.qName() + ".");
     }
   }
 
@@ -86,8 +86,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type '" + source.name()
-               + "' to parameter 'param' of type '" + target.name() + "'.");
+          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
+              + source.qName() + " to parameter `param` of type " + target.qName() + ".");
     }
   }
 
@@ -107,8 +107,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type '" + source.name()
-               + "' to parameter 'param' of type '" + target.name() + "'.");
+          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
+              + source.qName() + " to parameter `param` of type " + target.qName() + ".");
     }
   }
 
@@ -126,8 +126,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "Parameter 'param' is of type '" + target.name()
-               + "' so it cannot have default value of type '" + source.name() + "'.");
+          .loadsWithError(1, "Parameter `param` is of type " + target.qName()
+               + " so it cannot have default value of type " + source.qName() + ".");
     }
   }
 
@@ -147,8 +147,8 @@ public class AssignmentTest {
     } else {
       module(sourceCode)
           .loadsWithError(1,
-              "Array cannot contain elements of incompatible types. First element has type '" +
-               source.name() + "' while element at index 1 has type '" + target.name() + "'.");
+              "Array cannot contain elements of incompatible types. First element has type " +
+               source.qName() + " while element at index 1 has type " + target.qName() + ".");
     }
   }
 

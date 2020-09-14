@@ -69,7 +69,7 @@ public class TypeTest {
   @MethodSource("names")
   public void quoted_name(Type type, String name) {
     assertThat(type.q())
-        .isEqualTo("'" + name + "'");
+        .isEqualTo("`" + name + "`");
   }
 
   @ParameterizedTest

@@ -30,6 +30,10 @@ public abstract class Evaluable implements Named {
     return name;
   }
 
+  public String qName() {
+    return "`" + name() + "`";
+  }
+
   public String extendedName() {
     return name();
   }

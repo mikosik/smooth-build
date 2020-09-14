@@ -34,7 +34,7 @@ public class FilesTest extends AcceptanceTestCase {
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
-    assertSysOutContains("Param 'dir' has illegal value. Path cannot contain '..'.");
+    assertSysOutContains("Param `dir` has illegal value. Path cannot contain '..'.");
   }
 
   @Test
