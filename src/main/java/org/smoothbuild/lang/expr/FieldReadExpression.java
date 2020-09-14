@@ -1,15 +1,15 @@
 package org.smoothbuild.lang.expr;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
+
+import com.google.common.collect.ImmutableList;
 
 public class FieldReadExpression extends Expression {
   private final Field field;
 
-  public FieldReadExpression(Field field, List<? extends Expression> arguments, Location location) {
-    super(arguments, location);
+  public FieldReadExpression(Field field, Expression expression, Location location) {
+    super(ImmutableList.of(expression), location);
     this.field = field;
   }
 
