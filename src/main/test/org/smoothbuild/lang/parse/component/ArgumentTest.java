@@ -20,7 +20,7 @@ public class ArgumentTest {
            returnFirst(String param1, String param2) = param1;
            result = returnFirst("abc");
            """)
-        .loadsWithError(2, "In call to `returnFirst`: Parameter 'param2' must be specified.");
+        .loadsWithError(2, "In call to `returnFirst`: Parameter `param2` must be specified.");
   }
 
   @Test

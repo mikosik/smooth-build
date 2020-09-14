@@ -40,7 +40,7 @@ public class StructTest {
         }
         result = myStruct();
         """)
-        .loadsWithError(4, "In call to `myStruct`: Parameter 'field' must be specified.");
+        .loadsWithError(4, "In call to `myStruct`: Parameter `field` must be specified.");
   }
 
   @Nested
