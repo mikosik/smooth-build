@@ -185,7 +185,7 @@ public class AnalyzeSemantically {
         if (type.isArray()) {
           assertTypeIsDefined(((ArrayTypeNode) type).elementType());
         } else if (!isDefinedType(type)) {
-          logger.log(parseError(type.location(), "Undefined type " + type.qName() + "."));
+          logger.log(parseError(type.location(), "Undefined type " + type.q() + "."));
         }
       }
 
@@ -329,7 +329,7 @@ public class AnalyzeSemantically {
             && func.typeNode().isGeneric()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
           logger.log(parseError(func.typeNode(), "Undefined generic type "
-              + func.typeNode().coreType().qName()
+              + func.typeNode().coreType().q()
               + ". Only generic types used in declaration of function parameters "
               + "can be used here."));
         }

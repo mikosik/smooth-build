@@ -134,7 +134,7 @@ public record TestedType(String name, String literal, Object value, String decla
     this(name, literal, value, "");
   }
 
-  public String qName() {
+  public String q() {
     return "`" + name + "`";
   }
 }

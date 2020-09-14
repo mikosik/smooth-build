@@ -66,8 +66,8 @@ public class InferCallTypeAndParamAssignment {
             inNamedArgsSection = true;
             Item param = parametersMap.get(arg.name());
             if (param == null) {
-              result.log(parseError(arg, inCallToPrefix(call)
-                  + "Unknown parameter " + arg.qName() + "."));
+              result.log(
+                  parseError(arg, inCallToPrefix(call) + "Unknown parameter " + arg.q() + "."));
             } else if (assignedArgs.get(param.index()) != null) {
               result.log(parseError(arg,
                   inCallToPrefix(call) + "`" + arg.name() + "` is already assigned."));
