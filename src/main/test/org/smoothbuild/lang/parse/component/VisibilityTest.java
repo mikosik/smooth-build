@@ -63,7 +63,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             String otherModuleValue;
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
             myValue = otherModuleValue;
             """)
@@ -76,7 +77,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             String otherModuleFunction();
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 myValue = otherModuleFunction;
                 """)
@@ -90,7 +92,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             OtherModuleStruct{}
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 myValue = otherModuleStruct;
                 """)
@@ -180,7 +183,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             String otherModuleValue;
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                result = otherModuleValue();
                """)
@@ -193,7 +197,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             String otherModuleFunction();
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                result = otherModuleFunction();
                """)
@@ -206,7 +211,8 @@ public class VisibilityTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                result = otherModuleStruct();
                """)
