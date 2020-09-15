@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.smoothbuild.antlr.lang.SmoothBaseVisitor;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
@@ -20,13 +20,12 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
-import org.smoothbuild.antlr.lang.SmoothParser.NameContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
-import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
+import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModuleLocation;
@@ -38,8 +37,8 @@ public class AstCreator {
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
-        String name = struct.TYPE_IDENTIFIER().getText();
-        Location location = locationOf(moduleLocation, struct.TYPE_IDENTIFIER().getSymbol());
+        String name = struct.TNAME().getText();
+        Location location = locationOf(moduleLocation, struct.TNAME().getSymbol());
         List<ItemNode> fields = createFields(struct.fieldList());
         structs.add(new StructNode(name, fields, location));
         return null;
@@ -58,33 +57,33 @@ public class AstCreator {
 
       private ItemNode createField(int index, FieldContext field) {
         TypeNode type = createType(field.type());
-        NameContext nameContext = field.name();
-        String name = nameContext.getText();
-        Location location = locationOf(moduleLocation, nameContext);
+        TerminalNode nameNode = field.NAME();
+        String name = nameNode.getText();
+        Location location = locationOf(moduleLocation, nameNode);
         return new ItemNode(index, type, name, Optional.empty(), location);
       }
 
       @Override
       public Void visitValue(ValueContext value) {
         TypeNode type = value.type() == null ? null : createType(value.type());
-        NameContext nameContext = value.name();
-        String name = nameContext.getText();
+        TerminalNode nameNode = value.NAME();
+        String name = nameNode.getText();
         ExprNode expr = value.expr() == null ? null : createExpr(value.expr());
         visitChildren(value);
-        evaluables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameContext)));
+        evaluables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameNode)));
         return null;
       }
 
       @Override
       public Void visitFunc(FuncContext func) {
         TypeNode type = func.type() == null ? null : createType(func.type());
-        NameContext nameContext = func.name();
-        String name = nameContext.getText();
+        TerminalNode nameNode = func.NAME();
+        String name = nameNode.getText();
         List<ItemNode> params = createParams(func.paramList());
         ExprNode expr = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
         evaluables.add(
-            new FuncNode(type, name, params, expr, locationOf(moduleLocation, nameContext)));
+            new FuncNode(type, name, params, expr, locationOf(moduleLocation, nameNode)));
         return null;
       }
 
@@ -101,7 +100,7 @@ public class AstCreator {
 
       private ItemNode createParam(int index, ParamContext param) {
         TypeNode type = createType(param.type());
-        String name = param.name().getText();
+        String name = param.NAME().getText();
         Location location = locationOf(moduleLocation, param);
         Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
         return new ItemNode(index, type, name, defaultValue, location);
@@ -113,13 +112,13 @@ public class AstCreator {
         List<CallContext> callsInPipe = expr.call();
         for (int i = 0; i < callsInPipe.size(); i++) {
           CallContext call = callsInPipe.get(i);
-          result = createCallInPipe(result, expr, i, call.name(), createArgList(call.argList()));
+          result = createCallInPipe(result, expr, i, call.NAME(), createArgList(call.argList()));
         }
         return result;
       }
 
       private ExprNode createCallInPipe(ExprNode result, ExprContext expr, int i,
-          ParserRuleContext calledName, List<ArgNode> argList) {
+          TerminalNode calledName, List<ArgNode> argList) {
         // Location of nameless piped argument is set to the location of pipe character '|'.
         Location location = locationOf(moduleLocation, expr.p.get(i));
         List<ArgNode> args = new ArrayList<>();
@@ -132,7 +131,7 @@ public class AstCreator {
         if (expr.fieldRead() != null) {
           ExprNode structExpr = createNonPipeExpr(expr.nonPipeExpr());
           FieldReadContext accessor = expr.fieldRead();
-          String name = accessor.name().getText();
+          String name = accessor.NAME().getText();
           return new FieldReadNode(structExpr, name, locationOf(moduleLocation, accessor));
         }
         if (expr.array() != null) {
@@ -143,10 +142,10 @@ public class AstCreator {
           CallContext call = expr.call();
           Location location = locationOf(moduleLocation, call);
           List<ArgNode> args = createArgList(call.argList());
-          return new CallNode(call.name().getText(), args, location);
+          return new CallNode(call.NAME().getText(), args, location);
         }
-        if (expr.name() != null) {
-          NameContext name = expr.name();
+        if (expr.NAME() != null) {
+          TerminalNode name = expr.NAME();
           return new RefNode(name.getText(), locationOf(moduleLocation, name));
         }
         if (expr.STRING() != null) {
@@ -168,8 +167,8 @@ public class AstCreator {
           List<ArgContext> args = argList.arg();
           for (ArgContext arg : args) {
             ExprContext expr = arg.expr();
-            NameContext nameContext = arg.name();
-            String name = nameContext == null ? null : nameContext.getText();
+            TerminalNode nameNode = arg.NAME();
+            String name = nameNode == null ? null : nameNode.getText();
             ExprNode exprNode = createExpr(expr);
             result.add(new ArgNode(name, exprNode, locationOf(moduleLocation, arg)));
           }
@@ -178,7 +177,7 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeContext type) {
-        if (type instanceof TypeIdentifierContext typeIdentifier) {
+        if (type instanceof TypeNameContext typeIdentifier) {
           return createType(typeIdentifier);
         }
         if (type instanceof ArrayTypeContext arrayType) {
@@ -188,9 +187,9 @@ public class AstCreator {
             + " without children.");
       }
 
-      private TypeNode createType(TypeIdentifierContext type) {
+      private TypeNode createType(TypeNameContext type) {
         return new TypeNode(
-            type.getText(), locationOf(moduleLocation, type.TYPE_IDENTIFIER().getSymbol()));
+            type.getText(), locationOf(moduleLocation, type.TNAME()));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
