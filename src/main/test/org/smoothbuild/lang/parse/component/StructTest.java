@@ -116,7 +116,7 @@ public class StructTest {
           String result = MyStruct.field(myStruct("abc"));
           """)
           .loadsWithError(4, """
-              mismatched input 'MyStruct' expecting {'[', IDENTIFIER, STRING, BLOB}
+              mismatched input 'MyStruct' expecting {'[', NAME, STRING, BLOB}
               String result = MyStruct.field(myStruct("abc"));
                               ^^^^^^^^""");
     }

@@ -1,35 +1,34 @@
 grammar Smooth;
 
 module      : ( struct | value | func )* EOF ;
-struct      : TYPE_IDENTIFIER '{' fieldList? '}' ;
+struct      : TNAME '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
-field       : type name ;
-value       : type? name ('=' expr)? ';' ;
-func        : type? name '(' paramList? ')' ('=' expr)? ';' ;
+field       : type NAME ;
+value       : type? NAME ('=' expr)? ';' ;
+func        : type? NAME '(' paramList? ')' ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
-param       : type name ( '=' expr )? ;
+param       : type NAME ( '=' expr )? ;
 expr        : nonPipeExpr ( p+='|' call )* ;
 nonPipeExpr : nonPipeExpr fieldRead
             | call
-            | name
+            | NAME
             | STRING
             | BLOB
             | array
             ;
-call        : name p='(' argList? ')' ;
+call        : NAME p='(' argList? ')' ;
 argList     : arg ( ',' arg )* ','? ;
-arg         : ( name '=' )? expr ;
+arg         : ( NAME '=' )? expr ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
-fieldRead   : '.' name ;
-type        : TYPE_IDENTIFIER      # typeIdentifier
-            | '[' type ']'         # arrayType
+fieldRead   : '.' NAME ;
+type        : TNAME             # typeName
+            | '[' type ']'      # arrayType
             ;
-name        : IDENTIFIER ;
 
-IDENTIFIER        : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
-TYPE_IDENTIFIER   : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
-STRING            : '"' (ESC | ~('\r' | '\n'))*? '"' ;
-BLOB              : '0x' HEX_DIGIT* ;
+NAME        : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
+TNAME       : LARGE_LETTER ( IDENTIFIER_CHAR )* ;
+STRING      : '"' (ESC | ~('\r' | '\n'))*? '"' ;
+BLOB        : '0x' HEX_DIGIT* ;
 
 fragment ESC              : '\\"'
                           | '\\\\'

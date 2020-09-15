@@ -22,7 +22,7 @@ public class ScriptParsingTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(1,
-        "mismatched input 'BadName' expecting IDENTIFIER",
+        "mismatched input 'BadName' expecting NAME",
         "result(String a, String BadName) = \"abc\";",
         "                        ^^^^^^^");
   }

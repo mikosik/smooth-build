@@ -121,7 +121,7 @@ public class NameTest {
              String myFunction(String Name);
              """)
           .loadsWithError(1, """
-              mismatched input 'Name' expecting IDENTIFIER
+              mismatched input 'Name' expecting NAME
               String myFunction(String Name);
                                        ^^^^""");
     }
@@ -132,7 +132,7 @@ public class NameTest {
              String myFunction(String A);
              """)
           .loadsWithError(1, """
-              mismatched input 'A' expecting IDENTIFIER
+              mismatched input 'A' expecting NAME
               String myFunction(String A);
                                        ^""");
     }
@@ -212,7 +212,7 @@ public class NameTest {
              }
              """)
           .loadsWithError(2, """
-              mismatched input 'Field' expecting IDENTIFIER
+              mismatched input 'Field' expecting NAME
                 String Field
                        ^^^^^""");
     }
@@ -225,7 +225,7 @@ public class NameTest {
              }
              """)
           .loadsWithError(2, """
-              mismatched input 'A' expecting IDENTIFIER
+              mismatched input 'A' expecting NAME
                 String A
                        ^""");
     }
