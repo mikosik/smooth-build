@@ -3,6 +3,7 @@ Change Log
 
 Version 0.20.0 (??????????)
 
+ * changed smooth language: function call in a pipe has to have parentheses
  * renamed slib functions: aFile -> projectFile, files -> projectFiles
  * changed smooth language by introducing global values
  * changed smooth language so function call outside pipe must always have parentheses

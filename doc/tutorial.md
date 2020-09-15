@@ -6,7 +6,7 @@ a description of project's build process.
 One of the simplest non trivial build files is:
 
 ```
-release = files("src") | javac | jar;
+release = files("src") | javac() | jar();
 ```
 
 This script defines `release` value which is calculated by performing following tasks:
@@ -36,7 +36,7 @@ If you want to choose a different name for produced artifact file than default (
 you can do the following.
 
 ```
-release = files("src") | javac | jar | file("myApp.jar");
+release = files("src") | javac() | jar() | file("myApp.jar");
 ```
 
 and it will produce following output during build:
@@ -63,8 +63,8 @@ Note that there's ugly duplicated code in this example.
 We make it clean further in this tutorial for now we just focus on parallelism. 
 
 ```
-main = files("src-main") | javac | jar;
-deps = files("src-deps") | javac | jar;
+main = files("src-main") | javac() | jar();
+deps = files("src-deps") | javac() | jar();
 ```
 
 As both functions (`main` and `deps`) do not depend on each other
@@ -77,7 +77,7 @@ It is enough to ask smooth to build those jars with `smooth build main deps`.
 If you run build command twice for our initial example
 
 ```
-release = files("src") | javac | jar;
+release = files("src") | javac() | jar();
 ```
 
 you will notice that second run completes almost instantly.
@@ -289,7 +289,7 @@ strings = [ "dog", "cat", "donkey" ];
 Let's look once again at `release` value that we defined at the beginning of this tutorial.
 
 ```
-release = files("src") | javac | jar;
+release = files("src") | javac() | jar();
 ```
 
 It uses function chaining (represented by pipe symbol `|`) to pass function call result as
@@ -308,7 +308,7 @@ We can define our own functions in `build.smooth` same way we defined values so 
 Let's refactor our initial example by splitting it into two functions and adding result types:
 
 ```
-[File] classes(String sourcePath) = files(sourcePath) | javac;
+[File] classes(String sourcePath) = files(sourcePath) | javac();
 File release = jar(classes("src"));
 ```
 
@@ -319,7 +319,7 @@ This way we can build our own set of reusable functions.
 For example:
 
 ```
-javaJar(String srcPath) = files(srcPath) | javac | jar;
+javaJar(String srcPath) = files(srcPath) | javac() | jar();
 main = javaJar("src/main");
 other = javaJar("src/other"); 
 ```

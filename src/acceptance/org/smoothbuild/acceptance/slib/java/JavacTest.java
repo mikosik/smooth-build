@@ -18,7 +18,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void error_is_logged_when_compilation_error_occurs() throws Exception {
     createUserModule("""
             result = [ file(toBlob('public private class MyClass {}'), 'MyClass.java') ]
-              | javac;
+              | javac();
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -28,7 +28,7 @@ public class JavacTest extends AcceptanceTestCase {
   @Test
   public void zero_files_can_be_compiled() throws Exception {
     createUserModule("""
-            result = [] | javac;
+            result = [] | javac();
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -40,7 +40,7 @@ public class JavacTest extends AcceptanceTestCase {
     String classSource = "public class MyClass { "
         + "public static String myMethod() {return \\\"test-string\\\";}}";
     createUserModule(
-        "  result = [file(toBlob('" + classSource + "'), 'MyClass.java')] | javac;  ");
+        "  result = [file(toBlob('" + classSource + "'), 'MyClass.java')] | javac();  ");
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(invoke(artifactAbsolutePath("result").resolve("MyClass.class"), "myMethod"))
@@ -66,7 +66,7 @@ public class JavacTest extends AcceptanceTestCase {
         }
         """);
     createUserModule("""
-            libraryJar = projectFiles("srclib") | javac | jar;
+            libraryJar = projectFiles("srclib") | javac() | jar();
             result = projectFiles("src") | javac(libs = [ libraryJar ])
                 | concat(array2 = javac(projectFiles("srclib")));
             """);
@@ -85,7 +85,7 @@ public class JavacTest extends AcceptanceTestCase {
   public void duplicate_java_files_cause_error() throws Exception {
     createUserModule("""
             classFile = file(toBlob("public class MyClass {}"), "MyClass.java");
-            result = [ classFile, classFile ] | javac;
+            result = [ classFile, classFile ] | javac();
             """);
     runSmoothBuild("result");
     assertFinishedWithError();

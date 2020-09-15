@@ -15,7 +15,7 @@ public class JunitTest extends AcceptanceTestCase {
     createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule("""
             junitJars = projectFiles("junit");
-            srcJar = projectFiles("src") | javac(libs=junitJars) | jar;                                  
+            srcJar = projectFiles("src") | javac(libs=junitJars) | jar();                                  
             result = junit(tests=srcJar, deps=[]);                  
             """);
     runSmoothBuild("result");
@@ -29,7 +29,7 @@ public class JunitTest extends AcceptanceTestCase {
     createFile("src/" + SUCCESSFUL_TEST_CLASS + ".java", successfulTestSourceCode());
     createUserModule("""
             junitJars = projectFiles("junit");
-            srcJar = projectFiles("src") | javac(libs=junitJars) | jar;
+            srcJar = projectFiles("src") | javac(libs=junitJars) | jar();
             result = junit(tests=srcJar, deps=junitJars);
             """);
     runSmoothBuild("result");
@@ -42,7 +42,7 @@ public class JunitTest extends AcceptanceTestCase {
     createFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule("""
             junitJars = projectFiles("junit");
-            srcJar = projectFiles("src") | javac(libs=junitJars) | jar;
+            srcJar = projectFiles("src") | javac(libs=junitJars) | jar();
             result = junit(tests=srcJar, deps=junitJars);
             """);
     runSmoothBuild("result");
@@ -56,7 +56,7 @@ public class JunitTest extends AcceptanceTestCase {
     createDir("src");
     createUserModule("""
             junitJars = projectFiles("junit");
-            srcJar = projectFiles("src") | javac(libs=junitJars) | jar;
+            srcJar = projectFiles("src") | javac(libs=junitJars) | jar();
             result = junit(tests=srcJar, deps=junitJars);
             """);
     runSmoothBuild("result");
@@ -71,7 +71,7 @@ public class JunitTest extends AcceptanceTestCase {
     createFile("src/" + FAILING_TEST_CLASS + ".java", failingTestSourceCode());
     createUserModule(format("""
             junitJars = projectFiles("junit");
-            srcJar = projectFiles("src") | javac(libs=junitJars) | jar;
+            srcJar = projectFiles("src") | javac(libs=junitJars) | jar();
             result = junit(include="%s", tests=srcJar, deps=junitJars);
             """, SUCCESSFUL_TEST_CLASS));
     runSmoothBuild("result");

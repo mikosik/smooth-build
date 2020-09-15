@@ -14,7 +14,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.ArgContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArgListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ArrayTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.CallContext;
-import org.smoothbuild.antlr.lang.SmoothParser.CallInPipeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
@@ -31,8 +30,6 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModuleLocation;
-
-import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(ModuleLocation moduleLocation, ModuleContext module) {
@@ -113,18 +110,10 @@ public class AstCreator {
       private ExprNode createExpr(ExprContext expr) {
         NonPipeExprContext initialExpression = expr.nonPipeExpr();
         ExprNode result = createNonPipeExpr(initialExpression);
-        List<CallInPipeContext> callsInPipe = expr.callInPipe();
+        List<CallContext> callsInPipe = expr.call();
         for (int i = 0; i < callsInPipe.size(); i++) {
-          CallInPipeContext callInPipe = callsInPipe.get(i);
-          if (callInPipe.call() != null) {
-            CallContext call = callInPipe.call();
-            result = createCallInPipe(result, expr, i, call.name(), createArgList(call.argList()));
-          } else if (callInPipe.name() != null) {
-            NameContext call = callInPipe.name();
-            result = createCallInPipe(result, expr, i, call, ImmutableList.of());
-          } else {
-            throw new RuntimeException("ExprContext without 'call' nor 'name'.");
-          }
+          CallContext call = callsInPipe.get(i);
+          result = createCallInPipe(result, expr, i, call.name(), createArgList(call.argList()));
         }
         return result;
       }
