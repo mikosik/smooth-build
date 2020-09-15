@@ -17,7 +17,7 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
-import org.smoothbuild.lang.base.ModuleInfo;
+import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
@@ -33,16 +33,16 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static ValueWithLogs<Definitions> loadModule(Definitions imports, ModuleInfo moduleInfo,
-      String sourceCode) {
+  public static ValueWithLogs<Definitions> loadModule(
+      Definitions imports, ModuleLocation moduleLocation, String sourceCode) {
     var result = new ValueWithLogs<Definitions>();
 
-    ModuleContext moduleContext = parseModule(moduleInfo, result, sourceCode);
+    ModuleContext moduleContext = parseModule(moduleLocation, result, sourceCode);
     if (result.hasProblems()) {
       return result;
     }
 
-    Ast ast = fromParseTree(moduleInfo, moduleContext);
+    Ast ast = fromParseTree(moduleLocation, moduleContext);
     analyzeSemantically(imports, ast, result);
     if (result.hasProblems()) {
       return result;

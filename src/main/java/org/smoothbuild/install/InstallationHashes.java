@@ -1,24 +1,27 @@
 package org.smoothbuild.install;
 
+import static org.smoothbuild.install.InstallationPaths.standardLibraryModuleLocations;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Properties;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.ModuleInfo;
+import org.smoothbuild.lang.base.ModuleLocation;
 
 import com.google.common.collect.ImmutableList;
 
 public class InstallationHashes {
   private final InstallationPaths installationPaths;
+  private final FullPathResolver fullPathResolver;
 
   @Inject
-  public InstallationHashes(InstallationPaths installationPaths) {
+  public InstallationHashes(InstallationPaths installationPaths, FullPathResolver fullPathResolver) {
     this.installationPaths = installationPaths;
+    this.fullPathResolver = fullPathResolver;
   }
 
   public HashNode installationNode() throws IOException {
@@ -53,20 +56,21 @@ public class InstallationHashes {
   }
 
   private HashNode standardLibsNode() throws IOException {
-    List<ModuleInfo> modules = installationPaths.slibModules();
     ImmutableList.Builder<HashNode> builder = ImmutableList.builder();
-    for (ModuleInfo module : modules) {
+    for (ModuleLocation module : standardLibraryModuleLocations()) {
       builder.add(moduleNode(module));
     }
     return new HashNode("standard libraries", builder.build());
   }
 
-  private static HashNode moduleNode(ModuleInfo module) throws IOException {
-    HashNode smoothFile = new HashNode(module.smooth().shorted(), Hash.of(module.smooth().path()));
-    Path nativeJar = module.nativ().path();
-    String name = module.name() + " module";
-    if (Files.exists(nativeJar)) {
-      HashNode jarFile = new HashNode(module.nativ().shorted(), Hash.of(nativeJar));
+  private HashNode moduleNode(ModuleLocation moduleLocation) throws IOException {
+    HashNode smoothFile = new HashNode(
+        moduleLocation.prefixedPath(), Hash.of(fullPathResolver.resolve(moduleLocation)));
+    ModuleLocation nativeModuleLocation = moduleLocation.toNative();
+    Path nativeFullPath = fullPathResolver.resolve(nativeModuleLocation);
+    String name = moduleLocation.name() + " module";
+    if (Files.exists(nativeFullPath)) {
+      HashNode jarFile = new HashNode(nativeModuleLocation.prefixedPath(), Hash.of(nativeFullPath));
       return new HashNode(name, ImmutableList.of(smoothFile, jarFile));
     } else {
       return new HashNode(name, ImmutableList.of(smoothFile));

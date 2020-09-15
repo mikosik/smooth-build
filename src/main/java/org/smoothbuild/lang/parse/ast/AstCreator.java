@@ -30,19 +30,19 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeIdentifierContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModuleInfo;
+import org.smoothbuild.lang.base.ModuleLocation;
 
 import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
-  public static Ast fromParseTree(ModuleInfo moduleInfo, ModuleContext module) {
+  public static Ast fromParseTree(ModuleLocation moduleLocation, ModuleContext module) {
     List<StructNode> structs = new ArrayList<>();
     List<EvaluableNode> evaluables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
         String name = struct.TYPE_IDENTIFIER().getText();
-        Location location = locationOf(moduleInfo, struct.TYPE_IDENTIFIER().getSymbol());
+        Location location = locationOf(moduleLocation, struct.TYPE_IDENTIFIER().getSymbol());
         List<ItemNode> fields = createFields(struct.fieldList());
         structs.add(new StructNode(name, fields, location));
         return null;
@@ -63,7 +63,7 @@ public class AstCreator {
         TypeNode type = createType(field.type());
         NameContext nameContext = field.name();
         String name = nameContext.getText();
-        Location location = locationOf(moduleInfo, nameContext);
+        Location location = locationOf(moduleLocation, nameContext);
         return new ItemNode(index, type, name, Optional.empty(), location);
       }
 
@@ -74,7 +74,7 @@ public class AstCreator {
         String name = nameContext.getText();
         ExprNode expr = value.expr() == null ? null : createExpr(value.expr());
         visitChildren(value);
-        evaluables.add(new ValueNode(type, name, expr, locationOf(moduleInfo, nameContext)));
+        evaluables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameContext)));
         return null;
       }
 
@@ -86,7 +86,8 @@ public class AstCreator {
         List<ItemNode> params = createParams(func.paramList());
         ExprNode expr = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
-        evaluables.add(new FuncNode(type, name, params, expr, locationOf(moduleInfo, nameContext)));
+        evaluables.add(
+            new FuncNode(type, name, params, expr, locationOf(moduleLocation, nameContext)));
         return null;
       }
 
@@ -104,7 +105,7 @@ public class AstCreator {
       private ItemNode createParam(int index, ParamContext param) {
         TypeNode type = createType(param.type());
         String name = param.name().getText();
-        Location location = locationOf(moduleInfo, param);
+        Location location = locationOf(moduleLocation, param);
         Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
         return new ItemNode(index, type, name, defaultValue, location);
       }
@@ -131,11 +132,11 @@ public class AstCreator {
       private ExprNode createCallInPipe(ExprNode result, ExprContext expr, int i,
           ParserRuleContext calledName, List<ArgNode> argList) {
         // Location of nameless piped argument is set to the location of pipe character '|'.
-        Location location = locationOf(moduleInfo, expr.p.get(i));
+        Location location = locationOf(moduleLocation, expr.p.get(i));
         List<ArgNode> args = new ArrayList<>();
         args.add(new ArgNode(null, result, location));
         args.addAll(argList);
-        return new CallNode(calledName.getText(), args, locationOf(moduleInfo, calledName));
+        return new CallNode(calledName.getText(), args, locationOf(moduleLocation, calledName));
       }
 
       private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
@@ -143,30 +144,30 @@ public class AstCreator {
           ExprNode structExpr = createNonPipeExpr(expr.nonPipeExpr());
           FieldReadContext accessor = expr.fieldRead();
           String name = accessor.name().getText();
-          return new FieldReadNode(structExpr, name, locationOf(moduleInfo, accessor));
+          return new FieldReadNode(structExpr, name, locationOf(moduleLocation, accessor));
         }
         if (expr.array() != null) {
           List<ExprNode> elements = map(expr.array().expr(), this::createExpr);
-          return new ArrayNode(elements, locationOf(moduleInfo, expr));
+          return new ArrayNode(elements, locationOf(moduleLocation, expr));
         }
         if (expr.call() != null) {
           CallContext call = expr.call();
-          Location location = locationOf(moduleInfo, call);
+          Location location = locationOf(moduleLocation, call);
           List<ArgNode> args = createArgList(call.argList());
           return new CallNode(call.name().getText(), args, location);
         }
         if (expr.name() != null) {
           NameContext name = expr.name();
-          return new RefNode(name.getText(), locationOf(moduleInfo, name));
+          return new RefNode(name.getText(), locationOf(moduleLocation, name));
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();
           return new StringNode(quotedString.substring(1, quotedString.length() - 1),
-              locationOf(moduleInfo, expr));
+              locationOf(moduleLocation, expr));
         }
         if (expr.BLOB() != null) {
           return new BlobNode(
-              expr.BLOB().getText().substring(2), locationOf(moduleInfo, expr));
+              expr.BLOB().getText().substring(2), locationOf(moduleLocation, expr));
         }
         throw new RuntimeException("Illegal parse tree: " + NonPipeExprContext.class.getSimpleName()
             + " without children.");
@@ -181,7 +182,7 @@ public class AstCreator {
             NameContext nameContext = arg.name();
             String name = nameContext == null ? null : nameContext.getText();
             ExprNode exprNode = createExpr(expr);
-            result.add(new ArgNode(name, exprNode, locationOf(moduleInfo, arg)));
+            result.add(new ArgNode(name, exprNode, locationOf(moduleLocation, arg)));
           }
         }
         return result;
@@ -199,12 +200,13 @@ public class AstCreator {
       }
 
       private TypeNode createType(TypeIdentifierContext type) {
-        return new TypeNode(type.getText(), locationOf(moduleInfo, type.TYPE_IDENTIFIER().getSymbol()));
+        return new TypeNode(
+            type.getText(), locationOf(moduleLocation, type.TYPE_IDENTIFIER().getSymbol()));
       }
 
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
         TypeNode elementType = createType(arrayType.type());
-        return new ArrayTypeNode(elementType, locationOf(moduleInfo, arrayType));
+        return new ArrayTypeNode(elementType, locationOf(moduleLocation, arrayType));
       }
     }.visit(module);
     return new Ast(structs, evaluables);

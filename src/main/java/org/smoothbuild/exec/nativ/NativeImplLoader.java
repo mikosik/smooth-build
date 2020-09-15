@@ -11,9 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Value;
@@ -22,6 +24,12 @@ import org.smoothbuild.lang.base.type.Type;
 @Singleton
 public class NativeImplLoader {
   private final Map<Path, Map<String, Native>> nativesMap = new HashMap<>();
+  private final FullPathResolver pathResolver;
+
+  @Inject
+  public NativeImplLoader(FullPathResolver pathResolver) {
+    this.pathResolver = pathResolver;
+  }
 
   public synchronized Native loadNative(Function function) throws LoadingNativeImplException {
     Native nativ = loadNativeImpl(function);
@@ -38,7 +46,7 @@ public class NativeImplLoader {
   }
 
   private Native loadNativeImpl(Evaluable evaluable) throws LoadingNativeImplException {
-    Path path = evaluable.location().moduleInfo().nativ().path();
+    Path path = pathResolver.resolve(evaluable.location().module().toNative());
     Map<String, Native> natives = nativesInJar(path, evaluable.name());
     Native nativ = natives.get(evaluable.name());
     if (nativ == null) {

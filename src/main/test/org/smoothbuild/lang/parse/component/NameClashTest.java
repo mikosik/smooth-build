@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.ModuleInfo;
+import org.smoothbuild.lang.base.ModuleLocation;
 
 public class NameClashTest {
   @Nested
@@ -22,7 +22,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -37,7 +37,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -52,7 +52,7 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -103,7 +103,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -118,7 +118,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -133,7 +133,7 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -205,7 +205,7 @@ public class NameClashTest {
         Definitions imported = module("""
             OtherModuleStruct {}
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -258,7 +258,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleValue = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -273,7 +273,7 @@ public class NameClashTest {
         Definitions imported = module("""
             otherModuleFunction() = "abc";
             """)
-            .withImportedModuleInfo()
+            .withImportedModuleLocation()
             .loadsSuccessfully()
             .getModule();
         module("""
@@ -306,12 +306,12 @@ public class NameClashTest {
     }
   }
 
-  private static String alreadyDefinedIn(ModuleInfo moduleInfo, String name) {
-    return alreadyDefinedIn(moduleInfo, 1, name);
+  private static String alreadyDefinedIn(ModuleLocation moduleLocation, String name) {
+    return alreadyDefinedIn(moduleLocation, 1, name);
   }
 
-  private static String alreadyDefinedIn(ModuleInfo moduleInfo, int line, String name) {
-    return "`" + name + "` is already defined at " + moduleInfo.smooth().shorted()
+  private static String alreadyDefinedIn(ModuleLocation moduleLocation, int line, String name) {
+    return "`" + name + "` is already defined at " + moduleLocation.path()
         + ":" + line + ".";
   }
 }
