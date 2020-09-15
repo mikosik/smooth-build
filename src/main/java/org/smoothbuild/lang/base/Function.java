@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * Smooth function declared in a smooth file.
  */
@@ -29,7 +31,7 @@ public class Function extends Callable {
   }
 
   @Override
-  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
+  public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
     return new CallExpression(this, arguments, location);
   }
 }

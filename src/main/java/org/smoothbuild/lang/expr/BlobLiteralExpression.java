@@ -4,20 +4,14 @@ import org.smoothbuild.lang.base.Location;
 
 import okio.ByteString;
 
-public class BlobLiteralExpression extends Expression {
-  private final ByteString byteString;
-
-  public BlobLiteralExpression(ByteString byteString, Location location) {
-    super(location);
-    this.byteString = byteString;
-  }
-
-  public ByteString byteString() {
-    return byteString;
-  }
-
+public record BlobLiteralExpression(ByteString byteString, Location location) implements Expression {
   @Override
   public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
     return visitor.visit(this);
+  }
+
+  @Override
+  public String toString() {
+    return "BlobLiteralExpression{" + byteString + ", " + location() + "}";
   }
 }

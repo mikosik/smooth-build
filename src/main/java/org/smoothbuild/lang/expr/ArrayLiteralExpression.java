@@ -1,18 +1,13 @@
 package org.smoothbuild.lang.expr;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ArrayType;
 
-public class ArrayLiteralExpression extends Expression {
-  private final ArrayType arrayType;
+import com.google.common.collect.ImmutableList;
 
-  public ArrayLiteralExpression(ArrayType arrayType, List<? extends Expression> elements,
-      Location location) {
-    super(elements, location);
-    this.arrayType = arrayType;
-  }
+public record ArrayLiteralExpression(
+    ArrayType arrayType, ImmutableList<Expression> elements, Location location)
+    implements Expression {
 
   public ArrayType arrayType() {
     return arrayType;
@@ -21,5 +16,10 @@ public class ArrayLiteralExpression extends Expression {
   @Override
   public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
     return visitor.visit(this);
+  }
+
+  @Override
+  public String toString() {
+    return "ArrayLiteralExpression{" + arrayType.name() + ", " + elements + ", " + location() + "}";
   }
 }

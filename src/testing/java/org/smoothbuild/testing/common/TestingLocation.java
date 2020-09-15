@@ -14,7 +14,7 @@ public class TestingLocation {
   }
 
   public static Location loc(int line) {
-    String path = "script.smooth";
+    String path = "build.smooth";
     return location(moduleLocation(USER, Path.of(path)), line);
   }
 }

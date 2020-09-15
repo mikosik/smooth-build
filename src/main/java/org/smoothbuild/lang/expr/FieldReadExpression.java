@@ -3,19 +3,8 @@ package org.smoothbuild.lang.expr;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
 
-import com.google.common.collect.ImmutableList;
-
-public class FieldReadExpression extends Expression {
-  private final Field field;
-
-  public FieldReadExpression(Field field, Expression expression, Location location) {
-    super(ImmutableList.of(expression), location);
-    this.field = field;
-  }
-
-  public Field field() {
-    return field;
-  }
+public record FieldReadExpression(Field field, Expression expression, Location location)
+    implements Expression {
 
   @Override
   public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {

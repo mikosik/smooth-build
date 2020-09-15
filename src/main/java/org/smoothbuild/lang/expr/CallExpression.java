@@ -1,23 +1,13 @@
 package org.smoothbuild.lang.expr;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Location;
 
-public class CallExpression extends Expression {
-  private final Callable callable;
+import com.google.common.collect.ImmutableList;
 
-  public CallExpression(
-      Callable callable, List<? extends Expression> arguments, Location location) {
-    super(arguments, location);
-    this.callable = callable;
-  }
-
-  public Callable callable() {
-    return callable;
-  }
-
+public record CallExpression(
+    Callable callable, ImmutableList<Expression> arguments, Location location)
+    implements Expression {
   @Override
   public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
     return visitor.visit(this);
