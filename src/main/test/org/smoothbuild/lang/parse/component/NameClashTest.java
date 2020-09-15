@@ -23,7 +23,8 @@ public class NameClashTest {
             otherModuleValue = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                otherModuleValue = "def";
                """)
@@ -37,7 +38,8 @@ public class NameClashTest {
             otherModuleFunction() = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 otherModuleFunction = "def";
                 """)
@@ -51,7 +53,8 @@ public class NameClashTest {
             OtherModuleStruct {}
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 otherModuleStruct = "def";
                 """)
@@ -101,7 +104,8 @@ public class NameClashTest {
             otherModuleValue = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 otherModuleValue() = "def";
                 """)
@@ -115,7 +119,8 @@ public class NameClashTest {
             otherModuleFunction() = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 otherModuleFunction() = "def";
                 """)
@@ -129,7 +134,8 @@ public class NameClashTest {
             OtherModuleStruct {}
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 otherModuleStruct() = "def";
                 """)
@@ -200,7 +206,8 @@ public class NameClashTest {
             OtherModuleStruct {}
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 OtherModuleStruct {}
                 """)
@@ -252,7 +259,8 @@ public class NameClashTest {
             otherModuleValue = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 OtherModuleValue{}
                 """)
@@ -266,7 +274,8 @@ public class NameClashTest {
             otherModuleFunction() = "abc";
             """)
             .withImportedModuleInfo()
-            .loadsSuccessfully();
+            .loadsSuccessfully()
+            .getModule();
         module("""
                 OtherModuleFunction{}
                 """)

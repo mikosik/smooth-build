@@ -24,6 +24,7 @@ public class TestModuleLoader {
   private final String sourceCode;
   private ModuleInfo moduleInfo;
   private Definitions imports;
+  private ValueWithLogs<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
     return new TestModuleLoader(sourceCode, MODULE_INFO, basicTypeDefinitions());
@@ -50,10 +51,14 @@ public class TestModuleLoader {
     return this;
   }
 
-  public Definitions loadsSuccessfully() {
-    var module = load();
+  public TestModuleLoader loadsSuccessfully() {
+    module = load();
     assertThat(module.logs())
         .isEmpty();
+    return this;
+  }
+
+  public Definitions getModule() {
     return module.value();
   }
 
