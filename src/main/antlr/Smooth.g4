@@ -8,16 +8,13 @@ value       : type? name ('=' expr)? ';' ;
 func        : type? name '(' paramList? ')' ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type name ( '=' expr )? ;
-expr        : nonPipeExpr ( p+='|' callInPipe )* ;
+expr        : nonPipeExpr ( p+='|' call )* ;
 nonPipeExpr : nonPipeExpr fieldRead
             | call
             | name
             | STRING
             | BLOB
             | array
-            ;
-callInPipe  : call
-            | name
             ;
 call        : name p='(' argList? ')' ;
 argList     : arg ( ',' arg )* ','? ;

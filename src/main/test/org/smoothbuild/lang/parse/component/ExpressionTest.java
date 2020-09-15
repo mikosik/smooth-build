@@ -53,7 +53,7 @@ public class ExpressionTest {
       module("""
           A myIdentity(A value);
           String myFunction(String param);
-          result = myFunction("abc" | myIdentity);
+          result = myFunction("abc" | myIdentity());
           """)
           .loadsSuccessfully();
     }
