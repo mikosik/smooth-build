@@ -39,6 +39,6 @@ public abstract class Callable extends Evaluable {
         .allMatch(Item::hasDefaultValue);
   }
 
-  public abstract Expression createCallExpression(List<? extends Expression> arguments,
+  public abstract Expression createCallExpression(ImmutableList<Expression> arguments,
       Location location);
 }

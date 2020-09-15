@@ -42,6 +42,7 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.lang.parse.ast.ValueTarget;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public class EvaluableLoader {
   public static Value loadValue(
@@ -140,7 +141,7 @@ public class EvaluableLoader {
 
     private Expression createCall(CallNode call) {
       Callable callable = (Callable) find(call.calledName());
-      List<Expression> argExpressions = createArgumentExpressions(call, callable);
+      ImmutableList<Expression> argExpressions = createArgumentExpressions(call, callable);
       return callable.createCallExpression(argExpressions, call.location());
     }
 
@@ -148,18 +149,18 @@ public class EvaluableLoader {
       return requireNonNullElseGet(localEvaluables.get(name), () -> importedEvaluables.get(name));
     }
 
-    private List<Expression> createArgumentExpressions(CallNode call, Callable callable) {
+    private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
       ImmutableList<Parameter> parameters = callable.parameters();
-      ArrayList<Expression> result = new ArrayList<>(parameters.size());
+      Builder<Expression> resultBuilder = ImmutableList.builder();
       List<ArgNode> args = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {
         if (args.get(i) == null) {
-          result.add(parameters.get(i).defaultValueExpression().get());
+          resultBuilder.add(parameters.get(i).defaultValueExpression().get());
         } else {
-          result.add(createExpression(args.get(i).expr()));
+          resultBuilder.add(createExpression(args.get(i).expr()));
         }
       }
-      return result;
+      return resultBuilder.build();
     }
 
     private Expression createStringLiteral(StringNode string) {
@@ -176,7 +177,7 @@ public class EvaluableLoader {
 
     private Expression createArray(ArrayNode array) {
       ArrayType type = (ArrayType) array.type().get();
-      List<Expression> elements = map(array.elements(), this::createExpression);
+      ImmutableList<Expression> elements = map(array.elements(), this::createExpression);
       return new ArrayLiteralExpression(type, elements, array.location());
     }
   }

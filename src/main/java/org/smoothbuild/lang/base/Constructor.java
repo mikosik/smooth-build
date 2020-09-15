@@ -1,10 +1,10 @@
 package org.smoothbuild.lang.base;
 
-import java.util.List;
-
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
+
+import com.google.common.collect.ImmutableList;
 
 public class Constructor extends Callable {
   public Constructor(Signature signature, Location location) {
@@ -22,7 +22,7 @@ public class Constructor extends Callable {
   }
 
   @Override
-  public Expression createCallExpression(List<? extends Expression> arguments, Location location) {
+  public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
     return new CallExpression(this, arguments, location);
   }
 }

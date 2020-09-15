@@ -83,7 +83,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     Field field = expression.field();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
         field.index(), field.type().visit(toSpecConverter));
-    List<Task> children = childrenTasks(expression.children());
+    List<Task> children = childrenTasks(expression.expression());
     return new NormalTask(
         CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);
   }
@@ -120,7 +120,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   public Task visit(CallExpression expression) throws ExpressionVisitorException {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
-      List<Task> arguments = childrenTasks(expression.children());
+      List<Task> arguments = childrenTasks(expression.arguments());
       GenericTypeMap<ConcreteType> mapping =
           inferMapping(function.parameterTypes(), taskTypes(arguments));
       ConcreteType actualResultType = mapping.applyTo(function.signature().type());
@@ -142,7 +142,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
       throws ExpressionVisitorException {
     TupleSpec type = toSpecConverter.visit(constructor.type());
     Algorithm algorithm = new CreateTupleAlgorithm(type);
-    List<Task> dependencies = childrenTasks(expression.children());
+    List<Task> dependencies = childrenTasks(expression.arguments());
     return new NormalTask(CALL, constructor.type(), constructor.extendedName(), algorithm,
         dependencies, expression.location(), true);
   }
@@ -200,7 +200,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
 
   @Override
   public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
-    List<Task> elements = childrenTasks(expression.children());
+    List<Task> elements = childrenTasks(expression.elements());
     ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
 
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
@@ -244,6 +244,11 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
       builder.add(child.visit(this));
     }
     return builder.build();
+  }
+
+  private ImmutableList<Task> childrenTasks(Expression expression)
+      throws ExpressionVisitorException {
+    return ImmutableList.of(expression.visit(this));
   }
 
   private Task convertIfNeeded(Task task, ConcreteType requiredType) {

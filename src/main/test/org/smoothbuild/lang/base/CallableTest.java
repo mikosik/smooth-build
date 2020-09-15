@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
 
+import com.google.common.collect.ImmutableList;
+
 public class CallableTest extends TestingContext {
 
   @Test
@@ -82,8 +84,7 @@ public class CallableTest extends TestingContext {
     }
 
     @Override
-    public Expression createCallExpression(List<? extends Expression> arguments,
-        Location location) {
+    public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
       return null;
     }
   }
