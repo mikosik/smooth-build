@@ -10,19 +10,17 @@ import java.util.List;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.ModuleInfo;
-import org.smoothbuild.lang.base.ShortablePath;
+import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.parse.LoadModule;
 
 public class TestModuleLoader {
   private static final String BUILD_FILE = "myBuild.smooth";
-  private static final String NATIVE_JAR = "myBuild.jar";
-  public static final ModuleInfo MODULE_INFO = moduleInfo(BUILD_FILE);
-  public static final ModuleInfo IMPORTED_INFO = moduleInfo("imported.smooth");
+  public static final ModuleLocation MODULE_INFO = moduleLocation(BUILD_FILE);
+  public static final ModuleLocation IMPORTED_INFO = moduleLocation("imported.smooth");
 
   private final String sourceCode;
-  private ModuleInfo moduleInfo;
+  private ModuleLocation moduleLocation;
   private Definitions imports;
   private ValueWithLogs<Definitions> module;
 
@@ -30,19 +28,19 @@ public class TestModuleLoader {
     return new TestModuleLoader(sourceCode, MODULE_INFO, basicTypeDefinitions());
   }
 
-  public TestModuleLoader(String sourceCode, ModuleInfo moduleInfo, Definitions imports) {
+  public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imports) {
     this.sourceCode = sourceCode;
-    this.moduleInfo = moduleInfo;
+    this.moduleLocation = moduleLocation;
     this.imports = imports;
   }
 
-  public TestModuleLoader withImportedModuleInfo() {
-    withModuleInfo(IMPORTED_INFO);
+  public TestModuleLoader withImportedModuleLocation() {
+    withModuleLocation(IMPORTED_INFO);
     return this;
   }
 
-  public TestModuleLoader withModuleInfo(ModuleInfo moduleInfo) {
-    this.moduleInfo = moduleInfo;
+  public TestModuleLoader withModuleLocation(ModuleLocation moduleLocation) {
+    this.moduleLocation = moduleLocation;
     return this;
   }
 
@@ -83,13 +81,11 @@ public class TestModuleLoader {
   }
 
   private ValueWithLogs<Definitions> load() {
-    return LoadModule.loadModule(imports, moduleInfo, sourceCode);
+    return LoadModule.loadModule(imports, moduleLocation, sourceCode);
   }
 
-  public static ModuleInfo moduleInfo(String buildFile) {
-    ShortablePath smooth = new ShortablePath(Path.of("long/path/myBuild.smooth"), buildFile);
-    ShortablePath nativ = new ShortablePath(Path.of("long/path/myBuild.jar"), NATIVE_JAR);
-    return new ModuleInfo(Space.USER, smooth, nativ);
+  public static ModuleLocation moduleLocation(String buildFile) {
+    return new ModuleLocation(Space.USER, Path.of(buildFile));
   }
 
   public static Log err(int line, String message) {

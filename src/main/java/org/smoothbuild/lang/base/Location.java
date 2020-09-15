@@ -5,37 +5,37 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Space.INTERNAL;
 import static org.smoothbuild.lang.base.Space.USER;
 
-public record Location(ModuleInfo moduleInfo, int line) {
+public record Location(ModuleLocation moduleLocation, int line) {
 
   public static Location commandLineLocation() {
-    return new Location(ModuleInfo.moduleInfo(USER, null, null), 1);
+    return new Location(ModuleLocation.moduleLocation(USER, null), 1);
   }
 
   public static Location internal() {
-    return new Location(ModuleInfo.moduleInfo(INTERNAL, null, null), -1);
+    return new Location(ModuleLocation.moduleLocation(INTERNAL, null), -1);
   }
 
-  public static Location location(ModuleInfo moduleInfo, int line) {
+  public static Location location(ModuleLocation moduleLocation, int line) {
     checkArgument(0 < line);
-    return new Location(moduleInfo, line);
+    return new Location(moduleLocation, line);
   }
 
   public Location {
-    this.moduleInfo = requireNonNull(moduleInfo);
+    this.moduleLocation = requireNonNull(moduleLocation);
   }
 
-  public ModuleInfo module() {
-    return moduleInfo;
+  public ModuleLocation module() {
+    return moduleLocation;
   }
 
   @Override
   public String toString() {
-    if (moduleInfo.space() == INTERNAL) {
+    if (moduleLocation.space() == INTERNAL) {
       return "smooth internal";
-    } else if (moduleInfo.smooth().path() == null) {
+    } else if (moduleLocation.path() == null) {
       return "command line";
     } else {
-      return moduleInfo.smooth().shorted() + ":" + line;
+      return moduleLocation.path() + ":" + line;
     }
   }
 }
