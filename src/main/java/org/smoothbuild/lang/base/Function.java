@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 public class Function extends Callable {
   private final Optional<Expression> body;
 
-  public Function(Signature signature, Location location, Optional<Expression> body) {
+  public Function(Signature signature, Optional<Expression> body, Location location) {
     super(signature, location);
     this.body = checkNotNull(body);
   }
