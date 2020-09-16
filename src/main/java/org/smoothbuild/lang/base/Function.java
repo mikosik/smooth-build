@@ -20,11 +20,6 @@ public class Function extends Callable {
     this.body = checkNotNull(body);
   }
 
-  @Override
-  public String extendedName() {
-    return nameWithParentheses();
-  }
-
   public Optional<Expression> body() {
     return body;
   }
