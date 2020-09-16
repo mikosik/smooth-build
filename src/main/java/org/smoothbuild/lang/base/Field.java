@@ -17,9 +17,6 @@ public class Field extends Item {
 
   @Override
   public String toString() {
-    return "Field{" +
-        "type=" + type() +
-        ", name='" + name() +
-        '}';
+    return "Field(`" + type() + ", " + name() + "`)";
   }
 }

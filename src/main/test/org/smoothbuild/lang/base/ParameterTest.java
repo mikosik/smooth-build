@@ -66,6 +66,6 @@ public class ParameterTest {
   public void to_string() {
     parameter = new Parameter(0, STRING, name, Optional.of(mock(Expression.class)), internal());
     assertThat(parameter.toString())
-        .isEqualTo("Param(String: name)");
+        .isEqualTo("Parameter(`String name`)");
   }
 }
