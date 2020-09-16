@@ -19,9 +19,9 @@ public class NamesTest {
   }
 
   @Test
-  public void name_with_underscore_at_beginning_is_legal() {
+  public void name_with_underscore_at_beginning_is_illegal() {
     assertThat(isLegalName("_somename"))
-        .isTrue();
+        .isFalse();
   }
 
   @Test
@@ -31,9 +31,9 @@ public class NamesTest {
   }
 
   @Test
-  public void name_with_dash_is_legal() {
+  public void name_with_dash_is_illegal() {
     assertThat(isLegalName("some-name"))
-        .isTrue();
+        .isFalse();
   }
 
   @Test
@@ -43,15 +43,15 @@ public class NamesTest {
   }
 
   @Test
-  public void name_with_dash_at_end_is_legal() {
+  public void name_with_dash_at_end_is_illegal() {
     assertThat(isLegalName("somename-"))
-        .isTrue();
+        .isFalse();
   }
 
   @Test
-  public void name_with_dot_is_legal() {
+  public void name_with_dot_is_illegal() {
     assertThat(isLegalName("some.name"))
-        .isTrue();
+        .isFalse();
   }
 
   @Test
@@ -61,9 +61,9 @@ public class NamesTest {
   }
 
   @Test
-  public void name_with_dot_at_end_is_legal() {
+  public void name_with_dot_at_end_is_illegal() {
     assertThat(isLegalName("somename."))
-        .isTrue();
+        .isFalse();
   }
 
   @Test
