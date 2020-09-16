@@ -63,13 +63,16 @@ public class Item implements Named {
     if (!(object instanceof Item that)) {
       return false;
     }
-    return type.equals(that.type)
-        && name.equals(that.name);
+    return this.index == that.index
+        && this.type.equals(that.type)
+        && this.name.equals(that.name)
+        && this.hasDefaultValue == that.hasDefaultValue
+        && this.location.equals(that.location);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name);
+    return Objects.hash(index, type, name, hasDefaultValue, location);
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {

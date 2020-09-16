@@ -47,4 +47,9 @@ public class Function extends Callable {
   public int hashCode() {
     return Objects.hash(signature(), body, location());
   }
+
+  @Override
+  public String toString() {
+    return "Function(`" + signature().toString() + " = " + body + "`)";
+  }
 }

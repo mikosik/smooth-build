@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.lang.base.Definitions.basicTypeDefinitions;
 import static org.smoothbuild.lang.base.TestingModuleLocation.BUILD_FILE_PATH;
@@ -12,8 +13,12 @@ import java.util.List;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
+
+import com.google.common.collect.ImmutableMap;
 
 public class TestModuleLoader {
   private final String sourceCode;
@@ -51,6 +56,30 @@ public class TestModuleLoader {
     assertThat(module.logs())
         .isEmpty();
     return this;
+  }
+
+  public void containsEvaluable(Evaluable expected) {
+    String name = expected.name();
+    ImmutableMap<String, Evaluable> evaluables = module.value().evaluables();
+    assertWithMessage("Module doesn't contain '" + name + "'.")
+        .that(evaluables)
+        .containsKey(name);
+    Evaluable actual = evaluables.get(name);
+    assertThat(actual)
+        .isEqualTo(expected);
+  }
+
+  public void containsType(Type expected) {
+    String name = expected.name();
+    ImmutableMap<String, Type> types = module.value().types();
+    assertWithMessage("Module evaluables doesn't contain '" + name + "' type.")
+        .that(types)
+        .containsKey(name);
+    Type actual = types.get(name);
+    assertWithMessage(
+        "Module contains type '" + name + "', but")
+        .that(actual)
+        .isEqualTo(expected);
   }
 
   public Definitions getModule() {
