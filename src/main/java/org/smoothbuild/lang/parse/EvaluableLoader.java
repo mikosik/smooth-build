@@ -5,7 +5,6 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.map;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

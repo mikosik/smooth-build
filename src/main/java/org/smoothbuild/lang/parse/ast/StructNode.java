@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Optional.empty;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class StructNode extends NamedNode {
       var parameterInfos = type.fields()
           .values()
           .stream()
-          .map(f -> new Parameter(f.index(), f.type(), f.name(), null, f.location()))
+          .map(f -> new Parameter(f.index(), f.type(), f.name(), empty(), f.location()))
           .collect(toImmutableList());
       setParameterInfos(parameterInfos);
     }

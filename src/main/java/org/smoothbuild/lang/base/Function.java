@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.expr.CallExpression;

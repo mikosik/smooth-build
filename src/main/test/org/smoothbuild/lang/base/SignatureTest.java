@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
@@ -34,8 +35,8 @@ public class SignatureTest {
 
   @Test
   public void parameter_types() {
-    parameter = new Parameter(0, BLOB, "blob", null, internal());
-    parameter2 = new Parameter(0, STRING, "string", null, internal());
+    parameter = new Parameter(0, BLOB, "blob", empty(), internal());
+    parameter2 = new Parameter(0, STRING, "string", empty(), internal());
     assertThat(signature(STRING, "name", list(parameter, parameter2)).parameterTypes())
         .containsExactly(BLOB, STRING)
         .inOrder();
@@ -43,8 +44,8 @@ public class SignatureTest {
 
   @Test
   public void to_string() {
-    parameter = new Parameter(0, BLOB, "blob", null, internal());
-    parameter2 = new Parameter(0, STRING, "string", null, internal());
+    parameter = new Parameter(0, BLOB, "blob", empty(), internal());
+    parameter2 = new Parameter(0, STRING, "string", empty(), internal());
     Signature signature = signature(STRING, "name", list(parameter, parameter2));
     assertThat(signature.toString())
         .isEqualTo(STRING.name() + " " + "name" + "(" + parameter.type().name() + " "

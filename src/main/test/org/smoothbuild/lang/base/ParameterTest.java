@@ -17,40 +17,40 @@ public class ParameterTest {
 
   @Test
   public void null_type_is_forbidden() {
-    assertCall(() -> new Parameter(0, null, name, null, internal()))
+    assertCall(() -> new Parameter(0, null, name, Optional.empty(), internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new Parameter(0, STRING, null, null, internal()))
+    assertCall(() -> new Parameter(0, STRING, null, Optional.empty(), internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void index_getter() {
-    parameter = new Parameter(33, STRING, name, null, internal());
+    parameter = new Parameter(33, STRING, name, Optional.empty(), internal());
     assertThat(parameter.index())
         .isEqualTo(33);
   }
 
   @Test
   public void type_getter() {
-    parameter = new Parameter(0, STRING, name, null, internal());
+    parameter = new Parameter(0, STRING, name, Optional.empty(), internal());
     assertThat(parameter.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void name_getter() {
-    parameter = new Parameter(0, STRING, name, null, internal());
+    parameter = new Parameter(0, STRING, name, Optional.empty(), internal());
     assertThat(parameter.name())
         .isEqualTo(name);
   }
 
   @Test
   public void parameter_without_default() {
-    parameter = new Parameter(0, STRING, name, null, internal());
+    parameter = new Parameter(0, STRING, name, Optional.empty(), internal());
     assertThat(parameter.hasDefaultValue())
         .isFalse();
   }
