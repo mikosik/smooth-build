@@ -1,166 +1,237 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.lang.TestingLang.array;
+import static org.smoothbuild.lang.TestingLang.blob;
+import static org.smoothbuild.lang.TestingLang.call;
+import static org.smoothbuild.lang.TestingLang.constr;
+import static org.smoothbuild.lang.TestingLang.field;
+import static org.smoothbuild.lang.TestingLang.fieldRead;
+import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.parameter;
+import static org.smoothbuild.lang.TestingLang.parameterRef;
+import static org.smoothbuild.lang.TestingLang.signature;
+import static org.smoothbuild.lang.TestingLang.string;
+import static org.smoothbuild.lang.TestingLang.struct;
+import static org.smoothbuild.lang.TestingLang.value;
+import static org.smoothbuild.lang.TestingLang.valueRef;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.Constructor;
+import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.type.StructType;
 
 public class ExpressionTest {
-  @Nested
-  class field_read_can_be_used_as {
-    @Test
-    public void argument() {
-      module("""
-          MyStruct {
-            String field,
-          }
-          myValue = myStruct("abc");
-          String myFunction(String param);
-          result = myFunction(myValue.field);
+  @Test
+  public void value_with_empty_body() {
+    module("""
+          String result;
           """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void array_element() {
-      module("""
-             MyStruct {
-               String field,
-             }
-             myValue = myStruct("abc");
-             result = [ myValue.field ];
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void parameter_default_value() {
-      module("""
-          MyStruct {
-            String field,
-          }
-          value = myStruct("abc");
-          String myFunction(String value = value.field);
-          """)
-          .loadsSuccessfully();
-    }
+        .loadsSuccessfully()
+        .containsEvaluable(value(1, STRING, "result"));
   }
 
-  @Nested
-  class pipe_can_be_used_as {
-    @Test
-    public void argument() {
-      module("""
-          A myIdentity(A value);
-          String myFunction(String param);
-          result = myFunction("abc" | myIdentity());
+  @Test
+  public void value_reference() {
+    module("""
+          String myValue;
+          String result =
+            myValue;
           """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void array_element() {
-      module("""
-             String myIdentity(String string) = string;
-             result = [ "abc" | myIdentity() ];
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void parameter_default_value() {
-      module("""
-          String myIdentity(String string) = string;
-          String myFunction(String param = "abc" | myIdentity());
-          """)
-          .loadsSuccessfully();
-    }
+        .loadsSuccessfully()
+        .containsEvaluable(value(2, STRING, "result", valueRef(3, "myValue")));
   }
 
-  @Nested
-  class blob_literal_can_be_used_as {
-    @Test
-    public void argument() {
-      module("""
-          String myFunction(Blob param);
-          result = myFunction(0x01);
-          """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void array_element() {
-      module("""
-             result = [ 0x01 ];
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void parameter_default_value() {
-      module("""
-          String myFunction(Blob value = 0x01);
-          """)
-      .loadsSuccessfully();
-    }
-  }
-
-  @Nested
-  class string_literal_can_be_used_as {
-    @Test
-    public void argument() {
-      module("""
-          String myFunction(String param);
-          result = myFunction("abc");
-          """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void array_element() {
-      module("""
-             result = [ "abc" ];
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void parameter_default_value() {
-      module("""
-          String myFunction(String value = "abc");
-          """)
-      .loadsSuccessfully();
-    }
-  }
-
-  @Nested
-  class call_can_be_used_as {
-    @Test
-    public void argument() {
-      module("""
-          String otherFunction();
-          String myFunction(String param);
-          result = myFunction(otherFunction());
-          """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void array_element() {
-      module("""
-             String myFunction() = "abc";
-             result = [ myFunction() ];
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void parameter_default_value() {
-      module("""
+  @Test
+  public void function_with_empty_body() {
+    module("""
           String myFunction();
-          String otherFunction(String value = myFunction());
           """)
-          .loadsSuccessfully();
-    }
+        .loadsSuccessfully()
+        .containsEvaluable(function(1, STRING, "myFunction"));
+  }
+
+  @Test
+  public void function_with_body() {
+    module("""
+          Blob myFunction() =
+            0x07;
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(function(1, BLOB, "myFunction", blob(2, 7)));
+  }
+
+  @Test
+  public void function_with_parameter() {
+    module("""
+          String myFunction(
+            Blob param1);
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(function(1, STRING, "myFunction", parameter(2, 0, BLOB, "param1")));
+  }
+
+  @Test
+  public void function_with_parameter_reference() {
+    module("""
+          Blob myFunction(Blob param1)
+            = param1;
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(function(
+            1, BLOB, "myFunction", parameterRef("param1", 2), parameter(1, 0, BLOB, "param1")));
+  }
+
+  @Test
+  public void function_with_parameter_with_default_value() {
+    module("""
+          String myFunction(
+            Blob param1 =
+              0x07);
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            function(1, STRING, "myFunction", parameter(2, 0, BLOB, "param1", blob(3, 7))));
+  }
+
+  @Test
+  public void function_call() {
+    module("""
+          String myFunction();
+          result = myFunction();
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            value(2, STRING, "result", call(2, function(1, STRING, "myFunction"))));
+  }
+
+  @Test
+  public void function_call_with_argument() {
+    Function function = function(1, STRING, "myFunction", parameter(1, 0, BLOB, "param1"));
+    module("""
+          String myFunction(Blob param1);
+          result = myFunction(
+            0x07);
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            value(2, STRING, "result", call(2, function, blob(3, 7))));
+  }
+
+  @Test
+  public void function_call_with_named_argument() {
+    Function function = function(1, STRING, "myFunction", parameter(1, 0, BLOB, "param1"));
+    module("""
+          String myFunction(Blob param1);
+          result = myFunction(param1=
+            0x07);
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            value(2, STRING, "result", call(2, function, blob(3, 7))));
+  }
+
+  @Test
+  public void blob_literal() {
+    module("""
+          result =
+            0x07;
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(value(1, BLOB, "result", blob(2, 7)));
+  }
+
+  @Test
+  public void string_literal() {
+    module("""
+          result =
+            "abc";
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(value(1, STRING, "result", string(2, "abc")));
+  }
+
+  @Test
+  public void array_literal() {
+    module("""
+          result =
+          [
+            0x07,
+            0x08
+          ];
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            value(1, ARRAY_BLOB, "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
+  }
+
+  @Test
+  public void field_read() {
+    Field field = field(2, 0, STRING, "field");
+    module("""
+          MyStruct {
+            String field,
+          }
+          MyStruct struct;
+          result = struct
+            .field;
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(
+            value(5, STRING, "result", fieldRead(6, field, valueRef(5, "struct"))));
+  }
+
+  @Test
+  public void array_type() {
+    module("""
+          [String] result;
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(value(1, ARRAY_STRING, "result"));
+  }
+
+  @Test
+  public void struct_type() {
+    module("""
+          MyStruct {
+            String field
+          }
+          """)
+        .loadsSuccessfully()
+        .containsType(struct(1, "MyStruct", field(2, 0, STRING, "field")));
+  }
+
+  @Test
+  public void constructor() {
+    StructType struct = struct(1, "MyStruct", field(2, 0, STRING, "field"));
+    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, 0, STRING, "field"))
+    );
+    module("""
+          MyStruct {
+            String field
+          }
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(constr);
+  }
+
+  @Test
+  public void constructor_call_with_argument() {
+    StructType struct = struct(1, "MyStruct", field(2, 0, STRING, "field"));
+    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, 0, STRING, "field")));
+    module("""
+          MyStruct {
+            String field
+          }
+          result = myStruct(
+            "aaa");
+          """)
+        .loadsSuccessfully()
+        .containsEvaluable(value(4, struct, "result", call(4, constr, string(5, "aaa"))));
   }
 }

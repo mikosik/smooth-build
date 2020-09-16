@@ -53,17 +53,13 @@ public class ItemTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
-    tester.addEqualityGroup(
-        new Item(0, STRING, "equal", true, internal()),
-        new Item(0, STRING, "equal", true, commandLineLocation()),
-        new Item(1, STRING, "equal", true, internal()));
+    tester.addEqualityGroup(new Item(0, STRING, "equal", true, internal()));
+    tester.addEqualityGroup(new Item(0, STRING, "equal", true, commandLineLocation()));
+    tester.addEqualityGroup(new Item(0, STRING, "equal", false, internal()));
+    tester.addEqualityGroup(new Item(1, STRING, "equal", true, internal()));
     for (ConcreteType type : List.of(BOOL, STRING, array(STRING), BLOB, NOTHING, PERSON)) {
-      tester.addEqualityGroup(
-          new Item(0, type, name, true, internal()),
-          new Item(1, type, name, true, internal()));
-      tester.addEqualityGroup(
-          new Item(0, type, "name2", true, internal()),
-          new Item(1, type, "name2", true, internal()));
+      tester.addEqualityGroup(new Item(0, type, name, true, internal()));
+      tester.addEqualityGroup(new Item(0, type, "name2", true, internal()));
     }
     tester.testEquals();
   }

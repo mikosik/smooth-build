@@ -1,17 +1,30 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.lang.TestingLang.array;
+import static org.smoothbuild.lang.TestingLang.blob;
+import static org.smoothbuild.lang.TestingLang.call;
+import static org.smoothbuild.lang.TestingLang.field;
+import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.parameter;
+import static org.smoothbuild.lang.TestingLang.struct;
+import static org.smoothbuild.lang.TestingLang.value;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.Function;
 
 public class TrailingCommaTest {
   @Nested
   class array_literal {
     @Test
     public void can_have_trailing_comma() {
-      module(arrayLiteral("0x01,"))
-          .loadsSuccessfully();
+      module(arrayLiteral("0x07,"))
+          .loadsSuccessfully()
+          .containsEvaluable(value(1, ARRAY_BLOB, "result", array(1, BLOB, blob(1, 7))));
     }
 
     @Test
@@ -43,8 +56,9 @@ public class TrailingCommaTest {
   class parameter_list {
     @Test
     public void can_have_trailing_comma() {
-      module(functionDeclaration("String string,"))
-          .loadsSuccessfully();
+      module(functionDeclaration("String param1,"))
+          .loadsSuccessfully()
+          .containsEvaluable(function(1, STRING, "myFunction", parameter(1, 0, STRING, "param1")));
     }
 
     @Test
@@ -67,7 +81,7 @@ public class TrailingCommaTest {
 
     private String functionDeclaration(CharSequence string) {
       return """
-        myFunction(PLACEHOLDER) = "abc";
+        String myFunction(PLACEHOLDER);
         """.replace("PLACEHOLDER", string);
     }
   }
@@ -76,8 +90,9 @@ public class TrailingCommaTest {
   class field_list {
     @Test
     public void can_have_trailing_comma() {
-      module(structDeclaration("String field,"))
-          .loadsSuccessfully();
+      module(structDeclaration("String field1,"))
+          .loadsSuccessfully()
+          .containsType(struct(1, "MyStruct", field(1, 0, STRING, "field1")));
     }
 
     @Test
@@ -109,8 +124,10 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      module(functionCall("0x01,"))
-          .loadsSuccessfully();
+      Function function = function(1, BLOB, "myFunction", parameter(1, 0, BLOB, "blob"));
+      module(functionCall("0x07,"))
+          .loadsSuccessfully()
+          .containsEvaluable(value(2, BLOB, "result", call(2, function, blob(2, 7))));
     }
 
     @Test
@@ -133,7 +150,7 @@ public class TrailingCommaTest {
 
     private String functionCall(CharSequence string) {
       return """
-        myFunction(Blob blob) = blob;
+        Blob myFunction(Blob blob);
         result = myFunction(PLACEHOLDER);
         """.replace("PLACEHOLDER", string);
     }

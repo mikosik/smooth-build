@@ -34,13 +34,14 @@ public record Signature(Type type, String name, ImmutableList<Parameter> paramet
     if (!(object instanceof Signature that)) {
       return false;
     }
-    return type.equals(that.type)
-        && name.equals(that.name);
+    return this.type.equals(that.type)
+        && this.name.equals(that.name)
+        && this.parameters.equals(that.parameters);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, name);
+    return Objects.hash(type, name, parameters);
   }
 
   @Override
