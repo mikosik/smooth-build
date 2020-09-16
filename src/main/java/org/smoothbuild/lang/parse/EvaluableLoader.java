@@ -76,7 +76,7 @@ public class EvaluableLoader {
     }
 
     public Callable loadFunction() {
-      return new Function(createSignature(), evaluable.location(), bodyExpression());
+      return new Function(createSignature(), bodyExpression(), evaluable.location());
     }
 
     private Optional<Expression> bodyExpression() {
