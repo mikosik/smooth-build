@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
+/**
+ * This class is immutable.
+ */
 public class Parameter extends Item {
   private final Optional<Expression> defaultValue;
 

@@ -5,6 +5,9 @@ import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is immutable.
+ */
 public record CallExpression(
     Callable callable, ImmutableList<Expression> arguments, Location location)
     implements Expression {

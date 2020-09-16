@@ -6,6 +6,9 @@ import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ValueReferenceExpression;
 
+/**
+ * This class is immutable.
+ */
 public class Value extends Evaluable {
   private final Optional<Expression> body;
 

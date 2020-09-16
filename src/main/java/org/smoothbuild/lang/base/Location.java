@@ -5,6 +5,9 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Space.INTERNAL;
 import static org.smoothbuild.lang.base.Space.USER;
 
+/**
+ * This class is immutable.
+ */
 public record Location(ModuleLocation moduleLocation, int line) {
 
   public static Location commandLineLocation() {

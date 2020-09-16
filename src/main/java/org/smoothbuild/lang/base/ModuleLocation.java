@@ -6,6 +6,9 @@ import java.nio.file.Path;
 
 import org.smoothbuild.util.io.Paths;
 
+/**
+ * This class is immutable.
+ */
 public record ModuleLocation(Space space, Path path) {
 
   public static ModuleLocation moduleLocation(Space space, Path path) {

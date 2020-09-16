@@ -9,6 +9,9 @@ import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class and all its subclasses are immutable.
+ */
 public abstract class Callable extends Evaluable {
   public static final String PARENTHESES = "()";
   private final Signature signature;

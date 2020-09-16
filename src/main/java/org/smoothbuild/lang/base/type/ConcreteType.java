@@ -3,6 +3,9 @@ package org.smoothbuild.lang.base.type;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.property.TypeProperties;
 
+/**
+ * Subclasses of this class must be immutable.
+ */
 public abstract class ConcreteType extends Type {
   private final ConcreteType superType;
 

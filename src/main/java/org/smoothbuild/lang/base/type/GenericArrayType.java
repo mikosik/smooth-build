@@ -5,6 +5,9 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.type.property.ArrayProperties;
 
+/**
+ * This class is immutable.
+ */
 public class GenericArrayType extends GenericType implements ArrayType {
   private final GenericType elemType;
 

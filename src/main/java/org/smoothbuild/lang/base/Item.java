@@ -12,6 +12,7 @@ import org.smoothbuild.lang.parse.ast.Named;
 
 /**
  * Item contains attributes common to both struct field and function parameter.
+ * This class is immutable.
  */
 public class Item implements Named {
   private final int index;

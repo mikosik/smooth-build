@@ -2,6 +2,9 @@ package org.smoothbuild.lang.base.type.property;
 
 import org.smoothbuild.lang.base.type.Type;
 
+/**
+ * Classes implementing this interface must be immutable.
+ */
 public interface TypeProperties {
   public boolean isArray();
 

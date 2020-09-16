@@ -12,6 +12,9 @@ import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class and all its subclasses are immutable.
+ */
 public abstract class Type implements Named {
   private final String name;
   private final Location location;
