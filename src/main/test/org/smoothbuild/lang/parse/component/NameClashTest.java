@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.IMPORTED_INFO;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.MODULE_INFO;
+import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
+import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.err;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
@@ -29,7 +29,7 @@ public class NameClashTest {
                otherModuleValue = "def";
                """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -44,7 +44,7 @@ public class NameClashTest {
                 otherModuleFunction = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
       }
 
       @Test
@@ -59,7 +59,7 @@ public class NameClashTest {
                 otherModuleStruct = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleStruct"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"));
       }
     }
 
@@ -71,7 +71,7 @@ public class NameClashTest {
                myValue = "abc";
                myValue = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
       }
 
       @Test
@@ -80,7 +80,7 @@ public class NameClashTest {
                myFunction() = "abc";
                myFunction = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
       }
 
       @Test
@@ -89,7 +89,7 @@ public class NameClashTest {
                MyStruct {}
                myStruct = "abc";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myStruct"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myStruct"));
       }
     }
   }
@@ -110,7 +110,7 @@ public class NameClashTest {
                 otherModuleValue() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -125,7 +125,7 @@ public class NameClashTest {
                 otherModuleFunction() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
       }
 
       @Test
@@ -140,7 +140,7 @@ public class NameClashTest {
                 otherModuleStruct() = "def";
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleStruct"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"));
       }
     }
 
@@ -152,7 +152,7 @@ public class NameClashTest {
                myValue = "abc";
                myValue() = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
       }
 
       @Test
@@ -161,7 +161,7 @@ public class NameClashTest {
                myFunction() = "abc";
                myFunction() = "def";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
       }
 
       @Test
@@ -170,7 +170,7 @@ public class NameClashTest {
                MyStruct {}
                myStruct() = "abc";
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myStruct"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myStruct"));
       }
     }
   }
@@ -184,7 +184,7 @@ public class NameClashTest {
                String param,
                String param);    
                """)
-          .loadsWithError(3, alreadyDefinedIn(MODULE_INFO, 2, "param"));
+          .loadsWithError(3, alreadyDefinedIn(moduleLocation(), 2, "param"));
     }
   }
 
@@ -213,8 +213,8 @@ public class NameClashTest {
                 """)
             .withImported(imported)
             .loadsWithErrors(List.of(
-                    err(1, alreadyDefinedIn(IMPORTED_INFO, "OtherModuleStruct")),
-                    err(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleStruct"))
+                    err(1, alreadyDefinedIn(importedModuleLocation(), "OtherModuleStruct")),
+                    err(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleStruct"))
                 ));
       }
     }
@@ -228,8 +228,8 @@ public class NameClashTest {
                OtherModuleStruct {}
                """)
             .loadsWithErrors(List.of(
-                    err(2, alreadyDefinedIn(MODULE_INFO, "OtherModuleStruct")),
-                    err(2, alreadyDefinedIn(MODULE_INFO, "otherModuleStruct"))
+                    err(2, alreadyDefinedIn(moduleLocation(), "OtherModuleStruct")),
+                    err(2, alreadyDefinedIn(moduleLocation(), "otherModuleStruct"))
                 ));
       }
     }
@@ -245,7 +245,7 @@ public class NameClashTest {
                String field
              }
              """)
-          .loadsWithError(3, alreadyDefinedIn(MODULE_INFO, 2, "field"));
+          .loadsWithError(3, alreadyDefinedIn(moduleLocation(), 2, "field"));
     }
   }
 
@@ -265,7 +265,7 @@ public class NameClashTest {
                 OtherModuleValue{}
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleValue"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleValue"));
       }
 
       @Test
@@ -280,7 +280,7 @@ public class NameClashTest {
                 OtherModuleFunction{}
                 """)
             .withImported(imported)
-            .loadsWithError(1, alreadyDefinedIn(IMPORTED_INFO, "otherModuleFunction"));
+            .loadsWithError(1, alreadyDefinedIn(importedModuleLocation(), "otherModuleFunction"));
       }
     }
 
@@ -292,7 +292,7 @@ public class NameClashTest {
                myValue = "abc";
                MyValue{}
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myValue"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myValue"));
       }
 
       @Test
@@ -301,7 +301,7 @@ public class NameClashTest {
                myFunction() = "abc";
                MyFunction{}
                """)
-            .loadsWithError(2, alreadyDefinedIn(MODULE_INFO, "myFunction"));
+            .loadsWithError(2, alreadyDefinedIn(moduleLocation(), "myFunction"));
       }
     }
   }

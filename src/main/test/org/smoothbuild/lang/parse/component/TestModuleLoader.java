@@ -3,29 +3,26 @@ package org.smoothbuild.lang.parse.component;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.lang.base.Definitions.basicTypeDefinitions;
+import static org.smoothbuild.lang.base.TestingModuleLocation.BUILD_FILE_PATH;
+import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
+import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
 
-import java.nio.file.Path;
 import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleLocation;
-import org.smoothbuild.lang.base.Space;
 import org.smoothbuild.lang.parse.LoadModule;
 
 public class TestModuleLoader {
-  private static final String BUILD_FILE = "myBuild.smooth";
-  public static final ModuleLocation MODULE_INFO = moduleLocation(BUILD_FILE);
-  public static final ModuleLocation IMPORTED_INFO = moduleLocation("imported.smooth");
-
   private final String sourceCode;
   private ModuleLocation moduleLocation;
   private Definitions imports;
   private ValueWithLogs<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
-    return new TestModuleLoader(sourceCode, MODULE_INFO, basicTypeDefinitions());
+    return new TestModuleLoader(sourceCode, moduleLocation(), basicTypeDefinitions());
   }
 
   public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imports) {
@@ -35,7 +32,7 @@ public class TestModuleLoader {
   }
 
   public TestModuleLoader withImportedModuleLocation() {
-    withModuleLocation(IMPORTED_INFO);
+    withModuleLocation(importedModuleLocation());
     return this;
   }
 
@@ -84,11 +81,7 @@ public class TestModuleLoader {
     return LoadModule.loadModule(imports, moduleLocation, sourceCode);
   }
 
-  public static ModuleLocation moduleLocation(String buildFile) {
-    return new ModuleLocation(Space.USER, Path.of(buildFile));
-  }
-
   public static Log err(int line, String message) {
-    return error(BUILD_FILE + ":" + line + ": " + message);
+    return error(BUILD_FILE_PATH.toString() + ":" + line + ": " + message);
   }
 }
