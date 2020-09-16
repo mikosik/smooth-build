@@ -15,7 +15,7 @@ public class Parameter extends Item {
 
   public Parameter(int index, Type type, String name, Optional<Expression> defaultValue,
       Location location) {
-    super(index, type, name, defaultValue != null, location);
+    super(index, type, name, defaultValue.isPresent(), location);
     this.defaultValue = defaultValue;
   }
 
