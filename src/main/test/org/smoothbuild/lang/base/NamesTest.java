@@ -1,11 +1,11 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Name.isLegalName;
+import static org.smoothbuild.lang.base.Names.isLegalName;
 
 import org.junit.jupiter.api.Test;
 
-public class NameTest {
+public class NamesTest {
   @Test
   public void name_with_letters_only_is_legal() {
     assertThat(isLegalName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))

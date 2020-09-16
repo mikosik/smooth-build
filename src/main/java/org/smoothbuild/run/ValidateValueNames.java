@@ -1,7 +1,7 @@
 package org.smoothbuild.run;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static org.smoothbuild.lang.base.Name.isLegalName;
+import static org.smoothbuild.lang.base.Names.isLegalName;
 import static org.smoothbuild.util.Sets.map;
 
 import java.util.List;
