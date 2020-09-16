@@ -32,6 +32,6 @@ public class Parameter extends Item {
 
   @Override
   public String toString() {
-    return "Param(" + type().name() + ": " + name() + ")";
+    return "Parameter(`" + type().name() + " " + name() + "`)";
   }
 }
