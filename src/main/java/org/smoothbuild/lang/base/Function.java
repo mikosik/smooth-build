@@ -11,7 +11,7 @@ import org.smoothbuild.lang.expr.Expression;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Smooth function declared in a smooth file.
+ * This class is immutable.
  */
 public class Function extends Callable {
   private final Optional<Expression> body;

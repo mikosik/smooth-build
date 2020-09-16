@@ -10,6 +10,9 @@ import org.smoothbuild.lang.base.type.property.StructProperties;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * This class is immutable.
+ */
 public class StructType extends ConcreteType {
   private final ImmutableMap<String, Field> fields;
 

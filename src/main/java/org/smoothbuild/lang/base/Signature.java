@@ -11,10 +11,9 @@ import org.smoothbuild.lang.base.type.Type;
 import com.google.common.collect.ImmutableList;
 
 /**
- * Function's signature.
+ * This class is immutable.
  */
 public record Signature(Type type, String name, ImmutableList<Parameter> parameters) {
-
   public static Signature signature(
       Type type, String name, Iterable<? extends Parameter> parameters) {
     return new Signature(type, name, ImmutableList.copyOf(parameters));

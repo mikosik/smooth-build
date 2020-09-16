@@ -5,6 +5,9 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.type.property.ArrayProperties;
 
+/**
+ * This class is immutable.
+ */
 public class ConcreteArrayType extends ConcreteType implements ArrayType {
   private final ConcreteType elemType;
 

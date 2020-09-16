@@ -5,6 +5,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Named;
 
+/**
+ * This class and all its subclasses are immutable.
+ */
 public abstract class Evaluable implements Named {
   private final Type type;
   private final Location location;

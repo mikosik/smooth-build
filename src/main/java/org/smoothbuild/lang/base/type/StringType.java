@@ -1,5 +1,8 @@
 package org.smoothbuild.lang.base.type;
 
+/**
+ * This class is immutable.
+ */
 public class StringType extends ConcreteBasicType {
   public StringType() {
     super(TypeNames.STRING);

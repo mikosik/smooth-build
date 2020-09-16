@@ -6,6 +6,9 @@ import org.smoothbuild.lang.expr.Expression;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is immutable.
+ */
 public class Constructor extends Callable {
   public Constructor(Signature signature, Location location) {
     super(signature, location);
