@@ -15,11 +15,6 @@ public class Constructor extends Callable {
   }
 
   @Override
-  public String extendedName() {
-    return nameWithParentheses();
-  }
-
-  @Override
   public StructType type() {
     return (StructType) signature().type();
   }

@@ -21,7 +21,8 @@ public abstract class Callable extends Evaluable {
     this.signature = checkNotNull(signature);
   }
 
-  protected String nameWithParentheses() {
+  @Override
+  public String extendedName() {
     return signature().name() + PARENTHESES;
   }
 
