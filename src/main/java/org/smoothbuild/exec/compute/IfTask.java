@@ -13,7 +13,7 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableList;
 public class IfTask extends ComputableTask {
   public static final String IF_FUNCTION_NAME = "if";
 
-  public IfTask(ConcreteType type, Algorithm algorithm, List<? extends Task> dependencies,
+  public IfTask(Type type, Algorithm algorithm, List<? extends Task> dependencies,
       Location location, boolean cacheable) {
     super(TaskKind.CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location,
         cacheable);

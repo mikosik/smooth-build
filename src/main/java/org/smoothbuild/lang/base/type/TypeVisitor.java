@@ -21,15 +21,11 @@ public class TypeVisitor<T> {
     return null;
   }
 
-  public T visit(GenericType type) {
+  public T visit(ArrayType type) {
     return null;
   }
 
-  public T visit(ConcreteArrayType type) {
-    return null;
-  }
-
-  public T visit(GenericArrayType type) {
+  public T visit(GenericBasicType type) {
     return null;
   }
 }

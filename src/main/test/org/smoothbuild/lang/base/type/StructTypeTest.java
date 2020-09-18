@@ -39,7 +39,7 @@ public class StructTypeTest {
         .throwsException(IllegalArgumentException.class);
   }
 
-  private static List<Field> fields(ConcreteType... types) {
+  private static List<Field> fields(Type... types) {
     List<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
       result.add(new Field(i, types[i], "name" + i, internal()));

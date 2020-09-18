@@ -3,9 +3,9 @@ package org.smoothbuild.lang.base.type;
 /**
  * This class is immutable.
  */
-public class BoolType extends BasicType {
-  public BoolType() {
-    super(TypeNames.BOOL);
+public class GenericBasicType extends BasicType {
+  public GenericBasicType(String name) {
+    super(name, true);
   }
 
   @Override

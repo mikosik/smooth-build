@@ -1385,7 +1385,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("actualCoreTypeWhenAssignedFrom_test_data")
-  public void actualCoreTypeWhenAssignedFrom(GenericType type, Type assigned, Type expected) {
+  public void actualCoreTypeWhenAssignedFrom(Type type, Type assigned, Type expected) {
     if (expected == null) {
       assertCall(() -> type.actualCoreTypeWhenAssignedFrom(assigned))
           .throwsException(IllegalArgumentException.class);

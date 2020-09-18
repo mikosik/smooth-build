@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 /**
  * This class is immutable.
  */
-public class BlobType extends ConcreteBasicType {
+public class BlobType extends BasicType {
   public BlobType() {
     super(TypeNames.BLOB);
   }

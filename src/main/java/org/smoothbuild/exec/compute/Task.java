@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Space;
-import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 
 import com.google.common.collect.ImmutableList;
@@ -19,12 +19,12 @@ import com.google.common.collect.ImmutableList;
 public abstract class Task {
   public static final int NAME_LENGTH_LIMIT = 40;
 
-  private final ConcreteType type;
+  private final Type type;
   private final String name;
   protected final ImmutableList<Task> dependencies;
   protected final Location location;
 
-  public Task(ConcreteType type, String name, List<? extends Task> dependencies,
+  public Task(Type type, String name, List<? extends Task> dependencies,
       Location location) {
     this.type = type;
     this.name = name;
@@ -32,7 +32,7 @@ public abstract class Task {
     this.location = location;
   }
 
-  public ConcreteType type() {
+  public Type type() {
     return type;
   }
 
@@ -58,7 +58,7 @@ public abstract class Task {
 
   public abstract Feeder<Obj> startComputation(Worker worker);
 
-  public static List<ConcreteType> taskTypes(List<Task> tasks) {
+  public static List<Type> taskTypes(List<Task> tasks) {
     return map(tasks, Task::type);
   }
 

@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ValueReferenceExpression;
 
@@ -13,14 +13,14 @@ import org.smoothbuild.lang.expr.ValueReferenceExpression;
 public class Value extends Evaluable {
   private final Optional<Expression> body;
 
-  public Value(ConcreteType type, String name, Optional<Expression> body, Location location) {
+  public Value(Type type, String name, Optional<Expression> body, Location location) {
     super(type, name, location);
     this.body = body;
   }
 
   @Override
-  public ConcreteType type() {
-    return (ConcreteType) super.type();
+  public Type type() {
+    return (Type) super.type();
   }
 
   public Optional<Expression> body() {

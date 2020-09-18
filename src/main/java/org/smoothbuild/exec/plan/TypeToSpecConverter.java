@@ -10,11 +10,10 @@ import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
-import org.smoothbuild.lang.base.type.ConcreteArrayType;
-import org.smoothbuild.lang.base.type.GenericArrayType;
-import org.smoothbuild.lang.base.type.GenericType;
+import org.smoothbuild.lang.base.type.GenericBasicType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -57,17 +56,15 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
   }
 
   @Override
-  public Spec visit(GenericType type) {
+  public Spec visit(GenericBasicType type) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public ArraySpec visit(ConcreteArrayType type) {
+  public ArraySpec visit(ArrayType type) {
+    if (type.isGeneric()) {
+      throw new UnsupportedOperationException();
+    }
     return objectFactory.arraySpec(type.elemType().visit(this));
-  }
-
-  @Override
-  public Spec visit(GenericArrayType type) {
-    throw new UnsupportedOperationException();
   }
 }
