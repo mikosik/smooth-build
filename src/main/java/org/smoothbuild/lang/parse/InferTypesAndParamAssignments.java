@@ -19,7 +19,6 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -59,7 +58,7 @@ public class InferTypesAndParamAssignments {
         var builder = ImmutableList.<Field>builder();
         for (int i = 0; i < fieldNodes.size(); i++) {
           ItemNode fieldNode = fieldNodes.get(i);
-          Field field = new Field(i, (ConcreteType) fieldNode.type().get(), fieldNode.name(),
+          Field field = new Field(i, fieldNode.type().get(), fieldNode.name(),
               fieldNode.location());
           builder.add(field);
         }

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.testing.EqualsTester;
 
@@ -57,7 +57,7 @@ public class ItemTest {
     tester.addEqualityGroup(new Item(0, STRING, "equal", true, commandLineLocation()));
     tester.addEqualityGroup(new Item(0, STRING, "equal", false, internal()));
     tester.addEqualityGroup(new Item(1, STRING, "equal", true, internal()));
-    for (ConcreteType type : List.of(BOOL, STRING, array(STRING), BLOB, NOTHING, PERSON)) {
+    for (Type type : List.of(BOOL, STRING, array(STRING), BLOB, NOTHING, PERSON)) {
       tester.addEqualityGroup(new Item(0, type, name, true, internal()));
       tester.addEqualityGroup(new Item(0, type, "name2", true, internal()));
     }

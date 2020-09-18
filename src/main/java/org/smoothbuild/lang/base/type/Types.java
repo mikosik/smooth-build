@@ -2,11 +2,9 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
-import static org.smoothbuild.lang.base.Location.internal;
 
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.property.BasicProperties;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -20,12 +18,11 @@ public class Types {
   /**
    * Basic types available in smooth language.
    */
-  public static final ImmutableSet<ConcreteType> BASIC_TYPES = ImmutableSet.of(
-      BLOB, BOOL, NOTHING, STRING);
+  public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
 
-  public static GenericType generic(String name) {
+  public static Type generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
-    return new GenericType(name, internal(), new BasicProperties());
+    return new GenericBasicType(name);
   }
 
   public static BlobType blob() {
@@ -48,22 +45,8 @@ public class Types {
     return new StructType(name, location, ImmutableList.copyOf(fields));
   }
 
-  public static Type array(Type elemType) {
-    if (elemType instanceof GenericType genericElemType) {
-      return array(genericElemType);
-    } else if (elemType instanceof ConcreteType concreteElemType) {
-      return array(concreteElemType);
-    } else {
-      throw new RuntimeException("Unexpected class: " + elemType.getClass().getCanonicalName());
-    }
-  }
-
-  public static ConcreteArrayType array(ConcreteType elemType) {
-    return new ConcreteArrayType(elemType);
-  }
-
-  public static GenericArrayType array(GenericType elemType) {
-    return new GenericArrayType(elemType);
+  public static ArrayType array(Type elemType) {
+    return new ArrayType(elemType);
   }
 
   public static boolean isGenericTypeName(String name) {

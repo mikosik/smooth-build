@@ -43,8 +43,7 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.base.type.ConcreteArrayType;
-import org.smoothbuild.lang.base.type.ConcreteType;
+import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -121,9 +120,8 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
       List<Task> arguments = childrenTasks(expression.arguments());
-      GenericTypeMap<ConcreteType> mapping =
-          inferMapping(function.parameterTypes(), taskTypes(arguments));
-      ConcreteType actualResultType = mapping.applyTo(function.signature().type());
+      GenericTypeMap mapping = inferMapping(function.parameterTypes(), taskTypes(arguments));
+      Type actualResultType = mapping.applyTo(function.signature().type());
 
       if (function.body().isPresent()) {
         return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
@@ -147,7 +145,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
         dependencies, expression.location(), true);
   }
 
-  private Task taskForDefinedFunction(ConcreteType actualResultType, Function function,
+  private Task taskForDefinedFunction(Type actualResultType, Function function,
       List<Task> arguments, Location location) throws ExpressionVisitorException {
     scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     Task definedCallTask = function.body().get().visit(this);
@@ -157,7 +155,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   private Task taskForNativeFunction(List<Task> arguments, Function function,
-      GenericTypeMap<ConcreteType> mapping, ConcreteType actualResultType, Location location)
+      GenericTypeMap mapping, Type actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
     Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
@@ -188,12 +186,11 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     }
   }
 
-  private List<Task> convertedArguments(List<ConcreteType> actualParameterTypes,
-      List<Task> arguments) {
+  private List<Task> convertedArguments(List<Type> actualParameterTypes, List<Task> arguments) {
     List<Task> result = new ArrayList<>();
     for (int i = 0; i < arguments.size(); i++) {
-      ConcreteType concreteType = actualParameterTypes.get(i);
-      result.add(convertIfNeeded(arguments.get(i), concreteType));
+      Type type = actualParameterTypes.get(i);
+      result.add(convertIfNeeded(arguments.get(i), type));
     }
     return result;
   }
@@ -201,7 +198,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   @Override
   public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
     List<Task> elements = childrenTasks(expression.elements());
-    ConcreteArrayType actualType = arrayType(elements, (Type) expression.arrayType());
+    ArrayType actualType = arrayType(elements, expression.arrayType());
 
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
@@ -209,14 +206,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
         expression.location(), true);
   }
 
-  private List<Task> convertedElements(ConcreteType type, List<Task> elements) {
+  private List<Task> convertedElements(Type type, List<Task> elements) {
     return map(elements, t -> convertIfNeeded(t, type));
   }
 
-  private ConcreteArrayType arrayType(List<Task> elements, Type arrayType) {
-    return (ConcreteArrayType) elements
+  private ArrayType arrayType(List<Task> elements, Type arrayType) {
+    return (ArrayType) elements
         .stream()
-        .map(t -> (Type) t.type())
+        .map(Task::type)
         .reduce((type, type2) -> type.commonSuperType(type2).get())
         .map(t -> t.changeCoreDepthBy(1))
         .orElse(arrayType);
@@ -251,7 +248,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     return ImmutableList.of(expression.visit(this));
   }
 
-  private Task convertIfNeeded(Task task, ConcreteType requiredType) {
+  private Task convertIfNeeded(Task task, Type requiredType) {
     if (task.type().equals(requiredType)) {
       return task;
     } else {
@@ -259,7 +256,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     }
   }
 
-  private NormalTask convert(ConcreteType requiredType, Task task) {
+  private NormalTask convert(Type requiredType, Task task) {
     String description = requiredType.name() + "<-" + task.type().name();
     Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
     List<Task> dependencies = list(task);

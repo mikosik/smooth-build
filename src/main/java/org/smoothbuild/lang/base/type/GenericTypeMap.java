@@ -9,46 +9,40 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
-public class GenericTypeMap<T extends Type> {
-  private final Map<GenericType, T> map;
+public class GenericTypeMap {
+  private final Map<Type, Type> map;
 
-  public static <T extends Type> GenericTypeMap<T> inferMapping(List<? extends Type> types,
-      List<T> actualTypes) {
-    return new GenericTypeMap<>(inferMap(types, actualTypes));
+  public static GenericTypeMap inferMapping(List<? extends Type> types, List<Type> actualTypes) {
+    return new GenericTypeMap(inferMap(types, actualTypes));
   }
 
-  private GenericTypeMap(Map<GenericType, T> map) {
+  private GenericTypeMap(Map<Type, Type> map) {
     this.map = map;
   }
 
-  public List<T> applyTo(List<Type> types) {
+  public List<Type> applyTo(List<Type> types) {
     return map(types, this::applyTo);
   }
 
-  public T applyTo(Type type) {
+  public Type applyTo(Type type) {
     if (type.isGeneric()) {
-      GenericType genericType = (GenericType) type;
-      return type.replaceCoreType(map.get(genericType.coreType()));
+      return type.replaceCoreType(map.get(type.coreType()));
     } else {
-      @SuppressWarnings("unchecked")
-      T result = (T) type;
-      return result;
+      return type;
     }
   }
 
-  private static <T extends Type> Map<GenericType, T> inferMap(
-      List<? extends Type> types, List<T> actualTypes) {
-    Map<GenericType, T> builder = new HashMap<>();
+  private static Map<Type, Type> inferMap(
+      List<? extends Type> types, List<Type> actualTypes) {
+    Map<Type, Type> builder = new HashMap<>();
     for (int i = 0; i < types.size(); i++) {
       Type current = types.get(i);
       if (current.isGeneric()) {
-        GenericType type = (GenericType) current;
-        GenericType core = (GenericType) type.coreType();
-        T actualCore = type.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
+        Type core = current.coreType();
+        Type actualCore = current.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
         if (builder.containsKey(core)) {
-          T previous = builder.get(core);
-          @SuppressWarnings("unchecked")
-          Optional<T> commonSuperType = (Optional<T>) previous.commonSuperType(actualCore);
+          Type previous = builder.get(core);
+          Optional<Type> commonSuperType = previous.commonSuperType(actualCore);
           builder.put(core, commonSuperType.orElseThrow(() -> throwExc(actualCore, previous)));
         } else {
           builder.put(core, actualCore);

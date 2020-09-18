@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 /**
  * This class is immutable.
  */
-public class StringType extends ConcreteBasicType {
+public class StringType extends BasicType {
   public StringType() {
     super(TypeNames.STRING);
   }

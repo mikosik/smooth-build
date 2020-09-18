@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.property.TypeProperties;
 import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
@@ -16,15 +15,17 @@ import com.google.common.collect.ImmutableList;
  * This class and all its subclasses are immutable.
  */
 public abstract class Type implements Named {
+  protected final Type superType;
+  protected final boolean isGeneric;
   private final String name;
   private final Location location;
-  protected final TypeProperties properties;
   private ImmutableList<Type> hierarchy;
 
-  protected Type(String name, Location location, TypeProperties properties) {
+  protected Type(String name, Location location, Type superType, boolean isGeneric) {
     this.name = name;
     this.location = location;
-    this.properties = properties;
+    this.superType = superType;
+    this.isGeneric = isGeneric;
   }
 
   @Override
@@ -41,20 +42,24 @@ public abstract class Type implements Named {
     return "`" + name + "`";
   }
 
-  public abstract boolean isGeneric();
+  public boolean isGeneric() {
+    return isGeneric;
+  }
 
   public boolean isArray() {
-    return properties.isArray();
+    return false;
   }
 
   public boolean isNothing() {
     return this == nothing();
   }
 
-  public abstract Type superType();
+  public Type superType() {
+    return superType;
+  }
 
   public Type coreType() {
-    return properties.coreType(this);
+    return this;
   }
 
   public <T extends Type> T replaceCoreType(T coreType) {
@@ -64,11 +69,23 @@ public abstract class Type implements Named {
   }
 
   public int coreDepth() {
-    return properties.coreDepth(this);
+    return 0;
   }
 
   public Type changeCoreDepthBy(int delta) {
-    return properties.changeCoreDepthBy(this, delta);
+    if (delta < 0) {
+      throw new IllegalArgumentException(
+          "It's not possible to reduce core depth of non array type.");
+    }
+    return increaseCoreDepth(delta);
+  }
+
+  public Type increaseCoreDepth(int delta) {
+    Type result = this;
+    for (int i = 0; i < delta; i++) {
+      result = Types.array(result);
+    }
+    return result;
   }
 
   public List<? extends Type> hierarchy() {
@@ -91,9 +108,46 @@ public abstract class Type implements Named {
     }
   }
 
-  public abstract boolean isAssignableFrom(Type type);
+  public boolean isAssignableFrom(Type type) {
+    if (isGeneric()) {
+      if (type.isGeneric()) {
+        return equals(type);
+      } else {
+        return type.coreType().isNothing() && type.coreDepth() <= coreDepth();
+      }
+    } else {
+      if (type.isGeneric()) {
+        return false;
+      }
+      if (this.equals(type)) {
+        return true;
+      }
+      if (type.isNothing()) {
+        return true;
+      }
+      if (this instanceof ArrayType thisConcreteType
+          && type instanceof ArrayType thatConcreteType) {
+        Type thisElemType = thisConcreteType.elemType();
+        Type thatElemType = thatConcreteType.elemType();
+        return thisElemType.isAssignableFrom(thatElemType);
+      }
+      if (type instanceof StructType structType) {
+        return isAssignableFrom(structType.superType());
+      }
+      return false;
+    }
+  }
 
-  public abstract boolean isParamAssignableFrom(Type type);
+  public boolean isParamAssignableFrom(Type type) {
+    if (isGeneric()) {
+      if (type.coreType().isNothing()) {
+        return true;
+      }
+      return coreDepth() <= type.coreDepth();
+    } else {
+      return isAssignableFrom(type);
+    }
+  }
 
   public Optional<Type> commonSuperType(Type that) {
     /*
@@ -145,17 +199,11 @@ public abstract class Type implements Named {
         .findFirst();
   }
 
+  public Type actualCoreTypeWhenAssignedFrom(Type source) {
+    return source;
+  }
+
   public abstract <T> T visit(TypeVisitor<T> visitor);
-
-  @Override
-  public boolean equals(Object o) {
-    return properties.areEqual(this, o);
-  }
-
-  @Override
-  public int hashCode() {
-    return properties.hashCode(this);
-  }
 
   @Override
   public String toString() {

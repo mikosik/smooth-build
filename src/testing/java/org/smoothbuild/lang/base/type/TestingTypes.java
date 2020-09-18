@@ -29,23 +29,22 @@ public class TestingTypes {
       "Person", FAKE_LOCATION, List.of(
           new Field(0, STRING, "firstName", internal()),
           new Field(1, STRING, "lastName", internal())));
-  public static final GenericType A = generic("A");
-  public static final GenericType B = generic("B");
+  public static final Type A = generic("A");
+  public static final Type B = generic("B");
 
-  public static final ConcreteArrayType ARRAY_BOOL = array(BOOL);
-  public static final ConcreteArrayType ARRAY_STRING = array(STRING);
-  public static final ConcreteArrayType ARRAY_BLOB = array(BLOB);
-  public static final ConcreteArrayType ARRAY_NOTHING = array(NOTHING);
-  public static final ConcreteArrayType ARRAY_PERSON = array(PERSON);
-  public static final GenericArrayType ARRAY_A = array(A);
-  public static final GenericArrayType ARRAY_B = array(B);
+  public static final ArrayType ARRAY_BOOL = array(BOOL);
+  public static final ArrayType ARRAY_STRING = array(STRING);
+  public static final ArrayType ARRAY_BLOB = array(BLOB);
+  public static final ArrayType ARRAY_NOTHING = array(NOTHING);
+  public static final ArrayType ARRAY_PERSON = array(PERSON);
+  public static final ArrayType ARRAY_A = array(A);
+  public static final ArrayType ARRAY_B = array(B);
 
-  public static final ConcreteArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
-  public static final ConcreteArrayType ARRAY2_STRING = array(ARRAY_STRING);
-  public static final ConcreteArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
-  public static final ConcreteArrayType ARRAY2_NOTHING = array(ARRAY_NOTHING);
-  public static final ConcreteArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final GenericArrayType ARRAY2_A = array(ARRAY_A);
-  public static final GenericArrayType ARRAY2_B = array(ARRAY_B);
+  public static final ArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
+  public static final ArrayType ARRAY2_STRING = array(ARRAY_STRING);
+  public static final ArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
+  public static final ArrayType ARRAY2_NOTHING = array(ARRAY_NOTHING);
+  public static final ArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
+  public static final ArrayType ARRAY2_A = array(ARRAY_A);
+  public static final ArrayType ARRAY2_B = array(ARRAY_B);
 }
-

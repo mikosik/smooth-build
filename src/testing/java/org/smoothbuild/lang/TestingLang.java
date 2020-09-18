@@ -13,7 +13,6 @@ import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -75,15 +74,15 @@ public class TestingLang {
     return new Function(signature, body, loc(line));
   }
 
-  public static Value value(int line, ConcreteType type, String name) {
+  public static Value value(int line, Type type, String name) {
     return value(line, type, name, Optional.empty());
   }
 
-  public static Value value(int line, ConcreteType type, String name, Expression expression) {
+  public static Value value(int line, Type type, String name, Expression expression) {
     return value(line, type, name, Optional.of(expression));
   }
 
-  private static Value value(int line, ConcreteType type, String name,
+  private static Value value(int line, Type type, String name,
       Optional<Expression> expression) {
     return new Value(type, name, expression, loc(line));
   }
@@ -114,7 +113,7 @@ public class TestingLang {
     return new Parameter(index, type, name, defaultValue, loc(line));
   }
 
-  public static Field field(int line, int index, ConcreteType type, String name) {
+  public static Field field(int line, int index, Type type, String name) {
     return new Field(index, type, name, loc(line));
   }
 }

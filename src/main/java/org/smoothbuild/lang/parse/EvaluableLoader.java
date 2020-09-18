@@ -17,7 +17,6 @@ import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.ConcreteType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -71,7 +70,7 @@ public class EvaluableLoader {
     }
 
     public Value loadValue() {
-      return new Value((ConcreteType) evaluable.type().get(), evaluable.name(),
+      return new Value(evaluable.type().get(), evaluable.name(),
           bodyExpression(), evaluable.location());
     }
 

@@ -39,7 +39,7 @@ public class InferCallTypeAndParamAssignment {
           return;
         }
 
-        GenericTypeMap<Type> actualTypeMap =
+        GenericTypeMap actualTypeMap =
             inferActualTypesOfGenericParameters(parameters, assignedArgs.value());
         if (actualTypeMap == null) {
           return;
@@ -128,7 +128,7 @@ public class InferCallTypeAndParamAssignment {
         throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
       }
 
-      private GenericTypeMap<Type> inferActualTypesOfGenericParameters(
+      private GenericTypeMap inferActualTypesOfGenericParameters(
           List<? extends Item> parameters, List<ArgNode> assignedArgs) {
         List<Type> genericTypes = new ArrayList<>();
         List<Type> actualTypes = new ArrayList<>();
@@ -151,7 +151,7 @@ public class InferCallTypeAndParamAssignment {
         }
       }
 
-      private Optional<Type> callType(GenericTypeMap<Type> actualTypeMap) {
+      private Optional<Type> callType(GenericTypeMap actualTypeMap) {
         return callableType().map(actualTypeMap::applyTo);
       }
 
