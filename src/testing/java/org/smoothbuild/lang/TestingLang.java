@@ -12,7 +12,6 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
-import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -40,7 +39,7 @@ public class TestingLang {
 
   public static ArrayLiteralExpression array(int line, Type elemType, Expression... expressions) {
     return new ArrayLiteralExpression(
-        (ArrayType) Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
+        Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
   public static ValueReferenceExpression valueRef(int line, String name) {
