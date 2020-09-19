@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.sane;
@@ -45,22 +46,21 @@ public class AstCreator {
       }
 
       private List<ItemNode> createFields(FieldListContext fieldList) {
-        var result = new ArrayList<ItemNode>();
         if (fieldList != null) {
-          List<FieldContext> saneList = sane(fieldList.field());
-          for (int i = 0; i < saneList.size(); i++) {
-            result.add(createField(i, saneList.get(i)));
-          }
+          return sane(fieldList.field())
+              .stream()
+              .map(this::createField)
+              .collect(toImmutableList());
         }
-        return result;
+        return new ArrayList<>();
       }
 
-      private ItemNode createField(int index, FieldContext field) {
+      private ItemNode createField(FieldContext field) {
         TypeNode type = createType(field.type());
         TerminalNode nameNode = field.NAME();
         String name = nameNode.getText();
         Location location = locationOf(moduleLocation, nameNode);
-        return new ItemNode(index, type, name, Optional.empty(), location);
+        return new ItemNode(type, name, Optional.empty(), location);
       }
 
       @Override
@@ -90,20 +90,19 @@ public class AstCreator {
       private List<ItemNode> createParams(ParamListContext paramList) {
         ArrayList<ItemNode> result = new ArrayList<>();
         if (paramList != null) {
-          List<ParamContext> paramContexts = sane(paramList.param());
-          for (int i = 0; i < paramContexts.size(); i++) {
-            result.add(createParam(i, paramContexts.get(i)));
-          }
+          return sane(paramList.param())
+              .stream().map(this::createParam)
+              .collect(toImmutableList());
         }
         return result;
       }
 
-      private ItemNode createParam(int index, ParamContext param) {
+      private ItemNode createParam(ParamContext param) {
         TypeNode type = createType(param.type());
         String name = param.NAME().getText();
         Location location = locationOf(moduleLocation, param);
         Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
-        return new ItemNode(index, type, name, defaultValue, location);
+        return new ItemNode(type, name, defaultValue, location);
       }
 
       private ExprNode createExpr(ExprContext expr) {
