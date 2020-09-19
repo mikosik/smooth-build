@@ -49,7 +49,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
   @Override
   public TupleSpec visit(StructType type) {
     Iterable<Spec> fieldTypes =
-        type.fields().values().stream()
+        type.fields().stream()
             .map(f -> f.type().visit(this))
             .collect(toImmutableList());
     return objectFactory.tupleSpec(fieldTypes);
