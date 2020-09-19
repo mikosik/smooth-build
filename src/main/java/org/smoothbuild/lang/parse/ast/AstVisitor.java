@@ -31,10 +31,10 @@ public class AstVisitor {
   }
 
   public void visitFields(List<ItemNode> fields) {
-    visitIndexedElements(fields, this::visitField);
+    fields.forEach(this::visitField);
   }
 
-  public void visitField(int index, ItemNode field) {
+  public void visitField(ItemNode field) {
     visitType(field.typeNode());
   }
 

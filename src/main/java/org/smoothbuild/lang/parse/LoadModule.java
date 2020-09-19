@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
@@ -10,7 +11,6 @@ import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.ValueWithLogs;
@@ -26,7 +26,6 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
-import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
@@ -86,12 +85,10 @@ public class LoadModule {
 
   private static Constructor loadConstructor(StructNode struct) {
     ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-    List<ItemNode> fields = struct.fields();
-    for (int i = 0; i < fields.size(); i++) {
-      ItemNode field = fields.get(i);
-      builder.add(new Parameter(i, field.type().get(), field.name(), empty(), field.location()));
-    }
-    ImmutableList<Parameter> parameters = builder.build();
+    ImmutableList<Parameter> parameters = struct.fields()
+        .stream()
+        .map(field -> new Parameter(field.type().get(), field.name(), empty(), field.location()))
+        .collect(toImmutableList());
     Signature signature =
         new Signature(struct.type().get(), struct.constructor().name(), parameters);
     return new Constructor(signature, struct.location());

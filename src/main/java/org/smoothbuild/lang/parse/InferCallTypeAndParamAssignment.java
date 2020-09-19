@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.IntStream.range;
 import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
@@ -56,23 +57,24 @@ public class InferCallTypeAndParamAssignment {
       private ValueWithLogs<List<ArgNode>> assignedArguments(List<? extends Item> parameters) {
         var result = new ValueWithLogs<List<ArgNode>>();
         List<ArgNode> assignedArgs = asList(new ArgNode[parameters.size()]);
-        Map<String, ? extends Item> parametersMap = parameters.stream()
-            .collect(toMap(Item::name, p -> p));
+        Map<String, Integer> nameToIndex = range(0, parameters.size())
+            .boxed()
+            .collect(toMap(i -> parameters.get(i).name(), i -> i));
         List<ArgNode> args = call.args();
         boolean inNamedArgsSection = false;
         for (int i = 0; i < args.size(); i++) {
           ArgNode arg = args.get(i);
           if (arg.declaresName()) {
             inNamedArgsSection = true;
-            Item param = parametersMap.get(arg.name());
-            if (param == null) {
+            Integer index = nameToIndex.get(arg.name());
+            if (index == null) {
               result.log(
                   parseError(arg, inCallToPrefix(call) + "Unknown parameter " + arg.q() + "."));
-            } else if (assignedArgs.get(param.index()) != null) {
+            } else if (assignedArgs.get(index) != null) {
               result.log(parseError(arg,
                   inCallToPrefix(call) + "`" + arg.name() + "` is already assigned."));
             } else {
-              assignedArgs.set(param.index(), arg);
+              assignedArgs.set(index, arg);
             }
           } else {
             if (inNamedArgsSection) {

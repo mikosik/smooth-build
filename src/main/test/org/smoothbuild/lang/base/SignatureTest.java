@@ -35,8 +35,8 @@ public class SignatureTest {
 
   @Test
   public void parameter_types() {
-    parameter = new Parameter(0, BLOB, "blob", empty(), internal());
-    parameter2 = new Parameter(0, STRING, "string", empty(), internal());
+    parameter = new Parameter(BLOB, "blob", empty(), internal());
+    parameter2 = new Parameter(STRING, "string", empty(), internal());
     assertThat(signature(STRING, "name", list(parameter, parameter2)).parameterTypes())
         .containsExactly(BLOB, STRING)
         .inOrder();
@@ -44,8 +44,8 @@ public class SignatureTest {
 
   @Test
   public void to_string() {
-    parameter = new Parameter(0, BLOB, "blob", empty(), internal());
-    parameter2 = new Parameter(0, STRING, "string", empty(), internal());
+    parameter = new Parameter(BLOB, "blob", empty(), internal());
+    parameter2 = new Parameter(STRING, "string", empty(), internal());
     Signature signature = signature(STRING, "name", list(parameter, parameter2));
     assertThat(signature.toString())
         .isEqualTo(STRING.name() + " " + "name" + "(" + parameter.type().name() + " "

@@ -58,7 +58,7 @@ public class InferTypesAndParamAssignments {
         var builder = ImmutableList.<Field>builder();
         for (int i = 0; i < fieldNodes.size(); i++) {
           ItemNode fieldNode = fieldNodes.get(i);
-          Field field = new Field(i, fieldNode.type().get(), fieldNode.name(),
+          Field field = new Field(fieldNode.type().get(), fieldNode.name(),
               fieldNode.location());
           builder.add(field);
         }
@@ -67,11 +67,11 @@ public class InferTypesAndParamAssignments {
       }
 
       @Override
-      public void visitField(int index, ItemNode fieldNode) {
-        super.visitField(index, fieldNode);
+      public void visitField(ItemNode fieldNode) {
+        super.visitField(fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
         fieldNode.setItemInfo(Optional.of(new Item(
-            index, fieldNode.type().get(), fieldNode.name(), false, fieldNode.location())));
+            fieldNode.type().get(), fieldNode.name(), false, fieldNode.location())));
       }
 
       @Override
@@ -144,7 +144,7 @@ public class InferTypesAndParamAssignments {
         param.setType(type);
         type.ifPresentOrElse(t -> {
               var info = new Item(
-                  index, t, param.name(), param.defaultValue().isPresent(), param.location());
+                  t, param.name(), param.defaultValue().isPresent(), param.location());
               param.setItemInfo(Optional.of(info));
               if (param.defaultValue().isPresent()) {
                 Optional<Type> defaultValueType = param.defaultValue().get().type();

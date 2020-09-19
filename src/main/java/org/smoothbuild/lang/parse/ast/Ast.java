@@ -163,8 +163,8 @@ public class Ast {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitField(int index, ItemNode field) {
-        super.visitField(index, field);
+      public void visitField(ItemNode field) {
+        super.visitField(field);
         addToDependencies(field.typeNode());
       }
 

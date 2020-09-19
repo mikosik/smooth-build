@@ -81,7 +81,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   public Task visit(FieldReadExpression expression) throws ExpressionVisitorException {
     Field field = expression.field();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
-        field.index(), field.type().visit(toSpecConverter));
+        expression.index(), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.expression());
     return new NormalTask(
         CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);

@@ -27,8 +27,8 @@ public class TestingTypes {
       location(moduleLocation(USER, Path.of("fake/path")), 1);
   public static final StructType PERSON = struct(
       "Person", FAKE_LOCATION, List.of(
-          new Field(0, STRING, "firstName", internal()),
-          new Field(1, STRING, "lastName", internal())));
+          new Field(STRING, "firstName", internal()),
+          new Field(STRING, "lastName", internal())));
   public static final Type A = generic("A");
   public static final Type B = generic("B");
 

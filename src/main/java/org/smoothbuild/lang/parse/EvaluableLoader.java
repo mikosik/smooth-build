@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Evaluable;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
@@ -92,7 +91,7 @@ public class EvaluableLoader {
       String name = param.name();
       Optional<Expression> defaultValue = param.defaultValue()
           .map(this::createExpression);
-      return new Parameter(param.index(), type, name, defaultValue, param.location());
+      return new Parameter(type, name, defaultValue, param.location());
     }
 
     private Expression createExpression(ExprNode expr) {
@@ -119,9 +118,10 @@ public class EvaluableLoader {
 
     private Expression createFieldRead(FieldReadNode fieldReadNode) {
       StructType type = (StructType) fieldReadNode.expr().type().get();
-      Field field = type.fieldWithName(fieldReadNode.fieldName());
+      int index = type.fieldIndex(fieldReadNode.fieldName());
       Expression expression = createExpression(fieldReadNode.expr());
-      return new FieldReadExpression(field, expression, fieldReadNode.location());
+      return new FieldReadExpression(
+          index, type.fields().get(index), expression, fieldReadNode.location());
     }
 
     private Expression createReference(RefNode ref) {

@@ -73,7 +73,7 @@ public class ExpressionTest {
             Blob param1);
           """)
         .loadsSuccessfully()
-        .containsEvaluable(function(1, STRING, "myFunction", parameter(2, 0, BLOB, "param1")));
+        .containsEvaluable(function(1, STRING, "myFunction", parameter(2, BLOB, "param1")));
   }
 
   @Test
@@ -84,7 +84,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(function(
-            1, BLOB, "myFunction", parameterRef("param1", 2), parameter(1, 0, BLOB, "param1")));
+            1, BLOB, "myFunction", parameterRef("param1", 2), parameter(1, BLOB, "param1")));
   }
 
   @Test
@@ -96,7 +96,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            function(1, STRING, "myFunction", parameter(2, 0, BLOB, "param1", blob(3, 7))));
+            function(1, STRING, "myFunction", parameter(2, BLOB, "param1", blob(3, 7))));
   }
 
   @Test
@@ -112,7 +112,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_argument() {
-    Function function = function(1, STRING, "myFunction", parameter(1, 0, BLOB, "param1"));
+    Function function = function(1, STRING, "myFunction", parameter(1, BLOB, "param1"));
     module("""
           String myFunction(Blob param1);
           result = myFunction(
@@ -125,7 +125,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_named_argument() {
-    Function function = function(1, STRING, "myFunction", parameter(1, 0, BLOB, "param1"));
+    Function function = function(1, STRING, "myFunction", parameter(1, BLOB, "param1"));
     module("""
           String myFunction(Blob param1);
           result = myFunction(param1=
@@ -172,7 +172,7 @@ public class ExpressionTest {
 
   @Test
   public void field_read() {
-    Field field = field(2, 0, STRING, "field");
+    Field field = field(2, STRING, "field");
     module("""
           MyStruct {
             String field,
@@ -203,13 +203,13 @@ public class ExpressionTest {
           }
           """)
         .loadsSuccessfully()
-        .containsType(struct(1, "MyStruct", field(2, 0, STRING, "field")));
+        .containsType(struct(1, "MyStruct", field(2, STRING, "field")));
   }
 
   @Test
   public void constructor() {
-    StructType struct = struct(1, "MyStruct", field(2, 0, STRING, "field"));
-    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, 0, STRING, "field"))
+    StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
+    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, STRING, "field"))
     );
     module("""
           MyStruct {
@@ -222,8 +222,8 @@ public class ExpressionTest {
 
   @Test
   public void constructor_call_with_argument() {
-    StructType struct = struct(1, "MyStruct", field(2, 0, STRING, "field"));
-    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, 0, STRING, "field")));
+    StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
+    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, STRING, "field")));
     module("""
           MyStruct {
             String field

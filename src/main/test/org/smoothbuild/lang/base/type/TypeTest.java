@@ -1518,14 +1518,14 @@ public class TypeTest {
             struct("MyStruct", FAKE_LOCATION, list()),
             struct("MyStruct", FAKE_LOCATION, list()))
         .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))),
-            struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))
+            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))),
+            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))
         .addEqualityGroup(
-            struct("MyStruct2", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))),
-            struct("MyStruct2", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))
+            struct("MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))),
+            struct("MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))
         .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION))),
-            struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION))))
+            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))),
+            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))
         .addEqualityGroup(
             array(generic("A")),
             array(generic("A")))
@@ -1549,17 +1549,17 @@ public class TypeTest {
             array(struct("MyStruct", FAKE_LOCATION, list())))
         .addEqualityGroup(
             array(struct("MyStruct", FAKE_LOCATION,
-                list(new Field(0, string(), "field", LOCATION)))),
+                list(new Field(string(), "field", LOCATION)))),
             array(struct("MyStruct", FAKE_LOCATION,
-                list(new Field(0, string(), "field", LOCATION)))))
+                list(new Field(string(), "field", LOCATION)))))
         .addEqualityGroup(
             array(struct("MyStruct2", FAKE_LOCATION,
-                list(new Field(0, string(), "field", LOCATION)))),
+                list(new Field(string(), "field", LOCATION)))),
             array(struct("MyStruct2", FAKE_LOCATION,
-                list(new Field(0, string(), "field", LOCATION)))))
+                list(new Field(string(), "field", LOCATION)))))
         .addEqualityGroup(
-            array(struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION)))),
-            array(struct("MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION)))))
+            array(struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION)))),
+            array(struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION)))))
         .addEqualityGroup(
             array(array(generic("A"))),
             array(array(generic("A"))))
@@ -1583,19 +1583,19 @@ public class TypeTest {
             array(array(struct("MyStruct", FAKE_LOCATION, list()))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))),
+                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))),
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))))
+                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))),
+                "MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))),
             array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(new Field(0, string(), "field", LOCATION))))))
+                "MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION))))),
+                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))),
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(0, string(), "field2", LOCATION))))))
+                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))))
         .testEquals();
   }
 }

@@ -13,9 +13,8 @@ import org.smoothbuild.lang.expr.Expression;
 public class Parameter extends Item {
   private final Optional<Expression> defaultValue;
 
-  public Parameter(int index, Type type, String name, Optional<Expression> defaultValue,
-      Location location) {
-    super(index, type, name, defaultValue.isPresent(), location);
+  public Parameter(Type type, String name, Optional<Expression> defaultValue, Location location) {
+    super(type, name, defaultValue.isPresent(), location);
     this.defaultValue = defaultValue;
   }
 
