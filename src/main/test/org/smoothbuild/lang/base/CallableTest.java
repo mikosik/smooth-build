@@ -41,7 +41,7 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Parameter> parameters = list(new Parameter(0, STRING, "name", Optional.empty(), internal()));
+    List<Parameter> parameters = list(new Parameter(STRING, "name", Optional.empty(), internal()));
     Callable callable = new MyCallable(signature(STRING, "name", parameters));
     assertThat(callable.parameters())
         .isEqualTo(parameters);
@@ -71,11 +71,11 @@ public class CallableTest extends TestingContext {
   }
 
   private Parameter paramWithDefault() {
-    return new Parameter(0, STRING, "a", Optional.of(mock(Expression.class)), internal());
+    return new Parameter(STRING, "a", Optional.of(mock(Expression.class)), internal());
   }
 
   private Parameter paramWithoutDefault() {
-    return new Parameter(0, STRING, "a", Optional.empty(), internal());
+    return new Parameter(STRING, "a", Optional.empty(), internal());
   }
 
   public static class MyCallable extends Callable {

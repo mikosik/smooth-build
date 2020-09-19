@@ -51,7 +51,7 @@ public class TestingLang {
   }
 
   public static FieldReadExpression fieldRead(int line, Field field, Expression expression) {
-    return new FieldReadExpression(field, expression, loc(line));
+    return new FieldReadExpression(0, field, expression, loc(line));
   }
 
   public static CallExpression call(int line, Callable callable, Expression... arguments) {
@@ -98,21 +98,21 @@ public class TestingLang {
     return new Signature(myStruct, name, ImmutableList.of(param));
   }
 
-  public static Parameter parameter(int line, int index, Type type, String name) {
-    return parameter(line, index, type, name, Optional.empty());
+  public static Parameter parameter(int line, Type type, String name) {
+    return parameter(line, type, name, Optional.empty());
   }
 
-  public static Parameter parameter(int line, int index, Type type, String name,
+  public static Parameter parameter(int line, Type type, String name,
       Expression defaultValue) {
-    return parameter(line, index, type, name, Optional.of(defaultValue));
+    return parameter(line, type, name, Optional.of(defaultValue));
   }
 
-  private static Parameter parameter(int line, int index, Type type, String name,
+  private static Parameter parameter(int line, Type type, String name,
       Optional<Expression> defaultValue) {
-    return new Parameter(index, type, name, defaultValue, loc(line));
+    return new Parameter(type, name, defaultValue, loc(line));
   }
 
-  public static Field field(int line, int index, Type type, String name) {
-    return new Field(index, type, name, loc(line));
+  public static Field field(int line, Type type, String name) {
+    return new Field(type, name, loc(line));
   }
 }

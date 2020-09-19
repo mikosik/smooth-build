@@ -6,8 +6,8 @@ import org.smoothbuild.lang.base.type.Type;
  * This class is immutable.
  */
 public class Field extends Item {
-  public Field(int index, Type type, String name, Location location) {
-    super(index, type, name, false, location);
+  public Field(Type type, String name, Location location) {
+    super(type, name, false, location);
   }
 
   @Override

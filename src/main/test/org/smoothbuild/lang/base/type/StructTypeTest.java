@@ -43,7 +43,7 @@ public class StructTypeTest {
 
   @Test
   public void field_can_be_retrieved_by_name() {
-    Field field = field(1, 0, string(), "name1");
+    Field field = field(1, string(), "name1");
     StructType struct = struct("Struct", FAKE_LOCATION, List.of(field));
     assertThat(struct.fieldWithName("name1"))
         .isSameInstanceAs(field);
@@ -51,14 +51,14 @@ public class StructTypeTest {
 
   @Test
   public void contains_field_with_name_returns_true_for_existing_field() {
-    StructType struct = struct("Struct", FAKE_LOCATION, List.of(field(1, 0, string(), "name1")));
+    StructType struct = struct("Struct", FAKE_LOCATION, List.of(field(1, string(), "name1")));
     assertThat(struct.containsFieldWithName("name1"))
         .isTrue();
   }
 
   @Test
   public void contains_field_with_name_returns_false_for_not_existing_field() {
-    StructType struct = struct("Struct", FAKE_LOCATION, List.of(field(1, 0, string(), "name1")));
+    StructType struct = struct("Struct", FAKE_LOCATION, List.of(field(1, string(), "name1")));
     assertThat(struct.containsFieldWithName("name2"))
         .isFalse();
   }
@@ -66,7 +66,7 @@ public class StructTypeTest {
   private static List<Field> fields(Type... types) {
     List<Field> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
-      result.add(new Field(i, types[i], "name" + i, internal()));
+      result.add(new Field(types[i], "name" + i, internal()));
     }
     return result;
   }

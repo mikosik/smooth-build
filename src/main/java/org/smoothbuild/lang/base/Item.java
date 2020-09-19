@@ -15,22 +15,16 @@ import org.smoothbuild.lang.parse.ast.Named;
  * This class is immutable.
  */
 public class Item implements Named {
-  private final int index;
   private final Type type;
   private final String name;
   private final boolean hasDefaultValue;
   private final Location location;
 
-  public Item(int index, Type type, String name, boolean hasDefaultValue, Location location) {
-    this.index = index;
+  public Item(Type type, String name, boolean hasDefaultValue, Location location) {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
     this.hasDefaultValue = hasDefaultValue;
     this.location = requireNonNull(location);
-  }
-
-  public int index() {
-    return index;
   }
 
   public Type type() {
@@ -63,8 +57,7 @@ public class Item implements Named {
     if (!(object instanceof Item that)) {
       return false;
     }
-    return this.index == that.index
-        && this.type.equals(that.type)
+    return this.type.equals(that.type)
         && this.name.equals(that.name)
         && this.hasDefaultValue == that.hasDefaultValue
         && this.location.equals(that.location);
@@ -72,7 +65,7 @@ public class Item implements Named {
 
   @Override
   public int hashCode() {
-    return Objects.hash(index, type, name, hasDefaultValue, location);
+    return Objects.hash(type, name, hasDefaultValue, location);
   }
 
   public String toPaddedString(int minTypeLength, int minNameLength) {

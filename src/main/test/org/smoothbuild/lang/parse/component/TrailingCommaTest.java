@@ -58,7 +58,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
-          .containsEvaluable(function(1, STRING, "myFunction", parameter(1, 0, STRING, "param1")));
+          .containsEvaluable(function(1, STRING, "myFunction", parameter(1, STRING, "param1")));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(structDeclaration("String field1,"))
           .loadsSuccessfully()
-          .containsType(struct(1, "MyStruct", field(1, 0, STRING, "field1")));
+          .containsType(struct(1, "MyStruct", field(1, STRING, "field1")));
     }
 
     @Test
@@ -124,7 +124,7 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      Function function = function(1, BLOB, "myFunction", parameter(1, 0, BLOB, "blob"));
+      Function function = function(1, BLOB, "myFunction", parameter(1, BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
           .containsEvaluable(value(2, BLOB, "result", call(2, function, blob(2, 7))));

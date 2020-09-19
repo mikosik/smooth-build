@@ -55,11 +55,10 @@ public class StructNode extends NamedNode {
 
     public void initializeParameterInfos() {
       StructType type = (StructType) StructNode.this.type().get();
-      var parameterInfos = type.fields()
-          .stream()
-          .map(f -> new Parameter(f.index(), f.type(), f.name(), empty(), f.location()))
+      ImmutableList<Parameter> parameters = type.fields().stream()
+          .map(f -> new Parameter(f.type(), f.name(), empty(), f.location()))
           .collect(toImmutableList());
-      setParameterInfos(parameterInfos);
+      setParameterInfos(parameters);
     }
   }
 }

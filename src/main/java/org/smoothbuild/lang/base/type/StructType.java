@@ -52,7 +52,11 @@ public class StructType extends Type {
   }
 
   public Field fieldWithName(String name) {
-    return fields.get(fieldNameToIndex.get(name));
+    return fields.get(fieldIndex(name));
+  }
+
+  public int fieldIndex(String name) {
+    return fieldNameToIndex.get(name);
   }
 
   @Override

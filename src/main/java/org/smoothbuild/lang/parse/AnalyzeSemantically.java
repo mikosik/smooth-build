@@ -177,7 +177,7 @@ public class AnalyzeSemantically {
       }
 
       @Override
-      public void visitField(int index, ItemNode field) {
+      public void visitField(ItemNode field) {
         assertTypeIsDefined(field.typeNode());
       }
 
