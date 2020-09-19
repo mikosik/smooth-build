@@ -197,8 +197,8 @@ public class InferTypesAndParamAssignments {
         super.visitFieldRead(expr);
         expr.expr().type().ifPresentOrElse(
             t -> {
-              if (t instanceof StructType st && st.fields().containsKey(expr.fieldName())) {
-                expr.setType(((StructType) t).fields().get(expr.fieldName()).type());
+              if (t instanceof StructType st && st.containsFieldWithName(expr.fieldName())) {
+                expr.setType(((StructType) t).fieldWithName(expr.fieldName()).type());
               } else {
                 expr.setType(empty());
                 logger.log(parseError(expr.location(), "Type " + t.q()

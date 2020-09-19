@@ -1,9 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static com.google.common.collect.Streams.stream;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Location;
@@ -15,26 +16,26 @@ import com.google.common.collect.ImmutableMap;
  * This class is immutable.
  */
 public class StructType extends Type {
-  private final ImmutableMap<String, Field> fields;
+  private final ImmutableList<Field> fields;
+  private final ImmutableMap<String, Integer> fieldNameToIndex;
 
   public StructType(String name, Location location, ImmutableList<Field> fields) {
-    this(name, location, fieldsMap(fields));
-  }
-
-  public StructType(String name, Location location, ImmutableMap<String, Field> fields) {
     super(name, location, calculateSuperType(fields), false);
     this.fields = fields;
+    this.fieldNameToIndex = fieldsMap(fields);
   }
 
-  private static ImmutableMap<String, Field> fieldsMap(Iterable<Field> fields) {
-    return stream(fields).collect(toImmutableMap(Field::name, f -> f));
+  private static ImmutableMap<String, Integer> fieldsMap(List<? extends Field> fields) {
+    return IntStream.range(0, fields.size())
+        .boxed()
+        .collect(toImmutableMap(i -> fields.get(i).name(), i -> i));
   }
 
-  private static Type calculateSuperType(ImmutableMap<String, Field> fields) {
+  private static Type calculateSuperType(ImmutableList<Field> fields) {
     if (fields.size() == 0) {
       return null;
     } else {
-      Type superType = fields.values().iterator().next().type();
+      Type superType = fields.get(0).type();
       if (superType.isArray() || superType.isNothing()) {
         throw new IllegalArgumentException();
       }
@@ -42,8 +43,16 @@ public class StructType extends Type {
     }
   }
 
-  public ImmutableMap<String, Field> fields() {
+  public ImmutableList<Field> fields() {
     return fields;
+  }
+
+  public boolean containsFieldWithName(String name) {
+    return fieldNameToIndex.containsKey(name);
+  }
+
+  public Field fieldWithName(String name) {
+    return fields.get(fieldNameToIndex.get(name));
   }
 
   @Override
@@ -58,7 +67,7 @@ public class StructType extends Type {
     }
     if (object instanceof StructType thatStruct) {
       return this.name().equals(thatStruct.name())
-          && this.fields().equals(thatStruct.fields());
+          && this.fields.equals(thatStruct.fields);
     }
     return false;
   }

@@ -119,7 +119,7 @@ public class EvaluableLoader {
 
     private Expression createFieldRead(FieldReadNode fieldReadNode) {
       StructType type = (StructType) fieldReadNode.expr().type().get();
-      Field field = type.fields().get(fieldReadNode.fieldName());
+      Field field = type.fieldWithName(fieldReadNode.fieldName());
       Expression expression = createExpression(fieldReadNode.expr());
       return new FieldReadExpression(field, expression, fieldReadNode.location());
     }
