@@ -43,7 +43,8 @@ public class GenericTypeMap {
         if (builder.containsKey(core)) {
           Type previous = builder.get(core);
           Optional<Type> commonSuperType = previous.commonSuperType(actualCore);
-          builder.put(core, commonSuperType.orElseThrow(() -> throwExc(actualCore, previous)));
+          builder.put(core,
+              commonSuperType.orElseThrow(() -> noCommonSuperTypeException(actualCore, previous)));
         } else {
           builder.put(core, actualCore);
         }
@@ -52,7 +53,7 @@ public class GenericTypeMap {
     return ImmutableMap.copyOf(builder);
   }
 
-  private static <T extends Type> IllegalArgumentException throwExc(
+  private static <T extends Type> IllegalArgumentException noCommonSuperTypeException(
       T type1, T type2) {
     return new IllegalArgumentException("Types " + type2.name() + ", " + type1.name()
         + " don't have common super type.");
