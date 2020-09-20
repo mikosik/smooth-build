@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Types.array;
@@ -41,8 +42,6 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
-import com.google.common.collect.ImmutableList;
-
 public class InferTypesAndParamAssignments {
   public static void inferTypesAndParamAssignment(
       Ast ast, Definitions imported, Logger logger) {
@@ -54,15 +53,11 @@ public class InferTypesAndParamAssignments {
           return;
         }
 
-        List<ItemNode> fieldNodes = struct.fields();
-        var builder = ImmutableList.<Field>builder();
-        for (int i = 0; i < fieldNodes.size(); i++) {
-          ItemNode fieldNode = fieldNodes.get(i);
-          Field field = new Field(fieldNode.type().get(), fieldNode.name(),
-              fieldNode.location());
-          builder.add(field);
-        }
-        struct.setType(struct(struct.name(), struct.location(), builder.build()));
+        var fields = struct.fields()
+            .stream()
+            .map(f -> new Field(f.type().get(), f.name(), f.location()))
+            .collect(toImmutableList());
+        struct.setType(struct(struct.name(), struct.location(), fields));
         struct.constructor().initializeParameterInfos();
       }
 
