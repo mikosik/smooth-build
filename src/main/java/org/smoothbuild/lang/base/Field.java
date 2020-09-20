@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.type.Type;
 /**
  * This class is immutable.
  */
-public class Field extends Item {
+public class Field extends ItemSignature {
   public Field(Type type, String name, Location location) {
     super(type, name, false, location);
   }

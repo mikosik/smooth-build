@@ -40,7 +40,7 @@ public abstract class Callable extends Evaluable {
 
   public boolean canBeCalledArgless() {
     return signature.parameters().stream()
-        .allMatch(Item::hasDefaultValue);
+        .allMatch(ItemSignature::hasDefaultValue);
   }
 
   public abstract Expression createCallExpression(ImmutableList<Expression> arguments,

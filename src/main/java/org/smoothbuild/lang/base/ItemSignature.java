@@ -14,13 +14,13 @@ import org.smoothbuild.lang.parse.ast.Named;
  * Item contains attributes common to both struct field and function parameter.
  * This class is immutable.
  */
-public class Item implements Named {
+public class ItemSignature implements Named {
   private final Type type;
   private final String name;
   private final boolean hasDefaultValue;
   private final Location location;
 
-  public Item(Type type, String name, boolean hasDefaultValue, Location location) {
+  public ItemSignature(Type type, String name, boolean hasDefaultValue, Location location) {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
     this.hasDefaultValue = hasDefaultValue;
@@ -54,7 +54,7 @@ public class Item implements Named {
 
   @Override
   public boolean equals(Object object) {
-    if (!(object instanceof Item that)) {
+    if (!(object instanceof ItemSignature that)) {
       return false;
     }
     return this.type.equals(that.type)
@@ -79,7 +79,7 @@ public class Item implements Named {
     return type.name() + " " + name;
   }
 
-  public static String iterableToString(Iterable<Item> names) {
+  public static String iterableToString(Iterable<ItemSignature> names) {
     int typeLength = longestType(names);
     int nameLength = longestName(names);
     return stream(names)
@@ -88,17 +88,17 @@ public class Item implements Named {
         .collect(joining());
   }
 
-  public static int longestType(Iterable<Item> names) {
+  public static int longestType(Iterable<ItemSignature> names) {
     int result = 0;
-    for (Item name : names) {
+    for (ItemSignature name : names) {
       result = Math.max(result, name.type.name().length());
     }
     return result;
   }
 
-  public static int longestName(Iterable<Item> names) {
+  public static int longestName(Iterable<ItemSignature> names) {
     int result = 0;
-    for (Item name : names) {
+    for (ItemSignature name : names) {
       result = Math.max(result, name.name.length());
     }
     return result;
