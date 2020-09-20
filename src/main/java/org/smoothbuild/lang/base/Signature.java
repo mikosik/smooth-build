@@ -13,9 +13,9 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class is immutable.
  */
-public record Signature(Type type, String name, ImmutableList<Parameter> parameters) {
+public record Signature(Type type, String name, ImmutableList<Item> parameters) {
   public static Signature signature(
-      Type type, String name, Iterable<? extends Parameter> parameters) {
+      Type type, String name, Iterable<? extends Item> parameters) {
     return new Signature(type, name, ImmutableList.copyOf(parameters));
   }
 
@@ -52,7 +52,7 @@ public record Signature(Type type, String name, ImmutableList<Parameter> paramet
     builder.append(name);
     builder.append("(");
     int count = 0;
-    for (Parameter parameter : parameters) {
+    for (Item parameter : parameters) {
       if (count != 0) {
         builder.append(", ");
       }

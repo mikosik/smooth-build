@@ -8,8 +8,8 @@ import static java.util.Optional.empty;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 
@@ -55,8 +55,8 @@ public class StructNode extends NamedNode {
 
     public void initializeParameterInfos() {
       StructType type = (StructType) StructNode.this.type().get();
-      ImmutableList<Parameter> parameters = type.fields().stream()
-          .map(f -> new Parameter(f.type(), f.name(), empty(), f.location()))
+      ImmutableList<Item> parameters = type.fields().stream()
+          .map(f -> new Item(f.type(), f.name(), empty(), f.location()))
           .collect(toImmutableList());
       setParameterInfos(parameters);
     }

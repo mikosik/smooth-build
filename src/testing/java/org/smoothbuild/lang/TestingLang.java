@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.StructType;
@@ -58,16 +58,16 @@ public class TestingLang {
     return new CallExpression(callable, ImmutableList.copyOf(arguments), loc(line));
   }
 
-  public static Function function(int line, Type type, String name, Parameter... parameters) {
+  public static Function function(int line, Type type, String name, Item... parameters) {
     return function(line, type, name, parameters, Optional.empty());
   }
 
   public static Function function(int line, Type type, String name, Expression body,
-      Parameter... parameters) {
+      Item... parameters) {
     return function(line, type, name, parameters, Optional.of(body));
   }
 
-  private static Function function(int line, Type type, String name, Parameter[] parameters,
+  private static Function function(int line, Type type, String name, Item[] parameters,
       Optional<Expression> body) {
     Signature signature = new Signature(type, name, ImmutableList.copyOf(parameters));
     return new Function(signature, body, loc(line));
@@ -94,22 +94,22 @@ public class TestingLang {
     return new Constructor(signature, loc(line));
   }
 
-  public static Signature signature(StructType myStruct, String name, Parameter param) {
+  public static Signature signature(StructType myStruct, String name, Item param) {
     return new Signature(myStruct, name, ImmutableList.of(param));
   }
 
-  public static Parameter parameter(int line, Type type, String name) {
+  public static Item parameter(int line, Type type, String name) {
     return parameter(line, type, name, Optional.empty());
   }
 
-  public static Parameter parameter(int line, Type type, String name,
+  public static Item parameter(int line, Type type, String name,
       Expression defaultValue) {
     return parameter(line, type, name, Optional.of(defaultValue));
   }
 
-  private static Parameter parameter(int line, Type type, String name,
+  private static Item parameter(int line, Type type, String name,
       Optional<Expression> defaultValue) {
-    return new Parameter(type, name, defaultValue, loc(line));
+    return new Item(type, name, defaultValue, loc(line));
   }
 
   public static Field field(int line, Type type, String name) {
