@@ -22,8 +22,8 @@ import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.StructType;
 
 public class ExpressionTest {
@@ -172,7 +172,7 @@ public class ExpressionTest {
 
   @Test
   public void field_read() {
-    Field field = field(2, STRING, "field");
+    Item field = field(2, STRING, "field");
     module("""
           MyStruct {
             String field,

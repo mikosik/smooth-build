@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
 
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
@@ -41,7 +41,7 @@ public class Types {
     return STRING;
   }
 
-  public static StructType struct(String name, Location location, Iterable<Field> fields) {
+  public static StructType struct(String name, Location location, Iterable<Item> fields) {
     return new StructType(name, location, ImmutableList.copyOf(fields));
   }
 

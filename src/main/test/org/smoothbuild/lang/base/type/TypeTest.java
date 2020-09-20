@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
 import com.google.common.testing.EqualsTester;
@@ -1518,14 +1518,14 @@ public class TypeTest {
             struct("MyStruct", FAKE_LOCATION, list()),
             struct("MyStruct", FAKE_LOCATION, list()))
         .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))),
-            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))
+            struct("MyStruct", FAKE_LOCATION, list(field("field"))),
+            struct("MyStruct", FAKE_LOCATION, list(field("field"))))
         .addEqualityGroup(
-            struct("MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))),
-            struct("MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))
+            struct("MyStruct2", FAKE_LOCATION, list(field("field"))),
+            struct("MyStruct2", FAKE_LOCATION, list(field("field"))))
         .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))),
-            struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))
+            struct("MyStruct", FAKE_LOCATION, list(field("field2"))),
+            struct("MyStruct", FAKE_LOCATION, list(field("field2"))))
         .addEqualityGroup(
             array(generic("A")),
             array(generic("A")))
@@ -1549,17 +1549,17 @@ public class TypeTest {
             array(struct("MyStruct", FAKE_LOCATION, list())))
         .addEqualityGroup(
             array(struct("MyStruct", FAKE_LOCATION,
-                list(new Field(string(), "field", LOCATION)))),
+                list(field("field")))),
             array(struct("MyStruct", FAKE_LOCATION,
-                list(new Field(string(), "field", LOCATION)))))
+                list(field("field")))))
         .addEqualityGroup(
             array(struct("MyStruct2", FAKE_LOCATION,
-                list(new Field(string(), "field", LOCATION)))),
+                list(field("field")))),
             array(struct("MyStruct2", FAKE_LOCATION,
-                list(new Field(string(), "field", LOCATION)))))
+                list(field("field")))))
         .addEqualityGroup(
-            array(struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION)))),
-            array(struct("MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION)))))
+            array(struct("MyStruct", FAKE_LOCATION, list(field("field2")))),
+            array(struct("MyStruct", FAKE_LOCATION, list(field("field2")))))
         .addEqualityGroup(
             array(array(generic("A"))),
             array(array(generic("A"))))
@@ -1583,19 +1583,23 @@ public class TypeTest {
             array(array(struct("MyStruct", FAKE_LOCATION, list()))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))),
+                "MyStruct", FAKE_LOCATION, list(field("field"))))),
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))))
+                "MyStruct", FAKE_LOCATION, list(field("field"))))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))),
+                "MyStruct2", FAKE_LOCATION, list(field("field"))))),
             array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(new Field(string(), "field", LOCATION))))))
+                "MyStruct2", FAKE_LOCATION, list(field("field"))))))
         .addEqualityGroup(
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))),
+                "MyStruct", FAKE_LOCATION, list(field("field2"))))),
             array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(new Field(string(), "field2", LOCATION))))))
+                "MyStruct", FAKE_LOCATION, list(field("field2"))))))
         .testEquals();
+  }
+
+  private Item field(String name) {
+    return new Item(string(), name, Optional.empty(), LOCATION);
   }
 }

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -55,7 +55,7 @@ public class InferTypesAndParamAssignments {
 
         var fields = struct.fields()
             .stream()
-            .map(f -> new Field(f.type().get(), f.name(), f.location()))
+            .map(f -> new Item(f.type().get(), f.name(), Optional.empty(), f.location()))
             .collect(toImmutableList());
         struct.setType(struct(struct.name(), struct.location(), fields));
         struct.constructor().initializeParameterInfos();
