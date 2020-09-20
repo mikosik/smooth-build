@@ -23,13 +23,6 @@ public class Parameter extends Item {
   }
 
   @Override
-  public String toPaddedString(int minTypeLength, int minNameLength) {
-    String typePart = padEnd(type().name(), minTypeLength, ' ') + ": ";
-    String namePart = padEnd(name(), minNameLength, ' ');
-    return typePart + namePart;
-  }
-
-  @Override
   public String toString() {
     return "Parameter(`" + type().name() + " " + name() + "`)";
   }
