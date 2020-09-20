@@ -14,8 +14,9 @@ import static org.smoothbuild.lang.base.type.Types.struct;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
 public class TestingTypes {
@@ -27,8 +28,8 @@ public class TestingTypes {
       location(moduleLocation(USER, Path.of("fake/path")), 1);
   public static final StructType PERSON = struct(
       "Person", FAKE_LOCATION, List.of(
-          new Field(STRING, "firstName", internal()),
-          new Field(STRING, "lastName", internal())));
+          new Item(STRING, "firstName", Optional.empty(), internal()),
+          new Item(STRING, "lastName", Optional.empty(),internal())));
   public static final Type A = generic("A");
   public static final Type B = generic("B");
 

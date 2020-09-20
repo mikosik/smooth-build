@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Signature;
@@ -50,7 +49,7 @@ public class TestingLang {
     return new ParameterReferenceExpression(name, loc(line));
   }
 
-  public static FieldReadExpression fieldRead(int line, Field field, Expression expression) {
+  public static FieldReadExpression fieldRead(int line, Item field, Expression expression) {
     return new FieldReadExpression(0, field, expression, loc(line));
   }
 
@@ -86,7 +85,7 @@ public class TestingLang {
     return new Value(type, name, expression, loc(line));
   }
 
-  public static StructType struct(int line, String name, Field field) {
+  public static StructType struct(int line, String name, Item field) {
     return Types.struct(name, loc(line), List.of(field));
   }
 
@@ -112,7 +111,7 @@ public class TestingLang {
     return new Item(type, name, defaultValue, loc(line));
   }
 
-  public static Field field(int line, Type type, String name) {
-    return new Field(type, name, loc(line));
+  public static Item field(int line, Type type, String name) {
+    return new Item(type, name, Optional.empty(), loc(line));
   }
 }

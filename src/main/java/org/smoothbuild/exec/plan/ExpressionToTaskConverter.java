@@ -38,8 +38,8 @@ import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Field;
 import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
@@ -79,7 +79,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
 
   @Override
   public Task visit(FieldReadExpression expression) throws ExpressionVisitorException {
-    Field field = expression.field();
+    Item field = expression.field();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
         expression.index(), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.expression());

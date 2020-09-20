@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.lang.base.Field;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
 
-public record FieldReadExpression(int index, Field field, Expression expression, Location location)
+public record FieldReadExpression(int index, Item field, Expression expression, Location location)
     implements Expression {
 
   @Override
