@@ -19,7 +19,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Field;
-import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -65,7 +65,7 @@ public class InferTypesAndParamAssignments {
       public void visitField(ItemNode fieldNode) {
         super.visitField(fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
-        fieldNode.setItemInfo(Optional.of(new Item(
+        fieldNode.setItemInfo(Optional.of(new ItemSignature(
             fieldNode.type().get(), fieldNode.name(), false, fieldNode.location())));
       }
 
@@ -138,7 +138,7 @@ public class InferTypesAndParamAssignments {
         Optional<Type> type = param.typeNode().type();
         param.setType(type);
         type.ifPresentOrElse(t -> {
-              var info = new Item(
+              var info = new ItemSignature(
                   t, param.name(), param.defaultValue().isPresent(), param.location());
               param.setItemInfo(Optional.of(info));
               if (param.defaultValue().isPresent()) {

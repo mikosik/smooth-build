@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
-import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
@@ -33,7 +33,7 @@ public class InferCallTypeAndParamAssignment {
       @Override
       public void run() {
         call.setType(empty());
-        List<? extends Item> parameters = callableParameters();
+        List<? extends ItemSignature> parameters = callableParameters();
         ValueWithLogs<List<ArgNode>> assignedArgs = assignedArguments(parameters);
         assignedArgs.logs().forEach(logger::log);
         if (assignedArgs.hasProblems() || !allArgumentsHaveInferredType(assignedArgs.value())) {
@@ -54,7 +54,7 @@ public class InferCallTypeAndParamAssignment {
         return args.stream().allMatch(a -> a == null || a.type().isPresent());
       }
 
-      private ValueWithLogs<List<ArgNode>> assignedArguments(List<? extends Item> parameters) {
+      private ValueWithLogs<List<ArgNode>> assignedArguments(List<? extends ItemSignature> parameters) {
         var result = new ValueWithLogs<List<ArgNode>>();
         List<ArgNode> assignedArgs = asList(new ArgNode[parameters.size()]);
         Map<String, Integer> nameToIndex = range(0, parameters.size())
@@ -93,7 +93,7 @@ public class InferCallTypeAndParamAssignment {
         }
 
         for (int i = 0; i < parameters.size(); i++) {
-          Item param = parameters.get(i);
+          ItemSignature param = parameters.get(i);
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
             if (!param.hasDefaultValue()) {
@@ -117,7 +117,7 @@ public class InferCallTypeAndParamAssignment {
         return "In call to `" + call.calledName() + "`: ";
       }
 
-      private List<? extends Item> callableParameters() {
+      private List<? extends ItemSignature> callableParameters() {
         String name = call.calledName();
         Evaluable evaluable = imported.evaluables().get(name);
         if (evaluable != null) {
@@ -131,7 +131,7 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private GenericTypeMap inferActualTypesOfGenericParameters(
-          List<? extends Item> parameters, List<ArgNode> assignedArgs) {
+          List<? extends ItemSignature> parameters, List<ArgNode> assignedArgs) {
         List<Type> genericTypes = new ArrayList<>();
         List<Type> actualTypes = new ArrayList<>();
         for (int i = 0; i < parameters.size(); i++) {

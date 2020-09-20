@@ -2,14 +2,14 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 public class ItemNode extends NamedNode implements RefTarget {
   private final TypeNode typeNode;
   private final Optional<ExprNode> defaultValue;
-  private Optional<Item> itemInfo;
+  private Optional<ItemSignature> itemInfo;
 
   public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> defaultValue,
       Location location) {
@@ -26,11 +26,11 @@ public class ItemNode extends NamedNode implements RefTarget {
     return defaultValue;
   }
 
-  public Optional<Item> itemInfo() {
+  public Optional<ItemSignature> itemInfo() {
     return itemInfo;
   }
 
-  public void setItemInfo(Optional<Item> itemInfo) {
+  public void setItemInfo(Optional<ItemSignature> itemInfo) {
     this.itemInfo = itemInfo;
   }
 
