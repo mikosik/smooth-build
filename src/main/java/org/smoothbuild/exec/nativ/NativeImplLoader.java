@@ -18,6 +18,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
 
@@ -92,7 +93,7 @@ public class NativeImplLoader {
   private void nativeParameterTypesMatchesFuncParameters(Native nativ, Function function)
       throws LoadingNativeImplException {
     Parameter[] nativeParams = nativ.method().getParameters();
-    List<org.smoothbuild.lang.base.Parameter> params =
+    List<Item> params =
         function.parameters();
     if (params.size() != nativeParams.length - 1) {
       throw newException(function, "Function " + function.q() + " has "

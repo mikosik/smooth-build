@@ -12,7 +12,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Parameter;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
@@ -82,16 +82,16 @@ public class EvaluableLoader {
     }
 
     private Signature createSignature() {
-      List<Parameter> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
+      List<Item> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
       return signature(evaluable.type().get(), evaluable.name(), parameters);
     }
 
-    private Parameter createParameter(ItemNode param) {
+    private Item createParameter(ItemNode param) {
       Type type = param.typeNode().type().get();
       String name = param.name();
       Optional<Expression> defaultValue = param.defaultValue()
           .map(this::createExpression);
-      return new Parameter(type, name, defaultValue, param.location());
+      return new Item(type, name, defaultValue, param.location());
     }
 
     private Expression createExpression(ExprNode expr) {
@@ -148,7 +148,7 @@ public class EvaluableLoader {
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
-      ImmutableList<Parameter> parameters = callable.parameters();
+      ImmutableList<Item> parameters = callable.parameters();
       Builder<Expression> resultBuilder = ImmutableList.builder();
       List<ArgNode> args = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {

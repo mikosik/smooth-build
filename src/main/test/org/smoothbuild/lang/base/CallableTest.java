@@ -41,7 +41,7 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Parameter> parameters = list(new Parameter(STRING, "name", Optional.empty(), internal()));
+    List<Item> parameters = list(new Item(STRING, "name", Optional.empty(), internal()));
     Callable callable = new MyCallable(signature(STRING, "name", parameters));
     assertThat(callable.parameters())
         .isEqualTo(parameters);
@@ -56,7 +56,7 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void callable_with_all_params_with_default_values_can_be_called_without_args() {
-    List<Parameter> parameters = list(paramWithDefault(), paramWithDefault());
+    List<Item> parameters = list(paramWithDefault(), paramWithDefault());
     Callable callable = new MyCallable(signature(STRING, "name", parameters));
     assertThat(callable.canBeCalledArgless())
         .isTrue();
@@ -64,18 +64,18 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void callable_with_one_param_without_default_values_cannot_be_called_without_args() {
-    List<Parameter> parameters = list(paramWithDefault(), paramWithoutDefault());
+    List<Item> parameters = list(paramWithDefault(), paramWithoutDefault());
     Callable callable = new MyCallable(signature(STRING, "name", parameters));
     assertThat(callable.canBeCalledArgless())
         .isFalse();
   }
 
-  private Parameter paramWithDefault() {
-    return new Parameter(STRING, "a", Optional.of(mock(Expression.class)), internal());
+  private Item paramWithDefault() {
+    return new Item(STRING, "a", Optional.of(mock(Expression.class)), internal());
   }
 
-  private Parameter paramWithoutDefault() {
-    return new Parameter(STRING, "a", Optional.empty(), internal());
+  private Item paramWithoutDefault() {
+    return new Item(STRING, "a", Optional.empty(), internal());
   }
 
   public static class MyCallable extends Callable {

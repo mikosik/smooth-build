@@ -18,8 +18,8 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
-import org.smoothbuild.lang.base.Parameter;
 import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
@@ -84,10 +84,10 @@ public class LoadModule {
   }
 
   private static Constructor loadConstructor(StructNode struct) {
-    ImmutableList.Builder<Parameter> builder = ImmutableList.builder();
-    ImmutableList<Parameter> parameters = struct.fields()
+    ImmutableList.Builder<Item> builder = ImmutableList.builder();
+    ImmutableList<Item> parameters = struct.fields()
         .stream()
-        .map(field -> new Parameter(field.type().get(), field.name(), empty(), field.location()))
+        .map(field -> new Item(field.type().get(), field.name(), empty(), field.location()))
         .collect(toImmutableList());
     Signature signature =
         new Signature(struct.type().get(), struct.constructor().name(), parameters);

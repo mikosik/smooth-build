@@ -12,8 +12,8 @@ import static org.smoothbuild.util.Lists.list;
 import org.junit.jupiter.api.Test;
 
 public class SignatureTest {
-  private Parameter parameter;
-  private Parameter parameter2;
+  private Item parameter;
+  private Item parameter2;
 
   @Test
   public void null_type_is_forbidden() {
@@ -35,8 +35,8 @@ public class SignatureTest {
 
   @Test
   public void parameter_types() {
-    parameter = new Parameter(BLOB, "blob", empty(), internal());
-    parameter2 = new Parameter(STRING, "string", empty(), internal());
+    parameter = new Item(BLOB, "blob", empty(), internal());
+    parameter2 = new Item(STRING, "string", empty(), internal());
     assertThat(signature(STRING, "name", list(parameter, parameter2)).parameterTypes())
         .containsExactly(BLOB, STRING)
         .inOrder();
@@ -44,8 +44,8 @@ public class SignatureTest {
 
   @Test
   public void to_string() {
-    parameter = new Parameter(BLOB, "blob", empty(), internal());
-    parameter2 = new Parameter(STRING, "string", empty(), internal());
+    parameter = new Item(BLOB, "blob", empty(), internal());
+    parameter2 = new Item(STRING, "string", empty(), internal());
     Signature signature = signature(STRING, "name", list(parameter, parameter2));
     assertThat(signature.toString())
         .isEqualTo(STRING.name() + " " + "name" + "(" + parameter.type().name() + " "

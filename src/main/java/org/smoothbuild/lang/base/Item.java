@@ -8,10 +8,10 @@ import org.smoothbuild.lang.expr.Expression;
 /**
  * This class is immutable.
  */
-public class Parameter extends ItemSignature {
+public class Item extends ItemSignature {
   private final Optional<Expression> defaultValue;
 
-  public Parameter(Type type, String name, Optional<Expression> defaultValue, Location location) {
+  public Item(Type type, String name, Optional<Expression> defaultValue, Location location) {
     super(type, name, defaultValue.isPresent(), location);
     this.defaultValue = defaultValue;
   }

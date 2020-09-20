@@ -30,7 +30,7 @@ public abstract class Callable extends Evaluable {
     return signature;
   }
 
-  public ImmutableList<Parameter> parameters() {
+  public ImmutableList<Item> parameters() {
     return signature.parameters();
   }
 

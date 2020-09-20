@@ -13,51 +13,51 @@ import org.smoothbuild.lang.expr.Expression;
 
 public class ParameterTest {
   private final String name = "name";
-  private Parameter parameter;
+  private Item parameter;
 
   @Test
   public void null_type_is_forbidden() {
-    assertCall(() -> new Parameter(null, name, Optional.empty(), internal()))
+    assertCall(() -> new Item(null, name, Optional.empty(), internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new Parameter(STRING, null, Optional.empty(), internal()))
+    assertCall(() -> new Item(STRING, null, Optional.empty(), internal()))
         .throwsException(NullPointerException.class);
   }
 
   @Test
   public void type_getter() {
-    parameter = new Parameter(STRING, name, Optional.empty(), internal());
+    parameter = new Item(STRING, name, Optional.empty(), internal());
     assertThat(parameter.type())
         .isEqualTo(STRING);
   }
 
   @Test
   public void name_getter() {
-    parameter = new Parameter(STRING, name, Optional.empty(), internal());
+    parameter = new Item(STRING, name, Optional.empty(), internal());
     assertThat(parameter.name())
         .isEqualTo(name);
   }
 
   @Test
   public void parameter_without_default() {
-    parameter = new Parameter(STRING, name, Optional.empty(), internal());
+    parameter = new Item(STRING, name, Optional.empty(), internal());
     assertThat(parameter.hasDefaultValue())
         .isFalse();
   }
 
   @Test
   public void parameter_with_default_value() {
-    parameter = new Parameter(STRING, name, Optional.of(mock(Expression.class)), internal());
+    parameter = new Item(STRING, name, Optional.of(mock(Expression.class)), internal());
     assertThat(parameter.hasDefaultValue())
         .isTrue();
   }
 
   @Test
   public void to_string() {
-    parameter = new Parameter(STRING, name, Optional.of(mock(Expression.class)), internal());
+    parameter = new Item(STRING, name, Optional.of(mock(Expression.class)), internal());
     assertThat(parameter.toString())
         .isEqualTo("Parameter(`String name`)");
   }
