@@ -1,10 +1,12 @@
 package org.smoothbuild.lang.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 
@@ -16,9 +18,10 @@ import com.google.common.collect.ImmutableList;
 public class Function extends Callable {
   private final Optional<Expression> body;
 
-  public Function(Signature signature, Optional<Expression> body, Location location) {
-    super(signature, location);
-    this.body = checkNotNull(body);
+  public Function(Type resultType, String name, ImmutableList<Item> parameters,
+      Optional<Expression> body, Location location) {
+    super(resultType, name, parameters, location);
+    this.body = requireNonNull(body);
   }
 
   public Optional<Expression> body() {
@@ -36,7 +39,9 @@ public class Function extends Callable {
       return true;
     }
     if (o instanceof Function that) {
-      return this.signature().equals(that.signature())
+      return this.resultType().equals(that.resultType())
+          && this.name().equals(that.name())
+          && this.parameters().equals(that.parameters())
           && this.body.equals(that.body)
           && this.location().equals(that.location());
     }
@@ -45,11 +50,18 @@ public class Function extends Callable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(signature(), body, location());
+    return Objects.hash(resultType(), name(), parameters(), body, location());
   }
 
   @Override
   public String toString() {
-    return "Function(`" + signature().toString() + " = " + body + "`)";
+    return "Function(`" + resultType() + "(" + parametersToString() + ")" + " = " + body + "`)";
+  }
+
+  private String parametersToString() {
+    return parameters()
+        .stream()
+        .map(Object::toString)
+        .collect(joining(", "));
   }
 }

@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 
@@ -12,13 +13,14 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Constructor extends Callable {
-  public Constructor(Signature signature, Location location) {
-    super(signature, location);
+  public Constructor(Type resultType, String name, ImmutableList<Item> parameters,
+      Location location) {
+    super(resultType, name, parameters, location);
   }
 
   @Override
   public StructType type() {
-    return (StructType) signature().type();
+    return (StructType) resultType();
   }
 
   @Override
@@ -32,7 +34,9 @@ public class Constructor extends Callable {
       return true;
     }
     if (o instanceof Constructor that) {
-      return this.signature().equals(that.signature())
+      return this.resultType().equals(that.resultType())
+          && this.name().equals(that.name())
+          && this.parameters().equals(that.parameters())
           && this.location().equals(that.location());
     }
     return false;
@@ -40,6 +44,6 @@ public class Constructor extends Callable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(signature(), location());
+    return Objects.hash(resultType(), name(), parameters(), location());
   }
 }

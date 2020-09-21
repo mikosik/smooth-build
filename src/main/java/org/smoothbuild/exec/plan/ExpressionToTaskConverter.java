@@ -121,7 +121,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     if (callable instanceof Function function) {
       List<Task> arguments = childrenTasks(expression.arguments());
       GenericTypeMap mapping = inferMapping(function.parameterTypes(), taskTypes(arguments));
-      Type actualResultType = mapping.applyTo(function.signature().type());
+      Type actualResultType = mapping.applyTo(function.resultType());
 
       if (function.body().isPresent()) {
         return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
