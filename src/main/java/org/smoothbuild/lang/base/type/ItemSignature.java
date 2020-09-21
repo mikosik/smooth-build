@@ -11,7 +11,8 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
 
 /**
- * Item contains attributes common to both struct field and function parameter.
+ * Item is a function parameter or a struct field.
+ *
  * This class is immutable.
  */
 public class ItemSignature implements Named {
