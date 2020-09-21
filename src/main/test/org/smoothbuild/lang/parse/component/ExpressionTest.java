@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
-import static org.smoothbuild.lang.TestingLang.signature;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
@@ -209,8 +208,7 @@ public class ExpressionTest {
   @Test
   public void constructor() {
     StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
-    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, STRING, "field"))
-    );
+    Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {
             String field
@@ -223,7 +221,7 @@ public class ExpressionTest {
   @Test
   public void constructor_call_with_argument() {
     StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
-    Constructor constr = constr(1, signature(struct, "myStruct", parameter(2, STRING, "field")));
+    Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {
             String field

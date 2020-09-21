@@ -9,7 +9,6 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
@@ -68,8 +67,7 @@ public class TestingLang {
 
   private static Function function(int line, Type type, String name, Item[] parameters,
       Optional<Expression> body) {
-    Signature signature = new Signature(type, name, ImmutableList.copyOf(parameters));
-    return new Function(signature, body, loc(line));
+    return new Function(type, name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
   public static Value value(int line, Type type, String name) {
@@ -89,12 +87,8 @@ public class TestingLang {
     return Types.struct(name, loc(line), List.of(field));
   }
 
-  public static Constructor constr(int line, Signature signature) {
-    return new Constructor(signature, loc(line));
-  }
-
-  public static Signature signature(StructType myStruct, String name, Item param) {
-    return new Signature(myStruct, name, ImmutableList.of(param));
+  public static Constructor constr(int line, Type resultType, String name, Item... parameters) {
+    return new Constructor(resultType, name, ImmutableList.copyOf(parameters), loc(line));
   }
 
   public static Item parameter(int line, Type type, String name) {

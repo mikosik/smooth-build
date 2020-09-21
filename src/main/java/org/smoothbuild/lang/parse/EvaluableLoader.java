@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
-import static org.smoothbuild.lang.base.Signature.signature;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Signature;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -74,16 +72,14 @@ public class EvaluableLoader {
     }
 
     public Callable loadFunction() {
-      return new Function(createSignature(), bodyExpression(), evaluable.location());
+      Type resultType = evaluable.type().get();
+      String name = evaluable.name();
+      ImmutableList<Item> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
+      return new Function(resultType, name, parameters, bodyExpression(), evaluable.location());
     }
 
     private Optional<Expression> bodyExpression() {
       return evaluable.isNative() ? empty() : Optional.of(createExpression(evaluable.expr()));
-    }
-
-    private Signature createSignature() {
-      List<Item> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
-      return signature(evaluable.type().get(), evaluable.name(), parameters);
     }
 
     private Item createParameter(ItemNode param) {

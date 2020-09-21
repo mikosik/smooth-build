@@ -121,7 +121,7 @@ public class InferCallTypeAndParamAssignment {
         String name = call.calledName();
         Evaluable evaluable = imported.evaluables().get(name);
         if (evaluable != null) {
-          return ((Callable) evaluable).signature().parameterSignatures();
+          return ((Callable) evaluable).parameterSignatures();
         }
         CallableNode node = callables.get(name);
         if (node != null) {
@@ -154,14 +154,14 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private Optional<Type> callType(GenericTypeMap actualTypeMap) {
-        return callableType().map(actualTypeMap::applyTo);
+        return callableResultType().map(actualTypeMap::applyTo);
       }
 
-      private Optional<Type> callableType() {
+      private Optional<Type> callableResultType() {
         String name = call.calledName();
         Callable callable = (Callable) imported.evaluables().get(name);
         if (callable != null) {
-          return Optional.of(callable.signature().type());
+          return Optional.of(callable.resultType());
         }
         CallableNode node = callables.get(name);
         if (node != null) {
