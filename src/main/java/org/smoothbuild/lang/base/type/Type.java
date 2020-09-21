@@ -207,6 +207,6 @@ public abstract class Type implements Named {
 
   @Override
   public String toString() {
-    return "Type(\"" + name() + "\")";
+    return "Type(`" + name() + "`)";
   }
 }

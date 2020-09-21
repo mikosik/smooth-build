@@ -76,7 +76,7 @@ public class TypeTest {
   @MethodSource("names")
   public void to_string(Type type, String name) {
     assertThat(type.toString())
-        .isEqualTo("Type(\"" + name + "\")");
+        .isEqualTo("Type(`" + name + "`)");
   }
 
   public static Stream<Arguments> names() {
