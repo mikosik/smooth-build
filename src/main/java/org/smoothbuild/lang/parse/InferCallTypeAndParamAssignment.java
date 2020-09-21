@@ -121,7 +121,7 @@ public class InferCallTypeAndParamAssignment {
         String name = call.calledName();
         Evaluable evaluable = imported.evaluables().get(name);
         if (evaluable != null) {
-          return ((Callable) evaluable).signature().parameters();
+          return ((Callable) evaluable).signature().parameterSignatures();
         }
         CallableNode node = callables.get(name);
         if (node != null) {
