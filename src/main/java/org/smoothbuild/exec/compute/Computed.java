@@ -1,14 +1,14 @@
 package org.smoothbuild.exec.compute;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.exec.base.MaybeOutput;
 
 public record Computed(MaybeOutput maybeOutput, ResultSource resultSource) {
 
   public Computed {
-    this.maybeOutput = checkNotNull(maybeOutput);
-    this.resultSource = checkNotNull(resultSource);
+    this.maybeOutput = requireNonNull(maybeOutput);
+    this.resultSource = requireNonNull(resultSource);
   }
 
   public MaybeOutput computed() {

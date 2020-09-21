@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
@@ -9,7 +9,7 @@ import org.smoothbuild.db.object.base.Obj;
 public record Output(Obj value, Array messages) {
 
   public Output {
-    checkNotNull(messages);
+    requireNonNull(messages);
   }
 
   public boolean hasValue() {

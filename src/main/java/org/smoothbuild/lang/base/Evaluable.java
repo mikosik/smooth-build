@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Named;
@@ -14,9 +14,9 @@ public abstract class Evaluable implements Named {
   private final String name;
 
   public Evaluable(Type type, String name, Location location) {
-    this.type = checkNotNull(type);
-    this.location = checkNotNull(location);
-    this.name = checkNotNull(name);
+    this.type = requireNonNull(type);
+    this.location = requireNonNull(location);
+    this.name = requireNonNull(name);
   }
 
   @Override

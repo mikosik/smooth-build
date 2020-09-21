@@ -1,6 +1,6 @@
 package org.smoothbuild.db.object.base;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
@@ -19,8 +19,8 @@ public class Obj {
   protected final HashedDb hashedDb;
 
   public Obj(MerkleRoot merkleRoot, HashedDb hashedDb) {
-    this.merkleRoot = merkleRoot;
-    this.hashedDb = checkNotNull(hashedDb);
+    this.merkleRoot = requireNonNull(merkleRoot);
+    this.hashedDb = requireNonNull(hashedDb);
   }
 
   public Hash hash() {
