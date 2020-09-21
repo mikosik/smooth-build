@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Lists.map;
 
@@ -27,7 +28,13 @@ public record Signature(Type type, String name, ImmutableList<Item> parameters) 
   }
 
   public List<Type> parameterTypes() {
-    return map(parameters, ItemSignature::type);
+    return map(parameters, Item::type);
+  }
+
+  public ImmutableList<ItemSignature> parameterSignatures() {
+    return parameters.stream()
+        .map(Item::signature)
+        .collect(toImmutableList());
   }
 
   @Override

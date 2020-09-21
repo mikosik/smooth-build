@@ -153,7 +153,7 @@ public class EvaluableLoader {
       List<ArgNode> args = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {
         if (args.get(i) == null) {
-          resultBuilder.add(parameters.get(i).defaultValueExpression().get());
+          resultBuilder.add(parameters.get(i).defaultValue().get());
         } else {
           resultBuilder.add(createExpression(args.get(i).expr()));
         }

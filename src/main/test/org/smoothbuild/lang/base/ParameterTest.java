@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -9,7 +8,6 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.expr.Expression;
 
 public class ParameterTest {
   private final String name = "name";
@@ -42,23 +40,9 @@ public class ParameterTest {
   }
 
   @Test
-  public void parameter_without_default() {
-    parameter = new Item(STRING, name, Optional.empty(), internal());
-    assertThat(parameter.hasDefaultValue())
-        .isFalse();
-  }
-
-  @Test
-  public void parameter_with_default_value() {
-    parameter = new Item(STRING, name, Optional.of(mock(Expression.class)), internal());
-    assertThat(parameter.hasDefaultValue())
-        .isTrue();
-  }
-
-  @Test
   public void to_string() {
-    parameter = new Item(STRING, name, Optional.of(mock(Expression.class)), internal());
+    parameter = new Item(STRING, name, Optional.empty(), internal());
     assertThat(parameter.toString())
-        .isEqualTo("Parameter(`String name`)");
+        .isEqualTo("Item(`String name`)");
   }
 }

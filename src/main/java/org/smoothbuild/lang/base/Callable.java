@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
@@ -41,7 +40,7 @@ public abstract class Callable extends Evaluable {
 
   public boolean canBeCalledArgless() {
     return signature.parameters().stream()
-        .allMatch(ItemSignature::hasDefaultValue);
+        .allMatch(p -> p.defaultValue().isPresent());
   }
 
   public abstract Expression createCallExpression(ImmutableList<Expression> arguments,
