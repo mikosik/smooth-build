@@ -2,8 +2,8 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 
 public class ItemNode extends NamedNode implements RefTarget {

@@ -19,7 +19,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.ItemSignature;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;

@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base;
 
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 

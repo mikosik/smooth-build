@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.type;
 
 import static com.google.common.base.Strings.padEnd;
 import static com.google.common.collect.Streams.stream;
@@ -7,7 +7,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
 
 /**

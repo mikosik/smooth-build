@@ -2,8 +2,8 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.List;
 
-import org.smoothbuild.lang.base.ItemSignature;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.ItemSignature;
 
 import com.google.common.collect.ImmutableList;
 
