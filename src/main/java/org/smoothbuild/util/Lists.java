@@ -3,7 +3,6 @@ package org.smoothbuild.util;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -12,8 +11,8 @@ import com.google.common.collect.ImmutableList;
 
 public class Lists {
   @SafeVarargs
-  public static <E> List<E> list(E... elements) {
-    return Arrays.asList(elements);
+  public static <E> ImmutableList<E> list(E... elements) {
+    return ImmutableList.copyOf(elements);
   }
 
   public static <E> List<E> concat(List<E> list, E element) {
