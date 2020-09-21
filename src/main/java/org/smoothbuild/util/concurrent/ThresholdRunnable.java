@@ -1,6 +1,6 @@
 package org.smoothbuild.util.concurrent;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +14,7 @@ public class ThresholdRunnable implements Runnable {
 
   public ThresholdRunnable(int count, Runnable runnable) {
     this.count = new AtomicInteger(validateCount(count));
-    this.runnable = checkNotNull(runnable);
+    this.runnable = requireNonNull(runnable);
     if (count == 0) {
       runnable.run();
     }

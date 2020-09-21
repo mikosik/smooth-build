@@ -1,6 +1,6 @@
 package org.smoothbuild.util.concurrent;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
 
   @Override
   public void accept(T value) {
-    checkNotNull(value);
+    requireNonNull(value);
     synchronized (lock) {
       assertValueIsNotSetYet(value);
       this.value = value;
@@ -48,7 +48,7 @@ public class FeedingConsumer<T> implements Consumer<T>, Feeder<T> {
 
   @Override
   public void addConsumer(Consumer<T> consumer) {
-    checkNotNull(consumer);
+    requireNonNull(consumer);
     boolean notify = false;
     synchronized (lock) {
       if (value != null) {
