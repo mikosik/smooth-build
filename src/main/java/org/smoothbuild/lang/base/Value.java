@@ -20,7 +20,7 @@ public class Value extends Evaluable {
 
   @Override
   public Type type() {
-    return (Type) super.type();
+    return super.type();
   }
 
   public Optional<Expression> body() {
