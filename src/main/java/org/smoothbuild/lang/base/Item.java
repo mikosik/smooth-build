@@ -7,6 +7,8 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
 /**
+ * Item is a function parameter or a struct field.
+ *
  * This class is immutable.
  */
 public class Item extends ItemSignature {
