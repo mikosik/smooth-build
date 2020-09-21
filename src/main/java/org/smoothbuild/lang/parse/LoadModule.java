@@ -84,7 +84,6 @@ public class LoadModule {
   }
 
   private static Constructor loadConstructor(StructNode struct) {
-    ImmutableList.Builder<Item> builder = ImmutableList.builder();
     ImmutableList<Item> parameters = struct.fields()
         .stream()
         .map(field -> new Item(field.type().get(), field.name(), empty(), field.location()))
