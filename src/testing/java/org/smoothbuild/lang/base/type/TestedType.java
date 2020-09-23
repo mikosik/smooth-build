@@ -4,58 +4,64 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
+import static org.smoothbuild.lang.base.type.Types.generic;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.smoothbuild.lang.base.Item;
 
 import com.google.common.collect.ImmutableList;
 
-public record TestedType(String name, String literal, Object value, String declarations) {
+public record TestedType(Type type, String literal, Object value, String declarations) {
   public static final TestedType A = new TestedType(
-      "A",
+      generic("A"),
       null,
       null
   );
   public static final TestedType B = new TestedType(
-      "A",
+      generic("A"),
       null,
       null
   );
   public static final TestedType BLOB = new TestedType(
-      blob().name(),
+      blob(),
       "0x" + encodeString("xyz", US_ASCII).hex(),
       "xyz"
   );
   public static final TestedType BOOL = new TestedType(
-      bool().name(),
+      bool(),
       "true",
       new String(new byte[] {1})
   );
   public static final TestedType NOTHING = new TestedType(
-      nothing().name(),
+      nothing(),
       """
           reportError("e")""",
       null,
       "Nothing reportError(String message);");
   public static final TestedType STRING = new TestedType(
-      string().name(),
+      string(),
       "\"abc\"",
       "abc"
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      "Data",
+      struct("Data", loc(7), list(new Item(blob(), "value", Optional.empty(), loc(7)))),
       "data(0xAB)",
       null,
       "Data{ Blob value }");
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      "Flag",
+      struct("Flag", loc(7), list(new Item(bool(), "value", Optional.empty(), loc(7)))),
       "flag(true)",
       null,
       "Flag{ Bool value }");
   public static final TestedType STRUCT_WITH_STRING = new TestedType(
-      "Person",
+      struct("Person", loc(7), list(new Item(string(), "name", Optional.empty(), loc(7)))),
       """
           person("John")""",
       null,
@@ -66,7 +72,7 @@ public record TestedType(String name, String literal, Object value, String decla
   public static final TestedType BLOB_ARRAY = array(BLOB);
   public static final TestedType BOOL_ARRAY = array(BOOL);
   public static final TestedType NOTHING_ARRAY = new TestedType(
-      "[" + nothing().name() + "]",
+      Types.array(nothing()),
       "[]",
       list()
   );
@@ -123,18 +129,22 @@ public record TestedType(String name, String literal, Object value, String decla
 
   private static TestedType array(TestedType type, Object value) {
     return new TestedType(
-        "[" + type.name + "]",
+        Types.array(type.type),
         "[" + type.literal + "]",
         value,
         type.declarations
     );
   }
 
-  public TestedType(String name, String literal, Object value) {
-    this(name, literal, value, "");
+  public TestedType(Type type, String literal, Object value) {
+    this(type, literal, value, "");
+  }
+
+  public String name() {
+    return type.name();
   }
 
   public String q() {
-    return "`" + name + "`";
+    return "`" + name() + "`";
   }
 }
