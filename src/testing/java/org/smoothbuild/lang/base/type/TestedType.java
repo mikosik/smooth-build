@@ -25,7 +25,7 @@ public record TestedType(Type type, String literal, Object value, String declara
       null
   );
   public static final TestedType B = new TestedType(
-      generic("A"),
+      generic("B"),
       null,
       null
   );
