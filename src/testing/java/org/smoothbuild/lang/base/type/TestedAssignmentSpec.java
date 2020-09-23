@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedType.A;
 import static org.smoothbuild.lang.base.type.TestedType.A_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.A_ARRAY2;
@@ -25,7 +26,7 @@ import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 public class TestedAssignmentSpec extends TestedAssignment {
   public final boolean allowed;
@@ -48,13 +49,15 @@ public class TestedAssignmentSpec extends TestedAssignment {
     return new TestedAssignmentSpec(target, source, true);
   }
 
-  public static Stream<TestedAssignmentSpec> assignment_without_generics_test_specs() {
+  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
     return assignment_test_specs()
-        .filter(a -> !(a.target.type().isGeneric() || a.source.type().isGeneric()));
+        .stream()
+        .filter(a -> !(a.target.type().isGeneric() || a.source.type().isGeneric()))
+        .collect(toList());
   }
 
-  public static Stream<TestedAssignmentSpec> assignment_test_specs() {
-    return Stream.of(
+  public static List<TestedAssignmentSpec> assignment_test_specs() {
+    return List.of(
         // A
         illegalAssignment(A, BLOB),
         illegalAssignment(A, BOOL),
@@ -474,8 +477,12 @@ public class TestedAssignmentSpec extends TestedAssignment {
     );
   }
 
-  public static Stream<TestedAssignmentSpec> parameter_assignment_test_specs() {
-    return Stream.of(
+  public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
+    return parameter_assignment_generic_test_specs();
+  }
+
+  private static List<TestedAssignmentSpec> parameter_assignment_generic_test_specs() {
+    return List.of(
         allowedAssignment(A, STRING),
         allowedAssignment(A, STRUCT_WITH_STRING),
         allowedAssignment(A, NOTHING),
