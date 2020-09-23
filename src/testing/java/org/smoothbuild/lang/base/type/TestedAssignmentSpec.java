@@ -26,6 +26,7 @@ import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestedAssignmentSpec extends TestedAssignment {
@@ -478,7 +479,10 @@ public class TestedAssignmentSpec extends TestedAssignment {
   }
 
   public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
-    return parameter_assignment_generic_test_specs();
+    ArrayList<TestedAssignmentSpec> result = new ArrayList<>();
+    result.addAll(assignment_without_generics_test_specs());
+    result.addAll(parameter_assignment_generic_test_specs());
+    return result;
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_generic_test_specs() {
