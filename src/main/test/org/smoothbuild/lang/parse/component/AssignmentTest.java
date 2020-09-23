@@ -8,6 +8,7 @@ import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -117,7 +118,7 @@ public class AssignmentTest {
     }
   }
 
-  private static Stream<TestedAssignmentSpec> parameter_assignment_test_data() {
+  private static List<TestedAssignmentSpec> parameter_assignment_test_data() {
     return parameter_assignment_test_specs();
   }
 
@@ -185,11 +186,11 @@ public class AssignmentTest {
     return result.stream();
   }
 
-  private static Stream<TestedAssignmentSpec> without_generics_test_specs() {
+  private static List<TestedAssignmentSpec> without_generics_test_specs() {
     return assignment_without_generics_test_specs();
   }
 
-  private static Stream<TestedAssignmentSpec> test_specs() {
+  private static List<TestedAssignmentSpec> test_specs() {
     return assignment_test_specs();
   }
 }
