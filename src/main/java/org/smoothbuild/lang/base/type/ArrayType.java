@@ -55,6 +55,12 @@ public class ArrayType extends Type {
   }
 
   @Override
+  public boolean isAssignableDirectlyFrom(Type type) {
+    return type instanceof ArrayType thatArrayType
+        && elemType().isAssignableFrom(thatArrayType.elemType());
+  }
+
+  @Override
   public Type actualCoreTypeWhenAssignedFrom(Type source) {
     if (source.isArray()) {
       return elemType.actualCoreTypeWhenAssignedFrom(((ArrayType) source).elemType());
