@@ -20,7 +20,7 @@ import org.smoothbuild.lang.base.type.TestedType;
 public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("without_generics_test_specs")
-  public void value_body_type_must_be_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
+  public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
     String sourceCode = unlines(
@@ -39,7 +39,7 @@ public class AssignmentTest {
 
   @ParameterizedTest
   @MethodSource("test_specs")
-  public void function_body_type_must_be_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
+  public void function_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
     String sourceCode = unlines(
@@ -58,57 +58,32 @@ public class AssignmentTest {
   }
 
   @ParameterizedTest
-  @MethodSource("without_generics_test_specs")
-  public void argument_type_must_be_assignable_to_assigned_parameter_type(
-      TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
-    String sourceCode = unlines(
-        "myFunction(" + target.name() + " param) = param;",
-        "result = myFunction(" + source.literal() + ");",
-        testSpec.declarations(),
-        "Bool true;");
+  @MethodSource("parameter_assignment_test_data")
+  public void argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
+    TestedType targetType = testSpec.target;
+    TestedType sourceType = testSpec.source;
+    TestModuleLoader module = module(unlines(
+        "String innerFunction(" + targetType.name() + " target);                          ",
+        "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
+        testSpec.declarations()));
     if (testSpec.allowed) {
-      module(sourceCode)
-          .loadsSuccessfully();
+      module.loadsSuccessfully();
     } else {
-      module(sourceCode)
-          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
-              + source.q() + " to parameter `param` of type " + target.q() + ".");
-    }
-  }
-
-  @ParameterizedTest
-  @MethodSource("without_generics_test_specs")
-  public void argument_type_must_be_assignable_to_assigned_named_parameter_type(
-      TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
-    String sourceCode = unlines(
-        "myFunction(" + target.name() + " param) = param;",
-        "result = myFunction(param=" + source.literal() + ");",
-        testSpec.declarations(),
-        "Bool true;");
-    if (testSpec.allowed) {
-      module(sourceCode)
-          .loadsSuccessfully();
-    } else {
-      module(sourceCode)
-          .loadsWithError(2, "In call to `myFunction`: Cannot assign argument of type "
-              + source.q() + " to parameter `param` of type " + target.q() + ".");
+      module.loadsWithError(2,
+          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.q()
+              + " to parameter `target` of type " + targetType.q() + ".");
     }
   }
 
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
-  public void generic_parameter_assignment(TestedAssignmentSpec testSpec) {
+  public void argument_type_is_assignable_to_named_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType targetType = testSpec.target;
     TestedType sourceType = testSpec.source;
     TestModuleLoader module = module(unlines(
         "String innerFunction(" + targetType.name() + " target);                          ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
-        targetType.declarations(),
-        sourceType.declarations()));
+        testSpec.declarations()));
     if (testSpec.allowed) {
       module.loadsSuccessfully();
     } else {
@@ -124,7 +99,7 @@ public class AssignmentTest {
 
   @ParameterizedTest
   @MethodSource("without_generics_test_specs")
-  public void default_value_type_must_be_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
+  public void default_value_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
     String sourceCode = unlines(
@@ -143,7 +118,7 @@ public class AssignmentTest {
 
   @ParameterizedTest
   @MethodSource("array_element_assignment_test_specs")
-  public void array_literal_element_types_must_be_assignable_to_common_super_type(
+  public void array_literal_element_types_is_assignable_to_common_super_type(
       TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
