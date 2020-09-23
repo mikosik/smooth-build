@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
@@ -101,16 +100,15 @@ public class AssignmentTest {
 
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
-  public void generic_parameter_assignment(
-      boolean allowed, TestedType targetType, TestedType sourceType) {
-    String target = targetType.name();
-    String source = sourceType.name();
+  public void generic_parameter_assignment(TestedAssignmentSpec testSpec) {
+    TestedType targetType = testSpec.target;
+    TestedType sourceType = testSpec.source;
     TestModuleLoader module = module(unlines(
-        "String innerFunction(" + target + " target);                          ",
-        "outerFunction(" + source + " source) = innerFunction(target=source);  ",
+        "String innerFunction(" + targetType.name() + " target);                          ",
+        "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
         targetType.declarations(),
         sourceType.declarations()));
-    if (allowed) {
+    if (testSpec.allowed) {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
@@ -119,7 +117,7 @@ public class AssignmentTest {
     }
   }
 
-  private static Stream<Arguments> parameter_assignment_test_data() {
+  private static Stream<TestedAssignmentSpec> parameter_assignment_test_data() {
     return parameter_assignment_test_specs();
   }
 
