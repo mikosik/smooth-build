@@ -109,33 +109,13 @@ public abstract class Type implements Named {
   }
 
   public boolean isAssignableFrom(Type type) {
-    if (isGeneric()) {
-      if (type.isGeneric()) {
-        return equals(type);
-      } else {
-        return type.coreType().isNothing() && type.coreDepth() <= coreDepth();
-      }
-    } else {
-      if (type.isGeneric()) {
-        return false;
-      }
-      if (this.equals(type)) {
-        return true;
-      }
-      if (type.isNothing()) {
-        return true;
-      }
-      if (this instanceof ArrayType thisConcreteType
-          && type instanceof ArrayType thatConcreteType) {
-        Type thisElemType = thisConcreteType.elemType();
-        Type thatElemType = thatConcreteType.elemType();
-        return thisElemType.isAssignableFrom(thatElemType);
-      }
-      if (type instanceof StructType structType) {
-        return isAssignableFrom(structType.superType());
-      }
-      return false;
-    }
+    return type.isNothing()
+        || isAssignableDirectlyFrom(type)
+        || (type instanceof StructType structType && isAssignableFrom(structType.superType()));
+  }
+
+  public boolean isAssignableDirectlyFrom(Type type) {
+    return this.equals(type);
   }
 
   public boolean isParamAssignableFrom(Type type) {
