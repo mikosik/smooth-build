@@ -50,13 +50,6 @@ public class TestedAssignmentSpec extends TestedAssignment {
     return new TestedAssignmentSpec(target, source, true);
   }
 
-  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
-    return assignment_test_specs()
-        .stream()
-        .filter(a -> !(a.target.type().isGeneric() || a.source.type().isGeneric()))
-        .collect(toList());
-  }
-
   public static List<TestedAssignmentSpec> assignment_test_specs() {
     return List.of(
         // A
@@ -483,6 +476,13 @@ public class TestedAssignmentSpec extends TestedAssignment {
     result.addAll(assignment_without_generics_test_specs());
     result.addAll(parameter_assignment_generic_test_specs());
     return result;
+  }
+
+  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
+    return assignment_test_specs()
+        .stream()
+        .filter(a -> !(a.target.type().isGeneric() || a.source.type().isGeneric()))
+        .collect(toList());
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_generic_test_specs() {
