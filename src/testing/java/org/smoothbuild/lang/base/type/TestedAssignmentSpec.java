@@ -473,9 +473,16 @@ public class TestedAssignmentSpec extends TestedAssignment {
 
   public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
     ArrayList<TestedAssignmentSpec> result = new ArrayList<>();
-    result.addAll(assignment_without_generics_test_specs());
+    result.addAll(assignment_without_generic_target_test_specs());
     result.addAll(parameter_assignment_generic_test_specs());
     return result;
+  }
+
+  public static List<TestedAssignmentSpec> assignment_without_generic_target_test_specs() {
+    return assignment_test_specs()
+        .stream()
+        .filter(a -> !(a.target.type().isGeneric()))
+        .collect(toList());
   }
 
   public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {

@@ -1,9 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.Location.location;
-import static org.smoothbuild.lang.base.ModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
@@ -11,23 +9,21 @@ import static org.smoothbuild.lang.base.type.Types.generic;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Location;
+
+import com.google.common.collect.ImmutableList;
 
 public class TestingTypes {
   public static final BoolType BOOL = bool();
   public static final StringType STRING = string();
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
-  public static final Location FAKE_LOCATION =
-      location(moduleLocation(USER, Path.of("fake/path")), 1);
-  public static final StructType PERSON = struct(
-      "Person", FAKE_LOCATION, List.of(
+  public static final StructType PERSON = struct("Person", loc(), List.of(
           new Item(STRING, "firstName", Optional.empty(), internal()),
           new Item(STRING, "lastName", Optional.empty(),internal())));
   public static final Type A = generic("A");
@@ -48,4 +44,22 @@ public class TestingTypes {
   public static final ArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
   public static final ArrayType ARRAY2_A = array(ARRAY_A);
   public static final ArrayType ARRAY2_B = array(ARRAY_B);
+
+  public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
+      .addAll(BASIC_TYPES)
+      .add(PERSON)
+      .add(A)
+      .build();
+
+  public static final ImmutableList<Type> ELEMENTARY_NON_STRUCT_TYPES =
+      ImmutableList.<Type>builder()
+          .addAll(BASIC_TYPES)
+          .add(A)
+          .build();
+
+  public static final ImmutableList<Type> ELEMENTARY_NON_GENERIC_TYPES =
+      ImmutableList.<Type>builder()
+          .addAll(BASIC_TYPES)
+          .add(PERSON)
+          .build();
 }

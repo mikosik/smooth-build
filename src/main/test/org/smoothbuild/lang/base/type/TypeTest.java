@@ -5,7 +5,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_B;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_NOTHING;
@@ -21,21 +20,21 @@ import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
-import static org.smoothbuild.lang.base.type.TestingTypes.FAKE_LOCATION;
+import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_GENERIC_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_STRUCT_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
-import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.bool;
-import static org.smoothbuild.lang.base.type.Types.generic;
-import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -46,7 +45,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.util.Lists;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
 public class TypeTest {
@@ -104,7 +105,6 @@ public class TypeTest {
     );
   }
 
-
   @ParameterizedTest
   @MethodSource("coreType_test_data")
   public void coreType(Type type, Type expected) {
@@ -113,28 +113,13 @@ public class TypeTest {
   }
 
   public static List<Arguments> coreType_test_data() {
-    return List.of(
-        arguments(BOOL, BOOL),
-        arguments(STRING, STRING),
-        arguments(BLOB, BLOB),
-        arguments(NOTHING, NOTHING),
-        arguments(PERSON, PERSON),
-        arguments(A, A),
-
-        arguments(ARRAY_BOOL, BOOL),
-        arguments(ARRAY_STRING, STRING),
-        arguments(ARRAY_BLOB, BLOB),
-        arguments(ARRAY_NOTHING, NOTHING),
-        arguments(ARRAY_PERSON, PERSON),
-        arguments(ARRAY_A, A),
-
-        arguments(ARRAY2_BOOL, BOOL),
-        arguments(ARRAY2_STRING, STRING),
-        arguments(ARRAY2_BLOB, BLOB),
-        arguments(ARRAY2_NOTHING, NOTHING),
-        arguments(ARRAY2_PERSON, PERSON),
-        arguments(ARRAY2_A, A)
-    );
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, type));
+      result.add(arguments(array(type), type));
+      result.add(arguments(array(array(type)), type));
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -145,174 +130,18 @@ public class TypeTest {
   }
 
   public static List<Arguments> replaceCoreType_test_data() {
-    return List.of(
-        arguments(BOOL, BOOL, BOOL),
-        arguments(BOOL, STRING, STRING),
-        arguments(BOOL, BLOB, BLOB),
-        arguments(BOOL, NOTHING, NOTHING),
-        arguments(BOOL, PERSON, PERSON),
-        arguments(BOOL, A, A),
-
-        arguments(STRING, BOOL, BOOL),
-        arguments(STRING, STRING, STRING),
-        arguments(STRING, BLOB, BLOB),
-        arguments(STRING, NOTHING, NOTHING),
-        arguments(STRING, PERSON, PERSON),
-        arguments(STRING, A, A),
-
-        arguments(BLOB, BOOL, BOOL),
-        arguments(BLOB, STRING, STRING),
-        arguments(BLOB, BLOB, BLOB),
-        arguments(BLOB, NOTHING, NOTHING),
-        arguments(BLOB, PERSON, PERSON),
-        arguments(BLOB, A, A),
-
-        arguments(NOTHING, BOOL, BOOL),
-        arguments(NOTHING, STRING, STRING),
-        arguments(NOTHING, BLOB, BLOB),
-        arguments(NOTHING, NOTHING, NOTHING),
-        arguments(NOTHING, PERSON, PERSON),
-        arguments(NOTHING, A, A),
-
-        arguments(PERSON, BOOL, BOOL),
-        arguments(PERSON, STRING, STRING),
-        arguments(PERSON, BLOB, BLOB),
-        arguments(PERSON, NOTHING, NOTHING),
-        arguments(PERSON, PERSON, PERSON),
-        arguments(PERSON, A, A),
-
-        //
-
-        arguments(BOOL, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(BOOL, ARRAY_STRING, ARRAY_STRING),
-        arguments(BOOL, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(BOOL, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(BOOL, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(BOOL, ARRAY_A, ARRAY_A),
-
-        arguments(STRING, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(STRING, ARRAY_STRING, ARRAY_STRING),
-        arguments(STRING, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(STRING, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(STRING, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(STRING, ARRAY_A, ARRAY_A),
-
-        arguments(BLOB, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(BLOB, ARRAY_STRING, ARRAY_STRING),
-        arguments(BLOB, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(BLOB, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(BLOB, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(BLOB, ARRAY_A, ARRAY_A),
-
-        arguments(NOTHING, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(NOTHING, ARRAY_STRING, ARRAY_STRING),
-        arguments(NOTHING, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(NOTHING, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(NOTHING, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(NOTHING, ARRAY_A, ARRAY_A),
-
-        arguments(PERSON, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(PERSON, ARRAY_STRING, ARRAY_STRING),
-        arguments(PERSON, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(PERSON, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(PERSON, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(PERSON, ARRAY_A, ARRAY_A),
-
-        arguments(A, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(A, ARRAY_STRING, ARRAY_STRING),
-        arguments(A, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(A, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(A, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(A, ARRAY_A, ARRAY_A),
-
-        //
-
-        arguments(ARRAY_BOOL, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_BOOL, STRING, ARRAY_STRING),
-        arguments(ARRAY_BOOL, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_BOOL, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_BOOL, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_BOOL, A, ARRAY_A),
-
-        arguments(ARRAY_STRING, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_STRING, STRING, ARRAY_STRING),
-        arguments(ARRAY_STRING, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_STRING, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_STRING, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_STRING, A, ARRAY_A),
-
-        arguments(ARRAY_BLOB, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_BLOB, STRING, ARRAY_STRING),
-        arguments(ARRAY_BLOB, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_BLOB, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_BLOB, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_BLOB, A, ARRAY_A),
-
-        arguments(ARRAY_NOTHING, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_NOTHING, STRING, ARRAY_STRING),
-        arguments(ARRAY_NOTHING, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_NOTHING, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_NOTHING, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_NOTHING, A, ARRAY_A),
-
-        arguments(ARRAY_PERSON, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_PERSON, STRING, ARRAY_STRING),
-        arguments(ARRAY_PERSON, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_PERSON, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_PERSON, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_PERSON, A, ARRAY_A),
-
-        arguments(ARRAY_A, BOOL, ARRAY_BOOL),
-        arguments(ARRAY_A, STRING, ARRAY_STRING),
-        arguments(ARRAY_A, BLOB, ARRAY_BLOB),
-        arguments(ARRAY_A, NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_A, PERSON, ARRAY_PERSON),
-        arguments(ARRAY_A, A, ARRAY_A),
-
-        //
-
-        arguments(ARRAY_BOOL, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_BOOL, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_BOOL, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_BOOL, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_BOOL, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_BOOL, ARRAY_A, ARRAY2_A),
-
-        arguments(ARRAY_STRING, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_STRING, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_STRING, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_STRING, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_STRING, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_STRING, ARRAY_A, ARRAY2_A),
-
-        arguments(ARRAY_BLOB, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_BLOB, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_BLOB, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_BLOB, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_BLOB, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_BLOB, ARRAY_A, ARRAY2_A),
-
-        arguments(ARRAY_NOTHING, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_NOTHING, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_NOTHING, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_NOTHING, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_NOTHING, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_NOTHING, ARRAY_A, ARRAY2_A),
-
-        arguments(ARRAY_PERSON, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_PERSON, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_PERSON, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_PERSON, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_PERSON, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_PERSON, ARRAY_A, ARRAY2_A),
-
-        arguments(ARRAY_A, ARRAY_BOOL, ARRAY2_BOOL),
-        arguments(ARRAY_A, ARRAY_STRING, ARRAY2_STRING),
-        arguments(ARRAY_A, ARRAY_BLOB, ARRAY2_BLOB),
-        arguments(ARRAY_A, ARRAY_NOTHING, ARRAY2_NOTHING),
-        arguments(ARRAY_A, ARRAY_PERSON, ARRAY2_PERSON),
-        arguments(ARRAY_A, ARRAY_A, ARRAY2_A)
-    );
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      for (Type newCore : ELEMENTARY_TYPES) {
+        Type typeArray = array(type);
+        ArrayType newCoreArray = array(newCore);
+        result.add(arguments(type, newCore, newCore));
+        result.add(arguments(typeArray, newCore, newCoreArray));
+        result.add(arguments(type, newCoreArray, newCoreArray));
+        result.add(arguments(typeArray, newCoreArray, array(array(newCore))));
+      }
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -323,27 +152,13 @@ public class TypeTest {
   }
 
   public static List<Arguments> coreDepth_test_data() {
-    return List.of(
-        arguments(BOOL, 0),
-        arguments(STRING, 0),
-        arguments(BLOB, 0),
-        arguments(NOTHING, 0),
-        arguments(PERSON, 0),
-        arguments(A, 0),
-
-        arguments(ARRAY_BOOL, 1),
-        arguments(ARRAY_STRING, 1),
-        arguments(ARRAY_BLOB, 1),
-        arguments(ARRAY_NOTHING, 1),
-        arguments(ARRAY_PERSON, 1),
-        arguments(ARRAY_A, 1),
-
-        arguments(ARRAY2_BOOL, 2),
-        arguments(ARRAY2_STRING, 2),
-        arguments(ARRAY2_BLOB, 2),
-        arguments(ARRAY2_NOTHING, 2),
-        arguments(ARRAY2_PERSON, 2),
-        arguments(ARRAY2_A, 2));
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, 0));
+      result.add(arguments(array(type), 1));
+      result.add(arguments(array(array(type)), 2));
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -354,34 +169,16 @@ public class TypeTest {
   }
 
   public static List<Arguments> changeCoreDepthBy_test_data_with_illegal_values() {
-    return List.of(
-        arguments(BOOL, -2),
-        arguments(STRING, -2),
-        arguments(NOTHING, -2),
-        arguments(PERSON, -2),
-        arguments(A, -2),
-
-        arguments(BOOL, -1),
-        arguments(STRING, -1),
-        arguments(NOTHING, -1),
-        arguments(PERSON, -1),
-        arguments(A, -1),
-
-        //
-        arguments(ARRAY_BOOL, -2),
-        arguments(ARRAY_STRING, -2),
-        arguments(ARRAY_NOTHING, -2),
-        arguments(ARRAY_PERSON, -2),
-        arguments(ARRAY_A, -2),
-
-        //
-        arguments(ARRAY2_BOOL, -3),
-        arguments(ARRAY2_STRING, -3),
-        arguments(ARRAY2_BLOB, -3),
-        arguments(ARRAY2_NOTHING, -3),
-        arguments(ARRAY2_PERSON, -3),
-        arguments(ARRAY2_A, -3)
-    );
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, -1));
+      result.add(arguments(type, -2));
+      result.add(arguments(array(type), -2));
+      result.add(arguments(array(type), -3));
+      result.add(arguments(array(array(type)), -3));
+      result.add(arguments(array(array(type)), -4));
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -392,69 +189,24 @@ public class TypeTest {
   }
 
   public static List<Arguments> changeCoreDepth_test_data() {
-    return List.of(
-        arguments(BOOL, 0, BOOL),
-        arguments(STRING, 0, STRING),
-        arguments(NOTHING, 0, NOTHING),
-        arguments(PERSON, 0, PERSON),
-        arguments(A, 0, A),
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, 0, type));
+      result.add(arguments(type, 1, array(type)));
+      result.add(arguments(type, 2, array(array(type))));
 
-        arguments(BOOL, 1, ARRAY_BOOL),
-        arguments(STRING, 1, ARRAY_STRING),
-        arguments(NOTHING, 1, ARRAY_NOTHING),
-        arguments(PERSON, 1, ARRAY_PERSON),
-        arguments(A, 1, ARRAY_A),
+      result.add(arguments(array(type), -1, type));
+      result.add(arguments(array(type), 0, array(type)));
+      result.add(arguments(array(type), 1, array(array(type))));
+      result.add(arguments(array(type), 2, array(array(array(type)))));
 
-        arguments(BOOL, 2, ARRAY2_BOOL),
-        arguments(STRING, 2, ARRAY2_STRING),
-        arguments(NOTHING, 2, ARRAY2_NOTHING),
-        arguments(PERSON, 2, ARRAY2_PERSON),
-        arguments(A, 2, ARRAY2_A),
-
-        //
-        arguments(ARRAY_BOOL, -1, BOOL),
-        arguments(ARRAY_STRING, -1, STRING),
-        arguments(ARRAY_BLOB, -1, BLOB),
-        arguments(ARRAY_NOTHING, -1, NOTHING),
-        arguments(ARRAY_PERSON, -1, PERSON),
-        arguments(ARRAY_A, -1, A),
-
-        arguments(ARRAY_BOOL, 0, ARRAY_BOOL),
-        arguments(ARRAY_STRING, 0, ARRAY_STRING),
-        arguments(ARRAY_BLOB, 0, ARRAY_BLOB),
-        arguments(ARRAY_NOTHING, 0, ARRAY_NOTHING),
-        arguments(ARRAY_PERSON, 0, ARRAY_PERSON),
-        arguments(ARRAY_A, 0, ARRAY_A),
-
-        arguments(ARRAY_BOOL, 1, ARRAY2_BOOL),
-        arguments(ARRAY_STRING, 1, ARRAY2_STRING),
-        arguments(ARRAY_BLOB, 1, ARRAY2_BLOB),
-        arguments(ARRAY_NOTHING, 1, ARRAY2_NOTHING),
-        arguments(ARRAY_PERSON, 1, ARRAY2_PERSON),
-        arguments(ARRAY_A, 1, ARRAY2_A),
-
-        //
-        arguments(ARRAY2_BOOL, -2, BOOL),
-        arguments(ARRAY2_STRING, -2, STRING),
-        arguments(ARRAY2_BLOB, -2, BLOB),
-        arguments(ARRAY2_NOTHING, -2, NOTHING),
-        arguments(ARRAY2_PERSON, -2, PERSON),
-        arguments(ARRAY2_A, -2, A),
-
-        arguments(ARRAY2_BOOL, -1, ARRAY_BOOL),
-        arguments(ARRAY2_STRING, -1, ARRAY_STRING),
-        arguments(ARRAY2_BLOB, -1, ARRAY_BLOB),
-        arguments(ARRAY2_NOTHING, -1, ARRAY_NOTHING),
-        arguments(ARRAY2_PERSON, -1, ARRAY_PERSON),
-        arguments(ARRAY2_A, -1, ARRAY_A),
-
-        arguments(ARRAY2_BOOL, 0, ARRAY2_BOOL),
-        arguments(ARRAY2_STRING, 0, ARRAY2_STRING),
-        arguments(ARRAY2_BLOB, 0, ARRAY2_BLOB),
-        arguments(ARRAY2_NOTHING, 0, ARRAY2_NOTHING),
-        arguments(ARRAY2_PERSON, 0, ARRAY2_PERSON),
-        arguments(ARRAY2_A, 0, ARRAY2_A)
-    );
+      result.add(arguments(array(array(type)), -2, type));
+      result.add(arguments(array(array(type)), -1, array(type)));
+      result.add(arguments(array(array(type)), 0, array(array(type))));
+      result.add(arguments(array(array(type)), 1, array(array(array(type)))));
+      result.add(arguments(array(array(type)), 2, array(array(array(array(type))))));
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -465,30 +217,17 @@ public class TypeTest {
   }
 
   public static List<Arguments> isGeneric_test_data() {
-    return List.of(
-        arguments(BOOL, false),
-        arguments(STRING, false),
-        arguments(BLOB, false),
-        arguments(NOTHING, false),
-        arguments(PERSON, false),
-        arguments(ARRAY_BOOL, false),
-        arguments(ARRAY_STRING, false),
-        arguments(ARRAY_BLOB, false),
-        arguments(ARRAY_NOTHING, false),
-        arguments(ARRAY_PERSON, false),
-        arguments(ARRAY2_BOOL, false),
-        arguments(ARRAY2_STRING, false),
-        arguments(ARRAY2_BLOB, false),
-        arguments(ARRAY2_NOTHING, false),
-        arguments(ARRAY2_PERSON, false),
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_NON_GENERIC_TYPES) {
+      result.add(arguments(type, false));
+      result.add(arguments(array(type), false));
+      result.add(arguments(array(array(type)), false));
+    }
+    result.add(arguments(A, true));
+    result.add(arguments(array(A), true));
+    result.add(arguments(array(array(A)), true));
 
-        arguments(A, true),
-        arguments(ARRAY_A, true),
-        arguments(ARRAY2_A, true),
-        arguments(B, true),
-        arguments(ARRAY_B, true),
-        arguments(ARRAY2_B, true)
-    );
+    return result;
   }
 
   @ParameterizedTest
@@ -499,27 +238,13 @@ public class TypeTest {
   }
 
   public static List<Arguments> isArray_test_data() {
-    return List.of(
-        arguments(BOOL, false),
-        arguments(STRING, false),
-        arguments(BLOB, false),
-        arguments(NOTHING, false),
-        arguments(PERSON, false),
-        arguments(A, false),
-
-        arguments(ARRAY_STRING, true),
-        arguments(ARRAY_BOOL, true),
-        arguments(ARRAY_BLOB, true),
-        arguments(ARRAY_NOTHING, true),
-        arguments(ARRAY_PERSON, true),
-        arguments(ARRAY_A, true),
-        arguments(ARRAY2_BOOL, true),
-        arguments(ARRAY2_STRING, true),
-        arguments(ARRAY2_BLOB, true),
-        arguments(ARRAY2_NOTHING, true),
-        arguments(ARRAY2_PERSON, true),
-        arguments(ARRAY2_A, true)
-    );
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(type, false));
+      result.add(arguments(array(type), true));
+      result.add(arguments(array(array(type)), true));
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -530,28 +255,16 @@ public class TypeTest {
   }
 
   public static List<Arguments> superType_test_data() {
-    return List.of(
-        arguments(BOOL, null),
-        arguments(STRING, null),
-        arguments(BLOB, null),
-        arguments(NOTHING, null),
-        arguments(PERSON, STRING),
-        arguments(A, null),
-
-        arguments(ARRAY_BOOL, null),
-        arguments(ARRAY_STRING, null),
-        arguments(ARRAY_BLOB, null),
-        arguments(ARRAY_NOTHING, null),
-        arguments(ARRAY_PERSON, ARRAY_STRING),
-        arguments(ARRAY_A, null),
-
-        arguments(ARRAY2_BOOL, null),
-        arguments(ARRAY2_STRING, null),
-        arguments(ARRAY2_BLOB, null),
-        arguments(ARRAY2_NOTHING, null),
-        arguments(ARRAY2_PERSON, ARRAY2_STRING),
-        arguments(ARRAY2_A, null)
-    );
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_NON_STRUCT_TYPES) {
+      result.add(arguments(type, null));
+      result.add(arguments(array(type), null));
+      result.add(arguments(array(array(type)), null));
+    }
+    result.add(arguments(PERSON, STRING));
+    result.add(arguments(array(PERSON), array(STRING)));
+    result.add(arguments(array(array(PERSON)), array(array(STRING))));
+    return result;
   }
 
   @ParameterizedTest
@@ -563,25 +276,16 @@ public class TypeTest {
   }
 
   public static List<Arguments> hierarchy_test_data() {
-    return List.of(
-        arguments(list(STRING)),
-        arguments(list(BOOL)),
-        arguments(list(
-            STRING, PERSON)),
-        arguments(list(NOTHING)),
-        arguments(list(A)),
-        arguments(list(ARRAY_BOOL)),
-        arguments(list(ARRAY_STRING)),
-        arguments(list(
-            ARRAY_STRING, ARRAY_PERSON)),
-        arguments(list(ARRAY_NOTHING)),
-        arguments(list(ARRAY_A)),
-        arguments(list(ARRAY2_BOOL)),
-        arguments(list(ARRAY2_STRING)),
-        arguments(list(
-            ARRAY2_STRING, ARRAY2_PERSON)),
-        arguments(list(ARRAY2_NOTHING)),
-        arguments(list(ARRAY2_A)));
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_NON_STRUCT_TYPES) {
+      result.add(arguments(list(type)));
+      result.add(arguments(list(array(type))));
+      result.add(arguments(list(array(array(type)))));
+    }
+    result.add(arguments(list(STRING, PERSON)));
+    result.add(arguments(list(array(STRING), array(PERSON))));
+    result.add(arguments(list(array(array(STRING)), array(array(PERSON)))));
+    return result;
   }
 
   @ParameterizedTest
@@ -597,363 +301,13 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("isParamAssignableFrom_test_data")
-  public void isParamAssignableFrom(Type destination, Type source, boolean expected) {
-    assertThat(destination.isParamAssignableFrom(source))
-        .isEqualTo(expected);
+  public void isParamAssignableFrom(TestedAssignmentSpec spec) {
+    assertThat(spec.target.type().isParamAssignableFrom(spec.source.type()))
+        .isEqualTo(spec.allowed);
   }
 
-  public static List<Arguments> isParamAssignableFrom_test_data() {
-    return List.of(
-        arguments(BOOL, BOOL, true),
-        arguments(BOOL, STRING, false),
-        arguments(BOOL, BLOB, false),
-        arguments(BOOL, PERSON, false),
-        arguments(BOOL, NOTHING, true),
-        arguments(BOOL, A, false),
-        arguments(BOOL, ARRAY_BOOL, false),
-        arguments(BOOL, ARRAY_STRING, false),
-        arguments(BOOL, ARRAY_BLOB, false),
-        arguments(BOOL, ARRAY_PERSON, false),
-        arguments(BOOL, ARRAY_NOTHING, false),
-        arguments(BOOL, ARRAY_A, false),
-        arguments(BOOL, ARRAY2_BOOL, false),
-        arguments(BOOL, ARRAY2_STRING, false),
-        arguments(BOOL, ARRAY2_BLOB, false),
-        arguments(BOOL, ARRAY2_PERSON, false),
-        arguments(BOOL, ARRAY2_NOTHING, false),
-        arguments(BOOL, ARRAY2_A, false),
-
-        arguments(STRING, BOOL, false),
-        arguments(STRING, STRING, true),
-        arguments(STRING, BLOB, false),
-        arguments(STRING, PERSON, true),
-        arguments(STRING, NOTHING, true),
-        arguments(STRING, A, false),
-        arguments(STRING, ARRAY_BOOL, false),
-        arguments(STRING, ARRAY_STRING, false),
-        arguments(STRING, ARRAY_BLOB, false),
-        arguments(STRING, ARRAY_PERSON, false),
-        arguments(STRING, ARRAY_NOTHING, false),
-        arguments(STRING, ARRAY_A, false),
-        arguments(STRING, ARRAY2_BOOL, false),
-        arguments(STRING, ARRAY2_STRING, false),
-        arguments(STRING, ARRAY2_BLOB, false),
-        arguments(STRING, ARRAY2_PERSON, false),
-        arguments(STRING, ARRAY2_NOTHING, false),
-        arguments(STRING, ARRAY2_A, false),
-
-        arguments(BLOB, BOOL, false),
-        arguments(BLOB, STRING, false),
-        arguments(BLOB, BLOB, true),
-        arguments(BLOB, PERSON, false),
-        arguments(BLOB, NOTHING, true),
-        arguments(BLOB, A, false),
-        arguments(BLOB, ARRAY_BOOL, false),
-        arguments(BLOB, ARRAY_STRING, false),
-        arguments(BLOB, ARRAY_BLOB, false),
-        arguments(BLOB, ARRAY_PERSON, false),
-        arguments(BLOB, ARRAY_NOTHING, false),
-        arguments(BLOB, ARRAY_A, false),
-        arguments(BLOB, ARRAY2_BOOL, false),
-        arguments(BLOB, ARRAY2_STRING, false),
-        arguments(BLOB, ARRAY2_BLOB, false),
-        arguments(BLOB, ARRAY2_PERSON, false),
-        arguments(BLOB, ARRAY2_NOTHING, false),
-        arguments(BLOB, ARRAY2_A, false),
-
-        arguments(PERSON, BOOL, false),
-        arguments(PERSON, STRING, false),
-        arguments(PERSON, BLOB, false),
-        arguments(PERSON, PERSON, true),
-        arguments(PERSON, NOTHING, true),
-        arguments(PERSON, A, false),
-        arguments(PERSON, ARRAY_BOOL, false),
-        arguments(PERSON, ARRAY_STRING, false),
-        arguments(PERSON, ARRAY_BLOB, false),
-        arguments(PERSON, ARRAY_PERSON, false),
-        arguments(PERSON, ARRAY_NOTHING, false),
-        arguments(PERSON, ARRAY_A, false),
-        arguments(PERSON, ARRAY2_BOOL, false),
-        arguments(PERSON, ARRAY2_STRING, false),
-        arguments(PERSON, ARRAY2_BLOB, false),
-        arguments(PERSON, ARRAY2_PERSON, false),
-        arguments(PERSON, ARRAY2_NOTHING, false),
-        arguments(PERSON, ARRAY2_A, false),
-
-        arguments(NOTHING, BOOL, false),
-        arguments(NOTHING, STRING, false),
-        arguments(NOTHING, BLOB, false),
-        arguments(NOTHING, PERSON, false),
-        arguments(NOTHING, NOTHING, true),
-        arguments(NOTHING, A, false),
-        arguments(NOTHING, ARRAY_BOOL, false),
-        arguments(NOTHING, ARRAY_STRING, false),
-        arguments(NOTHING, ARRAY_BLOB, false),
-        arguments(NOTHING, ARRAY_PERSON, false),
-        arguments(NOTHING, ARRAY_NOTHING, false),
-        arguments(NOTHING, ARRAY_A, false),
-        arguments(NOTHING, ARRAY2_BOOL, false),
-        arguments(NOTHING, ARRAY2_STRING, false),
-        arguments(NOTHING, ARRAY2_BLOB, false),
-        arguments(NOTHING, ARRAY2_PERSON, false),
-        arguments(NOTHING, ARRAY2_NOTHING, false),
-        arguments(NOTHING, ARRAY2_A, false),
-
-        arguments(A, BOOL, true),
-        arguments(A, STRING, true),
-        arguments(A, BLOB, true),
-        arguments(A, PERSON, true),
-        arguments(A, NOTHING, true),
-        arguments(A, A, true),
-        arguments(A, B, true),
-        arguments(A, ARRAY_BOOL, true),
-        arguments(A, ARRAY_STRING, true),
-        arguments(A, ARRAY_BLOB, true),
-        arguments(A, ARRAY_PERSON, true),
-        arguments(A, ARRAY_NOTHING, true),
-        arguments(A, ARRAY_A, true),
-        arguments(A, ARRAY_B, true),
-        arguments(A, ARRAY2_BOOL, true),
-        arguments(A, ARRAY2_STRING, true),
-        arguments(A, ARRAY2_BLOB, true),
-        arguments(A, ARRAY2_PERSON, true),
-        arguments(A, ARRAY2_NOTHING, true),
-        arguments(A, ARRAY2_A, true),
-        arguments(A, ARRAY2_B, true),
-
-        arguments(ARRAY_BOOL, BOOL, false),
-        arguments(ARRAY_BOOL, STRING, false),
-        arguments(ARRAY_BOOL, BLOB, false),
-        arguments(ARRAY_BOOL, PERSON, false),
-        arguments(ARRAY_BOOL, NOTHING, true),
-        arguments(ARRAY_BOOL, A, false),
-        arguments(ARRAY_BOOL, ARRAY_BOOL, true),
-        arguments(ARRAY_BOOL, ARRAY_STRING, false),
-        arguments(ARRAY_BOOL, ARRAY_BLOB, false),
-        arguments(ARRAY_BOOL, ARRAY_PERSON, false),
-        arguments(ARRAY_BOOL, ARRAY_NOTHING, true),
-        arguments(ARRAY_BOOL, ARRAY_A, false),
-        arguments(ARRAY_BOOL, ARRAY2_BOOL, false),
-        arguments(ARRAY_BOOL, ARRAY2_STRING, false),
-        arguments(ARRAY_BOOL, ARRAY2_BLOB, false),
-        arguments(ARRAY_BOOL, ARRAY2_PERSON, false),
-        arguments(ARRAY_BOOL, ARRAY2_NOTHING, false),
-        arguments(ARRAY_BOOL, ARRAY2_A, false),
-
-        arguments(ARRAY_STRING, BOOL, false),
-        arguments(ARRAY_STRING, STRING, false),
-        arguments(ARRAY_STRING, BLOB, false),
-        arguments(ARRAY_STRING, PERSON, false),
-        arguments(ARRAY_STRING, NOTHING, true),
-        arguments(ARRAY_STRING, A, false),
-        arguments(ARRAY_STRING, ARRAY_BOOL, false),
-        arguments(ARRAY_STRING, ARRAY_STRING, true),
-        arguments(ARRAY_STRING, ARRAY_BLOB, false),
-        arguments(ARRAY_STRING, ARRAY_PERSON, true),
-        arguments(ARRAY_STRING, ARRAY_NOTHING, true),
-        arguments(ARRAY_STRING, ARRAY_A, false),
-        arguments(ARRAY_STRING, ARRAY2_BOOL, false),
-        arguments(ARRAY_STRING, ARRAY2_STRING, false),
-        arguments(ARRAY_STRING, ARRAY2_BLOB, false),
-        arguments(ARRAY_STRING, ARRAY2_PERSON, false),
-        arguments(ARRAY_STRING, ARRAY2_NOTHING, false),
-        arguments(ARRAY_STRING, ARRAY2_A, false),
-
-        arguments(ARRAY_BLOB, BOOL, false),
-        arguments(ARRAY_BLOB, STRING, false),
-        arguments(ARRAY_BLOB, BLOB, false),
-        arguments(ARRAY_BLOB, PERSON, false),
-        arguments(ARRAY_BLOB, NOTHING, true),
-        arguments(ARRAY_BLOB, A, false),
-        arguments(ARRAY_BLOB, ARRAY_BOOL, false),
-        arguments(ARRAY_BLOB, ARRAY_STRING, false),
-        arguments(ARRAY_BLOB, ARRAY_BLOB, true),
-        arguments(ARRAY_BLOB, ARRAY_PERSON, false),
-        arguments(ARRAY_BLOB, ARRAY_NOTHING, true),
-        arguments(ARRAY_BLOB, ARRAY_A, false),
-        arguments(ARRAY_BLOB, ARRAY2_BOOL, false),
-        arguments(ARRAY_BLOB, ARRAY2_STRING, false),
-        arguments(ARRAY_BLOB, ARRAY2_BLOB, false),
-        arguments(ARRAY_BLOB, ARRAY2_PERSON, false),
-        arguments(ARRAY_BLOB, ARRAY2_NOTHING, false),
-        arguments(ARRAY_BLOB, ARRAY2_A, false),
-
-        arguments(ARRAY_PERSON, BOOL, false),
-        arguments(ARRAY_PERSON, STRING, false),
-        arguments(ARRAY_PERSON, BLOB, false),
-        arguments(ARRAY_PERSON, PERSON, false),
-        arguments(ARRAY_PERSON, NOTHING, true),
-        arguments(ARRAY_PERSON, A, false),
-        arguments(ARRAY_PERSON, ARRAY_BOOL, false),
-        arguments(ARRAY_PERSON, ARRAY_STRING, false),
-        arguments(ARRAY_PERSON, ARRAY_BLOB, false),
-        arguments(ARRAY_PERSON, ARRAY_PERSON, true),
-        arguments(ARRAY_PERSON, ARRAY_NOTHING, true),
-        arguments(ARRAY_PERSON, ARRAY_A, false),
-        arguments(ARRAY_PERSON, ARRAY2_BOOL, false),
-        arguments(ARRAY_PERSON, ARRAY2_STRING, false),
-        arguments(ARRAY_PERSON, ARRAY2_BLOB, false),
-        arguments(ARRAY_PERSON, ARRAY2_PERSON, false),
-        arguments(ARRAY_PERSON, ARRAY2_NOTHING, false),
-        arguments(ARRAY_PERSON, ARRAY2_A, false),
-
-        arguments(ARRAY_NOTHING, BOOL, false),
-        arguments(ARRAY_NOTHING, STRING, false),
-        arguments(ARRAY_NOTHING, BLOB, false),
-        arguments(ARRAY_NOTHING, PERSON, false),
-        arguments(ARRAY_NOTHING, NOTHING, true),
-        arguments(ARRAY_NOTHING, A, false),
-        arguments(ARRAY_NOTHING, ARRAY_BOOL, false),
-        arguments(ARRAY_NOTHING, ARRAY_STRING, false),
-        arguments(ARRAY_NOTHING, ARRAY_BLOB, false),
-        arguments(ARRAY_NOTHING, ARRAY_PERSON, false),
-        arguments(ARRAY_NOTHING, ARRAY_NOTHING, true),
-        arguments(ARRAY_NOTHING, ARRAY_A, false),
-        arguments(ARRAY_NOTHING, ARRAY2_BOOL, false),
-        arguments(ARRAY_NOTHING, ARRAY2_STRING, false),
-        arguments(ARRAY_NOTHING, ARRAY2_BLOB, false),
-        arguments(ARRAY_NOTHING, ARRAY2_PERSON, false),
-        arguments(ARRAY_NOTHING, ARRAY2_NOTHING, false),
-        arguments(ARRAY_NOTHING, ARRAY2_A, false),
-
-        arguments(ARRAY_A, BOOL, false),
-        arguments(ARRAY_A, STRING, false),
-        arguments(ARRAY_A, BLOB, false),
-        arguments(ARRAY_A, PERSON, false),
-        arguments(ARRAY_A, NOTHING, true),
-        arguments(ARRAY_A, A, false),
-        arguments(ARRAY_A, B, false),
-        arguments(ARRAY_A, ARRAY_BOOL, true),
-        arguments(ARRAY_A, ARRAY_STRING, true),
-        arguments(ARRAY_A, ARRAY_BLOB, true),
-        arguments(ARRAY_A, ARRAY_PERSON, true),
-        arguments(ARRAY_A, ARRAY_NOTHING, true),
-        arguments(ARRAY_A, ARRAY_A, true),
-        arguments(ARRAY_A, ARRAY_B, true),
-        arguments(ARRAY_A, ARRAY2_BOOL, true),
-        arguments(ARRAY_A, ARRAY2_STRING, true),
-        arguments(ARRAY_A, ARRAY2_BLOB, true),
-        arguments(ARRAY_A, ARRAY2_PERSON, true),
-        arguments(ARRAY_A, ARRAY2_NOTHING, true),
-        arguments(ARRAY_A, ARRAY2_A, true),
-        arguments(ARRAY_A, ARRAY2_B, true),
-
-        arguments(ARRAY2_BOOL, BOOL, false),
-        arguments(ARRAY2_BOOL, STRING, false),
-        arguments(ARRAY2_BOOL, BLOB, false),
-        arguments(ARRAY2_BOOL, PERSON, false),
-        arguments(ARRAY2_BOOL, NOTHING, true),
-        arguments(ARRAY2_BOOL, A, false),
-        arguments(ARRAY2_BOOL, ARRAY_BOOL, false),
-        arguments(ARRAY2_BOOL, ARRAY_STRING, false),
-        arguments(ARRAY2_BOOL, ARRAY_BLOB, false),
-        arguments(ARRAY2_BOOL, ARRAY_PERSON, false),
-        arguments(ARRAY2_BOOL, ARRAY_NOTHING, true),
-        arguments(ARRAY2_BOOL, ARRAY_A, false),
-        arguments(ARRAY2_BOOL, ARRAY2_BOOL, true),
-        arguments(ARRAY2_BOOL, ARRAY2_STRING, false),
-        arguments(ARRAY2_BOOL, ARRAY2_BLOB, false),
-        arguments(ARRAY2_BOOL, ARRAY2_PERSON, false),
-        arguments(ARRAY2_BOOL, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_BOOL, ARRAY2_A, false),
-
-        arguments(ARRAY2_STRING, BOOL, false),
-        arguments(ARRAY2_STRING, STRING, false),
-        arguments(ARRAY2_STRING, BLOB, false),
-        arguments(ARRAY2_STRING, PERSON, false),
-        arguments(ARRAY2_STRING, NOTHING, true),
-        arguments(ARRAY2_STRING, A, false),
-        arguments(ARRAY2_STRING, ARRAY_BOOL, false),
-        arguments(ARRAY2_STRING, ARRAY_STRING, false),
-        arguments(ARRAY2_STRING, ARRAY_BLOB, false),
-        arguments(ARRAY2_STRING, ARRAY_PERSON, false),
-        arguments(ARRAY2_STRING, ARRAY_NOTHING, true),
-        arguments(ARRAY2_STRING, ARRAY_A, false),
-        arguments(ARRAY2_STRING, ARRAY2_BOOL, false),
-        arguments(ARRAY2_STRING, ARRAY2_STRING, true),
-        arguments(ARRAY2_STRING, ARRAY2_BLOB, false),
-        arguments(ARRAY2_STRING, ARRAY2_PERSON, true),
-        arguments(ARRAY2_STRING, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_STRING, ARRAY2_A, false),
-
-        arguments(ARRAY2_BLOB, BOOL, false),
-        arguments(ARRAY2_BLOB, STRING, false),
-        arguments(ARRAY2_BLOB, BLOB, false),
-        arguments(ARRAY2_BLOB, PERSON, false),
-        arguments(ARRAY2_BLOB, NOTHING, true),
-        arguments(ARRAY2_BLOB, A, false),
-        arguments(ARRAY2_BLOB, ARRAY_BOOL, false),
-        arguments(ARRAY2_BLOB, ARRAY_STRING, false),
-        arguments(ARRAY2_BLOB, ARRAY_BLOB, false),
-        arguments(ARRAY2_BLOB, ARRAY_PERSON, false),
-        arguments(ARRAY2_BLOB, ARRAY_NOTHING, true),
-        arguments(ARRAY2_BLOB, ARRAY_A, false),
-        arguments(ARRAY2_BLOB, ARRAY2_BOOL, false),
-        arguments(ARRAY2_BLOB, ARRAY2_STRING, false),
-        arguments(ARRAY2_BLOB, ARRAY2_BLOB, true),
-        arguments(ARRAY2_BLOB, ARRAY2_PERSON, false),
-        arguments(ARRAY2_BLOB, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_BLOB, ARRAY2_A, false),
-
-        arguments(ARRAY2_PERSON, BOOL, false),
-        arguments(ARRAY2_PERSON, STRING, false),
-        arguments(ARRAY2_PERSON, BLOB, false),
-        arguments(ARRAY2_PERSON, PERSON, false),
-        arguments(ARRAY2_PERSON, NOTHING, true),
-        arguments(ARRAY2_PERSON, A, false),
-        arguments(ARRAY2_PERSON, ARRAY_BOOL, false),
-        arguments(ARRAY2_PERSON, ARRAY_STRING, false),
-        arguments(ARRAY2_PERSON, ARRAY_BLOB, false),
-        arguments(ARRAY2_PERSON, ARRAY_PERSON, false),
-        arguments(ARRAY2_PERSON, ARRAY_NOTHING, true),
-        arguments(ARRAY2_PERSON, ARRAY_A, false),
-        arguments(ARRAY2_PERSON, ARRAY2_BOOL, false),
-        arguments(ARRAY2_PERSON, ARRAY2_STRING, false),
-        arguments(ARRAY2_PERSON, ARRAY2_BLOB, false),
-        arguments(ARRAY2_PERSON, ARRAY2_PERSON, true),
-        arguments(ARRAY2_PERSON, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_PERSON, ARRAY2_A, false),
-
-        arguments(ARRAY2_NOTHING, BOOL, false),
-        arguments(ARRAY2_NOTHING, STRING, false),
-        arguments(ARRAY2_NOTHING, BLOB, false),
-        arguments(ARRAY2_NOTHING, PERSON, false),
-        arguments(ARRAY2_NOTHING, NOTHING, true),
-        arguments(ARRAY2_NOTHING, A, false),
-        arguments(ARRAY2_NOTHING, ARRAY_BOOL, false),
-        arguments(ARRAY2_NOTHING, ARRAY_STRING, false),
-        arguments(ARRAY2_NOTHING, ARRAY_BLOB, false),
-        arguments(ARRAY2_NOTHING, ARRAY_PERSON, false),
-        arguments(ARRAY2_NOTHING, ARRAY_NOTHING, true),
-        arguments(ARRAY2_NOTHING, ARRAY_A, false),
-        arguments(ARRAY2_NOTHING, ARRAY2_BOOL, false),
-        arguments(ARRAY2_NOTHING, ARRAY2_STRING, false),
-        arguments(ARRAY2_NOTHING, ARRAY2_BLOB, false),
-        arguments(ARRAY2_NOTHING, ARRAY2_PERSON, false),
-        arguments(ARRAY2_NOTHING, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_NOTHING, ARRAY2_A, false),
-
-        arguments(ARRAY2_A, BOOL, false),
-        arguments(ARRAY2_A, STRING, false),
-        arguments(ARRAY2_A, BLOB, false),
-        arguments(ARRAY2_A, PERSON, false),
-        arguments(ARRAY2_A, NOTHING, true),
-        arguments(ARRAY2_A, A, false),
-        arguments(ARRAY2_A, B, false),
-        arguments(ARRAY2_A, ARRAY_BOOL, false),
-        arguments(ARRAY2_A, ARRAY_STRING, false),
-        arguments(ARRAY2_A, ARRAY_BLOB, false),
-        arguments(ARRAY2_A, ARRAY_PERSON, false),
-        arguments(ARRAY2_A, ARRAY_NOTHING, true),
-        arguments(ARRAY2_A, ARRAY_A, false),
-        arguments(ARRAY2_A, ARRAY_B, false),
-        arguments(ARRAY2_A, ARRAY2_BOOL, true),
-        arguments(ARRAY2_A, ARRAY2_STRING, true),
-        arguments(ARRAY2_A, ARRAY2_BLOB, true),
-        arguments(ARRAY2_A, ARRAY2_PERSON, true),
-        arguments(ARRAY2_A, ARRAY2_NOTHING, true),
-        arguments(ARRAY2_A, ARRAY2_A, true),
-        arguments(ARRAY2_A, ARRAY2_B, true));
+  public static List<TestedAssignmentSpec> isParamAssignableFrom_test_data() {
+    return TestedAssignmentSpec.parameter_assignment_test_specs();
   }
 
   @ParameterizedTest
@@ -1045,78 +399,35 @@ public class TypeTest {
   }
 
   public static List<Arguments> actualCoreTypeWhenAssignedFrom_test_data() {
-    return List.of(
-        arguments(A, BOOL, BOOL),
-        arguments(A, STRING, STRING),
-        arguments(A, BLOB, BLOB),
-        arguments(A, PERSON, PERSON),
-        arguments(A, NOTHING, NOTHING),
-        arguments(A, A, A),
-        arguments(A, B, B),
+    var result = new ArrayList<Arguments>();
+    for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
+      if (type.isNothing()) {
+        result.add(arguments(A, NOTHING, NOTHING));
+        result.add(arguments(A, array(NOTHING), array(NOTHING)));
+        result.add(arguments(A, array(array(NOTHING)), array(array(NOTHING))));
 
-        arguments(A, ARRAY_BOOL, ARRAY_BOOL),
-        arguments(A, ARRAY_STRING, ARRAY_STRING),
-        arguments(A, ARRAY_BLOB, ARRAY_BLOB),
-        arguments(A, ARRAY_PERSON, ARRAY_PERSON),
-        arguments(A, ARRAY_NOTHING, ARRAY_NOTHING),
-        arguments(A, ARRAY_A, ARRAY_A),
-        arguments(A, ARRAY_B, ARRAY_B),
+        result.add(arguments(array(A), NOTHING, NOTHING));
+        result.add(arguments(array(A), array(NOTHING), NOTHING));
+        result.add(arguments(array(A), array(array(NOTHING)), array(NOTHING)));
 
-        arguments(A, ARRAY2_BOOL, ARRAY2_BOOL),
-        arguments(A, ARRAY2_STRING, ARRAY2_STRING),
-        arguments(A, ARRAY2_BLOB, ARRAY2_BLOB),
-        arguments(A, ARRAY2_PERSON, ARRAY2_PERSON),
-        arguments(A, ARRAY2_NOTHING, ARRAY2_NOTHING),
-        arguments(A, ARRAY2_A, ARRAY2_A),
-        arguments(A, ARRAY2_B, ARRAY2_B),
+        result.add(arguments(array(array(A)), NOTHING, NOTHING));
+        result.add(arguments(array(array(A)), array(NOTHING), NOTHING));
+        result.add(arguments(array(array(A)), array(array(NOTHING)), NOTHING));
+      } else {
+        result.add(arguments(A, type, type));
+        result.add(arguments(A, array(type), array(type)));
+        result.add(arguments(A, array(array(type)), array(array(type))));
 
-        arguments(ARRAY_A, BOOL, null),
-        arguments(ARRAY_A, STRING, null),
-        arguments(ARRAY_A, BLOB, null),
-        arguments(ARRAY_A, PERSON, null),
-        arguments(ARRAY_A, NOTHING, NOTHING),
-        arguments(ARRAY_A, A, null),
-        arguments(ARRAY_A, B, null),
+        result.add(arguments(array(A), type, null));
+        result.add(arguments(array(A), array(type), type));
+        result.add(arguments(array(A), array(array(type)), array(type)));
 
-        arguments(ARRAY_A, ARRAY_BOOL, BOOL),
-        arguments(ARRAY_A, ARRAY_STRING, STRING),
-        arguments(ARRAY_A, ARRAY_BLOB, BLOB),
-        arguments(ARRAY_A, ARRAY_PERSON, PERSON),
-        arguments(ARRAY_A, ARRAY_NOTHING, NOTHING),
-        arguments(ARRAY_A, ARRAY_A, A),
-        arguments(ARRAY_A, ARRAY_B, B),
-
-        arguments(ARRAY_A, ARRAY2_BOOL, ARRAY_BOOL),
-        arguments(ARRAY_A, ARRAY2_STRING, ARRAY_STRING),
-        arguments(ARRAY_A, ARRAY2_BLOB, ARRAY_BLOB),
-        arguments(ARRAY_A, ARRAY2_PERSON, ARRAY_PERSON),
-        arguments(ARRAY_A, ARRAY2_NOTHING, ARRAY_NOTHING),
-        arguments(ARRAY_A, ARRAY2_A, ARRAY_A),
-        arguments(ARRAY_A, ARRAY2_B, ARRAY_B),
-
-        arguments(ARRAY2_A, BOOL, null),
-        arguments(ARRAY2_A, STRING, null),
-        arguments(ARRAY2_A, BLOB, null),
-        arguments(ARRAY2_A, PERSON, null),
-        arguments(ARRAY2_A, NOTHING, NOTHING),
-        arguments(ARRAY2_A, A, null),
-        arguments(ARRAY2_A, B, null),
-
-        arguments(ARRAY2_A, ARRAY_BOOL, null),
-        arguments(ARRAY2_A, ARRAY_STRING, null),
-        arguments(ARRAY2_A, ARRAY_BLOB, null),
-        arguments(ARRAY2_A, ARRAY_PERSON, null),
-        arguments(ARRAY2_A, ARRAY_NOTHING, NOTHING),
-        arguments(ARRAY2_A, ARRAY_A, null),
-        arguments(ARRAY2_A, ARRAY_B, null),
-
-        arguments(ARRAY2_A, ARRAY2_BOOL, BOOL),
-        arguments(ARRAY2_A, ARRAY2_STRING, STRING),
-        arguments(ARRAY2_A, ARRAY2_BLOB, BLOB),
-        arguments(ARRAY2_A, ARRAY2_PERSON, PERSON),
-        arguments(ARRAY2_A, ARRAY2_NOTHING, NOTHING),
-        arguments(ARRAY2_A, ARRAY2_A, A),
-        arguments(ARRAY2_A, ARRAY2_B, B));
+        result.add(arguments(array(array(A)), type, null));
+        result.add(arguments(array(array(A)), array(type), null));
+        result.add(arguments(array(array(A)), array(array(type)), type));
+      }
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -1127,125 +438,32 @@ public class TypeTest {
   }
 
   public static List<Arguments> elemType_test_data() {
-    return List.of(
-        arguments(ARRAY_BOOL, BOOL),
-        arguments(ARRAY_STRING, STRING),
-        arguments(ARRAY_BLOB, BLOB),
-        arguments(ARRAY_PERSON, PERSON),
-        arguments(ARRAY_NOTHING, NOTHING),
-
-        arguments(ARRAY2_BOOL, ARRAY_BOOL),
-        arguments(ARRAY2_STRING, ARRAY_STRING),
-        arguments(ARRAY2_BLOB, ARRAY_BLOB),
-        arguments(ARRAY2_PERSON, ARRAY_PERSON),
-        arguments(ARRAY2_NOTHING, ARRAY_NOTHING));
+    var result = new ArrayList<Arguments>();
+    for (Type type : ELEMENTARY_TYPES) {
+      result.add(arguments(array(type), type));
+      result.add(arguments(array(array(type)), array(type)));
+      result.add(arguments(array(array(array(type))), array(array(type))));
+    }
+    return result;
   }
-
 
   @Test
   public void equality() {
-    new EqualsTester()
-        .addEqualityGroup(
-            generic("A"),
-            generic("A"))
-        .addEqualityGroup(
-            generic("B"),
-            generic("B"))
-        .addEqualityGroup(
-            blob(),
-            blob())
-        .addEqualityGroup(
-            bool(),
-            bool())
-        .addEqualityGroup(
-            nothing(),
-            nothing())
-        .addEqualityGroup(
-            string(),
-            string())
-        .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list()),
-            struct("MyStruct", FAKE_LOCATION, list()))
-        .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(field("field"))),
-            struct("MyStruct", FAKE_LOCATION, list(field("field"))))
-        .addEqualityGroup(
-            struct("MyStruct2", FAKE_LOCATION, list(field("field"))),
-            struct("MyStruct2", FAKE_LOCATION, list(field("field"))))
-        .addEqualityGroup(
-            struct("MyStruct", FAKE_LOCATION, list(field("field2"))),
-            struct("MyStruct", FAKE_LOCATION, list(field("field2"))))
-        .addEqualityGroup(
-            array(generic("A")),
-            array(generic("A")))
-        .addEqualityGroup(
-            array(generic("B")),
-            array(generic("B")))
-        .addEqualityGroup(
-            array(blob()),
-            array(blob()))
-        .addEqualityGroup(
-            array(bool()),
-            array(bool()))
-        .addEqualityGroup(
-            array(nothing()),
-            array(nothing()))
-        .addEqualityGroup(
-            array(string()),
-            array(string()))
-        .addEqualityGroup(
-            array(struct("MyStruct", FAKE_LOCATION, list())),
-            array(struct("MyStruct", FAKE_LOCATION, list())))
-        .addEqualityGroup(
-            array(struct("MyStruct", FAKE_LOCATION,
-                list(field("field")))),
-            array(struct("MyStruct", FAKE_LOCATION,
-                list(field("field")))))
-        .addEqualityGroup(
-            array(struct("MyStruct2", FAKE_LOCATION,
-                list(field("field")))),
-            array(struct("MyStruct2", FAKE_LOCATION,
-                list(field("field")))))
-        .addEqualityGroup(
-            array(struct("MyStruct", FAKE_LOCATION, list(field("field2")))),
-            array(struct("MyStruct", FAKE_LOCATION, list(field("field2")))))
-        .addEqualityGroup(
-            array(array(generic("A"))),
-            array(array(generic("A"))))
-        .addEqualityGroup(
-            array(array(generic("B"))),
-            array(array(generic("B"))))
-        .addEqualityGroup(
-            array(array(blob())),
-            array(array(blob())))
-        .addEqualityGroup(
-            array(array(bool())),
-            array(array(bool())))
-        .addEqualityGroup(
-            array(array(nothing())),
-            array(array(nothing())))
-        .addEqualityGroup(
-            array(array(string())),
-            array(array(string())))
-        .addEqualityGroup(
-            array(array(struct("MyStruct", FAKE_LOCATION, list()))),
-            array(array(struct("MyStruct", FAKE_LOCATION, list()))))
-        .addEqualityGroup(
-            array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(field("field"))))),
-            array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(field("field"))))))
-        .addEqualityGroup(
-            array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(field("field"))))),
-            array(array(struct(
-                "MyStruct2", FAKE_LOCATION, list(field("field"))))))
-        .addEqualityGroup(
-            array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(field("field2"))))),
-            array(array(struct(
-                "MyStruct", FAKE_LOCATION, list(field("field2"))))))
-        .testEquals();
+    EqualsTester equalsTester = new EqualsTester();
+    List<Type> types = ImmutableList.<Type>builder()
+        .addAll(ELEMENTARY_TYPES)
+        .add(B)
+        .add(struct("MyStruct", loc(), list()))
+        .add(struct("MyStruct", loc(), list(field("field"))))
+        .add(struct("MyStruct2", loc(), list(field("field"))))
+        .add(struct("MyStruct", loc(), list(field("field2"))))
+        .build();
+    for (Type type : types) {
+      equalsTester.addEqualityGroup(type, type);
+      equalsTester.addEqualityGroup(array(type), array(type));
+      equalsTester.addEqualityGroup(array(array(type)), array(array(type)));
+    }
+    equalsTester.testEquals();
   }
 
   private Item field(String name) {
