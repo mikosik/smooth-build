@@ -91,6 +91,18 @@ public record TestedType(Type type, String literal, Object value, String declara
   public static final TestedType STRUCT_WITH_BOOL_ARRAY2 = array(STRUCT_WITH_BOOL_ARRAY);
   public static final TestedType STRUCT_WITH_STRING_ARRAY2 = array(STRUCT_WITH_STRING_ARRAY);
 
+  public static final ImmutableList<TestedType> ELEMENTARY_TYPES =
+      ImmutableList.<TestedType>builder()
+      .add(BLOB)
+      .add(BOOL)
+      .add(NOTHING)
+      .add(STRING)
+      .add(STRUCT_WITH_BLOB)
+      .add(STRUCT_WITH_BOOL)
+      .add(STRUCT_WITH_STRING)
+      .add(A)
+      .build();
+
   public static final List<TestedType> CONCRETE_TESTED_TYPES = ImmutableList.of(
       BLOB,
       BOOL,
@@ -122,7 +134,7 @@ public record TestedType(Type type, String literal, Object value, String declara
       .add(A_ARRAY2)
       .build();
 
-  private static TestedType array(TestedType type) {
+  public static TestedType array(TestedType type) {
     Object value = type.value == null ? null : list(type.value);
     return array(type, value);
   }

@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.B_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.B_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
@@ -25,9 +26,12 @@ import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.array;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.smoothbuild.util.Lists;
 
 public class TestedAssignmentSpec extends TestedAssignment {
   public final boolean allowed;
@@ -493,71 +497,34 @@ public class TestedAssignmentSpec extends TestedAssignment {
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_generic_test_specs() {
-    return List.of(
-        allowedAssignment(A, BLOB),
-        allowedAssignment(A, BOOL),
-        allowedAssignment(A, STRING),
-        allowedAssignment(A, STRUCT_WITH_STRING),
-        allowedAssignment(A, NOTHING),
-        allowedAssignment(A, A),
-        allowedAssignment(A, B),
-        allowedAssignment(A, BLOB_ARRAY),
-        allowedAssignment(A, BOOL_ARRAY),
-        allowedAssignment(A, STRING_ARRAY),
-        allowedAssignment(A, STRUCT_WITH_STRING_ARRAY),
-        allowedAssignment(A, NOTHING_ARRAY),
-        allowedAssignment(A, A_ARRAY),
-        allowedAssignment(A, B_ARRAY),
-        allowedAssignment(A, BLOB_ARRAY2),
-        allowedAssignment(A, BOOL_ARRAY2),
-        allowedAssignment(A, STRING_ARRAY2),
-        allowedAssignment(A, STRUCT_WITH_STRING_ARRAY2),
-        allowedAssignment(A, NOTHING_ARRAY2),
-        allowedAssignment(A, A_ARRAY2),
-        allowedAssignment(A, B_ARRAY2),
+    var result = new ArrayList<TestedAssignmentSpec>();
+    for (TestedType type : Lists.concat(ELEMENTARY_TYPES, B)) {
+      if (type.type().isNothing()) {
+        result.add(allowedAssignment(A, NOTHING));
+        result.add(allowedAssignment(A, array(NOTHING)));
+        result.add(allowedAssignment(A, array(array(NOTHING))));
 
-        illegalAssignment(A_ARRAY, BLOB),
-        illegalAssignment(A_ARRAY, BOOL),
-        illegalAssignment(A_ARRAY, STRING),
-        illegalAssignment(A_ARRAY, STRUCT_WITH_STRING),
-        allowedAssignment(A_ARRAY, NOTHING),
-        illegalAssignment(A_ARRAY, A),
-        illegalAssignment(A_ARRAY, B),
-        allowedAssignment(A_ARRAY, BLOB_ARRAY),
-        allowedAssignment(A_ARRAY, BOOL_ARRAY),
-        allowedAssignment(A_ARRAY, STRING_ARRAY),
-        allowedAssignment(A_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        allowedAssignment(A_ARRAY, NOTHING_ARRAY),
-        allowedAssignment(A_ARRAY, A_ARRAY),
-        allowedAssignment(A_ARRAY, B_ARRAY),
-        allowedAssignment(A_ARRAY, BLOB_ARRAY2),
-        allowedAssignment(A_ARRAY, BOOL_ARRAY2),
-        allowedAssignment(A_ARRAY, STRING_ARRAY2),
-        allowedAssignment(A_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        allowedAssignment(A_ARRAY, NOTHING_ARRAY2),
-        allowedAssignment(A_ARRAY, A_ARRAY2),
-        allowedAssignment(A_ARRAY, B_ARRAY2),
+        result.add(allowedAssignment(array(A), NOTHING));
+        result.add(allowedAssignment(array(A), array(NOTHING)));
+        result.add(allowedAssignment(array(A), array(array(NOTHING))));
 
-        illegalAssignment(A_ARRAY2, BLOB),
-        illegalAssignment(A_ARRAY2, BOOL),
-        illegalAssignment(A_ARRAY2, STRING),
-        illegalAssignment(A_ARRAY2, STRUCT_WITH_STRING),
-        allowedAssignment(A_ARRAY2, NOTHING),
-        illegalAssignment(A_ARRAY2, A),
-        illegalAssignment(A_ARRAY2, B),
-        illegalAssignment(A_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(A_ARRAY2, BOOL_ARRAY),
-        illegalAssignment(A_ARRAY2, STRING_ARRAY),
-        illegalAssignment(A_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        allowedAssignment(A_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(A_ARRAY2, A_ARRAY),
-        illegalAssignment(A_ARRAY2, B_ARRAY),
-        allowedAssignment(A_ARRAY2, BLOB_ARRAY2),
-        allowedAssignment(A_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(A_ARRAY2, STRING_ARRAY2),
-        allowedAssignment(A_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        allowedAssignment(A_ARRAY2, NOTHING_ARRAY2),
-        allowedAssignment(A_ARRAY2, A_ARRAY2),
-        allowedAssignment(A_ARRAY2, B_ARRAY2));
+        result.add(allowedAssignment(array(array(A)), NOTHING));
+        result.add(allowedAssignment(array(array(A)), array(NOTHING)));
+        result.add(allowedAssignment(array(array(A)), array(array(NOTHING))));
+      } else {
+        result.add(allowedAssignment(A, type));
+        result.add(allowedAssignment(A, array(type)));
+        result.add(allowedAssignment(A, array(array(type))));
+
+        result.add(illegalAssignment(array(A), type));
+        result.add(allowedAssignment(array(A), array(type)));
+        result.add(allowedAssignment(array(A), array(array(type))));
+
+        result.add(illegalAssignment(array(array(A)), type));
+        result.add(illegalAssignment(array(array(A)), array(type)));
+        result.add(allowedAssignment(array(array(A)), array(array(type))));
+      }
+    }
+    return result;
   }
 }
