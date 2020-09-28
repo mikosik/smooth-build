@@ -121,7 +121,6 @@ and run build command that will provide results instantly.
 Smooth language is statically typed which means all types are known at compile time.
 It is also strongly typed so it is not possible to assign value of one type
 to value of different type unless the former is convertible to the latter.
-We will come back to topic of conversion later.
 First let's discuss all types available in smooth language.
 
 #### Basic types
@@ -202,23 +201,6 @@ Accessing specific field of struct value is done using dot `.`.
 ```
 String name = person.lastName;
 ```
-
-Each struct value can be automatically converted to value of its first field.
-This happens when we invoke a function passing argument of some struct type
-for parameter that has type equal to type of struct's first field.
-
-
-Most common struct is predefined `File` struct. It is defined as:
-
-```
-File {
-  Blob content,
-  String path,
-}
-```
-
-First field of `File` is `content` with type `Blob` which means `File` value can
-be converted to `Blob`.
 
 #### Array types
 Array is an ordered sequence of elements. Each element has the same type.

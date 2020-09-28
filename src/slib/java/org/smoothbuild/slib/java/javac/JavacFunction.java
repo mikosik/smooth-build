@@ -1,7 +1,7 @@
 package org.smoothbuild.slib.java.javac;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static org.smoothbuild.slib.java.javac.PackagedJavaFileObjects.classesFromJars;
+import static org.smoothbuild.slib.java.javac.PackagedJavaFileObjects.classesFromJarFiles;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -16,7 +16,6 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
@@ -65,7 +64,7 @@ public class JavacFunction {
       Iterable<String> options = options();
       StandardJavaFileManager fileManager1 =
           compiler.getStandardFileManager(diagnostic, null, defaultCharset());
-      var libsClasses = classesFromJars(nativeApi, libs.asIterable(Blob.class));
+      var libsClasses = classesFromJarFiles(nativeApi, libs.asIterable(Tuple.class));
       if (libsClasses == null) {
         return null;
       }

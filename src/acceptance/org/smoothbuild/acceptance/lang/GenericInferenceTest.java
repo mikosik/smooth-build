@@ -170,21 +170,6 @@ public class GenericInferenceTest extends AcceptanceTestCase {
         .isEqualTo(list("aaa", "bbb"));
   }
 
-  @Test
-  public void infer_actual_type_of_parameters_in_append_function_2() throws Exception {
-    createNativeJar(Append.class);
-    createUserModule("""
-            [A] testAppend([A] array, A element);
-            StringStruct {
-              String value
-            }
-            result = testAppend(array = [ 'aaa' ], element = stringStruct('bbb'));
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(stringifiedArtifact("result"))
-        .isEqualTo(list("aaa", "bbb"));
-  }
 
   @Test
   public void infer_actual_type_of_parameters_in_append_function_3() throws Exception {
@@ -195,7 +180,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
               String value
             }
             [String] emptyStringArray = [];
-            result = testAppend(array = emptyStringArray, element = stringStruct("bbb"));
+            result = testAppend(emptyStringArray, "bbb");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();

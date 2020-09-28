@@ -152,7 +152,7 @@ public class TestedAssignmentSpec extends TestedAssignment {
         illegalAssignment(STRING, BOOL),
         allowedAssignment(STRING, NOTHING),
         allowedAssignment(STRING, STRING),
-        allowedAssignment(STRING, STRUCT_WITH_STRING),
+        illegalAssignment(STRING, STRUCT_WITH_STRING),
         illegalAssignment(STRING, A),
 
         illegalAssignment(STRING, BLOB_ARRAY),
@@ -298,7 +298,7 @@ public class TestedAssignmentSpec extends TestedAssignment {
         illegalAssignment(STRING_ARRAY, BOOL_ARRAY),
         allowedAssignment(STRING_ARRAY, NOTHING_ARRAY),
         allowedAssignment(STRING_ARRAY, STRING_ARRAY),
-        allowedAssignment(STRING_ARRAY, STRUCT_WITH_STRING_ARRAY),
+        illegalAssignment(STRING_ARRAY, STRUCT_WITH_STRING_ARRAY),
         illegalAssignment(STRING_ARRAY, A_ARRAY),
 
         illegalAssignment(STRING_ARRAY, BLOB_ARRAY2),
@@ -444,7 +444,7 @@ public class TestedAssignmentSpec extends TestedAssignment {
         illegalAssignment(STRING_ARRAY2, BOOL_ARRAY2),
         allowedAssignment(STRING_ARRAY2, NOTHING_ARRAY2),
         allowedAssignment(STRING_ARRAY2, STRING_ARRAY2),
-        allowedAssignment(STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
+        illegalAssignment(STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
         illegalAssignment(STRING_ARRAY2, A_ARRAY2),
 
         // [[Struct]]

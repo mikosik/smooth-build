@@ -103,26 +103,6 @@ public class EqualTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void struct_is_equal_to_different_struct_when_their_first_fields_are_equal() throws
-      Exception {
-    // This is caused by the fact that struct can be auto-converted to value of its first field.
-    createUserModule("""
-            Person {
-              String firstName,
-              String secondName,
-            }
-            Person2 {
-              String firstName,
-            }
-            result = equal(person('aaa', 'bbb'), person2('aaa'));
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithSuccess();
-    assertThat(artifactAsBoolean("result"))
-        .isEqualTo(true);
-  }
-
-  @Test
   public void struct_cannot_be_compared_to_different_struct_when_their_first_field_types_are_not_equal()
       throws Exception {
     createUserModule("""

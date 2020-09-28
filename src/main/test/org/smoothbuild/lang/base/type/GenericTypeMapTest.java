@@ -211,21 +211,6 @@ public class GenericTypeMapTest {
             list(ARRAY2_B),
             A, B),
 
-        // a <- String, struct (Person); with conversions
-
-        arguments(
-            list(A, A),
-            list(PERSON, STRING),
-            A, STRING),
-        arguments(
-            list(A, ARRAY_A),
-            list(PERSON, ARRAY_STRING),
-            A, STRING),
-        arguments(
-            list(A, ARRAY_A),
-            list(STRING, ARRAY_PERSON),
-            A, STRING),
-
         // a <- Nothing, String; with conversions
 
         arguments(

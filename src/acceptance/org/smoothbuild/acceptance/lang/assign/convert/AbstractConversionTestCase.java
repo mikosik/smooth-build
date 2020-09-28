@@ -15,7 +15,6 @@ import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
-import static org.smoothbuild.util.Lists.list;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -58,7 +57,6 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
 
         // String
         allowedConversion(STRING, STRING),
-        allowedConversion(STRING, STRUCT_WITH_STRING, "John"),
 
         // Struct
         allowedConversion(STRUCT_WITH_STRING, STRUCT_WITH_STRING),
@@ -76,7 +74,6 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
 
         // [String]
         allowedConversion(STRING_ARRAY, NOTHING_ARRAY),
-        allowedConversion(STRING_ARRAY, STRUCT_WITH_STRING_ARRAY, list("John")),
         allowedConversion(STRING_ARRAY, STRING_ARRAY),
 
         // [Struct]
@@ -104,7 +101,6 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(STRING_ARRAY2, NOTHING_ARRAY),
 
         allowedConversion(STRING_ARRAY2, NOTHING_ARRAY2),
-        allowedConversion(STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2, list(list("John"))),
         allowedConversion(STRING_ARRAY2, STRING_ARRAY2),
 
         // [[Struct]]

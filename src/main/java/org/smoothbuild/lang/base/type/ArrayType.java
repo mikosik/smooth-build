@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This class is immutable.
@@ -12,22 +13,12 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", internal(), calculateSuperType(elemType),
-        elemType.isGeneric());
+    super("[" +  elemType.name() + "]", internal(), elemType.isGeneric());
     this.elemType = requireNonNull(elemType);
   }
 
   public Type elemType() {
     return elemType;
-  }
-
-  private static Type calculateSuperType(Type elemType) {
-    Type elemSuperType = elemType.superType();
-    if (elemSuperType == null) {
-      return null;
-    } else {
-      return new ArrayType(elemSuperType);
-    }
   }
 
   @Override
@@ -55,9 +46,24 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public boolean isAssignableDirectlyFrom(Type type) {
-    return type instanceof ArrayType thatArrayType
-        && elemType().isAssignableFrom(thatArrayType.elemType());
+  public boolean isAssignableFrom(Type type) {
+    return type.isNothing()
+        || (type instanceof ArrayType thatArrayType && elemTypesAreAssignable(thatArrayType));
+  }
+
+  private boolean elemTypesAreAssignable(ArrayType thatArrayType) {
+    return elemType().isAssignableFrom(thatArrayType.elemType());
+  }
+
+  @Override
+  public Optional<Type> commonSuperType(Type that) {
+    if (that.isNothing()) {
+      return Optional.of(this);
+    } else if (that instanceof ArrayType thatArray) {
+      return elemType.commonSuperType(thatArray.elemType).map(ArrayType::new);
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Override

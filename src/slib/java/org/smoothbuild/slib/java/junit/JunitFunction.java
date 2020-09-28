@@ -1,8 +1,10 @@
 package org.smoothbuild.slib.java.junit;
 
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.StreamSupport.stream;
+import static org.smoothbuild.exec.base.FileStruct.fileContent;
 import static org.smoothbuild.exec.base.FileStruct.filePath;
 import static org.smoothbuild.io.fs.base.Path.path;
 import static org.smoothbuild.slib.compress.UnzipFunction.unzip;
@@ -22,14 +24,17 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
+import com.google.common.collect.Streams;
+
 public class JunitFunction {
   @NativeImplementation("junit")
-  public static Str junit(NativeApi nativeApi, Blob tests, Array deps, Str include)
+  public static Str junit(NativeApi nativeApi, Tuple tests, Array deps, Str include)
       throws IOException {
 
     try {
@@ -75,7 +80,10 @@ public class JunitFunction {
 
   private static Map<String, Tuple> buildNameFileMap(NativeApi nativeApi, Array deps,
       Map<String, Tuple> testFiles) throws IOException, JunitException {
-    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, deps.asIterable(Blob.class));
+    Iterable<Blob> libraryJars = Streams.stream(deps.asIterable(Tuple.class))
+        .map(FileStruct::fileContent)
+        .collect(toList());
+    Map<String, Tuple> allFiles = binaryNameToClassFile(nativeApi, libraryJars);
     for (Entry<String, Tuple> entry : testFiles.entrySet()) {
       if (allFiles.containsKey(entry.getKey())) {
         throw new JunitException("Both 'tests' and 'deps' contains class " + entry.getValue());
@@ -86,10 +94,10 @@ public class JunitFunction {
     return allFiles;
   }
 
-  private static Array unzipTestFiles(NativeApi nativeApi, Blob tests) throws IOException,
+  private static Array unzipTestFiles(NativeApi nativeApi, Tuple tests) throws IOException,
       JunitException {
     try {
-      return unzip(nativeApi, tests, isClassFilePredicate());
+      return unzip(nativeApi, fileContent(tests), isClassFilePredicate());
     } catch (ZipException e) {
       throw new JunitException("Cannot read archive from 'tests' param. Corrupted data?");
     }

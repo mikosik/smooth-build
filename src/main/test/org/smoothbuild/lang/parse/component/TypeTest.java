@@ -145,10 +145,8 @@ public class TypeTest {
     @Test
     public void can_declare_type_which_is_supertype_of_its_body_type() {
       module("""
-           MyStruct {
-             String field
-           }
-           String myValue = myStruct("abc");
+           Nothing nothing;
+           String myValue = nothing;
            """)
           .loadsSuccessfully();
     }
@@ -156,14 +154,12 @@ public class TypeTest {
     @Test
     public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_is_convertible() {
       module("""
-           MyStruct {
-             String field
-           }
-           String myValue = myStruct("abc");
-           MyStruct result = myValue;
+           Nothing nothing;
+           String myValue = nothing;
+           Nothing result = myValue;
          """)
-          .loadsWithError(5, "`result` has body which type is `String` and it is not "
-              + "convertible to its declared type `MyStruct`.");
+          .loadsWithError(3, "`result` has body which type is `String` and it is not "
+              + "convertible to its declared type `Nothing`.");
     }
   }
 
@@ -235,10 +231,8 @@ public class TypeTest {
       @Test
       public void can_declare_result_type_which_is_supertype_of_function_expression() {
         module("""
-            MyStruct {
-              String field
-            }
-            String myFunction() = myStruct("abc");
+            Nothing nothing;
+            String myFunction() = nothing;
             """)
             .loadsSuccessfully();
       }
@@ -246,14 +240,12 @@ public class TypeTest {
       @Test
       public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_type_is_convertible() {
         module("""
-            MyStruct {
-              String field
-            }
-            String myFunction() = myStruct("abc");
-            MyStruct result = myFunction();
+            Nothing nothing;
+            String myFunction() = nothing;
+            Nothing result = myFunction();
             """)
-            .loadsWithError(5, "`result` has body which type is `String` and it is not "
-                + "convertible to its declared type `MyStruct`.");
+            .loadsWithError(3, "`result` has body which type is `String` and it is not "
+                + "convertible to its declared type `Nothing`.");
       }
     }
 
