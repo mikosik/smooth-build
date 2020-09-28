@@ -26,6 +26,10 @@ public class TestingTypes {
   public static final StructType PERSON = struct("Person", loc(), List.of(
           new Item(STRING, "firstName", Optional.empty(), internal()),
           new Item(STRING, "lastName", Optional.empty(),internal())));
+  public static final StructType FLAG = struct("Flag", loc(), List.of(
+          new Item(BOOL, "flag", Optional.empty(),internal())));
+  public static final StructType DATA = struct("Data", loc(), List.of(
+          new Item(BLOB, "data", Optional.empty(),internal())));
   public static final Type A = generic("A");
   public static final Type B = generic("B");
 
@@ -33,6 +37,8 @@ public class TestingTypes {
   public static final ArrayType ARRAY_STRING = array(STRING);
   public static final ArrayType ARRAY_BLOB = array(BLOB);
   public static final ArrayType ARRAY_NOTHING = array(NOTHING);
+  public static final ArrayType ARRAY_DATA = array(DATA);
+  public static final ArrayType ARRAY_FLAG = array(FLAG);
   public static final ArrayType ARRAY_PERSON = array(PERSON);
   public static final ArrayType ARRAY_A = array(A);
   public static final ArrayType ARRAY_B = array(B);

@@ -14,15 +14,19 @@ import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_B;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_DATA;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
+import static org.smoothbuild.lang.base.type.TestingTypes.DATA;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_GENERIC_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_STRUCT_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -321,69 +325,161 @@ public class TypeTest {
 
   public static List<Arguments> commonSuperType_test_data() {
     return List.of(
-        arguments(BOOL, STRING, Optional.empty()),
-        arguments(BOOL, BOOL, Optional.of(BOOL)),
-        arguments(BOOL, BLOB, Optional.empty()),
-        arguments(BOOL, NOTHING, Optional.of(BOOL)),
-        arguments(BOOL, A, Optional.empty()),
-        arguments(BOOL, ARRAY_STRING, Optional.empty()),
-        arguments(BOOL, ARRAY_BOOL, Optional.empty()),
-        arguments(BOOL, ARRAY_BLOB, Optional.empty()),
-        arguments(BOOL, ARRAY_NOTHING, Optional.empty()),
-        arguments(BOOL, ARRAY_A, Optional.empty()),
-
-        arguments(STRING, STRING, Optional.of(STRING)),
-        arguments(STRING, BLOB, Optional.empty()),
-        arguments(STRING, NOTHING, Optional.of(STRING)),
-        arguments(STRING, A, Optional.empty()),
-        arguments(STRING, ARRAY_STRING, Optional.empty()),
-        arguments(STRING, ARRAY_BOOL, Optional.empty()),
-        arguments(STRING, ARRAY_BLOB, Optional.empty()),
-        arguments(STRING, ARRAY_NOTHING, Optional.empty()),
-        arguments(STRING, ARRAY_A, Optional.empty()),
-
         arguments(BLOB, BLOB, Optional.of(BLOB)),
+        arguments(BLOB, BOOL, Optional.empty()),
         arguments(BLOB, NOTHING, Optional.of(BLOB)),
+        arguments(BLOB, STRING, Optional.empty()),
+        arguments(BLOB, DATA, Optional.of(BLOB)),
+        arguments(BLOB, FLAG, Optional.empty()),
+        arguments(BLOB, PERSON, Optional.empty()),
         arguments(BLOB, A, Optional.empty()),
-        arguments(BLOB, ARRAY_STRING, Optional.empty()),
         arguments(BLOB, ARRAY_BLOB, Optional.empty()),
-        arguments(BLOB, ARRAY_NOTHING, Optional.empty()),
+        arguments(BOOL, ARRAY_BOOL, Optional.empty()),
+        arguments(BOOL, ARRAY_NOTHING, Optional.empty()),
+        arguments(BLOB, ARRAY_STRING, Optional.empty()),
+        arguments(BOOL, ARRAY_DATA, Optional.empty()),
+        arguments(BOOL, ARRAY_FLAG, Optional.empty()),
+        arguments(BOOL, ARRAY_PERSON, Optional.empty()),
         arguments(BLOB, ARRAY_A, Optional.empty()),
 
-        arguments(NOTHING, NOTHING, Optional.of(NOTHING)),
+        arguments(BOOL, BOOL, Optional.of(BOOL)),
+        arguments(BOOL, NOTHING, Optional.of(BOOL)),
+        arguments(BOOL, STRING, Optional.empty()),
+        arguments(BOOL, DATA, Optional.empty()),
+        arguments(BOOL, FLAG, Optional.of(BOOL)),
+        arguments(BOOL, PERSON, Optional.empty()),
+        arguments(BOOL, A, Optional.empty()),
+        arguments(BOOL, ARRAY_BLOB, Optional.empty()),
+        arguments(BOOL, ARRAY_BOOL, Optional.empty()),
+        arguments(BOOL, ARRAY_NOTHING, Optional.empty()),
+        arguments(BOOL, ARRAY_STRING, Optional.empty()),
+        arguments(BOOL, ARRAY_DATA, Optional.empty()),
+        arguments(BOOL, ARRAY_FLAG, Optional.empty()),
+        arguments(BOOL, ARRAY_PERSON, Optional.empty()),
+        arguments(BOOL, ARRAY_A, Optional.empty()),
+
+        arguments(NOTHING, STRING, Optional.of(STRING)),
+        arguments(NOTHING, DATA, Optional.of(DATA)),
+        arguments(NOTHING, FLAG, Optional.of(FLAG)),
+        arguments(NOTHING, PERSON, Optional.of(PERSON)),
         arguments(NOTHING, A, Optional.of(A)),
-        arguments(NOTHING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
         arguments(NOTHING, ARRAY_BLOB, Optional.of(ARRAY_BLOB)),
+        arguments(NOTHING, ARRAY_BOOL, Optional.of(ARRAY_BOOL)),
         arguments(NOTHING, ARRAY_NOTHING, Optional.of(ARRAY_NOTHING)),
+        arguments(NOTHING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
+        arguments(NOTHING, ARRAY_DATA, Optional.of(ARRAY_DATA)),
+        arguments(NOTHING, ARRAY_FLAG, Optional.of(ARRAY_FLAG)),
+        arguments(NOTHING, ARRAY_PERSON, Optional.of(ARRAY_PERSON)),
         arguments(NOTHING, ARRAY_A, Optional.of(ARRAY_A)),
+
+        arguments(STRING, STRING, Optional.of(STRING)),
+        arguments(STRING, DATA, Optional.empty()),
+        arguments(STRING, FLAG, Optional.empty()),
+        arguments(STRING, PERSON, Optional.of(STRING)),
+        arguments(STRING, A, Optional.empty()),
+        arguments(STRING, ARRAY_BLOB, Optional.empty()),
+        arguments(STRING, ARRAY_BOOL, Optional.empty()),
+        arguments(STRING, ARRAY_NOTHING, Optional.empty()),
+        arguments(STRING, ARRAY_STRING, Optional.empty()),
+        arguments(STRING, ARRAY_DATA, Optional.empty()),
+        arguments(STRING, ARRAY_FLAG, Optional.empty()),
+        arguments(STRING, ARRAY_PERSON, Optional.empty()),
+        arguments(STRING, ARRAY_A, Optional.empty()),
+
+        arguments(DATA, DATA, Optional.of(DATA)),
+        arguments(DATA, FLAG, Optional.empty()),
+        arguments(DATA, PERSON, Optional.empty()),
+        arguments(DATA, A, Optional.empty()),
+        arguments(DATA, ARRAY_BLOB, Optional.empty()),
+        arguments(DATA, ARRAY_BOOL, Optional.empty()),
+        arguments(DATA, ARRAY_NOTHING, Optional.empty()),
+        arguments(DATA, ARRAY_STRING, Optional.empty()),
+        arguments(DATA, ARRAY_DATA, Optional.empty()),
+        arguments(DATA, ARRAY_FLAG, Optional.empty()),
+        arguments(DATA, ARRAY_PERSON, Optional.empty()),
+        arguments(DATA, ARRAY_A, Optional.empty()),
+
+        arguments(FLAG, FLAG, Optional.of(FLAG)),
+        arguments(FLAG, PERSON, Optional.empty()),
+        arguments(FLAG, A, Optional.empty()),
+        arguments(FLAG, ARRAY_BLOB, Optional.empty()),
+        arguments(FLAG, ARRAY_BOOL, Optional.empty()),
+        arguments(FLAG, ARRAY_NOTHING, Optional.empty()),
+        arguments(FLAG, ARRAY_STRING, Optional.empty()),
+        arguments(FLAG, ARRAY_DATA, Optional.empty()),
+        arguments(FLAG, ARRAY_FLAG, Optional.empty()),
+        arguments(FLAG, ARRAY_PERSON, Optional.empty()),
+        arguments(FLAG, ARRAY_A, Optional.empty()),
+
+        arguments(PERSON, PERSON, Optional.of(PERSON)),
+        arguments(PERSON, A, Optional.empty()),
+        arguments(PERSON, ARRAY_BLOB, Optional.empty()),
+        arguments(PERSON, ARRAY_BOOL, Optional.empty()),
+        arguments(PERSON, ARRAY_NOTHING, Optional.empty()),
+        arguments(PERSON, ARRAY_STRING, Optional.empty()),
+        arguments(PERSON, ARRAY_DATA, Optional.empty()),
+        arguments(PERSON, ARRAY_FLAG, Optional.empty()),
+        arguments(PERSON, ARRAY_PERSON, Optional.empty()),
+        arguments(PERSON, ARRAY_A, Optional.empty()),
 
         arguments(A, A, Optional.of(A)),
         arguments(A, B, Optional.empty()),
-        arguments(A, ARRAY_STRING, Optional.empty()),
         arguments(A, ARRAY_BLOB, Optional.empty()),
+        arguments(A, ARRAY_BOOL, Optional.empty()),
         arguments(A, ARRAY_NOTHING, Optional.empty()),
+        arguments(A, ARRAY_STRING, Optional.empty()),
+        arguments(A, ARRAY_DATA, Optional.empty()),
+        arguments(A, ARRAY_FLAG, Optional.empty()),
+        arguments(A, ARRAY_PERSON, Optional.empty()),
         arguments(A, ARRAY_A, Optional.empty()),
         arguments(A, ARRAY_B, Optional.empty()),
 
-        arguments(ARRAY_STRING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
-        arguments(ARRAY_STRING, ARRAY_BLOB, Optional.empty()),
-        arguments(ARRAY_STRING, ARRAY_NOTHING, Optional.of(ARRAY_STRING)),
-        arguments(ARRAY_STRING, NOTHING, Optional.of(ARRAY_STRING)),
-        arguments(ARRAY_STRING, ARRAY_A, Optional.empty()),
-
         arguments(ARRAY_BLOB, ARRAY_BLOB, Optional.of(ARRAY_BLOB)),
+        arguments(ARRAY_BLOB, ARRAY_BOOL, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_NOTHING, Optional.of(ARRAY_BLOB)),
-        arguments(ARRAY_BLOB, NOTHING, Optional.of(ARRAY_BLOB)),
+        arguments(ARRAY_BLOB, ARRAY_STRING, Optional.empty()),
+        arguments(ARRAY_BLOB, ARRAY_DATA, Optional.of(ARRAY_BLOB)),
+        arguments(ARRAY_BLOB, ARRAY_FLAG, Optional.empty()),
+        arguments(ARRAY_BLOB, ARRAY_PERSON, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_A, Optional.empty()),
 
+        arguments(ARRAY_BOOL, ARRAY_BOOL, Optional.of(ARRAY_BOOL)),
+        arguments(ARRAY_BOOL, ARRAY_NOTHING, Optional.of(ARRAY_BOOL)),
+        arguments(ARRAY_BOOL, ARRAY_STRING, Optional.empty()),
+        arguments(ARRAY_BOOL, ARRAY_DATA, Optional.empty()),
+        arguments(ARRAY_BOOL, ARRAY_FLAG, Optional.of(ARRAY_BOOL)),
+        arguments(ARRAY_BOOL, ARRAY_PERSON, Optional.empty()),
+        arguments(ARRAY_BOOL, ARRAY_A, Optional.empty()),
+
         arguments(ARRAY_NOTHING, ARRAY_NOTHING, Optional.of(ARRAY_NOTHING)),
-        arguments(ARRAY_NOTHING, ARRAY2_NOTHING, Optional.of(ARRAY2_NOTHING)),
         arguments(ARRAY_NOTHING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
-        arguments(ARRAY_NOTHING, ARRAY_BLOB, Optional.of(ARRAY_BLOB)),
         arguments(ARRAY_NOTHING, ARRAY_A, Optional.of(ARRAY_A)),
+        arguments(ARRAY_NOTHING, ARRAY_DATA, Optional.of(ARRAY_DATA)),
+        arguments(ARRAY_NOTHING, ARRAY_FLAG, Optional.of(ARRAY_FLAG)),
+        arguments(ARRAY_NOTHING, ARRAY_PERSON, Optional.of(ARRAY_PERSON)),
+        arguments(ARRAY_NOTHING, ARRAY2_NOTHING, Optional.of(ARRAY2_NOTHING)),
+
+        arguments(ARRAY_STRING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
+        arguments(ARRAY_STRING, ARRAY_A, Optional.empty()),
+        arguments(ARRAY_STRING, ARRAY_DATA, Optional.empty()),
+        arguments(ARRAY_STRING, ARRAY_FLAG, Optional.empty()),
+        arguments(ARRAY_STRING, ARRAY_PERSON, Optional.of(ARRAY_STRING)),
 
         arguments(ARRAY_A, ARRAY_A, Optional.of(ARRAY_A)),
-        arguments(ARRAY_A, ARRAY_B, Optional.empty()));
+        arguments(ARRAY_A, ARRAY_B, Optional.empty()),
+        arguments(ARRAY_A, ARRAY_DATA, Optional.empty()),
+        arguments(ARRAY_A, ARRAY_FLAG, Optional.empty()),
+        arguments(ARRAY_A, ARRAY_PERSON, Optional.empty()),
+
+        arguments(ARRAY_DATA, ARRAY_DATA, Optional.of(ARRAY_DATA)),
+        arguments(ARRAY_DATA, ARRAY_FLAG, Optional.empty()),
+        arguments(ARRAY_DATA, ARRAY_PERSON, Optional.empty()),
+
+        arguments(ARRAY_FLAG, ARRAY_FLAG, Optional.of(ARRAY_FLAG)),
+        arguments(ARRAY_FLAG, ARRAY_PERSON, Optional.empty()),
+
+        arguments(ARRAY_PERSON, ARRAY_PERSON, Optional.of(ARRAY_PERSON))
+    );
   }
 
   @ParameterizedTest
