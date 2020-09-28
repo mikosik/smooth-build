@@ -46,6 +46,7 @@ import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.GenericTypeMap;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -210,12 +211,12 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     return map(elements, t -> convertIfNeeded(t, type));
   }
 
-  private ArrayType arrayType(List<Task> elements, Type arrayType) {
-    return (ArrayType) elements
+  private ArrayType arrayType(List<Task> elements, ArrayType arrayType) {
+    return elements
         .stream()
         .map(Task::type)
         .reduce((type, type2) -> type.commonSuperType(type2).get())
-        .map(t -> t.changeCoreDepthBy(1))
+        .map(Types::array)
         .orElse(arrayType);
   }
 

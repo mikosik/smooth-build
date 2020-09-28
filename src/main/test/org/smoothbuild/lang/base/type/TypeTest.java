@@ -165,54 +165,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("changeCoreDepthBy_test_data_with_illegal_values")
-  public void changeCoreDepthBy_fails_for(Type type, int change) {
-    assertCall(() -> type.changeCoreDepthBy(change))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  public static List<Arguments> changeCoreDepthBy_test_data_with_illegal_values() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, -1));
-      result.add(arguments(type, -2));
-      result.add(arguments(array(type), -2));
-      result.add(arguments(array(type), -3));
-      result.add(arguments(array(array(type)), -3));
-      result.add(arguments(array(array(type)), -4));
-    }
-    return result;
-  }
-
-  @ParameterizedTest
-  @MethodSource("changeCoreDepth_test_data")
-  public void changeCoreDepthBy(Type type, int change, Type expected) {
-    assertThat(type.changeCoreDepthBy(change))
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> changeCoreDepth_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, 0, type));
-      result.add(arguments(type, 1, array(type)));
-      result.add(arguments(type, 2, array(array(type))));
-
-      result.add(arguments(array(type), -1, type));
-      result.add(arguments(array(type), 0, array(type)));
-      result.add(arguments(array(type), 1, array(array(type))));
-      result.add(arguments(array(type), 2, array(array(array(type)))));
-
-      result.add(arguments(array(array(type)), -2, type));
-      result.add(arguments(array(array(type)), -1, array(type)));
-      result.add(arguments(array(array(type)), 0, array(array(type))));
-      result.add(arguments(array(array(type)), 1, array(array(array(type)))));
-      result.add(arguments(array(array(type)), 2, array(array(array(array(type))))));
-    }
-    return result;
-  }
-
-  @ParameterizedTest
   @MethodSource("isGeneric_test_data")
   public void isGeneric(Type type, boolean expected) {
     assertThat(type.isGeneric())

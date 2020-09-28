@@ -42,15 +42,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      return elemType.changeCoreDepthBy(delta + 1);
-    } else {
-      return increaseCoreDepth(delta);
-    }
-  }
-
-  @Override
   public boolean isAssignableFrom(Type type) {
     return type.isNothing()
         || (type instanceof ArrayType thatArrayType && elemTypesAreAssignable(thatArrayType));

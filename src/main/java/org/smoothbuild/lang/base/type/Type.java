@@ -59,14 +59,6 @@ public abstract class Type implements Named {
     return 0;
   }
 
-  public Type changeCoreDepthBy(int delta) {
-    if (delta < 0) {
-      throw new IllegalArgumentException(
-          "It's not possible to reduce core depth of non array type.");
-    }
-    return increaseCoreDepth(delta);
-  }
-
   public Type increaseCoreDepth(int delta) {
     Type result = this;
     for (int i = 0; i < delta; i++) {
