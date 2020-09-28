@@ -39,6 +39,7 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -127,8 +128,8 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("replaceCoreType_test_data")
-  public void replaceCoreType(Type type, Type coreType, Type expected) {
-    assertThat(type.replaceCoreType(coreType))
+  public void replaceCoreType(Type type, Map<Type, Type> map, Type expected) {
+    assertThat(type.mapTypeParameters(map))
         .isEqualTo(expected);
   }
 
@@ -138,10 +139,10 @@ public class TypeTest {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);
-        result.add(arguments(type, newCore, newCore));
-        result.add(arguments(typeArray, newCore, newCoreArray));
-        result.add(arguments(type, newCoreArray, newCoreArray));
-        result.add(arguments(typeArray, newCoreArray, array(array(newCore))));
+        result.add(arguments(type, Map.of(type, newCore), newCore));
+        result.add(arguments(typeArray, Map.of(type, newCore), newCoreArray));
+        result.add(arguments(type, Map.of(type, newCoreArray), newCoreArray));
+        result.add(arguments(typeArray, Map.of(type, newCoreArray), array(array(newCore))));
       }
     }
     return result;

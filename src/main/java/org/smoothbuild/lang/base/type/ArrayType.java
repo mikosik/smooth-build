@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,8 +33,8 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type replaceCoreType(Type type) {
-    return new ArrayType(elemType.replaceCoreType(type));
+  public Type mapTypeParameters(Map<Type, Type> map) {
+    return new ArrayType(elemType.mapTypeParameters(map));
   }
 
   @Override
