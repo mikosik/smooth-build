@@ -24,7 +24,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.DATA;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_GENERIC_TYPES;
-import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_STRUCT_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
@@ -252,47 +251,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("superType_test_data")
-  public void superType(Type type, Type expected) {
-    assertThat(type.superType())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> superType_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_NON_STRUCT_TYPES) {
-      result.add(arguments(type, null));
-      result.add(arguments(array(type), null));
-      result.add(arguments(array(array(type)), null));
-    }
-    result.add(arguments(PERSON, STRING));
-    result.add(arguments(array(PERSON), array(STRING)));
-    result.add(arguments(array(array(PERSON)), array(array(STRING))));
-    return result;
-  }
-
-  @ParameterizedTest
-  @MethodSource("hierarchy_test_data")
-  public void hierarchy(List<Type> hierarchy) {
-    Type root = hierarchy.get(hierarchy.size() - 1);
-    assertThat(root.hierarchy())
-        .isEqualTo(hierarchy);
-  }
-
-  public static List<Arguments> hierarchy_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_NON_STRUCT_TYPES) {
-      result.add(arguments(list(type)));
-      result.add(arguments(list(array(type))));
-      result.add(arguments(list(array(array(type)))));
-    }
-    result.add(arguments(list(STRING, PERSON)));
-    result.add(arguments(list(array(STRING), array(PERSON))));
-    result.add(arguments(list(array(array(STRING)), array(array(PERSON)))));
-    return result;
-  }
-
-  @ParameterizedTest
   @MethodSource("isAssignableFrom_test_data")
   public void isAssignableFrom(TestedAssignmentSpec spec) {
     assertThat(spec.target.type().isAssignableFrom(spec.source.type()))
@@ -329,7 +287,7 @@ public class TypeTest {
         arguments(BLOB, BOOL, Optional.empty()),
         arguments(BLOB, NOTHING, Optional.of(BLOB)),
         arguments(BLOB, STRING, Optional.empty()),
-        arguments(BLOB, DATA, Optional.of(BLOB)),
+        arguments(BLOB, DATA, Optional.empty()),
         arguments(BLOB, FLAG, Optional.empty()),
         arguments(BLOB, PERSON, Optional.empty()),
         arguments(BLOB, A, Optional.empty()),
@@ -346,7 +304,7 @@ public class TypeTest {
         arguments(BOOL, NOTHING, Optional.of(BOOL)),
         arguments(BOOL, STRING, Optional.empty()),
         arguments(BOOL, DATA, Optional.empty()),
-        arguments(BOOL, FLAG, Optional.of(BOOL)),
+        arguments(BOOL, FLAG, Optional.empty()),
         arguments(BOOL, PERSON, Optional.empty()),
         arguments(BOOL, A, Optional.empty()),
         arguments(BOOL, ARRAY_BLOB, Optional.empty()),
@@ -375,7 +333,7 @@ public class TypeTest {
         arguments(STRING, STRING, Optional.of(STRING)),
         arguments(STRING, DATA, Optional.empty()),
         arguments(STRING, FLAG, Optional.empty()),
-        arguments(STRING, PERSON, Optional.of(STRING)),
+        arguments(STRING, PERSON, Optional.empty()),
         arguments(STRING, A, Optional.empty()),
         arguments(STRING, ARRAY_BLOB, Optional.empty()),
         arguments(STRING, ARRAY_BOOL, Optional.empty()),
@@ -438,7 +396,7 @@ public class TypeTest {
         arguments(ARRAY_BLOB, ARRAY_BOOL, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_NOTHING, Optional.of(ARRAY_BLOB)),
         arguments(ARRAY_BLOB, ARRAY_STRING, Optional.empty()),
-        arguments(ARRAY_BLOB, ARRAY_DATA, Optional.of(ARRAY_BLOB)),
+        arguments(ARRAY_BLOB, ARRAY_DATA, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_FLAG, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_PERSON, Optional.empty()),
         arguments(ARRAY_BLOB, ARRAY_A, Optional.empty()),
@@ -447,7 +405,7 @@ public class TypeTest {
         arguments(ARRAY_BOOL, ARRAY_NOTHING, Optional.of(ARRAY_BOOL)),
         arguments(ARRAY_BOOL, ARRAY_STRING, Optional.empty()),
         arguments(ARRAY_BOOL, ARRAY_DATA, Optional.empty()),
-        arguments(ARRAY_BOOL, ARRAY_FLAG, Optional.of(ARRAY_BOOL)),
+        arguments(ARRAY_BOOL, ARRAY_FLAG, Optional.empty()),
         arguments(ARRAY_BOOL, ARRAY_PERSON, Optional.empty()),
         arguments(ARRAY_BOOL, ARRAY_A, Optional.empty()),
 
@@ -463,7 +421,7 @@ public class TypeTest {
         arguments(ARRAY_STRING, ARRAY_A, Optional.empty()),
         arguments(ARRAY_STRING, ARRAY_DATA, Optional.empty()),
         arguments(ARRAY_STRING, ARRAY_FLAG, Optional.empty()),
-        arguments(ARRAY_STRING, ARRAY_PERSON, Optional.of(ARRAY_STRING)),
+        arguments(ARRAY_STRING, ARRAY_PERSON, Optional.empty()),
 
         arguments(ARRAY_A, ARRAY_A, Optional.of(ARRAY_A)),
         arguments(ARRAY_A, ARRAY_B, Optional.empty()),

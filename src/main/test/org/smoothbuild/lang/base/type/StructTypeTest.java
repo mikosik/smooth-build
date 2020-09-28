@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
@@ -25,21 +24,13 @@ public class StructTypeTest {
   }
 
   @Test
-  public void first_field_type_cannot_be_nothing() {
-    assertCall(() -> struct("Struct", loc(), fields(nothing())))
-        .throwsException(IllegalArgumentException.class);
+  public void first_field_type_can_be_nothing() {
+    struct("Struct", loc(), fields(nothing()));
   }
 
   @Test
-  public void first_field_type_cannot_be_nothing_array() {
-    assertCall(() -> struct("Struct", loc(), fields(array(nothing()))))
-        .throwsException(IllegalArgumentException.class);
-  }
-
-  @Test
-  public void first_field_type_cannot_be_array() {
-    assertCall(() -> struct("Struct", loc(), fields(array(string()))))
-        .throwsException(IllegalArgumentException.class);
+  public void first_field_type_can_be_nothing_array() {
+    struct("Struct", loc(), fields(array(nothing())));
   }
 
   @Test

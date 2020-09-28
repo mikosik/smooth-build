@@ -12,13 +12,15 @@ import java.util.zip.ZipException;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.plugin.NativeApi;
 
 public class PackagedJavaFileObjects {
-  public static Iterable<InputClassFile> classesFromJars(NativeApi nativeApi,
-      Iterable<Blob> libraryJars) throws IOException, ZipException {
+  public static Iterable<InputClassFile> classesFromJarFiles(NativeApi nativeApi,
+      Iterable<Tuple> libraryJars) throws IOException, ZipException {
     Set<InputClassFile> result = new HashSet<>();
-    for (Blob jarBlob : libraryJars) {
+    for (Tuple jar : libraryJars) {
+      Blob jarBlob = FileStruct.fileContent(jar);
       Array files = unzip(nativeApi, jarBlob, isClassFilePredicate());
       for (Tuple file : files.asIterable(Tuple.class)) {
         InputClassFile inputClassFile = new InputClassFile(file);

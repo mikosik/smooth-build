@@ -14,10 +14,14 @@ import org.smoothbuild.testing.TestingContext;
 
 import okio.Buffer;
 import okio.BufferedSource;
+import okio.ByteString;
 
 public class JarTester {
-
   public static Blob jar(Tuple... files) throws IOException {
+    return new TestingContext().blob(jarByteString(files));
+  }
+
+  public static ByteString jarByteString(Tuple... files) throws IOException {
     Buffer buffer = new Buffer();
     try (JarOutputStream jarOutputStream = new JarOutputStream(buffer.outputStream())) {
       for (Tuple file : files) {
@@ -25,7 +29,8 @@ public class JarTester {
       }
     }
 
-    return new TestingContext().blob(buffer.readByteString());
+    ByteString bytes = buffer.readByteString();
+    return bytes;
   }
 
   private static void addEntry(JarOutputStream jarOutputStream, Tuple file) throws IOException {

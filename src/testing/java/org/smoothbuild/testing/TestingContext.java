@@ -240,8 +240,11 @@ public class TestingContext {
   }
 
   public Tuple file(Path path, ByteString content) {
-    Str string = objectFactory().string(path.toString());
-    Blob blob = blob(content);
+    return file(path.toString(), blob(content));
+  }
+
+  public Tuple file(String path, Blob blob) {
+    Str string = objectFactory().string(path);
     return objectFactory().file(string, blob);
   }
 

@@ -13,7 +13,7 @@ public abstract class BasicType extends Type {
   }
 
   public BasicType(String name, boolean isGeneric){
-      super(name, internal(), null, isGeneric);
+      super(name, internal(), isGeneric);
   }
 
   @Override

@@ -13,7 +13,6 @@ import org.smoothbuild.acceptance.testing.AddElementOfWrongTypeToArray;
 import org.smoothbuild.acceptance.testing.BrokenIdentity;
 import org.smoothbuild.acceptance.testing.DifferentJavaName;
 import org.smoothbuild.acceptance.testing.EmptyStringArray;
-import org.smoothbuild.acceptance.testing.FileParameter;
 import org.smoothbuild.acceptance.testing.OneStringParameter;
 import org.smoothbuild.acceptance.testing.ReportFixedError;
 import org.smoothbuild.acceptance.testing.ReportWarningAndReturnNull;
@@ -23,7 +22,6 @@ import org.smoothbuild.acceptance.testing.ReturnStringTuple;
 import org.smoothbuild.acceptance.testing.ThrowException;
 import org.smoothbuild.acceptance.testing.ThrowRandomException;
 import org.smoothbuild.db.object.base.Array;
-import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
@@ -136,21 +134,6 @@ public class NativeFunctionTest extends AcceptanceTestCase {
     assertSysOutContains("Function `oneStringParameter` parameter `string` has type `[String]` "
         + "so its native implementation type must be " + Array.class.getCanonicalName()
         + " but it is " + Str.class.getCanonicalName() + ".\n");
-  }
-
-  @Test
-  public void native_with_parameter_type_that_is_subtype_of_declared_causes_error()
-      throws Exception {
-    createNativeJar(FileParameter.class);
-    createUserModule("""
-            File fileParameter(Blob file);
-            result = fileParameter(file(0x41, "file.txt"));
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContains("Function `fileParameter` parameter `file` has type `Blob` "
-        + "so its native implementation type must be " + Blob.class.getCanonicalName()
-        + " but it is " + Tuple.class.getCanonicalName() + ".\n");
   }
 
   @Test

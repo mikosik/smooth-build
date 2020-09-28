@@ -20,7 +20,7 @@ public class StructType extends Type {
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
   public StructType(String name, Location location, ImmutableList<Item> fields) {
-    super(name, location, calculateSuperType(fields), false);
+    super(name, location, false);
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
   }
@@ -29,18 +29,6 @@ public class StructType extends Type {
     return IntStream.range(0, fields.size())
         .boxed()
         .collect(toImmutableMap(i -> fields.get(i).name(), i -> i));
-  }
-
-  private static Type calculateSuperType(ImmutableList<Item> fields) {
-    if (fields.size() == 0) {
-      return null;
-    } else {
-      Type superType = fields.get(0).type();
-      if (superType.isArray() || superType.isNothing()) {
-        throw new IllegalArgumentException();
-      }
-      return superType;
-    }
   }
 
   public ImmutableList<Item> fields() {

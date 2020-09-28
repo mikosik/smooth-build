@@ -63,7 +63,7 @@ Blob jar(
 
 [File] javac(
   [File] srcs,
-  [Blob] libs = [],
+  [File] libs = [],
   String source = "1.8",
   String target = "1.8",
   [String] options = [],
@@ -74,13 +74,13 @@ Blob jar(
 
 [File] javac_(
   [File] srcs,
-  [Blob] libs = [],
+  [File] libs = [],
   [String] options = [],
 );
 
 String junit(
-  Blob tests,
-  [Blob] deps = [],
+  File tests,
+  [File] deps = [],
   String include = "**Test.class",
 );
 

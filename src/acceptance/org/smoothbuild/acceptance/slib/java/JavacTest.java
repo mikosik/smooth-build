@@ -66,7 +66,7 @@ public class JavacTest extends AcceptanceTestCase {
         }
         """);
     createUserModule("""
-            libraryJar = projectFiles("srclib") | javac() | jar();
+            libraryJar = projectFiles("srclib") | javac() | jar() | file("library.jar");
             result = projectFiles("src") | javac(libs = [ libraryJar ])
                 | concat(array2 = javac(projectFiles("srclib")));
             """);

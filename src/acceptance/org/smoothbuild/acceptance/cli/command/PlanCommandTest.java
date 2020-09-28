@@ -183,16 +183,14 @@ public class PlanCommandTest {
     @Test
     public void convert_computation() throws Exception {
       createUserModule("""
-              Blob result = file(0x41, "name.txt");
+              [String] result = [];
               """);
       runSmoothTree("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
-              Blob result
-                Blob Blob<-File
-                  File file()
-                    Blob 0x41
-                    String "name.txt"
+              [String] result
+                [String] [String]<-[Nothing]
+                  [Nothing] [Nothing]
               """);
     }
   }
