@@ -32,6 +32,11 @@ public class ArrayType extends Type {
   }
 
   @Override
+  public Type replaceCoreType(Type type) {
+    return new ArrayType(elemType.replaceCoreType(type));
+  }
+
+  @Override
   public int coreDepth() {
     return 1 + elemType.coreDepth();
   }
