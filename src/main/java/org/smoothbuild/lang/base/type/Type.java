@@ -51,10 +51,8 @@ public abstract class Type implements Named {
     return this;
   }
 
-  public <T extends Type> T replaceCoreType(T coreType) {
-    @SuppressWarnings("unchecked")
-    T result = (T) coreType.changeCoreDepthBy(coreDepth());
-    return result;
+  public Type replaceCoreType(Type type) {
+    return type;
   }
 
   public int coreDepth() {
