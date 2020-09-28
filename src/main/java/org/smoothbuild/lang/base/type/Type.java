@@ -55,15 +55,6 @@ public abstract class Type implements Named {
     return type;
   }
 
-
-  public Type increaseCoreDepth(int delta) {
-    Type result = this;
-    for (int i = 0; i < delta; i++) {
-      result = Types.array(result);
-    }
-    return result;
-  }
-
   public boolean isAssignableFrom(Type type) {
     return type.isNothing() || this.equals(type);
   }
