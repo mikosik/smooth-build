@@ -5,7 +5,7 @@ Jars an array of files.
  | Name | Type | Default | Description |
  | ---- | ---- | ------- | ----------- |
  | files | [File] |   | Files to be compressed (jared). |
- | manifest | Blob | File("META-INF/MANIFEST.MF", toBlob("")) | Content of manifest file. |
+ | manifest | Blob | 0x | Content of manifest file. |
 
 Returns __Blob__ containing compressed files.
 

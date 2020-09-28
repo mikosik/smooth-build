@@ -58,7 +58,7 @@ File projectFile(
 
 Blob jar(
   [File] files,
-  Blob manifest = file(toBlob(""), "META-INF/MANIFEST.MF"),
+  Blob manifest = 0x,
 );
 
 [File] javac(
