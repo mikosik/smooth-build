@@ -55,9 +55,6 @@ public abstract class Type implements Named {
     return type;
   }
 
-  public int coreDepth() {
-    return 0;
-  }
 
   public Type increaseCoreDepth(int delta) {
     Type result = this;
@@ -73,10 +70,7 @@ public abstract class Type implements Named {
 
   public boolean isParamAssignableFrom(Type type) {
     if (isGeneric()) {
-      if (type.coreType().isNothing()) {
-        return true;
-      }
-      return coreDepth() <= type.coreDepth();
+      return true;
     } else {
       return isAssignableFrom(type);
     }
