@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
@@ -51,8 +52,8 @@ public abstract class Type implements Named {
     return this;
   }
 
-  public Type replaceCoreType(Type type) {
-    return type;
+  public Type mapTypeParameters(Map<Type, Type> map) {
+    return map.get(this);
   }
 
   public boolean isAssignableFrom(Type type) {

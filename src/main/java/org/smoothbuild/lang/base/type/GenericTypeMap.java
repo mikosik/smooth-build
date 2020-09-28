@@ -26,7 +26,7 @@ public class GenericTypeMap {
 
   public Type applyTo(Type type) {
     if (type.isGeneric()) {
-      return type.replaceCoreType(map.get(type.coreType()));
+      return type.mapTypeParameters(map);
     } else {
       return type;
     }
