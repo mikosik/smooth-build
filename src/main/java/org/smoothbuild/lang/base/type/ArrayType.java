@@ -37,11 +37,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public int coreDepth() {
-    return 1 + elemType.coreDepth();
-  }
-
-  @Override
   public boolean isAssignableFrom(Type type) {
     return type.isNothing()
         || (type instanceof ArrayType thatArrayType && elemTypesAreAssignable(thatArrayType));
@@ -49,6 +44,16 @@ public class ArrayType extends Type {
 
   private boolean elemTypesAreAssignable(ArrayType thatArrayType) {
     return elemType().isAssignableFrom(thatArrayType.elemType());
+  }
+
+  @Override
+  public boolean isParamAssignableFrom(Type type) {
+    if (isGeneric()) {
+      return type.isNothing() || (type instanceof ArrayType thatArrayType
+          && elemType.isParamAssignableFrom(thatArrayType.elemType));
+    } else {
+      return isAssignableFrom(type);
+    }
   }
 
   @Override

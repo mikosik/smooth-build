@@ -148,23 +148,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("coreDepth_test_data")
-  public void coreDepth(Type type, int expected) {
-    assertThat(type.coreDepth())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> coreDepth_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, 0));
-      result.add(arguments(array(type), 1));
-      result.add(arguments(array(array(type)), 2));
-    }
-    return result;
-  }
-
-  @ParameterizedTest
   @MethodSource("isGeneric_test_data")
   public void isGeneric(Type type, boolean expected) {
     assertThat(type.isGeneric())
