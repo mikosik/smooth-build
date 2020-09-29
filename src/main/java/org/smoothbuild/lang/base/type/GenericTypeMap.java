@@ -10,13 +10,13 @@ import java.util.Optional;
 import com.google.common.collect.ImmutableMap;
 
 public class GenericTypeMap {
-  private final Map<Type, Type> map;
+  private final Map<GenericBasicType, Type> map;
 
   public static GenericTypeMap inferMapping(List<? extends Type> types, List<Type> actualTypes) {
     return new GenericTypeMap(inferMap(types, actualTypes));
   }
 
-  private GenericTypeMap(Map<Type, Type> map) {
+  private GenericTypeMap(Map<GenericBasicType, Type> map) {
     this.map = map;
   }
 
@@ -32,21 +32,23 @@ public class GenericTypeMap {
     }
   }
 
-  private static Map<Type, Type> inferMap(
-      List<? extends Type> types, List<Type> actualTypes) {
-    Map<Type, Type> builder = new HashMap<>();
+  private static Map<GenericBasicType, Type> inferMap(List<? extends Type> types, List<Type> actualTypes) {
+    var builder = new HashMap<GenericBasicType, Type>();
     for (int i = 0; i < types.size(); i++) {
       Type current = types.get(i);
       if (current.isGeneric()) {
-        Type core = current.coreType();
-        Type actualCore = current.actualCoreTypeWhenAssignedFrom(actualTypes.get(i));
-        if (builder.containsKey(core)) {
-          Type previous = builder.get(core);
-          Optional<Type> commonSuperType = previous.commonSuperType(actualCore);
-          builder.put(core,
-              commonSuperType.orElseThrow(() -> noCommonSuperTypeException(actualCore, previous)));
-        } else {
-          builder.put(core, actualCore);
+        var inferredMap = current.inferTypeParametersMap(actualTypes.get(i));
+        for (var entry : inferredMap.entrySet()) {
+          GenericBasicType key = entry.getKey();
+          Type value = entry.getValue();
+          if (builder.containsKey(key)) {
+            Type previous = builder.get(key);
+            Optional<Type> commonSuperType = previous.commonSuperType(value);
+            builder.put(key,
+                commonSuperType.orElseThrow(() -> noCommonSuperTypeException(value, previous)));
+          } else {
+            builder.put(key, value);
+          }
         }
       }
     }

@@ -52,8 +52,16 @@ public abstract class Type implements Named {
     return this;
   }
 
-  public Type mapTypeParameters(Map<Type, Type> map) {
-    return map.get(this);
+  public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
+    throw newNotGenericException();
+  }
+
+  public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
+    throw newNotGenericException();
+  }
+
+  private UnsupportedOperationException newNotGenericException() {
+    return new UnsupportedOperationException(toString() + " is not generic");
   }
 
   public boolean isAssignableFrom(Type type) {
@@ -76,10 +84,6 @@ public abstract class Type implements Named {
     } else {
       return Optional.empty();
     }
-  }
-
-  public Type actualCoreTypeWhenAssignedFrom(Type source) {
-    return source;
   }
 
   public abstract <T> T visit(TypeVisitor<T> visitor);

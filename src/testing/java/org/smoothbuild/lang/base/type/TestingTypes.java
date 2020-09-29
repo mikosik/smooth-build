@@ -30,8 +30,8 @@ public class TestingTypes {
           new Item(BOOL, "flag", Optional.empty(),internal())));
   public static final StructType DATA = struct("Data", loc(), List.of(
           new Item(BLOB, "data", Optional.empty(),internal())));
-  public static final Type A = generic("A");
-  public static final Type B = generic("B");
+  public static final GenericBasicType A = generic("A");
+  public static final GenericBasicType B = generic("B");
 
   public static final ArrayType ARRAY_BOOL = array(BOOL);
   public static final ArrayType ARRAY_STRING = array(STRING);
