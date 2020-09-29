@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.util.Lists.map;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,27 +7,9 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
-public class GenericTypeMap {
-  private final Map<GenericBasicType, Type> map;
-
-  public static GenericTypeMap inferMapping(List<? extends Type> types, List<Type> actualTypes) {
-    return new GenericTypeMap(inferMap(types, actualTypes));
-  }
-
-  private GenericTypeMap(Map<GenericBasicType, Type> map) {
-    this.map = map;
-  }
-
-  public List<Type> applyTo(List<Type> types) {
-    return map(types, this::applyTo);
-  }
-
-  public Type applyTo(Type type) {
-    return type.mapTypeParameters(map);
-  }
-
-  private static Map<GenericBasicType, Type> inferMap(
-      List<? extends Type> types, List<Type> actualTypes) {
+public class InferTypeParameters {
+  public static Map<GenericBasicType, Type> inferTypeParameters(
+      List<Type> types, List<Type> actualTypes) {
     var builder = new HashMap<GenericBasicType, Type>();
     for (int i = 0; i < types.size(); i++) {
       Type current = types.get(i);

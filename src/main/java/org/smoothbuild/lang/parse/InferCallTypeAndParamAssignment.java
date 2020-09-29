@@ -4,7 +4,7 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.lang.base.type.GenericTypeMap.inferMapping;
+import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
-import org.smoothbuild.lang.base.type.GenericTypeMap;
+import org.smoothbuild.lang.base.type.GenericBasicType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
@@ -40,14 +40,14 @@ public class InferCallTypeAndParamAssignment {
           return;
         }
 
-        GenericTypeMap actualTypeMap =
+        Map<GenericBasicType, Type> typeParametersMap =
             inferActualTypesOfGenericParameters(parameters, assignedArgs.value());
-        if (actualTypeMap == null) {
+        if (typeParametersMap == null) {
           return;
         }
 
         call.setAssignedArgs(assignedArgs.value());
-        call.setType(callType(actualTypeMap));
+        call.setType(callableResultType(typeParametersMap));
       }
 
       private boolean allArgumentsHaveInferredType(List<ArgNode> args) {
@@ -130,7 +130,7 @@ public class InferCallTypeAndParamAssignment {
         throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
       }
 
-      private GenericTypeMap inferActualTypesOfGenericParameters(
+      private Map<GenericBasicType, Type> inferActualTypesOfGenericParameters(
           List<? extends ItemSignature> parameters, List<ArgNode> assignedArgs) {
         List<Type> genericTypes = new ArrayList<>();
         List<Type> actualTypes = new ArrayList<>();
@@ -144,7 +144,7 @@ public class InferCallTypeAndParamAssignment {
           return null;
         }
         try {
-          return inferMapping(genericTypes, actualTypes);
+          return inferTypeParameters(genericTypes, actualTypes);
         } catch (IllegalArgumentException e) {
           logger.log(
               parseError(call, "Cannot infer actual type(s) for generic parameter(s) in call to `"
@@ -153,8 +153,8 @@ public class InferCallTypeAndParamAssignment {
         }
       }
 
-      private Optional<Type> callType(GenericTypeMap actualTypeMap) {
-        return callableResultType().map(actualTypeMap::applyTo);
+      private Optional<Type> callableResultType(Map<GenericBasicType, Type> typeParametersMap) {
+        return callableResultType().map(t -> t.mapTypeParameters(typeParametersMap));
       }
 
       private Optional<Type> callableResultType() {

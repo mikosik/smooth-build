@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_B;
@@ -14,7 +15,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.B;
-import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -22,270 +22,271 @@ import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class GenericTypeMapTest {
+public class InferTypeParametersTest {
   @ParameterizedTest
-  @MethodSource("inferMapping_test_data")
-  public void inferMapping(List<Type> types, List<Type> actualTypes, Type type, Type expected) {
-    if (type == null) {
-      assertCall(() -> GenericTypeMap
-          .inferMapping(types, actualTypes))
+  @MethodSource("inferTypeParameters_test_data")
+  public void infer_type_parameters(List<Type> types, List<Type> actualTypes,
+      Map<GenericBasicType, Type> expected) {
+    if (expected == null) {
+      assertCall(() -> inferTypeParameters(types, actualTypes))
           .throwsException(IllegalArgumentException.class);
     } else {
-      assertThat(GenericTypeMap.inferMapping(types, actualTypes).applyTo(type))
+      assertThat(inferTypeParameters(types, actualTypes))
           .isEqualTo(expected);
     }
   }
 
-  public static List<Arguments> inferMapping_test_data() {
+  public static List<Arguments> inferTypeParameters_test_data() {
     return List.of(
         // concrete types
         arguments(
             list(STRING),
             list(STRING),
-            BLOB, BLOB),
+            Map.of()),
 
         // a <- string
         arguments(
             list(A),
             list(STRING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(A),
             list(ARRAY_STRING),
-            A, ARRAY_STRING),
+            Map.of(A, ARRAY_STRING)),
         arguments(
             list(A),
             list(ARRAY2_STRING),
-            A, ARRAY2_STRING),
+            Map.of(A, ARRAY2_STRING)),
 
         arguments(
             list(ARRAY_A),
             list(STRING),
-            null, null),
+            null),
         arguments(
             list(ARRAY_A),
             list(ARRAY_STRING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_STRING),
-            A, ARRAY_STRING),
+            Map.of(A, ARRAY_STRING)),
 
         arguments(
             list(ARRAY2_A),
             list(STRING),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_STRING),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_STRING),
-            A, STRING),
+            Map.of(A, STRING)),
 
         // a <- struct (Person)
         arguments(
             list(A),
             list(PERSON),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(A),
             list(ARRAY_PERSON),
-            A, ARRAY_PERSON),
+            Map.of(A, ARRAY_PERSON)),
         arguments(
             list(A),
             list(ARRAY2_PERSON),
-            A, ARRAY2_PERSON),
+            Map.of(A, ARRAY2_PERSON)),
 
         arguments(
             list(ARRAY_A),
             list(PERSON),
-            null, null),
+            null),
         arguments(
             list(ARRAY_A),
             list(ARRAY_PERSON),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_PERSON),
-            A, ARRAY_PERSON),
+            Map.of(A, ARRAY_PERSON)),
 
         arguments(
             list(ARRAY2_A),
             list(PERSON),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_PERSON),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_PERSON),
-            A, PERSON),
+            Map.of(A, PERSON)),
 
         // a <- Nothing
 
         arguments(
             list(A),
             list(NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
         arguments(
             list(A),
             list(ARRAY_NOTHING),
-            A, ARRAY_NOTHING),
+            Map.of(A, ARRAY_NOTHING)),
         arguments(
             list(A),
             list(ARRAY2_NOTHING),
-            A, ARRAY2_NOTHING),
+            Map.of(A, ARRAY2_NOTHING)),
 
         arguments(
             list(ARRAY_A),
             list(NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY_NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_NOTHING),
-            A, ARRAY_NOTHING),
+            Map.of(A, ARRAY_NOTHING)),
 
         arguments(
             list(ARRAY2_A),
             list(NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_NOTHING),
-            A, NOTHING),
+            Map.of(A, NOTHING)),
 
         // a <- b
 
         arguments(
             list(A),
             list(B),
-            A, B),
+            Map.of(A, B)),
         arguments(
             list(A),
             list(ARRAY_B),
-            A, ARRAY_B),
+            Map.of(A, ARRAY_B)),
         arguments(
             list(A),
             list(ARRAY2_B),
-            A, ARRAY2_B),
+            Map.of(A, ARRAY2_B)),
 
         arguments(
             list(ARRAY_A),
             list(B),
-            null, null),
+            null),
         arguments(
             list(ARRAY_A),
             list(ARRAY_B),
-            A, B),
+            Map.of(A, B)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_B),
-            A, ARRAY_B),
+            Map.of(A, ARRAY_B)),
 
         arguments(
             list(ARRAY2_A),
             list(B),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_B),
-            null, null),
+            null),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_B),
-            A, B),
+            Map.of(A, B)),
 
         // a <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, STRING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(A, ARRAY_A),
             list(STRING, ARRAY_NOTHING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_STRING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_STRING, ARRAY_NOTHING),
-            A, STRING),
+            Map.of(A, STRING)),
         arguments(
             list(A, A),
             list(ARRAY_STRING, NOTHING),
-            A, ARRAY_STRING),
+            Map.of(A, ARRAY_STRING)),
 
         // a <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, PERSON),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(A, ARRAY_A),
             list(PERSON, ARRAY_NOTHING),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_PERSON),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_PERSON, ARRAY_NOTHING),
-            A, PERSON),
+            Map.of(A, PERSON)),
         arguments(
             list(A, A),
             list(ARRAY_PERSON, NOTHING),
-            A, ARRAY_PERSON),
+            Map.of(A, ARRAY_PERSON)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_NOTHING, ARRAY2_STRING),
-            A, ARRAY_STRING),
+            Map.of(A, ARRAY_STRING)),
 
         // a <- Nothing, a; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, A),
-            A, A),
+            Map.of(A, A)),
         arguments(
             list(A, ARRAY_A),
             list(A, ARRAY_NOTHING),
-            A, A),
+            Map.of(A, A)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_A),
-            A, A),
+            Map.of(A, A)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_A, ARRAY_NOTHING),
-            A, A),
+            Map.of(A, A)),
         arguments(
             list(A, A),
             list(ARRAY_A, NOTHING),
-            A, ARRAY_A),
+            Map.of(A, ARRAY_A)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_NOTHING, ARRAY2_A),
-            A, ARRAY_A));
+            Map.of(A, ARRAY_A)));
   }
 }
