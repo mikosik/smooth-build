@@ -33,8 +33,19 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeParameters(Map<Type, Type> map) {
+  public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
     return new ArrayType(elemType.mapTypeParameters(map));
+  }
+
+  @Override
+  public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
+    if (source instanceof ArrayType arrayType) {
+      return elemType.inferTypeParametersMap(arrayType.elemType());
+    } else if (source.isNothing()) {
+      return elemType.inferTypeParametersMap(source);
+    } else {
+      throw new IllegalArgumentException("Cannot assign " + q() + " from " + source.q());
+    }
   }
 
   @Override
@@ -65,17 +76,6 @@ public class ArrayType extends Type {
       return elemType.commonSuperType(thatArray.elemType).map(ArrayType::new);
     } else {
       return Optional.empty();
-    }
-  }
-
-  @Override
-  public Type actualCoreTypeWhenAssignedFrom(Type source) {
-    if (source.isArray()) {
-      return elemType.actualCoreTypeWhenAssignedFrom(((ArrayType) source).elemType());
-    } else if (source.isNothing()) {
-      return source;
-    } else {
-      throw new IllegalArgumentException("Cannot assign " + this + " from " + source.name());
     }
   }
 

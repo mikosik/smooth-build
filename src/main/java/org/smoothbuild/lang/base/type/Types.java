@@ -20,7 +20,7 @@ public class Types {
    */
   public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
 
-  public static Type generic(String name) {
+  public static GenericBasicType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
     return new GenericBasicType(name);
   }

@@ -127,15 +127,29 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("replaceCoreType_test_data")
-  public void replaceCoreType(Type type, Map<Type, Type> map, Type expected) {
-    assertThat(type.mapTypeParameters(map))
-        .isEqualTo(expected);
+  @MethodSource("mapTypeParameters_test_data")
+  public void mapTypeParameters(Type type, Map<GenericBasicType, Type> map, Type expected) {
+    if (expected == null) {
+      assertCall(() -> type.mapTypeParameters(map))
+          .throwsException(new UnsupportedOperationException(
+              arrayTypeParameter(type).toString() + " is not generic"));
+    } else {
+      assertThat(type.mapTypeParameters(map))
+          .isEqualTo(expected);
+    }
   }
 
-  public static List<Arguments> replaceCoreType_test_data() {
+  private static Type arrayTypeParameter(Type type) {
+    if (type instanceof ArrayType arrayType) {
+      return arrayTypeParameter(arrayType.elemType());
+    } else {
+      return type;
+    }
+  }
+
+  public static List<Arguments> mapTypeParameters_test_data() {
     var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
+    for (GenericBasicType type : List.of(A, B)) {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);
@@ -144,6 +158,11 @@ public class TypeTest {
         result.add(arguments(type, Map.of(type, newCoreArray), newCoreArray));
         result.add(arguments(typeArray, Map.of(type, newCoreArray), array(array(newCore))));
       }
+    }
+    for (Type type : ELEMENTARY_NON_GENERIC_TYPES) {
+      Type typeArray = array(type);
+      result.add(arguments(type, Map.of(), null));
+      result.add(arguments(typeArray, Map.of(), null));
     }
     return result;
   }
@@ -377,44 +396,44 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("actualCoreTypeWhenAssignedFrom_test_data")
-  public void actualCoreTypeWhenAssignedFrom(Type type, Type assigned, Type expected) {
+  @MethodSource("inferTypeParametersMap_test_data")
+  public void inferTypeParametersMap(Type type, Type assigned, Map<Type, Type> expected) {
     if (expected == null) {
-      assertCall(() -> type.actualCoreTypeWhenAssignedFrom(assigned))
+      assertCall(() -> type.inferTypeParametersMap(assigned))
           .throwsException(IllegalArgumentException.class);
     } else {
-      assertThat(type.actualCoreTypeWhenAssignedFrom(assigned))
+      assertThat(type.inferTypeParametersMap(assigned))
           .isEqualTo(expected);
     }
   }
 
-  public static List<Arguments> actualCoreTypeWhenAssignedFrom_test_data() {
+  public static List<Arguments> inferTypeParametersMap_test_data() {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type.isNothing()) {
-        result.add(arguments(A, NOTHING, NOTHING));
-        result.add(arguments(A, array(NOTHING), array(NOTHING)));
-        result.add(arguments(A, array(array(NOTHING)), array(array(NOTHING))));
+        result.add(arguments(A, NOTHING, Map.of(A, NOTHING)));
+        result.add(arguments(A, array(NOTHING), Map.of(A, array(NOTHING))));
+        result.add(arguments(A, array(array(NOTHING)), Map.of(A, array(array(NOTHING)))));
 
-        result.add(arguments(array(A), NOTHING, NOTHING));
-        result.add(arguments(array(A), array(NOTHING), NOTHING));
-        result.add(arguments(array(A), array(array(NOTHING)), array(NOTHING)));
+        result.add(arguments(array(A), NOTHING, Map.of(A, NOTHING)));
+        result.add(arguments(array(A), array(NOTHING), Map.of(A, NOTHING)));
+        result.add(arguments(array(A), array(array(NOTHING)), Map.of(A, array(NOTHING))));
 
-        result.add(arguments(array(array(A)), NOTHING, NOTHING));
-        result.add(arguments(array(array(A)), array(NOTHING), NOTHING));
-        result.add(arguments(array(array(A)), array(array(NOTHING)), NOTHING));
+        result.add(arguments(array(array(A)), NOTHING, Map.of(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(NOTHING), Map.of(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(array(NOTHING)), Map.of(A, NOTHING)));
       } else {
-        result.add(arguments(A, type, type));
-        result.add(arguments(A, array(type), array(type)));
-        result.add(arguments(A, array(array(type)), array(array(type))));
+        result.add(arguments(A, type, Map.of(A, type)));
+        result.add(arguments(A, array(type), Map.of(A, array(type))));
+        result.add(arguments(A, array(array(type)), Map.of(A, array(array(type)))));
 
         result.add(arguments(array(A), type, null));
-        result.add(arguments(array(A), array(type), type));
-        result.add(arguments(array(A), array(array(type)), array(type)));
+        result.add(arguments(array(A), array(type), Map.of(A, type)));
+        result.add(arguments(array(A), array(array(type)), Map.of(A, array(type))));
 
         result.add(arguments(array(array(A)), type, null));
         result.add(arguments(array(array(A)), array(type), null));
-        result.add(arguments(array(array(A)), array(array(type)), type));
+        result.add(arguments(array(array(A)), array(array(type)), Map.of(A, type)));
       }
     }
     return result;
