@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 public class CallNode extends ExprNode {
   private final String name;
   private final List<ArgNode> args;
-  private List<ArgNode> assignedArgs;
+  private List<ExprNode> assignedArgs;
 
   public CallNode(String name, List<ArgNode> args, Location location) {
     super(location);
@@ -25,8 +25,8 @@ public class CallNode extends ExprNode {
     return args;
   }
 
-  public void setAssignedArgs(List<ArgNode> sortedArgs) {
-    this.assignedArgs = sortedArgs;
+  public void setAssignedArgs(List<ExprNode> assignedArgs) {
+    this.assignedArgs = assignedArgs;
   }
 
   /**
@@ -34,7 +34,7 @@ public class CallNode extends ExprNode {
    * argument has been assigned. Null element means that function call didn't specify
    * assignment for given parameters.
    */
-  public List<ArgNode> assignedArgs() {
+  public List<ExprNode> assignedArgs() {
     return assignedArgs;
   }
 }

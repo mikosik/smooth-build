@@ -130,7 +130,7 @@ public class InferTypesAndParamAssignments {
             var optDefaultValueType = optDefaultValue.get().type();
             if (optDefaultValueType.isPresent()) {
               Type dt = optDefaultValueType.get();
-              if (!type.isAssignableFrom(dt)) {
+              if (!type.isParamAssignableFrom(dt)) {
                 logger.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
                     + " so it cannot have default value of type " + dt.q() + "."));
               }
