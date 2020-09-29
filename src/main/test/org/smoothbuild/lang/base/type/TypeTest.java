@@ -110,23 +110,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("coreType_test_data")
-  public void coreType(Type type, Type expected) {
-    assertThat(type.coreType())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> coreType_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, type));
-      result.add(arguments(array(type), type));
-      result.add(arguments(array(array(type)), type));
-    }
-    return result;
-  }
-
-  @ParameterizedTest
   @MethodSource("mapTypeParameters_test_data")
   public void mapTypeParameters(Type type, Map<GenericBasicType, Type> map, Type expected) {
     if (expected == null) {

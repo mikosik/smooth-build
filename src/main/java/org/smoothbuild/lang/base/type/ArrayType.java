@@ -28,11 +28,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type coreType() {
-    return elemType.coreType();
-  }
-
-  @Override
   public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
     return new ArrayType(elemType.mapTypeParameters(map));
   }

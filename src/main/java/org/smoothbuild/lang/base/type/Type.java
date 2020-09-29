@@ -48,10 +48,6 @@ public abstract class Type implements Named {
     return this == nothing();
   }
 
-  public Type coreType() {
-    return this;
-  }
-
   public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
     throw newNotGenericException();
   }
