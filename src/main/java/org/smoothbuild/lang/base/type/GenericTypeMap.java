@@ -25,30 +25,25 @@ public class GenericTypeMap {
   }
 
   public Type applyTo(Type type) {
-    if (type.isGeneric()) {
-      return type.mapTypeParameters(map);
-    } else {
-      return type;
-    }
+    return type.mapTypeParameters(map);
   }
 
-  private static Map<GenericBasicType, Type> inferMap(List<? extends Type> types, List<Type> actualTypes) {
+  private static Map<GenericBasicType, Type> inferMap(
+      List<? extends Type> types, List<Type> actualTypes) {
     var builder = new HashMap<GenericBasicType, Type>();
     for (int i = 0; i < types.size(); i++) {
       Type current = types.get(i);
-      if (current.isGeneric()) {
-        var inferredMap = current.inferTypeParametersMap(actualTypes.get(i));
-        for (var entry : inferredMap.entrySet()) {
-          GenericBasicType key = entry.getKey();
-          Type value = entry.getValue();
-          if (builder.containsKey(key)) {
-            Type previous = builder.get(key);
-            Optional<Type> commonSuperType = previous.commonSuperType(value);
-            builder.put(key,
-                commonSuperType.orElseThrow(() -> noCommonSuperTypeException(value, previous)));
-          } else {
-            builder.put(key, value);
-          }
+      var inferredMap = current.inferTypeParametersMap(actualTypes.get(i));
+      for (var entry : inferredMap.entrySet()) {
+        GenericBasicType key = entry.getKey();
+        Type value = entry.getValue();
+        if (builder.containsKey(key)) {
+          Type previous = builder.get(key);
+          Optional<Type> commonSuperType = previous.commonSuperType(value);
+          builder.put(key,
+              commonSuperType.orElseThrow(() -> noCommonSuperTypeException(value, previous)));
+        } else {
+          builder.put(key, value);
         }
       }
     }
