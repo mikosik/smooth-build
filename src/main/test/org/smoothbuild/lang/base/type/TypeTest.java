@@ -144,8 +144,8 @@ public class TypeTest {
     }
     for (Type type : ELEMENTARY_NON_GENERIC_TYPES) {
       Type typeArray = array(type);
-      result.add(arguments(type, Map.of(), null));
-      result.add(arguments(typeArray, Map.of(), null));
+      result.add(arguments(type, Map.of(), type));
+      result.add(arguments(typeArray, Map.of(), typeArray));
     }
     return result;
   }

@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * This class and all its subclasses are immutable.
  */
@@ -49,15 +51,11 @@ public abstract class Type implements Named {
   }
 
   public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
-    throw newNotGenericException();
+    return this;
   }
 
   public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
-    throw newNotGenericException();
-  }
-
-  private UnsupportedOperationException newNotGenericException() {
-    return new UnsupportedOperationException(toString() + " is not generic");
+    return ImmutableMap.of();
   }
 
   public boolean isAssignableFrom(Type type) {
