@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
@@ -17,12 +18,14 @@ import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.GenericBasicType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
+import org.smoothbuild.lang.parse.ast.ExprNode;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -34,29 +37,29 @@ public class InferCallTypeAndParamAssignment {
       public void run() {
         call.setType(empty());
         List<? extends ItemSignature> parameters = callableParameters();
-        ValueWithLogs<List<ArgNode>> assignedArgs = assignedArguments(parameters);
-        assignedArgs.logs().forEach(logger::log);
-        if (assignedArgs.hasProblems() || !allArgumentsHaveInferredType(assignedArgs.value())) {
+        ValueWithLogs<List<Assigned>> assigned = assigned(parameters);
+        assigned.logs().forEach(logger::log);
+        if (assigned.hasProblems() || !allAssignedHaveInferredType(assigned.value())) {
           return;
         }
 
         Map<GenericBasicType, Type> typeParametersMap =
-            inferActualTypesOfGenericParameters(parameters, assignedArgs.value());
+            inferActualTypesOfGenericParameters(parameters, assigned.value());
         if (typeParametersMap == null) {
           return;
         }
 
-        call.setAssignedArgs(assignedArgs.value());
+        call.setAssignedArgs(assigned.value().stream().map(Assigned::expr).collect(toList()));
         call.setType(callableResultType(typeParametersMap));
       }
 
-      private boolean allArgumentsHaveInferredType(List<ArgNode> args) {
-        return args.stream().allMatch(a -> a == null || a.type().isPresent());
+      private boolean allAssignedHaveInferredType(List<Assigned> assigned) {
+        return assigned.stream().allMatch(a -> a.type().isPresent());
       }
 
-      private ValueWithLogs<List<ArgNode>> assignedArguments(List<? extends ItemSignature> parameters) {
-        var result = new ValueWithLogs<List<ArgNode>>();
-        List<ArgNode> assignedArgs = asList(new ArgNode[parameters.size()]);
+      private ValueWithLogs<List<Assigned>> assigned(List<? extends ItemSignature> parameters) {
+        var result = new ValueWithLogs<List<Assigned>>();
+        List<Assigned> assignedList = asList(new Assigned[parameters.size()]);
         Map<String, Integer> nameToIndex = range(0, parameters.size())
             .boxed()
             .collect(toMap(i -> parameters.get(i).name(), i -> i));
@@ -70,18 +73,18 @@ public class InferCallTypeAndParamAssignment {
             if (index == null) {
               result.log(
                   parseError(arg, inCallToPrefix(call) + "Unknown parameter " + arg.q() + "."));
-            } else if (assignedArgs.get(index) != null) {
+            } else if (assignedList.get(index) != null) {
               result.log(parseError(arg,
                   inCallToPrefix(call) + "`" + arg.name() + "` is already assigned."));
             } else {
-              assignedArgs.set(index, arg);
+              assignedList.set(index, new Assigned(arg));
             }
           } else {
             if (inNamedArgsSection) {
               result.log(parseError(arg, inCallToPrefix(call)
                   + "Positional arguments must be placed before named arguments."));
             } else if (i < parameters.size()) {
-              assignedArgs.set(i, arg);
+              assignedList.set(i, new Assigned(arg));
             } else {
               result.log(parseError(arg,
                   inCallToPrefix(call) + "Too many positional arguments."));
@@ -94,22 +97,24 @@ public class InferCallTypeAndParamAssignment {
 
         for (int i = 0; i < parameters.size(); i++) {
           ItemSignature param = parameters.get(i);
-          ArgNode arg = assignedArgs.get(i);
-          if (arg == null) {
-            if (param.defaultValueType().isEmpty()) {
+          Assigned assigned = assignedList.get(i);
+          if (assigned == null) {
+            if (param.defaultValueType().isPresent()) {
+              assignedList.set(i, new Assigned(param));
+            } else {
               result.log(parseError(call,
                   inCallToPrefix(call) + "Parameter " + param.q() + " must be specified."));
             }
-          } else if (arg.type().isPresent()) {
-            Type argType = arg.type().get();
+          } else if (assigned.type().isPresent()) {
+            Type argType = assigned.type().get();
             if (!param.type().isParamAssignableFrom(argType)) {
-              result.log(parseError(arg, inCallToPrefix(call)
+              result.log(parseError(assigned.location(), inCallToPrefix(call)
                   + "Cannot assign argument of type " + argType.q() + " to parameter "
                   + param.q() + " of type " + param.type().q() + "."));
             }
           }
         }
-        result.setValue(assignedArgs);
+        result.setValue(assignedList);
         return result;
       }
 
@@ -131,13 +136,13 @@ public class InferCallTypeAndParamAssignment {
       }
 
       private Map<GenericBasicType, Type> inferActualTypesOfGenericParameters(
-          List<? extends ItemSignature> parameters, List<ArgNode> assignedArgs) {
+          List<? extends ItemSignature> parameters, List<Assigned> assigned) {
         List<Type> genericTypes = new ArrayList<>();
         List<Type> actualTypes = new ArrayList<>();
         for (int i = 0; i < parameters.size(); i++) {
           if (parameters.get(i).type().isGeneric()) {
             genericTypes.add(parameters.get(i).type());
-            actualTypes.add(assignedArgs.get(i).type().get());
+            actualTypes.add(assigned.get(i).type().get());
           }
         }
         if (actualTypes.contains(null)) {
@@ -170,5 +175,15 @@ public class InferCallTypeAndParamAssignment {
         throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
       }
     }.run();
+  }
+
+  private static record Assigned(Optional<Type> type, ExprNode expr, Location location) {
+    public Assigned(ArgNode arg) {
+      this(arg.type(), arg.expr(), arg.location());
+    }
+
+    public Assigned(ItemSignature param) {
+      this(param.defaultValueType(), null, null);
+    }
   }
 }

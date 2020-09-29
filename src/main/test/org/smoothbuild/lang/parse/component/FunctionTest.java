@@ -15,4 +15,21 @@ public class FunctionTest {
         .loadsWithError(3, "parameter with default value must be placed after all parameters " +
             "which don't have default value.");
   }
+
+  @Test
+  public void generic_parameter_can_have_default_value() {
+    module("""
+        A myFunc(A value = "abc") = value;
+        """)
+       .loadsSuccessfully();
+  }
+
+  @Test
+  public void default_value_gets_converted_to_generic_parameter() {
+    module("""
+        [A] myFunc(A param1, [A] param2 = []) = param2;
+        [String] result = myFunc("abc");
+        """)
+        .loadsSuccessfully();
+  }
 }
