@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
@@ -36,6 +37,7 @@ import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.lang.parse.ast.ValueTarget;
 import org.smoothbuild.util.DecodingHexException;
+import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
 
 public class AnalyzeSemantically {
@@ -146,7 +148,7 @@ public class AnalyzeSemantically {
   }
 
   private static void undefinedTypes(Logger logger, Definitions imported, Ast ast) {
-    List<String> structNames = map(ast.structs(), NamedNode::name);
+    Set<String> structNames = Sets.map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
       public void visitConstructor(ConstructorNode constructor) {
