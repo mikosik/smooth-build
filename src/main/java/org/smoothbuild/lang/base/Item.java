@@ -24,7 +24,7 @@ public record Item(Type type, String name, Optional<Expression> defaultValue, Lo
   }
 
   public ItemSignature signature() {
-    return new ItemSignature(type, name, defaultValue.isPresent(), location);
+    return new ItemSignature(type, name, defaultValue.map(Expression::type), location);
   }
 
   @Override
