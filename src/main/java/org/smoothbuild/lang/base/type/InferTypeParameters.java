@@ -12,9 +12,7 @@ public class InferTypeParameters {
       List<Type> types, List<Type> actualTypes) {
     var builder = new HashMap<GenericBasicType, Type>();
     for (int i = 0; i < types.size(); i++) {
-      Type current = types.get(i);
-      var inferredMap = current.inferTypeParametersMap(actualTypes.get(i));
-      for (var entry : inferredMap.entrySet()) {
+      for (var entry : types.get(i).inferTypeParametersMap(actualTypes.get(i)).entrySet()) {
         GenericBasicType key = entry.getKey();
         Type value = entry.getValue();
         if (builder.containsKey(key)) {
