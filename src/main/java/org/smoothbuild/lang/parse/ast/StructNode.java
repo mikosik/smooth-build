@@ -2,14 +2,11 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.ItemSignature;
-import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;
@@ -50,14 +47,6 @@ public class StructNode extends NamedNode {
     @Override
     public void setType(Optional<Type> type) {
       throw new UnsupportedOperationException();
-    }
-
-    public void initializeParameterInfos() {
-      StructType type = (StructType) StructNode.this.type().get();
-      ImmutableList<ItemSignature> parameters = type.fields().stream()
-          .map(f -> new ItemSignature(f.type(), f.name(), false, f.location()))
-          .collect(toImmutableList());
-      setParameterInfos(parameters);
     }
   }
 }

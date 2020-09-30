@@ -9,13 +9,19 @@ import org.smoothbuild.lang.base.type.Type;
 public class ItemNode extends NamedNode implements RefTarget {
   private final TypeNode typeNode;
   private final Optional<ExprNode> defaultValue;
-  private Optional<ItemSignature> itemInfo;
+  private Optional<ItemSignature> signature;
 
   public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> defaultValue,
       Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.defaultValue = defaultValue;
+  }
+
+  @Override
+  public void setType(Optional<Type> type) {
+    super.setType(type);
+    signature = type().map(t -> new ItemSignature(t, name(), defaultValue.isPresent(), location()));
   }
 
   public TypeNode typeNode() {
@@ -26,12 +32,8 @@ public class ItemNode extends NamedNode implements RefTarget {
     return defaultValue;
   }
 
-  public Optional<ItemSignature> itemInfo() {
-    return itemInfo;
-  }
-
-  public void setItemInfo(Optional<ItemSignature> itemInfo) {
-    this.itemInfo = itemInfo;
+  public Optional<ItemSignature> itemSignature() {
+    return signature;
   }
 
   @Override

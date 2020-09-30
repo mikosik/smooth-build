@@ -22,7 +22,7 @@ public class Node {
   }
 
   public void setType(Type type) {
-    this.type = Optional.of(type);
+    setType(Optional.of(type));
   }
 
   public void setType(Optional<Type> type) {
