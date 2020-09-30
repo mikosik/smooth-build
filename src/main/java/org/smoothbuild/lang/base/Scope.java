@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static java.util.stream.Collectors.joining;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -10,16 +9,6 @@ import java.util.Set;
 public class Scope<E> {
   private final Scope<E> outerScope;
   private final Map<String, ? extends E> bindings;
-
-  @Deprecated
-  public static <E> Scope<E> scope() {
-    return new Scope<>(null, new HashMap<>());
-  }
-
-  @Deprecated
-  public static <E> Scope<E> scope(Scope<E> outerScope) {
-    return new Scope<>(outerScope, new HashMap<>());
-  }
 
   public Scope(Map<String, ? extends E> bindings) {
     this(null, bindings);
