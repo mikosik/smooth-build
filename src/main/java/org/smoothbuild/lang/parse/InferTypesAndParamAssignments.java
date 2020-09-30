@@ -11,7 +11,6 @@ import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
-import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +18,6 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -55,18 +53,15 @@ public class InferTypesAndParamAssignments {
 
         var fields = struct.fields()
             .stream()
-            .map(f -> new Item(f.type().get(), f.name(), Optional.empty(), f.location()))
+            .map(f -> new Item(f.type().get(), f.name(), empty(), f.location()))
             .collect(toImmutableList());
         struct.setType(struct(struct.name(), struct.location(), fields));
-        struct.constructor().initializeParameterInfos();
       }
 
       @Override
       public void visitField(ItemNode fieldNode) {
         super.visitField(fieldNode);
         fieldNode.setType(fieldNode.typeNode().type());
-        fieldNode.setItemInfo(Optional.of(new ItemSignature(
-            fieldNode.type().get(), fieldNode.name(), false, fieldNode.location())));
       }
 
       @Override
@@ -74,7 +69,6 @@ public class InferTypesAndParamAssignments {
         visitParams(func.params());
         func.visitExpr(this);
         func.setType(codeType(func));
-        setParametersInfo(func);
       }
 
       @Override
@@ -86,14 +80,6 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitCallable(CallableNode callable) {
         super.visitCallable(callable);
-        setParametersInfo(callable);
-      }
-
-      private void setParametersInfo(CallableNode callable) {
-        var infos = map(callable.params(), ItemNode::itemInfo);
-        if (infos.stream().noneMatch(Optional::isEmpty)) {
-           callable.setParameterInfos(map(infos, Optional::get));
-        }
       }
 
       private Optional<Type> codeType(EvaluableNode evaluable) {
@@ -135,23 +121,22 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
-        Optional<Type> type = param.typeNode().type();
-        param.setType(type);
-        type.ifPresentOrElse(t -> {
-              var info = new ItemSignature(
-                  t, param.name(), param.defaultValue().isPresent(), param.location());
-              param.setItemInfo(Optional.of(info));
-              if (param.defaultValue().isPresent()) {
-                Optional<Type> defaultValueType = param.defaultValue().get().type();
-                defaultValueType.ifPresent(dt -> {
-                  if (!t.isAssignableFrom(dt)) {
-                    logger.log(parseError(param, "Parameter " + param.q() + " is of type " + t.q()
-                        + " so it cannot have default value of type " + dt.q() + "."));
-                  }
-                });
+        Optional<Type> optType = param.typeNode().type();
+        param.setType(optType);
+        if (optType.isPresent()) {
+          Type type = optType.get();
+          var optDefaultValue = param.defaultValue();
+          if (optDefaultValue.isPresent()) {
+            var optDefaultValueType = optDefaultValue.get().type();
+            if (optDefaultValueType.isPresent()) {
+              Type dt = optDefaultValueType.get();
+              if (!type.isAssignableFrom(dt)) {
+                logger.log(parseError(param, "Parameter " + param.q() + " is of type " + type.q()
+                    + " so it cannot have default value of type " + dt.q() + "."));
               }
-            },
-            () -> param.setItemInfo(empty()));
+            }
+          }
+        }
       }
 
       @Override

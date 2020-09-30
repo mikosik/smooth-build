@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
+import static org.smoothbuild.util.Lists.map;
+
 import java.util.List;
 
 import org.smoothbuild.lang.base.Location;
@@ -8,7 +10,6 @@ import org.smoothbuild.lang.base.type.ItemSignature;
 import com.google.common.collect.ImmutableList;
 
 public class CallableNode extends EvaluableNode {
-  private List<? extends ItemSignature> parameterInfos;
   private final List<ItemNode> params;
 
   public CallableNode(TypeNode typeNode, String name, ExprNode exprNode, List<ItemNode> params,
@@ -21,11 +22,7 @@ public class CallableNode extends EvaluableNode {
     return params;
   }
 
-  public List<? extends ItemSignature> parameterInfos() {
-    return parameterInfos;
-  }
-
-  public void setParameterInfos(List<? extends ItemSignature> parameterInfos) {
-    this.parameterInfos = parameterInfos;
+  public List<? extends ItemSignature> parameterSignatures() {
+    return map(params(), itemNode -> itemNode.itemSignature().get());
   }
 }
