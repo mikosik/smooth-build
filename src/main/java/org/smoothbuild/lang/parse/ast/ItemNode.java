@@ -21,7 +21,8 @@ public class ItemNode extends NamedNode implements RefTarget {
   @Override
   public void setType(Optional<Type> type) {
     super.setType(type);
-    signature = type().map(t -> new ItemSignature(t, name(), defaultValue.isPresent(), location()));
+    signature = type()
+        .map(t -> new ItemSignature(t, name(), defaultValue.flatMap(Node::type), location()));
   }
 
   public TypeNode typeNode() {

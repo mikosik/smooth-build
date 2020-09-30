@@ -5,6 +5,8 @@ import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
+import java.util.Optional;
+
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
 
@@ -13,12 +15,12 @@ import org.smoothbuild.lang.parse.ast.Named;
  *
  * This class is immutable.
  */
-public record ItemSignature(Type type, String name, boolean hasDefaultValue, Location location)
-    implements Named {
+public record ItemSignature(
+    Type type, String name, Optional<Type> defaultValueType, Location location) implements Named {
   public ItemSignature {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
-    this.hasDefaultValue = hasDefaultValue;
+    this.defaultValueType = defaultValueType;
     this.location = requireNonNull(location);
   }
 

@@ -96,7 +96,7 @@ public class InferCallTypeAndParamAssignment {
           ItemSignature param = parameters.get(i);
           ArgNode arg = assignedArgs.get(i);
           if (arg == null) {
-            if (!param.hasDefaultValue()) {
+            if (param.defaultValueType().isEmpty()) {
               result.log(parseError(call,
                   inCallToPrefix(call) + "Parameter " + param.q() + " must be specified."));
             }
