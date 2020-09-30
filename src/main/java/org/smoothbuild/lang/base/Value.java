@@ -28,7 +28,7 @@ public class Value extends Evaluable {
   }
 
   public Expression createReferenceExpression(Location location) {
-    return new ValueReferenceExpression(name(), location);
+    return new ValueReferenceExpression(name(), type(), location);
   }
 
   @Override

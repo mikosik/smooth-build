@@ -200,7 +200,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   @Override
   public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
     List<Task> elements = childrenTasks(expression.elements());
-    ArrayType actualType = arrayType(elements, expression.arrayType());
+    ArrayType actualType = arrayType(elements, expression.type());
 
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);

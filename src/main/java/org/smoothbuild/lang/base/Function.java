@@ -2,6 +2,8 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -30,7 +32,13 @@ public class Function extends Callable {
 
   @Override
   public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
-    return new CallExpression(this, arguments, location);
+    Type resultType = inferResultType(arguments);
+    return new CallExpression(resultType, this, arguments, location);
+  }
+
+  private Type inferResultType(ImmutableList<Expression> arguments) {
+    var typeParametersMap = inferTypeParameters(parameterTypes(), map(arguments, Expression::type));
+    return resultType().mapTypeParameters(typeParametersMap);
   }
 
   @Override

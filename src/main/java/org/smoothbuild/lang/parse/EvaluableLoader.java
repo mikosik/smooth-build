@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.parse;
 
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.util.Lists.map;
@@ -38,6 +39,7 @@ import org.smoothbuild.lang.parse.ast.ValueTarget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableMap;
 
 public class EvaluableLoader {
   public static Value loadValue(
@@ -58,6 +60,7 @@ public class EvaluableLoader {
     private final EvaluableNode evaluable;
     private final Map<String, Evaluable> localEvaluables;
     private final Map<String, Evaluable> importedEvaluables;
+    private ImmutableMap<String, Type> functionParameters;
 
     public EvaluableSupplier(EvaluableNode evaluable, Map<String, Evaluable> localEvaluables,
         Map<String, Evaluable> importedEvaluables) {
@@ -75,6 +78,7 @@ public class EvaluableLoader {
       Type resultType = evaluable.type().get();
       String name = evaluable.name();
       ImmutableList<Item> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
+      functionParameters = parameters.stream().collect(toImmutableMap(Item::name, Item::type));
       return new Function(resultType, name, parameters, bodyExpression(), evaluable.location());
     }
 
@@ -122,7 +126,8 @@ public class EvaluableLoader {
 
     private Expression createReference(RefNode ref) {
       if (ref.target() instanceof ItemNode) {
-        return new ParameterReferenceExpression(ref.name(), ref.location());
+        String name = ref.name();
+        return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
       } else if (ref.target() instanceof ValueNode) {
         Value value = (Value) find(ref.name());
         return value.createReferenceExpression(ref.location());
