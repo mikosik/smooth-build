@@ -127,7 +127,7 @@ public class TrailingCommaTest {
       Function function = function(1, BLOB, "myFunction", parameter(1, BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
-          .containsEvaluable(value(2, BLOB, "result", call(2, function, blob(2, 7))));
+          .containsEvaluable(value(2, BLOB, "result", call(2, BLOB, function, blob(2, 7))));
     }
 
     @Test

@@ -25,7 +25,7 @@ public class Constructor extends Callable {
 
   @Override
   public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
-    return new CallExpression(this, arguments, location);
+    return new CallExpression(type(), this, arguments, location);
   }
 
   @Override

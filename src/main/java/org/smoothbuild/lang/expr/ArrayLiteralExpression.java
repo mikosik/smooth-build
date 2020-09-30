@@ -6,12 +6,8 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import com.google.common.collect.ImmutableList;
 
 public record ArrayLiteralExpression(
-    ArrayType arrayType, ImmutableList<Expression> elements, Location location)
+    ArrayType type, ImmutableList<Expression> elements, Location location)
     implements Expression {
-
-  public ArrayType arrayType() {
-    return arrayType;
-  }
 
   @Override
   public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
@@ -20,6 +16,6 @@ public record ArrayLiteralExpression(
 
   @Override
   public String toString() {
-    return "ArrayLiteralExpression{" + arrayType.name() + ", " + elements + ", " + location() + "}";
+    return "ArrayLiteralExpression{" + type.name() + ", " + elements + ", " + location() + "}";
   }
 }

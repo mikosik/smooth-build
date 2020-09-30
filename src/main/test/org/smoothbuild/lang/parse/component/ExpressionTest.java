@@ -43,7 +43,7 @@ public class ExpressionTest {
             myValue;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(2, STRING, "result", valueRef(3, "myValue")));
+        .containsEvaluable(value(2, STRING, "result", valueRef(3, STRING, "myValue")));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(function(
-            1, BLOB, "myFunction", parameterRef("param1", 2), parameter(1, BLOB, "param1")));
+            1, BLOB, "myFunction", parameterRef(BLOB, "param1", 2), parameter(1, BLOB, "param1")));
   }
 
   @Test
@@ -106,7 +106,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(2, STRING, "result", call(2, function(1, STRING, "myFunction"))));
+            value(2, STRING, "result", call(2, STRING, function(1, STRING, "myFunction"))));
   }
 
   @Test
@@ -119,7 +119,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(2, STRING, "result", call(2, function, blob(3, 7))));
+            value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
   @Test
@@ -132,7 +132,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(2, STRING, "result", call(2, function, blob(3, 7))));
+            value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
   @Test
@@ -172,6 +172,7 @@ public class ExpressionTest {
   @Test
   public void field_read() {
     Item field = field(2, STRING, "field");
+    StructType myStruct = struct(1, "MyStruct", field);
     module("""
           MyStruct {
             String field,
@@ -182,7 +183,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(5, STRING, "result", fieldRead(6, field, valueRef(5, "struct"))));
+            value(5, STRING, "result", fieldRead(6, field, valueRef(5, myStruct, "struct"))));
   }
 
   @Test
@@ -230,6 +231,6 @@ public class ExpressionTest {
             "aaa");
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(4, struct, "result", call(4, constr, string(5, "aaa"))));
+        .containsEvaluable(value(4, struct, "result", call(4, struct, constr, string(5, "aaa"))));
   }
 }

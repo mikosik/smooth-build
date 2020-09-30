@@ -40,20 +40,21 @@ public class TestingLang {
         Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
-  public static ValueReferenceExpression valueRef(int line, String name) {
-    return new ValueReferenceExpression(name, loc(line));
+  public static ValueReferenceExpression valueRef(int line, Type type, String name) {
+    return new ValueReferenceExpression(name, type, loc(line));
   }
 
-  public static ParameterReferenceExpression parameterRef(String name, int line) {
-    return new ParameterReferenceExpression(name, loc(line));
+  public static ParameterReferenceExpression parameterRef(Type type, String name, int line) {
+    return new ParameterReferenceExpression(type, name, loc(line));
   }
 
   public static FieldReadExpression fieldRead(int line, Item field, Expression expression) {
     return new FieldReadExpression(0, field, expression, loc(line));
   }
 
-  public static CallExpression call(int line, Callable callable, Expression... arguments) {
-    return new CallExpression(callable, ImmutableList.copyOf(arguments), loc(line));
+  public static CallExpression call(
+      int line, Type type, Callable callable, Expression... arguments) {
+    return new CallExpression(type, callable, ImmutableList.copyOf(arguments), loc(line));
   }
 
   public static Function function(int line, Type type, String name, Item... parameters) {
