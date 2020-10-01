@@ -202,7 +202,7 @@ public class InferCallTypeAndParamAssignment {
     List<Type> genericTypes = new ArrayList<>();
     List<Type> actualTypes = new ArrayList<>();
     for (int i = 0; i < parameters.size(); i++) {
-      if (parameters.get(i).type().isGeneric()) {
+      if (parameters.get(i).type().hasGenericTypeParameters()) {
         genericTypes.add(parameters.get(i).type());
         actualTypes.add(assigned.get(i).type().get());
       }

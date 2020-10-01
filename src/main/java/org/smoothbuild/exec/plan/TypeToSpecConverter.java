@@ -62,7 +62,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   @Override
   public ArraySpec visit(ArrayType type) {
-    if (type.isGeneric()) {
+    if (type.hasGenericTypeParameters()) {
       throw new UnsupportedOperationException();
     }
     return objectFactory.arraySpec(type.elemType().visit(this));

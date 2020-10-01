@@ -14,7 +14,7 @@ public class MapTypeToJType {
   public static Class<? extends Obj> mapTypeToJType(Type type) {
     if (type.isArray()) {
       return Array.class;
-    } else if (type.isGeneric()) {
+    } else if (type.hasGenericTypeParameters()) {
       return Obj.class;
     } else if (type instanceof StructType) {
       return Tuple.class;

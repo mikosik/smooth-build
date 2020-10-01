@@ -153,7 +153,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("isGeneric_test_data")
   public void isGeneric(Type type, boolean expected) {
-    assertThat(type.isGeneric())
+    assertThat(type.hasGenericTypeParameters())
         .isEqualTo(expected);
   }
 

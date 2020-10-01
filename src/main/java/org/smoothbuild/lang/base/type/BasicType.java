@@ -12,8 +12,8 @@ public abstract class BasicType extends Type {
     this(name, false);
   }
 
-  public BasicType(String name, boolean isGeneric){
-      super(name, internal(), isGeneric);
+  public BasicType(String name, boolean hasGenericTypeParameters){
+      super(name, internal(), hasGenericTypeParameters);
   }
 
   @Override
