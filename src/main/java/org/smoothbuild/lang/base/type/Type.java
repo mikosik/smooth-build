@@ -63,11 +63,7 @@ public abstract class Type implements Named {
   }
 
   public boolean isParamAssignableFrom(Type type) {
-    if (hasGenericTypeParameters()) {
-      return true;
-    } else {
-      return isAssignableFrom(type);
-    }
+    return isAssignableFrom(type);
   }
 
   public Optional<Type> commonSuperType(Type that) {

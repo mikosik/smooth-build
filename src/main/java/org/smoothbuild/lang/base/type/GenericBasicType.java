@@ -21,6 +21,11 @@ public class GenericBasicType extends BasicType {
   }
 
   @Override
+  public boolean isParamAssignableFrom(Type type) {
+    return true;
+  }
+
+  @Override
   public <T> T visit(TypeVisitor<T> visitor) {
     return visitor.visit(this);
   }
