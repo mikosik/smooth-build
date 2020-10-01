@@ -6,6 +6,7 @@ import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.mapM;
 import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
@@ -114,6 +115,27 @@ public class ListsTest {
     @Test
     public void mapping_with_two_elements(){
       assertThat(map(asList("abc", "def"), String::toUpperCase))
+          .containsExactly("ABC", "DEF");
+    }
+  }
+
+  @Nested
+  class mapM {
+    @Test
+    public void returns_empty_list_for_empty_argument(){
+      assertThat(mapM(new ArrayList<String>(), String::toUpperCase))
+          .isEmpty();
+    }
+
+    @Test
+    public void returns_mapped_one_element(){
+      assertThat(mapM(asList("abc"), String::toUpperCase))
+          .containsExactly("ABC");
+    }
+
+    @Test
+    public void mapping_with_two_elements(){
+      assertThat(mapM(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
     }
   }

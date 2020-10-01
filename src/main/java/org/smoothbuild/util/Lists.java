@@ -1,6 +1,7 @@
 package org.smoothbuild.util;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,14 @@ public class Lists {
         .stream()
         .map(function)
         .collect(toImmutableList());
+  }
+
+  public static <E, R> List<R> mapM(
+      List<E> list, Function<? super E, ? extends R> function) {
+    return list
+        .stream()
+        .map(function)
+        .collect(toList());
   }
 
   public static <E> List<E> sane(List<E> list) {
