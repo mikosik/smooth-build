@@ -10,4 +10,8 @@ public interface Logger {
   public void warning(String message);
 
   public void info(String message);
+
+  public default void log(Iterable<? extends Log> logs) {
+    logs.forEach(this::log);
+  }
 }
