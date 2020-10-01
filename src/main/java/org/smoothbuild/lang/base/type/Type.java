@@ -14,14 +14,14 @@ import com.google.common.collect.ImmutableMap;
  * This class and all its subclasses are immutable.
  */
 public abstract class Type implements Named {
-  protected final boolean isGeneric;
+  protected final boolean hasGenericTypeParameters;
   private final String name;
   private final Location location;
 
-  protected Type(String name, Location location, boolean isGeneric) {
+  protected Type(String name, Location location, boolean hasGenericTypeParameters) {
     this.name = name;
     this.location = location;
-    this.isGeneric = isGeneric;
+    this.hasGenericTypeParameters = hasGenericTypeParameters;
   }
 
   @Override
@@ -38,16 +38,16 @@ public abstract class Type implements Named {
     return "`" + name + "`";
   }
 
-  public boolean isGeneric() {
-    return isGeneric;
-  }
-
   public boolean isArray() {
     return false;
   }
 
   public boolean isNothing() {
     return this == nothing();
+  }
+
+  public boolean hasGenericTypeParameters() {
+    return hasGenericTypeParameters;
   }
 
   public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
@@ -63,7 +63,7 @@ public abstract class Type implements Named {
   }
 
   public boolean isParamAssignableFrom(Type type) {
-    if (isGeneric()) {
+    if (hasGenericTypeParameters()) {
       return true;
     } else {
       return isAssignableFrom(type);

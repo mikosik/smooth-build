@@ -14,7 +14,7 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", internal(), elemType.isGeneric());
+    super("[" +  elemType.name() + "]", internal(), elemType.hasGenericTypeParameters());
     this.elemType = requireNonNull(elemType);
   }
 
@@ -55,7 +55,7 @@ public class ArrayType extends Type {
 
   @Override
   public boolean isParamAssignableFrom(Type type) {
-    if (isGeneric()) {
+    if (hasGenericTypeParameters()) {
       return type.isNothing() || (type instanceof ArrayType thatArrayType
           && elemType.isParamAssignableFrom(thatArrayType.elemType));
     } else {

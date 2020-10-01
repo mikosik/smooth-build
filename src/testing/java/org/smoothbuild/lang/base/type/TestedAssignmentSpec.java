@@ -485,14 +485,14 @@ public class TestedAssignmentSpec extends TestedAssignment {
   public static List<TestedAssignmentSpec> assignment_without_generic_target_test_specs() {
     return assignment_test_specs()
         .stream()
-        .filter(a -> !(a.target.type().isGeneric()))
+        .filter(a -> !(a.target.type().hasGenericTypeParameters()))
         .collect(toList());
   }
 
   public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
     return assignment_test_specs()
         .stream()
-        .filter(a -> !(a.target.type().isGeneric() || a.source.type().isGeneric()))
+        .filter(a -> !(a.target.type().hasGenericTypeParameters() || a.source.type().hasGenericTypeParameters()))
         .collect(toList());
   }
 
