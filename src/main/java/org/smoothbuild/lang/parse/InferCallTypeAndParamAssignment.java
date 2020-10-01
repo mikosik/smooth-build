@@ -24,7 +24,7 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.GenericBasicType;
+import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.ArgNode;
@@ -197,7 +197,7 @@ public class InferCallTypeAndParamAssignment {
     throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
   }
 
-  private static Map<GenericBasicType, Type> typeParametersMap(CallNode call, Logger logger,
+  private static Map<GenericType, Type> typeParametersMap(CallNode call, Logger logger,
       List<ItemSignature> parameters, List<Assigned> assigned) {
     List<Type> genericTypes = new ArrayList<>();
     List<Type> actualTypes = new ArrayList<>();

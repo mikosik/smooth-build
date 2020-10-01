@@ -44,7 +44,7 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.GenericBasicType;
+import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -156,7 +156,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   private Task taskForNativeFunction(List<Task> arguments, Function function,
-      Map<GenericBasicType, Type> typeParametersMap, Type actualResultType, Location location)
+      Map<GenericType, Type> typeParametersMap, Type actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
     Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);

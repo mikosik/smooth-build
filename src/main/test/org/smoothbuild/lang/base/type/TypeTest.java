@@ -111,7 +111,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("mapTypeParameters_test_data")
-  public void mapTypeParameters(Type type, Map<GenericBasicType, Type> map, Type expected) {
+  public void mapTypeParameters(Type type, Map<GenericType, Type> map, Type expected) {
     if (expected == null) {
       assertCall(() -> type.mapTypeParameters(map))
           .throwsException(new UnsupportedOperationException(
@@ -132,7 +132,7 @@ public class TypeTest {
 
   public static List<Arguments> mapTypeParameters_test_data() {
     var result = new ArrayList<Arguments>();
-    for (GenericBasicType type : List.of(A, B)) {
+    for (GenericType type : List.of(A, B)) {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);

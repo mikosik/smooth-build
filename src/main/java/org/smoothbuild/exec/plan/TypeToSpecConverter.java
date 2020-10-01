@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
-import org.smoothbuild.lang.base.type.GenericBasicType;
+import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -56,7 +56,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
   }
 
   @Override
-  public Spec visit(GenericBasicType type) {
+  public Spec visit(GenericType type) {
     throw new UnsupportedOperationException();
   }
 
