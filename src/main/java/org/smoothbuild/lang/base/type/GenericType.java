@@ -5,18 +5,18 @@ import java.util.Map;
 /**
  * This class is immutable.
  */
-public class GenericBasicType extends BasicType {
-  public GenericBasicType(String name) {
+public class GenericType extends BasicType {
+  public GenericType(String name) {
     super(name, true);
   }
 
   @Override
-  public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
+  public Type mapTypeParameters(Map<GenericType, Type> map) {
     return map.get(this);
   }
 
   @Override
-  public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
+  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
     return Map.of(this, source);
   }
 

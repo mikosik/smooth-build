@@ -28,12 +28,12 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
+  public Type mapTypeParameters(Map<GenericType, Type> map) {
     return new ArrayType(elemType.mapTypeParameters(map));
   }
 
   @Override
-  public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
+  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
     if (source instanceof ArrayType arrayType) {
       return elemType.inferTypeParametersMap(arrayType.elemType());
     } else if (source.isNothing()) {

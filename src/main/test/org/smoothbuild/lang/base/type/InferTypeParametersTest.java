@@ -32,7 +32,7 @@ public class InferTypeParametersTest {
   @ParameterizedTest
   @MethodSource("inferTypeParameters_test_data")
   public void infer_type_parameters(List<Type> types, List<Type> actualTypes,
-      Map<GenericBasicType, Type> expected) {
+      Map<GenericType, Type> expected) {
     if (expected == null) {
       assertCall(() -> inferTypeParameters(types, actualTypes))
           .throwsException(IllegalArgumentException.class);

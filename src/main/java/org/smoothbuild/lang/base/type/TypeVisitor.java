@@ -25,7 +25,7 @@ public class TypeVisitor<T> {
     return null;
   }
 
-  public T visit(GenericBasicType type) {
+  public T visit(GenericType type) {
     return null;
   }
 }

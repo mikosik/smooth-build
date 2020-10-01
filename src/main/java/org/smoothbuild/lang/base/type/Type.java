@@ -50,11 +50,11 @@ public abstract class Type implements Named {
     return hasGenericTypeParameters;
   }
 
-  public Type mapTypeParameters(Map<GenericBasicType, Type> map) {
+  public Type mapTypeParameters(Map<GenericType, Type> map) {
     return this;
   }
 
-  public Map<GenericBasicType, Type> inferTypeParametersMap(Type source) {
+  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
     return ImmutableMap.of();
   }
 
