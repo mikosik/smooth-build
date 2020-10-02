@@ -49,7 +49,6 @@ public class AnalyzeSemantically {
     duplicateGlobalNames(logger, imported, ast);
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
-    defaultParamBeforeNonDefault(logger, ast);
     structNameWithSingleCapitalLetter(logger, ast);
     firstFieldWithForbiddenType(logger, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
@@ -263,25 +262,6 @@ public class AnalyzeSemantically {
       }
       alreadyDefined.put(name, named.location());
     }
-  }
-
-  private static void defaultParamBeforeNonDefault(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitParams(List<ItemNode> params) {
-        super.visitParams(params);
-        boolean foundParamWithDefaultValue = false;
-        for (ItemNode param : params) {
-          if (param.defaultValue().isPresent()) {
-            foundParamWithDefaultValue = true;
-          } else if (foundParamWithDefaultValue) {
-            logger.log(parseError(param,
-                "parameter with default value must be placed after all parameters " +
-                    "which don't have default value."));
-          }
-        }
-      }
-    }.visitAst(ast);
   }
 
   private static void structNameWithSingleCapitalLetter(Logger logger, Ast ast) {
