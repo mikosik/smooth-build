@@ -1,19 +1,25 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.TestingLang.parameter;
+import static org.smoothbuild.lang.TestingLang.string;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Test;
 
 public class FunctionTest {
   @Test
-  public void default_parameter_before_non_default_causes_error() {
+  public void default_parameter_before_non_default_is_allowed() {
     module("""
         String myFunction(
           String default = "value",
           String nonDefault);
         """)
-        .loadsWithError(3, "parameter with default value must be placed after all parameters " +
-            "which don't have default value.");
+        .loadsSuccessfully()
+        .containsEvaluable(function(1, STRING, "myFunction",
+            parameter(2, STRING, "default", string(2, "value")),
+            parameter(3, STRING, "nonDefault")));
   }
 
   @Test
