@@ -55,12 +55,8 @@ public class ArrayType extends Type {
 
   @Override
   public boolean isParamAssignableFrom(Type type) {
-    if (hasGenericTypeParameters()) {
-      return type.isNothing() || (type instanceof ArrayType thatArrayType
-          && elemType.isParamAssignableFrom(thatArrayType.elemType));
-    } else {
-      return isAssignableFrom(type);
-    }
+    return type.isNothing() || (type instanceof ArrayType thatArrayType
+        && elemType.isParamAssignableFrom(thatArrayType.elemType));
   }
 
   @Override
