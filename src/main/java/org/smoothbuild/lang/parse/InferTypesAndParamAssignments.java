@@ -211,15 +211,15 @@ public class InferTypesAndParamAssignments {
           if (type.isEmpty()) {
             return empty();
           }
-          Optional<Type> common = elemType.commonSuperType(type.get());
-          if (common.isEmpty()) {
+          Optional<Type> leastUpperBound = elemType.leastUpperBound(type.get());
+          if (leastUpperBound.isEmpty()) {
             logger.log(parseError(array,
                 "Array cannot contain elements of incompatible types. "
                     + "First element has type " + firstType.get().q()
                     + " while element at index " + i + " has type " + type.get().q() + "."));
             return empty();
           }
-          elemType = common.get();
+          elemType = leastUpperBound.get();
         }
         return Optional.of(array(elemType));
       }

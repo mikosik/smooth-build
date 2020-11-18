@@ -211,15 +211,15 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("commonSuperType_test_data")
-  public void commonSuperType(Type type1, Type type2, Optional<Type> expected) {
-    assertThat(type1.commonSuperType(type2))
+  @MethodSource("leastUpperBound_test_data")
+  public void leastUpperBound(Type type1, Type type2, Optional<Type> expected) {
+    assertThat(type1.leastUpperBound(type2))
         .isEqualTo(expected);
-    assertThat(type2.commonSuperType(type1))
+    assertThat(type2.leastUpperBound(type1))
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> commonSuperType_test_data() {
+  public static List<Arguments> leastUpperBound_test_data() {
     return List.of(
         arguments(BLOB, BLOB, Optional.of(BLOB)),
         arguments(BLOB, BOOL, Optional.empty()),

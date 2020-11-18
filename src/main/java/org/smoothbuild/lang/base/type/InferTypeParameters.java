@@ -17,9 +17,9 @@ public class InferTypeParameters {
         Type value = entry.getValue();
         if (builder.containsKey(key)) {
           Type previous = builder.get(key);
-          Optional<Type> commonSuperType = previous.commonSuperType(value);
+          Optional<Type> leastUpperBound = previous.leastUpperBound(value);
           builder.put(key,
-              commonSuperType.orElseThrow(() -> noCommonSuperTypeException(value, previous)));
+              leastUpperBound.orElseThrow(() -> noLeastUpperBoundException(value, previous)));
         } else {
           builder.put(key, value);
         }
@@ -28,9 +28,9 @@ public class InferTypeParameters {
     return ImmutableMap.copyOf(builder);
   }
 
-  private static <T extends Type> IllegalArgumentException noCommonSuperTypeException(
+  private static <T extends Type> IllegalArgumentException noLeastUpperBoundException(
       T type1, T type2) {
     return new IllegalArgumentException("Types " + type2.name() + ", " + type1.name()
-        + " don't have common super type.");
+        + " don't have least-upper-bound.");
   }
 }

@@ -60,11 +60,11 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Optional<Type> commonSuperType(Type that) {
+  public Optional<Type> leastUpperBound(Type that) {
     if (that.isNothing()) {
       return Optional.of(this);
     } else if (that instanceof ArrayType thatArray) {
-      return elemType.commonSuperType(thatArray.elemType).map(ArrayType::new);
+      return elemType.leastUpperBound(thatArray.elemType).map(ArrayType::new);
     } else {
       return Optional.empty();
     }

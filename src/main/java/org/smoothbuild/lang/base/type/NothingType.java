@@ -11,7 +11,7 @@ public class NothingType extends BasicType {
   }
 
   @Override
-  public Optional<Type> commonSuperType(Type that) {
+  public Optional<Type> leastUpperBound(Type that) {
     return Optional.of(that);
   }
 
