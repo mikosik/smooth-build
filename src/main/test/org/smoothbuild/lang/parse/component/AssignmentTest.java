@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
+import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
-import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_without_generics_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
@@ -163,6 +163,13 @@ public class AssignmentTest {
 
   private static List<TestedAssignmentSpec> without_generics_test_specs() {
     return assignment_without_generics_test_specs();
+  }
+
+  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
+    return assignment_test_specs()
+        .stream()
+        .filter(a -> !(a.target.type().hasGenericTypeParameters() || a.source.type().hasGenericTypeParameters()))
+        .collect(toList());
   }
 
   private static List<TestedAssignmentSpec> test_specs() {

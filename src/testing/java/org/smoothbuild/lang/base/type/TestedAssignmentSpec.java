@@ -1,37 +1,17 @@
 package org.smoothbuild.lang.base.type;
 
-import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedType.A;
-import static org.smoothbuild.lang.base.type.TestedType.A_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.A_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.B;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.B_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.B_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.array;
+import static org.smoothbuild.lang.base.type.TestedType.a;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.smoothbuild.util.Lists;
 
 public class TestedAssignmentSpec extends TestedAssignment {
   public final boolean allowed;
@@ -46,6 +26,11 @@ public class TestedAssignmentSpec extends TestedAssignment {
     this.allowed = allowed;
   }
 
+  @Override
+  public String toString() {
+    return super.toString() + " :" + (allowed ? "allowed" : "illegal");
+  }
+
   public static TestedAssignmentSpec illegalAssignment(TestedType target, TestedType source) {
     return new TestedAssignmentSpec(target, source, false);
   }
@@ -55,6 +40,366 @@ public class TestedAssignmentSpec extends TestedAssignment {
   }
 
   public static List<TestedAssignmentSpec> assignment_test_specs() {
+    var result = new ArrayList<TestedAssignmentSpec>();
+    result.addAll(assignmentsCommonForNormalCaseAndParameterAssignment());
+    result.addAll(testSpecSpecificForNormalAssignment());
+    return result;
+  }
+
+  public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
+    var result = new ArrayList<TestedAssignmentSpec>();
+    result.addAll(assignmentsCommonForNormalCaseAndParameterAssignment());
+    result.addAll(testSpecsSpecificForParameterAssignment());
+    return result;
+  }
+
+  public static List<TestedAssignmentSpec> assignmentsCommonForNormalCaseAndParameterAssignment() {
+    return List.of(
+        // Blob
+        allowedAssignment(BLOB, BLOB),
+        illegalAssignment(BLOB, BOOL),
+        allowedAssignment(BLOB, NOTHING),
+        illegalAssignment(BLOB, STRING),
+        illegalAssignment(BLOB, STRUCT_WITH_STRING),
+        illegalAssignment(BLOB, A),
+
+        illegalAssignment(BLOB, a(BLOB)),
+        illegalAssignment(BLOB, a(BOOL)),
+        illegalAssignment(BLOB, a(NOTHING)),
+        illegalAssignment(BLOB, a(STRUCT_WITH_STRING)),
+        illegalAssignment(BLOB, a(STRING)),
+        illegalAssignment(BLOB, a(A)),
+
+        illegalAssignment(BLOB, a(a(BLOB))),
+        illegalAssignment(BLOB, a(a(BOOL))),
+        illegalAssignment(BLOB, a(a(NOTHING))),
+        illegalAssignment(BLOB, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(BLOB, a(a(STRING))),
+        illegalAssignment(BLOB, a(a(A))),
+
+        // Bool
+        illegalAssignment(BOOL, BLOB),
+        allowedAssignment(BOOL, BOOL),
+        allowedAssignment(BOOL, NOTHING),
+        illegalAssignment(BOOL, STRING),
+        illegalAssignment(BOOL, STRUCT_WITH_STRING),
+        illegalAssignment(BOOL, A),
+
+        illegalAssignment(BOOL, a(BLOB)),
+        illegalAssignment(BOOL, a(BOOL)),
+        illegalAssignment(BOOL, a(NOTHING)),
+        illegalAssignment(BOOL, a(STRUCT_WITH_STRING)),
+        illegalAssignment(BOOL, a(STRING)),
+        illegalAssignment(BOOL, a(A)),
+
+        illegalAssignment(BOOL, a(a(BLOB))),
+        illegalAssignment(BOOL, a(a(BOOL))),
+        illegalAssignment(BOOL, a(a(NOTHING))),
+        illegalAssignment(BOOL, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(BOOL, a(a(STRING))),
+        illegalAssignment(BOOL, a(a(A))),
+
+        // Nothing
+        illegalAssignment(NOTHING, BLOB),
+        illegalAssignment(NOTHING, BOOL),
+        allowedAssignment(NOTHING, NOTHING),
+        illegalAssignment(NOTHING, STRING),
+        illegalAssignment(NOTHING, STRUCT_WITH_STRING),
+        illegalAssignment(NOTHING, A),
+
+        illegalAssignment(NOTHING, a(BLOB)),
+        illegalAssignment(NOTHING, a(BOOL)),
+        illegalAssignment(NOTHING, a(NOTHING)),
+        illegalAssignment(NOTHING, a(STRUCT_WITH_STRING)),
+        illegalAssignment(NOTHING, a(STRING)),
+        illegalAssignment(NOTHING, a(A)),
+
+        illegalAssignment(NOTHING, a(a(BLOB))),
+        illegalAssignment(NOTHING, a(a(BOOL))),
+        illegalAssignment(NOTHING, a(a(NOTHING))),
+        illegalAssignment(NOTHING, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(NOTHING, a(a(STRING))),
+        illegalAssignment(NOTHING, a(a(A))),
+
+        // String
+        illegalAssignment(STRING, BLOB),
+        illegalAssignment(STRING, BOOL),
+        allowedAssignment(STRING, NOTHING),
+        allowedAssignment(STRING, STRING),
+        illegalAssignment(STRING, STRUCT_WITH_STRING),
+        illegalAssignment(STRING, A),
+
+        illegalAssignment(STRING, a(BLOB)),
+        illegalAssignment(STRING, a(BOOL)),
+        illegalAssignment(STRING, a(NOTHING)),
+        illegalAssignment(STRING, a(STRUCT_WITH_STRING)),
+        illegalAssignment(STRING, a(STRING)),
+        illegalAssignment(STRING, a(A)),
+
+        illegalAssignment(STRING, a(a(BLOB))),
+        illegalAssignment(STRING, a(a(BOOL))),
+        illegalAssignment(STRING, a(a(NOTHING))),
+        illegalAssignment(STRING, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(STRING, a(a(STRING))),
+        illegalAssignment(STRING, a(a(A))),
+
+        // Struct
+        illegalAssignment(STRUCT_WITH_STRING, BLOB),
+        illegalAssignment(STRUCT_WITH_STRING, BOOL),
+        allowedAssignment(STRUCT_WITH_STRING, NOTHING),
+        illegalAssignment(STRUCT_WITH_STRING, STRING),
+        allowedAssignment(STRUCT_WITH_STRING, STRUCT_WITH_STRING),
+        illegalAssignment(STRUCT_WITH_STRING, A),
+
+        illegalAssignment(STRUCT_WITH_STRING, a(BLOB)),
+        illegalAssignment(STRUCT_WITH_STRING, a(BOOL)),
+        illegalAssignment(STRUCT_WITH_STRING, a(NOTHING)),
+        illegalAssignment(STRUCT_WITH_STRING, a(STRUCT_WITH_STRING)),
+        illegalAssignment(STRUCT_WITH_STRING, a(STRING)),
+        illegalAssignment(STRUCT_WITH_STRING, a(A)),
+
+        illegalAssignment(STRUCT_WITH_STRING, a(a(BLOB))),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(BOOL))),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(NOTHING))),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(STRING))),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(A))),
+
+        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_BOOL),
+        illegalAssignment(STRUCT_WITH_STRING, a(STRUCT_WITH_BOOL)),
+        illegalAssignment(STRUCT_WITH_STRING, a(a(STRUCT_WITH_BOOL))),
+
+        // [Blob]
+        illegalAssignment(a(BLOB), BLOB),
+        illegalAssignment(a(BLOB), BOOL),
+        allowedAssignment(a(BLOB), NOTHING),
+        illegalAssignment(a(BLOB), STRING),
+        illegalAssignment(a(BLOB), STRUCT_WITH_STRING),
+        illegalAssignment(a(BLOB), A),
+
+        allowedAssignment(a(BLOB), a(BLOB)),
+        illegalAssignment(a(BLOB), a(BOOL)),
+        allowedAssignment(a(BLOB), a(NOTHING)),
+        illegalAssignment(a(BLOB), a(STRING)),
+        illegalAssignment(a(BLOB), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(BLOB), a(A)),
+
+        illegalAssignment(a(BLOB), a(a(BLOB))),
+        illegalAssignment(a(BLOB), a(a(BOOL))),
+        illegalAssignment(a(BLOB), a(a(NOTHING))),
+        illegalAssignment(a(BLOB), a(a(STRING))),
+        illegalAssignment(a(BLOB), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(BLOB), a(a(A))),
+
+        // [Bool]
+        illegalAssignment(a(BOOL), BLOB),
+        illegalAssignment(a(BOOL), BOOL),
+        allowedAssignment(a(BOOL), NOTHING),
+        illegalAssignment(a(BOOL), STRING),
+        illegalAssignment(a(BOOL), STRUCT_WITH_STRING),
+        illegalAssignment(a(BOOL), A),
+
+        illegalAssignment(a(BOOL), a(BLOB)),
+        allowedAssignment(a(BOOL), a(BOOL)),
+        allowedAssignment(a(BOOL), a(NOTHING)),
+        illegalAssignment(a(BOOL), a(STRING)),
+        illegalAssignment(a(BOOL), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(BOOL), a(A)),
+
+        illegalAssignment(a(BOOL), a(a(BLOB))),
+        illegalAssignment(a(BOOL), a(a(BOOL))),
+        illegalAssignment(a(BOOL), a(a(NOTHING))),
+        illegalAssignment(a(BOOL), a(a(STRING))),
+        illegalAssignment(a(BOOL), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(BOOL), a(a(A))),
+
+        // [Nothing]
+        illegalAssignment(a(NOTHING), BLOB),
+        illegalAssignment(a(NOTHING), BOOL),
+        allowedAssignment(a(NOTHING), NOTHING),
+        illegalAssignment(a(NOTHING), STRING),
+        illegalAssignment(a(NOTHING), STRUCT_WITH_STRING),
+        illegalAssignment(a(NOTHING), A),
+
+        illegalAssignment(a(NOTHING), a(BLOB)),
+        illegalAssignment(a(NOTHING), a(BOOL)),
+        allowedAssignment(a(NOTHING), a(NOTHING)),
+        illegalAssignment(a(NOTHING), a(STRING)),
+        illegalAssignment(a(NOTHING), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(NOTHING), a(A)),
+
+        illegalAssignment(a(NOTHING), a(a(BLOB))),
+        illegalAssignment(a(NOTHING), a(a(BOOL))),
+        illegalAssignment(a(NOTHING), a(a(NOTHING))),
+        illegalAssignment(a(NOTHING), a(a(STRING))),
+        illegalAssignment(a(NOTHING), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(NOTHING), a(a(A))),
+
+        // [String]
+        illegalAssignment(a(STRING), BLOB),
+        illegalAssignment(a(STRING), BOOL),
+        allowedAssignment(a(STRING), NOTHING),
+        illegalAssignment(a(STRING), STRING),
+        illegalAssignment(a(STRING), STRUCT_WITH_STRING),
+        illegalAssignment(a(STRING), A),
+
+        illegalAssignment(a(STRING), a(BLOB)),
+        illegalAssignment(a(STRING), a(BOOL)),
+        allowedAssignment(a(STRING), a(NOTHING)),
+        allowedAssignment(a(STRING), a(STRING)),
+        illegalAssignment(a(STRING), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(STRING), a(A)),
+
+        illegalAssignment(a(STRING), a(a(BLOB))),
+        illegalAssignment(a(STRING), a(a(BOOL))),
+        illegalAssignment(a(STRING), a(a(NOTHING))),
+        illegalAssignment(a(STRING), a(a(STRING))),
+        illegalAssignment(a(STRING), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(STRING), a(a(A))),
+
+        // [Struct]
+        illegalAssignment(a(STRUCT_WITH_STRING), BLOB),
+        illegalAssignment(a(STRUCT_WITH_STRING), BOOL),
+        allowedAssignment(a(STRUCT_WITH_STRING), NOTHING),
+        illegalAssignment(a(STRUCT_WITH_STRING), STRING),
+        illegalAssignment(a(STRUCT_WITH_STRING), STRUCT_WITH_STRING),
+        illegalAssignment(a(STRUCT_WITH_STRING), A),
+
+        illegalAssignment(a(STRUCT_WITH_STRING), a(BLOB)),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(BOOL)),
+        allowedAssignment(a(STRUCT_WITH_STRING), a(NOTHING)),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(STRING)),
+        allowedAssignment(a(STRUCT_WITH_STRING), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(A)),
+
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(BLOB))),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(BOOL))),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(NOTHING))),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(STRING))),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(A))),
+
+        illegalAssignment(a(STRUCT_WITH_STRING), STRUCT_WITH_BOOL),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(STRUCT_WITH_BOOL)),
+        illegalAssignment(a(STRUCT_WITH_STRING), a(a(STRUCT_WITH_BOOL))),
+
+        // [[Blob]]
+        illegalAssignment(a(a(BLOB)), BLOB),
+        illegalAssignment(a(a(BLOB)), BOOL),
+        allowedAssignment(a(a(BLOB)), NOTHING),
+        illegalAssignment(a(a(BLOB)), STRING),
+        illegalAssignment(a(a(BLOB)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(BLOB)), A),
+
+        illegalAssignment(a(a(BLOB)), a(BLOB)),
+        illegalAssignment(a(a(BLOB)), a(BOOL)),
+        allowedAssignment(a(a(BLOB)), a(NOTHING)),
+        illegalAssignment(a(a(BLOB)), a(STRING)),
+        illegalAssignment(a(a(BLOB)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(BLOB)), a(A)),
+
+        allowedAssignment(a(a(BLOB)), a(a(BLOB))),
+        illegalAssignment(a(a(BLOB)), a(a(BOOL))),
+        allowedAssignment(a(a(BLOB)), a(a(NOTHING))),
+        illegalAssignment(a(a(BLOB)), a(a(STRING))),
+        illegalAssignment(a(a(BLOB)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(BLOB)), a(a(A))),
+
+        // [[Bool]]
+        illegalAssignment(a(a(BOOL)), BLOB),
+        illegalAssignment(a(a(BOOL)), BOOL),
+        allowedAssignment(a(a(BOOL)), NOTHING),
+        illegalAssignment(a(a(BOOL)), STRING),
+        illegalAssignment(a(a(BOOL)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(BOOL)), A),
+
+        illegalAssignment(a(a(BOOL)), a(BLOB)),
+        illegalAssignment(a(a(BOOL)), a(BOOL)),
+        allowedAssignment(a(a(BOOL)), a(NOTHING)),
+        illegalAssignment(a(a(BOOL)), a(STRING)),
+        illegalAssignment(a(a(BOOL)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(BOOL)), a(A)),
+
+        illegalAssignment(a(a(BOOL)), a(a(BLOB))),
+        allowedAssignment(a(a(BOOL)), a(a(BOOL))),
+        allowedAssignment(a(a(BOOL)), a(a(NOTHING))),
+        illegalAssignment(a(a(BOOL)), a(a(STRING))),
+        illegalAssignment(a(a(BOOL)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(BOOL)), a(a(A))),
+
+        // [[Nothing]]
+        illegalAssignment(a(a(NOTHING)), BLOB),
+        illegalAssignment(a(a(NOTHING)), BOOL),
+        allowedAssignment(a(a(NOTHING)), NOTHING),
+        illegalAssignment(a(a(NOTHING)), STRING),
+        illegalAssignment(a(a(NOTHING)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(NOTHING)), A),
+
+        illegalAssignment(a(a(NOTHING)), a(BLOB)),
+        illegalAssignment(a(a(NOTHING)), a(BOOL)),
+        allowedAssignment(a(a(NOTHING)), a(NOTHING)),
+        illegalAssignment(a(a(NOTHING)), a(STRING)),
+        illegalAssignment(a(a(NOTHING)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(NOTHING)), a(A)),
+
+        illegalAssignment(a(a(NOTHING)), a(a(BLOB))),
+        illegalAssignment(a(a(NOTHING)), a(a(BOOL))),
+        allowedAssignment(a(a(NOTHING)), a(a(NOTHING))),
+        illegalAssignment(a(a(NOTHING)), a(a(STRING))),
+        illegalAssignment(a(a(NOTHING)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(NOTHING)), a(a(A))),
+
+        // [[String]]
+        illegalAssignment(a(a(STRING)), BLOB),
+        illegalAssignment(a(a(STRING)), BOOL),
+        allowedAssignment(a(a(STRING)), NOTHING),
+        illegalAssignment(a(a(STRING)), STRING),
+        illegalAssignment(a(a(STRING)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(STRING)), A),
+
+        illegalAssignment(a(a(STRING)), a(BLOB)),
+        illegalAssignment(a(a(STRING)), a(BOOL)),
+        allowedAssignment(a(a(STRING)), a(NOTHING)),
+        illegalAssignment(a(a(STRING)), a(STRING)),
+        illegalAssignment(a(a(STRING)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(STRING)), a(A)),
+
+        illegalAssignment(a(a(STRING)), a(a(BLOB))),
+        illegalAssignment(a(a(STRING)), a(a(BOOL))),
+        allowedAssignment(a(a(STRING)), a(a(NOTHING))),
+        allowedAssignment(a(a(STRING)), a(a(STRING))),
+        illegalAssignment(a(a(STRING)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(STRING)), a(a(A))),
+
+        // [[Struct]]
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), BLOB),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), BOOL),
+        allowedAssignment(a(a(STRUCT_WITH_STRING)), NOTHING),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), STRING),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), A),
+
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(BLOB)),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(BOOL)),
+        allowedAssignment(a(a(STRUCT_WITH_STRING)), a(NOTHING)),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(STRING)),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(A)),
+
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(a(BLOB))),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(a(BOOL))),
+        allowedAssignment(a(a(STRUCT_WITH_STRING)), a(a(NOTHING))),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(a(STRING))),
+        allowedAssignment(a(a(STRUCT_WITH_STRING)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(a(A))),
+
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), STRUCT_WITH_BOOL),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(STRUCT_WITH_BOOL)),
+        illegalAssignment(a(a(STRUCT_WITH_STRING)), a(a(STRUCT_WITH_BOOL)))
+    );
+  }
+
+  public static List<TestedAssignmentSpec> testSpecSpecificForNormalAssignment() {
     return List.of(
         // A
         illegalAssignment(A, BLOB),
@@ -65,466 +410,150 @@ public class TestedAssignmentSpec extends TestedAssignment {
         allowedAssignment(A, A),
         illegalAssignment(A, B),
 
-        illegalAssignment(A, BLOB_ARRAY),
-        illegalAssignment(A, BOOL_ARRAY),
-        illegalAssignment(A, NOTHING_ARRAY),
-        illegalAssignment(A, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(A, STRING_ARRAY),
-        illegalAssignment(A, A_ARRAY),
-        illegalAssignment(A, B_ARRAY),
+        illegalAssignment(A, a(BLOB)),
+        illegalAssignment(A, a(BOOL)),
+        illegalAssignment(A, a(NOTHING)),
+        illegalAssignment(A, a(STRUCT_WITH_STRING)),
+        illegalAssignment(A, a(STRING)),
+        illegalAssignment(A, a(A)),
+        illegalAssignment(A, a(B)),
 
-        illegalAssignment(A, BLOB_ARRAY2),
-        illegalAssignment(A, BOOL_ARRAY2),
-        illegalAssignment(A, NOTHING_ARRAY2),
-        illegalAssignment(A, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(A, STRING_ARRAY2),
-        illegalAssignment(A, A_ARRAY2),
-        illegalAssignment(A, B_ARRAY2),
-
-        // Blob
-        allowedAssignment(BLOB, BLOB),
-        illegalAssignment(BLOB, BOOL),
-        allowedAssignment(BLOB, NOTHING),
-        illegalAssignment(BLOB, STRING),
-        illegalAssignment(BLOB, STRUCT_WITH_STRING),
-        illegalAssignment(BLOB, A),
-
-        illegalAssignment(BLOB, BLOB_ARRAY),
-        illegalAssignment(BLOB, BOOL_ARRAY),
-        illegalAssignment(BLOB, NOTHING_ARRAY),
-        illegalAssignment(BLOB, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BLOB, STRING_ARRAY),
-        illegalAssignment(BLOB, A_ARRAY),
-
-        illegalAssignment(BLOB, BLOB_ARRAY2),
-        illegalAssignment(BLOB, BOOL_ARRAY2),
-        illegalAssignment(BLOB, NOTHING_ARRAY2),
-        illegalAssignment(BLOB, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BLOB, STRING_ARRAY2),
-        illegalAssignment(BLOB, A_ARRAY2),
-
-        // Bool
-        illegalAssignment(BOOL, BLOB),
-        allowedAssignment(BOOL, BOOL),
-        allowedAssignment(BOOL, NOTHING),
-        illegalAssignment(BOOL, STRING),
-        illegalAssignment(BOOL, STRUCT_WITH_STRING),
-        illegalAssignment(BOOL, A),
-
-        illegalAssignment(BOOL, BLOB_ARRAY),
-        illegalAssignment(BOOL, BOOL_ARRAY),
-        illegalAssignment(BOOL, NOTHING_ARRAY),
-        illegalAssignment(BOOL, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BOOL, STRING_ARRAY),
-        illegalAssignment(BOOL, A_ARRAY),
-
-        illegalAssignment(BOOL, BLOB_ARRAY2),
-        illegalAssignment(BOOL, BOOL_ARRAY2),
-        illegalAssignment(BOOL, NOTHING_ARRAY2),
-        illegalAssignment(BOOL, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BOOL, STRING_ARRAY2),
-        illegalAssignment(BOOL, A_ARRAY2),
-
-        // Nothing
-        illegalAssignment(NOTHING, BLOB),
-        illegalAssignment(NOTHING, BOOL),
-        allowedAssignment(NOTHING, NOTHING),
-        illegalAssignment(NOTHING, STRING),
-        illegalAssignment(NOTHING, STRUCT_WITH_STRING),
-        illegalAssignment(NOTHING, A),
-
-        illegalAssignment(NOTHING, BLOB_ARRAY),
-        illegalAssignment(NOTHING, BOOL_ARRAY),
-        illegalAssignment(NOTHING, NOTHING_ARRAY),
-        illegalAssignment(NOTHING, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(NOTHING, STRING_ARRAY),
-        illegalAssignment(NOTHING, A_ARRAY),
-
-        illegalAssignment(NOTHING, BLOB_ARRAY2),
-        illegalAssignment(NOTHING, BOOL_ARRAY2),
-        illegalAssignment(NOTHING, NOTHING_ARRAY2),
-        illegalAssignment(NOTHING, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(NOTHING, STRING_ARRAY2),
-        illegalAssignment(NOTHING, A_ARRAY2),
-
-        // String
-        illegalAssignment(STRING, BLOB),
-        illegalAssignment(STRING, BOOL),
-        allowedAssignment(STRING, NOTHING),
-        allowedAssignment(STRING, STRING),
-        illegalAssignment(STRING, STRUCT_WITH_STRING),
-        illegalAssignment(STRING, A),
-
-        illegalAssignment(STRING, BLOB_ARRAY),
-        illegalAssignment(STRING, BOOL_ARRAY),
-        illegalAssignment(STRING, NOTHING_ARRAY),
-        illegalAssignment(STRING, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRING, STRING_ARRAY),
-        illegalAssignment(STRING, A_ARRAY),
-
-        illegalAssignment(STRING, BLOB_ARRAY2),
-        illegalAssignment(STRING, BOOL_ARRAY2),
-        illegalAssignment(STRING, NOTHING_ARRAY2),
-        illegalAssignment(STRING, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRING, STRING_ARRAY2),
-        illegalAssignment(STRING, A_ARRAY2),
-
-        // Struct
-        illegalAssignment(STRUCT_WITH_STRING, BLOB),
-        illegalAssignment(STRUCT_WITH_STRING, BOOL),
-        allowedAssignment(STRUCT_WITH_STRING, NOTHING),
-        illegalAssignment(STRUCT_WITH_STRING, STRING),
-        allowedAssignment(STRUCT_WITH_STRING, STRUCT_WITH_STRING),
-        illegalAssignment(STRUCT_WITH_STRING, A),
-
-        illegalAssignment(STRUCT_WITH_STRING, BLOB_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, BOOL_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, NOTHING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, STRING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, A_ARRAY),
-
-        illegalAssignment(STRUCT_WITH_STRING, BLOB_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING, BOOL_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING, NOTHING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING, STRING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING, A_ARRAY2),
-
-        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_BOOL),
-        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_BOOL_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING, STRUCT_WITH_BOOL_ARRAY2),
+        illegalAssignment(A, a(a(BLOB))),
+        illegalAssignment(A, a(a(BOOL))),
+        illegalAssignment(A, a(a(NOTHING))),
+        illegalAssignment(A, a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(A, a(a(STRING))),
+        illegalAssignment(A, a(a(A))),
+        illegalAssignment(A, a(a(B))),
 
         // [A]
-        illegalAssignment(A_ARRAY, BLOB),
-        illegalAssignment(A_ARRAY, BOOL),
-        allowedAssignment(A_ARRAY, NOTHING),
-        illegalAssignment(A_ARRAY, STRING),
-        illegalAssignment(A_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(A_ARRAY, A),
-        illegalAssignment(A_ARRAY, B),
+        illegalAssignment(a(A), BLOB),
+        illegalAssignment(a(A), BOOL),
+        allowedAssignment(a(A), NOTHING),
+        illegalAssignment(a(A), STRING),
+        illegalAssignment(a(A), STRUCT_WITH_STRING),
+        illegalAssignment(a(A), A),
+        illegalAssignment(a(A), B),
 
-        illegalAssignment(A_ARRAY, BLOB_ARRAY),
-        illegalAssignment(A_ARRAY, BOOL_ARRAY),
-        allowedAssignment(A_ARRAY, NOTHING_ARRAY),
-        illegalAssignment(A_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(A_ARRAY, STRING_ARRAY),
-        allowedAssignment(A_ARRAY, A_ARRAY),
-        illegalAssignment(A_ARRAY, B_ARRAY),
+        illegalAssignment(a(A), a(BLOB)),
+        illegalAssignment(a(A), a(BOOL)),
+        allowedAssignment(a(A), a(NOTHING)),
+        illegalAssignment(a(A), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(A), a(STRING)),
+        allowedAssignment(a(A), a(A)),
+        illegalAssignment(a(A), a(B)),
 
-        illegalAssignment(A_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(A_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(A_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(A_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(A_ARRAY, STRING_ARRAY2),
-        illegalAssignment(A_ARRAY, A_ARRAY2),
-        illegalAssignment(A_ARRAY, B_ARRAY2),
-
-        // [Blob]
-        illegalAssignment(BLOB_ARRAY, BLOB),
-        illegalAssignment(BLOB_ARRAY, BOOL),
-        allowedAssignment(BLOB_ARRAY, NOTHING),
-        illegalAssignment(BLOB_ARRAY, STRING),
-        illegalAssignment(BLOB_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(BLOB_ARRAY, A),
-
-        allowedAssignment(BLOB_ARRAY, BLOB_ARRAY),
-        illegalAssignment(BLOB_ARRAY, BOOL_ARRAY),
-        allowedAssignment(BLOB_ARRAY, NOTHING_ARRAY),
-        illegalAssignment(BLOB_ARRAY, STRING_ARRAY),
-        illegalAssignment(BLOB_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BLOB_ARRAY, A_ARRAY),
-
-        illegalAssignment(BLOB_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(BLOB_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(BLOB_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY, STRING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY, A_ARRAY2),
-
-        // [Bool]
-        illegalAssignment(BOOL_ARRAY, BLOB),
-        illegalAssignment(BOOL_ARRAY, BOOL),
-        allowedAssignment(BOOL_ARRAY, NOTHING),
-        illegalAssignment(BOOL_ARRAY, STRING),
-        illegalAssignment(BOOL_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(BOOL_ARRAY, A),
-
-        illegalAssignment(BOOL_ARRAY, BLOB_ARRAY),
-        allowedAssignment(BOOL_ARRAY, BOOL_ARRAY),
-        allowedAssignment(BOOL_ARRAY, NOTHING_ARRAY),
-        illegalAssignment(BOOL_ARRAY, STRING_ARRAY),
-        illegalAssignment(BOOL_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BOOL_ARRAY, A_ARRAY),
-
-        illegalAssignment(BOOL_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(BOOL_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(BOOL_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY, STRING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY, A_ARRAY2),
-
-        // [Nothing]
-        illegalAssignment(NOTHING_ARRAY, BLOB),
-        illegalAssignment(NOTHING_ARRAY, BOOL),
-        allowedAssignment(NOTHING_ARRAY, NOTHING),
-        illegalAssignment(NOTHING_ARRAY, STRING),
-        illegalAssignment(NOTHING_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(NOTHING_ARRAY, A),
-
-        illegalAssignment(NOTHING_ARRAY, BLOB_ARRAY),
-        illegalAssignment(NOTHING_ARRAY, BOOL_ARRAY),
-        allowedAssignment(NOTHING_ARRAY, NOTHING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY, STRING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY, A_ARRAY),
-
-        illegalAssignment(NOTHING_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY, STRING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY, A_ARRAY2),
-
-        // [String]
-        illegalAssignment(STRING_ARRAY, BLOB),
-        illegalAssignment(STRING_ARRAY, BOOL),
-        allowedAssignment(STRING_ARRAY, NOTHING),
-        illegalAssignment(STRING_ARRAY, STRING),
-        illegalAssignment(STRING_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(STRING_ARRAY, A),
-
-        illegalAssignment(STRING_ARRAY, BLOB_ARRAY),
-        illegalAssignment(STRING_ARRAY, BOOL_ARRAY),
-        allowedAssignment(STRING_ARRAY, NOTHING_ARRAY),
-        allowedAssignment(STRING_ARRAY, STRING_ARRAY),
-        illegalAssignment(STRING_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRING_ARRAY, A_ARRAY),
-
-        illegalAssignment(STRING_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(STRING_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(STRING_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(STRING_ARRAY, STRING_ARRAY2),
-        illegalAssignment(STRING_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRING_ARRAY, A_ARRAY2),
-
-        // [Struct]
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BLOB),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BOOL),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY, NOTHING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_STRING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, A),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BLOB_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BOOL_ARRAY),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY, NOTHING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRING_ARRAY),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, A_ARRAY),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BLOB_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, BOOL_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, NOTHING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, A_ARRAY2),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_BOOL),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_BOOL_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_BOOL_ARRAY2),
+        illegalAssignment(a(A), a(a(BLOB))),
+        illegalAssignment(a(A), a(a(BOOL))),
+        illegalAssignment(a(A), a(a(NOTHING))),
+        illegalAssignment(a(A), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(A), a(a(STRING))),
+        illegalAssignment(a(A), a(a(A))),
+        illegalAssignment(a(A), a(a(B))),
 
         // [[A]]
-        illegalAssignment(A_ARRAY2, BLOB),
-        illegalAssignment(A_ARRAY2, BOOL),
-        allowedAssignment(A_ARRAY2, NOTHING),
-        illegalAssignment(A_ARRAY2, STRING),
-        illegalAssignment(A_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(A_ARRAY2, A),
-        illegalAssignment(A_ARRAY2, B),
+        illegalAssignment(a(a(A)), BLOB),
+        illegalAssignment(a(a(A)), BOOL),
+        allowedAssignment(a(a(A)), NOTHING),
+        illegalAssignment(a(a(A)), STRING),
+        illegalAssignment(a(a(A)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(A)), A),
+        illegalAssignment(a(a(A)), B),
 
-        illegalAssignment(A_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(A_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(A_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(A_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(A_ARRAY2, STRING_ARRAY),
-        illegalAssignment(A_ARRAY2, A_ARRAY),
-        illegalAssignment(A_ARRAY2, B_ARRAY),
+        illegalAssignment(a(a(A)), a(BLOB)),
+        illegalAssignment(a(a(A)), a(BOOL)),
+        allowedAssignment(a(a(A)), a(NOTHING)),
+        illegalAssignment(a(a(A)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(A)), a(STRING)),
+        illegalAssignment(a(a(A)), a(A)),
+        illegalAssignment(a(a(A)), a(B)),
 
-        illegalAssignment(A_ARRAY2, BLOB_ARRAY2),
-        illegalAssignment(A_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(A_ARRAY2, NOTHING_ARRAY2),
-        illegalAssignment(A_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(A_ARRAY2, STRING_ARRAY2),
-        allowedAssignment(A_ARRAY2, A_ARRAY2),
-        illegalAssignment(A_ARRAY2, B_ARRAY2),
+        illegalAssignment(a(a(A)), a(a(BLOB))),
+        illegalAssignment(a(a(A)), a(a(BOOL))),
+        allowedAssignment(a(a(A)), a(a(NOTHING))),
+        illegalAssignment(a(a(A)), a(a(STRUCT_WITH_STRING))),
+        illegalAssignment(a(a(A)), a(a(STRING))),
+        allowedAssignment(a(a(A)), a(a(A))),
+        illegalAssignment(a(a(A)), a(a(B)))
+      );
+  }
 
-        // [[Blob]]
-        illegalAssignment(BLOB_ARRAY2, BLOB),
-        illegalAssignment(BLOB_ARRAY2, BOOL),
-        allowedAssignment(BLOB_ARRAY2, NOTHING),
-        illegalAssignment(BLOB_ARRAY2, STRING),
-        illegalAssignment(BLOB_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(BLOB_ARRAY2, A),
+  public static List<TestedAssignmentSpec> testSpecsSpecificForParameterAssignment() {
+    return List.of(
+        // A
+        allowedAssignment(A, BLOB),
+        allowedAssignment(A, BOOL),
+        allowedAssignment(A, NOTHING),
+        allowedAssignment(A, STRING),
+        allowedAssignment(A, STRUCT_WITH_STRING),
+        allowedAssignment(A, A),
+        allowedAssignment(A, B),
 
-        illegalAssignment(BLOB_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(BLOB_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(BLOB_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(BLOB_ARRAY2, STRING_ARRAY),
-        illegalAssignment(BLOB_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BLOB_ARRAY2, A_ARRAY),
+        allowedAssignment(A, a(BLOB)),
+        allowedAssignment(A, a(BOOL)),
+        allowedAssignment(A, a(NOTHING)),
+        allowedAssignment(A, a(STRUCT_WITH_STRING)),
+        allowedAssignment(A, a(STRING)),
+        allowedAssignment(A, a(A)),
+        allowedAssignment(A, a(B)),
 
-        allowedAssignment(BLOB_ARRAY2, BLOB_ARRAY2),
-        illegalAssignment(BLOB_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(BLOB_ARRAY2, NOTHING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY2, STRING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BLOB_ARRAY2, A_ARRAY2),
+        allowedAssignment(A, a(a(BLOB))),
+        allowedAssignment(A, a(a(BOOL))),
+        allowedAssignment(A, a(a(NOTHING))),
+        allowedAssignment(A, a(a(STRUCT_WITH_STRING))),
+        allowedAssignment(A, a(a(STRING))),
+        allowedAssignment(A, a(a(A))),
+        allowedAssignment(A, a(a(B))),
 
-        // [[Bool]]
-        illegalAssignment(BOOL_ARRAY2, BLOB),
-        illegalAssignment(BOOL_ARRAY2, BOOL),
-        allowedAssignment(BOOL_ARRAY2, NOTHING),
-        illegalAssignment(BOOL_ARRAY2, STRING),
-        illegalAssignment(BOOL_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(BOOL_ARRAY2, A),
+        // [A]
+        illegalAssignment(a(A), BLOB),
+        illegalAssignment(a(A), BOOL),
+        allowedAssignment(a(A), NOTHING),
+        illegalAssignment(a(A), STRING),
+        illegalAssignment(a(A), STRUCT_WITH_STRING),
+        illegalAssignment(a(A), A),
+        illegalAssignment(a(A), B),
 
-        illegalAssignment(BOOL_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(BOOL_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(BOOL_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(BOOL_ARRAY2, STRING_ARRAY),
-        illegalAssignment(BOOL_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(BOOL_ARRAY2, A_ARRAY),
+        allowedAssignment(a(A), a(BLOB)),
+        allowedAssignment(a(A), a(BOOL)),
+        allowedAssignment(a(A), a(NOTHING)),
+        allowedAssignment(a(A), a(STRUCT_WITH_STRING)),
+        allowedAssignment(a(A), a(STRING)),
+        allowedAssignment(a(A), a(A)),
+        allowedAssignment(a(A), a(B)),
 
-        illegalAssignment(BOOL_ARRAY2, BLOB_ARRAY2),
-        allowedAssignment(BOOL_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(BOOL_ARRAY2, NOTHING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY2, STRING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(BOOL_ARRAY2, A_ARRAY2),
+        allowedAssignment(a(A), a(a(BLOB))),
+        allowedAssignment(a(A), a(a(BOOL))),
+        allowedAssignment(a(A), a(a(NOTHING))),
+        allowedAssignment(a(A), a(a(STRUCT_WITH_STRING))),
+        allowedAssignment(a(A), a(a(STRING))),
+        allowedAssignment(a(A), a(a(A))),
+        allowedAssignment(a(A), a(a(B))),
 
-        // [[Nothing]]
-        illegalAssignment(NOTHING_ARRAY2, BLOB),
-        illegalAssignment(NOTHING_ARRAY2, BOOL),
-        allowedAssignment(NOTHING_ARRAY2, NOTHING),
-        illegalAssignment(NOTHING_ARRAY2, STRING),
-        illegalAssignment(NOTHING_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(NOTHING_ARRAY2, A),
+        // [[A]]
+        illegalAssignment(a(a(A)), BLOB),
+        illegalAssignment(a(a(A)), BOOL),
+        allowedAssignment(a(a(A)), NOTHING),
+        illegalAssignment(a(a(A)), STRING),
+        illegalAssignment(a(a(A)), STRUCT_WITH_STRING),
+        illegalAssignment(a(a(A)), A),
+        illegalAssignment(a(a(A)), B),
 
-        illegalAssignment(NOTHING_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(NOTHING_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(NOTHING_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY2, STRING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(NOTHING_ARRAY2, A_ARRAY),
+        illegalAssignment(a(a(A)), a(BLOB)),
+        illegalAssignment(a(a(A)), a(BOOL)),
+        allowedAssignment(a(a(A)), a(NOTHING)),
+        illegalAssignment(a(a(A)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(a(a(A)), a(STRING)),
+        illegalAssignment(a(a(A)), a(A)),
+        illegalAssignment(a(a(A)), a(B)),
 
-        illegalAssignment(NOTHING_ARRAY2, BLOB_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(NOTHING_ARRAY2, NOTHING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY2, STRING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(NOTHING_ARRAY2, A_ARRAY2),
-
-        // [[String]]
-        illegalAssignment(STRING_ARRAY2, BLOB),
-        illegalAssignment(STRING_ARRAY2, BOOL),
-        allowedAssignment(STRING_ARRAY2, NOTHING),
-        illegalAssignment(STRING_ARRAY2, STRING),
-        illegalAssignment(STRING_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(STRING_ARRAY2, A),
-
-        illegalAssignment(STRING_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(STRING_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(STRING_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(STRING_ARRAY2, STRING_ARRAY),
-        illegalAssignment(STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRING_ARRAY2, A_ARRAY),
-
-        illegalAssignment(STRING_ARRAY2, BLOB_ARRAY2),
-        illegalAssignment(STRING_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(STRING_ARRAY2, NOTHING_ARRAY2),
-        allowedAssignment(STRING_ARRAY2, STRING_ARRAY2),
-        illegalAssignment(STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRING_ARRAY2, A_ARRAY2),
-
-        // [[Struct]]
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BLOB),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BOOL),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY2, NOTHING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, A),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BLOB_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BOOL_ARRAY),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, A_ARRAY),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BLOB_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, BOOL_ARRAY2),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRING_ARRAY2),
-        allowedAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, A_ARRAY2),
-
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_BOOL),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_BOOL_ARRAY),
-        illegalAssignment(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_BOOL_ARRAY2)
+        allowedAssignment(a(a(A)), a(a(BLOB))),
+        allowedAssignment(a(a(A)), a(a(BOOL))),
+        allowedAssignment(a(a(A)), a(a(NOTHING))),
+        allowedAssignment(a(a(A)), a(a(STRUCT_WITH_STRING))),
+        allowedAssignment(a(a(A)), a(a(STRING))),
+        allowedAssignment(a(a(A)), a(a(A))),
+        allowedAssignment(a(a(A)), a(a(B)))
     );
-  }
-
-  public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
-    ArrayList<TestedAssignmentSpec> result = new ArrayList<>();
-    result.addAll(assignment_without_generic_target_test_specs());
-    result.addAll(parameter_assignment_generic_test_specs());
-    return result;
-  }
-
-  public static List<TestedAssignmentSpec> assignment_without_generic_target_test_specs() {
-    return assignment_test_specs()
-        .stream()
-        .filter(a -> !(a.target.type().hasGenericTypeParameters()))
-        .collect(toList());
-  }
-
-  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
-    return assignment_test_specs()
-        .stream()
-        .filter(a -> !(a.target.type().hasGenericTypeParameters() || a.source.type().hasGenericTypeParameters()))
-        .collect(toList());
-  }
-
-  private static List<TestedAssignmentSpec> parameter_assignment_generic_test_specs() {
-    var result = new ArrayList<TestedAssignmentSpec>();
-    for (TestedType type : Lists.concat(ELEMENTARY_TYPES, B)) {
-      if (type.type().isNothing()) {
-        result.add(allowedAssignment(A, NOTHING));
-        result.add(allowedAssignment(A, array(NOTHING)));
-        result.add(allowedAssignment(A, array(array(NOTHING))));
-
-        result.add(allowedAssignment(array(A), NOTHING));
-        result.add(allowedAssignment(array(A), array(NOTHING)));
-        result.add(allowedAssignment(array(A), array(array(NOTHING))));
-
-        result.add(allowedAssignment(array(array(A)), NOTHING));
-        result.add(allowedAssignment(array(array(A)), array(NOTHING)));
-        result.add(allowedAssignment(array(array(A)), array(array(NOTHING))));
-      } else {
-        result.add(allowedAssignment(A, type));
-        result.add(allowedAssignment(A, array(type)));
-        result.add(allowedAssignment(A, array(array(type))));
-
-        result.add(illegalAssignment(array(A), type));
-        result.add(allowedAssignment(array(A), array(type)));
-        result.add(allowedAssignment(array(A), array(array(type))));
-
-        result.add(illegalAssignment(array(array(A)), type));
-        result.add(illegalAssignment(array(array(A)), array(type)));
-        result.add(allowedAssignment(array(array(A)), array(array(type))));
-      }
-    }
-    return result;
   }
 }
