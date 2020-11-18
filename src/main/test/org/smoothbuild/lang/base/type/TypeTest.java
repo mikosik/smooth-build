@@ -379,6 +379,174 @@ public class TypeTest {
   }
 
   @ParameterizedTest
+  @MethodSource("greatestLowerBound_test_data")
+  public void greatestLowerBound(Type type1, Type type2, Optional<Type> expected) {
+    assertThat(type1.greatestLowerBound(type2))
+        .isEqualTo(expected);
+    assertThat(type2.greatestLowerBound(type1))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> greatestLowerBound_test_data() {
+    return List.of(
+        arguments(BLOB, BLOB, Optional.of(BLOB)),
+        arguments(BLOB, BOOL, Optional.of(NOTHING)),
+        arguments(BLOB, NOTHING, Optional.of(NOTHING)),
+        arguments(BLOB, STRING, Optional.of(NOTHING)),
+        arguments(BLOB, DATA, Optional.of(NOTHING)),
+        arguments(BLOB, FLAG, Optional.of(NOTHING)),
+        arguments(BLOB, PERSON, Optional.of(NOTHING)),
+        arguments(BLOB, A, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(BLOB, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(BOOL, BOOL, Optional.of(BOOL)),
+        arguments(BOOL, NOTHING, Optional.of(NOTHING)),
+        arguments(BOOL, STRING, Optional.of(NOTHING)),
+        arguments(BOOL, DATA, Optional.of(NOTHING)),
+        arguments(BOOL, FLAG, Optional.of(NOTHING)),
+        arguments(BOOL, PERSON, Optional.of(NOTHING)),
+        arguments(BOOL, A, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(BOOL, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(NOTHING, STRING, Optional.of(NOTHING)),
+        arguments(NOTHING, DATA, Optional.of(NOTHING)),
+        arguments(NOTHING, FLAG, Optional.of(NOTHING)),
+        arguments(NOTHING, PERSON, Optional.of(NOTHING)),
+        arguments(NOTHING, A, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(NOTHING, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(STRING, STRING, Optional.of(STRING)),
+        arguments(STRING, DATA, Optional.of(NOTHING)),
+        arguments(STRING, FLAG, Optional.of(NOTHING)),
+        arguments(STRING, PERSON, Optional.of(NOTHING)),
+        arguments(STRING, A, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(STRING, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(DATA, DATA, Optional.of(DATA)),
+        arguments(DATA, FLAG, Optional.of(NOTHING)),
+        arguments(DATA, PERSON, Optional.of(NOTHING)),
+        arguments(DATA, A, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(DATA, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(FLAG, FLAG, Optional.of(FLAG)),
+        arguments(FLAG, PERSON, Optional.of(NOTHING)),
+        arguments(FLAG, A, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(FLAG, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(PERSON, PERSON, Optional.of(PERSON)),
+        arguments(PERSON, A, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(PERSON, ARRAY_A, Optional.of(NOTHING)),
+
+        arguments(A, A, Optional.of(A)),
+        arguments(A, B, Optional.of(NOTHING)),
+        arguments(A, ARRAY_BLOB, Optional.of(NOTHING)),
+        arguments(A, ARRAY_BOOL, Optional.of(NOTHING)),
+        arguments(A, ARRAY_NOTHING, Optional.of(NOTHING)),
+        arguments(A, ARRAY_STRING, Optional.of(NOTHING)),
+        arguments(A, ARRAY_DATA, Optional.of(NOTHING)),
+        arguments(A, ARRAY_FLAG, Optional.of(NOTHING)),
+        arguments(A, ARRAY_PERSON, Optional.of(NOTHING)),
+        arguments(A, ARRAY_A, Optional.of(NOTHING)),
+        arguments(A, ARRAY_B, Optional.of(NOTHING)),
+
+        arguments(ARRAY_BLOB, ARRAY_BLOB, Optional.of(ARRAY_BLOB)),
+        arguments(ARRAY_BLOB, ARRAY_BOOL, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_NOTHING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_STRING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_DATA, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BLOB, ARRAY_A, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_BOOL, ARRAY_BOOL, Optional.of(ARRAY_BOOL)),
+        arguments(ARRAY_BOOL, ARRAY_NOTHING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BOOL, ARRAY_STRING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BOOL, ARRAY_DATA, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BOOL, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BOOL, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_BOOL, ARRAY_A, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_NOTHING, ARRAY_NOTHING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY_STRING, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY_A, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY_DATA, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_NOTHING, ARRAY2_NOTHING, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_STRING, ARRAY_STRING, Optional.of(ARRAY_STRING)),
+        arguments(ARRAY_STRING, ARRAY_A, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_STRING, ARRAY_DATA, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_STRING, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_STRING, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_A, ARRAY_A, Optional.of(ARRAY_A)),
+        arguments(ARRAY_A, ARRAY_B, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_A, ARRAY_DATA, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_A, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_A, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_DATA, ARRAY_DATA, Optional.of(ARRAY_DATA)),
+        arguments(ARRAY_DATA, ARRAY_FLAG, Optional.of(ARRAY_NOTHING)),
+        arguments(ARRAY_DATA, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_FLAG, ARRAY_FLAG, Optional.of(ARRAY_FLAG)),
+        arguments(ARRAY_FLAG, ARRAY_PERSON, Optional.of(ARRAY_NOTHING)),
+
+        arguments(ARRAY_PERSON, ARRAY_PERSON, Optional.of(ARRAY_PERSON))
+    );
+  }
+
+  @ParameterizedTest
   @MethodSource("inferTypeParametersMap_test_data")
   public void inferTypeParametersMap(Type type, Type assigned, Map<Type, Type> expected) {
     if (expected == null) {
