@@ -25,7 +25,7 @@ public record ItemSignature(
   }
 
   /**
-   * @return name of this parameter inside backtics.
+   * @return name of this parameter inside backticks.
    */
   public String q() {
     return "`" + name() + "`";
