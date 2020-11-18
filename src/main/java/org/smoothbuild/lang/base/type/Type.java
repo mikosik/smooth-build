@@ -76,6 +76,14 @@ public abstract class Type implements Named {
     }
   }
 
+  public Optional<Type> greatestLowerBound(Type that) {
+    if (this.equals(that)){
+      return Optional.of(this);
+    } else {
+      return Optional.of(Types.nothing());
+    }
+  }
+
   public abstract <T> T visit(TypeVisitor<T> visitor);
 
   @Override

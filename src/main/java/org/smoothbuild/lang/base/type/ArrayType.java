@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +68,17 @@ public class ArrayType extends Type {
       return elemType.leastUpperBound(thatArray.elemType).map(ArrayType::new);
     } else {
       return Optional.empty();
+    }
+  }
+
+  @Override
+  public Optional<Type> greatestLowerBound(Type that) {
+    if (that.isNothing()) {
+      return Optional.of(that);
+    } else if (that instanceof ArrayType thatArray) {
+      return elemType.greatestLowerBound(thatArray.elemType).map(ArrayType::new);
+    } else {
+      return Optional.of(nothing());
     }
   }
 
