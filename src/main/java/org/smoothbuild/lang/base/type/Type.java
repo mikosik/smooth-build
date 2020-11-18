@@ -66,7 +66,7 @@ public abstract class Type implements Named {
     return isAssignableFrom(type);
   }
 
-  public Optional<Type> commonSuperType(Type that) {
+  public Optional<Type> leastUpperBound(Type that) {
     if (that.isNothing()) {
       return Optional.of(this);
     } else if (this.equals(that)){
