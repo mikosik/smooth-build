@@ -2,19 +2,11 @@ package org.smoothbuild.acceptance.lang.assign.convert;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.a;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -62,52 +54,52 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(STRUCT_WITH_STRING, STRUCT_WITH_STRING),
 
         // [Blob]
-        allowedConversion(BLOB_ARRAY, BLOB_ARRAY),
-        allowedConversion(BLOB_ARRAY, NOTHING_ARRAY),
+        allowedConversion(a(BLOB), a(BLOB)),
+        allowedConversion(a(BLOB), a(NOTHING)),
 
         // [Bool]
-        allowedConversion(BOOL_ARRAY, BOOL_ARRAY),
-        allowedConversion(BOOL_ARRAY, NOTHING_ARRAY),
+        allowedConversion(a(BOOL), a(BOOL)),
+        allowedConversion(a(BOOL), a(NOTHING)),
 
         // [Nothing]
-        allowedConversion(NOTHING_ARRAY, NOTHING_ARRAY),
+        allowedConversion(a(NOTHING), a(NOTHING)),
 
         // [String]
-        allowedConversion(STRING_ARRAY, NOTHING_ARRAY),
-        allowedConversion(STRING_ARRAY, STRING_ARRAY),
+        allowedConversion(a(STRING), a(NOTHING)),
+        allowedConversion(a(STRING), a(STRING)),
 
         // [Struct]
-        allowedConversion(STRUCT_WITH_STRING_ARRAY, NOTHING_ARRAY),
-        allowedConversion(STRUCT_WITH_STRING_ARRAY, STRUCT_WITH_STRING_ARRAY),
+        allowedConversion(a(STRUCT_WITH_STRING), a(NOTHING)),
+        allowedConversion(a(STRUCT_WITH_STRING), a(STRUCT_WITH_STRING)),
 
         // [[Blob]]
-        allowedConversion(BLOB_ARRAY2, NOTHING_ARRAY),
+        allowedConversion(a(a(BLOB)), a(NOTHING)),
 
-        allowedConversion(BLOB_ARRAY2, BLOB_ARRAY2),
-        allowedConversion(BLOB_ARRAY2, NOTHING_ARRAY2),
+        allowedConversion(a(a(BLOB)), a(a(BLOB))),
+        allowedConversion(a(a(BLOB)), a(a(NOTHING))),
 
         // [[Bool]]
-        allowedConversion(BOOL_ARRAY2, NOTHING_ARRAY),
+        allowedConversion(a(a(BOOL)), a(NOTHING)),
 
-        allowedConversion(BOOL_ARRAY2, BOOL_ARRAY2),
-        allowedConversion(BOOL_ARRAY2, NOTHING_ARRAY2),
+        allowedConversion(a(a(BOOL)), a(a(BOOL))),
+        allowedConversion(a(a(BOOL)), a(a(NOTHING))),
 
         // [[Nothing]]
-        allowedConversion(NOTHING_ARRAY2, NOTHING_ARRAY),
+        allowedConversion(a(a(NOTHING)), a(NOTHING)),
 
-        allowedConversion(NOTHING_ARRAY2, NOTHING_ARRAY2),
+        allowedConversion(a(a(NOTHING)), a(a(NOTHING))),
 
         // [[String]]
-        allowedConversion(STRING_ARRAY2, NOTHING_ARRAY),
+        allowedConversion(a(a(STRING)), a(NOTHING)),
 
-        allowedConversion(STRING_ARRAY2, NOTHING_ARRAY2),
-        allowedConversion(STRING_ARRAY2, STRING_ARRAY2),
+        allowedConversion(a(a(STRING)), a(a(NOTHING))),
+        allowedConversion(a(a(STRING)), a(a(STRING))),
 
         // [[Struct]]
-        allowedConversion(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY),
+        allowedConversion(a(a(STRUCT_WITH_STRING)), a(NOTHING)),
 
-        allowedConversion(STRUCT_WITH_STRING_ARRAY2, NOTHING_ARRAY2),
-        allowedConversion(STRUCT_WITH_STRING_ARRAY2, STRUCT_WITH_STRING_ARRAY2)
+        allowedConversion(a(a(STRUCT_WITH_STRING)), a(a(NOTHING))),
+        allowedConversion(a(a(STRUCT_WITH_STRING)), a(a(STRUCT_WITH_STRING)))
     );
   }
 

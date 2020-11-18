@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
+import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
-import static org.smoothbuild.util.Sets.set;
 
 public class TestedAssignment {
   public final TestedType target;
@@ -13,7 +13,7 @@ public class TestedAssignment {
   }
 
   public String declarations() {
-    return join("\n", set(target.declarations(), source.declarations()));
+    return join("\n", union(target.declarations(), source.declarations()));
   }
 
   @Override

@@ -2,23 +2,16 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.base.type.TestedType.A;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.CONCRETE_TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRING_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL_ARRAY2;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING_ARRAY2;
+import static org.smoothbuild.lang.base.type.TestedType.STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
+import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -121,7 +114,7 @@ public class TypeTest {
     @ArgumentsSource(TestedConcreteTypes.class)
     public void can_declare_concrete_type(TestedType type) {
       module(unlines(
-          type.declarations(),
+          type.declarationsAsString(),
           type.name() + " myValue;"))
           .loadsSuccessfully();
     }
@@ -171,7 +164,7 @@ public class TypeTest {
       @ArgumentsSource(TestedConcreteTypes.class)
       public void can_declare_concrete_result_type(TestedType type) {
         module(unlines(
-            type.declarations(),
+            type.declarationsAsString(),
             type.name() + " myFunction();"))
             .loadsSuccessfully();
       }
@@ -255,7 +248,7 @@ public class TypeTest {
       @ArgumentsSource(TestedTypes.class)
       public void can_declare_any_type(TestedType type) {
         module(unlines(
-            type.declarations(),
+            type.declarationsAsString(),
             "String myFunction(" + type.name() + " param);"))
             .loadsSuccessfully();
       }
@@ -268,7 +261,7 @@ public class TypeTest {
     @ArgumentsSource(FirstFieldAllowedTypes.class)
     public void first_field_can_declare_following_types(TestedType testedType) {
       module(unlines(
-          testedType.declarations(),
+          testedType.declarationsAsString(),
           "MyStruct {",
           "  " + testedType.name() + " field,",
           "}"))
@@ -279,7 +272,7 @@ public class TypeTest {
     @ArgumentsSource(FirstFieldForbiddenTypes.class)
     public void first_field_cannot_declare_following_types(TestedType testedType) {
       TestModuleLoader module = module(unlines(
-          testedType.declarations(),
+          testedType.declarationsAsString(),
           "MyStruct {",
           "  " + testedType.name() + " field,",
           "}"));
@@ -296,7 +289,7 @@ public class TypeTest {
     @ArgumentsSource(FieldAllowedTypes.class)
     public void non_first_field_can_declare_concrete_type(TestedType testedType) {
       module(unlines(
-          testedType.declarations(),
+          testedType.declarationsAsString(),
           "MyStruct {",
           "  String firstField,",
           "  " + testedType.name() + " secondField,",
@@ -308,7 +301,7 @@ public class TypeTest {
     @ArgumentsSource(FieldForbiddenTypes.class)
     public void non_first_field_cannot_declare_following_types(TestedType testedType) {
       TestModuleLoader module = module(unlines(
-          testedType.declarations(),
+          testedType.declarationsAsString(),
           "MyStruct {",
           "  String firstField,",
           "  " + testedType.name() + " field,",
@@ -386,21 +379,21 @@ public class TypeTest {
     return List.of(
         A,
         NOTHING,
-        NOTHING_ARRAY,
-        NOTHING_ARRAY2,
-        STRING_ARRAY,
-        STRING_ARRAY2,
-        BLOB_ARRAY,
-        BOOL_ARRAY,
-        STRUCT_WITH_BLOB_ARRAY,
-        STRUCT_WITH_BOOL_ARRAY,
-        STRUCT_WITH_STRING_ARRAY,
-        BLOB_ARRAY2,
-        BOOL_ARRAY2,
-        STRING_ARRAY2,
-        STRUCT_WITH_BLOB_ARRAY2,
-        STRUCT_WITH_BOOL_ARRAY2,
-        STRUCT_WITH_STRING_ARRAY2
+        a(NOTHING),
+        a(a(NOTHING)),
+        a(STRING),
+        a(a(STRING)),
+        a(BLOB),
+        a(BOOL),
+        a(STRUCT_WITH_BLOB),
+        a(STRUCT_WITH_BOOL),
+        a(STRUCT_WITH_STRING),
+        a(a(BLOB)),
+        a(a(BOOL)),
+        a(a(STRING)),
+        a(a(STRUCT_WITH_BLOB)),
+        a(a(STRUCT_WITH_BOOL)),
+        a(a(STRUCT_WITH_STRING))
     );
   }
 

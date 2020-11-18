@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
+import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.Types.blob;
@@ -13,12 +14,16 @@ import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.smoothbuild.lang.base.Item;
 
 import com.google.common.collect.ImmutableList;
 
-public record TestedType(Type type, String literal, Object value, String declarations) {
+public record TestedType(Type type, String literal, Object value, Set<String> declarations) {
+  private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
+
   public static final TestedType A = new TestedType(
       generic("A"),
       null,
@@ -44,7 +49,7 @@ public record TestedType(Type type, String literal, Object value, String declara
       """
           reportError("e")""",
       null,
-      "Nothing reportError(String message);");
+      Set.of("Nothing reportError(String message);"));
   public static final TestedType STRING = new TestedType(
       string(),
       "\"abc\"",
@@ -54,42 +59,18 @@ public record TestedType(Type type, String literal, Object value, String declara
       struct("Data", loc(7), list(new Item(blob(), "value", Optional.empty(), loc(7)))),
       "data(0xAB)",
       null,
-      "Data{ Blob value }");
+      Set.of("Data{ Blob value }"));
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
       struct("Flag", loc(7), list(new Item(bool(), "value", Optional.empty(), loc(7)))),
       "flag(true)",
       null,
-      "Flag{ Bool value }");
+      Set.of("Flag{ Bool value }"));
   public static final TestedType STRUCT_WITH_STRING = new TestedType(
       struct("Person", loc(7), list(new Item(string(), "name", Optional.empty(), loc(7)))),
       """
           person("John")""",
       null,
-      "Person{ String name }");
-
-  public static final TestedType A_ARRAY = array(A);
-  public static final TestedType B_ARRAY = array(B);
-  public static final TestedType BLOB_ARRAY = array(BLOB);
-  public static final TestedType BOOL_ARRAY = array(BOOL);
-  public static final TestedType NOTHING_ARRAY = new TestedType(
-      Types.array(nothing()),
-      "[]",
-      list()
-  );
-  public static final TestedType STRING_ARRAY = array(STRING);
-  public static final TestedType STRUCT_WITH_BLOB_ARRAY = array(STRUCT_WITH_BLOB);
-  public static final TestedType STRUCT_WITH_BOOL_ARRAY = array(STRUCT_WITH_BOOL);
-  public static final TestedType STRUCT_WITH_STRING_ARRAY = array(STRUCT_WITH_STRING);
-
-  public static final TestedType A_ARRAY2 = array(A_ARRAY);
-  public static final TestedType B_ARRAY2 = array(B_ARRAY);
-  public static final TestedType BLOB_ARRAY2 = array(BLOB_ARRAY);
-  public static final TestedType BOOL_ARRAY2 = array(BOOL_ARRAY);
-  public static final TestedType NOTHING_ARRAY2 = array(NOTHING_ARRAY);
-  public static final TestedType STRING_ARRAY2 = array(STRING_ARRAY);
-  public static final TestedType STRUCT_WITH_BLOB_ARRAY2 = array(STRUCT_WITH_BLOB_ARRAY);
-  public static final TestedType STRUCT_WITH_BOOL_ARRAY2 = array(STRUCT_WITH_BOOL_ARRAY);
-  public static final TestedType STRUCT_WITH_STRING_ARRAY2 = array(STRUCT_WITH_STRING_ARRAY);
+      Set.of("Person{ String name }"));
 
   public static final ImmutableList<TestedType> ELEMENTARY_TYPES =
       ImmutableList.<TestedType>builder()
@@ -111,35 +92,43 @@ public record TestedType(Type type, String literal, Object value, String declara
       STRUCT_WITH_BLOB,
       STRUCT_WITH_BOOL,
       STRUCT_WITH_STRING,
-      BLOB_ARRAY,
-      BOOL_ARRAY,
-      NOTHING_ARRAY,
-      STRING_ARRAY,
-      STRUCT_WITH_BLOB_ARRAY,
-      STRUCT_WITH_BOOL_ARRAY,
-      STRUCT_WITH_STRING_ARRAY,
-      BLOB_ARRAY2,
-      BOOL_ARRAY2,
-      NOTHING_ARRAY2,
-      STRING_ARRAY2,
-      STRUCT_WITH_BLOB_ARRAY2,
-      STRUCT_WITH_BOOL_ARRAY2,
-      STRUCT_WITH_STRING_ARRAY2
+      a(BLOB),
+      a(BOOL),
+      a(NOTHING),
+      a(STRING),
+      a(STRUCT_WITH_BLOB),
+      a(STRUCT_WITH_BOOL),
+      a(STRUCT_WITH_STRING),
+      a(a(BLOB)),
+      a(a(BOOL)),
+      a(a(NOTHING)),
+      a(a(STRING)),
+      a(a(STRUCT_WITH_BLOB)),
+      a(a(STRUCT_WITH_BOOL)),
+      a(a(STRUCT_WITH_STRING))
   );
 
   public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
       .addAll(CONCRETE_TESTED_TYPES)
       .add(A)
-      .add(A_ARRAY)
-      .add(A_ARRAY2)
+      .add(a(A))
+      .add(a(a(A)))
       .build();
 
-  public static TestedType array(TestedType type) {
-    Object value = type.value == null ? null : list(type.value);
-    return array(type, value);
+  public static TestedType a(TestedType type) {
+    if (type == NOTHING) {
+      return new TestedType(
+          Types.array(nothing()),
+          "[]",
+          list()
+      );
+    } else {
+      Object value = type.value == null ? null : list(type.value);
+      return a(type, value);
+    }
   }
 
-  private static TestedType array(TestedType type, Object value) {
+  private static TestedType a(TestedType type, Object value) {
     return new TestedType(
         Types.array(type.type),
         "[" + type.literal + "]",
@@ -149,7 +138,7 @@ public record TestedType(Type type, String literal, Object value, String declara
   }
 
   public TestedType(Type type, String literal, Object value) {
-    this(type, literal, value, "");
+    this(type, literal, value, Set.of());
   }
 
   public String name() {
@@ -158,5 +147,9 @@ public record TestedType(Type type, String literal, Object value, String declara
 
   public String q() {
     return "`" + name() + "`";
+  }
+
+  public String declarationsAsString() {
+    return join("\n", declarations);
   }
 }
