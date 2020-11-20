@@ -1,60 +1,53 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.testing.common.TestingLocation;
 
 public class TypeNodeTest {
-  private static final Location LOCATION = TestingLocation.loc();
+  @Nested
+  class is_array {
+    @Test
+    public void normal_type_node_is_not_array() {
+      TypeNode typeNode = new TypeNode("MyType", loc());
+      assertThat(typeNode.isArray())
+          .isFalse();
+    }
 
-  @Test
-  public void normal_type_node_is_not_array() {
-    TypeNode typeNode = new TypeNode("MyType", LOCATION);
-    assertThat(typeNode.isArray())
-        .isFalse();
+    @Test
+    public void type_variable_node_is_not_array() {
+      TypeNode typeNode = new TypeNode("A", loc());
+      assertThat(typeNode.isArray())
+          .isFalse();
+    }
   }
 
-  @Test
-  public void type_variable_node_is_not_array() {
-    TypeNode typeNode = new TypeNode("A", LOCATION);
-    assertThat(typeNode.isArray())
-        .isFalse();
+  @Nested
+  class is_polytype {
+    @Test
+    public void node_with_type_variable_name_is_polytype() {
+      TypeNode typeNode = new TypeNode("B", loc());
+      assertThat(typeNode.isPolytype())
+          .isTrue();
+    }
+
+    @Test
+    public void node_with_non_type_variable_name_is_not_polytype() {
+      TypeNode typeNode = new TypeNode("MyType", loc());
+      assertThat(typeNode.isPolytype())
+          .isFalse();
+    }
   }
 
-  @Test
-  public void normal_array_type_node_is_array() {
-    ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("MyType", LOCATION), LOCATION);
-    assertThat(typeNode.isArray())
-        .isTrue();
-  }
-
-  @Test
-  public void polytype_array_type_node_is_array() {
-    ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("A", LOCATION), LOCATION);
-    assertThat(typeNode.isArray())
-        .isTrue();
-  }
-
-  @Test
-  public void node_with_type_variable_name_is_polytype() {
-    TypeNode typeNode = new TypeNode("B", LOCATION);
-    assertThat(typeNode.isPolytype())
-        .isTrue();
-  }
-
-  @Test
-  public void node_with_non_type_variable_name_is_not_polytype() {
-    TypeNode typeNode = new TypeNode("MyType", LOCATION);
-    assertThat(typeNode.isPolytype())
-        .isFalse();
-  }
-
-  @Test
-  public void type_node_core_type_is_that_node() {
-    TypeNode typeNode = new TypeNode("MyType", LOCATION);
-    assertThat(typeNode.coreType())
-        .isEqualTo(typeNode);
+  @Nested
+  class core_type {
+    @Test
+    public void type_node_core_type_is_that_node() {
+      TypeNode typeNode = new TypeNode("MyType", loc());
+      assertThat(typeNode.coreType())
+          .isEqualTo(typeNode);
+    }
   }
 }
