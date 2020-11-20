@@ -11,8 +11,8 @@ public class ArrayTypeNode extends TypeNode {
   }
 
   @Override
-  public boolean isGeneric() {
-    return elementType.isGeneric();
+  public boolean isPolytype() {
+    return elementType.isPolytype();
   }
 
   @Override

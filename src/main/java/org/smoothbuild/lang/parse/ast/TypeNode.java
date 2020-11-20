@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import org.smoothbuild.lang.base.Location;
@@ -18,8 +18,8 @@ public class TypeNode extends NamedNode {
     return name().equals(nothing().name());
   }
 
-  public boolean isGeneric() {
-    return isGenericTypeName(name());
+  public boolean isPolytype() {
+    return isTypeVariableName(name());
   }
 
   public TypeNode coreType() {

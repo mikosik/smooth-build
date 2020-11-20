@@ -8,7 +8,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.Append;
 import org.smoothbuild.acceptance.testing.Concat;
 
-public class GenericInferenceTest extends AcceptanceTestCase {
+public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void actual_result_type_can_be_inferred_from_arguments() throws Exception {
     createUserModule("""
@@ -110,7 +110,7 @@ public class GenericInferenceTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(2,
-        "Cannot infer actual type(s) for generic parameter(s) in call to `testConcat`.");
+        "Cannot infer actual type(s) for parameter(s) in call to `testConcat`.");
   }
 
   @Test
@@ -201,6 +201,6 @@ public class GenericInferenceTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(5,
-        "Cannot infer actual type(s) for generic parameter(s) in call to `testAppend`.");
+        "Cannot infer actual type(s) for parameter(s) in call to `testAppend`.");
   }
 }

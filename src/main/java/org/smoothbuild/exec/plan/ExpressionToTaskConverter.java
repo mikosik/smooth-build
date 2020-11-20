@@ -6,7 +6,7 @@ import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
-import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
+import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.util.Lists.list;
@@ -44,8 +44,8 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.TypeVariable;
 import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
@@ -121,13 +121,13 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
       List<Task> arguments = childrenTasks(expression.arguments());
-      var typeParametersMap = inferTypeParameters(function.parameterTypes(), taskTypes(arguments));
-      Type actualResultType = function.resultType().mapTypeParameters(typeParametersMap);
+      var typeVariablesMap = inferTypeVariables(function.parameterTypes(), taskTypes(arguments));
+      Type actualResultType = function.resultType().mapTypeVariables(typeVariablesMap);
 
       if (function.body().isPresent()) {
         return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
       } else {
-        return taskForNativeFunction(arguments, function, typeParametersMap, actualResultType,
+        return taskForNativeFunction(arguments, function, typeVariablesMap, actualResultType,
             expression.location());
       }
     } else if (callable instanceof Constructor constructor) {
@@ -156,12 +156,12 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   private Task taskForNativeFunction(List<Task> arguments, Function function,
-      Map<GenericType, Type> typeParametersMap, Type actualResultType, Location location)
+      Map<TypeVariable, Type> typeVariablesMap, Type actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
     Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
     ImmutableList<Type> actualParameterTypes =
-        map(function.parameterTypes(), t -> t.mapTypeParameters(typeParametersMap));
+        map(function.parameterTypes(), t -> t.mapTypeVariables(typeVariablesMap));
     List<Task> dependencies = convertedArguments(actualParameterTypes, arguments);
     if (function.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cacheable());

@@ -7,7 +7,7 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
+import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.mapM;
 
@@ -24,9 +24,9 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.GenericType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.base.type.TypeVariable;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
@@ -45,13 +45,13 @@ public class InferCallTypeAndParamAssignment {
     if (assigned.hasProblems() || !allAssignedHaveInferredType(assigned.value())) {
       return;
     }
-    var typeParametersMap = typeParametersMap(call, logger, parameters, assigned.value());
-    if (typeParametersMap == null) {
+    var typeVariablesMap = typeVariablesMap(call, logger, parameters, assigned.value());
+    if (typeVariablesMap == null) {
       return;
     }
     call.setAssignedArgs(mapM(assigned.value(), Assigned::expr));
     call.setType(callableResultType(call, imported, callables)
-        .map(t -> t.mapTypeParameters(typeParametersMap)));
+        .map(t -> t.mapTypeVariables(typeVariablesMap)));
   }
 
   private static boolean allAssignedHaveInferredType(List<Assigned> assigned) {
@@ -197,24 +197,24 @@ public class InferCallTypeAndParamAssignment {
     throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
   }
 
-  private static Map<GenericType, Type> typeParametersMap(CallNode call, Logger logger,
+  private static Map<TypeVariable, Type> typeVariablesMap(CallNode call, Logger logger,
       List<ItemSignature> parameters, List<Assigned> assigned) {
-    List<Type> genericTypes = new ArrayList<>();
-    List<Type> actualTypes = new ArrayList<>();
+    List<Type> parameterTypes = new ArrayList<>();
+    List<Type> assignedTypes = new ArrayList<>();
     for (int i = 0; i < parameters.size(); i++) {
-      if (parameters.get(i).type().hasGenericTypeParameters()) {
-        genericTypes.add(parameters.get(i).type());
-        actualTypes.add(assigned.get(i).type().get());
+      if (parameters.get(i).type().isPolytype()) {
+        parameterTypes.add(parameters.get(i).type());
+        assignedTypes.add(assigned.get(i).type().get());
       }
     }
-    if (actualTypes.contains(null)) {
+    if (assignedTypes.contains(null)) {
       return null;
     }
     try {
-      return inferTypeParameters(genericTypes, actualTypes);
+      return inferTypeVariables(parameterTypes, assignedTypes);
     } catch (IllegalArgumentException e) {
       logger.log(
-          parseError(call, "Cannot infer actual type(s) for generic parameter(s) in call to `"
+          parseError(call, "Cannot infer actual type(s) for parameter(s) in call to `"
               + call.calledName() + "`."));
       return null;
     }

@@ -7,39 +7,39 @@ import org.junit.jupiter.api.Test;
 
 public class ArrayTypeNodeTest {
   @Test
-  public void array_node_with_generic_element_name_is_generic() {
+  public void polytype_array_node() {
     TypeNode typeNode = new ArrayTypeNode(new TypeNode("B", internal()), internal());
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isTrue();
   }
 
   @Test
-  public void array_node_with_non_generic_element_name_is_not_generic() {
+  public void non_polytype_array_node() {
     TypeNode typeNode = new ArrayTypeNode(new TypeNode("MyType", internal()),
         internal());
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isFalse();
   }
 
   @Test
-  public void array_node_of_depth_2_with_generic_element_name_is_generic() {
+  public void polytype_array_node_with_depth_2() {
     TypeNode typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
             new TypeNode("B", internal()),
             internal()),
         internal());
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isTrue();
   }
 
   @Test
-  public void array_node_of_depth_2_with_non_generic_element_name_is_not_generic() {
+  public void non_polytype_array_node_with_depth_2() {
     TypeNode typeNode = new ArrayTypeNode(
         new ArrayTypeNode(
             new TypeNode("MyType", internal()),
             internal()),
         internal());
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isFalse();
   }
 

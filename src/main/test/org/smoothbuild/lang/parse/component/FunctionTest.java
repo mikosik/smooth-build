@@ -23,7 +23,7 @@ public class FunctionTest {
   }
 
   @Test
-  public void generic_parameter_can_have_default_value() {
+  public void polytype_parameter_can_have_default_value() {
     module("""
         A myFunc(A value = "abc") = value;
         """)
@@ -31,7 +31,7 @@ public class FunctionTest {
   }
 
   @Test
-  public void default_value_gets_converted_to_generic_parameter() {
+  public void default_value_gets_converted_to_polytype_parameter() {
     module("""
         [A] myFunc(A param1, [A] param2 = []) = param2;
         [String] result = myFunc("abc");

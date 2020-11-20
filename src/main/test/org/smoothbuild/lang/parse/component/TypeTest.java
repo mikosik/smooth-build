@@ -120,19 +120,19 @@ public class TypeTest {
     }
 
     @Test
-    public void cannot_declare_generic_type() {
+    public void cannot_declare_its_type_as_type_variable() {
       module("""
-             A valueWithGenericType;
+             A myValue;
              """)
-          .loadsWithError(1, "Value cannot have generic type.");
+          .loadsWithError(1, "Value type cannot have type variables.");
     }
 
     @Test
-    public void cannot_declare_generic_array_type() {
+    public void cannot_declare_its_type_as_array_type_with_type_variable() {
       module("""
-             [A] valueWithGenericType;
+             [A] myValue;
              """)
-          .loadsWithError(1, "Value cannot have generic type.");
+          .loadsWithError(1, "Value type cannot have type variables.");
     }
 
     @Test
@@ -170,7 +170,7 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_generic_result_type_when_some_param_has_such_type() {
+      public void can_declare_polytype_result_when_some_param_has_such_type() {
         module("""
             A testIdentity(A param);
             """)
@@ -178,47 +178,45 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_generic_result_type_when_some_param_has_such_core_type() {
+      public void can_declare_polytype_result_when_some_param_has_such_core_type() {
         module("""
-            A genericResult([A] param);
+            A myFunction([A] param);
             """)
             .loadsSuccessfully();
       }
 
       @Test
-      public void can_declare_generic_array_result_type_when_some_param_has_such_type() {
+      public void can_declare_polytype_array_result_when_some_param_has_such_type() {
         module("""
-            [A] testArrayIdentity(A param);
+            [A] myFunction(A param);
             """)
             .loadsSuccessfully();
       }
 
       @Test
-      public void can_declare_generic_array_result_type_when_some_param_has_such_core_type() {
+      public void can_declare_polytype_array_result_when_some_param_has_such_core_type() {
         module("""
-            [A] testArrayIdentity([A] param);
+            [A] myFunction([A] param);
             """)
             .loadsSuccessfully();
       }
 
       @Test
-      public void cannot_declare_generic_result_type_when_no_param_has_such_core_type() {
+      public void cannot_declare_polytype_result_when_no_param_has_such_core_type() {
         module("""
-            A genericResult([B] param);
+            A myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined generic type `A`. "
-                +
-                "Only generic types used in declaration of function parameters can be used here.");
+            .loadsWithError(1, "Undefined type variable `A`. " +
+                "Only type variables used in declaration of function parameters can be used here.");
       }
 
       @Test
-      public void cannot_declare_generic_array_result_type_when_no_param_has_such_core_type() {
+      public void cannot_declare_polytype_array_result_when_no_param_has_such_core_type() {
         module("""
-            [A] result([B] param);
+            [A] myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined generic type `A`. "
-                +
-                "Only generic types used in declaration of function parameters can be used here.");
+            .loadsWithError(1, "Undefined type variable `A`. " +
+                "Only type variables used in declaration of function parameters can be used here.");
       }
 
       @Test
@@ -281,7 +279,7 @@ public class TypeTest {
       } else if (testedType.name().equals("Nothing")) {
         module.loadsWithError(3, "First field of struct cannot have 'Nothing' type.");
       } else {
-        module.loadsWithError(3, "Struct field cannot have a generic type.");
+        module.loadsWithError(3, "Struct field type cannot have type variable.");
       }
     }
 
@@ -311,7 +309,7 @@ public class TypeTest {
       } else if (testedType.name().equals("Nothing")) {
         module.loadsWithError(4, "First field of struct cannot have 'Nothing' type.");
       } else {
-        module.loadsWithError(4, "Struct field cannot have a generic type.");
+        module.loadsWithError(4, "Struct field type cannot have type variable.");
       }
     }
 

@@ -119,7 +119,7 @@ public class EqualTest extends AcceptanceTestCase {
     runSmoothBuild("result");
     assertFinishedWithError();
     assertSysOutContainsParseError(
-        9, "Cannot infer actual type(s) for generic parameter(s) in call to `equal`.");
+        9, "Cannot infer actual type(s) for parameter(s) in call to `equal`.");
   }
 
   @Test

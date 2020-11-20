@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
-import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
+import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.Objects;
@@ -37,8 +37,8 @@ public class Function extends Callable {
   }
 
   private Type inferResultType(ImmutableList<Expression> arguments) {
-    var typeParametersMap = inferTypeParameters(parameterTypes(), map(arguments, Expression::type));
-    return resultType().mapTypeParameters(typeParametersMap);
+    var typeVariablesMap = inferTypeVariables(parameterTypes(), map(arguments, Expression::type));
+    return resultType().mapTypeVariables(typeVariablesMap);
   }
 
   @Override

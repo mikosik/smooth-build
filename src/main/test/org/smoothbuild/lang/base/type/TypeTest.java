@@ -23,7 +23,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.DATA;
-import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_GENERIC_TYPES;
+import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_NON_POLYTYPE_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
@@ -110,29 +110,29 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("mapTypeParameters_test_data")
-  public void mapTypeParameters(Type type, Map<GenericType, Type> map, Type expected) {
+  @MethodSource("mapTypeVariable_test_data")
+  public void mapTypeVariable(Type type, Map<TypeVariable, Type> map, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapTypeParameters(map))
+      assertCall(() -> type.mapTypeVariables(map))
           .throwsException(new UnsupportedOperationException(
-              arrayTypeParameter(type).toString() + " is not generic"));
+              arrayTypeVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapTypeParameters(map))
+      assertThat(type.mapTypeVariables(map))
           .isEqualTo(expected);
     }
   }
 
-  private static Type arrayTypeParameter(Type type) {
+  private static Type arrayTypeVariable(Type type) {
     if (type instanceof ArrayType arrayType) {
-      return arrayTypeParameter(arrayType.elemType());
+      return arrayTypeVariable(arrayType.elemType());
     } else {
       return type;
     }
   }
 
-  public static List<Arguments> mapTypeParameters_test_data() {
+  public static List<Arguments> mapTypeVariable_test_data() {
     var result = new ArrayList<Arguments>();
-    for (GenericType type : List.of(A, B)) {
+    for (TypeVariable type : List.of(A, B)) {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);
@@ -142,7 +142,7 @@ public class TypeTest {
         result.add(arguments(typeArray, Map.of(type, newCoreArray), array(array(newCore))));
       }
     }
-    for (Type type : ELEMENTARY_NON_GENERIC_TYPES) {
+    for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       Type typeArray = array(type);
       result.add(arguments(type, Map.of(), type));
       result.add(arguments(typeArray, Map.of(), typeArray));
@@ -151,15 +151,15 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isGeneric_test_data")
-  public void isGeneric(Type type, boolean expected) {
-    assertThat(type.hasGenericTypeParameters())
+  @MethodSource("isPolytype_test_data")
+  public void isPolytype(Type type, boolean expected) {
+    assertThat(type.isPolytype())
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> isGeneric_test_data() {
+  public static List<Arguments> isPolytype_test_data() {
     var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_NON_GENERIC_TYPES) {
+    for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       result.add(arguments(type, false));
       result.add(arguments(array(type), false));
       result.add(arguments(array(array(type)), false));
@@ -547,18 +547,18 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("inferTypeParametersMap_test_data")
-  public void inferTypeParametersMap(Type type, Type assigned, Map<Type, Type> expected) {
+  @MethodSource("inferTypeVariables_test_data")
+  public void inferTypeVariables(Type type, Type assigned, Map<Type, Type> expected) {
     if (expected == null) {
-      assertCall(() -> type.inferTypeParametersMap(assigned))
+      assertCall(() -> type.inferTypeVariables(assigned))
           .throwsException(IllegalArgumentException.class);
     } else {
-      assertThat(type.inferTypeParametersMap(assigned))
+      assertThat(type.inferTypeVariables(assigned))
           .isEqualTo(expected);
     }
   }
 
-  public static List<Arguments> inferTypeParametersMap_test_data() {
+  public static List<Arguments> inferTypeVariables_test_data() {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type.isNothing()) {

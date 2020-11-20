@@ -17,7 +17,7 @@ public class TypeNodeTest {
   }
 
   @Test
-  public void generic_type_node_is_not_array() {
+  public void type_variable_node_is_not_array() {
     TypeNode typeNode = new TypeNode("A", LOCATION);
     assertThat(typeNode.isArray())
         .isFalse();
@@ -31,23 +31,23 @@ public class TypeNodeTest {
   }
 
   @Test
-  public void generic_array_type_node_is_array() {
+  public void polytype_array_type_node_is_array() {
     ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("A", LOCATION), LOCATION);
     assertThat(typeNode.isArray())
         .isTrue();
   }
 
   @Test
-  public void node_with_generic_name_is_generic() {
+  public void node_with_type_variable_name_is_polytype() {
     TypeNode typeNode = new TypeNode("B", LOCATION);
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isTrue();
   }
 
   @Test
-  public void node_with_non_generic_name_is_not_generic() {
+  public void node_with_non_type_variable_name_is_not_polytype() {
     TypeNode typeNode = new TypeNode("MyType", LOCATION);
-    assertThat(typeNode.isGeneric())
+    assertThat(typeNode.isPolytype())
         .isFalse();
   }
 

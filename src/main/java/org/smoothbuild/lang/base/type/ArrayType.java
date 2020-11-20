@@ -15,7 +15,7 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", internal(), elemType.hasGenericTypeParameters());
+    super("[" +  elemType.name() + "]", internal(), elemType.isPolytype());
     this.elemType = requireNonNull(elemType);
   }
 
@@ -29,16 +29,16 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeParameters(Map<GenericType, Type> map) {
-    return new ArrayType(elemType.mapTypeParameters(map));
+  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
+    return new ArrayType(elemType.mapTypeVariables(map));
   }
 
   @Override
-  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
+  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
     if (source instanceof ArrayType arrayType) {
-      return elemType.inferTypeParametersMap(arrayType.elemType());
+      return elemType.inferTypeVariables(arrayType.elemType());
     } else if (source.isNothing()) {
-      return elemType.inferTypeParametersMap(source);
+      return elemType.inferTypeVariables(source);
     } else {
       throw new IllegalArgumentException("Cannot assign " + q() + " from " + source.q());
     }

@@ -7,18 +7,18 @@ import java.util.Map;
 /**
  * This class is immutable.
  */
-public class GenericType extends Type {
-  public GenericType(String name) {
+public class TypeVariable extends Type {
+  public TypeVariable(String name) {
     super(name, internal(), true);
   }
 
   @Override
-  public Type mapTypeParameters(Map<GenericType, Type> map) {
+  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
     return map.get(this);
   }
 
   @Override
-  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
+  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
     return Map.of(this, source);
   }
 

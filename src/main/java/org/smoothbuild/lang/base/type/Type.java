@@ -15,14 +15,14 @@ import com.google.common.collect.ImmutableMap;
  * This class and all its subclasses are immutable.
  */
 public abstract class Type implements Named {
-  protected final boolean hasGenericTypeParameters;
+  protected final boolean isPolytype;
   private final String name;
   private final Location location;
 
-  protected Type(String name, Location location, boolean hasGenericTypeParameters) {
+  protected Type(String name, Location location, boolean isPolytype) {
     this.name = name;
     this.location = location;
-    this.hasGenericTypeParameters = hasGenericTypeParameters;
+    this.isPolytype = isPolytype;
   }
 
   @Override
@@ -47,15 +47,18 @@ public abstract class Type implements Named {
     return this == nothing();
   }
 
-  public boolean hasGenericTypeParameters() {
-    return hasGenericTypeParameters;
+  /**
+   * @return true iff this type contains type variable(s).
+   */
+  public boolean isPolytype() {
+    return isPolytype;
   }
 
-  public Type mapTypeParameters(Map<GenericType, Type> map) {
+  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
     return this;
   }
 
-  public Map<GenericType, Type> inferTypeParametersMap(Type source) {
+  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
     return ImmutableMap.of();
   }
 

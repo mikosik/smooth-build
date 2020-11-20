@@ -5,10 +5,10 @@ import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
-import static org.smoothbuild.lang.base.type.Types.generic;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.typeVariable;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.List;
@@ -30,8 +30,8 @@ public class TestingTypes {
           new Item(BOOL, "flag", Optional.empty(),internal())));
   public static final StructType DATA = struct("Data", loc(), List.of(
           new Item(BLOB, "data", Optional.empty(),internal())));
-  public static final GenericType A = generic("A");
-  public static final GenericType B = generic("B");
+  public static final TypeVariable A = typeVariable("A");
+  public static final TypeVariable B = typeVariable("B");
 
   public static final ArrayType ARRAY_BOOL = array(BOOL);
   public static final ArrayType ARRAY_STRING = array(STRING);
@@ -63,7 +63,7 @@ public class TestingTypes {
           .add(A)
           .build();
 
-  public static final ImmutableList<Type> ELEMENTARY_NON_GENERIC_TYPES =
+  public static final ImmutableList<Type> ELEMENTARY_NON_POLYTYPE_TYPES =
       ImmutableList.<Type>builder()
           .addAll(BASE_TYPES)
           .add(PERSON)

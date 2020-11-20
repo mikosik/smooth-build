@@ -5,10 +5,11 @@ import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.typeVariable;
 import static org.smoothbuild.lang.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
@@ -146,8 +147,8 @@ public class InferTypesAndParamAssignments {
       }
 
       private Optional<Type> createType(TypeNode type) {
-        if (isGenericTypeName(type.name())) {
-          return Optional.of(Types.generic(type.name()));
+        if (isTypeVariableName(type.name())) {
+          return Optional.of(typeVariable(type.name()));
         } else if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return createType(elementType).map(Types::array);
