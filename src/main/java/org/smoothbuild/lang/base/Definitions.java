@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import org.smoothbuild.lang.base.type.Type;
 
@@ -28,9 +28,9 @@ public record Definitions(
     );
   }
 
-  public static Definitions basicTypeDefinitions() {
+  public static Definitions baseTypeDefinitions() {
     return new Definitions(
-        BASIC_TYPES.stream().collect(toImmutableMap(Type::name, t -> t)),
+        BASE_TYPES.stream().collect(toImmutableMap(Type::name, t -> t)),
         ImmutableMap.of());
   }
 }

@@ -47,7 +47,7 @@ public class RuntimeController {
   public int setUpRuntimeAndRun(Consumer<Definitions> runner) {
     reporter.startNewPhase("Parsing");
 
-    Definitions allDefinitions = Definitions.basicTypeDefinitions();
+    Definitions allDefinitions = Definitions.baseTypeDefinitions();
     for (ModuleLocation module : MODULES) {
       ValueWithLogs<Definitions> definitions = load(module, allDefinitions);
       reporter.report(module.path().toString(), definitions.logs());

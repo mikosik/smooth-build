@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.component;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.lang.base.Definitions.basicTypeDefinitions;
+import static org.smoothbuild.lang.base.Definitions.baseTypeDefinitions;
 import static org.smoothbuild.lang.base.TestingModuleLocation.BUILD_FILE_PATH;
 import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
 import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
@@ -27,7 +27,7 @@ public class TestModuleLoader {
   private ValueWithLogs<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
-    return new TestModuleLoader(sourceCode, moduleLocation(), basicTypeDefinitions());
+    return new TestModuleLoader(sourceCode, moduleLocation(), baseTypeDefinitions());
   }
 
   public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imports) {

@@ -70,10 +70,10 @@ public class ObjectDb {
 
   private void initialize() {
     try {
-      this.blobSpec = new BlobSpec(writeBasicSpecRoot(BLOB), hashedDb, this);
-      this.boolSpec = new BoolSpec(writeBasicSpecRoot(BOOL), hashedDb, this);
-      this.nothingSpec = new NothingSpec(writeBasicSpecRoot(NOTHING), hashedDb, this);
-      this.stringSpec = new StringSpec(writeBasicSpecRoot(STRING), hashedDb, this);
+      this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), hashedDb, this);
+      this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), hashedDb, this);
+      this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), hashedDb, this);
+      this.stringSpec = new StringSpec(writeBaseSpecRoot(STRING), hashedDb, this);
 
       cacheSpec(blobSpec);
       cacheSpec(boolSpec);
@@ -325,20 +325,20 @@ public class ObjectDb {
   }
 
   private Hash writeArraySpecRoot(Spec elementSpec) throws HashedDbException {
-    return writeNonBasicSpecRoot(ARRAY, elementSpec.hash());
+    return writeNonBaseSpecRoot(ARRAY, elementSpec.hash());
   }
 
   private Hash writeTupleSpecRoot(Iterable<? extends Spec> elementSpecs)
       throws HashedDbException {
     Hash elementsHash = hashedDb.writeHashes(map(elementSpecs, Spec::hash));
-    return writeNonBasicSpecRoot(TUPLE, elementsHash);
+    return writeNonBaseSpecRoot(TUPLE, elementsHash);
   }
 
-  private Hash writeNonBasicSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {
+  private Hash writeNonBaseSpecRoot(SpecKind specKind, Hash elements) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()), elements);
   }
 
-  private Hash writeBasicSpecRoot(SpecKind specKind) throws HashedDbException {
+  private Hash writeBaseSpecRoot(SpecKind specKind) throws HashedDbException {
     return hashedDb.writeHashes(hashedDb.writeByte(specKind.marker()));
   }
 }
