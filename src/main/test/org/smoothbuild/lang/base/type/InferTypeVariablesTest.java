@@ -2,7 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.type.InferTypeParameters.inferTypeParameters;
+import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_B;
@@ -28,21 +28,21 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class InferTypeParametersTest {
+public class InferTypeVariablesTest {
   @ParameterizedTest
-  @MethodSource("inferTypeParameters_test_data")
-  public void infer_type_parameters(List<Type> types, List<Type> actualTypes,
-      Map<GenericType, Type> expected) {
+  @MethodSource("inferTypeVariables_test_data")
+  public void infer_type_variables(List<Type> types, List<Type> actualTypes,
+      Map<TypeVariable, Type> expected) {
     if (expected == null) {
-      assertCall(() -> inferTypeParameters(types, actualTypes))
+      assertCall(() -> inferTypeVariables(types, actualTypes))
           .throwsException(IllegalArgumentException.class);
     } else {
-      assertThat(inferTypeParameters(types, actualTypes))
+      assertThat(inferTypeVariables(types, actualTypes))
           .isEqualTo(expected);
     }
   }
 
-  public static List<Arguments> inferTypeParameters_test_data() {
+  public static List<Arguments> inferTypeVariables_test_data() {
     return List.of(
         // concrete types
         arguments(

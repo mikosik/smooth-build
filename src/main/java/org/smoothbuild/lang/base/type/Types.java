@@ -20,9 +20,9 @@ public class Types {
    */
   public static final ImmutableSet<Type> BASE_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
 
-  public static GenericType generic(String name) {
-    checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);
-    return new GenericType(name);
+  public static TypeVariable typeVariable(String name) {
+    checkArgument(isTypeVariableName(name), "Illegal type variable name '%s'", name);
+    return new TypeVariable(name);
   }
 
   public static BlobType blob() {
@@ -49,7 +49,7 @@ public class Types {
     return new ArrayType(elemType);
   }
 
-  public static boolean isGenericTypeName(String name) {
+  public static boolean isTypeVariableName(String name) {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 }

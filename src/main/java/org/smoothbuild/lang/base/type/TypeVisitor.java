@@ -25,7 +25,7 @@ public class TypeVisitor<T> {
     return null;
   }
 
-  public T visit(GenericType type) {
+  public T visit(TypeVariable type) {
     return null;
   }
 }

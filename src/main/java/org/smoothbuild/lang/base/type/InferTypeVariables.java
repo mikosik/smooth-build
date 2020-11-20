@@ -7,13 +7,13 @@ import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InferTypeParameters {
-  public static Map<GenericType, Type> inferTypeParameters(
+public class InferTypeVariables {
+  public static Map<TypeVariable, Type> inferTypeVariables(
       List<Type> types, List<Type> actualTypes) {
-    var builder = new HashMap<GenericType, Type>();
+    var builder = new HashMap<TypeVariable, Type>();
     for (int i = 0; i < types.size(); i++) {
-      for (var entry : types.get(i).inferTypeParametersMap(actualTypes.get(i)).entrySet()) {
-        GenericType key = entry.getKey();
+      for (var entry : types.get(i).inferTypeVariables(actualTypes.get(i)).entrySet()) {
+        TypeVariable key = entry.getKey();
         Type value = entry.getValue();
         if (builder.containsKey(key)) {
           Type previous = builder.get(key);

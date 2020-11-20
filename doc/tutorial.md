@@ -238,10 +238,10 @@ then empty array is assignable to any other array.
 [String] strings = emptyArray;
 ```
 
-#### Generic types
+#### Polymorphic functions
 
-Smooth allows declaring function with generic parameters. To define generic
-parameter simply use single upper case letter as its name.
+Smooth allows declaring polymorphic functions.
+To define type variable simply use a single upper case letter as its type.
 Below declaration of `identity` function that returns its only parameter.
 
 ```

@@ -19,7 +19,7 @@ import org.smoothbuild.lang.base.type.TestedType;
 
 public class AssignmentTest {
   @ParameterizedTest
-  @MethodSource("without_generics_test_specs")
+  @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
@@ -43,7 +43,7 @@ public class AssignmentTest {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
     String sourceCode = unlines(
-        "%s myFunction(%s param, %s probablyGeneric) = param;"
+        "%s myFunction(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
         testSpec.declarations(),
         "Bool true;");
@@ -98,7 +98,7 @@ public class AssignmentTest {
   }
 
   @ParameterizedTest
-  @MethodSource("without_generics_test_specs")
+  @MethodSource("without_polytypes_test_specs")
   public void default_value_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
     TestedType target = testSpec.target;
     TestedType source = testSpec.source;
@@ -143,13 +143,13 @@ public class AssignmentTest {
    */
   public static Stream<TestedAssignmentSpec> array_element_assignment_test_specs() {
     var map = new HashMap<TestedType, Map<TestedType, TestedAssignmentSpec>>();
-    without_generics_test_specs().forEach(spec -> {
+    without_polytypes_test_specs().forEach(spec -> {
       map.computeIfAbsent(spec.source, testedType -> new HashMap<>());
       map.get(spec.source).put(spec.target, spec);
     });
 
     var result = new ArrayList<TestedAssignmentSpec>();
-    without_generics_test_specs().forEach(spec -> {
+    without_polytypes_test_specs().forEach(spec -> {
       TestedAssignmentSpec reversed = map.get(spec.target).get(spec.source);
       boolean reversedAllowed = reversed != null && reversed.allowed;
       if (!spec.allowed && reversedAllowed) {
@@ -161,14 +161,14 @@ public class AssignmentTest {
     return result.stream();
   }
 
-  private static List<TestedAssignmentSpec> without_generics_test_specs() {
-    return assignment_without_generics_test_specs();
+  private static List<TestedAssignmentSpec> without_polytypes_test_specs() {
+    return assignment_without_polytypes_test_specs();
   }
 
-  public static List<TestedAssignmentSpec> assignment_without_generics_test_specs() {
+  public static List<TestedAssignmentSpec> assignment_without_polytypes_test_specs() {
     return assignment_test_specs()
         .stream()
-        .filter(a -> !(a.target.type().hasGenericTypeParameters() || a.source.type().hasGenericTypeParameters()))
+        .filter(a -> !(a.target.type().isPolytype() || a.source.type().isPolytype()))
         .collect(toList());
   }
 

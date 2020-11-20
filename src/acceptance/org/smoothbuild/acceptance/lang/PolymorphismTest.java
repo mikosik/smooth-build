@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.Flatten;
 
-public class GenericTest extends AcceptanceTestCase {
+public class PolymorphismTest extends AcceptanceTestCase {
   @Test
   public void flatten_1() throws Exception {
     createNativeJar(Flatten.class);

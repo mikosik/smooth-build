@@ -5,10 +5,10 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static okio.ByteString.encodeString;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
-import static org.smoothbuild.lang.base.type.Types.generic;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.Types.typeVariable;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
@@ -25,12 +25,12 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedType A = new TestedType(
-      generic("A"),
+      typeVariable("A"),
       null,
       null
   );
   public static final TestedType B = new TestedType(
-      generic("B"),
+      typeVariable("B"),
       null,
       null
   );

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.type.Types.isGenericTypeName;
+import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -52,7 +52,7 @@ public class AnalyzeSemantically {
     structNameWithSingleCapitalLetter(logger, ast);
     firstFieldWithForbiddenType(logger, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
-    valueTypeIsGeneric(logger, ast);
+    valueTypeIsPolytype(logger, ast);
   }
 
   private static void unescapeStringLiterals(Logger logger, Ast ast) {
@@ -191,7 +191,7 @@ public class AnalyzeSemantically {
       }
 
       private boolean isDefinedType(TypeNode type) {
-        return isGenericTypeName(type.name())
+        return isTypeVariableName(type.name())
             || structNames.contains(type.name())
             || imported.types().containsKey(type.name());
       }
@@ -269,7 +269,7 @@ public class AnalyzeSemantically {
       @Override
       public void visitStruct(StructNode struct) {
         String name = struct.name();
-        if (isGenericTypeName(name)) {
+        if (isTypeVariableName(name)) {
           logger.log(parseError(struct.location(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
@@ -294,8 +294,8 @@ public class AnalyzeSemantically {
           }
         }
         for (ItemNode field : fields) {
-          if (isGenericTypeName(field.typeNode().name())) {
-            logger.log(parseError(field, "Struct field cannot have a generic type."));
+          if (isTypeVariableName(field.typeNode().name())) {
+            logger.log(parseError(field, "Struct field type cannot have type variable."));
           }
         }
       }
@@ -308,11 +308,11 @@ public class AnalyzeSemantically {
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
         if (func.declaresType()
-            && func.typeNode().isGeneric()
+            && func.typeNode().isPolytype()
             && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          logger.log(parseError(func.typeNode(), "Undefined generic type "
+          logger.log(parseError(func.typeNode(), "Undefined type variable "
               + func.typeNode().coreType().q()
-              + ". Only generic types used in declaration of function parameters "
+              + ". Only type variables used in declaration of function parameters "
               + "can be used here."));
         }
       }
@@ -326,13 +326,13 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void valueTypeIsGeneric(Logger logger, Ast ast) {
+  private static void valueTypeIsPolytype(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitValue(ValueNode value) {
         super.visitValue(value);
-        if (value.declaresType() && value.typeNode().isGeneric()) {
-          logger.log(parseError(value.typeNode(), "Value cannot have generic type."));
+        if (value.declaresType() && value.typeNode().isPolytype()) {
+          logger.log(parseError(value.typeNode(), "Value type cannot have type variables."));
         }
       }
     }.visitAst(ast);
