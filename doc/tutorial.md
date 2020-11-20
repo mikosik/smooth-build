@@ -123,9 +123,9 @@ It is also strongly typed so it is not possible to assign value of one type
 to value of different type unless the former is convertible to the latter.
 First let's discuss all types available in smooth language.
 
-#### Basic types
-Basic types are predefined by the language (cannot be defined by user).
-Currently, we have following basic types: String, Bool, Blob, Nothing.
+#### Base types
+Base types are predefined by the language (cannot be defined by user).
+Currently, we have following base types: String, Bool, Blob, Nothing.
 Others (like Int) will be added before smooth reaches version 1.0.
 
 ##### _Bool_

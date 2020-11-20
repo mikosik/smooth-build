@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * This class is immutable.
  */
-public class NothingType extends BasicType {
+public class NothingType extends BaseType {
   public NothingType() {
     super(TypeNames.NOTHING);
   }

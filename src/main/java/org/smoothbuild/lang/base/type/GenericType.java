@@ -1,13 +1,15 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.Location.internal;
+
 import java.util.Map;
 
 /**
  * This class is immutable.
  */
-public class GenericType extends BasicType {
+public class GenericType extends Type {
   public GenericType(String name) {
-    super(name, true);
+    super(name, internal(), true);
   }
 
   @Override

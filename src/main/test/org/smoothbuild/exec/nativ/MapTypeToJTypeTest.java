@@ -20,7 +20,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import java.util.stream.Stream;
 
@@ -39,7 +39,7 @@ import org.smoothbuild.lang.base.type.Type;
 public class MapTypeToJTypeTest {
   @Test
   public void verify_all_types_are_tested_below() {
-    assertThat(BASIC_TYPES.size())
+    assertThat(BASE_TYPES.size())
         .isEqualTo(4);
   }
 

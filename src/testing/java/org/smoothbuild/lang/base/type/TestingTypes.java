@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
@@ -52,20 +52,20 @@ public class TestingTypes {
   public static final ArrayType ARRAY2_B = array(ARRAY_B);
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
-      .addAll(BASIC_TYPES)
+      .addAll(BASE_TYPES)
       .add(PERSON)
       .add(A)
       .build();
 
   public static final ImmutableList<Type> ELEMENTARY_NON_STRUCT_TYPES =
       ImmutableList.<Type>builder()
-          .addAll(BASIC_TYPES)
+          .addAll(BASE_TYPES)
           .add(A)
           .build();
 
   public static final ImmutableList<Type> ELEMENTARY_NON_GENERIC_TYPES =
       ImmutableList.<Type>builder()
-          .addAll(BASIC_TYPES)
+          .addAll(BASE_TYPES)
           .add(PERSON)
           .build();
 }

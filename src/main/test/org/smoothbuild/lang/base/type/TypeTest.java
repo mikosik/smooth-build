@@ -29,7 +29,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.lang.base.type.Types.BASIC_TYPES;
+import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
@@ -58,8 +58,8 @@ public class TypeTest {
   private static final Location LOCATION = internal();
 
   @Test
-  public void verify_all_basic_types_are_tested() {
-    assertThat(BASIC_TYPES)
+  public void verify_all_base_types_are_tested() {
+    assertThat(BASE_TYPES)
         .hasSize(4);
   }
 

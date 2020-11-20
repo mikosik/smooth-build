@@ -23,7 +23,7 @@ public class CorruptedSpecTest extends AbstractCorruptedTestCase {
     public void creating_string_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
-       * to save basic spec in HashedDb.
+       * to save base spec in HashedDb.
        */
       Hash hash = hash(
           hash(STRING.marker())
@@ -87,7 +87,7 @@ public class CorruptedSpecTest extends AbstractCorruptedTestCase {
   }
 
   @Nested
-  class basic_spec {
+  class base_spec {
     @Test
     public void blob_with_additional_child_causes_exception() throws Exception {
       do_test_with_additional_child(BLOB);

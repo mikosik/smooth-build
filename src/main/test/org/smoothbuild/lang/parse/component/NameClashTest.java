@@ -193,7 +193,7 @@ public class NameClashTest {
     @Nested
     class imported {
       @Test
-      public void basic_type() {
+      public void base_type() {
         module("""
                String {}
                """)

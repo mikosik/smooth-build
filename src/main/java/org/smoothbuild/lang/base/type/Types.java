@@ -16,9 +16,9 @@ public class Types {
   private static final StringType STRING = new StringType();
 
   /**
-   * Basic types available in smooth language.
+   * Base types available in smooth language.
    */
-  public static final ImmutableSet<Type> BASIC_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
+  public static final ImmutableSet<Type> BASE_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
 
   public static GenericType generic(String name) {
     checkArgument(isGenericTypeName(name), "Illegal generic type name '%s'", name);

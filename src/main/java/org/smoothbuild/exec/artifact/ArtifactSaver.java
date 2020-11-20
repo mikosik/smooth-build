@@ -42,7 +42,7 @@ public class ArtifactSaver {
     } else if (object.spec().equals(objectFactory.fileSpec())) {
       return saveFile(artifactPath, (Tuple) object);
     } else {
-      return saveBasicObject(artifactPath, object);
+      return saveBaseObject(artifactPath, object);
     }
   }
 
@@ -106,7 +106,7 @@ public class ArtifactSaver {
             + delimiter + list);
   }
 
-  private Path saveBasicObject(Path artifactPath, Obj object) throws IOException {
+  private Path saveBaseObject(Path artifactPath, Obj object) throws IOException {
     Path targetPath = targetPath(object);
     fileSystem.delete(artifactPath);
     fileSystem.createLink(artifactPath, targetPath);
