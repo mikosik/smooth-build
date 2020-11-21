@@ -44,7 +44,7 @@ public class InferTypeVariablesTest {
 
   public static List<Arguments> inferTypeVariables_test_data() {
     return List.of(
-        // concrete types
+        // monotype
         arguments(
             list(STRING),
             list(STRING),
