@@ -6,6 +6,7 @@ import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeNames;
@@ -13,7 +14,7 @@ import org.smoothbuild.lang.base.type.TypeVariable;
 
 public class MapTypeToJType {
   public static Class<? extends Obj> mapTypeToJType(Type type) {
-    if (type.isArray()) {
+    if (type instanceof ArrayType) {
       return Array.class;
     } else if (type instanceof TypeVariable) {
       return Obj.class;

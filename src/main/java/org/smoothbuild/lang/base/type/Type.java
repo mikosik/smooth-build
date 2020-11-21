@@ -39,10 +39,6 @@ public abstract class Type implements Named {
     return "`" + name + "`";
   }
 
-  public boolean isArray() {
-    return false;
-  }
-
   public boolean isNothing() {
     return this == nothing();
   }
