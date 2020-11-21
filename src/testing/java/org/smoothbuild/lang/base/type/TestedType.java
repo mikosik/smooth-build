@@ -84,7 +84,7 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       .add(A)
       .build();
 
-  public static final List<TestedType> CONCRETE_TESTED_TYPES = ImmutableList.of(
+  public static final List<TestedType> TESTED_MONOTYPES = ImmutableList.of(
       BLOB,
       BOOL,
       NOTHING,
@@ -109,7 +109,7 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
   );
 
   public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
-      .addAll(CONCRETE_TESTED_TYPES)
+      .addAll(TESTED_MONOTYPES)
       .add(A)
       .add(a(A))
       .add(a(a(A)))

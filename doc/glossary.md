@@ -6,8 +6,9 @@
  - __array type__ - Type that represents sequence of elements. Each element has the same type which is known as array's element type.
  - __base type__ - Unstructured type that is built into language. Base type cannot be declared by
   user. They include `Blob`, `Bool`, `Nothing` `String`.
- - __concrete type__ - Type that does not have type variables.
  - __default value__ - Value assigned to function parameter upon its declaration. Function can be called without specifying such parameter in which case default value will be assigned to it.
+ - __monotype__ - Type that does not have type variables.
+ - __polytype__ - Type that has type variables.
  - __shadowing__ - Making some function inaccessible inside other function body by declaring latter with a parameter that has name equal to former function name.
  - __standard library__ - modules with types and functions provided by default by smooth installation.
  - __struct type__ - Type that is constructed by combining other types which are called its fields.

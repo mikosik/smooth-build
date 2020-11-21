@@ -4,12 +4,12 @@ import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.base.type.TestedType.A;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.CONCRETE_TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
@@ -111,8 +111,8 @@ public class TypeTest {
   @Nested
   class value {
     @ParameterizedTest
-    @ArgumentsSource(TestedConcreteTypes.class)
-    public void can_declare_concrete_type(TestedType type) {
+    @ArgumentsSource(TestedMonotypes.class)
+    public void can_declare_monotype(TestedType type) {
       module(unlines(
           type.declarationsAsString(),
           type.name() + " myValue;"))
@@ -161,8 +161,8 @@ public class TypeTest {
     @Nested
     class result {
       @ParameterizedTest
-      @ArgumentsSource(TestedConcreteTypes.class)
-      public void can_declare_concrete_result_type(TestedType type) {
+      @ArgumentsSource(TestedMonotypes.class)
+      public void can_declare_monotype_result(TestedType type) {
         module(unlines(
             type.declarationsAsString(),
             type.name() + " myFunction();"))
@@ -285,7 +285,7 @@ public class TypeTest {
 
     @ParameterizedTest
     @ArgumentsSource(FieldAllowedTypes.class)
-    public void non_first_field_can_declare_concrete_type(TestedType testedType) {
+    public void non_first_field_can_declare_monotype(TestedType testedType) {
       module(unlines(
           testedType.declarationsAsString(),
           "MyStruct {",
@@ -339,10 +339,10 @@ public class TypeTest {
     }
   }
 
-  private static class TestedConcreteTypes implements ArgumentsProvider {
+  private static class TestedMonotypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return CONCRETE_TESTED_TYPES.stream()
+      return TESTED_MONOTYPES.stream()
           .map(Arguments::of);
     }
   }
@@ -359,7 +359,7 @@ public class TypeTest {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       List<TestedType> forbidden = firstFieldForbiddenTypes();
-      return CONCRETE_TESTED_TYPES
+      return TESTED_MONOTYPES
           .stream()
           .filter(not(forbidden::contains))
           .map(Arguments::of);
@@ -399,7 +399,7 @@ public class TypeTest {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
       List<TestedType> forbidden = fieldForbiddenTypes();
-      return CONCRETE_TESTED_TYPES
+      return TESTED_MONOTYPES
           .stream()
           .filter(not(forbidden::contains))
           .map(Arguments::of);
