@@ -8,7 +8,7 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
 public enum SpecKind {
-  NOTHING((byte) 1, Obj.class),
+  NOTHING((byte) 1, null),
   TUPLE((byte) 2, Tuple.class),
   ARRAY((byte) 3, Array.class),
   BLOB((byte) 4, Blob.class),
