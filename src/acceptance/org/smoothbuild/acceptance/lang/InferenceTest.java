@@ -38,7 +38,7 @@ public class InferenceTest extends AcceptanceTestCase {
       throws Exception {
     createUserModule("""
             pair(A first, A second) = [ first, second ];
-            result = pair(first = [], second = [ [ 'aaa' ] ]);
+            result = pair(first = [], second = [ [ "aaa" ] ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -66,7 +66,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Concat.class);
     createUserModule("""
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ 'aaa' ], second = [ 'bbb' ]);
+            result = testConcat(first = [ "aaa" ], second = [ "bbb" ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -79,7 +79,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Concat.class);
     createUserModule("""
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ 'aaa' ], second = []);
+            result = testConcat(first = [ "aaa" ], second = []);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -92,7 +92,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Concat.class);
     createUserModule("""
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [], second = [ 'bbb' ]);
+            result = testConcat(first = [], second = [ "bbb" ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -105,7 +105,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Concat.class);
     createUserModule("""
             [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ [] ], second = [ 'bbb' ]);
+            result = testConcat(first = [ [] ], second = [ "bbb" ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
@@ -119,7 +119,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createUserModule("""
             [A] testConcat([A] first, [A] second);
             wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
-            result = wrapper(f = [], s = [ [ 'aaa' ] ]);
+            result = wrapper(f = [], s = [ [ "aaa" ] ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -134,7 +134,7 @@ public class InferenceTest extends AcceptanceTestCase {
             [A] testConcat([A] first, [A] second);
             [A] testConcatW([A] f, [A] s) = testConcat(first = f, second = s);
             wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
-            result = wrapper(f = [], s = [ [ 'aaa' ] ]);
+            result = wrapper(f = [], s = [ [ "aaa" ] ]);
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -149,7 +149,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Append.class);
     createUserModule("""
             [A] testAppend([A] array, A element);
-            result = testAppend(array = [], element = 'bbb');
+            result = testAppend(array = [], element = "bbb");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -162,7 +162,7 @@ public class InferenceTest extends AcceptanceTestCase {
     createNativeJar(Append.class);
     createUserModule("""
             [A] testAppend([A] array, A element);
-            result = testAppend(array = [ 'aaa' ], element = 'bbb');
+            result = testAppend(array = [ "aaa" ], element = "bbb");
             """);
     runSmoothBuild("result");
     assertFinishedWithSuccess();
@@ -196,7 +196,7 @@ public class InferenceTest extends AcceptanceTestCase {
             StringStruct {
               String value
             }
-            result = testAppend(array = [ [] ], element = stringStruct('bbb'));
+            result = testAppend(array = [ [] ], element = stringStruct("bbb"));
             """);
     runSmoothBuild("result");
     assertFinishedWithError();
