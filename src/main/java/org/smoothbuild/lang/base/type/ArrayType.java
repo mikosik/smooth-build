@@ -24,11 +24,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public boolean isArray() {
-    return true;
-  }
-
-  @Override
   public Type mapTypeVariables(Map<TypeVariable, Type> map) {
     return new ArrayType(elemType.mapTypeVariables(map));
   }

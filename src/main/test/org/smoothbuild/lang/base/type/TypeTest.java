@@ -167,23 +167,6 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isArray_test_data")
-  public void isArray(Type type, boolean expected) {
-    assertThat(type.isArray())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> isArray_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(type, false));
-      result.add(arguments(array(type), true));
-      result.add(arguments(array(array(type)), true));
-    }
-    return result;
-  }
-
-  @ParameterizedTest
   @MethodSource("isAssignableFrom_test_data")
   public void isAssignableFrom(TestedAssignmentSpec spec) {
     assertThat(spec.target.type().isAssignableFrom(spec.source.type()))
