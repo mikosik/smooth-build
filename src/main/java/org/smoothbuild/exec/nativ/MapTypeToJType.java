@@ -9,12 +9,13 @@ import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeNames;
+import org.smoothbuild.lang.base.type.TypeVariable;
 
 public class MapTypeToJType {
   public static Class<? extends Obj> mapTypeToJType(Type type) {
     if (type.isArray()) {
       return Array.class;
-    } else if (type.isPolytype()) {
+    } else if (type instanceof TypeVariable) {
       return Obj.class;
     } else if (type instanceof StructType) {
       return Tuple.class;
