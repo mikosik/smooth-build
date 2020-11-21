@@ -28,7 +28,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Bool;
-import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 
 import com.google.common.testing.EqualsTester;
@@ -89,7 +88,7 @@ public class SpecTest {
         arguments(BOOL, Bool.class),
         arguments(STRING, Str.class),
         arguments(BLOB, Blob.class),
-        arguments(NOTHING, Obj.class),
+        arguments(NOTHING, null),
         arguments(ARRAY_BOOL, Array.class),
         arguments(ARRAY_STRING, Array.class),
         arguments(ARRAY_BLOB, Array.class),
