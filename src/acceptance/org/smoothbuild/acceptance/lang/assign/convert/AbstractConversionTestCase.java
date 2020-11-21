@@ -21,12 +21,12 @@ import org.smoothbuild.lang.base.type.TestedType;
 public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
   @ParameterizedTest
   @MethodSource("conversion_test_specs")
-  public void conversion_is_verified(ConversionTestSpec testSpec) throws IOException {
+  public void conversion_is_verified(TestedAssignment testSpec) throws IOException {
     createNativeJar(ReportError.class);
     createUserModule(createTestScript(testSpec));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    Object expected = testSpec.expectedResult;
+    Object expected = testSpec.source.value();
 
     // Currently it is not possible to read artifact of a struct so we are not testing that.
     if (expected != null) {
@@ -35,9 +35,9 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
     }
   }
 
-  protected abstract String createTestScript(ConversionTestSpec testSpec);
+  protected abstract String createTestScript(TestedAssignment testSpec);
 
-  public static Stream<ConversionTestSpec> conversion_test_specs() {
+  private static Stream<TestedAssignment> conversion_test_specs() {
     return Stream.of(
         // Blob
         allowedConversion(BLOB, BLOB),
@@ -45,7 +45,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         // Bool
         allowedConversion(BOOL, BOOL),
 
-        // Nothing
+        // No test cases for Nothing - it cannot be converted to anything.
 
         // String
         allowedConversion(STRING, STRING),
@@ -103,21 +103,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
     );
   }
 
-  public static ConversionTestSpec allowedConversion(TestedType target, TestedType source) {
-    return new ConversionTestSpec(target, source, source.value());
-  }
-
-  public static ConversionTestSpec allowedConversion(TestedType target, TestedType source,
-      Object expectedResult) {
-    return new ConversionTestSpec(target, source, expectedResult);
-  }
-
-  public static class ConversionTestSpec extends TestedAssignment {
-    public final Object expectedResult;
-
-    private ConversionTestSpec(TestedType target, TestedType source, Object expectedResult) {
-      super(target, source);
-      this.expectedResult = expectedResult;
-    }
+  public static TestedAssignment allowedConversion(TestedType target, TestedType source) {
+    return new TestedAssignment(target, source);
   }
 }
