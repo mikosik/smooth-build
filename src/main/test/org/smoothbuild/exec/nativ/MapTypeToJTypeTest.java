@@ -44,13 +44,13 @@ public class MapTypeToJTypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("map_type_to_jtype_test_data")
-  public void map_type_to_jtype(Type type, Class<?> clazz) {
+  @MethodSource("mapTypeToJType_test_data")
+  public void map_type_to_jType(Type type, Class<?> clazz) {
     assertThat(MapTypeToJType.mapTypeToJType(type))
         .isEqualTo(clazz);
   }
 
-  private static Stream<Arguments> map_type_to_jtype_test_data() {
+  private static Stream<Arguments> mapTypeToJType_test_data() {
     return Stream.of(
         arguments(A, Obj.class),
         arguments(BLOB, Blob.class),
