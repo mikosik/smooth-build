@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BLOB;
@@ -31,7 +30,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
-import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
@@ -47,16 +45,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.TestingItem;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
 
 public class TypeTest {
-  private static final Location LOCATION = internal();
-
   @Test
   public void verify_all_base_types_are_tested() {
     assertThat(BASE_TYPES)
@@ -614,9 +609,9 @@ public class TypeTest {
         .addAll(ELEMENTARY_TYPES)
         .add(B)
         .add(struct("MyStruct", loc(), list()))
-        .add(struct("MyStruct", loc(), list(field("field"))))
-        .add(struct("MyStruct2", loc(), list(field("field"))))
-        .add(struct("MyStruct", loc(), list(field("field2"))))
+        .add(struct("MyStruct", loc(), list(TestingItem.field("field"))))
+        .add(struct("MyStruct2", loc(), list(TestingItem.field("field"))))
+        .add(struct("MyStruct", loc(), list(TestingItem.field("field2"))))
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);
@@ -624,9 +619,5 @@ public class TypeTest {
       equalsTester.addEqualityGroup(array(array(type)), array(array(type)));
     }
     equalsTester.testEquals();
-  }
-
-  private Item field(String name) {
-    return new Item(string(), name, Optional.empty(), LOCATION);
   }
 }
