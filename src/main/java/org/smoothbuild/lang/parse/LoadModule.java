@@ -4,9 +4,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
+import static org.smoothbuild.lang.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.lang.parse.EvaluableLoader.loadFunction;
 import static org.smoothbuild.lang.parse.EvaluableLoader.loadValue;
-import static org.smoothbuild.lang.parse.InferTypesAndParamAssignments.inferTypesAndParamAssignment;
+import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
@@ -46,11 +47,15 @@ public class LoadModule {
     if (result.hasProblems()) {
       return result;
     }
+    assignArgsToParams(ast, imports, result);
+    if (result.hasProblems()) {
+      return result;
+    }
     Ast sortedAst = ast.sortedByDependencies(result);
     if (result.hasProblems()) {
       return result;
     }
-    inferTypesAndParamAssignment(sortedAst, imports, result);
+    inferTypes(sortedAst, imports, result);
     if (result.hasProblems()) {
       return result;
     }

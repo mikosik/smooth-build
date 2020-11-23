@@ -23,6 +23,7 @@ import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
@@ -150,12 +151,12 @@ public class EvaluableLoader {
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
       ImmutableList<Item> parameters = callable.parameters();
       Builder<Expression> resultBuilder = ImmutableList.builder();
-      List<ExprNode> assignedArgs = call.assignedArgs();
+      List<ArgNode> assignedArgs = call.assignedArgs();
       for (int i = 0; i < parameters.size(); i++) {
         if (assignedArgs.get(i) == null) {
           resultBuilder.add(parameters.get(i).defaultValue().get());
         } else {
-          resultBuilder.add(createExpression(assignedArgs.get(i)));
+          resultBuilder.add(createExpression(assignedArgs.get(i).expr()));
         }
       }
       return resultBuilder.build();
