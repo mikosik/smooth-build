@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.typeVariable;
-import static org.smoothbuild.lang.parse.InferCallTypeAndParamAssignment.inferCallTypeAndParamAssignment;
+import static org.smoothbuild.lang.parse.InferCallTypes.inferCallTypes;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.List;
@@ -41,9 +41,8 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
-public class InferTypesAndParamAssignments {
-  public static void inferTypesAndParamAssignment(
-      Ast ast, Definitions imported, Logger logger) {
+public class InferTypes {
+  public static void inferTypes(Ast ast, Definitions imported, Logger logger) {
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -228,7 +227,7 @@ public class InferTypesAndParamAssignments {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypeAndParamAssignment(call, imported, ast.callablesMap(), logger);
+        inferCallTypes(call, imported, ast.callablesMap(), logger);
       }
 
       @Override
