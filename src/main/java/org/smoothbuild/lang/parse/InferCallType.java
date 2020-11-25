@@ -1,8 +1,6 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.Arrays.asList;
-import static java.util.Optional.empty;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -14,6 +12,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
@@ -23,34 +22,37 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 
 public class InferCallType {
-  public static void inferCallType(CallNode call, Context context, Logger logger) {
-    call.setType(empty());
+  public static ValueWithLogs<Type> inferCallType(CallNode call, Context context) {
+    ValueWithLogs<Type> result = new ValueWithLogs<>();
     List<ItemSignature> parameters = context.parametersOf(call.calledName());
     List<ArgNode> assignedArgs = call.assignedArgs();
-    List<Log> typeErrors = findIllegalTypeAssignmentErrors(call, assignedArgs, parameters);
-    if (!typeErrors.isEmpty()) {
-      logger.log(typeErrors);
-      return;
+    findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, result);
+    if (result.hasProblems()) {
+      return result;
     }
     List<Assigned> assigned = assignedList(parameters, assignedArgs);
     if (!allAssignedHaveInferredType(assigned)) {
-      return;
+      return result;
     }
-    var typeVariablesMap = typeVariablesMap(call, logger, parameters, assigned);
+    var typeVariablesMap = typeVariablesMap(call, result, parameters, assigned);
     if (typeVariablesMap == null) {
-      return;
+      return result;
     }
-    call.setType(context.resultTypeOf(call.calledName())
-        .map(t -> t.mapTypeVariables(typeVariablesMap)));
+    Optional<Type> type = context.resultTypeOf(call.calledName());
+    if (type.isPresent()) {
+      result.setValue(type.get().mapTypeVariables(typeVariablesMap));
+    }
+    return result;
   }
 
-  private static List<Log> findIllegalTypeAssignmentErrors(
-      CallNode call, List<ArgNode> assignedList, List<ItemSignature> parameters) {
-    return range(0, assignedList.size())
+  private static void findIllegalTypeAssignmentErrors(
+      CallNode call, List<ArgNode> assignedList, List<ItemSignature> parameters,
+      Logger result) {
+    range(0, assignedList.size())
         .filter(i -> assignedList.get(i) != null)
         .filter(i -> !isAssignable(parameters.get(i), assignedList.get(i)))
         .mapToObj(i -> illegalAssignmentError(call, parameters.get(i), assignedList.get(i)))
-        .collect(toList());
+        .forEach(result::log);
   }
 
   private static boolean isAssignable(ItemSignature parameter, ArgNode arg) {

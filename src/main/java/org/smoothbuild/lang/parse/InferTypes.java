@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.StructType;
@@ -227,7 +229,9 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallType(call, new Context(imported, ast.callablesMap()), logger);
+        ValueWithLogs<Type> type = inferCallType(call, new Context(imported, ast.callablesMap()));
+        call.setType(ofNullable(type.value()));
+        logger.log(type.logs());
       }
 
       @Override
