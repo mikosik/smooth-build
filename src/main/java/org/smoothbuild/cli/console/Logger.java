@@ -11,7 +11,7 @@ public interface Logger {
 
   public void info(String message);
 
-  public default void log(Iterable<? extends Log> logs) {
+  public default void logAll(Iterable<? extends Log> logs) {
     logs.forEach(this::log);
   }
 }

@@ -233,7 +233,7 @@ public class InferTypes {
         super.visitCall(call);
         Maybe<Type> type = inferCallType(call, new Context(imported, ast.callablesMap()));
         call.setType(ofNullable(type.value()));
-        logger.log(type.logs());
+        logger.logAll(type.logs());
       }
 
       @Override
