@@ -37,28 +37,35 @@ public class LoadModule {
       Definitions imports, ModuleLocation moduleLocation, String sourceCode) {
     var result = new Maybe<Definitions>();
 
-    ModuleContext moduleContext = parseModule(moduleLocation, result, sourceCode);
+    Maybe<ModuleContext> moduleContext = parseModule(moduleLocation, sourceCode);
+    result.addLogs(moduleContext);
+    if (result.hasProblems()) {
+      return new Maybe<>(moduleContext);
+    }
+
+    Ast ast = fromParseTree(moduleLocation, moduleContext.value());
+    result.log(analyzeSemantically(imports, ast));
     if (result.hasProblems()) {
       return result;
     }
 
-    Ast ast = fromParseTree(moduleLocation, moduleContext);
-    analyzeSemantically(imports, ast, result);
+    result.log(assignArgsToParams(ast, imports));
     if (result.hasProblems()) {
       return result;
     }
-    assignArgsToParams(ast, imports, result);
+
+    Maybe<Ast> maybeSortedAst = ast.sortedByDependencies();
+    result.log(maybeSortedAst.logs());
     if (result.hasProblems()) {
       return result;
     }
-    Ast sortedAst = ast.sortedByDependencies(result);
+    Ast sortedAst = maybeSortedAst.value();
+
+    result.log(inferTypes(sortedAst, imports));
     if (result.hasProblems()) {
       return result;
     }
-    inferTypes(sortedAst, imports, result);
-    if (result.hasProblems()) {
-      return result;
-    }
+
     var declaredFunctions = loadCodes(imports, sortedAst);
     var declaredTypes = sortedAst.structs().stream()
         .map(structNode -> structNode.type().get())
