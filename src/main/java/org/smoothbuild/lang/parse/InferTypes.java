@@ -227,7 +227,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypes(call, imported, ast.callablesMap(), logger);
+        inferCallTypes(call, new Context(imported, ast.callablesMap()), logger);
       }
 
       @Override
