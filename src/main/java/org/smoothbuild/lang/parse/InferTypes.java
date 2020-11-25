@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.typeVariable;
-import static org.smoothbuild.lang.parse.InferCallTypes.inferCallTypes;
+import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.List;
@@ -227,7 +227,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        inferCallTypes(call, new Context(imported, ast.callablesMap()), logger);
+        inferCallType(call, new Context(imported, ast.callablesMap()), logger);
       }
 
       @Override
