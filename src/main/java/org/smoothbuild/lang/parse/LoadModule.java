@@ -14,7 +14,7 @@ import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 import java.util.HashMap;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
-import org.smoothbuild.cli.console.ValueWithLogs;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Definitions;
@@ -33,9 +33,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
-  public static ValueWithLogs<Definitions> loadModule(
+  public static Maybe<Definitions> loadModule(
       Definitions imports, ModuleLocation moduleLocation, String sourceCode) {
-    var result = new ValueWithLogs<Definitions>();
+    var result = new Maybe<Definitions>();
 
     ModuleContext moduleContext = parseModule(moduleLocation, result, sourceCode);
     if (result.hasProblems()) {

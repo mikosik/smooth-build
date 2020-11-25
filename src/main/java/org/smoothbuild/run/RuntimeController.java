@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 
 import org.smoothbuild.SmoothConstants;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleLocation;
@@ -49,7 +49,7 @@ public class RuntimeController {
 
     Definitions allDefinitions = Definitions.baseTypeDefinitions();
     for (ModuleLocation module : MODULES) {
-      ValueWithLogs<Definitions> definitions = load(module, allDefinitions);
+      Maybe<Definitions> definitions = load(module, allDefinitions);
       reporter.report(module.path().toString(), definitions.logs());
       if (reporter.isProblemReported()) {
         reporter.printSummary();
@@ -63,17 +63,17 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private ValueWithLogs<Definitions> load(ModuleLocation info, Definitions imports) {
+  private Maybe<Definitions> load(ModuleLocation info, Definitions imports) {
     var sourceCode = readFileContent(fullPathResolver.resolve(info));
     if (sourceCode.hasProblems()) {
-      return new ValueWithLogs<>(sourceCode);
+      return new Maybe<>(sourceCode);
     } else {
       return loadModule(imports, info, sourceCode.value());
     }
   }
 
-  private static ValueWithLogs<String> readFileContent(Path filePath) {
-    var result = new ValueWithLogs<String>();
+  private static Maybe<String> readFileContent(Path filePath) {
+    var result = new Maybe<String>();
     try {
       result.setValue(readFileContentImpl(filePath));
     } catch (NoSuchFileException e) {

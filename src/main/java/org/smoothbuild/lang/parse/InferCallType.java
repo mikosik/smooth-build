@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.ValueWithLogs;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
@@ -22,8 +22,8 @@ import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 
 public class InferCallType {
-  public static ValueWithLogs<Type> inferCallType(CallNode call, Context context) {
-    ValueWithLogs<Type> result = new ValueWithLogs<>();
+  public static Maybe<Type> inferCallType(CallNode call, Context context) {
+    Maybe<Type> result = new Maybe<>();
     List<ItemSignature> parameters = context.parametersOf(call.calledName());
     List<ArgNode> assignedArgs = call.assignedArgs();
     findIllegalTypeAssignmentErrors(call, assignedArgs, parameters, result);
