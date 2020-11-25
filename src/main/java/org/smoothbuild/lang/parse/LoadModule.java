@@ -55,7 +55,7 @@ public class LoadModule {
     }
 
     Maybe<Ast> maybeSortedAst = ast.sortedByDependencies();
-    result.logAll(maybeSortedAst.logs());
+    result.logAllFrom(maybeSortedAst);
     if (result.hasProblems()) {
       return result;
     }
