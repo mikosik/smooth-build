@@ -22,7 +22,7 @@ public class CallableNode extends EvaluableNode {
     return params;
   }
 
-  public List<ItemSignature> parameterSignatures() {
+  public ImmutableList<ItemSignature> parameterSignatures() {
     return map(params(), itemNode -> itemNode.itemSignature().get());
   }
 }

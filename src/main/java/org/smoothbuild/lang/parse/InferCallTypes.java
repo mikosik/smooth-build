@@ -14,25 +14,18 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeVariable;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 
-import com.google.common.collect.ImmutableMap;
-
 public class InferCallTypes {
-  public static void inferCallTypes(CallNode call, Definitions imported,
-      ImmutableMap<String, CallableNode> callables, Logger logger) {
+  public static void inferCallTypes(CallNode call, Context context, Logger logger) {
     call.setType(empty());
-    List<ItemSignature> parameters = parameters(call, imported, callables);
+    List<ItemSignature> parameters = context.parametersOf(call.calledName());
     List<ArgNode> assignedArgs = call.assignedArgs();
     List<Log> typeErrors = findIllegalTypeAssignmentErrors(call, assignedArgs, parameters);
     if (!typeErrors.isEmpty()) {
@@ -47,22 +40,8 @@ public class InferCallTypes {
     if (typeVariablesMap == null) {
       return;
     }
-    call.setType(callableResultType(call, imported, callables)
+    call.setType(context.resultTypeOf(call.calledName())
         .map(t -> t.mapTypeVariables(typeVariablesMap)));
-  }
-
-  private static List<ItemSignature> parameters(
-      CallNode call, Definitions imported, ImmutableMap<String, CallableNode> callables) {
-    String name = call.calledName();
-    Evaluable evaluable = imported.evaluables().get(name);
-    if (evaluable != null) {
-      return ((Callable) evaluable).parameterSignatures();
-    }
-    CallableNode node = callables.get(name);
-    if (node != null) {
-      return node.parameterSignatures();
-    }
-    throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
   }
 
   private static List<Log> findIllegalTypeAssignmentErrors(
@@ -127,20 +106,6 @@ public class InferCallTypes {
               + call.calledName() + "`."));
       return null;
     }
-  }
-
-  private static Optional<Type> callableResultType(CallNode call, Definitions imported,
-      ImmutableMap<String, CallableNode> callables) {
-    String name = call.calledName();
-    Callable callable = (Callable) imported.evaluables().get(name);
-    if (callable != null) {
-      return Optional.of(callable.resultType());
-    }
-    CallableNode node = callables.get(name);
-    if (node != null) {
-      return node.type();
-    }
-    throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
   }
 
   public static record Assigned(Optional<Type> type, ExprNode expr, Location location) {

@@ -1,0 +1,47 @@
+package org.smoothbuild.lang.parse;
+
+import java.util.Optional;
+
+import org.smoothbuild.lang.base.Callable;
+import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.type.ItemSignature;
+import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.parse.ast.CallableNode;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+public class Context {
+  private final Definitions imported;
+  private final ImmutableMap<String, CallableNode> callables;
+
+  public Context(Definitions imported, ImmutableMap<String, CallableNode> callables) {
+    this.imported = imported;
+    this.callables = callables;
+  }
+
+  public ImmutableList<ItemSignature> parametersOf(String name) {
+    Evaluable evaluable = imported.evaluables().get(name);
+    if (evaluable != null) {
+      return ((Callable) evaluable).parameterSignatures();
+    }
+    CallableNode node = callables.get(name);
+    if (node != null) {
+      return node.parameterSignatures();
+    }
+    throw new RuntimeException("Couldn't find `" + name + "` function.");
+  }
+
+  public Optional<Type> resultTypeOf(String name) {
+    Callable callable = (Callable) imported.evaluables().get(name);
+    if (callable != null) {
+      return Optional.of(callable.resultType());
+    }
+    CallableNode node = callables.get(name);
+    if (node != null) {
+      return node.type();
+    }
+    throw new RuntimeException("Couldn't find `" + name + "` function.");
+  }
+}
