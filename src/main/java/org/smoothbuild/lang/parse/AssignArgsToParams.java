@@ -36,7 +36,7 @@ public class AssignArgsToParams {
         super.visitCall(call);
         List<AParam> parameters = parameters(call, imported, ast.callablesMap());
         var assigned = assigned(call, parameters);
-        logger.logAll(assigned.logs());
+        logger.logAllFrom(assigned);
         if (!assigned.hasProblems()) {
           call.setAssignedArgs(assigned.value());
         }
