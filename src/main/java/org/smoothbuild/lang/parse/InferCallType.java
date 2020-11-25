@@ -22,8 +22,8 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 
-public class InferCallTypes {
-  public static void inferCallTypes(CallNode call, Context context, Logger logger) {
+public class InferCallType {
+  public static void inferCallType(CallNode call, Context context, Logger logger) {
     call.setType(empty());
     List<ItemSignature> parameters = context.parametersOf(call.calledName());
     List<ArgNode> assignedArgs = call.assignedArgs();
