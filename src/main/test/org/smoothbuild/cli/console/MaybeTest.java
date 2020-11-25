@@ -10,12 +10,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class ValueWithLogsTest {
-  private ValueWithLogs<String> value;
+public class MaybeTest {
+  private Maybe<String> value;
 
   @BeforeEach
   public void before() {
-    value = new ValueWithLogs<>();
+    value = new Maybe<>();
   }
 
   @Nested
@@ -122,8 +122,8 @@ public class ValueWithLogsTest {
         .inOrder();
   }
 
-  private static ValueWithLogs<Object> valueWith(Log log) {
-    ValueWithLogs<Object> otherValue = new ValueWithLogs<>();
+  private static Maybe<Object> valueWith(Log log) {
+    Maybe<Object> otherValue = new Maybe<>();
     otherValue.log(log);
     return otherValue;
   }

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.ValueWithLogs;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.StructType;
@@ -229,7 +229,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        ValueWithLogs<Type> type = inferCallType(call, new Context(imported, ast.callablesMap()));
+        Maybe<Type> type = inferCallType(call, new Context(imported, ast.callablesMap()));
         call.setType(ofNullable(type.value()));
         logger.log(type.logs());
       }

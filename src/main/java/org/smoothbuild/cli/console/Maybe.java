@@ -9,21 +9,21 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValueWithLogs<V> implements Logger {
+public class Maybe<V> implements Logger {
   private V value;
   private final List<Log> logs;
   private boolean hasProblems;
 
-  public ValueWithLogs() {
+  public Maybe() {
     this.value = null;
     this.logs = new ArrayList<>();
     this.hasProblems = false;
   }
 
-  public <T> ValueWithLogs(ValueWithLogs<T> valueWithLogs) {
+  public <T> Maybe(Maybe<T> maybe) {
     this.value = null;
-    this.logs = new ArrayList<>(valueWithLogs.logs);
-    this.hasProblems = valueWithLogs.hasProblems;
+    this.logs = new ArrayList<>(maybe.logs);
+    this.hasProblems = maybe.hasProblems;
   }
 
   public void setValue(V value) {
@@ -54,9 +54,9 @@ public class ValueWithLogs<V> implements Logger {
     log(new Log(INFO, message));
   }
 
-  public <T> void addLogs(ValueWithLogs<T> valueWithLogs) {
-    logs.addAll(valueWithLogs.logs);
-    hasProblems = hasProblems || valueWithLogs.hasProblems;
+  public <T> void addLogs(Maybe<T> maybe) {
+    logs.addAll(maybe.logs);
+    hasProblems = hasProblems || maybe.hasProblems;
   }
 
   @Override

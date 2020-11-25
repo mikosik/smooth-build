@@ -11,7 +11,7 @@ import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
 import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.ValueWithLogs;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
 import org.smoothbuild.lang.base.ModuleLocation;
@@ -24,7 +24,7 @@ public class TestModuleLoader {
   private final String sourceCode;
   private ModuleLocation moduleLocation;
   private Definitions imports;
-  private ValueWithLogs<Definitions> module;
+  private Maybe<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
     return new TestModuleLoader(sourceCode, moduleLocation(), baseTypeDefinitions());
@@ -106,7 +106,7 @@ public class TestModuleLoader {
         .containsExactlyElementsIn(errors);
   }
 
-  private ValueWithLogs<Definitions> load() {
+  private Maybe<Definitions> load() {
     return LoadModule.loadModule(imports, moduleLocation, sourceCode);
   }
 

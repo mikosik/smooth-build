@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.ValueWithLogs;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
@@ -63,9 +63,9 @@ public class AssignArgsToParams {
     throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
   }
 
-  private static ValueWithLogs<List<ArgNode>> assigned(
+  private static Maybe<List<ArgNode>> assigned(
       CallNode call, List<AParam> parameters) {
-    var result = new ValueWithLogs<List<ArgNode>>();
+    var result = new Maybe<List<ArgNode>>();
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
 
