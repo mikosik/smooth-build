@@ -38,7 +38,7 @@ public class LoadModule {
     var result = new Maybe<Definitions>();
 
     Maybe<ModuleContext> moduleContext = parseModule(moduleLocation, sourceCode);
-    result.addLogs(moduleContext);
+    result.logAllFrom(moduleContext);
     if (result.hasProblems()) {
       return new Maybe<>(moduleContext);
     }
