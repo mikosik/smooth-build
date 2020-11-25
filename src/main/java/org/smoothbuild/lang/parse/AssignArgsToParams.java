@@ -36,7 +36,7 @@ public class AssignArgsToParams {
         super.visitCall(call);
         List<AParam> parameters = parameters(call, imported, ast.callablesMap());
         var assigned = assigned(call, parameters);
-        logger.log(assigned.logs());
+        logger.logAll(assigned.logs());
         if (!assigned.hasProblems()) {
           call.setAssignedArgs(assigned.value());
         }
@@ -71,16 +71,17 @@ public class AssignArgsToParams {
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
 
-    result.log(findPositionalArgumentAfterNamedArgumentError(call));
-    result.log(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
-    result.log(findUnknownParameterNameErrors(call, nameToIndex));
-    result.log(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
+    result.logAll(findPositionalArgumentAfterNamedArgumentError(call));
+    result.logAll(findTooManyPositionalArgumentsError(call, positionalArguments, parameters));
+    result.logAll(findUnknownParameterNameErrors(call, nameToIndex));
+    result.logAll(findDuplicateAssignmentErrors(call, positionalArguments, parameters));
     if (result.hasProblems()) {
       return result;
     }
 
     List<ArgNode> assignedArgs = assignedArgs(call, parameters, nameToIndex);
-    result.log(findUnassignedParametersWithoutDefaultValuesErrors(call, assignedArgs, parameters));
+    result.logAll(findUnassignedParametersWithoutDefaultValuesErrors(
+        call, assignedArgs, parameters));
     result.setValue(assignedArgs);
     return result;
   }

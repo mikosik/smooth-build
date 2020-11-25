@@ -44,24 +44,24 @@ public class LoadModule {
     }
 
     Ast ast = fromParseTree(moduleLocation, moduleContext.value());
-    result.log(analyzeSemantically(imports, ast));
+    result.logAll(analyzeSemantically(imports, ast));
     if (result.hasProblems()) {
       return result;
     }
 
-    result.log(assignArgsToParams(ast, imports));
+    result.logAll(assignArgsToParams(ast, imports));
     if (result.hasProblems()) {
       return result;
     }
 
     Maybe<Ast> maybeSortedAst = ast.sortedByDependencies();
-    result.log(maybeSortedAst.logs());
+    result.logAll(maybeSortedAst.logs());
     if (result.hasProblems()) {
       return result;
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    result.log(inferTypes(sortedAst, imports));
+    result.logAll(inferTypes(sortedAst, imports));
     if (result.hasProblems()) {
       return result;
     }
