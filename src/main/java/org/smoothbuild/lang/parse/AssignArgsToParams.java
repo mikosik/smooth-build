@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Evaluable;
@@ -28,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class AssignArgsToParams {
   public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
-    var logger = new Maybe<Void>();
+    var logger = new MemoryLogger();
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {

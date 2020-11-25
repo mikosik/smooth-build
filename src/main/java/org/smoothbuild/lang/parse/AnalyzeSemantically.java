@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
-import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Location;
@@ -43,7 +43,7 @@ import org.smoothbuild.util.UnescapingFailedException;
 
 public class AnalyzeSemantically {
   public static List<Log> analyzeSemantically(Definitions imported, Ast ast) {
-    var logger = new Maybe<Void>();
+    var logger = new MemoryLogger();
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
     resolveReferences(logger, imported, ast);
