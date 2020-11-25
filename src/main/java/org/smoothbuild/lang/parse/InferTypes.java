@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
+import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.StructType;
@@ -45,7 +46,7 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 
 public class InferTypes {
   public static List<Log> inferTypes(Ast ast, Definitions imported) {
-    Maybe<Void> logger = new Maybe<>();
+    var logger = new MemoryLogger();
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
