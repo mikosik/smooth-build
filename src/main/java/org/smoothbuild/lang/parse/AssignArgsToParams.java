@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
+import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.ValueWithLogs;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
@@ -27,15 +28,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class AssignArgsToParams {
-  public static void assignArgsToParams(Ast ast, Definitions imported,
-      ValueWithLogs<Definitions> result) {
+  public static void assignArgsToParams(Ast ast, Definitions imported, Logger logger) {
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
         List<AParam> parameters = parameters(call, imported, ast.callablesMap());
-        ValueWithLogs<List<ArgNode>> assigned = assigned(call, parameters);
-        result.addLogs(assigned);
+        var assigned = assigned(call, parameters);
+        logger.log(assigned.logs());
         if (!assigned.hasProblems()) {
           call.setAssignedArgs(assigned.value());
         }
