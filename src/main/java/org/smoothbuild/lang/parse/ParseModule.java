@@ -23,12 +23,14 @@ import org.smoothbuild.antlr.lang.SmoothLexer;
 import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModuleLocation;
 
 public class ParseModule {
-  public static ModuleContext parseModule(ModuleLocation info, Logger logger, String sourceCode) {
-    ErrorListener errorListener = new ErrorListener(info, logger);
+  public static Maybe<ModuleContext> parseModule(ModuleLocation info, String sourceCode) {
+    var result = new Maybe<ModuleContext>();
+    ErrorListener errorListener = new ErrorListener(info, result);
     SmoothLexer lexer = new SmoothLexer(CharStreams.fromString(sourceCode));
     lexer.removeErrorListeners();
     lexer.addErrorListener(errorListener);
@@ -36,7 +38,8 @@ public class ParseModule {
     SmoothParser parser = new SmoothParser(new CommonTokenStream(lexer));
     parser.removeErrorListeners();
     parser.addErrorListener(errorListener);
-    return parser.module();
+    result.setValue(parser.module());
+    return result;
   }
 
   public static class ErrorListener implements ANTLRErrorListener {

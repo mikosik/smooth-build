@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.util.graph.GraphEdge;
 import org.smoothbuild.util.graph.GraphNode;
@@ -104,18 +105,20 @@ public class Ast {
     return builder.build();
   }
 
-  public Ast sortedByDependencies(Logger logger) {
+  public Maybe<Ast> sortedByDependencies() {
+    var result = new Maybe<Ast>();
     var sortedTypes = sortStructsByDependencies();
     if (sortedTypes.sorted() == null) {
-      reportCycle(logger,"Type hierarchy" , sortedTypes.cycle());
-      return null;
+      reportCycle(result,"Type hierarchy" , sortedTypes.cycle());
+      return result;
     }
     var sortedEvaluables = sortEvaluablesByDependencies();
     if (sortedEvaluables.sorted() == null) {
-      reportCycle(logger, "Dependency graph", sortedEvaluables.cycle());
-      return null;
+      reportCycle(result, "Dependency graph", sortedEvaluables.cycle());
+      return result;
     }
-    return new Ast(sortedTypes.valuesReversed(), sortedEvaluables.valuesReversed());
+    result.setValue(new Ast(sortedTypes.valuesReversed(), sortedEvaluables.valuesReversed()));
+    return result;
   }
 
   private TopologicalSortingResult<String, EvaluableNode, Location> sortEvaluablesByDependencies() {

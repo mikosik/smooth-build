@@ -17,7 +17,7 @@ import static org.smoothbuild.lang.parse.ParseError.parseError;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
@@ -44,7 +44,8 @@ import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
 public class InferTypes {
-  public static void inferTypes(Ast ast, Definitions imported, Logger logger) {
+  public static List<Log> inferTypes(Ast ast, Definitions imported) {
+    Maybe<Void> logger = new Maybe<>();
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -258,5 +259,6 @@ public class InferTypes {
         blob.setType(blob());
       }
     }.visitAst(ast);
+    return logger.logs();
   }
 }

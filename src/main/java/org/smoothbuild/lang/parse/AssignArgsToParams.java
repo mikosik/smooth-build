@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
@@ -28,7 +27,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class AssignArgsToParams {
-  public static void assignArgsToParams(Ast ast, Definitions imported, Logger logger) {
+  public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
+    var logger = new Maybe<Void>();
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {
@@ -41,6 +41,7 @@ public class AssignArgsToParams {
         }
       }
     }.visitAst(ast);
+    return logger.logs();
   }
 
   public static ImmutableList<AParam> parameters(

@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
+import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Location;
@@ -41,7 +42,8 @@ import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
 
 public class AnalyzeSemantically {
-  public static void analyzeSemantically(Definitions imported, Ast ast, Logger logger) {
+  public static List<Log> analyzeSemantically(Definitions imported, Ast ast) {
+    var logger = new Maybe<Void>();
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
     resolveReferences(logger, imported, ast);
@@ -53,6 +55,7 @@ public class AnalyzeSemantically {
     firstFieldWithForbiddenType(logger, ast);
     functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
     valueTypeIsPolytype(logger, ast);
+    return logger.logs();
   }
 
   private static void unescapeStringLiterals(Logger logger, Ast ast) {
