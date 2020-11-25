@@ -95,9 +95,6 @@ public class InferCallType {
         assignedTypes.add(assigned.get(i).type().get());
       }
     }
-    if (assignedTypes.contains(null)) {
-      return null;
-    }
     try {
       return inferTypeVariables(parameterTypes, assignedTypes);
     } catch (IllegalArgumentException e) {
