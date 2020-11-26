@@ -40,7 +40,7 @@ public class LoadModule {
     Maybe<ModuleContext> moduleContext = parseModule(moduleLocation, sourceCode);
     result.logAllFrom(moduleContext);
     if (result.hasProblems()) {
-      return new Maybe<>(moduleContext);
+      return Maybe.withLogsFrom(moduleContext);
     }
 
     Ast ast = fromParseTree(moduleLocation, moduleContext.value());
