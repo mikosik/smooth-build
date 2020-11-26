@@ -66,7 +66,7 @@ public class RuntimeController {
   private Maybe<Definitions> load(ModuleLocation info, Definitions imports) {
     var sourceCode = readFileContent(fullPathResolver.resolve(info));
     if (sourceCode.hasProblems()) {
-      return new Maybe<>(sourceCode);
+      return  Maybe.withLogsFrom(sourceCode);
     } else {
       return loadModule(imports, info, sourceCode.value());
     }
