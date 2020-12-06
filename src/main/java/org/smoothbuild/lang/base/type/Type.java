@@ -60,7 +60,7 @@ public abstract class Type implements Named {
     return isAssignableFrom(type);
   }
 
-  public Optional<Type> leastUpperBound(Type that) {
+  public Optional<Type> joinWith(Type that) {
     if (that instanceof NothingType) {
       return Optional.of(this);
     } else if (this.equals(that)){
@@ -70,7 +70,7 @@ public abstract class Type implements Named {
     }
   }
 
-  public Optional<Type> greatestLowerBound(Type that) {
+  public Optional<Type> meetWith(Type that) {
     if (this.equals(that)){
       return Optional.of(this);
     } else {

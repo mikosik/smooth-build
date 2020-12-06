@@ -17,7 +17,7 @@ public class InferTypeVariables {
         Type value = entry.getValue();
         if (builder.containsKey(key)) {
           Type previous = builder.get(key);
-          Optional<Type> leastUpperBound = previous.leastUpperBound(value);
+          Optional<Type> leastUpperBound = previous.joinWith(value);
           builder.put(key,
               leastUpperBound.orElseThrow(() -> noLeastUpperBoundException(value, previous)));
         } else {
