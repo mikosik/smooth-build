@@ -56,22 +56,22 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Optional<Type> leastUpperBound(Type that) {
+  public Optional<Type> joinWith(Type that) {
     if (that instanceof NothingType) {
       return Optional.of(this);
     } else if (that instanceof ArrayType thatArray) {
-      return elemType.leastUpperBound(thatArray.elemType).map(ArrayType::new);
+      return elemType.joinWith(thatArray.elemType).map(ArrayType::new);
     } else {
       return Optional.empty();
     }
   }
 
   @Override
-  public Optional<Type> greatestLowerBound(Type that) {
+  public Optional<Type> meetWith(Type that) {
     if (that instanceof NothingType) {
       return Optional.of(that);
     } else if (that instanceof ArrayType thatArray) {
-      return elemType.greatestLowerBound(thatArray.elemType).map(ArrayType::new);
+      return elemType.meetWith(thatArray.elemType).map(ArrayType::new);
     } else {
       return Optional.of(nothing());
     }

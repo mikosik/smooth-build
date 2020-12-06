@@ -11,7 +11,7 @@ public class NothingType extends BaseType {
   }
 
   @Override
-  public Optional<Type> leastUpperBound(Type that) {
+  public Optional<Type> joinWith(Type that) {
     return Optional.of(that);
   }
 
