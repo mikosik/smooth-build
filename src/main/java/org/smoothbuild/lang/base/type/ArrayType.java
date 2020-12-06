@@ -32,7 +32,7 @@ public class ArrayType extends Type {
   public Map<TypeVariable, Type> inferTypeVariables(Type source) {
     if (source instanceof ArrayType arrayType) {
       return elemType.inferTypeVariables(arrayType.elemType());
-    } else if (source.isNothing()) {
+    } else if (source instanceof NothingType) {
       return elemType.inferTypeVariables(source);
     } else {
       throw new IllegalArgumentException("Cannot assign " + q() + " from " + source.q());
@@ -41,7 +41,7 @@ public class ArrayType extends Type {
 
   @Override
   public boolean isAssignableFrom(Type type) {
-    return type.isNothing()
+    return (type instanceof NothingType)
         || (type instanceof ArrayType thatArrayType && elemTypesAreAssignable(thatArrayType));
   }
 
@@ -51,13 +51,13 @@ public class ArrayType extends Type {
 
   @Override
   public boolean isParamAssignableFrom(Type type) {
-    return type.isNothing() || (type instanceof ArrayType thatArrayType
+    return (type instanceof NothingType) || (type instanceof ArrayType thatArrayType
         && elemType.isParamAssignableFrom(thatArrayType.elemType));
   }
 
   @Override
   public Optional<Type> leastUpperBound(Type that) {
-    if (that.isNothing()) {
+    if (that instanceof NothingType) {
       return Optional.of(this);
     } else if (that instanceof ArrayType thatArray) {
       return elemType.leastUpperBound(thatArray.elemType).map(ArrayType::new);
@@ -68,7 +68,7 @@ public class ArrayType extends Type {
 
   @Override
   public Optional<Type> greatestLowerBound(Type that) {
-    if (that.isNothing()) {
+    if (that instanceof NothingType) {
       return Optional.of(that);
     } else if (that instanceof ArrayType thatArray) {
       return elemType.greatestLowerBound(thatArray.elemType).map(ArrayType::new);

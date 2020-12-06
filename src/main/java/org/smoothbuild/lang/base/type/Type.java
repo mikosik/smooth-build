@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Types.nothing;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,10 +37,6 @@ public abstract class Type implements Named {
     return "`" + name + "`";
   }
 
-  public boolean isNothing() {
-    return this == nothing();
-  }
-
   /**
    * @return true iff this type contains type variable(s).
    */
@@ -59,7 +53,7 @@ public abstract class Type implements Named {
   }
 
   public boolean isAssignableFrom(Type type) {
-    return type.isNothing() || this.equals(type);
+    return (type instanceof NothingType) || this.equals(type);
   }
 
   public boolean isParamAssignableFrom(Type type) {
@@ -67,7 +61,7 @@ public abstract class Type implements Named {
   }
 
   public Optional<Type> leastUpperBound(Type that) {
-    if (that.isNothing()) {
+    if (that instanceof NothingType) {
       return Optional.of(this);
     } else if (this.equals(that)){
       return Optional.of(this);
