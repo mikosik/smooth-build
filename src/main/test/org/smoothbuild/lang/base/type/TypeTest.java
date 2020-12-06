@@ -539,7 +539,7 @@ public class TypeTest {
   public static List<Arguments> inferTypeVariables_test_data() {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
-      if (type.isNothing()) {
+      if (type instanceof NothingType) {
         result.add(arguments(A, NOTHING, Map.of(A, NOTHING)));
         result.add(arguments(A, array(NOTHING), Map.of(A, array(NOTHING))));
         result.add(arguments(A, array(array(NOTHING)), Map.of(A, array(array(NOTHING)))));
