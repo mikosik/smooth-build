@@ -101,19 +101,6 @@ public class InferenceTest extends AcceptanceTestCase {
   }
 
   @Test
-  public void infer_actual_type_of_parameters_in_concat_function_4() throws Exception {
-    createNativeJar(Concat.class);
-    createUserModule("""
-            [A] testConcat([A] first, [A] second);
-            result = testConcat(first = [ [] ], second = [ "bbb" ]);
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(2,
-        "Cannot infer actual type(s) for parameter(s) in call to `testConcat`.");
-  }
-
-  @Test
   public void infer_actual_type_of_parameters_in_concat_function_5() throws Exception {
     createNativeJar(Concat.class);
     createUserModule("""
@@ -186,21 +173,5 @@ public class InferenceTest extends AcceptanceTestCase {
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
         .isEqualTo(list("bbb"));
-  }
-
-  @Test
-  public void infer_actual_type_of_parameters_in_append_function_4() throws Exception {
-    createNativeJar(Append.class);
-    createUserModule("""
-            [A] testAppend([A] array, A element);
-            StringStruct {
-              String value
-            }
-            result = testAppend(array = [ [] ], element = stringStruct("bbb"));
-            """);
-    runSmoothBuild("result");
-    assertFinishedWithError();
-    assertSysOutContainsParseError(5,
-        "Cannot infer actual type(s) for parameter(s) in call to `testAppend`.");
   }
 }

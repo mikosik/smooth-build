@@ -216,7 +216,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     return elements
         .stream()
         .map(Task::type)
-        .reduce((type, type2) -> type.joinWith(type2).get())
+        .reduce(Type::joinWith)
         .map(Types::array)
         .orElse(arrayType);
   }

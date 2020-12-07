@@ -1,5 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
+import static com.google.common.collect.Sets.union;
+import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
@@ -7,15 +9,14 @@ import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
+import org.smoothbuild.lang.base.type.Type;
 
 public class AssignmentTest {
   @ParameterizedTest
@@ -119,46 +120,23 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("array_element_assignment_test_specs")
   public void array_literal_element_types_is_assignable_to_common_super_type(
-      TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
+      TestedType type1, TestedType type2, Type joinType) {
     String sourceCode = unlines(
-        "result = [" + source.literal() + ", " + target.literal() + "];",
-        testSpec.declarations(),
+        "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
+        join("\n", union(type1.declarations(), type2.declarations())),
         "Bool true;");
-    if (testSpec.allowed) {
-      module(sourceCode)
-          .loadsSuccessfully();
-    } else {
-      module(sourceCode)
-          .loadsWithError(1,
-              "Array cannot contain elements of incompatible types. First element has type " +
-               source.q() + " while element at index 1 has type " + target.q() + ".");
-    }
+    module(sourceCode)
+        .loadsSuccessfully();
   }
 
-  /**
-   * Type compatibility between two array literal elements is satisfied when type of any of those
-   * elements is assignable to the type of the other.
-   */
-  public static Stream<TestedAssignmentSpec> array_element_assignment_test_specs() {
-    var map = new HashMap<TestedType, Map<TestedType, TestedAssignmentSpec>>();
-    without_polytypes_test_specs().forEach(spec -> {
-      map.computeIfAbsent(spec.source, testedType -> new HashMap<>());
-      map.get(spec.source).put(spec.target, spec);
-    });
-
-    var result = new ArrayList<TestedAssignmentSpec>();
-    without_polytypes_test_specs().forEach(spec -> {
-      TestedAssignmentSpec reversed = map.get(spec.target).get(spec.source);
-      boolean reversedAllowed = reversed != null && reversed.allowed;
-      if (!spec.allowed && reversedAllowed) {
-        result.add(new TestedAssignmentSpec(spec, true));
-      } else {
-        result.add(spec);
+  public static List<Arguments> array_element_assignment_test_specs() {
+    ArrayList<Arguments> result = new ArrayList<>();
+    for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
+      for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
+        result.add(Arguments.of(type1, type2, type1.type().joinWith(type2.type())));
       }
-    });
-    return result.stream();
+    }
+    return result;
   }
 
   private static List<TestedAssignmentSpec> without_polytypes_test_specs() {

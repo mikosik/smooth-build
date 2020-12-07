@@ -3,6 +3,7 @@ package org.smoothbuild.exec.nativ;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BOOL;
@@ -40,7 +41,7 @@ public class MapTypeToJTypeTest {
   @Test
   public void verify_all_types_are_tested_below() {
     assertThat(BASE_TYPES.size())
-        .isEqualTo(4);
+        .isEqualTo(5);
   }
 
   @ParameterizedTest
@@ -53,6 +54,7 @@ public class MapTypeToJTypeTest {
   private static Stream<Arguments> mapTypeToJType_test_data() {
     return Stream.of(
         arguments(A, Obj.class),
+        arguments(ANY, Obj.class),
         arguments(BLOB, Blob.class),
         arguments(BOOL, Bool.class),
         arguments(NOTHING, Obj.class),

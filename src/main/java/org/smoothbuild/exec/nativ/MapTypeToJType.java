@@ -22,6 +22,7 @@ public class MapTypeToJType {
       return Tuple.class;
     } else {
       return switch (type.name()) {
+        case TypeNames.ANY -> Obj.class;
         case TypeNames.BLOB -> Blob.class;
         case TypeNames.BOOL -> Bool.class;
         case TypeNames.NOTHING -> Obj.class;

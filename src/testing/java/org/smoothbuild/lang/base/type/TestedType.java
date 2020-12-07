@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static java.lang.String.join;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static okio.ByteString.encodeString;
+import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
 import static org.smoothbuild.lang.base.type.Types.nothing;
@@ -33,6 +34,12 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       typeVariable("B"),
       null,
       null
+  );
+  public static final TestedType ANY = new TestedType(
+      any(),
+      "createAny()",
+      null,
+      Set.of("Any createAny() = \"abc\";")
   );
   public static final TestedType BLOB = new TestedType(
       blob(),
@@ -72,19 +79,8 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       null,
       Set.of("Person{ String name }"));
 
-  public static final ImmutableList<TestedType> ELEMENTARY_TYPES =
-      ImmutableList.<TestedType>builder()
-      .add(BLOB)
-      .add(BOOL)
-      .add(NOTHING)
-      .add(STRING)
-      .add(STRUCT_WITH_BLOB)
-      .add(STRUCT_WITH_BOOL)
-      .add(STRUCT_WITH_STRING)
-      .add(A)
-      .build();
-
-  public static final List<TestedType> TESTED_MONOTYPES = ImmutableList.of(
+  public static final ImmutableList<TestedType> ELEMENTARY_TYPES = ImmutableList.of(
+      ANY,
       BLOB,
       BOOL,
       NOTHING,
@@ -92,6 +88,18 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       STRUCT_WITH_BLOB,
       STRUCT_WITH_BOOL,
       STRUCT_WITH_STRING,
+      A);
+
+  public static final List<TestedType> TESTED_MONOTYPES = ImmutableList.of(
+      ANY,
+      BLOB,
+      BOOL,
+      NOTHING,
+      STRING,
+      STRUCT_WITH_BLOB,
+      STRUCT_WITH_BOOL,
+      STRUCT_WITH_STRING,
+      a(ANY),
       a(BLOB),
       a(BOOL),
       a(NOTHING),
@@ -99,6 +107,7 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       a(STRUCT_WITH_BLOB),
       a(STRUCT_WITH_BOOL),
       a(STRUCT_WITH_STRING),
+      a(a(ANY)),
       a(a(BLOB)),
       a(a(BOOL)),
       a(a(NOTHING)),

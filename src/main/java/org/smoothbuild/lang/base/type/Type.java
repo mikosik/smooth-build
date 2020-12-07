@@ -1,8 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.Types.any;
+import static org.smoothbuild.lang.base.type.Types.nothing;
+
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
@@ -60,21 +62,23 @@ public abstract class Type implements Named {
     return isAssignableFrom(type);
   }
 
-  public Optional<Type> joinWith(Type that) {
+  public Type joinWith(Type that) {
     if (that instanceof NothingType) {
-      return Optional.of(this);
+      return this;
     } else if (this.equals(that)){
-      return Optional.of(this);
+      return this;
     } else {
-      return Optional.empty();
+      return any();
     }
   }
 
-  public Optional<Type> meetWith(Type that) {
+  public Type meetWith(Type that) {
     if (this.equals(that)){
-      return Optional.of(this);
+      return this;
+    } else if (that instanceof AnyType) {
+      return this;
     } else {
-      return Optional.of(Types.nothing());
+      return nothing();
     }
   }
 

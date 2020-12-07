@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -16,21 +15,13 @@ public class InferTypeVariables {
         TypeVariable key = entry.getKey();
         Type value = entry.getValue();
         if (builder.containsKey(key)) {
-          Type previous = builder.get(key);
-          Optional<Type> leastUpperBound = previous.joinWith(value);
-          builder.put(key,
-              leastUpperBound.orElseThrow(() -> noLeastUpperBoundException(value, previous)));
+          Type leastUpperBound = builder.get(key).joinWith(value);
+          builder.put(key, leastUpperBound);
         } else {
           builder.put(key, value);
         }
       }
     }
     return ImmutableMap.copyOf(builder);
-  }
-
-  private static <T extends Type> IllegalArgumentException noLeastUpperBoundException(
-      T type1, T type2) {
-    return new IllegalArgumentException("Types " + type2.name() + ", " + type1.name()
-        + " don't have least-upper-bound.");
   }
 }

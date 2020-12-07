@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.base.type.TestedType.A;
+import static org.smoothbuild.lang.base.type.TestedType.ANY;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
@@ -377,17 +378,18 @@ public class TypeTest {
     return List.of(
         A,
         NOTHING,
-        a(NOTHING),
-        a(a(NOTHING)),
-        a(STRING),
-        a(a(STRING)),
+        a(ANY),
         a(BLOB),
         a(BOOL),
+        a(NOTHING),
+        a(STRING),
         a(STRUCT_WITH_BLOB),
         a(STRUCT_WITH_BOOL),
         a(STRUCT_WITH_STRING),
+        a(a(ANY)),
         a(a(BLOB)),
         a(a(BOOL)),
+        a(a(NOTHING)),
         a(a(STRING)),
         a(a(STRUCT_WITH_BLOB)),
         a(a(STRUCT_WITH_BOOL)),

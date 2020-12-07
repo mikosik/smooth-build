@@ -3,6 +3,7 @@ package org.smoothbuild.exec.plan;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import org.smoothbuild.db.object.db.ObjectFactory;
+import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
@@ -10,6 +11,7 @@ import org.smoothbuild.db.object.spec.NothingSpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.db.object.spec.TupleSpec;
+import org.smoothbuild.lang.base.type.AnyType;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
@@ -24,6 +26,11 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   public TypeToSpecConverter(ObjectFactory objectFactory) {
     this.objectFactory = objectFactory;
+  }
+
+  @Override
+  public AnySpec visit(AnyType type) {
+    return objectFactory.anySpec();
   }
 
   @Override
