@@ -1,6 +1,7 @@
 package org.smoothbuild.db.object.corrupt;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.smoothbuild.db.object.spec.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.SpecKind.BOOL;
@@ -20,7 +21,7 @@ public class CorruptedSpecTest extends AbstractCorruptedTestCase {
   @Nested
   class learn {
     @Test
-    public void creating_string_spec() throws Exception {
+    public void creating_base_spec() throws Exception {
       /*
        * This test makes sure that other tests in this class use proper scheme
        * to save base spec in HashedDb.
@@ -88,6 +89,11 @@ public class CorruptedSpecTest extends AbstractCorruptedTestCase {
 
   @Nested
   class base_spec {
+    @Test
+    public void any_with_additional_child_causes_exception() throws Exception {
+      do_test_with_additional_child(ANY);
+    }
+
     @Test
     public void blob_with_additional_child_causes_exception() throws Exception {
       do_test_with_additional_child(BLOB);

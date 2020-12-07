@@ -11,6 +11,7 @@ import org.smoothbuild.testing.TestingContext;
 public class SpecStableHashTest extends TestingContext {
   @Test
   public void hashes_of_specs_are_stable() {
+    assertHash(anySpec(), "8aacfde27b33a25ea9797815353fa580f744b3cb");
     assertHash(boolSpec(), "cf1a0a6c0b2bd3fb9bc6dd67c6c2497cf94cdedf");
     assertHash(stringSpec(), "de248ad7b14cbd4e62207297826e21c2aaae36f4");
     assertHash(blobSpec(), "8be891c7170d4d1bbca0ffcb3fce71285c55aee4");
