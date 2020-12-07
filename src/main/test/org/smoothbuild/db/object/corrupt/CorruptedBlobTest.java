@@ -1,5 +1,6 @@
 package org.smoothbuild.db.object.corrupt;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import org.junit.jupiter.api.Test;
@@ -7,8 +8,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.NoSuchDataException;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
-
-import com.google.common.truth.Truth;
 
 import okio.ByteString;
 
@@ -24,7 +23,7 @@ public class CorruptedBlobTest  extends AbstractCorruptedTestCase {
         hash(
             hash(blobSpec()),
             hash(byteString));
-    Truth.assertThat(((Blob) objectDb().get(objectHash)).source().readByteString())
+    assertThat(((Blob) objectDb().get(objectHash)).source().readByteString())
         .isEqualTo(byteString);
   }
 

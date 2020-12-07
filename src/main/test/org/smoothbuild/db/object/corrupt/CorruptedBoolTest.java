@@ -1,5 +1,6 @@
 package org.smoothbuild.db.object.corrupt;
 
+import static com.google.common.truth.Truth.assertThat;
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -16,8 +17,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Bool;
 import org.smoothbuild.db.object.db.CannotDecodeObjectException;
 
-import com.google.common.truth.Truth;
-
 import okio.ByteString;
 
 public class CorruptedBoolTest extends AbstractCorruptedTestCase {
@@ -32,7 +31,7 @@ public class CorruptedBoolTest extends AbstractCorruptedTestCase {
         hash(
             hash(boolSpec()),
             hash(value));
-    Truth.assertThat(((Bool) objectDb().get(objectHash)).jValue())
+    assertThat(((Bool) objectDb().get(objectHash)).jValue())
         .isEqualTo(value);
   }
 

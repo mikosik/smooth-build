@@ -21,7 +21,7 @@ import okio.ByteString;
 
 public class CorruptedObjectTest extends AbstractCorruptedTestCase {
   @Test
-  public void learning_test_create_any_value() throws Exception {
+  public void learning_test_create_some_value() throws Exception {
     /*
      * This test makes sure that other tests in this class use proper scheme to save smooth value
      * in HashedDb.

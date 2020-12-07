@@ -4,6 +4,7 @@ import static com.google.common.collect.Streams.stream;
 import static java.util.Objects.requireNonNullElse;
 import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.db.object.db.Helpers.wrapException;
+import static org.smoothbuild.db.object.spec.SpecKind.ANY;
 import static org.smoothbuild.db.object.spec.SpecKind.ARRAY;
 import static org.smoothbuild.db.object.spec.SpecKind.BLOB;
 import static org.smoothbuild.db.object.spec.SpecKind.BOOL;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.hashed.HashedDb;
 import org.smoothbuild.db.hashed.HashedDbException;
+import org.smoothbuild.db.object.base.Any;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Blob;
@@ -29,6 +31,7 @@ import org.smoothbuild.db.object.base.MerkleRoot;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
+import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.BlobSpec;
 import org.smoothbuild.db.object.spec.BoolSpec;
@@ -52,6 +55,7 @@ public class ObjectDb {
    * which is invoked before instance of ObjectDb is returned from factory method.
    */
 
+  private AnySpec anySpec;
   private BoolSpec boolSpec;
   private BlobSpec blobSpec;
   private NothingSpec nothingSpec;
@@ -70,6 +74,7 @@ public class ObjectDb {
 
   private void initialize() {
     try {
+      this.anySpec = new AnySpec(writeBaseSpecRoot(ANY), hashedDb, this);
       this.blobSpec = new BlobSpec(writeBaseSpecRoot(BLOB), hashedDb, this);
       this.boolSpec = new BoolSpec(writeBaseSpecRoot(BOOL), hashedDb, this);
       this.nothingSpec = new NothingSpec(writeBaseSpecRoot(NOTHING), hashedDb, this);
@@ -92,6 +97,10 @@ public class ObjectDb {
 
   public BlobBuilder blobBuilder() {
     return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
+  }
+
+  public Any any(Hash value) {
+    return wrapException(() -> newAny(value));
   }
 
   public Bool bool(boolean value) {
@@ -139,6 +148,10 @@ public class ObjectDb {
     return cacheSpec(wrapException(() -> newArraySpec(elementSpec)));
   }
 
+  public AnySpec anySpec() {
+    return anySpec;
+  }
+
   public BlobSpec blobSpec() {
     return blobSpec;
   }
@@ -182,6 +195,10 @@ public class ObjectDb {
             "It has illegal SpecKind marker = " + marker + ".");
       }
       return switch (specKind) {
+        case ANY -> {
+          assertSize(hash, ANY, hashes, 1);
+          yield anySpec;
+        }
         case BOOL -> {
           assertSize(hash, BOOL, hashes, 1);
           yield boolSpec;
@@ -260,6 +277,10 @@ public class ObjectDb {
     return spec.newJObject(writeRoot(spec, writeArrayData(elements)));
   }
 
+  public Any newAny(Hash wrappedHash) throws HashedDbException {
+    return anySpec.newJObject(writeRoot(anySpec, writeAnyData(wrappedHash)));
+  }
+
   public Blob newBlob(Hash dataHash) throws HashedDbException {
     return blobSpec.newJObject(writeRoot(blobSpec, dataHash));
   }
@@ -303,6 +324,10 @@ public class ObjectDb {
 
   private Hash writeArrayData(Iterable<? extends Obj> elements) throws HashedDbException {
     return writeSequence(elements);
+  }
+
+  private Hash writeAnyData(Hash wrappedHash) throws HashedDbException {
+    return hashedDb.writeHashes(wrappedHash);
   }
 
   private Hash writeBoolData(boolean value) throws HashedDbException {

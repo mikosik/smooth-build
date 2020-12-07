@@ -4,7 +4,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.truth.Truth;
@@ -191,6 +197,18 @@ public class ArrayTest extends TestingContext {
         .build();
     assertThat(objectDbOther().get(array.hash()).hash())
         .isEqualTo(array.hash());
+  }
+
+  @ParameterizedTest
+  @MethodSource("spec_test_data")
+  public void spec(Spec spec) {
+    Array array = arrayBuilder(spec).build();
+    assertThat(array.spec())
+        .isEqualTo(arraySpec(spec));
+  }
+
+  private static List<Spec> spec_test_data() {
+    return TestingSpecs.SPECS_TO_TEST;
   }
 
   @Test
