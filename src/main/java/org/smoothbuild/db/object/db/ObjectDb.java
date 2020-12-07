@@ -99,8 +99,8 @@ public class ObjectDb {
     return wrapException(() -> new BlobBuilder(this, hashedDb.sink()));
   }
 
-  public Any any(Hash value) {
-    return wrapException(() -> newAny(value));
+  public Any any(Hash wrappedHash) {
+    return wrapException(() -> newAny(wrappedHash));
   }
 
   public Bool bool(boolean value) {

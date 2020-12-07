@@ -2,11 +2,9 @@ package org.smoothbuild.lang.base.type;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * This class is immutable.
@@ -56,24 +54,20 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Optional<Type> joinWith(Type that) {
-    if (that instanceof NothingType) {
-      return Optional.of(this);
-    } else if (that instanceof ArrayType thatArray) {
-      return elemType.joinWith(thatArray.elemType).map(ArrayType::new);
+  public Type joinWith(Type that) {
+    if (that instanceof ArrayType thatArray) {
+      return new ArrayType(elemType.joinWith(thatArray.elemType));
     } else {
-      return Optional.empty();
+      return super.joinWith(that);
     }
   }
 
   @Override
-  public Optional<Type> meetWith(Type that) {
-    if (that instanceof NothingType) {
-      return Optional.of(that);
-    } else if (that instanceof ArrayType thatArray) {
-      return elemType.meetWith(thatArray.elemType).map(ArrayType::new);
+  public Type meetWith(Type that) {
+    if (that instanceof ArrayType thatArray) {
+      return new ArrayType(elemType.meetWith(thatArray.elemType));
     } else {
-      return Optional.of(nothing());
+      return super.meetWith(that);
     }
   }
 

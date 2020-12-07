@@ -151,16 +151,6 @@ public class LiteralTest {
     }
 
     @Test
-    public void with_elements_of_incompatible_types() {
-      module("""
-        result = [ "abc", 0x01 ];
-        """)
-          .loadsWithError(1,
-              "Array cannot contain elements of incompatible types. First element has type" +
-                  " `String` while element at index 1 has type `Blob`.");
-    }
-
-    @Test
     public void error_in_first_element_doesnt_suppress_error_in_second_element() {
       module("""
             myFunction() = "abc";

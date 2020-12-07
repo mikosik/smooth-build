@@ -6,6 +6,7 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.spec.AnySpec;
 import org.smoothbuild.db.object.spec.ArraySpec;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
@@ -32,32 +33,36 @@ public class ConvertAlgorithm implements Algorithm {
   @Override
   public Output run(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
-    Obj object = input.objects().get(0);
-    assertThat(!destinationSpec.equals(object.spec()));
-    if (object instanceof Array array) {
-      return new Output(convertArray(nativeApi, array, destinationSpec), nativeApi.messages());
-    }
-    throw new RuntimeException("This should not happen. It means smooth build release is broken.");
+    Obj obj = input.objects().get(0);
+    assertThat(!destinationSpec.equals(obj.spec()));
+    return new Output(convert(destinationSpec, obj, nativeApi), nativeApi.messages());
   }
 
-  private static Obj convertArray(NativeApi nativeApi, Array array, Spec destinationSpec) {
-    Spec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
-    ArrayBuilder builder = nativeApi.factory().arrayBuilder(elemSpec);
-    for (Obj element : array.asIterable(Obj.class)) {
-      if (element instanceof Array arr) {
-        builder.add(convertArray(nativeApi, arr, elemSpec));
-      } else {
-        throw new RuntimeException(
-            "This should not happen. It means smooth build release is broken.");
-      }
+  private static Obj convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {
+    if (destinationSpec instanceof AnySpec) {
+      return nativeApi.factory().any(obj.hash());
+    } else if (obj instanceof Array array) {
+      return convertArray(destinationSpec, array, nativeApi);
     }
-    return builder.build();
+    throw newBuildBrokenException();
+  }
+
+  private static Obj convertArray(Spec destinationSpec, Array array, NativeApi nativeApi) {
+    Spec elemSpec = ((ArraySpec) destinationSpec).elemSpec();
+    ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(elemSpec);
+    for (Obj element : array.asIterable(Obj.class)) {
+      arrayBuilder.add(convert(elemSpec, element, nativeApi));
+    }
+    return arrayBuilder.build();
   }
 
   private static void assertThat(boolean expression) {
     if (!expression) {
-      throw new RuntimeException(
-          "This should not happen. It means smooth build release is broken.");
+      throw newBuildBrokenException();
     }
+  }
+
+  private static RuntimeException newBuildBrokenException() {
+    return new RuntimeException("This should not happen. It means smooth build release is broken.");
   }
 }

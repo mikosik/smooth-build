@@ -215,15 +215,7 @@ public class InferTypes {
           if (type.isEmpty()) {
             return empty();
           }
-          Optional<Type> leastUpperBound = elemType.joinWith(type.get());
-          if (leastUpperBound.isEmpty()) {
-            logger.log(parseError(array,
-                "Array cannot contain elements of incompatible types. "
-                    + "First element has type " + firstType.get().q()
-                    + " while element at index " + i + " has type " + type.get().q() + "."));
-            return empty();
-          }
-          elemType = leastUpperBound.get();
+          elemType = elemType.joinWith(type.get());
         }
         return Optional.of(array(elemType));
       }

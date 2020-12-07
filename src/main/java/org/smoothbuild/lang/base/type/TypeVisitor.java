@@ -1,6 +1,10 @@
 package org.smoothbuild.lang.base.type;
 
 public class TypeVisitor<T> {
+  public T visit(AnyType type) {
+    return null;
+  }
+
   public T visit(BlobType type) {
     return null;
   }

@@ -4,12 +4,14 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_B;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_A;
+import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_B;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_PERSON;
@@ -50,7 +52,47 @@ public class InferTypeVariablesTest {
             list(STRING),
             Map.of()),
 
-        // a <- string
+        // A <- Any
+        arguments(
+            list(A),
+            list(ANY),
+            Map.of(A, ANY)),
+        arguments(
+            list(A),
+            list(ARRAY_ANY),
+            Map.of(A, ARRAY_ANY)),
+        arguments(
+            list(A),
+            list(ARRAY2_STRING),
+            Map.of(A, ARRAY2_STRING)),
+
+        arguments(
+            list(ARRAY_A),
+            list(STRING),
+            null),
+        arguments(
+            list(ARRAY_A),
+            list(ARRAY_STRING),
+            Map.of(A, STRING)),
+        arguments(
+            list(ARRAY_A),
+            list(ARRAY2_STRING),
+            Map.of(A, ARRAY_STRING)),
+
+        arguments(
+            list(ARRAY2_A),
+            list(STRING),
+            null),
+        arguments(
+            list(ARRAY2_A),
+            list(ARRAY_STRING),
+            null),
+        arguments(
+            list(ARRAY2_A),
+            list(ARRAY2_STRING),
+            Map.of(A, STRING)),
+
+        // A <- String
         arguments(
             list(A),
             list(STRING),
@@ -90,7 +132,7 @@ public class InferTypeVariablesTest {
             list(ARRAY2_STRING),
             Map.of(A, STRING)),
 
-        // a <- struct (Person)
+        // A <- struct (Person)
         arguments(
             list(A),
             list(PERSON),
@@ -130,7 +172,7 @@ public class InferTypeVariablesTest {
             list(ARRAY2_PERSON),
             Map.of(A, PERSON)),
 
-        // a <- Nothing
+        // A <- Nothing
 
         arguments(
             list(A),
@@ -171,7 +213,7 @@ public class InferTypeVariablesTest {
             list(ARRAY2_NOTHING),
             Map.of(A, NOTHING)),
 
-        // a <- b
+        // A <- B
 
         arguments(
             list(A),
@@ -212,7 +254,7 @@ public class InferTypeVariablesTest {
             list(ARRAY2_B),
             Map.of(A, B)),
 
-        // a <- Nothing, String; with conversions
+        // A <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
@@ -235,7 +277,7 @@ public class InferTypeVariablesTest {
             list(ARRAY_STRING, NOTHING),
             Map.of(A, ARRAY_STRING)),
 
-        // a <- Nothing, String; with conversions
+        // A <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
@@ -262,7 +304,7 @@ public class InferTypeVariablesTest {
             list(ARRAY_NOTHING, ARRAY2_STRING),
             Map.of(A, ARRAY_STRING)),
 
-        // a <- Nothing, a; with conversions
+        // A <- Nothing, A; with conversions
 
         arguments(
             list(A, A),

@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class Types {
+  private static final AnyType ANY = new AnyType();
   private static final BlobType BLOB = new BlobType();
   private static final BoolType BOOL = new BoolType();
   private static final NothingType NOTHING = new NothingType();
@@ -18,11 +19,21 @@ public class Types {
   /**
    * Base types available in smooth language.
    */
-  public static final ImmutableSet<Type> BASE_TYPES = ImmutableSet.of(BLOB, BOOL, NOTHING, STRING);
+  public static final ImmutableSet<Type> BASE_TYPES = ImmutableSet.of(
+      ANY,
+      BLOB,
+      BOOL,
+      NOTHING,
+      STRING
+  );
 
   public static TypeVariable typeVariable(String name) {
     checkArgument(isTypeVariableName(name), "Illegal type variable name '%s'", name);
     return new TypeVariable(name);
+  }
+
+  public static AnyType any() {
+    return ANY;
   }
 
   public static BlobType blob() {

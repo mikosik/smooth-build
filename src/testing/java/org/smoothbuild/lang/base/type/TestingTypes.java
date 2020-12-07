@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
+import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
@@ -19,6 +20,7 @@ import org.smoothbuild.lang.base.Item;
 import com.google.common.collect.ImmutableList;
 
 public class TestingTypes {
+  public static final AnyType ANY = any();
   public static final BoolType BOOL = bool();
   public static final StringType STRING = string();
   public static final BlobType BLOB = blob();
@@ -33,6 +35,7 @@ public class TestingTypes {
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");
 
+  public static final ArrayType ARRAY_ANY = array(ANY);
   public static final ArrayType ARRAY_BOOL = array(BOOL);
   public static final ArrayType ARRAY_STRING = array(STRING);
   public static final ArrayType ARRAY_BLOB = array(BLOB);
@@ -43,6 +46,7 @@ public class TestingTypes {
   public static final ArrayType ARRAY_A = array(A);
   public static final ArrayType ARRAY_B = array(B);
 
+  public static final ArrayType ARRAY2_ANY = array(ARRAY_ANY);
   public static final ArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
   public static final ArrayType ARRAY2_STRING = array(ARRAY_STRING);
   public static final ArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
