@@ -30,7 +30,7 @@ import org.smoothbuild.lang.base.type.TestedType;
 
 public class TypeTest {
   @Nested
-  class type_declared_below {
+  class _type_declared_below {
     @Test
     public void struct_can_be_used_as_field_type() {
       module("""
