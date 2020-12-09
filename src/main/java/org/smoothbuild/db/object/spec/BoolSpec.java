@@ -18,7 +18,7 @@ public class BoolSpec extends Spec {
   }
 
   @Override
-  public Bool newJObject(MerkleRoot merkleRoot) {
+  public Bool newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Bool(merkleRoot, hashedDb);
   }

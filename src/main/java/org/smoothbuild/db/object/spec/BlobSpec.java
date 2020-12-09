@@ -18,7 +18,7 @@ public class BlobSpec extends Spec {
   }
 
   @Override
-  public Blob newJObject(MerkleRoot merkleRoot) {
+  public Blob newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Blob(merkleRoot, hashedDb);
   }

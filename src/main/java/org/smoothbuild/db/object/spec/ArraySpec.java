@@ -22,7 +22,7 @@ public class ArraySpec extends Spec {
   }
 
   @Override
-  public Array newJObject(MerkleRoot merkleRoot) {
+  public Array newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Array(merkleRoot, objectDb, hashedDb);
   }
