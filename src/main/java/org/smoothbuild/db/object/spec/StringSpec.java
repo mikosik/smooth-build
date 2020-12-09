@@ -18,7 +18,7 @@ public class StringSpec extends Spec {
   }
 
   @Override
-  public Str newJObject(MerkleRoot merkleRoot) {
+  public Str newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Str(merkleRoot, hashedDb);
   }

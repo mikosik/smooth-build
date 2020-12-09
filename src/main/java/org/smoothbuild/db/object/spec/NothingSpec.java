@@ -18,7 +18,7 @@ public class NothingSpec extends Spec {
   }
 
   @Override
-  public Obj newJObject(MerkleRoot merkleRoot) {
+  public Obj newObj(MerkleRoot merkleRoot) {
     throw new ObjectDbException("Cannot create java object for 'NOTHING' spec.");
   }
 }

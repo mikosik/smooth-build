@@ -18,7 +18,7 @@ public class AnySpec extends Spec {
   }
 
   @Override
-  public Any newJObject(MerkleRoot merkleRoot) {
+  public Any newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Any(merkleRoot, hashedDb);
   }

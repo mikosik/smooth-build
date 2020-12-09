@@ -136,7 +136,7 @@ public class ObjectDb {
       Spec spec = getSpecOrChainException(
           hashes.get(0), e -> new CannotDecodeObjectException(hash, e));
       Hash dataHash = hashes.get(1);
-      return spec.newJObject(new MerkleRoot(hash, spec, dataHash));
+      return spec.newObj(new MerkleRoot(hash, spec, dataHash));
     } catch (HashedDbException e) {
       throw new CannotDecodeObjectException(hash, e);
     }
@@ -274,27 +274,27 @@ public class ObjectDb {
 
   public Array newArray(ArraySpec spec, Iterable<? extends Obj> elements)
       throws HashedDbException {
-    return spec.newJObject(writeRoot(spec, writeArrayData(elements)));
+    return spec.newObj(writeRoot(spec, writeArrayData(elements)));
   }
 
   public Any newAny(Hash wrappedHash) throws HashedDbException {
-    return anySpec.newJObject(writeRoot(anySpec, writeAnyData(wrappedHash)));
+    return anySpec.newObj(writeRoot(anySpec, writeAnyData(wrappedHash)));
   }
 
   public Blob newBlob(Hash dataHash) throws HashedDbException {
-    return blobSpec.newJObject(writeRoot(blobSpec, dataHash));
+    return blobSpec.newObj(writeRoot(blobSpec, dataHash));
   }
 
   private Bool newBool(boolean value) throws HashedDbException {
-    return boolSpec.newJObject(writeRoot(boolSpec, writeBoolData(value)));
+    return boolSpec.newObj(writeRoot(boolSpec, writeBoolData(value)));
   }
 
   private Str newString(String string) throws HashedDbException {
-    return stringSpec.newJObject(writeRoot(stringSpec, writeStringData(string)));
+    return stringSpec.newObj(writeRoot(stringSpec, writeStringData(string)));
   }
 
   private Tuple newTuple(TupleSpec spec, List<?extends Obj> objects) throws HashedDbException {
-    return spec.newJObject(writeRoot(spec, writeTupleData(objects)));
+    return spec.newObj(writeRoot(spec, writeTupleData(objects)));
   }
 
   private ArraySpec newArraySpec(Spec elementSpec) throws HashedDbException {

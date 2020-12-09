@@ -24,7 +24,7 @@ public abstract class Spec {
   /**
    * Creates new java instance of Obj represented by merkleRoot.
    */
-  public abstract Obj newJObject(MerkleRoot merkleRoot);
+  public abstract Obj newObj(MerkleRoot merkleRoot);
 
   public Hash hash() {
     return hash;

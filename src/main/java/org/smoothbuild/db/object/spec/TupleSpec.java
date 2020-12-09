@@ -25,7 +25,7 @@ public class TupleSpec extends Spec {
   }
 
   @Override
-  public Tuple newJObject(MerkleRoot merkleRoot) {
+  public Tuple newObj(MerkleRoot merkleRoot) {
     checkArgument(this.equals(merkleRoot.spec()));
     return new Tuple(merkleRoot, objectDb, hashedDb);
   }
