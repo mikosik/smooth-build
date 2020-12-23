@@ -34,6 +34,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.struct;
+import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
+import static org.smoothbuild.lang.base.type.constraint.Side.UPPER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
@@ -191,6 +193,24 @@ public class TypeTest {
 
   public static List<TestedAssignmentSpec> isParamAssignableFrom_test_data() {
     return TestedAssignmentSpec.parameter_assignment_test_specs();
+  }
+
+  @ParameterizedTest
+  @MethodSource("joinWith_test_data")
+  public void mergeWith_upper_direction(Type type1, Type type2, Type expected) {
+    assertThat(type1.mergeWith(type2, UPPER))
+        .isEqualTo(expected);
+    assertThat(type2.mergeWith(type1, UPPER))
+        .isEqualTo(expected);
+  }
+
+  @ParameterizedTest
+  @MethodSource("meetWith_test_data")
+  public void mergeWith_lower_direction(Type type1, Type type2, Type expected) {
+    assertThat(type1.mergeWith(type2, LOWER))
+        .isEqualTo(expected);
+    assertThat(type2.mergeWith(type1, LOWER))
+        .isEqualTo(expected);
   }
 
   @ParameterizedTest
