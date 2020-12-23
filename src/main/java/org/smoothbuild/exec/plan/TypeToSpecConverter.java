@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.type.AnyType;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BlobType;
 import org.smoothbuild.lang.base.type.BoolType;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
@@ -73,5 +74,10 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
       throw new UnsupportedOperationException();
     }
     return objectFactory.arraySpec(type.elemType().visit(this));
+  }
+
+  @Override
+  public Spec visit(FunctionType type) {
+    throw new UnsupportedOperationException("not yet implemented");
   }
 }

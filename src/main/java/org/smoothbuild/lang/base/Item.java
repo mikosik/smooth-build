@@ -1,12 +1,16 @@
 package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.util.Lists.map;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Item is a function parameter or a struct field.
@@ -31,5 +35,9 @@ public record Item(Type type, String name, Optional<Expression> defaultValue) {
 
   private String defaultValueToString() {
     return defaultValue.map(v -> " = " + v.toString()).orElse("");
+  }
+
+  public static ImmutableList<ItemSignature> toItemSignatures(List<Item> items) {
+    return map(items, Item::signature);
   }
 }

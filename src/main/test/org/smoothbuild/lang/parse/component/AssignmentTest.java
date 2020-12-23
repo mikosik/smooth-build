@@ -15,6 +15,8 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Type;
@@ -96,7 +98,7 @@ public class AssignmentTest {
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_test_data() {
-    return parameter_assignment_test_specs();
+    return filterOutFunctions(parameter_assignment_test_specs());
   }
 
   @ParameterizedTest
@@ -141,7 +143,7 @@ public class AssignmentTest {
   }
 
   private static List<TestedAssignmentSpec> without_polytypes_test_specs() {
-    return assignment_without_polytypes_test_specs();
+    return filterOutFunctions(assignment_without_polytypes_test_specs());
   }
 
   public static List<TestedAssignmentSpec> assignment_without_polytypes_test_specs() {
@@ -152,6 +154,23 @@ public class AssignmentTest {
   }
 
   private static List<TestedAssignmentSpec> test_specs() {
-    return assignment_test_specs();
+    return filterOutFunctions(assignment_test_specs());
+  }
+
+  // TODO remove once functions are implemented on language level
+  private static List<TestedAssignmentSpec> filterOutFunctions(List<TestedAssignmentSpec> specs) {
+    return specs
+        .stream()
+        .filter(t -> !isFunctionOrContainsFunction(t.source().type()))
+        .filter(t -> !isFunctionOrContainsFunction(t.target().type()))
+        .collect(toList());
+  }
+
+  private static boolean isFunctionOrContainsFunction(Type type) {
+    return type instanceof FunctionType || containsFunction(type);
+  }
+
+  private static boolean containsFunction(Type type) {
+    return type instanceof ArrayType arrayType && isFunctionOrContainsFunction(arrayType.elemType());
   }
 }

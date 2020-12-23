@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
@@ -19,13 +18,8 @@ public class Constructor extends Callable {
   }
 
   @Override
-  public StructType type() {
-    return (StructType) resultType();
-  }
-
-  @Override
   public Expression createCallExpression(ImmutableList<Expression> arguments, Location location) {
-    return new CallExpression(type(), this, arguments, location);
+    return new CallExpression(resultType(), this, arguments, location);
   }
 
   @Override

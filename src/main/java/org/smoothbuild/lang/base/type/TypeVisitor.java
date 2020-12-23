@@ -32,4 +32,8 @@ public class TypeVisitor<T> {
   public T visit(Variable type) {
     return null;
   }
+
+  public T visit(FunctionType type) {
+    return null;
+  }
 }
