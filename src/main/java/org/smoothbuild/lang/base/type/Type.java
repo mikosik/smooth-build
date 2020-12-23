@@ -3,14 +3,12 @@ package org.smoothbuild.lang.base.type;
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
-import java.util.Map;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.constraint.Constraints;
 import org.smoothbuild.lang.base.type.constraint.Side;
 import org.smoothbuild.lang.parse.ast.Named;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * This class and all its subclasses are immutable.
@@ -47,20 +45,24 @@ public abstract class Type implements Named {
     return isPolytype;
   }
 
-  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
+  public Type mapTypeVariables(Constraints constraints) {
     return this;
   }
 
-  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
-    return ImmutableMap.of();
-  }
-
   public boolean isAssignableFrom(Type type) {
-    return (type instanceof NothingType) || this.equals(type);
+    return isAssignableFrom(type, false);
   }
 
   public boolean isParamAssignableFrom(Type type) {
-    return isAssignableFrom(type);
+    return isAssignableFrom(type, true);
+  }
+
+  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
+    return (type instanceof NothingType) || this.equals(type);
+  }
+
+  public Constraints inferConstraints(Type type, Side side) {
+    return Constraints.empty();
   }
 
   public Type mergeWith(Type that, Side direction) {

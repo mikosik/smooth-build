@@ -3,8 +3,10 @@ package org.smoothbuild.lang.base.type;
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Location.internal;
 
-import java.util.Map;
 import java.util.Objects;
+
+import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.Side;
 
 /**
  * This class is immutable.
@@ -22,35 +24,29 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
-    return new ArrayType(elemType.mapTypeVariables(map));
+  public Type mapTypeVariables(Constraints constraints) {
+    return new ArrayType(elemType.mapTypeVariables(constraints));
   }
 
   @Override
-  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
-    if (source instanceof ArrayType arrayType) {
-      return elemType.inferTypeVariables(arrayType.elemType());
-    } else if (source instanceof NothingType) {
-      return elemType.inferTypeVariables(source);
+  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
+    return (type instanceof NothingType) || isAssignableArray(type, variableRenaming);
+  }
+
+  private boolean isAssignableArray(Type type, boolean variableRenaming) {
+    return type instanceof ArrayType thatArrayType
+        && elemType().isAssignableFrom(thatArrayType.elemType(), variableRenaming);
+  }
+
+  @Override
+  public Constraints inferConstraints(Type type, Side side) {
+    if (type instanceof ArrayType thatArrayType) {
+      return elemType.inferConstraints(thatArrayType.elemType(), side);
+    } else if (type instanceof NothingType) {
+      return elemType.inferConstraints(type, side);
     } else {
-      throw new IllegalArgumentException("Cannot assign " + q() + " from " + source.q());
+      return Constraints.empty();
     }
-  }
-
-  @Override
-  public boolean isAssignableFrom(Type type) {
-    return (type instanceof NothingType)
-        || (type instanceof ArrayType thatArrayType && elemTypesAreAssignable(thatArrayType));
-  }
-
-  private boolean elemTypesAreAssignable(ArrayType thatArrayType) {
-    return elemType().isAssignableFrom(thatArrayType.elemType());
-  }
-
-  @Override
-  public boolean isParamAssignableFrom(Type type) {
-    return (type instanceof NothingType) || (type instanceof ArrayType thatArrayType
-        && elemType.isParamAssignableFrom(thatArrayType.elemType));
   }
 
   @Override

@@ -1,8 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.type.constraint.Bounds.oneSideBound;
+import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 
-import java.util.Map;
+import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.Side;
 
 /**
  * This class is immutable.
@@ -13,18 +16,18 @@ public class TypeVariable extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(Map<TypeVariable, Type> map) {
-    return map.get(this);
+  public Type mapTypeVariables(Constraints constraints) {
+    return constraints.boundsMap().get(this).get(LOWER);
   }
 
   @Override
-  public Map<TypeVariable, Type> inferTypeVariables(Type source) {
-    return Map.of(this, source);
+  public boolean isAssignableFrom(Type type, boolean variableRenaming) {
+    return (type instanceof NothingType) || variableRenaming || equals(type);
   }
 
   @Override
-  public boolean isParamAssignableFrom(Type type) {
-    return true;
+  public Constraints inferConstraints(Type type, Side side) {
+    return Constraints.empty().addBounds(this, oneSideBound(side, type));
   }
 
   @Override

@@ -9,7 +9,7 @@ public class AnyType extends BaseType {
   }
 
   @Override
-  public boolean isAssignableFrom(Type type) {
+  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
     return true;
   }
 

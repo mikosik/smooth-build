@@ -19,6 +19,10 @@ public record Constraints(ImmutableMap<TypeVariable, Bounds> boundsMap) {
     return mergeWith(ImmutableMap.of(variable, bounds));
   }
 
+  public Constraints mergeWith(Constraints constraints) {
+    return mergeWith(constraints.boundsMap);
+  }
+
   private Constraints mergeWith(ImmutableMap<TypeVariable, Bounds> thatBoundsMap) {
     Builder<TypeVariable, Bounds> builder = ImmutableMap.builder();
 

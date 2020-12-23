@@ -20,21 +20,22 @@ import static org.smoothbuild.lang.base.type.TestingTypes.B;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.constraint.TestingConstraints.constraints;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.type.constraint.Constraints;
 
 public class InferTypeVariablesTest {
   @ParameterizedTest
   @MethodSource("inferTypeVariables_test_data")
   public void infer_type_variables(List<Type> types, List<Type> actualTypes,
-      Map<TypeVariable, Type> expected) {
+      Constraints expected) {
     if (expected == null) {
       assertCall(() -> inferTypeVariables(types, actualTypes))
           .throwsException(IllegalArgumentException.class);
@@ -50,285 +51,285 @@ public class InferTypeVariablesTest {
         arguments(
             list(STRING),
             list(STRING),
-            Map.of()),
+            Constraints.empty()),
 
         // A <- Any
         arguments(
             list(A),
             list(ANY),
-            Map.of(A, ANY)),
+            constraints(A, ANY)),
         arguments(
             list(A),
             list(ARRAY_ANY),
-            Map.of(A, ARRAY_ANY)),
+            constraints(A, ARRAY_ANY)),
         arguments(
             list(A),
             list(ARRAY2_STRING),
-            Map.of(A, ARRAY2_STRING)),
+            constraints(A, ARRAY2_STRING)),
 
         arguments(
             list(ARRAY_A),
             list(STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_STRING),
-            Map.of(A, ARRAY_STRING)),
+            constraints(A, ARRAY_STRING)),
 
         arguments(
             list(ARRAY2_A),
             list(STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
 
         // A <- String
         arguments(
             list(A),
             list(STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(A),
             list(ARRAY_STRING),
-            Map.of(A, ARRAY_STRING)),
+            constraints(A, ARRAY_STRING)),
         arguments(
             list(A),
             list(ARRAY2_STRING),
-            Map.of(A, ARRAY2_STRING)),
+            constraints(A, ARRAY2_STRING)),
 
         arguments(
             list(ARRAY_A),
             list(STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_STRING),
-            Map.of(A, ARRAY_STRING)),
+            constraints(A, ARRAY_STRING)),
 
         arguments(
             list(ARRAY2_A),
             list(STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_STRING),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
 
         // A <- struct (Person)
         arguments(
             list(A),
             list(PERSON),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(A),
             list(ARRAY_PERSON),
-            Map.of(A, ARRAY_PERSON)),
+            constraints(A, ARRAY_PERSON)),
         arguments(
             list(A),
             list(ARRAY2_PERSON),
-            Map.of(A, ARRAY2_PERSON)),
+            constraints(A, ARRAY2_PERSON)),
 
         arguments(
             list(ARRAY_A),
             list(PERSON),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_PERSON),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_PERSON),
-            Map.of(A, ARRAY_PERSON)),
+            constraints(A, ARRAY_PERSON)),
 
         arguments(
             list(ARRAY2_A),
             list(PERSON),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_PERSON),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_PERSON),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
 
         // A <- Nothing
 
         arguments(
             list(A),
             list(NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
         arguments(
             list(A),
             list(ARRAY_NOTHING),
-            Map.of(A, ARRAY_NOTHING)),
+            constraints(A, ARRAY_NOTHING)),
         arguments(
             list(A),
             list(ARRAY2_NOTHING),
-            Map.of(A, ARRAY2_NOTHING)),
+            constraints(A, ARRAY2_NOTHING)),
 
         arguments(
             list(ARRAY_A),
             list(NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY_NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_NOTHING),
-            Map.of(A, ARRAY_NOTHING)),
+            constraints(A, ARRAY_NOTHING)),
 
         arguments(
             list(ARRAY2_A),
             list(NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_NOTHING),
-            Map.of(A, NOTHING)),
+            constraints(A, NOTHING)),
 
         // A <- B
 
         arguments(
             list(A),
             list(B),
-            Map.of(A, B)),
+            constraints(A, B)),
         arguments(
             list(A),
             list(ARRAY_B),
-            Map.of(A, ARRAY_B)),
+            constraints(A, ARRAY_B)),
         arguments(
             list(A),
             list(ARRAY2_B),
-            Map.of(A, ARRAY2_B)),
+            constraints(A, ARRAY2_B)),
 
         arguments(
             list(ARRAY_A),
             list(B),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_B),
-            Map.of(A, B)),
+            constraints(A, B)),
         arguments(
             list(ARRAY_A),
             list(ARRAY2_B),
-            Map.of(A, ARRAY_B)),
+            constraints(A, ARRAY_B)),
 
         arguments(
             list(ARRAY2_A),
             list(B),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_B),
-            null),
+            Constraints.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_B),
-            Map.of(A, B)),
+            constraints(A, B)),
 
         // A <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(A, ARRAY_A),
             list(STRING, ARRAY_NOTHING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_STRING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_STRING, ARRAY_NOTHING),
-            Map.of(A, STRING)),
+            constraints(A, STRING)),
         arguments(
             list(A, A),
             list(ARRAY_STRING, NOTHING),
-            Map.of(A, ARRAY_STRING)),
+            constraints(A, ARRAY_STRING)),
 
         // A <- Nothing, String; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, PERSON),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(A, ARRAY_A),
             list(PERSON, ARRAY_NOTHING),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_PERSON),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_PERSON, ARRAY_NOTHING),
-            Map.of(A, PERSON)),
+            constraints(A, PERSON)),
         arguments(
             list(A, A),
             list(ARRAY_PERSON, NOTHING),
-            Map.of(A, ARRAY_PERSON)),
+            constraints(A, ARRAY_PERSON)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_NOTHING, ARRAY2_STRING),
-            Map.of(A, ARRAY_STRING)),
+            constraints(A, ARRAY_STRING)),
 
         // A <- Nothing, A; with conversions
 
         arguments(
             list(A, A),
             list(NOTHING, A),
-            Map.of(A, A)),
+            constraints(A, A)),
         arguments(
             list(A, ARRAY_A),
             list(A, ARRAY_NOTHING),
-            Map.of(A, A)),
+            constraints(A, A)),
         arguments(
             list(A, ARRAY_A),
             list(NOTHING, ARRAY_A),
-            Map.of(A, A)),
+            constraints(A, A)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_A, ARRAY_NOTHING),
-            Map.of(A, A)),
+            constraints(A, A)),
         arguments(
             list(A, A),
             list(ARRAY_A, NOTHING),
-            Map.of(A, ARRAY_A)),
+            constraints(A, ARRAY_A)),
         arguments(
             list(ARRAY_A, ARRAY_A),
             list(ARRAY_NOTHING, ARRAY2_A),
-            Map.of(A, ARRAY_A)));
+            constraints(A, ARRAY_A)));
   }
 }
