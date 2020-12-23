@@ -1,27 +1,19 @@
 package org.smoothbuild.lang.base.type;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.List;
+
+import org.smoothbuild.lang.base.type.constraint.Constraints;
 
 public class InferTypeVariables {
-  public static Map<TypeVariable, Type> inferTypeVariables(
+  public static Constraints inferTypeVariables(
       List<Type> types, List<Type> actualTypes) {
-    var builder = new HashMap<TypeVariable, Type>();
+    Constraints constraints = Constraints.empty();
     for (int i = 0; i < types.size(); i++) {
-      for (var entry : types.get(i).inferTypeVariables(actualTypes.get(i)).entrySet()) {
-        TypeVariable key = entry.getKey();
-        Type value = entry.getValue();
-        if (builder.containsKey(key)) {
-          Type leastUpperBound = builder.get(key).joinWith(value);
-          builder.put(key, leastUpperBound);
-        } else {
-          builder.put(key, value);
-        }
-      }
+      Constraints inferred = types.get(i).inferConstraints(actualTypes.get(i), LOWER);
+      constraints = constraints.mergeWith(inferred);
     }
-    return ImmutableMap.copyOf(builder);
+    return constraints;
   }
 }

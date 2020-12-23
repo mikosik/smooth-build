@@ -36,13 +36,13 @@ import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 import static org.smoothbuild.lang.base.type.constraint.Side.UPPER;
+import static org.smoothbuild.lang.base.type.constraint.TestingConstraints.constraints;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -50,6 +50,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.TestingItem;
+import org.smoothbuild.lang.base.type.constraint.Constraints;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -113,13 +114,13 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("mapTypeVariable_test_data")
-  public void mapTypeVariable(Type type, Map<TypeVariable, Type> map, Type expected) {
+  public void mapTypeVariable(Type type, Constraints constraints, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapTypeVariables(map))
+      assertCall(() -> type.mapTypeVariables(constraints))
           .throwsException(new UnsupportedOperationException(
               arrayTypeVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapTypeVariables(map))
+      assertThat(type.mapTypeVariables(constraints))
           .isEqualTo(expected);
     }
   }
@@ -138,16 +139,16 @@ public class TypeTest {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);
-        result.add(arguments(type, Map.of(type, newCore), newCore));
-        result.add(arguments(typeArray, Map.of(type, newCore), newCoreArray));
-        result.add(arguments(type, Map.of(type, newCoreArray), newCoreArray));
-        result.add(arguments(typeArray, Map.of(type, newCoreArray), array(array(newCore))));
+        result.add(arguments(type, constraints(type, newCore), newCore));
+        result.add(arguments(typeArray, constraints(type, newCore), newCoreArray));
+        result.add(arguments(type, constraints(type, newCoreArray), newCoreArray));
+        result.add(arguments(typeArray, constraints(type, newCoreArray), array(array(newCore))));
       }
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       Type typeArray = array(type);
-      result.add(arguments(type, Map.of(), type));
-      result.add(arguments(typeArray, Map.of(), typeArray));
+      result.add(arguments(type, Constraints.empty(), type));
+      result.add(arguments(typeArray, Constraints.empty(), typeArray));
     }
     return result;
   }
@@ -193,6 +194,46 @@ public class TypeTest {
 
   public static List<TestedAssignmentSpec> isParamAssignableFrom_test_data() {
     return TestedAssignmentSpec.parameter_assignment_test_specs();
+  }
+
+  @ParameterizedTest
+  @MethodSource("inferConstraints_test_data")
+  public void inferConstraints(Type type, Type assigned, Constraints expected) {
+    assertThat(type.inferConstraints(assigned, LOWER))
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> inferConstraints_test_data() {
+    var result = new ArrayList<Arguments>();
+    for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
+      if (type instanceof NothingType) {
+        result.add(arguments(A, NOTHING, constraints(A, NOTHING)));
+        result.add(arguments(A, array(NOTHING), constraints(A, array(NOTHING))));
+        result.add(arguments(A, array(array(NOTHING)), constraints(A, array(array(NOTHING)))));
+
+        result.add(arguments(array(A), NOTHING, constraints(A, NOTHING)));
+        result.add(arguments(array(A), array(NOTHING), constraints(A, NOTHING)));
+        result.add(arguments(array(A), array(array(NOTHING)), constraints(A, array(NOTHING))));
+
+        result.add(arguments(array(array(A)), NOTHING, constraints(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(NOTHING), constraints(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(array(NOTHING)), constraints(A, NOTHING)));
+      } else {
+        result.add(arguments(A, type, constraints(A, type)));
+        result.add(arguments(A, array(type), constraints(A, array(type))));
+        result.add(arguments(A, array(array(type)), constraints(A, array(array(type)))));
+
+        result.add(arguments(array(A), type, Constraints.empty()));
+        result.add(arguments(array(A), array(type), constraints(A, type)));
+        result.add(arguments(array(A), array(array(type)), constraints(A, array(type))));
+
+        result.add(arguments(array(array(A)), type, Constraints.empty()));
+        result.add(arguments(array(array(A)), array(type), Constraints.empty()));
+        result.add(arguments(array(array(A)), array(array(type)), constraints(A,
+            type)));
+      }
+    }
+    return result;
   }
 
   @ParameterizedTest
@@ -603,50 +644,6 @@ public class TypeTest {
 
         arguments(ARRAY_PERSON, ARRAY_PERSON, ARRAY_PERSON)
     );
-  }
-
-  @ParameterizedTest
-  @MethodSource("inferTypeVariables_test_data")
-  public void inferTypeVariables(Type type, Type assigned, Map<Type, Type> expected) {
-    if (expected == null) {
-      assertCall(() -> type.inferTypeVariables(assigned))
-          .throwsException(IllegalArgumentException.class);
-    } else {
-      assertThat(type.inferTypeVariables(assigned))
-          .isEqualTo(expected);
-    }
-  }
-
-  public static List<Arguments> inferTypeVariables_test_data() {
-    var result = new ArrayList<Arguments>();
-    for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
-      if (type instanceof NothingType) {
-        result.add(arguments(A, NOTHING, Map.of(A, NOTHING)));
-        result.add(arguments(A, array(NOTHING), Map.of(A, array(NOTHING))));
-        result.add(arguments(A, array(array(NOTHING)), Map.of(A, array(array(NOTHING)))));
-
-        result.add(arguments(array(A), NOTHING, Map.of(A, NOTHING)));
-        result.add(arguments(array(A), array(NOTHING), Map.of(A, NOTHING)));
-        result.add(arguments(array(A), array(array(NOTHING)), Map.of(A, array(NOTHING))));
-
-        result.add(arguments(array(array(A)), NOTHING, Map.of(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(NOTHING), Map.of(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(array(NOTHING)), Map.of(A, NOTHING)));
-      } else {
-        result.add(arguments(A, type, Map.of(A, type)));
-        result.add(arguments(A, array(type), Map.of(A, array(type))));
-        result.add(arguments(A, array(array(type)), Map.of(A, array(array(type)))));
-
-        result.add(arguments(array(A), type, null));
-        result.add(arguments(array(A), array(type), Map.of(A, type)));
-        result.add(arguments(array(A), array(array(type)), Map.of(A, array(type))));
-
-        result.add(arguments(array(array(A)), type, null));
-        result.add(arguments(array(array(A)), array(type), null));
-        result.add(arguments(array(array(A)), array(array(type)), Map.of(A, type)));
-      }
-    }
-    return result;
   }
 
   @ParameterizedTest
