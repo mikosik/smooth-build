@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.constraint.Side;
 import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableMap;
@@ -60,6 +61,13 @@ public abstract class Type implements Named {
 
   public boolean isParamAssignableFrom(Type type) {
     return isAssignableFrom(type);
+  }
+
+  public Type mergeWith(Type that, Side direction) {
+    return switch (direction) {
+      case UPPER -> joinWith(that);
+      case LOWER -> meetWith(that);
+    };
   }
 
   public Type joinWith(Type that) {
