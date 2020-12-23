@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.base;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNull;
+import static org.smoothbuild.lang.base.Item.toItemSignatures;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 
-import org.smoothbuild.lang.base.type.ItemSignature;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 
@@ -21,9 +21,18 @@ public abstract class Callable extends Declared {
   private final ImmutableList<Item> parameters;
 
   public Callable(Type resultType, String name, ImmutableList<Item> parameters, Location location) {
-    super(resultType, name, location);
+    super(functionType(resultType, parameters), name, location);
     this.resultType = requireNonNull(resultType);
     this.parameters = requireNonNull(parameters);
+  }
+
+  private static FunctionType functionType(Type resultType, ImmutableList<Item> parameters) {
+    return new FunctionType(resultType, toItemSignatures(parameters));
+  }
+
+  @Override
+  public FunctionType type() {
+    return (FunctionType) super.type();
   }
 
   @Override
@@ -41,12 +50,6 @@ public abstract class Callable extends Declared {
 
   public List<Type> parameterTypes() {
     return map(parameters, Item::type);
-  }
-
-  public ImmutableList<ItemSignature> parameterSignatures() {
-    return parameters.stream()
-        .map(Item::signature)
-        .collect(toImmutableList());
   }
 
   public boolean canBeCalledArgless() {

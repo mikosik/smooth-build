@@ -24,7 +24,7 @@ public class Context {
   public ImmutableList<ItemSignature> parametersOf(String name) {
     Declared evaluable = imported.evaluables().get(name);
     if (evaluable != null) {
-      return ((Callable) evaluable).parameterSignatures();
+      return ((Callable) evaluable).type().parameters();
     }
     CallableNode node = callables.get(name);
     if (node != null) {

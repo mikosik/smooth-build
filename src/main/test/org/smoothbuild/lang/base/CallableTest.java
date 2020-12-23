@@ -4,33 +4,27 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.smoothbuild.lang.base.TestingItem.item;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.testing.TestingContext;
-import org.smoothbuild.testing.common.TestingLocation;
 
 import com.google.common.collect.ImmutableList;
 
 public class CallableTest extends TestingContext {
 
   @Test
-  public void type_returns_signature_type() {
-    Callable callable = new MyCallable(STRING, "name", list());
+  public void type_returns_function_type() {
+    Callable callable = new MyCallable(STRING, "name", list(), loc(7));
     assertThat(callable.type())
-        .isEqualTo(STRING);
-  }
-
-  @Test
-  public void name_returns_signature_name() {
-    Callable callable = new MyCallable(STRING, "name", list());
-    assertThat(callable.type())
-        .isEqualTo(STRING);
+        .isEqualTo(new FunctionType(STRING, ImmutableList.of()));
   }
 
   @Test
@@ -74,7 +68,11 @@ public class CallableTest extends TestingContext {
 
   public static class MyCallable extends Callable {
     public MyCallable(Type string, String name, List<Item> parameters) {
-      super(string, name, ImmutableList.copyOf(parameters), TestingLocation.loc(1));
+      this(string, name, parameters, loc(1));
+    }
+
+    public MyCallable(Type string, String name, List<Item> parameters, Location location) {
+      super(string, name, ImmutableList.copyOf(parameters), location);
     }
 
     @Override

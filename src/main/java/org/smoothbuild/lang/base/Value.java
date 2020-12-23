@@ -18,11 +18,6 @@ public class Value extends Declared {
     this.body = body;
   }
 
-  @Override
-  public Type type() {
-    return super.type();
-  }
-
   public Optional<Expression> body() {
     return body;
   }

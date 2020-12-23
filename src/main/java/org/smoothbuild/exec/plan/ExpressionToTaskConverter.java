@@ -144,10 +144,11 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
 
   private Task taskForConstructorCall(Constructor constructor, CallExpression expression)
       throws ExpressionVisitorException {
-    TupleSpec type = toSpecConverter.visit(constructor.type());
+    Type resultType = constructor.type().resultType();
+    TupleSpec type = (TupleSpec) resultType.visit(toSpecConverter);
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(expression.arguments());
-    return new NormalTask(CALL, constructor.type(), constructor.extendedName(), algorithm,
+    return new NormalTask(CALL, resultType, constructor.extendedName(), algorithm,
         dependencies, expression.location(), true);
   }
 

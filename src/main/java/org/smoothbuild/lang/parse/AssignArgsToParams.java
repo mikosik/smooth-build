@@ -50,7 +50,7 @@ public class AssignArgsToParams {
     String name = call.calledName();
     Declared evaluable = imported.evaluables().get(name);
     if (evaluable != null) {
-      return ((Callable) evaluable).parameterSignatures()
+      return ((Callable) evaluable).type().parameters()
           .stream()
           .map(p -> new AParam(p.name().get(), p.defaultValueType().isPresent()))
           .collect(toImmutableList());

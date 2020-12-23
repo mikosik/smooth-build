@@ -34,14 +34,14 @@ public class NativeImplLoader {
 
   public synchronized Native loadNative(Function function) throws LoadingNativeImplException {
     Native nativ = loadNativeImpl(function);
-    nativeResultMatchesDeclared(function, nativ);
+    nativeResultMatchesDeclared(function, nativ, function.type().resultType());
     nativeParameterTypesMatchesFuncParameters(nativ, function);
     return nativ;
   }
 
   public synchronized Native loadNative(Value value) throws LoadingNativeImplException {
     Native nativ = loadNativeImpl(value);
-    nativeResultMatchesDeclared(value, nativ);
+    nativeResultMatchesDeclared(value, nativ, value.type());
     nativeHasOneParameter(nativ, value);
     return nativ;
   }
@@ -77,10 +77,9 @@ public class NativeImplLoader {
     return nativesInJar;
   }
 
-  private void nativeResultMatchesDeclared(Declared evaluable, Native nativ)
+  private void nativeResultMatchesDeclared(Declared evaluable, Native nativ, Type resultType)
       throws LoadingNativeImplException {
     Method method = nativ.method();
-    Type resultType = evaluable.type();
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
       throw newException(evaluable, evaluable.q() + " declares type " + resultType.q()
@@ -93,8 +92,7 @@ public class NativeImplLoader {
   private void nativeParameterTypesMatchesFuncParameters(Native nativ, Function function)
       throws LoadingNativeImplException {
     Parameter[] nativeParams = nativ.method().getParameters();
-    List<Item> params =
-        function.parameters();
+    List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
       throw newException(function, "Function " + function.q() + " has "
           + params.size() + " parameter(s) but its native implementation has "

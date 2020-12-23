@@ -57,6 +57,10 @@ public class Types {
     return new ArrayType(elemType);
   }
 
+  public static FunctionType function(Type resultType, Iterable<ItemSignature> parameters) {
+    return new FunctionType(resultType, ImmutableList.copyOf(parameters));
+  }
+
   public static boolean isVariableName(String name) {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
