@@ -6,9 +6,10 @@ import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
-import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
+import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 
@@ -121,13 +122,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
       List<Task> arguments = childrenTasks(expression.arguments());
-      var typeVariablesMap = inferTypeVariables(function.parameterTypes(), taskTypes(arguments));
-      Type actualResultType = function.resultType().mapTypeVariables(typeVariablesMap);
+      var variableToBounds =
+          inferVariableBounds(function.parameterTypes(), taskTypes(arguments), LOWER);
+      Type actualResultType = function.resultType().mapTypeVariables(variableToBounds);
 
       if (function.body().isPresent()) {
         return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
       } else {
-        return taskForNativeFunction(arguments, function, typeVariablesMap, actualResultType,
+        return taskForNativeFunction(arguments, function, variableToBounds, actualResultType,
             expression.location());
       }
     } else if (callable instanceof Constructor constructor) {
