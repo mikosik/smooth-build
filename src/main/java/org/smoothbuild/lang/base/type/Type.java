@@ -6,8 +6,8 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.constraint.Constraints;
 import org.smoothbuild.lang.base.type.constraint.Side;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 import org.smoothbuild.lang.parse.ast.Named;
 
 /**
@@ -45,7 +45,7 @@ public abstract class Type implements Named {
     return isPolytype;
   }
 
-  public Type mapTypeVariables(Constraints constraints) {
+  public Type mapTypeVariables(VariableToBounds variableToBounds) {
     return this;
   }
 
@@ -61,8 +61,8 @@ public abstract class Type implements Named {
     return (type instanceof NothingType) || this.equals(type);
   }
 
-  public Constraints inferConstraints(Type type, Side side) {
-    return Constraints.empty();
+  public VariableToBounds inferVariableBounds(Type type, Side side) {
+    return VariableToBounds.empty();
   }
 
   public Type mergeWith(Type that, Side direction) {

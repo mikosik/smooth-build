@@ -50,7 +50,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.TestingItem;
-import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -114,13 +114,13 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("mapTypeVariable_test_data")
-  public void mapTypeVariable(Type type, Constraints constraints, Type expected) {
+  public void mapTypeVariable(Type type, VariableToBounds variableToBounds, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapTypeVariables(constraints))
+      assertCall(() -> type.mapTypeVariables(variableToBounds))
           .throwsException(new UnsupportedOperationException(
               arrayTypeVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapTypeVariables(constraints))
+      assertThat(type.mapTypeVariables(variableToBounds))
           .isEqualTo(expected);
     }
   }
@@ -147,8 +147,8 @@ public class TypeTest {
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       Type typeArray = array(type);
-      result.add(arguments(type, Constraints.empty(), type));
-      result.add(arguments(typeArray, Constraints.empty(), typeArray));
+      result.add(arguments(type, VariableToBounds.empty(), type));
+      result.add(arguments(typeArray, VariableToBounds.empty(), typeArray));
     }
     return result;
   }
@@ -197,13 +197,13 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("inferConstraints_test_data")
-  public void inferConstraints(Type type, Type assigned, Constraints expected) {
-    assertThat(type.inferConstraints(assigned, LOWER))
+  @MethodSource("inferVariableBounds_test_data")
+  public void inferVariableBounds(Type type, Type assigned, VariableToBounds expected) {
+    assertThat(type.inferVariableBounds(assigned, LOWER))
         .isEqualTo(expected);
   }
 
-  public static List<Arguments> inferConstraints_test_data() {
+  public static List<Arguments> inferVariableBounds_test_data() {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type instanceof NothingType) {
@@ -223,12 +223,12 @@ public class TypeTest {
         result.add(arguments(A, array(type), constraints(A, array(type))));
         result.add(arguments(A, array(array(type)), constraints(A, array(array(type)))));
 
-        result.add(arguments(array(A), type, Constraints.empty()));
+        result.add(arguments(array(A), type, VariableToBounds.empty()));
         result.add(arguments(array(A), array(type), constraints(A, type)));
         result.add(arguments(array(A), array(array(type)), constraints(A, array(type))));
 
-        result.add(arguments(array(array(A)), type, Constraints.empty()));
-        result.add(arguments(array(array(A)), array(type), Constraints.empty()));
+        result.add(arguments(array(array(A)), type, VariableToBounds.empty()));
+        result.add(arguments(array(array(A)), array(type), VariableToBounds.empty()));
         result.add(arguments(array(array(A)), array(array(type)), constraints(A,
             type)));
       }
