@@ -2,6 +2,8 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
 import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
@@ -34,8 +36,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
-import static org.smoothbuild.lang.base.type.constraint.Side.UPPER;
 import static org.smoothbuild.lang.base.type.constraint.TestingConstraints.constraints;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
@@ -50,7 +50,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.smoothbuild.lang.base.TestingItem;
-import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;

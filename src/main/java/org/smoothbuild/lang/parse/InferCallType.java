@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.stream.IntStream.range;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
-import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
+import org.smoothbuild.lang.base.type.VariableToBounds;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 

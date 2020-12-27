@@ -5,9 +5,6 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.constraint.Side;
-import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
-
 /**
  * This class is immutable.
  */

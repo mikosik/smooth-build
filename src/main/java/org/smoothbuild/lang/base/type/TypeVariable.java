@@ -1,11 +1,8 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.constraint.Bounds.oneSideBound;
-import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
-
-import org.smoothbuild.lang.base.type.constraint.Side;
-import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
+import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
 
 /**
  * This class is immutable.

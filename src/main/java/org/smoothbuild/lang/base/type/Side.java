@@ -1,9 +1,7 @@
-package org.smoothbuild.lang.base.type.constraint;
+package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.nothing;
-
-import org.smoothbuild.lang.base.type.Type;
 
 public enum Side {
   UPPER,
