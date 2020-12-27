@@ -21,8 +21,9 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(VariableToBounds variableToBounds) {
-    return new ArrayType(elemType.mapTypeVariables(variableToBounds));
+  public Type mapTypeVariables(VariableToBounds variableToBounds,
+      Side side) {
+    return new ArrayType(elemType.mapTypeVariables(variableToBounds, side));
   }
 
   @Override

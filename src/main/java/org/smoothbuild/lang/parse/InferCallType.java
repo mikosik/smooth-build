@@ -33,7 +33,7 @@ public class InferCallType {
           map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get),
           LOWER);
-      resultType.ifPresent(type -> result.setValue(type.mapTypeVariables(variableToBounds)));
+      resultType.ifPresent(type -> result.setValue(type.mapTypeVariables(variableToBounds, LOWER)));
     }
     return result;
   }

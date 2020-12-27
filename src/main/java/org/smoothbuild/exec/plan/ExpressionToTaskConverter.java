@@ -124,7 +124,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
       List<Task> arguments = childrenTasks(expression.arguments());
       var variableToBounds =
           inferVariableBounds(function.parameterTypes(), taskTypes(arguments), LOWER);
-      Type actualResultType = function.resultType().mapTypeVariables(variableToBounds);
+      Type actualResultType = function.resultType().mapTypeVariables(variableToBounds, LOWER);
 
       if (function.body().isPresent()) {
         return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
@@ -163,7 +163,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     Native nativ = loadNative(function);
     Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
     ImmutableList<Type> actualParameterTypes =
-        map(function.parameterTypes(), t -> t.mapTypeVariables(variableToBounds));
+        map(function.parameterTypes(), t -> t.mapTypeVariables(variableToBounds, LOWER));
     List<Task> dependencies = convertedArguments(actualParameterTypes, arguments);
     if (function.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cacheable());

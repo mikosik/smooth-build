@@ -115,11 +115,11 @@ public class TypeTest {
   @MethodSource("mapTypeVariable_test_data")
   public void mapTypeVariable(Type type, VariableToBounds variableToBounds, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapTypeVariables(variableToBounds))
+      assertCall(() -> type.mapTypeVariables(variableToBounds, LOWER))
           .throwsException(new UnsupportedOperationException(
               arrayTypeVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapTypeVariables(variableToBounds))
+      assertThat(type.mapTypeVariables(variableToBounds, LOWER))
           .isEqualTo(expected);
     }
   }

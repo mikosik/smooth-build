@@ -44,16 +44,16 @@ public abstract class Type implements Named {
     return isPolytype;
   }
 
-  public Type mapTypeVariables(VariableToBounds variableToBounds) {
-    return this;
-  }
-
   public boolean isAssignableFrom(Type type) {
     return isAssignableFrom(type, false);
   }
 
   public boolean isParamAssignableFrom(Type type) {
     return isAssignableFrom(type, true);
+  }
+
+  public Type mapTypeVariables(VariableToBounds variableToBounds, Side side) {
+    return this;
   }
 
   protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
