@@ -29,13 +29,13 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 
 public class InferTypeVariablesTest {
   @ParameterizedTest
   @MethodSource("inferTypeVariables_test_data")
   public void infer_type_variables(List<Type> types, List<Type> actualTypes,
-      Constraints expected) {
+      VariableToBounds expected) {
     if (expected == null) {
       assertCall(() -> inferTypeVariables(types, actualTypes))
           .throwsException(IllegalArgumentException.class);
@@ -51,7 +51,7 @@ public class InferTypeVariablesTest {
         arguments(
             list(STRING),
             list(STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
 
         // A <- Any
         arguments(
@@ -70,7 +70,7 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY_A),
             list(STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_STRING),
@@ -83,11 +83,11 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY2_A),
             list(STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_STRING),
@@ -110,7 +110,7 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY_A),
             list(STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_STRING),
@@ -123,11 +123,11 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY2_A),
             list(STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_STRING),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_STRING),
@@ -150,7 +150,7 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY_A),
             list(PERSON),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_PERSON),
@@ -163,11 +163,11 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY2_A),
             list(PERSON),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_PERSON),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_PERSON),
@@ -232,7 +232,7 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY_A),
             list(B),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY_A),
             list(ARRAY_B),
@@ -245,11 +245,11 @@ public class InferTypeVariablesTest {
         arguments(
             list(ARRAY2_A),
             list(B),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY_B),
-            Constraints.empty()),
+            VariableToBounds.empty()),
         arguments(
             list(ARRAY2_A),
             list(ARRAY2_B),

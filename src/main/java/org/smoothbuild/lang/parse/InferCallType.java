@@ -13,7 +13,7 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
@@ -81,7 +81,7 @@ public class InferCallType {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private static Constraints typeVariablesMap(CallNode call, Logger logger,
+  private static VariableToBounds typeVariablesMap(CallNode call, Logger logger,
       List<ItemSignature> parameters, List<Optional<Type>> assigned) {
     List<Type> parameterTypes = new ArrayList<>();
     List<Type> assignedTypes = new ArrayList<>();

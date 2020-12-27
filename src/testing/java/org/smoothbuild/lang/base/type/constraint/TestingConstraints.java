@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeVariable;
 
 public class TestingConstraints {
-  public static Constraints constraints(TypeVariable var, Type lowerBound) {
-    return Constraints.empty().addBounds(var, oneSideBound(LOWER, lowerBound));
+  public static VariableToBounds constraints(TypeVariable var, Type lowerBound) {
+    return VariableToBounds.empty().addBounds(var, oneSideBound(LOWER, lowerBound));
   }
 }

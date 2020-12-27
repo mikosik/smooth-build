@@ -4,16 +4,16 @@ import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 
 import java.util.List;
 
-import org.smoothbuild.lang.base.type.constraint.Constraints;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 
 public class InferTypeVariables {
-  public static Constraints inferTypeVariables(
+  public static VariableToBounds inferTypeVariables(
       List<Type> types, List<Type> actualTypes) {
-    Constraints constraints = Constraints.empty();
+    VariableToBounds variableToBounds = VariableToBounds.empty();
     for (int i = 0; i < types.size(); i++) {
-      Constraints inferred = types.get(i).inferConstraints(actualTypes.get(i), LOWER);
-      constraints = constraints.mergeWith(inferred);
+      VariableToBounds inferred = types.get(i).inferVariableBounds(actualTypes.get(i), LOWER);
+      variableToBounds = variableToBounds.mergeWith(inferred);
     }
-    return constraints;
+    return variableToBounds;
   }
 }

@@ -8,22 +8,22 @@ import org.smoothbuild.lang.base.type.TypeVariable;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public record Constraints(ImmutableMap<TypeVariable, Bounds> boundsMap) {
-  private static final Constraints EMPTY = new Constraints(ImmutableMap.of());
+public record VariableToBounds(ImmutableMap<TypeVariable, Bounds> boundsMap) {
+  private static final VariableToBounds EMPTY = new VariableToBounds(ImmutableMap.of());
 
-  public static Constraints empty() {
+  public static VariableToBounds empty() {
     return EMPTY;
   }
 
-  public Constraints addBounds(TypeVariable variable, Bounds bounds) {
+  public VariableToBounds addBounds(TypeVariable variable, Bounds bounds) {
     return mergeWith(ImmutableMap.of(variable, bounds));
   }
 
-  public Constraints mergeWith(Constraints constraints) {
-    return mergeWith(constraints.boundsMap);
+  public VariableToBounds mergeWith(VariableToBounds variableToBounds) {
+    return mergeWith(variableToBounds.boundsMap);
   }
 
-  private Constraints mergeWith(ImmutableMap<TypeVariable, Bounds> thatBoundsMap) {
+  private VariableToBounds mergeWith(ImmutableMap<TypeVariable, Bounds> thatBoundsMap) {
     Builder<TypeVariable, Bounds> builder = ImmutableMap.builder();
 
     var thisIterator = this.boundsMap.entrySet().iterator();
@@ -55,7 +55,7 @@ public record Constraints(ImmutableMap<TypeVariable, Bounds> boundsMap) {
       builder.put(thatCurrent);
       thatCurrent = nextOrNull(thatIterator);
     }
-    return new Constraints(builder.build());
+    return new VariableToBounds(builder.build());
   }
 
   private static Entry<TypeVariable, Bounds> nextOrNull(Iterator<Entry<TypeVariable, Bounds>> it) {

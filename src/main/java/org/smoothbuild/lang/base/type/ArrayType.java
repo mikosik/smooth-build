@@ -5,8 +5,8 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import java.util.Objects;
 
-import org.smoothbuild.lang.base.type.constraint.Constraints;
 import org.smoothbuild.lang.base.type.constraint.Side;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 
 /**
  * This class is immutable.
@@ -24,8 +24,8 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(Constraints constraints) {
-    return new ArrayType(elemType.mapTypeVariables(constraints));
+  public Type mapTypeVariables(VariableToBounds variableToBounds) {
+    return new ArrayType(elemType.mapTypeVariables(variableToBounds));
   }
 
   @Override
@@ -39,13 +39,13 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Constraints inferConstraints(Type type, Side side) {
+  public VariableToBounds inferVariableBounds(Type type, Side side) {
     if (type instanceof ArrayType thatArrayType) {
-      return elemType.inferConstraints(thatArrayType.elemType(), side);
+      return elemType.inferVariableBounds(thatArrayType.elemType(), side);
     } else if (type instanceof NothingType) {
-      return elemType.inferConstraints(type, side);
+      return elemType.inferVariableBounds(type, side);
     } else {
-      return Constraints.empty();
+      return VariableToBounds.empty();
     }
   }
 

@@ -4,8 +4,8 @@ import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.constraint.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 
-import org.smoothbuild.lang.base.type.constraint.Constraints;
 import org.smoothbuild.lang.base.type.constraint.Side;
+import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 
 /**
  * This class is immutable.
@@ -16,8 +16,8 @@ public class TypeVariable extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(Constraints constraints) {
-    return constraints.boundsMap().get(this).get(LOWER);
+  public Type mapTypeVariables(VariableToBounds variableToBounds) {
+    return variableToBounds.boundsMap().get(this).get(LOWER);
   }
 
   @Override
@@ -26,8 +26,8 @@ public class TypeVariable extends Type {
   }
 
   @Override
-  public Constraints inferConstraints(Type type, Side side) {
-    return Constraints.empty().addBounds(this, oneSideBound(side, type));
+  public VariableToBounds inferVariableBounds(Type type, Side side) {
+    return VariableToBounds.empty().addBounds(this, oneSideBound(side, type));
   }
 
   @Override
