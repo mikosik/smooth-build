@@ -4,6 +4,7 @@ import static java.util.stream.IntStream.range;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.base.type.VariableToBounds;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
@@ -28,15 +28,12 @@ public class InferCallType {
       return result;
     }
     List<Optional<Type>> assignedTypes = assignedTypes(parameters, assignedArgs);
-    if (!allAssignedTypesAreInferred(assignedTypes)) {
-      return result;
-    }
-    var typeVariablesMap = typeVariablesMap(parameters, assignedTypes);
-    if (typeVariablesMap == null) {
-      return result;
-    }
-    if (resultType.isPresent()) {
-      result.setValue(resultType.get().mapTypeVariables(typeVariablesMap));
+    if (allAssignedTypesAreInferred(assignedTypes)) {
+      var variableToBounds = inferVariableBounds(
+          map(parameters, ItemSignature::type),
+          map(assignedTypes, Optional::get),
+          LOWER);
+      resultType.ifPresent(type -> result.setValue(type.mapTypeVariables(variableToBounds)));
     }
     return result;
   }
@@ -80,18 +77,5 @@ public class InferCallType {
 
   private static boolean allAssignedTypesAreInferred(List<Optional<Type>> assigned) {
     return assigned.stream().allMatch(Optional::isPresent);
-  }
-
-  private static VariableToBounds typeVariablesMap(
-      List<ItemSignature> parameters, List<Optional<Type>> assigned) {
-    List<Type> parameterTypes = new ArrayList<>();
-    List<Type> assignedTypes = new ArrayList<>();
-    for (int i = 0; i < parameters.size(); i++) {
-      if (parameters.get(i).type().isPolytype()) {
-        parameterTypes.add(parameters.get(i).type());
-        assignedTypes.add(assigned.get(i).get());
-      }
-    }
-    return inferVariableBounds(parameterTypes, assignedTypes, LOWER);
   }
 }
