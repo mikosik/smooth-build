@@ -31,7 +31,7 @@ public class InferCallType {
     if (!allAssignedTypesAreInferred(assignedTypes)) {
       return result;
     }
-    var typeVariablesMap = typeVariablesMap(call, result, parameters, assignedTypes);
+    var typeVariablesMap = typeVariablesMap(parameters, assignedTypes);
     if (typeVariablesMap == null) {
       return result;
     }
@@ -82,7 +82,7 @@ public class InferCallType {
     return assigned.stream().allMatch(Optional::isPresent);
   }
 
-  private static VariableToBounds typeVariablesMap(CallNode call, Logger logger,
+  private static VariableToBounds typeVariablesMap(
       List<ItemSignature> parameters, List<Optional<Type>> assigned) {
     List<Type> parameterTypes = new ArrayList<>();
     List<Type> assignedTypes = new ArrayList<>();
@@ -92,13 +92,6 @@ public class InferCallType {
         assignedTypes.add(assigned.get(i).get());
       }
     }
-    try {
-      return inferVariableBounds(parameterTypes, assignedTypes, LOWER);
-    } catch (IllegalArgumentException e) {
-      logger.log(
-          parseError(call, "Cannot infer actual type(s) for parameter(s) in call to `"
-              + call.calledName() + "`."));
-      return null;
-    }
+    return inferVariableBounds(parameterTypes, assignedTypes, LOWER);
   }
 }
