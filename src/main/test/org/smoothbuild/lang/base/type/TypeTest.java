@@ -36,7 +36,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.constraint.TestingConstraints.constraints;
+import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.variableToBounds;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
@@ -138,10 +138,10 @@ public class TypeTest {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = array(type);
         ArrayType newCoreArray = array(newCore);
-        result.add(arguments(type, constraints(type, newCore), newCore));
-        result.add(arguments(typeArray, constraints(type, newCore), newCoreArray));
-        result.add(arguments(type, constraints(type, newCoreArray), newCoreArray));
-        result.add(arguments(typeArray, constraints(type, newCoreArray), array(array(newCore))));
+        result.add(arguments(type, variableToBounds(type, newCore), newCore));
+        result.add(arguments(typeArray, variableToBounds(type, newCore), newCoreArray));
+        result.add(arguments(type, variableToBounds(type, newCoreArray), newCoreArray));
+        result.add(arguments(typeArray, variableToBounds(type, newCoreArray), array(array(newCore))));
       }
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
@@ -206,29 +206,29 @@ public class TypeTest {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type instanceof NothingType) {
-        result.add(arguments(A, NOTHING, constraints(A, NOTHING)));
-        result.add(arguments(A, array(NOTHING), constraints(A, array(NOTHING))));
-        result.add(arguments(A, array(array(NOTHING)), constraints(A, array(array(NOTHING)))));
+        result.add(arguments(A, NOTHING, variableToBounds(A, NOTHING)));
+        result.add(arguments(A, array(NOTHING), variableToBounds(A, array(NOTHING))));
+        result.add(arguments(A, array(array(NOTHING)), variableToBounds(A, array(array(NOTHING)))));
 
-        result.add(arguments(array(A), NOTHING, constraints(A, NOTHING)));
-        result.add(arguments(array(A), array(NOTHING), constraints(A, NOTHING)));
-        result.add(arguments(array(A), array(array(NOTHING)), constraints(A, array(NOTHING))));
+        result.add(arguments(array(A), NOTHING, variableToBounds(A, NOTHING)));
+        result.add(arguments(array(A), array(NOTHING), variableToBounds(A, NOTHING)));
+        result.add(arguments(array(A), array(array(NOTHING)), variableToBounds(A, array(NOTHING))));
 
-        result.add(arguments(array(array(A)), NOTHING, constraints(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(NOTHING), constraints(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(array(NOTHING)), constraints(A, NOTHING)));
+        result.add(arguments(array(array(A)), NOTHING, variableToBounds(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(NOTHING), variableToBounds(A, NOTHING)));
+        result.add(arguments(array(array(A)), array(array(NOTHING)), variableToBounds(A, NOTHING)));
       } else {
-        result.add(arguments(A, type, constraints(A, type)));
-        result.add(arguments(A, array(type), constraints(A, array(type))));
-        result.add(arguments(A, array(array(type)), constraints(A, array(array(type)))));
+        result.add(arguments(A, type, variableToBounds(A, type)));
+        result.add(arguments(A, array(type), variableToBounds(A, array(type))));
+        result.add(arguments(A, array(array(type)), variableToBounds(A, array(array(type)))));
 
         result.add(arguments(array(A), type, VariableToBounds.empty()));
-        result.add(arguments(array(A), array(type), constraints(A, type)));
-        result.add(arguments(array(A), array(array(type)), constraints(A, array(type))));
+        result.add(arguments(array(A), array(type), variableToBounds(A, type)));
+        result.add(arguments(array(A), array(array(type)), variableToBounds(A, array(type))));
 
         result.add(arguments(array(array(A)), type, VariableToBounds.empty()));
         result.add(arguments(array(array(A)), array(type), VariableToBounds.empty()));
-        result.add(arguments(array(array(A)), array(array(type)), constraints(A,
+        result.add(arguments(array(array(A)), array(array(type)), variableToBounds(A,
             type)));
       }
     }
