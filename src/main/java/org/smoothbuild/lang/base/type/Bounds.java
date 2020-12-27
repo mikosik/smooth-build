@@ -1,11 +1,9 @@
-package org.smoothbuild.lang.base.type.constraint;
+package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.nothing;
-import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
-import static org.smoothbuild.lang.base.type.constraint.Side.UPPER;
-
-import org.smoothbuild.lang.base.type.Type;
 
 public record Bounds(Type lower, Type upper) {
   public static Bounds oneSideBound(Side side, Type type) {

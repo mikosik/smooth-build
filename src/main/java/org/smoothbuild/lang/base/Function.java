@@ -2,8 +2,8 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
+import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
-import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.Objects;

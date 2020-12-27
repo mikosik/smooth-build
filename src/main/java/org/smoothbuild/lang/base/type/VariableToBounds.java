@@ -1,9 +1,7 @@
-package org.smoothbuild.lang.base.type.constraint;
+package org.smoothbuild.lang.base.type;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
-
-import org.smoothbuild.lang.base.type.TypeVariable;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;

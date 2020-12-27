@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.type.constraint.Side;
-import org.smoothbuild.lang.base.type.constraint.VariableToBounds;
 import org.smoothbuild.lang.parse.ast.Named;
 
 /**
