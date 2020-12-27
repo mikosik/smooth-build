@@ -3,6 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
@@ -59,6 +60,16 @@ public abstract class Type implements Named {
 
   protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
     return (type instanceof NothingType) || this.equals(type);
+  }
+
+  public static VariableToBounds inferVariableBounds(
+      List<Type> typesA, List<Type> typesB, Side side) {
+    VariableToBounds variableToBounds = VariableToBounds.empty();
+    for (int i = 0; i < typesA.size(); i++) {
+      VariableToBounds inferred = typesA.get(i).inferVariableBounds(typesB.get(i), side);
+      variableToBounds = variableToBounds.mergeWith(inferred);
+    }
+    return variableToBounds;
   }
 
   public VariableToBounds inferVariableBounds(Type type, Side side) {

@@ -1,7 +1,8 @@
 package org.smoothbuild.lang.parse;
 
 import static java.util.stream.IntStream.range;
-import static org.smoothbuild.lang.base.type.InferTypeVariables.inferTypeVariables;
+import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
+import static org.smoothbuild.lang.base.type.constraint.Side.LOWER;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class InferCallType {
       }
     }
     try {
-      return inferTypeVariables(parameterTypes, assignedTypes);
+      return inferVariableBounds(parameterTypes, assignedTypes, LOWER);
     } catch (IllegalArgumentException e) {
       logger.log(
           parseError(call, "Cannot infer actual type(s) for parameter(s) in call to `"
