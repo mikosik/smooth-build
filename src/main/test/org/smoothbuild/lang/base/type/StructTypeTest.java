@@ -3,7 +3,7 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.TestingLang.field;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.type.Types.array;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
@@ -30,7 +30,7 @@ public class StructTypeTest {
 
   @Test
   public void first_field_type_can_be_nothing_array() {
-    struct("Struct", loc(), fields(array(nothing())));
+    struct("Struct", loc(), fields(a(nothing())));
   }
 
   @Test

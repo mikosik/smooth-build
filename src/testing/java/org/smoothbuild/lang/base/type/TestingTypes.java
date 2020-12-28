@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type;
 import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.bool;
 import static org.smoothbuild.lang.base.type.Types.nothing;
@@ -35,25 +34,25 @@ public class TestingTypes {
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");
 
-  public static final ArrayType ARRAY_ANY = array(ANY);
-  public static final ArrayType ARRAY_BOOL = array(BOOL);
-  public static final ArrayType ARRAY_STRING = array(STRING);
-  public static final ArrayType ARRAY_BLOB = array(BLOB);
-  public static final ArrayType ARRAY_NOTHING = array(NOTHING);
-  public static final ArrayType ARRAY_DATA = array(DATA);
-  public static final ArrayType ARRAY_FLAG = array(FLAG);
-  public static final ArrayType ARRAY_PERSON = array(PERSON);
-  public static final ArrayType ARRAY_A = array(A);
-  public static final ArrayType ARRAY_B = array(B);
+  public static final ArrayType ARRAY_ANY = a(ANY);
+  public static final ArrayType ARRAY_BOOL = a(BOOL);
+  public static final ArrayType ARRAY_STRING = a(STRING);
+  public static final ArrayType ARRAY_BLOB = a(BLOB);
+  public static final ArrayType ARRAY_NOTHING = a(NOTHING);
+  public static final ArrayType ARRAY_DATA = a(DATA);
+  public static final ArrayType ARRAY_FLAG = a(FLAG);
+  public static final ArrayType ARRAY_PERSON = a(PERSON);
+  public static final ArrayType ARRAY_A = a(A);
+  public static final ArrayType ARRAY_B = a(B);
 
-  public static final ArrayType ARRAY2_ANY = array(ARRAY_ANY);
-  public static final ArrayType ARRAY2_BOOL = array(ARRAY_BOOL);
-  public static final ArrayType ARRAY2_STRING = array(ARRAY_STRING);
-  public static final ArrayType ARRAY2_BLOB = array(ARRAY_BLOB);
-  public static final ArrayType ARRAY2_NOTHING = array(ARRAY_NOTHING);
-  public static final ArrayType ARRAY2_PERSON = array(ARRAY_PERSON);
-  public static final ArrayType ARRAY2_A = array(ARRAY_A);
-  public static final ArrayType ARRAY2_B = array(ARRAY_B);
+  public static final ArrayType ARRAY2_ANY = a(ARRAY_ANY);
+  public static final ArrayType ARRAY2_BOOL = a(ARRAY_BOOL);
+  public static final ArrayType ARRAY2_STRING = a(ARRAY_STRING);
+  public static final ArrayType ARRAY2_BLOB = a(ARRAY_BLOB);
+  public static final ArrayType ARRAY2_NOTHING = a(ARRAY_NOTHING);
+  public static final ArrayType ARRAY2_PERSON = a(ARRAY_PERSON);
+  public static final ArrayType ARRAY2_A = a(ARRAY_A);
+  public static final ArrayType ARRAY2_B = a(ARRAY_B);
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
       .addAll(BASE_TYPES)
@@ -72,4 +71,8 @@ public class TestingTypes {
           .addAll(BASE_TYPES)
           .add(PERSON)
           .build();
+
+  public static ArrayType a(Type elemType) {
+    return Types.array(elemType);
+  }
 }

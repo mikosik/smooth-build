@@ -8,7 +8,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.lang.base.type.Types.array;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -59,7 +59,7 @@ public class ItemSignatureTest {
         new ItemSignature(STRING, "equal", Optional.of(STRING), commandLineLocation()));
     tester.addEqualityGroup(
         new ItemSignature(STRING, "equal", Optional.empty(), internal()));
-    for (Type type : List.of(BOOL, STRING, array(STRING), BLOB, NOTHING, PERSON)) {
+    for (Type type : List.of(BOOL, STRING, a(STRING), BLOB, NOTHING, PERSON)) {
       tester.addEqualityGroup(new ItemSignature(type, name, Optional.of(STRING), internal()));
       tester.addEqualityGroup(new ItemSignature(type, "name2", Optional.of(STRING), internal()));
     }
@@ -92,7 +92,7 @@ public class ItemSignatureTest {
     List<ItemSignature> names = new ArrayList<>();
     names.add(new ItemSignature(STRING, "param1", Optional.of(STRING), internal()));
     names.add(new ItemSignature(STRING, "param2-with-very-long", Optional.of(STRING), internal()));
-    names.add(new ItemSignature(array(BLOB), "param3", Optional.of(STRING), internal()));
+    names.add(new ItemSignature(a(BLOB), "param3", Optional.of(STRING), internal()));
 
     assertThat(ItemSignature.iterableToString(names))
         .isEqualTo(unlines(
