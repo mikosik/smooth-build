@@ -9,8 +9,11 @@ public class NothingType extends BaseType {
   }
 
   @Override
-  public Type joinWith(Type that) {
-    return that;
+  public Type mergeWith(Type that, Side direction) {
+    return switch (direction) {
+      case UPPER -> that;
+      case LOWER -> this;
+    };
   }
 
   @Override

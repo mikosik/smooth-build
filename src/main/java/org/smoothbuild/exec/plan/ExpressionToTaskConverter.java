@@ -7,6 +7,7 @@ import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
 import static org.smoothbuild.exec.compute.TaskKind.VALUE;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -218,7 +219,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     return elements
         .stream()
         .map(Task::type)
-        .reduce(Type::joinWith)
+        .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
         .map(Types::array)
         .orElse(arrayType);
   }

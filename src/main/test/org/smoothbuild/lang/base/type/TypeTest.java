@@ -219,7 +219,7 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("joinWith_test_data")
+  @MethodSource("mergeWith_upper_direction_test_data")
   public void mergeWith_upper_direction(Type type1, Type type2, Type expected) {
     assertThat(type1.mergeWith(type2, UPPER))
         .isEqualTo(expected);
@@ -228,7 +228,7 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("meetWith_test_data")
+  @MethodSource("mergeWith_lower_direction_test_data")
   public void mergeWith_lower_direction(Type type1, Type type2, Type expected) {
     assertThat(type1.mergeWith(type2, LOWER))
         .isEqualTo(expected);
@@ -236,16 +236,7 @@ public class TypeTest {
         .isEqualTo(expected);
   }
 
-  @ParameterizedTest
-  @MethodSource("joinWith_test_data")
-  public void joinWith(Type type1, Type type2, Type expected) {
-    assertThat(type1.joinWith(type2))
-        .isEqualTo(expected);
-    assertThat(type2.joinWith(type1))
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> joinWith_test_data() {
+  public static List<Arguments> mergeWith_upper_direction_test_data() {
     return List.of(
         arguments(ANY, ANY, ANY),
         arguments(ANY, BLOB, ANY),
@@ -441,16 +432,7 @@ public class TypeTest {
     );
   }
 
-  @ParameterizedTest
-  @MethodSource("meetWith_test_data")
-  public void meetWith(Type type1, Type type2, Type expected) {
-    assertThat(type1.meetWith(type2))
-        .isEqualTo(expected);
-    assertThat(type2.meetWith(type1))
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> meetWith_test_data() {
+  public static List<Arguments> mergeWith_lower_direction_test_data() {
     return List.of(
         arguments(ANY, ANY, ANY),
         arguments(ANY, BLOB, BLOB),
