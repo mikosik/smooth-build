@@ -34,26 +34,6 @@ public class TestingTypes {
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");
 
-  public static final ArrayType ARRAY_ANY = a(ANY);
-  public static final ArrayType ARRAY_BOOL = a(BOOL);
-  public static final ArrayType ARRAY_STRING = a(STRING);
-  public static final ArrayType ARRAY_BLOB = a(BLOB);
-  public static final ArrayType ARRAY_NOTHING = a(NOTHING);
-  public static final ArrayType ARRAY_DATA = a(DATA);
-  public static final ArrayType ARRAY_FLAG = a(FLAG);
-  public static final ArrayType ARRAY_PERSON = a(PERSON);
-  public static final ArrayType ARRAY_A = a(A);
-  public static final ArrayType ARRAY_B = a(B);
-
-  public static final ArrayType ARRAY2_ANY = a(ARRAY_ANY);
-  public static final ArrayType ARRAY2_BOOL = a(ARRAY_BOOL);
-  public static final ArrayType ARRAY2_STRING = a(ARRAY_STRING);
-  public static final ArrayType ARRAY2_BLOB = a(ARRAY_BLOB);
-  public static final ArrayType ARRAY2_NOTHING = a(ARRAY_NOTHING);
-  public static final ArrayType ARRAY2_PERSON = a(ARRAY_PERSON);
-  public static final ArrayType ARRAY2_A = a(ARRAY_A);
-  public static final ArrayType ARRAY2_B = a(ARRAY_B);
-
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
       .addAll(BASE_TYPES)
       .add(PERSON)

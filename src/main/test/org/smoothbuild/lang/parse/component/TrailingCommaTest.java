@@ -8,9 +8,9 @@ import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Nested;
@@ -24,7 +24,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(arrayLiteral("0x07,"))
           .loadsSuccessfully()
-          .containsEvaluable(value(1, ARRAY_BLOB, "result", array(1, BLOB, blob(1, 7))));
+          .containsEvaluable(value(1, a(BLOB), "result", array(1, BLOB, blob(1, 7))));
     }
 
     @Test
