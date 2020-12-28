@@ -33,8 +33,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.FLAG;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
-import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.variableToBounds;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
@@ -136,16 +136,16 @@ public class TypeTest {
     var result = new ArrayList<Arguments>();
     for (TypeVariable type : List.of(A, B)) {
       for (Type newCore : ELEMENTARY_TYPES) {
-        Type typeArray = array(type);
-        ArrayType newCoreArray = array(newCore);
+        Type typeArray = a(type);
+        ArrayType newCoreArray = a(newCore);
         result.add(arguments(type, variableToBounds(type, newCore), newCore));
         result.add(arguments(typeArray, variableToBounds(type, newCore), newCoreArray));
         result.add(arguments(type, variableToBounds(type, newCoreArray), newCoreArray));
-        result.add(arguments(typeArray, variableToBounds(type, newCoreArray), array(array(newCore))));
+        result.add(arguments(typeArray, variableToBounds(type, newCoreArray), a(a(newCore))));
       }
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
-      Type typeArray = array(type);
+      Type typeArray = a(type);
       result.add(arguments(type, VariableToBounds.empty(), type));
       result.add(arguments(typeArray, VariableToBounds.empty(), typeArray));
     }
@@ -163,12 +163,12 @@ public class TypeTest {
     var result = new ArrayList<Arguments>();
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       result.add(arguments(type, false));
-      result.add(arguments(array(type), false));
-      result.add(arguments(array(array(type)), false));
+      result.add(arguments(a(type), false));
+      result.add(arguments(a(a(type)), false));
     }
     result.add(arguments(A, true));
-    result.add(arguments(array(A), true));
-    result.add(arguments(array(array(A)), true));
+    result.add(arguments(a(A), true));
+    result.add(arguments(a(a(A)), true));
 
     return result;
   }
@@ -207,28 +207,28 @@ public class TypeTest {
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type instanceof NothingType) {
         result.add(arguments(A, NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(A, array(NOTHING), variableToBounds(A, array(NOTHING))));
-        result.add(arguments(A, array(array(NOTHING)), variableToBounds(A, array(array(NOTHING)))));
+        result.add(arguments(A, a(NOTHING), variableToBounds(A, a(NOTHING))));
+        result.add(arguments(A, a(a(NOTHING)), variableToBounds(A, a(a(NOTHING)))));
 
-        result.add(arguments(array(A), NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(array(A), array(NOTHING), variableToBounds(A, NOTHING)));
-        result.add(arguments(array(A), array(array(NOTHING)), variableToBounds(A, array(NOTHING))));
+        result.add(arguments(a(A), NOTHING, variableToBounds(A, NOTHING)));
+        result.add(arguments(a(A), a(NOTHING), variableToBounds(A, NOTHING)));
+        result.add(arguments(a(A), a(a(NOTHING)), variableToBounds(A, a(NOTHING))));
 
-        result.add(arguments(array(array(A)), NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(NOTHING), variableToBounds(A, NOTHING)));
-        result.add(arguments(array(array(A)), array(array(NOTHING)), variableToBounds(A, NOTHING)));
+        result.add(arguments(a(a(A)), NOTHING, variableToBounds(A, NOTHING)));
+        result.add(arguments(a(a(A)), a(NOTHING), variableToBounds(A, NOTHING)));
+        result.add(arguments(a(a(A)), a(a(NOTHING)), variableToBounds(A, NOTHING)));
       } else {
         result.add(arguments(A, type, variableToBounds(A, type)));
-        result.add(arguments(A, array(type), variableToBounds(A, array(type))));
-        result.add(arguments(A, array(array(type)), variableToBounds(A, array(array(type)))));
+        result.add(arguments(A, a(type), variableToBounds(A, a(type))));
+        result.add(arguments(A, a(a(type)), variableToBounds(A, a(a(type)))));
 
-        result.add(arguments(array(A), type, VariableToBounds.empty()));
-        result.add(arguments(array(A), array(type), variableToBounds(A, type)));
-        result.add(arguments(array(A), array(array(type)), variableToBounds(A, array(type))));
+        result.add(arguments(a(A), type, VariableToBounds.empty()));
+        result.add(arguments(a(A), a(type), variableToBounds(A, type)));
+        result.add(arguments(a(A), a(a(type)), variableToBounds(A, a(type))));
 
-        result.add(arguments(array(array(A)), type, VariableToBounds.empty()));
-        result.add(arguments(array(array(A)), array(type), VariableToBounds.empty()));
-        result.add(arguments(array(array(A)), array(array(type)), variableToBounds(A,
+        result.add(arguments(a(a(A)), type, VariableToBounds.empty()));
+        result.add(arguments(a(a(A)), a(type), VariableToBounds.empty()));
+        result.add(arguments(a(a(A)), a(a(type)), variableToBounds(A,
             type)));
       }
     }
@@ -655,9 +655,9 @@ public class TypeTest {
   public static List<Arguments> elemType_test_data() {
     var result = new ArrayList<Arguments>();
     for (Type type : ELEMENTARY_TYPES) {
-      result.add(arguments(array(type), type));
-      result.add(arguments(array(array(type)), array(type)));
-      result.add(arguments(array(array(array(type))), array(array(type))));
+      result.add(arguments(a(type), type));
+      result.add(arguments(a(a(type)), a(type)));
+      result.add(arguments(a(a(a(type))), a(a(type))));
     }
     return result;
   }
@@ -675,8 +675,8 @@ public class TypeTest {
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);
-      equalsTester.addEqualityGroup(array(type), array(type));
-      equalsTester.addEqualityGroup(array(array(type)), array(array(type)));
+      equalsTester.addEqualityGroup(a(type), a(type));
+      equalsTester.addEqualityGroup(a(a(type)), a(a(type)));
     }
     equalsTester.testEquals();
   }
