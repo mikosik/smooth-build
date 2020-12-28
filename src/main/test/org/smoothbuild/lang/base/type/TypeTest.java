@@ -19,7 +19,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.variableToBounds;
+import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.vtb;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
@@ -121,10 +121,10 @@ public class TypeTest {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = a(type);
         ArrayType newCoreArray = a(newCore);
-        result.add(arguments(type, variableToBounds(type, newCore), newCore));
-        result.add(arguments(typeArray, variableToBounds(type, newCore), newCoreArray));
-        result.add(arguments(type, variableToBounds(type, newCoreArray), newCoreArray));
-        result.add(arguments(typeArray, variableToBounds(type, newCoreArray), a(a(newCore))));
+        result.add(arguments(type, vtb(type, LOWER, newCore), newCore));
+        result.add(arguments(typeArray, vtb(type, LOWER, newCore), newCoreArray));
+        result.add(arguments(type, vtb(type, LOWER, newCoreArray), newCoreArray));
+        result.add(arguments(typeArray, vtb(type, LOWER, newCoreArray), a(a(newCore))));
       }
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
@@ -189,30 +189,30 @@ public class TypeTest {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type instanceof NothingType) {
-        result.add(arguments(A, NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(A, a(NOTHING), variableToBounds(A, a(NOTHING))));
-        result.add(arguments(A, a(a(NOTHING)), variableToBounds(A, a(a(NOTHING)))));
+        result.add(arguments(A, NOTHING, vtb(A, LOWER, NOTHING)));
+        result.add(arguments(A, a(NOTHING), vtb(A, LOWER, a(NOTHING))));
+        result.add(arguments(A, a(a(NOTHING)), vtb(A, LOWER, a(a(NOTHING)))));
 
-        result.add(arguments(a(A), NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(a(A), a(NOTHING), variableToBounds(A, NOTHING)));
-        result.add(arguments(a(A), a(a(NOTHING)), variableToBounds(A, a(NOTHING))));
+        result.add(arguments(a(A), NOTHING, vtb(A, LOWER, NOTHING)));
+        result.add(arguments(a(A), a(NOTHING), vtb(A, LOWER, NOTHING)));
+        result.add(arguments(a(A), a(a(NOTHING)), vtb(A, LOWER, a(NOTHING))));
 
-        result.add(arguments(a(a(A)), NOTHING, variableToBounds(A, NOTHING)));
-        result.add(arguments(a(a(A)), a(NOTHING), variableToBounds(A, NOTHING)));
-        result.add(arguments(a(a(A)), a(a(NOTHING)), variableToBounds(A, NOTHING)));
+        result.add(arguments(a(a(A)), NOTHING, vtb(A, LOWER, NOTHING)));
+        result.add(arguments(a(a(A)), a(NOTHING), vtb(A, LOWER, NOTHING)));
+        result.add(arguments(a(a(A)), a(a(NOTHING)), vtb(A, LOWER, NOTHING)));
       } else {
-        result.add(arguments(A, type, variableToBounds(A, type)));
-        result.add(arguments(A, a(type), variableToBounds(A, a(type))));
-        result.add(arguments(A, a(a(type)), variableToBounds(A, a(a(type)))));
+        result.add(arguments(A, type, vtb(A, LOWER, type)));
+        result.add(arguments(A, a(type), vtb(A, LOWER, a(type))));
+        result.add(arguments(A, a(a(type)), vtb(A, LOWER, a(a(type)))));
 
         result.add(arguments(a(A), type, VariableToBounds.empty()));
-        result.add(arguments(a(A), a(type), variableToBounds(A, type)));
-        result.add(arguments(a(A), a(a(type)), variableToBounds(A, a(type))));
+        result.add(arguments(a(A), a(type), vtb(A, LOWER, type)));
+        result.add(arguments(a(A), a(a(type)), vtb(A, LOWER, a(type))));
 
         result.add(arguments(a(a(A)), type, VariableToBounds.empty()));
         result.add(arguments(a(a(A)), a(type), VariableToBounds.empty()));
-        result.add(arguments(a(a(A)), a(a(type)), variableToBounds(A,
-            type)));
+        result.add(arguments(a(a(A)), a(a(type)), vtb(A,
+            LOWER, type)));
       }
     }
     return result;
