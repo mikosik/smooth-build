@@ -48,20 +48,11 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type joinWith(Type that) {
+  public Type mergeWith(Type that, Side direction) {
     if (that instanceof ArrayType thatArray) {
-      return new ArrayType(elemType.joinWith(thatArray.elemType));
+      return new ArrayType(elemType.mergeWith(thatArray.elemType, direction));
     } else {
-      return super.joinWith(that);
-    }
-  }
-
-  @Override
-  public Type meetWith(Type that) {
-    if (that instanceof ArrayType thatArray) {
-      return new ArrayType(elemType.meetWith(thatArray.elemType));
-    } else {
-      return super.meetWith(that);
+      return super.mergeWith(that, direction);
     }
   }
 

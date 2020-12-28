@@ -3,6 +3,7 @@ package org.smoothbuild.lang.parse.component;
 import static com.google.common.collect.Sets.union;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
+import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.assignment_test_specs;
 import static org.smoothbuild.lang.base.type.TestedAssignmentSpec.parameter_assignment_test_specs;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
@@ -133,7 +134,7 @@ public class AssignmentTest {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        result.add(Arguments.of(type1, type2, type1.type().joinWith(type2.type())));
+        result.add(Arguments.of(type1, type2, type1.type().mergeWith(type2.type(), UPPER)));
       }
     }
     return result;

@@ -1,8 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Types.any;
-import static org.smoothbuild.lang.base.type.Types.nothing;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -75,29 +72,10 @@ public abstract class Type implements Named {
   }
 
   public Type mergeWith(Type that, Side direction) {
-    return switch (direction) {
-      case UPPER -> joinWith(that);
-      case LOWER -> meetWith(that);
-    };
-  }
-
-  public Type joinWith(Type that) {
-    if (that instanceof NothingType) {
-      return this;
-    } else if (this.equals(that)){
+    if (direction.reversed().edge().equals(that) || this.equals(that)) {
       return this;
     } else {
-      return any();
-    }
-  }
-
-  public Type meetWith(Type that) {
-    if (this.equals(that)){
-      return this;
-    } else if (that instanceof AnyType) {
-      return this;
-    } else {
-      return nothing();
+      return direction.edge();
     }
   }
 

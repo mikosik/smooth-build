@@ -4,6 +4,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
+import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
@@ -215,7 +216,7 @@ public class InferTypes {
           if (type.isEmpty()) {
             return empty();
           }
-          elemType = elemType.joinWith(type.get());
+          elemType = elemType.mergeWith(type.get(), UPPER);
         }
         return Optional.of(array(elemType));
       }

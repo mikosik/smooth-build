@@ -14,13 +14,11 @@ public class AnyType extends BaseType {
   }
 
   @Override
-  public Type joinWith(Type that) {
-    return this;
-  }
-
-  @Override
-  public Type meetWith(Type that) {
-    return that;
+  public Type mergeWith(Type that, Side direction) {
+    return switch (direction) {
+      case UPPER -> this;
+      case LOWER -> that;
+    };
   }
 
   @Override
