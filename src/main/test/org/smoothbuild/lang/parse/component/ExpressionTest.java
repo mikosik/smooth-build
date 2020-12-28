@@ -13,10 +13,9 @@ import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.TestingLang.valueRef;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Test;
@@ -166,7 +165,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsEvaluable(
-            value(1, ARRAY_BLOB, "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
+            value(1, a(BLOB), "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
   }
 
   @Test
@@ -192,7 +191,7 @@ public class ExpressionTest {
           [String] result;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, ARRAY_STRING, "result"));
+        .containsEvaluable(value(1, a(STRING), "result"));
   }
 
   @Test

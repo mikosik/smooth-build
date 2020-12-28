@@ -4,23 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
 import static org.smoothbuild.lang.base.type.TestingTypes.ANY;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_A;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_BOOL;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_PERSON;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY2_STRING;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_A;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BLOB;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_BOOL;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_NOTHING;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_PERSON;
-import static org.smoothbuild.lang.base.type.TestingTypes.ARRAY_STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.BOOL;
 import static org.smoothbuild.lang.base.type.TestingTypes.NOTHING;
 import static org.smoothbuild.lang.base.type.TestingTypes.PERSON;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import java.util.stream.Stream;
@@ -61,18 +50,18 @@ public class MapTypeToJTypeTest {
         arguments(STRING, Str.class),
         arguments(PERSON, Tuple.class),
 
-        arguments(ARRAY_A, Array.class),
-        arguments(ARRAY_BLOB, Array.class),
-        arguments(ARRAY_BOOL, Array.class),
-        arguments(ARRAY_NOTHING, Array.class),
-        arguments(ARRAY_STRING, Array.class),
-        arguments(ARRAY_PERSON, Array.class),
-        arguments(ARRAY2_A, Array.class),
-        arguments(ARRAY2_BLOB, Array.class),
-        arguments(ARRAY2_BOOL, Array.class),
-        arguments(ARRAY2_NOTHING, Array.class),
-        arguments(ARRAY2_STRING, Array.class),
-        arguments(ARRAY2_PERSON, Array.class)
+        arguments(a(A), Array.class),
+        arguments(a(BLOB), Array.class),
+        arguments(a(BOOL), Array.class),
+        arguments(a(NOTHING), Array.class),
+        arguments(a(STRING), Array.class),
+        arguments(a(PERSON), Array.class),
+        arguments(a(a(A)), Array.class),
+        arguments(a(a(BLOB)), Array.class),
+        arguments(a(a(BOOL)), Array.class),
+        arguments(a(a(NOTHING)), Array.class),
+        arguments(a(a(STRING)), Array.class),
+        arguments(a(a(PERSON)), Array.class)
     );
   }
 }
