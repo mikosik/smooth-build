@@ -8,10 +8,16 @@ public enum Side {
   LOWER;
 
   public Side reversed() {
-    return this == UPPER ? LOWER : UPPER;
+    return switch (this) {
+      case UPPER -> LOWER;
+      case LOWER -> UPPER;
+    };
   }
 
   public Type edge() {
-    return this == UPPER ? any() : nothing();
+    return switch (this) {
+      case UPPER -> any();
+      case LOWER -> nothing();
+    };
   }
 }
