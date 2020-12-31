@@ -22,8 +22,8 @@ public class TypeVariable extends Type {
   }
 
   @Override
-  public VariableToBounds inferVariableBounds(Type type, Side side) {
-    return VariableToBounds.empty().addBounds(this, oneSideBound(side, type));
+  public VariableToBounds inferVariableBounds(Type that, Side side) {
+    return VariableToBounds.empty().addBounds(this, oneSideBound(side, that));
   }
 
   @Override

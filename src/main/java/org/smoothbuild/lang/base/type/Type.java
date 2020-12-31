@@ -1,9 +1,12 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.util.Lists.zip;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
@@ -92,16 +95,38 @@ public abstract class Type implements Named {
 
   public static VariableToBounds inferVariableBounds(
       List<Type> typesA, List<Type> typesB, Side side) {
-    VariableToBounds variableToBounds = VariableToBounds.empty();
-    for (int i = 0; i < typesA.size(); i++) {
-      VariableToBounds inferred = typesA.get(i).inferVariableBounds(typesB.get(i), side);
-      variableToBounds = variableToBounds.mergeWith(inferred);
-    }
-    return variableToBounds;
+    return reduce(zip(typesA, typesB, inferFunction(side)));
   }
 
-  public VariableToBounds inferVariableBounds(Type type, Side side) {
-    return VariableToBounds.empty();
+  public VariableToBounds inferVariableBounds(Type that, Side side) {
+    if (that.equals(side.edge())) {
+      return inferVariableBoundFromEdge(side);
+    } else if (this.typeConstructor().equals(that.typeConstructor())) {
+      return reduce(
+          zip(this.covariants(), that.covariants(), inferFunction(side)),
+          zip(this.contravariants(), that.contravariants(), inferFunction(side.reversed())));
+    } else {
+      return VariableToBounds.empty();
+    }
+  }
+
+  private static BiFunction<Type, Type, VariableToBounds> inferFunction(Side side) {
+    return (Type a, Type b) -> a.inferVariableBounds(b, side);
+  }
+
+  private VariableToBounds inferVariableBoundFromEdge(Side side) {
+    Side reversed = side.reversed();
+    return reduce(
+        map(covariants(), t -> t.inferVariableBounds(side.edge(), side)),
+        map(contravariants(), t -> t.inferVariableBounds(reversed.edge(), reversed)));
+  }
+
+  private VariableToBounds reduce(List<VariableToBounds> listA, List<VariableToBounds> listB) {
+    return reduce(listA).mergeWith(reduce(listB));
+  }
+
+  private static VariableToBounds reduce(List<VariableToBounds> list) {
+    return list.stream().reduce(VariableToBounds.empty(), VariableToBounds::mergeWith);
   }
 
   public Type mergeWith(Type that, Side direction) {
