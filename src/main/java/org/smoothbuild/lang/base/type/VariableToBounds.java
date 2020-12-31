@@ -18,12 +18,19 @@ public record VariableToBounds(ImmutableMap<TypeVariable, Bounds> boundsMap) {
   }
 
   public VariableToBounds mergeWith(VariableToBounds variableToBounds) {
-    return mergeWith(variableToBounds.boundsMap);
+    if (boundsMap.isEmpty()) {
+      return variableToBounds;
+    } else {
+      return mergeWith(variableToBounds.boundsMap);
+    }
   }
 
   private VariableToBounds mergeWith(ImmutableMap<TypeVariable, Bounds> thatBoundsMap) {
-    Builder<TypeVariable, Bounds> builder = ImmutableMap.builder();
+    if (thatBoundsMap.isEmpty()) {
+      return this;
+    }
 
+    Builder<TypeVariable, Bounds> builder = ImmutableMap.builder();
     var thisIterator = this.boundsMap.entrySet().iterator();
     var thatIterator = thatBoundsMap.entrySet().iterator();
     var thisCurrent = nextOrNull(thisIterator);
