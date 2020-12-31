@@ -1,10 +1,15 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.Side.LOWER;
+
 import java.util.List;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.parse.ast.Named;
+import org.smoothbuild.util.Lists;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * This class and all its subclasses are immutable.
@@ -41,8 +46,36 @@ public abstract class Type implements Named {
     return isPolytype;
   }
 
+  public String typeConstructor() {
+    return name();
+  }
+
+  public ImmutableList<Type> covariants() {
+    return ImmutableList.of();
+  }
+
+  public ImmutableList<Type> contravariants() {
+    return ImmutableList.of();
+  }
+
+  public boolean inequal(Type that, Side side) {
+    return that.equals(side.edge())
+        || this.equals(side.reversed().edge())
+        || inequalByConstruction(that, side);
+  }
+
+  private boolean inequalByConstruction(Type that, Side side) {
+    return this.typeConstructor().equals(that.typeConstructor())
+        && allMatch(this.covariants(), that.covariants(), side)
+        && allMatch(this.contravariants(), that.contravariants(), side.reversed());
+  }
+
+  private static boolean allMatch(List<Type> listA, List<Type> listB, Side side) {
+    return Lists.allMatch(listA, listB, (Type a, Type b) -> a.inequal(b, side));
+  }
+
   public boolean isAssignableFrom(Type type) {
-    return isAssignableFrom(type, false);
+    return inequal(type, LOWER);
   }
 
   public boolean isParamAssignableFrom(Type type) {

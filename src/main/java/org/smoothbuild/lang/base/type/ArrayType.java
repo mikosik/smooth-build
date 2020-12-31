@@ -5,6 +5,8 @@ import static org.smoothbuild.lang.base.Location.internal;
 
 import java.util.Objects;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * This class is immutable.
  */
@@ -16,8 +18,18 @@ public class ArrayType extends Type {
     this.elemType = requireNonNull(elemType);
   }
 
+  @Override
+  public String typeConstructor() {
+    return "[]";
+  }
+
   public Type elemType() {
     return elemType;
+  }
+
+  @Override
+  public ImmutableList<Type> covariants() {
+    return ImmutableList.of(elemType);
   }
 
   @Override
