@@ -49,17 +49,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public VariableToBounds inferVariableBounds(Type type, Side side) {
-    if (type instanceof ArrayType thatArrayType) {
-      return elemType.inferVariableBounds(thatArrayType.elemType(), side);
-    } else if (type instanceof NothingType) {
-      return elemType.inferVariableBounds(type, side);
-    } else {
-      return VariableToBounds.empty();
-    }
-  }
-
-  @Override
   public Type mergeWith(Type that, Side direction) {
     if (that instanceof ArrayType thatArray) {
       return new ArrayType(elemType.mergeWith(thatArray.elemType, direction));
