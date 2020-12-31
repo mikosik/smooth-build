@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public class Lists {
   @SafeVarargs
@@ -44,6 +45,18 @@ public class Lists {
         .stream()
         .map(function)
         .collect(toList());
+  }
+
+  public static <T, R> List<R> zip(List<T> listA, List<T> listB, BiFunction<T, T, R> biFunction) {
+    if (listA.size() != listB.size()) {
+      throw new IllegalArgumentException(
+          "List sizes differ " + listA.size() + " != " + listB.size() + " .");
+    }
+    Builder<R> builder = ImmutableList.builder();
+    for (int i = 0; i < listA.size(); i++) {
+      builder.add(biFunction.apply(listA.get(i), listB.get(i)));
+    }
+    return builder.build();
   }
 
   public static <T> boolean allMatch(List<T> listA, List<T> listB,
