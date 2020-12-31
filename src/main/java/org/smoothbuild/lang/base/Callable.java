@@ -15,7 +15,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class Callable extends Evaluable {
+public abstract class Callable extends Declared {
   public static final String PARENTHESES = "()";
   private final Type resultType;
   private final ImmutableList<Item> parameters;

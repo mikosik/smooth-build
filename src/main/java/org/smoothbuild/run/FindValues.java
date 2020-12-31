@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Value;
 
 public class FindValues {
@@ -19,7 +19,7 @@ public class FindValues {
     List<Value> callablesToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      Evaluable evaluable = evaluables.get(name);
+      Declared evaluable = evaluables.get(name);
       if (evaluable != null) {
         if (evaluable instanceof Value value) {
           callablesToRun.add(value);

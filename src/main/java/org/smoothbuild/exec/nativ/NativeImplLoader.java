@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.install.FullPathResolver;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
@@ -46,7 +46,7 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  private Native loadNativeImpl(Evaluable evaluable) throws LoadingNativeImplException {
+  private Native loadNativeImpl(Declared evaluable) throws LoadingNativeImplException {
     Path path = pathResolver.resolve(evaluable.location().module().toNative());
     Map<String, Native> natives = nativesInJar(path, evaluable.name());
     Native nativ = natives.get(evaluable.name());
@@ -77,7 +77,7 @@ public class NativeImplLoader {
     return nativesInJar;
   }
 
-  private void nativeResultMatchesDeclared(Evaluable evaluable, Native nativ)
+  private void nativeResultMatchesDeclared(Declared evaluable, Native nativ)
       throws LoadingNativeImplException {
     Method method = nativ.method();
     Type resultType = evaluable.type();
@@ -124,7 +124,7 @@ public class NativeImplLoader {
     }
   }
 
-  private static LoadingNativeImplException newException(Evaluable evaluable, String message) {
+  private static LoadingNativeImplException newException(Declared evaluable, String message) {
     return new LoadingNativeImplException(evaluable.location().toString() + ": " + message);
   }
 }

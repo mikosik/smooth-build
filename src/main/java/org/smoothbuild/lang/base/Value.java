@@ -10,7 +10,7 @@ import org.smoothbuild.lang.expr.ValueReferenceExpression;
 /**
  * This class is immutable.
  */
-public class Value extends Evaluable {
+public class Value extends Declared {
   private final Optional<Expression> body;
 
   public Value(Type type, String name, Optional<Expression> body, Location location) {

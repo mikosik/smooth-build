@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
@@ -44,26 +44,26 @@ import com.google.common.collect.ImmutableMap;
 public class EvaluableLoader {
   public static Value loadValue(
       ValueNode value,
-      Map<String, Evaluable> importedEvaluables,
-      Map<String, Evaluable> localEvaluables) {
+      Map<String, Declared> importedEvaluables,
+      Map<String, Declared> localEvaluables) {
     return new EvaluableSupplier(value, localEvaluables, importedEvaluables).loadValue();
   }
 
   public static Callable loadFunction(
       FuncNode func,
-      Map<String, Evaluable> importedEvaluables,
-      Map<String, Evaluable> localEvaluables) {
+      Map<String, Declared> importedEvaluables,
+      Map<String, Declared> localEvaluables) {
     return new EvaluableSupplier(func, localEvaluables, importedEvaluables).loadFunction();
   }
 
   private static class EvaluableSupplier {
     private final EvaluableNode evaluable;
-    private final Map<String, Evaluable> localEvaluables;
-    private final Map<String, Evaluable> importedEvaluables;
+    private final Map<String, Declared> localEvaluables;
+    private final Map<String, Declared> importedEvaluables;
     private ImmutableMap<String, Type> functionParameters;
 
-    public EvaluableSupplier(EvaluableNode evaluable, Map<String, Evaluable> localEvaluables,
-        Map<String, Evaluable> importedEvaluables) {
+    public EvaluableSupplier(EvaluableNode evaluable, Map<String, Declared> localEvaluables,
+        Map<String, Declared> importedEvaluables) {
       this.evaluable = evaluable;
       this.localEvaluables = localEvaluables;
       this.importedEvaluables = importedEvaluables;
@@ -144,7 +144,7 @@ public class EvaluableLoader {
       return callable.createCallExpression(argExpressions, call.location());
     }
 
-    private Evaluable find(String name) {
+    private Declared find(String name) {
       return requireNonNullElseGet(localEvaluables.get(name), () -> importedEvaluables.get(name));
     }
 

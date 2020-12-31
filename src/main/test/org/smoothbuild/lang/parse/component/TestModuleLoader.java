@@ -13,7 +13,7 @@ import java.util.List;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
@@ -58,13 +58,13 @@ public class TestModuleLoader {
     return this;
   }
 
-  public void containsEvaluable(Evaluable expected) {
+  public void containsEvaluable(Declared expected) {
     String name = expected.name();
-    ImmutableMap<String, Evaluable> evaluables = module.value().evaluables();
+    ImmutableMap<String, Declared> evaluables = module.value().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(evaluables)
         .containsKey(name);
-    Evaluable actual = evaluables.get(name);
+    Declared actual = evaluables.get(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
