@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -43,6 +44,19 @@ public class Lists {
         .stream()
         .map(function)
         .collect(toList());
+  }
+
+  public static <T> boolean allMatch(List<T> listA, List<T> listB,
+      BiFunction<T, T, Boolean> predicate) {
+    if (listA.size() != listB.size()) {
+      return false;
+    }
+    for (int i = 0; i < listA.size(); i++) {
+      if (!predicate.apply(listA.get(i), listB.get(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static <E> List<E> sane(List<E> list) {

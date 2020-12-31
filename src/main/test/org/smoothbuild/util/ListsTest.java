@@ -2,6 +2,7 @@ package org.smoothbuild.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
+import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.filter;
 import static org.smoothbuild.util.Lists.list;
@@ -11,6 +12,7 @@ import static org.smoothbuild.util.Lists.sane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -137,6 +139,47 @@ public class ListsTest {
     public void mapping_with_two_elements(){
       assertThat(mapM(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
+    }
+  }
+
+  @Nested
+  class _allMatch {
+    @Test
+    public void empty_lists_match() {
+      assertThat(allMatch(List.of(), List.of(), alwaysFalsePredicate()))
+          .isTrue();
+    }
+
+    @Test
+    public void same_size_lists_with_same_content_matches() {
+      assertThat(allMatch(List.of("aaa"), List.of("aaa"), String::equals))
+          .isTrue();
+    }
+
+    @Test
+    public void list_which_beginning_is_equal_to_other_list_does_not_match_it() {
+      assertThat(allMatch(List.of("aaa"), List.of("aaa", "bbb"), String::equals))
+          .isFalse();
+    }
+
+    @Test
+    public void non_empty_list_does_not_match_empty() {
+      assertThat(allMatch(List.of("aaa"), List.of(), alwaysTruePredicate()))
+          .isFalse();
+    }
+
+    @Test
+    public void empty_list_does_not_match_non_empty() {
+      assertThat(allMatch(List.of(), List.of("aaa"), alwaysTruePredicate()))
+          .isFalse();
+    }
+
+    private <T> BiFunction<T, T, Boolean> alwaysFalsePredicate() {
+      return (a, b) -> false;
+    }
+
+    private <T> BiFunction<T, T, Boolean> alwaysTruePredicate() {
+      return (a, b) -> true;
     }
   }
 
