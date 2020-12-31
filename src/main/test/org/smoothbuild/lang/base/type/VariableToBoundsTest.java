@@ -59,6 +59,24 @@ public class VariableToBoundsTest {
       assertThat(variableToBounds.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
       assertThat(variableToBounds.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
     }
+
+    @Test
+    public void mergeWith_returns_other_instance_when_this_is_empty() {
+      VariableToBounds variableToBounds = VariableToBounds.empty();
+      VariableToBounds toMerge = VariableToBounds.empty()
+          .addBounds(B, oneSideBound(LOWER, STRING));
+      assertThat(variableToBounds.mergeWith(toMerge))
+          .isSameInstanceAs(toMerge);
+    }
+
+    @Test
+    public void mergeWith_returns_this_instance_when_other_is_empty() {
+      VariableToBounds variableToBounds = VariableToBounds.empty()
+          .addBounds(B, oneSideBound(LOWER, STRING));
+      VariableToBounds toMerge = VariableToBounds.empty();
+      assertThat(variableToBounds.mergeWith(toMerge))
+          .isSameInstanceAs(variableToBounds);
+    }
   }
 
   @Test
