@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
@@ -71,11 +71,11 @@ public class TestModuleLoader {
 
   public void containsType(Type expected) {
     String name = expected.name();
-    ImmutableMap<String, Type> types = module.value().types();
+    ImmutableMap<String, Declared> types = module.value().types();
     assertWithMessage("Module evaluables doesn't contain '" + name + "' type.")
         .that(types)
         .containsKey(name);
-    Type actual = types.get(name);
+    Type actual = types.get(name).type();
     assertWithMessage(
         "Module contains type '" + name + "', but")
         .that(actual)

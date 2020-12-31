@@ -21,6 +21,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.MemoryLogger;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.type.StructType;
@@ -53,6 +54,7 @@ public class InferTypes {
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         if (struct.fields().stream().anyMatch(f -> f.type().isEmpty())) {
+          struct.setStruct(Optional.empty());
           return;
         }
 
@@ -60,7 +62,8 @@ public class InferTypes {
             .stream()
             .map(f -> new Item(f.type().get(), f.name(), empty(), f.location()))
             .collect(toImmutableList());
-        struct.setType(struct(struct.name(), struct.location(), fields));
+        StructType type = struct(struct.name(), struct.location(), fields);
+        struct.setStruct(Optional.of(new Declared(type, type.name(), type.location())));
       }
 
       @Override
@@ -157,22 +160,22 @@ public class InferTypes {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return createType(elementType).map(Types::array);
         } else {
-          return Optional.of(findType(type.name()));
+          return Optional.of(findType(type.name()).type());
         }
       }
 
-      private Type findType(String name) {
-        Type type = imported.types().get(name);
-        return requireNonNullElseGet(type, () -> findStructType(name));
+      private Declared findType(String name) {
+        Declared type = imported.types().get(name);
+        return requireNonNullElseGet(type, () -> findStruct(name));
       }
 
-      private Type findStructType(String name) {
+      private Declared findStruct(String name) {
         StructNode structNode = ast.structsMap().get(name);
         if (structNode == null) {
           throw new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structsMap());
         } else {
-          return structNode.type().orElseThrow(() -> new RuntimeException(
+          return structNode.struct().orElseThrow(() -> new RuntimeException(
               "Cannot find type `" + name + "`. Available types = " + ast.structsMap()));
         }
       }
