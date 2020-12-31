@@ -2,6 +2,7 @@ package org.smoothbuild.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.Arrays.asList;
+import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.filter;
@@ -9,6 +10,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.mapM;
 import static org.smoothbuild.util.Lists.sane;
+import static org.smoothbuild.util.Lists.zip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,6 +141,33 @@ public class ListsTest {
     public void mapping_with_two_elements(){
       assertThat(mapM(asList("abc", "def"), String::toUpperCase))
           .containsExactly("ABC", "DEF");
+    }
+  }
+
+  @Nested
+  class _zip {
+    @Test
+    public void empty_lists_zip_to_empty_list() {
+      assertThat(zip(List.of(), List.of(), (String a, String b) -> a))
+          .isEqualTo(List.of());
+    }
+
+    @Test
+    public void first_list_longer_than_second__causes_exception() {
+      assertCall(() -> zip(List.of(), List.of("a"), (String a, String b) -> a))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void first_list_shorter_than_second__causes_exception() {
+      assertCall(() -> zip(List.of("a"), List.of(), (String a, String b) -> a))
+          .throwsException(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void lists_elements_are_zipped_together() {
+      assertThat(zip(List.of("a", "b"), List.of("1", "2"), (String a, String b) -> a + b))
+          .isEqualTo(List.of("a1", "b2"));
     }
   }
 
