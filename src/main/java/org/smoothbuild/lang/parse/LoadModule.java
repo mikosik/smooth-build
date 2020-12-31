@@ -17,8 +17,8 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Value;
@@ -69,7 +69,7 @@ public class LoadModule {
     var declaredFunctions = loadCodes(imports, sortedAst);
     var declaredTypes = sortedAst.structs().stream()
         .map(structNode -> structNode.type().get())
-        .collect(toImmutableMap(Type::name, t -> t));
+        .collect(toImmutableMap(Type::name, t -> new Declared(t, t.name(), t.location())));
     result.setValue(new Definitions(declaredTypes, declaredFunctions));
     return result;
   }

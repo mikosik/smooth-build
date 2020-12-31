@@ -8,8 +8,8 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Value;
 
 public class FindValues {

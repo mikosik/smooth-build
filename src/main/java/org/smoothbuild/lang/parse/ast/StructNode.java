@@ -6,6 +6,7 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.Type;
 
@@ -14,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 public class StructNode extends NamedNode {
   private final ConstructorNode constructor;
   private final List<ItemNode> fields;
+  private Optional<Declared> struct;
 
   public StructNode(String name, List<ItemNode> fields, Location location) {
     this(name, ImmutableList.copyOf(fields), location);
@@ -31,6 +33,15 @@ public class StructNode extends NamedNode {
 
   public List<ItemNode> fields() {
     return fields;
+  }
+
+  public Optional<Declared> struct() {
+    return struct;
+  }
+
+  public void setStruct(Optional<Declared> struct) {
+    this.struct = struct;
+    setType(struct.map(Declared::type));
   }
 
   public class ConstructorNode extends CallableNode {
