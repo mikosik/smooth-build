@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.CallableNode;
@@ -22,7 +22,7 @@ public class Context {
   }
 
   public ImmutableList<ItemSignature> parametersOf(String name) {
-    Evaluable evaluable = imported.evaluables().get(name);
+    Declared evaluable = imported.evaluables().get(name);
     if (evaluable != null) {
       return ((Callable) evaluable).parameterSignatures();
     }

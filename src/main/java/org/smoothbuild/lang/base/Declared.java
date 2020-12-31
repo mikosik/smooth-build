@@ -8,12 +8,12 @@ import org.smoothbuild.lang.parse.ast.Named;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class Evaluable implements Named {
+public abstract class Declared implements Named {
   private final Type type;
   private final Location location;
   private final String name;
 
-  public Evaluable(Type type, String name, Location location) {
+  public Declared(Type type, String name, Location location) {
     this.type = requireNonNull(type);
     this.location = requireNonNull(location);
     this.name = requireNonNull(name);

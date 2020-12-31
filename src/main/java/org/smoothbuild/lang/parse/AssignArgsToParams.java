@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
@@ -48,7 +48,7 @@ public class AssignArgsToParams {
   public static ImmutableList<AParam> parameters(
       CallNode call, Definitions imported, ImmutableMap<String, CallableNode> callables) {
     String name = call.calledName();
-    Evaluable evaluable = imported.evaluables().get(name);
+    Declared evaluable = imported.evaluables().get(name);
     if (evaluable != null) {
       return ((Callable) evaluable).parameterSignatures()
           .stream()

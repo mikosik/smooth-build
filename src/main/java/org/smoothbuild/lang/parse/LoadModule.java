@@ -18,7 +18,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Evaluable;
+import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Value;
@@ -74,8 +74,8 @@ public class LoadModule {
     return result;
   }
 
-  private static ImmutableMap<String, Evaluable> loadCodes(Definitions imports, Ast ast) {
-    var localFunctions = new HashMap<String, Evaluable>();
+  private static ImmutableMap<String, Declared> loadCodes(Definitions imports, Ast ast) {
+    var localFunctions = new HashMap<String, Declared>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
