@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.any;
 import static org.smoothbuild.lang.base.type.Types.blob;
@@ -24,12 +23,12 @@ public class TestingTypes {
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
   public static final StructType PERSON = struct("Person", List.of(
-          new Item(STRING, "firstName", Optional.empty(), internal()),
-          new Item(STRING, "lastName", Optional.empty(),internal())));
+          new Item(STRING, "firstName", Optional.empty()),
+          new Item(STRING, "lastName", Optional.empty())));
   public static final StructType FLAG = struct("Flag", List.of(
-          new Item(BOOL, "flag", Optional.empty(),internal())));
+          new Item(BOOL, "flag", Optional.empty())));
   public static final StructType DATA = struct("Data", List.of(
-          new Item(BLOB, "data", Optional.empty(),internal())));
+          new Item(BLOB, "data", Optional.empty())));
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");
 

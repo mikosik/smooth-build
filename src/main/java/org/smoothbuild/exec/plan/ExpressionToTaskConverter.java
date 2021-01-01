@@ -59,7 +59,6 @@ import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.expr.ValueReferenceExpression;
-import org.smoothbuild.lang.parse.ast.Named;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -174,7 +173,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     }
   }
 
-  private static ImmutableMap<String, Task> nameToArgumentMap(List<? extends Named> names,
+  private static ImmutableMap<String, Task> nameToArgumentMap(List<Item> names,
       List<Task> arguments) {
     Builder<String, Task> builder = ImmutableMap.builder();
     for (int i = 0; i < arguments.size(); i++) {

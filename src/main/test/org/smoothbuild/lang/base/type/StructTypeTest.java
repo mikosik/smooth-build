@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.TestingLang.field;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
@@ -57,7 +56,7 @@ public class StructTypeTest {
   private static List<Item> fields(Type... types) {
     List<Item> result = new ArrayList<>();
     for (int i = 0; i < types.length; i++) {
-      result.add(new Item(types[i], "name" + i, Optional.empty(), internal()));
+      result.add(new Item(types[i], "name" + i, Optional.empty()));
     }
     return result;
   }

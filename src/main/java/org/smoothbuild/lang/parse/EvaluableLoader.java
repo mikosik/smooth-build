@@ -91,7 +91,7 @@ public class EvaluableLoader {
       String name = param.name();
       Optional<Expression> defaultValue = param.defaultValue()
           .map(this::createExpression);
-      return new Item(type, name, defaultValue, param.location());
+      return new Item(type, name, defaultValue);
     }
 
     private Expression createExpression(ExprNode expr) {

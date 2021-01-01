@@ -103,10 +103,10 @@ public class TestingLang {
 
   private static Item parameter(int line, Type type, String name,
       Optional<Expression> defaultValue) {
-    return new Item(type, name, defaultValue, loc(line));
+    return new Item(type, name, defaultValue);
   }
 
   public static Item field(int line, Type type, String name) {
-    return new Item(type, name, Optional.empty(), loc(line));
+    return new Item(type, name, Optional.empty());
   }
 }
