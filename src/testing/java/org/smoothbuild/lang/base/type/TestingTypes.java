@@ -9,7 +9,6 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.typeVariable;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,12 +23,12 @@ public class TestingTypes {
   public static final StringType STRING = string();
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
-  public static final StructType PERSON = struct("Person", loc(), List.of(
+  public static final StructType PERSON = struct("Person", List.of(
           new Item(STRING, "firstName", Optional.empty(), internal()),
           new Item(STRING, "lastName", Optional.empty(),internal())));
-  public static final StructType FLAG = struct("Flag", loc(), List.of(
+  public static final StructType FLAG = struct("Flag", List.of(
           new Item(BOOL, "flag", Optional.empty(),internal())));
-  public static final StructType DATA = struct("Data", loc(), List.of(
+  public static final StructType DATA = struct("Data", List.of(
           new Item(BLOB, "data", Optional.empty(),internal())));
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");

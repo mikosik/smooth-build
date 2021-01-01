@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
@@ -20,37 +19,37 @@ import org.smoothbuild.lang.base.Item;
 public class StructTypeTest {
   @Test
   public void struct_type_without_fields_can_be_created() {
-    struct("Struct", loc(), list());
+    struct("Struct", list());
   }
 
   @Test
   public void first_field_type_can_be_nothing() {
-    struct("Struct", loc(), fields(nothing()));
+    struct("Struct", fields(nothing()));
   }
 
   @Test
   public void first_field_type_can_be_nothing_array() {
-    struct("Struct", loc(), fields(a(nothing())));
+    struct("Struct", fields(a(nothing())));
   }
 
   @Test
   public void field_can_be_retrieved_by_name() {
     Item field = field(1, string(), "name1");
-    StructType struct = struct("Struct", loc(), List.of(field));
+    StructType struct = struct("Struct", List.of(field));
     assertThat(struct.fieldWithName("name1"))
         .isSameInstanceAs(field);
   }
 
   @Test
   public void contains_field_with_name_returns_true_for_existing_field() {
-    StructType struct = struct("Struct", loc(), List.of(field(1, string(), "name1")));
+    StructType struct = struct("Struct", List.of(field(1, string(), "name1")));
     assertThat(struct.containsFieldWithName("name1"))
         .isTrue();
   }
 
   @Test
   public void contains_field_with_name_returns_false_for_not_existing_field() {
-    StructType struct = struct("Struct", loc(), List.of(field(1, string(), "name1")));
+    StructType struct = struct("Struct", List.of(field(1, string(), "name1")));
     assertThat(struct.containsFieldWithName("name2"))
         .isFalse();
   }

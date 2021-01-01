@@ -67,10 +67,10 @@ public class LoadModule {
     }
 
     var declaredFunctions = loadCodes(imports, sortedAst);
-    var declaredTypes = sortedAst.structs().stream()
-        .map(structNode -> structNode.type().get())
-        .collect(toImmutableMap(Type::name, t -> new Declared(t, t.name(), t.location())));
-    result.setValue(new Definitions(declaredTypes, declaredFunctions));
+    var declaredStructs = sortedAst.structs().stream()
+        .map(structNode -> structNode.struct().get())
+        .collect(toImmutableMap(Declared::name, d -> d));
+    result.setValue(new Definitions(declaredStructs, declaredFunctions));
     return result;
   }
 

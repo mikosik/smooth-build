@@ -2,6 +2,7 @@ package org.smoothbuild.lang.base.type;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.smoothbuild.lang.base.TestingItem.field;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.TestingTypes.A;
@@ -21,7 +22,6 @@ import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.vtb;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.ArrayList;
@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.TestingItem;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -633,10 +632,10 @@ public class TypeTest {
     List<Type> types = ImmutableList.<Type>builder()
         .addAll(ELEMENTARY_TYPES)
         .add(B)
-        .add(struct("MyStruct", loc(), list()))
-        .add(struct("MyStruct", loc(), list(TestingItem.field("field"))))
-        .add(struct("MyStruct2", loc(), list(TestingItem.field("field"))))
-        .add(struct("MyStruct", loc(), list(TestingItem.field("field2"))))
+        .add(struct("MyStruct", list()))
+        .add(struct("MyStruct", list(field("field"))))
+        .add(struct("MyStruct2", list(field("field"))))
+        .add(struct("MyStruct", list(field("field2"))))
         .build();
     for (Type type : types) {
       equalsTester.addEqualityGroup(type, type);
