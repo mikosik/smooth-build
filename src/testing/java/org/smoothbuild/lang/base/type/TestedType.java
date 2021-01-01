@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.typeVariable;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -63,17 +62,17 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       "abc"
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", list(new Item(blob(), "value", Optional.empty(), loc(7)))),
+      struct("Data", list(new Item(blob(), "value", Optional.empty()))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"));
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", list(new Item(bool(), "value", Optional.empty(), loc(7)))),
+      struct("Flag", list(new Item(bool(), "value", Optional.empty()))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"));
   public static final TestedType STRUCT_WITH_STRING = new TestedType(
-      struct("Person", list(new Item(string(), "name", Optional.empty(), loc(7)))),
+      struct("Person", list(new Item(string(), "name", Optional.empty()))),
       """
           person("John")""",
       null,

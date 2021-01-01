@@ -2,7 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
@@ -35,7 +34,7 @@ public class CallableTest extends TestingContext {
 
   @Test
   public void params_returns_signature_params() {
-    List<Item> parameters = list(new Item(STRING, "name", Optional.empty(), internal()));
+    List<Item> parameters = list(new Item(STRING, "name", Optional.empty()));
     Callable callable = new MyCallable(STRING, "name", parameters);
     assertThat(callable.parameters())
         .isEqualTo(parameters);
@@ -65,11 +64,11 @@ public class CallableTest extends TestingContext {
   }
 
   private Item paramWithDefault() {
-    return new Item(STRING, "a", Optional.of(mock(Expression.class)), internal());
+    return new Item(STRING, "a", Optional.of(mock(Expression.class)));
   }
 
   private Item paramWithoutDefault() {
-    return new Item(STRING, "a", Optional.empty(), internal());
+    return new Item(STRING, "a", Optional.empty());
   }
 
   public static class MyCallable extends Callable {

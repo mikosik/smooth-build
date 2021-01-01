@@ -7,20 +7,17 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.parse.ast.Named;
 
 /**
  * Item is a function parameter or a struct field.
  *
  * This class is immutable.
  */
-public record Item(Type type, String name, Optional<Expression> defaultValue, Location location)
-    implements Named {
+public record Item(Type type, String name, Optional<Expression> defaultValue) {
   public Item {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
     this.defaultValue = requireNonNull(defaultValue);
-    this.location = requireNonNull(location);
   }
 
   public ItemSignature signature() {
