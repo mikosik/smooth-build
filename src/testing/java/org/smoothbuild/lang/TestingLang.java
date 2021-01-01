@@ -85,7 +85,7 @@ public class TestingLang {
   }
 
   public static StructType struct(int line, String name, Item field) {
-    return Types.struct(name, loc(line), List.of(field));
+    return Types.struct(name, List.of(field));
   }
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {

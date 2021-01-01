@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.parse.ast.Named;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -17,25 +15,17 @@ import com.google.common.collect.ImmutableList;
 /**
  * This class and all its subclasses are immutable.
  */
-public abstract class Type implements Named {
+public abstract class Type {
   protected final boolean isPolytype;
   private final String name;
-  private final Location location;
 
-  protected Type(String name, Location location, boolean isPolytype) {
+  protected Type(String name, boolean isPolytype) {
     this.name = name;
-    this.location = location;
     this.isPolytype = isPolytype;
   }
 
-  @Override
   public String name() {
     return name;
-  }
-
-  @Override
-  public Location location() {
-    return location;
   }
 
   public String q() {

@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isUpperCase;
 
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -52,8 +51,8 @@ public class Types {
     return STRING;
   }
 
-  public static StructType struct(String name, Location location, Iterable<Item> fields) {
-    return new StructType(name, location, ImmutableList.copyOf(fields));
+  public static StructType struct(String name, Iterable<Item> fields) {
+    return new StructType(name, ImmutableList.copyOf(fields));
   }
 
   public static ArrayType array(Type elemType) {

@@ -62,8 +62,8 @@ public class InferTypes {
             .stream()
             .map(f -> new Item(f.type().get(), f.name(), empty(), f.location()))
             .collect(toImmutableList());
-        StructType type = struct(struct.name(), struct.location(), fields);
-        struct.setStruct(Optional.of(new Declared(type, type.name(), type.location())));
+        StructType type = struct(struct.name(), fields);
+        struct.setStruct(Optional.of(new Declared(type, type.name(), struct.location())));
       }
 
       @Override

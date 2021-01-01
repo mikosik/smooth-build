@@ -63,17 +63,17 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       "abc"
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", loc(7), list(new Item(blob(), "value", Optional.empty(), loc(7)))),
+      struct("Data", list(new Item(blob(), "value", Optional.empty(), loc(7)))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"));
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", loc(7), list(new Item(bool(), "value", Optional.empty(), loc(7)))),
+      struct("Flag", list(new Item(bool(), "value", Optional.empty(), loc(7)))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"));
   public static final TestedType STRUCT_WITH_STRING = new TestedType(
-      struct("Person", loc(7), list(new Item(string(), "name", Optional.empty(), loc(7)))),
+      struct("Person", list(new Item(string(), "name", Optional.empty(), loc(7)))),
       """
           person("John")""",
       null,

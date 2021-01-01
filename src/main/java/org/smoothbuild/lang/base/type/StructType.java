@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Location;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -19,8 +18,8 @@ public class StructType extends Type {
   private final ImmutableList<Item> fields;
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
-  public StructType(String name, Location location, ImmutableList<Item> fields) {
-    super(name, location, false);
+  public StructType(String name, ImmutableList<Item> fields) {
+    super(name, false);
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
   }

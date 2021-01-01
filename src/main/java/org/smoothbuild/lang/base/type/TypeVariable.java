@@ -1,6 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.Location.internal;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 
 /**
@@ -8,7 +7,7 @@ import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
  */
 public class TypeVariable extends Type {
   public TypeVariable(String name) {
-    super(name, internal(), true);
+    super(name, true);
   }
 
   @Override
