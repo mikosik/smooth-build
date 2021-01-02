@@ -7,7 +7,7 @@ import static org.smoothbuild.lang.base.type.Types.bool;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.Types.typeVariable;
+import static org.smoothbuild.lang.base.type.Types.variable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +27,8 @@ public class TestingTypes {
           new ItemSignature(BOOL, "flag", Optional.empty())));
   public static final StructType DATA = struct("Data", List.of(
           new ItemSignature(BLOB, "data", Optional.empty())));
-  public static final TypeVariable A = typeVariable("A");
-  public static final TypeVariable B = typeVariable("B");
+  public static final Variable A = variable("A");
+  public static final Variable B = variable("B");
 
   public static final ImmutableList<Type> ELEMENTARY_TYPES = ImmutableList.<Type>builder()
       .addAll(BASE_TYPES)

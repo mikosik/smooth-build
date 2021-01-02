@@ -29,7 +29,7 @@ public class TypeVisitor<T> {
     return null;
   }
 
-  public T visit(TypeVariable type) {
+  public T visit(Variable type) {
     return null;
   }
 }

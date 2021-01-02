@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
+import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import org.smoothbuild.lang.base.Location;
@@ -19,7 +19,7 @@ public class TypeNode extends NamedNode {
   }
 
   public boolean isPolytype() {
-    return isTypeVariableName(name());
+    return isVariableName(name());
   }
 
   public TypeNode coreType() {

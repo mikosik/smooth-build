@@ -3,15 +3,17 @@ package org.smoothbuild.lang.base.type;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 
 /**
+ * Type variable.
+ *
  * This class is immutable.
  */
-public class TypeVariable extends Type {
-  public TypeVariable(String name) {
+public class Variable extends Type {
+  public Variable(String name) {
     super(name, true);
   }
 
   @Override
-  public Type mapTypeVariables(VariableToBounds variableToBounds, Side side) {
+  public Type mapVariables(VariableToBounds variableToBounds, Side side) {
     return variableToBounds.boundsMap().get(this).get(side);
   }
 

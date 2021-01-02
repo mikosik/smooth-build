@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.type.Types.bool;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.Types.typeVariable;
+import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -23,12 +23,12 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
   private static final AtomicLong UNIQUE_IDENTIFIER = new AtomicLong();
 
   public static final TestedType A = new TestedType(
-      typeVariable("A"),
+      variable("A"),
       null,
       null
   );
   public static final TestedType B = new TestedType(
-      typeVariable("B"),
+      variable("B"),
       null,
       null
   );

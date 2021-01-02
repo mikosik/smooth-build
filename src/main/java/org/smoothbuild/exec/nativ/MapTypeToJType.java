@@ -10,13 +10,13 @@ import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeNames;
-import org.smoothbuild.lang.base.type.TypeVariable;
+import org.smoothbuild.lang.base.type.Variable;
 
 public class MapTypeToJType {
   public static Class<? extends Obj> mapTypeToJType(Type type) {
     if (type instanceof ArrayType) {
       return Array.class;
-    } else if (type instanceof TypeVariable) {
+    } else if (type instanceof Variable) {
       return Obj.class;
     } else if (type instanceof StructType) {
       return Tuple.class;

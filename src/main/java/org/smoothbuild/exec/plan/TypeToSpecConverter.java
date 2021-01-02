@@ -18,8 +18,8 @@ import org.smoothbuild.lang.base.type.BoolType;
 import org.smoothbuild.lang.base.type.NothingType;
 import org.smoothbuild.lang.base.type.StringType;
 import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.lang.base.type.TypeVariable;
 import org.smoothbuild.lang.base.type.TypeVisitor;
+import org.smoothbuild.lang.base.type.Variable;
 
 public class TypeToSpecConverter extends TypeVisitor<Spec> {
   private final ObjectFactory objectFactory;
@@ -63,7 +63,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
   }
 
   @Override
-  public Spec visit(TypeVariable type) {
+  public Spec visit(Variable type) {
     throw new UnsupportedOperationException();
   }
 

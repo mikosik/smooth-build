@@ -7,10 +7,10 @@ import static java.util.Optional.ofNullable;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
-import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
+import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.typeVariable;
+import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 
@@ -153,8 +153,8 @@ public class InferTypes {
       }
 
       private Optional<Type> createType(TypeNode type) {
-        if (isTypeVariableName(type.name())) {
-          return Optional.of(typeVariable(type.name()));
+        if (isVariableName(type.name())) {
+          return Optional.of(variable(type.name()));
         } else if (type.isArray()) {
           TypeNode elementType = ((ArrayTypeNode) type).elementType();
           return createType(elementType).map(Types::array);

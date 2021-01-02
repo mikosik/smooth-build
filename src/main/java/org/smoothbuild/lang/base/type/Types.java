@@ -24,9 +24,9 @@ public class Types {
       STRING
   );
 
-  public static TypeVariable typeVariable(String name) {
-    checkArgument(isTypeVariableName(name), "Illegal type variable name '%s'", name);
-    return new TypeVariable(name);
+  public static Variable variable(String name) {
+    checkArgument(isVariableName(name), "Illegal type variable name '%s'", name);
+    return new Variable(name);
   }
 
   public static AnyType any() {
@@ -57,7 +57,7 @@ public class Types {
     return new ArrayType(elemType);
   }
 
-  public static boolean isTypeVariableName(String name) {
+  public static boolean isVariableName(String name) {
     return 1 == name.length() && isUpperCase(name.charAt(0));
   }
 }

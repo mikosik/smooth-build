@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Comparator.comparing;
-import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
+import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
@@ -194,7 +194,7 @@ public class AnalyzeSemantically {
       }
 
       private boolean isDefinedType(TypeNode type) {
-        return isTypeVariableName(type.name())
+        return isVariableName(type.name())
             || structNames.contains(type.name())
             || imported.types().containsKey(type.name());
       }
@@ -272,7 +272,7 @@ public class AnalyzeSemantically {
       @Override
       public void visitStruct(StructNode struct) {
         String name = struct.name();
-        if (isTypeVariableName(name)) {
+        if (isVariableName(name)) {
           logger.log(parseError(struct.location(),
               "`" + name + "` is illegal struct name. It must have at least two characters."));
         }
@@ -297,7 +297,7 @@ public class AnalyzeSemantically {
           }
         }
         for (ItemNode field : fields) {
-          if (isTypeVariableName(field.typeNode().name())) {
+          if (isVariableName(field.typeNode().name())) {
             logger.log(parseError(field, "Struct field type cannot have type variable."));
           }
         }
