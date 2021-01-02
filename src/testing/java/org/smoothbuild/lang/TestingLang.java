@@ -51,7 +51,7 @@ public class TestingLang {
 
   public static FieldReadExpression fieldRead(
       int line, ItemSignature field, Expression expression) {
-    return new FieldReadExpression(0, field, expression, loc(line));
+    return new FieldReadExpression(field, expression, loc(line));
   }
 
   public static CallExpression call(

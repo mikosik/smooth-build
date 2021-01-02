@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
@@ -118,10 +119,9 @@ public class EvaluableLoader {
 
     private Expression createFieldRead(FieldReadNode fieldReadNode) {
       StructType type = (StructType) fieldReadNode.expr().type().get();
-      int index = type.fieldIndex(fieldReadNode.fieldName());
+      ItemSignature field = type.fieldWithName(fieldReadNode.fieldName());
       Expression expression = createExpression(fieldReadNode.expr());
-      return new FieldReadExpression(
-          index, type.fields().get(index), expression, fieldReadNode.location());
+      return new FieldReadExpression(field, expression, fieldReadNode.location());
     }
 
     private Expression createReference(RefNode ref) {

@@ -47,6 +47,7 @@ import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
+import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
 import org.smoothbuild.lang.base.type.VariableToBounds;
@@ -83,8 +84,9 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   @Override
   public Task visit(FieldReadExpression expression) throws ExpressionVisitorException {
     ItemSignature field = expression.field();
+    StructType structType = (StructType) expression.expression().type();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
-        expression.index(), field.type().visit(toSpecConverter));
+        structType.fieldIndex(field.name()), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.expression());
     return new NormalTask(
         CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);
