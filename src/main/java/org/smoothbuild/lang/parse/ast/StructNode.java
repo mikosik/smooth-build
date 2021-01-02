@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Struct;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;
@@ -15,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 public class StructNode extends NamedNode {
   private final ConstructorNode constructor;
   private final List<ItemNode> fields;
-  private Optional<Declared> struct;
+  private Optional<Struct> struct;
 
   public StructNode(String name, List<ItemNode> fields, Location location) {
     this(name, ImmutableList.copyOf(fields), location);
@@ -35,11 +36,11 @@ public class StructNode extends NamedNode {
     return fields;
   }
 
-  public Optional<Declared> struct() {
+  public Optional<Struct> struct() {
     return struct;
   }
 
-  public void setStruct(Optional<Declared> struct) {
+  public void setStruct(Optional<Struct> struct) {
     this.struct = struct;
     setType(struct.map(Declared::type));
   }

@@ -3,11 +3,11 @@ package org.smoothbuild.lang.parse.component;
 import static org.smoothbuild.lang.TestingLang.array;
 import static org.smoothbuild.lang.TestingLang.blob;
 import static org.smoothbuild.lang.TestingLang.call;
-import static org.smoothbuild.lang.TestingLang.field;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
+import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
@@ -90,9 +90,9 @@ public class TrailingCommaTest {
   class field_list {
     @Test
     public void can_have_trailing_comma() {
-      module(structDeclaration("String field1,"))
+      module(structDeclaration("String field,"))
           .loadsSuccessfully()
-          .containsType(struct(1, "MyStruct", field(1, STRING, "field1")));
+          .containsType(struct(1, "MyStruct", itemSignature(STRING, "field")));
     }
 
     @Test

@@ -10,6 +10,7 @@ import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -48,7 +49,8 @@ public class TestingLang {
     return new ParameterReferenceExpression(type, name, loc(line));
   }
 
-  public static FieldReadExpression fieldRead(int line, Item field, Expression expression) {
+  public static FieldReadExpression fieldRead(
+      int line, ItemSignature field, Expression expression) {
     return new FieldReadExpression(0, field, expression, loc(line));
   }
 
@@ -84,7 +86,7 @@ public class TestingLang {
     return new Value(type, name, expression, loc(line));
   }
 
-  public static StructType struct(int line, String name, Item field) {
+  public static StructType struct(int line, String name, ItemSignature field) {
     return Types.struct(name, List.of(field));
   }
 

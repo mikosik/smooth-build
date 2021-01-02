@@ -12,8 +12,6 @@ import static org.smoothbuild.lang.base.type.Types.typeVariable;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Item;
-
 import com.google.common.collect.ImmutableList;
 
 public class TestingTypes {
@@ -23,12 +21,12 @@ public class TestingTypes {
   public static final BlobType BLOB = blob();
   public static final NothingType NOTHING = nothing();
   public static final StructType PERSON = struct("Person", List.of(
-          new Item(STRING, "firstName", Optional.empty()),
-          new Item(STRING, "lastName", Optional.empty())));
+          new ItemSignature(STRING, "firstName", Optional.empty()),
+          new ItemSignature(STRING, "lastName", Optional.empty())));
   public static final StructType FLAG = struct("Flag", List.of(
-          new Item(BOOL, "flag", Optional.empty())));
+          new ItemSignature(BOOL, "flag", Optional.empty())));
   public static final StructType DATA = struct("Data", List.of(
-          new Item(BLOB, "data", Optional.empty())));
+          new ItemSignature(BLOB, "data", Optional.empty())));
   public static final TypeVariable A = typeVariable("A");
   public static final TypeVariable B = typeVariable("B");
 
