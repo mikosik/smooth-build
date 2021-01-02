@@ -40,7 +40,7 @@ public class Function extends Callable {
   private Type inferResultType(ImmutableList<Expression> arguments) {
     var variableToBounds =
         inferVariableBounds(parameterTypes(), map(arguments, Expression::type), LOWER);
-    return resultType().mapTypeVariables(variableToBounds, LOWER);
+    return resultType().mapVariables(variableToBounds, LOWER);
   }
 
   @Override

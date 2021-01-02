@@ -32,9 +32,9 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapTypeVariables(VariableToBounds variableToBounds,
+  public Type mapVariables(VariableToBounds variableToBounds,
       Side side) {
-    return new ArrayType(elemType.mapTypeVariables(variableToBounds, side));
+    return new ArrayType(elemType.mapVariables(variableToBounds, side));
   }
 
   @Override

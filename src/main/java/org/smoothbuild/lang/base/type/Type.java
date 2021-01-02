@@ -75,7 +75,7 @@ public abstract class Type {
     return isAssignableFrom(type, true);
   }
 
-  public Type mapTypeVariables(VariableToBounds variableToBounds, Side side) {
+  public Type mapVariables(VariableToBounds variableToBounds, Side side) {
     return this;
   }
 

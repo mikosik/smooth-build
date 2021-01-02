@@ -94,29 +94,29 @@ public class TypeTest {
   }
 
   @ParameterizedTest
-  @MethodSource("mapTypeVariable_test_data")
-  public void mapTypeVariable(Type type, VariableToBounds variableToBounds, Type expected) {
+  @MethodSource("mapVariables_test_data")
+  public void mapVariables(Type type, VariableToBounds variableToBounds, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapTypeVariables(variableToBounds, LOWER))
+      assertCall(() -> type.mapVariables(variableToBounds, LOWER))
           .throwsException(new UnsupportedOperationException(
-              arrayTypeVariable(type).toString() + " is not generic"));
+              arrayVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapTypeVariables(variableToBounds, LOWER))
+      assertThat(type.mapVariables(variableToBounds, LOWER))
           .isEqualTo(expected);
     }
   }
 
-  private static Type arrayTypeVariable(Type type) {
+  private static Type arrayVariable(Type type) {
     if (type instanceof ArrayType arrayType) {
-      return arrayTypeVariable(arrayType.elemType());
+      return arrayVariable(arrayType.elemType());
     } else {
       return type;
     }
   }
 
-  public static List<Arguments> mapTypeVariable_test_data() {
+  public static List<Arguments> mapVariables_test_data() {
     var result = new ArrayList<Arguments>();
-    for (TypeVariable type : List.of(A, B)) {
+    for (Variable type : List.of(A, B)) {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = a(type);
         ArrayType newCoreArray = a(newCore);

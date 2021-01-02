@@ -6,14 +6,14 @@ import java.util.Map.Entry;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public record VariableToBounds(ImmutableMap<TypeVariable, Bounds> boundsMap) {
+public record VariableToBounds(ImmutableMap<Variable, Bounds> boundsMap) {
   private static final VariableToBounds EMPTY = new VariableToBounds(ImmutableMap.of());
 
   public static VariableToBounds empty() {
     return EMPTY;
   }
 
-  public VariableToBounds addBounds(TypeVariable variable, Bounds bounds) {
+  public VariableToBounds addBounds(Variable variable, Bounds bounds) {
     return mergeWith(ImmutableMap.of(variable, bounds));
   }
 
@@ -25,12 +25,12 @@ public record VariableToBounds(ImmutableMap<TypeVariable, Bounds> boundsMap) {
     }
   }
 
-  private VariableToBounds mergeWith(ImmutableMap<TypeVariable, Bounds> thatBoundsMap) {
+  private VariableToBounds mergeWith(ImmutableMap<Variable, Bounds> thatBoundsMap) {
     if (thatBoundsMap.isEmpty()) {
       return this;
     }
 
-    Builder<TypeVariable, Bounds> builder = ImmutableMap.builder();
+    Builder<Variable, Bounds> builder = ImmutableMap.builder();
     var thisIterator = this.boundsMap.entrySet().iterator();
     var thatIterator = thatBoundsMap.entrySet().iterator();
     var thisCurrent = nextOrNull(thisIterator);
@@ -63,7 +63,7 @@ public record VariableToBounds(ImmutableMap<TypeVariable, Bounds> boundsMap) {
     return new VariableToBounds(builder.build());
   }
 
-  private static Entry<TypeVariable, Bounds> nextOrNull(Iterator<Entry<TypeVariable, Bounds>> it) {
+  private static Entry<Variable, Bounds> nextOrNull(Iterator<Entry<Variable, Bounds>> it) {
     return it.hasNext() ? it.next() : null;
   }
 
