@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-public class ParameterTest {
+public class ItemTest {
   private final String name = "name";
   private Item parameter;
 
