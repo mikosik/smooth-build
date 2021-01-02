@@ -10,7 +10,6 @@ import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.isTypeVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.Types.typeVariable;
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
@@ -24,6 +23,7 @@ import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Declared;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.Struct;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -62,8 +62,7 @@ public class InferTypes {
             .stream()
             .map(f -> new Item(f.type().get(), f.name(), empty()))
             .collect(toImmutableList());
-        StructType type = struct(struct.name(), fields);
-        struct.setStruct(Optional.of(new Declared(type, type.name(), struct.location())));
+        struct.setStruct(Optional.of(new Struct(struct.name(), fields, struct.location())));
       }
 
       @Override

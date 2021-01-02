@@ -17,8 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.smoothbuild.lang.base.Item;
-
 import com.google.common.collect.ImmutableList;
 
 public record TestedType(Type type, String literal, Object value, Set<String> declarations) {
@@ -62,17 +60,17 @@ public record TestedType(Type type, String literal, Object value, Set<String> de
       "abc"
   );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
-      struct("Data", list(new Item(blob(), "value", Optional.empty()))),
+      struct("Data", list(new ItemSignature(blob(), "value", Optional.empty()))),
       "data(0xAB)",
       null,
       Set.of("Data{ Blob value }"));
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
-      struct("Flag", list(new Item(bool(), "value", Optional.empty()))),
+      struct("Flag", list(new ItemSignature(bool(), "value", Optional.empty()))),
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"));
   public static final TestedType STRUCT_WITH_STRING = new TestedType(
-      struct("Person", list(new Item(string(), "name", Optional.empty()))),
+      struct("Person", list(new ItemSignature(string(), "name", Optional.empty()))),
       """
           person("John")""",
       null,

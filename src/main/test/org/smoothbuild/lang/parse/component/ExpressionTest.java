@@ -4,7 +4,6 @@ import static org.smoothbuild.lang.TestingLang.array;
 import static org.smoothbuild.lang.TestingLang.blob;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.constr;
-import static org.smoothbuild.lang.TestingLang.field;
 import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
@@ -13,6 +12,7 @@ import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
 import static org.smoothbuild.lang.TestingLang.valueRef;
+import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
@@ -21,7 +21,7 @@ import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 
 public class ExpressionTest {
@@ -170,7 +170,7 @@ public class ExpressionTest {
 
   @Test
   public void field_read() {
-    Item field = field(2, STRING, "field");
+    ItemSignature field = itemSignature(STRING, "field");
     StructType myStruct = struct(1, "MyStruct", field);
     module("""
           MyStruct {
@@ -202,12 +202,12 @@ public class ExpressionTest {
           }
           """)
         .loadsSuccessfully()
-        .containsType(struct(1, "MyStruct", field(2, STRING, "field")));
+        .containsType(struct(1, "MyStruct", itemSignature(STRING, "field")));
   }
 
   @Test
   public void constructor() {
-    StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
+    StructType struct = struct(1, "MyStruct", itemSignature(STRING, "field"));
     Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {
@@ -220,7 +220,7 @@ public class ExpressionTest {
 
   @Test
   public void constructor_call_with_argument() {
-    StructType struct = struct(1, "MyStruct", field(2, STRING, "field"));
+    StructType struct = struct(1, "MyStruct", itemSignature(STRING, "field"));
     Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {

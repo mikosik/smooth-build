@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import org.smoothbuild.lang.base.Item;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -15,22 +13,22 @@ import com.google.common.collect.ImmutableMap;
  * This class is immutable.
  */
 public class StructType extends Type {
-  private final ImmutableList<Item> fields;
+  private final ImmutableList<ItemSignature> fields;
   private final ImmutableMap<String, Integer> fieldNameToIndex;
 
-  public StructType(String name, ImmutableList<Item> fields) {
+  public StructType(String name, ImmutableList<ItemSignature> fields) {
     super(name, false);
     this.fields = fields;
     this.fieldNameToIndex = fieldsMap(fields);
   }
 
-  private static ImmutableMap<String, Integer> fieldsMap(List<? extends Item> fields) {
+  private static ImmutableMap<String, Integer> fieldsMap(List<ItemSignature> fields) {
     return IntStream.range(0, fields.size())
         .boxed()
         .collect(toImmutableMap(i -> fields.get(i).name(), i -> i));
   }
 
-  public ImmutableList<Item> fields() {
+  public ImmutableList<ItemSignature> fields() {
     return fields;
   }
 
@@ -38,7 +36,7 @@ public class StructType extends Type {
     return fieldNameToIndex.containsKey(name);
   }
 
-  public Item fieldWithName(String name) {
+  public ItemSignature fieldWithName(String name) {
     return fields.get(fieldIndex(name));
   }
 
