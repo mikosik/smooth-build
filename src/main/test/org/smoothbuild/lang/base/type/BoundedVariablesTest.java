@@ -14,25 +14,25 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.testing.EqualsTester;
 
-public class VariableToBoundsTest {
+public class BoundedVariablesTest {
   @Nested
   class _addBounds {
     @Test
     public void bounds_for_the_same_type_variable_are_merged() {
-      VariableToBounds variableToBounds = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL))
           .addBounds(A, oneSideBound(LOWER, STRING));
-      assertThat(variableToBounds.boundsMap().get(A))
+      assertThat(boundedVariables.boundsMap().get(A))
           .isEqualTo(new Bounds(STRING, BOOL));
     }
 
     @Test
     public void bounds_for_different_type_variables_are_not_merged() {
-      VariableToBounds variableToBounds = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL))
           .addBounds(B, oneSideBound(LOWER, STRING));
-      assertThat(variableToBounds.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
-      assertThat(variableToBounds.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
+      assertThat(boundedVariables.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
+      assertThat(boundedVariables.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
     }
   }
 
@@ -40,62 +40,62 @@ public class VariableToBoundsTest {
   class _mergeWith {
     @Test
     public void bounds_for_the_same_type_variable_are_merged() {
-      VariableToBounds toMerge = VariableToBounds.empty()
+      BoundedVariables toMerge = BoundedVariables.empty()
           .addBounds(A, oneSideBound(LOWER, STRING));
-      VariableToBounds variableToBounds = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL))
           .mergeWith(toMerge);
-      assertThat(variableToBounds.boundsMap().get(A))
+      assertThat(boundedVariables.boundsMap().get(A))
           .isEqualTo(new Bounds(STRING, BOOL));
     }
 
     @Test
     public void bounds_for_different_type_variables_are_not_merged() {
-      VariableToBounds toMerge = VariableToBounds.empty()
+      BoundedVariables toMerge = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
-      VariableToBounds variableToBounds = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(A, oneSideBound(UPPER, BOOL))
           .mergeWith(toMerge);
-      assertThat(variableToBounds.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
-      assertThat(variableToBounds.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
+      assertThat(boundedVariables.boundsMap().get(A)).isEqualTo(oneSideBound(UPPER, BOOL));
+      assertThat(boundedVariables.boundsMap().get(B)).isEqualTo(oneSideBound(LOWER, STRING));
     }
 
     @Test
     public void mergeWith_returns_other_instance_when_this_is_empty() {
-      VariableToBounds variableToBounds = VariableToBounds.empty();
-      VariableToBounds toMerge = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty();
+      BoundedVariables toMerge = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
-      assertThat(variableToBounds.mergeWith(toMerge))
+      assertThat(boundedVariables.mergeWith(toMerge))
           .isSameInstanceAs(toMerge);
     }
 
     @Test
     public void mergeWith_returns_this_instance_when_other_is_empty() {
-      VariableToBounds variableToBounds = VariableToBounds.empty()
+      BoundedVariables boundedVariables = BoundedVariables.empty()
           .addBounds(B, oneSideBound(LOWER, STRING));
-      VariableToBounds toMerge = VariableToBounds.empty();
-      assertThat(variableToBounds.mergeWith(toMerge))
-          .isSameInstanceAs(variableToBounds);
+      BoundedVariables toMerge = BoundedVariables.empty();
+      assertThat(boundedVariables.mergeWith(toMerge))
+          .isSameInstanceAs(boundedVariables);
     }
   }
 
   @Test
   public void constraints_object_is_immutable() {
-    VariableToBounds empty = VariableToBounds.empty();
+    BoundedVariables empty = BoundedVariables.empty();
     empty.addBounds(A, oneSideBound(UPPER, BOOL));
     assertThat(empty)
-        .isEqualTo(VariableToBounds.empty());
+        .isEqualTo(BoundedVariables.empty());
   }
 
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(VariableToBounds.empty())
-        .addEqualityGroup(VariableToBounds.empty().addBounds(A, oneSideBound(LOWER, STRING)))
-        .addEqualityGroup(VariableToBounds.empty().addBounds(A, oneSideBound(UPPER, STRING)))
-        .addEqualityGroup(VariableToBounds.empty().addBounds(A, oneSideBound(LOWER, BOOL)))
+        .addEqualityGroup(BoundedVariables.empty())
+        .addEqualityGroup(BoundedVariables.empty().addBounds(A, oneSideBound(LOWER, STRING)))
+        .addEqualityGroup(BoundedVariables.empty().addBounds(A, oneSideBound(UPPER, STRING)))
+        .addEqualityGroup(BoundedVariables.empty().addBounds(A, oneSideBound(LOWER, BOOL)))
         .addEqualityGroup(
-            VariableToBounds.empty().addBounds(B, oneSideBound(LOWER, STRING)),
-            VariableToBounds.empty().addBounds(B, oneSideBound(LOWER, STRING)));
+            BoundedVariables.empty().addBounds(B, oneSideBound(LOWER, STRING)),
+            BoundedVariables.empty().addBounds(B, oneSideBound(LOWER, STRING)));
   }
 }
