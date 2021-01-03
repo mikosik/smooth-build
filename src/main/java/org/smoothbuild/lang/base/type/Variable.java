@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
  */
 public class Variable extends Type {
   public Variable(String name) {
-    super(name, true);
+    super(name, new TypeConstructor(name), true);
   }
 
   @Override

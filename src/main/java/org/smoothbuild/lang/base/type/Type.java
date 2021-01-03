@@ -9,19 +9,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-import org.smoothbuild.util.Lists;
-
 import com.google.common.collect.ImmutableList;
 
 /**
  * This class and all its subclasses are immutable.
  */
 public abstract class Type {
-  protected final boolean isPolytype;
   private final String name;
+  private final TypeConstructor typeConstructor;
+  protected final boolean isPolytype;
 
-  protected Type(String name, boolean isPolytype) {
+  protected Type(String name, TypeConstructor typeConstructor, boolean isPolytype) {
     this.name = name;
+    this.typeConstructor = typeConstructor;
     this.isPolytype = isPolytype;
   }
 
@@ -40,10 +40,6 @@ public abstract class Type {
     return isPolytype;
   }
 
-  public String typeConstructor() {
-    return name();
-  }
-
   public ImmutableList<Type> covariants() {
     return ImmutableList.of();
   }
@@ -59,7 +55,7 @@ public abstract class Type {
   }
 
   private boolean inequalByConstruction(Type that, Side side) {
-    return this.typeConstructor().equals(that.typeConstructor())
+    return this.typeConstructor.equals(that.typeConstructor)
         && allInequal(this.covariants(), that.covariants(), side)
         && allInequal(this.contravariants(), that.contravariants(), side.reversed());
   }
@@ -92,7 +88,7 @@ public abstract class Type {
   public VariableToBounds inferVariableBounds(Type that, Side side) {
     if (that.equals(side.edge())) {
       return inferVariableBoundFromEdge(side);
-    } else if (this.typeConstructor().equals(that.typeConstructor())) {
+    } else if (this.typeConstructor.equals(that.typeConstructor)) {
       return reduce(
           zip(this.covariants(), that.covariants(), inferFunction(side)),
           zip(this.contravariants(), that.contravariants(), inferFunction(side.reversed())));
