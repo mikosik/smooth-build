@@ -13,13 +13,13 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", elemType.isPolytype());
+    super("[" +  elemType.name() + "]", createTypeConstructor(), elemType.isPolytype());
     this.elemType = requireNonNull(elemType);
   }
 
-  @Override
-  public String typeConstructor() {
-    return "[]";
+  private static TypeConstructor createTypeConstructor() {
+    return new TypeConstructor("[]", 1, 0,
+        (covariants, contravariants) -> new ArrayType(covariants.get(0)));
   }
 
   public Type elemType() {

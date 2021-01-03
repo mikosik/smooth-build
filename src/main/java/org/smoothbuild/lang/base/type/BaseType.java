@@ -5,7 +5,7 @@ package org.smoothbuild.lang.base.type;
  */
 public abstract class BaseType extends Type {
   public BaseType(String name) {
-    super(name, false);
+    super(name, new TypeConstructor(name), false);
   }
 }
 
