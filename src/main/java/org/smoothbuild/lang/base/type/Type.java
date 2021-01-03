@@ -117,11 +117,25 @@ public abstract class Type {
   }
 
   public Type mergeWith(Type that, Side direction) {
-    if (direction.reversed().edge().equals(that) || this.equals(that)) {
+    Side reversed = direction.reversed();
+    Type reversedEdge = reversed.edge();
+    if (reversedEdge.equals(that)) {
       return this;
+    } else if (reversedEdge.equals(this)) {
+      return that;
+    } else if (this.equals(that)) {
+      return this;
+    } else if (this.typeConstructor.equals(that.typeConstructor)) {
+      var covar = zip(covariants(), that.covariants(), mergeWithFunction(direction));
+      var contravar = zip(contravariants(), that.contravariants(), mergeWithFunction(reversed));
+      return typeConstructor.construct(covar, contravar);
     } else {
       return direction.edge();
     }
+  }
+
+  private static BiFunction<Type, Type, Type> mergeWithFunction(Side direction) {
+    return (a, b) -> a.mergeWith(b, direction);
   }
 
   public abstract <T> T visit(TypeVisitor<T> visitor);
