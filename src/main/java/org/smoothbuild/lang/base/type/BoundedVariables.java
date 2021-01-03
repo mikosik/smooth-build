@@ -6,26 +6,26 @@ import java.util.Map.Entry;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public record VariableToBounds(ImmutableMap<Variable, Bounds> boundsMap) {
-  private static final VariableToBounds EMPTY = new VariableToBounds(ImmutableMap.of());
+public record BoundedVariables(ImmutableMap<Variable, Bounds> boundsMap) {
+  private static final BoundedVariables EMPTY = new BoundedVariables(ImmutableMap.of());
 
-  public static VariableToBounds empty() {
+  public static BoundedVariables empty() {
     return EMPTY;
   }
 
-  public VariableToBounds addBounds(Variable variable, Bounds bounds) {
+  public BoundedVariables addBounds(Variable variable, Bounds bounds) {
     return mergeWith(ImmutableMap.of(variable, bounds));
   }
 
-  public VariableToBounds mergeWith(VariableToBounds variableToBounds) {
+  public BoundedVariables mergeWith(BoundedVariables boundedVariables) {
     if (boundsMap.isEmpty()) {
-      return variableToBounds;
+      return boundedVariables;
     } else {
-      return mergeWith(variableToBounds.boundsMap);
+      return mergeWith(boundedVariables.boundsMap);
     }
   }
 
-  private VariableToBounds mergeWith(ImmutableMap<Variable, Bounds> thatBoundsMap) {
+  private BoundedVariables mergeWith(ImmutableMap<Variable, Bounds> thatBoundsMap) {
     if (thatBoundsMap.isEmpty()) {
       return this;
     }
@@ -60,7 +60,7 @@ public record VariableToBounds(ImmutableMap<Variable, Bounds> boundsMap) {
       builder.put(thatCurrent);
       thatCurrent = nextOrNull(thatIterator);
     }
-    return new VariableToBounds(builder.build());
+    return new BoundedVariables(builder.build());
   }
 
   private static Entry<Variable, Bounds> nextOrNull(Iterator<Entry<Variable, Bounds>> it) {

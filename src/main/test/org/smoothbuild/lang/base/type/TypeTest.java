@@ -20,7 +20,6 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.struct;
-import static org.smoothbuild.lang.base.type.constraint.TestingVariableToBounds.vtb;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
 
@@ -32,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.smoothbuild.lang.base.type.constraint.TestingBoundedVariables;
 import org.smoothbuild.util.Lists;
 
 import com.google.common.collect.ImmutableList;
@@ -95,13 +95,13 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("mapVariables_test_data")
-  public void mapVariables(Type type, VariableToBounds variableToBounds, Type expected) {
+  public void mapVariables(Type type, BoundedVariables boundedVariables, Type expected) {
     if (expected == null) {
-      assertCall(() -> type.mapVariables(variableToBounds, LOWER))
+      assertCall(() -> type.mapVariables(boundedVariables, LOWER))
           .throwsException(new UnsupportedOperationException(
               arrayVariable(type).toString() + " is not generic"));
     } else {
-      assertThat(type.mapVariables(variableToBounds, LOWER))
+      assertThat(type.mapVariables(boundedVariables, LOWER))
           .isEqualTo(expected);
     }
   }
@@ -120,16 +120,16 @@ public class TypeTest {
       for (Type newCore : ELEMENTARY_TYPES) {
         Type typeArray = a(type);
         ArrayType newCoreArray = a(newCore);
-        result.add(arguments(type, vtb(type, LOWER, newCore), newCore));
-        result.add(arguments(typeArray, vtb(type, LOWER, newCore), newCoreArray));
-        result.add(arguments(type, vtb(type, LOWER, newCoreArray), newCoreArray));
-        result.add(arguments(typeArray, vtb(type, LOWER, newCoreArray), a(a(newCore))));
+        result.add(arguments(type, TestingBoundedVariables.bv(type, LOWER, newCore), newCore));
+        result.add(arguments(typeArray, TestingBoundedVariables.bv(type, LOWER, newCore), newCoreArray));
+        result.add(arguments(type, TestingBoundedVariables.bv(type, LOWER, newCoreArray), newCoreArray));
+        result.add(arguments(typeArray, TestingBoundedVariables.bv(type, LOWER, newCoreArray), a(a(newCore))));
       }
     }
     for (Type type : ELEMENTARY_NON_POLYTYPE_TYPES) {
       Type typeArray = a(type);
-      result.add(arguments(type, VariableToBounds.empty(), type));
-      result.add(arguments(typeArray, VariableToBounds.empty(), typeArray));
+      result.add(arguments(type, BoundedVariables.empty(), type));
+      result.add(arguments(typeArray, BoundedVariables.empty(), typeArray));
     }
     return result;
   }
@@ -179,7 +179,7 @@ public class TypeTest {
 
   @ParameterizedTest
   @MethodSource("inferVariableBounds_test_data")
-  public void inferVariableBounds(Type type, Type assigned, VariableToBounds expected) {
+  public void inferVariableBounds(Type type, Type assigned, BoundedVariables expected) {
     assertThat(type.inferVariableBounds(assigned, LOWER))
         .isEqualTo(expected);
   }
@@ -188,29 +188,29 @@ public class TypeTest {
     var result = new ArrayList<Arguments>();
     for (Type type : Lists.concat(ELEMENTARY_TYPES, B)) {
       if (type instanceof NothingType) {
-        result.add(arguments(A, NOTHING, vtb(A, LOWER, NOTHING)));
-        result.add(arguments(A, a(NOTHING), vtb(A, LOWER, a(NOTHING))));
-        result.add(arguments(A, a(a(NOTHING)), vtb(A, LOWER, a(a(NOTHING)))));
+        result.add(arguments(A, NOTHING, TestingBoundedVariables.bv(A, LOWER, NOTHING)));
+        result.add(arguments(A, a(NOTHING), TestingBoundedVariables.bv(A, LOWER, a(NOTHING))));
+        result.add(arguments(A, a(a(NOTHING)), TestingBoundedVariables.bv(A, LOWER, a(a(NOTHING)))));
 
-        result.add(arguments(a(A), NOTHING, vtb(A, LOWER, NOTHING)));
-        result.add(arguments(a(A), a(NOTHING), vtb(A, LOWER, NOTHING)));
-        result.add(arguments(a(A), a(a(NOTHING)), vtb(A, LOWER, a(NOTHING))));
+        result.add(arguments(a(A), NOTHING, TestingBoundedVariables.bv(A, LOWER, NOTHING)));
+        result.add(arguments(a(A), a(NOTHING), TestingBoundedVariables.bv(A, LOWER, NOTHING)));
+        result.add(arguments(a(A), a(a(NOTHING)), TestingBoundedVariables.bv(A, LOWER, a(NOTHING))));
 
-        result.add(arguments(a(a(A)), NOTHING, vtb(A, LOWER, NOTHING)));
-        result.add(arguments(a(a(A)), a(NOTHING), vtb(A, LOWER, NOTHING)));
-        result.add(arguments(a(a(A)), a(a(NOTHING)), vtb(A, LOWER, NOTHING)));
+        result.add(arguments(a(a(A)), NOTHING, TestingBoundedVariables.bv(A, LOWER, NOTHING)));
+        result.add(arguments(a(a(A)), a(NOTHING), TestingBoundedVariables.bv(A, LOWER, NOTHING)));
+        result.add(arguments(a(a(A)), a(a(NOTHING)), TestingBoundedVariables.bv(A, LOWER, NOTHING)));
       } else {
-        result.add(arguments(A, type, vtb(A, LOWER, type)));
-        result.add(arguments(A, a(type), vtb(A, LOWER, a(type))));
-        result.add(arguments(A, a(a(type)), vtb(A, LOWER, a(a(type)))));
+        result.add(arguments(A, type, TestingBoundedVariables.bv(A, LOWER, type)));
+        result.add(arguments(A, a(type), TestingBoundedVariables.bv(A, LOWER, a(type))));
+        result.add(arguments(A, a(a(type)), TestingBoundedVariables.bv(A, LOWER, a(a(type)))));
 
-        result.add(arguments(a(A), type, VariableToBounds.empty()));
-        result.add(arguments(a(A), a(type), vtb(A, LOWER, type)));
-        result.add(arguments(a(A), a(a(type)), vtb(A, LOWER, a(type))));
+        result.add(arguments(a(A), type, BoundedVariables.empty()));
+        result.add(arguments(a(A), a(type), TestingBoundedVariables.bv(A, LOWER, type)));
+        result.add(arguments(a(A), a(a(type)), TestingBoundedVariables.bv(A, LOWER, a(type))));
 
-        result.add(arguments(a(a(A)), type, VariableToBounds.empty()));
-        result.add(arguments(a(a(A)), a(type), VariableToBounds.empty()));
-        result.add(arguments(a(a(A)), a(a(type)), vtb(A,
+        result.add(arguments(a(a(A)), type, BoundedVariables.empty()));
+        result.add(arguments(a(a(A)), a(type), BoundedVariables.empty()));
+        result.add(arguments(a(a(A)), a(a(type)), TestingBoundedVariables.bv(A,
             LOWER, type)));
       }
     }

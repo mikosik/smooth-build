@@ -13,8 +13,8 @@ public class Variable extends Type {
   }
 
   @Override
-  public Type mapVariables(VariableToBounds variableToBounds, Side side) {
-    return variableToBounds.boundsMap().get(this).get(side);
+  public Type mapVariables(BoundedVariables boundedVariables, Side side) {
+    return boundedVariables.boundsMap().get(this).get(side);
   }
 
   @Override
@@ -23,8 +23,8 @@ public class Variable extends Type {
   }
 
   @Override
-  public VariableToBounds inferVariableBounds(Type that, Side side) {
-    return VariableToBounds.empty().addBounds(this, oneSideBound(side, that));
+  public BoundedVariables inferVariableBounds(Type that, Side side) {
+    return BoundedVariables.empty().addBounds(this, oneSideBound(side, that));
   }
 
   @Override

@@ -46,11 +46,11 @@ import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.BoundedVariables;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
-import org.smoothbuild.lang.base.type.VariableToBounds;
 import org.smoothbuild.lang.expr.ArrayLiteralExpression;
 import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -161,12 +161,12 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   private Task taskForNativeFunction(List<Task> arguments, Function function,
-      VariableToBounds variableToBounds, Type actualResultType, Location location)
+      BoundedVariables boundedVariables, Type actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
     Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
     ImmutableList<Type> actualParameterTypes =
-        map(function.parameterTypes(), t -> t.mapVariables(variableToBounds, LOWER));
+        map(function.parameterTypes(), t -> t.mapVariables(boundedVariables, LOWER));
     List<Task> dependencies = convertedArguments(actualParameterTypes, arguments);
     if (function.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cacheable());
