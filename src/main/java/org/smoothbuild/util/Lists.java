@@ -47,7 +47,8 @@ public class Lists {
         .collect(toList());
   }
 
-  public static <T, R> List<R> zip(List<T> listA, List<T> listB, BiFunction<T, T, R> biFunction) {
+  public static <T, R> ImmutableList<R> zip(
+      List<T> listA, List<T> listB, BiFunction<T, T, R> biFunction) {
     if (listA.size() != listB.size()) {
       throw new IllegalArgumentException(
           "List sizes differ " + listA.size() + " != " + listB.size() + " .");
