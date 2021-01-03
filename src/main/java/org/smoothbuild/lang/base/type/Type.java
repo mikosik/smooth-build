@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import static org.smoothbuild.lang.base.type.Side.LOWER;
+import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
@@ -59,12 +60,12 @@ public abstract class Type {
 
   private boolean inequalByConstruction(Type that, Side side) {
     return this.typeConstructor().equals(that.typeConstructor())
-        && allMatch(this.covariants(), that.covariants(), side)
-        && allMatch(this.contravariants(), that.contravariants(), side.reversed());
+        && allInequal(this.covariants(), that.covariants(), side)
+        && allInequal(this.contravariants(), that.contravariants(), side.reversed());
   }
 
-  private static boolean allMatch(List<Type> listA, List<Type> listB, Side side) {
-    return Lists.allMatch(listA, listB, (Type a, Type b) -> a.inequal(b, side));
+  private static boolean allInequal(List<Type> listA, List<Type> listB, Side side) {
+    return allMatch(listA, listB, (Type a, Type b) -> a.inequal(b, side));
   }
 
   public boolean isAssignableFrom(Type type) {
