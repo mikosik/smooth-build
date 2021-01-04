@@ -51,6 +51,14 @@ public abstract class Type {
     return isPolytype;
   }
 
+  public boolean isAssignableFrom(Type type) {
+    return inequal(type, LOWER);
+  }
+
+  public boolean isParamAssignableFrom(Type type) {
+    return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
+  }
+
   public boolean inequal(Type that, Side side) {
     return inequalByEdgeCases(that, side)
         || inequalByConstruction(that, side, s -> (Type a, Type b) -> a.inequal(b, s));
@@ -74,14 +82,6 @@ public abstract class Type {
     return this.typeConstructor.equals(that.typeConstructor)
         && allMatch(covariants, that.covariants, inequalFunction)
         && allMatch(contravariants, that.contravariants, inequalReversedFunction);
-  }
-
-  public boolean isAssignableFrom(Type type) {
-    return inequal(type, LOWER);
-  }
-
-  public boolean isParamAssignableFrom(Type type) {
-    return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
   }
 
   public Type mapVariables(BoundedVariables boundedVariables, Side side) {
