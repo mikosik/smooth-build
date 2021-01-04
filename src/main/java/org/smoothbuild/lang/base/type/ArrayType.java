@@ -2,8 +2,6 @@ package org.smoothbuild.lang.base.type;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.Objects;
-
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -41,10 +39,5 @@ public class ArrayType extends Type {
       return this.elemType().equals(thatArray.elemType());
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name());
   }
 }
