@@ -59,12 +59,12 @@ public abstract class Type {
     return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
   }
 
-  public boolean inequal(Type that, Side side) {
+  private boolean inequal(Type that, Side side) {
     return inequalByEdgeCases(that, side)
         || inequalByConstruction(that, side, s -> (Type a, Type b) -> a.inequal(b, s));
   }
 
-  public boolean inequalParam(Type that, Side side) {
+  private boolean inequalParam(Type that, Side side) {
     return inequalByEdgeCases(that, side)
         || ((this instanceof Variable) && (side == LOWER || that instanceof Variable))
         || inequalByConstruction(that, side, s -> (a, b) -> a.inequalParam(b, s));
