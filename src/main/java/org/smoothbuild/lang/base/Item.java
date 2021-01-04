@@ -21,7 +21,7 @@ public record Item(Type type, String name, Optional<Expression> defaultValue) {
   }
 
   public ItemSignature signature() {
-    return new ItemSignature(type, name, defaultValue.map(Expression::type));
+    return new ItemSignature(type, Optional.of(name), defaultValue.map(Expression::type));
   }
 
   @Override

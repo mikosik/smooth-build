@@ -52,7 +52,7 @@ public class AssignArgsToParams {
     if (evaluable != null) {
       return ((Callable) evaluable).parameterSignatures()
           .stream()
-          .map(p -> new AParam(p.name(), p.defaultValueType().isPresent()))
+          .map(p -> new AParam(p.name().get(), p.defaultValueType().isPresent()))
           .collect(toImmutableList());
     }
     CallableNode node = callables.get(name);

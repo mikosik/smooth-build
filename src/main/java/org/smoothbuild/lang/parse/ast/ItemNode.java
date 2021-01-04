@@ -22,7 +22,7 @@ public class ItemNode extends NamedNode implements RefTarget {
   public void setType(Optional<Type> type) {
     super.setType(type);
     signature = type()
-        .map(t -> new ItemSignature(t, name(), defaultValue.flatMap(Node::type)));
+        .map(t -> new ItemSignature(t, Optional.of(name()), defaultValue.flatMap(Node::type)));
   }
 
   public TypeNode typeNode() {

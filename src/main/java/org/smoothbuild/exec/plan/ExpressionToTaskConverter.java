@@ -86,10 +86,10 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     ItemSignature field = expression.field();
     StructType structType = (StructType) expression.expression().type();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
-        structType.fieldIndex(field.name()), field.type().visit(toSpecConverter));
+        structType.fieldIndex(field.name().get()), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(expression.expression());
-    return new NormalTask(
-        CALL, field.type(), "." + field.name(), algorithm, children, expression.location(), true);
+    return new NormalTask(CALL, field.type(), "." + field.name().get(), algorithm, children,
+        expression.location(), true);
   }
 
   @Override
