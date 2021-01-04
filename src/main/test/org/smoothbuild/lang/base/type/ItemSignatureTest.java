@@ -30,7 +30,7 @@ public class ItemSignatureTest {
 
   @Test
   public void null_name_is_forbidden() {
-    assertCall(() -> new ItemSignature(STRING, null, Optional.of(STRING)))
+    assertCall(() -> new ItemSignature(STRING, (String) null, Optional.of(STRING)))
         .throwsException(NullPointerException.class);
   }
 
@@ -45,7 +45,7 @@ public class ItemSignatureTest {
   public void name_getter() {
     item = new ItemSignature(STRING, name, Optional.of(STRING));
     assertThat(item.name())
-        .isEqualTo(name);
+        .isEqualTo(Optional.of(name));
   }
 
   @Test
@@ -79,6 +79,13 @@ public class ItemSignatureTest {
     item = new ItemSignature(STRING, "myName", Optional.of(STRING));
     assertThat(item.toString())
         .isEqualTo("String myName");
+  }
+
+  @Test
+  public void to_string_without_name() {
+    item = new ItemSignature(STRING, Optional.empty(), Optional.of(STRING));
+    assertThat(item.toString())
+        .isEqualTo("String");
   }
 
   @Test

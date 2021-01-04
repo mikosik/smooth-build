@@ -1,12 +1,11 @@
 package org.smoothbuild.lang.base.type;
 
-import static com.google.common.collect.ImmutableMap.toImmutableMap;
-
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 
 /**
  * This class is immutable.
@@ -22,9 +21,14 @@ public class StructType extends Type {
   }
 
   private static ImmutableMap<String, Integer> fieldsMap(List<ItemSignature> fields) {
-    return IntStream.range(0, fields.size())
-        .boxed()
-        .collect(toImmutableMap(i -> fields.get(i).name(), i -> i));
+    Builder<String, Integer> builder = ImmutableMap.builder();
+    for (int i = 0; i < fields.size(); i++) {
+      Optional<String> name = fields.get(i).name();
+      if (name.isPresent()) {
+        builder.put(name.get(), i);
+      }
+    }
+    return builder.build();
   }
 
   public ImmutableList<ItemSignature> fields() {
