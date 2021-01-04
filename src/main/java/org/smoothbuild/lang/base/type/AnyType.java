@@ -9,11 +9,6 @@ public class AnyType extends BaseType {
   }
 
   @Override
-  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
-    return true;
-  }
-
-  @Override
   public <T> T visit(TypeVisitor<T> visitor) {
     return visitor.visit(this);
   }

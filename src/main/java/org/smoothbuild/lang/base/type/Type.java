@@ -69,16 +69,34 @@ public abstract class Type {
   }
 
   public boolean isParamAssignableFrom(Type type) {
-    return isAssignableFrom(type, true);
+    return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
+  }
+
+  public boolean inequalParam(Type that, Side side) {
+    return that.equals(side.edge())
+        || this.equals(side.reversed().edge())
+        || ((this instanceof Variable) && (side == LOWER || that instanceof Variable))
+        || inequalParamByConstruction(that, side);
+  }
+
+  private boolean inequalParamByConstruction(Type that, Side side) {
+    return this.typeConstructor.equals(that.typeConstructor)
+        && allInequalParam(covariants(), that.covariants(), side)
+        && allInequalParam(contravariants(), that.contravariants(), side.reversed());
+  }
+
+  private static boolean allInequalParam(List<Type> listA, List<Type> listB, Side side) {
+    return allMatch(listA, listB, isParamAssignableFunction(side));
+  }
+
+  private static BiFunction<Type, Type, Boolean> isParamAssignableFunction(Side side) {
+    return (a, b) -> a.inequalParam(b, side);
   }
 
   public Type mapVariables(BoundedVariables boundedVariables, Side side) {
     return this;
   }
 
-  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
-    return (type instanceof NothingType) || this.equals(type);
-  }
 
   public static BoundedVariables inferVariableBounds(
       List<Type> typesA, List<Type> typesB, Side side) {
