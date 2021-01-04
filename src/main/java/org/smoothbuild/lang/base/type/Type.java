@@ -18,11 +18,20 @@ import com.google.common.collect.ImmutableList;
 public abstract class Type {
   private final String name;
   private final TypeConstructor typeConstructor;
+  private final ImmutableList<Type> covariants;
+  private final ImmutableList<Type> contravariants;
   protected final boolean isPolytype;
 
   protected Type(String name, TypeConstructor typeConstructor, boolean isPolytype) {
+    this(name, typeConstructor, ImmutableList.of(), ImmutableList.of(), isPolytype);
+  }
+
+  protected Type(String name, TypeConstructor typeConstructor,
+      ImmutableList<Type> covariants, ImmutableList<Type> contravariants, boolean isPolytype) {
     this.name = name;
     this.typeConstructor = typeConstructor;
+    this.covariants = covariants;
+    this.contravariants = contravariants;
     this.isPolytype = isPolytype;
   }
 
@@ -39,14 +48,6 @@ public abstract class Type {
    */
   public boolean isPolytype() {
     return isPolytype;
-  }
-
-  public ImmutableList<Type> covariants() {
-    return ImmutableList.of();
-  }
-
-  public ImmutableList<Type> contravariants() {
-    return ImmutableList.of();
   }
 
   public boolean inequal(Type that, Side side) {
@@ -70,8 +71,8 @@ public abstract class Type {
     var inequalFunction = inequalityFunctionProducer.apply(side);
     var inequalReversedFunction = inequalityFunctionProducer.apply(side.reversed());
     return this.typeConstructor.equals(that.typeConstructor)
-        && allMatch(this.covariants(), that.covariants(), inequalFunction)
-        && allMatch(this.contravariants(), that.contravariants(), inequalReversedFunction);
+        && allMatch(covariants, that.covariants, inequalFunction)
+        && allMatch(contravariants, that.contravariants, inequalReversedFunction);
   }
 
   public boolean isAssignableFrom(Type type) {
@@ -96,8 +97,8 @@ public abstract class Type {
       return inferVariableBoundFromEdge(side);
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
       return reduce(
-          zip(this.covariants(), that.covariants(), inferFunction(side)),
-          zip(this.contravariants(), that.contravariants(), inferFunction(side.reversed())));
+          zip(covariants, that.covariants, inferFunction(side)),
+          zip(contravariants, that.contravariants, inferFunction(side.reversed())));
     } else {
       return BoundedVariables.empty();
     }
@@ -110,8 +111,8 @@ public abstract class Type {
   private BoundedVariables inferVariableBoundFromEdge(Side side) {
     Side reversed = side.reversed();
     return reduce(
-        map(covariants(), t -> t.inferVariableBounds(side.edge(), side)),
-        map(contravariants(), t -> t.inferVariableBounds(reversed.edge(), reversed)));
+        map(covariants, t -> t.inferVariableBounds(side.edge(), side)),
+        map(contravariants, t -> t.inferVariableBounds(reversed.edge(), reversed)));
   }
 
   private BoundedVariables reduce(List<BoundedVariables> listA, List<BoundedVariables> listB) {
@@ -132,8 +133,8 @@ public abstract class Type {
     } else if (this.equals(that)) {
       return this;
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
-      var covar = zip(covariants(), that.covariants(), mergeWithFunction(direction));
-      var contravar = zip(contravariants(), that.contravariants(), mergeWithFunction(reversed));
+      var covar = zip(covariants, that.covariants, mergeWithFunction(direction));
+      var contravar = zip(contravariants, that.contravariants, mergeWithFunction(reversed));
       return typeConstructor.construct(covar, contravar);
     } else {
       return direction.edge();

@@ -13,7 +13,8 @@ public class ArrayType extends Type {
   private final Type elemType;
 
   public ArrayType(Type elemType) {
-    super("[" +  elemType.name() + "]", createTypeConstructor(), elemType.isPolytype());
+    super("[" +  elemType.name() + "]", createTypeConstructor(),
+        ImmutableList.of(elemType), ImmutableList.of(), elemType.isPolytype());
     this.elemType = requireNonNull(elemType);
   }
 
@@ -24,11 +25,6 @@ public class ArrayType extends Type {
 
   public Type elemType() {
     return elemType;
-  }
-
-  @Override
-  public ImmutableList<Type> covariants() {
-    return ImmutableList.of(elemType);
   }
 
   @Override
