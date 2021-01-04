@@ -3,7 +3,6 @@ package org.smoothbuild.lang.base.type;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.google.common.collect.ImmutableList;
@@ -59,10 +58,5 @@ public class StructType extends Type {
           && this.fields.equals(thatStruct.fields);
     }
     return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name());
   }
 }
