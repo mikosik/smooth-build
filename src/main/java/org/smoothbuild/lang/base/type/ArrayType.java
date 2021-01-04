@@ -28,12 +28,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  public Type mapVariables(BoundedVariables boundedVariables,
-      Side side) {
-    return new ArrayType(elemType.mapVariables(boundedVariables, side));
-  }
-
-  @Override
   public <T> T visit(TypeVisitor<T> visitor) {
     return visitor.visit(this);
   }

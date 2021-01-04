@@ -84,7 +84,17 @@ public abstract class Type {
   }
 
   public Type mapVariables(BoundedVariables boundedVariables, Side side) {
-    return this;
+    if (isPolytype) {
+      if (this instanceof Variable) {
+        return boundedVariables.boundsMap().get(this).get(side);
+      } else {
+        return typeConstructor.construct(
+            map(covariants, c -> c.mapVariables(boundedVariables, side)),
+            map(contravariants, c -> c.mapVariables(boundedVariables, side.reversed())));
+      }
+    } else {
+      return this;
+    }
   }
 
   public static BoundedVariables inferVariableBounds(
