@@ -38,16 +38,6 @@ public class ArrayType extends Type {
   }
 
   @Override
-  protected boolean isAssignableFrom(Type type, boolean variableRenaming) {
-    return (type instanceof NothingType) || isAssignableArray(type, variableRenaming);
-  }
-
-  private boolean isAssignableArray(Type type, boolean variableRenaming) {
-    return type instanceof ArrayType thatArrayType
-        && elemType().isAssignableFrom(thatArrayType.elemType(), variableRenaming);
-  }
-
-  @Override
   public <T> T visit(TypeVisitor<T> visitor) {
     return visitor.visit(this);
   }

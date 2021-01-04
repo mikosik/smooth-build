@@ -18,11 +18,6 @@ public class Variable extends Type {
   }
 
   @Override
-  public boolean isAssignableFrom(Type type, boolean variableRenaming) {
-    return (type instanceof NothingType) || variableRenaming || equals(type);
-  }
-
-  @Override
   public BoundedVariables inferVariableBounds(Type that, Side side) {
     return BoundedVariables.empty().addBounds(this, oneSideBound(side, that));
   }
