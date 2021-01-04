@@ -8,6 +8,7 @@ import static org.smoothbuild.util.Lists.zip;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
@@ -49,19 +50,28 @@ public abstract class Type {
   }
 
   public boolean inequal(Type that, Side side) {
+    return inequalByEdgeCases(that, side)
+        || inequalByConstruction(that, side, s -> (Type a, Type b) -> a.inequal(b, s));
+  }
+
+  public boolean inequalParam(Type that, Side side) {
+    return inequalByEdgeCases(that, side)
+        || ((this instanceof Variable) && (side == LOWER || that instanceof Variable))
+        || inequalByConstruction(that, side, s -> (a, b) -> a.inequalParam(b, s));
+  }
+
+  private boolean inequalByEdgeCases(Type that, Side side) {
     return that.equals(side.edge())
-        || this.equals(side.reversed().edge())
-        || inequalByConstruction(that, side);
+        || this.equals(side.reversed().edge());
   }
 
-  private boolean inequalByConstruction(Type that, Side side) {
+  private boolean inequalByConstruction(Type that, Side side,
+      Function<Side, BiFunction<Type, Type, Boolean>> inequalityFunctionProducer) {
+    var inequalFunction = inequalityFunctionProducer.apply(side);
+    var inequalReversedFunction = inequalityFunctionProducer.apply(side.reversed());
     return this.typeConstructor.equals(that.typeConstructor)
-        && allInequal(this.covariants(), that.covariants(), side)
-        && allInequal(this.contravariants(), that.contravariants(), side.reversed());
-  }
-
-  private static boolean allInequal(List<Type> listA, List<Type> listB, Side side) {
-    return allMatch(listA, listB, (Type a, Type b) -> a.inequal(b, side));
+        && allMatch(this.covariants(), that.covariants(), inequalFunction)
+        && allMatch(this.contravariants(), that.contravariants(), inequalReversedFunction);
   }
 
   public boolean isAssignableFrom(Type type) {
@@ -72,31 +82,9 @@ public abstract class Type {
     return inequalParam(type, LOWER) && inferVariableBounds(type, LOWER).areConsistent();
   }
 
-  public boolean inequalParam(Type that, Side side) {
-    return that.equals(side.edge())
-        || this.equals(side.reversed().edge())
-        || ((this instanceof Variable) && (side == LOWER || that instanceof Variable))
-        || inequalParamByConstruction(that, side);
-  }
-
-  private boolean inequalParamByConstruction(Type that, Side side) {
-    return this.typeConstructor.equals(that.typeConstructor)
-        && allInequalParam(covariants(), that.covariants(), side)
-        && allInequalParam(contravariants(), that.contravariants(), side.reversed());
-  }
-
-  private static boolean allInequalParam(List<Type> listA, List<Type> listB, Side side) {
-    return allMatch(listA, listB, isParamAssignableFunction(side));
-  }
-
-  private static BiFunction<Type, Type, Boolean> isParamAssignableFunction(Side side) {
-    return (a, b) -> a.inequalParam(b, side);
-  }
-
   public Type mapVariables(BoundedVariables boundedVariables, Side side) {
     return this;
   }
-
 
   public static BoundedVariables inferVariableBounds(
       List<Type> typesA, List<Type> typesB, Side side) {
