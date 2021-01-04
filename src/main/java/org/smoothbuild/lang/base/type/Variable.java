@@ -1,7 +1,5 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
-
 /**
  * Type variable.
  *
@@ -10,11 +8,6 @@ import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 public class Variable extends Type {
   public Variable(String name) {
     super(name, new TypeConstructor(name), true);
-  }
-
-  @Override
-  public BoundedVariables inferVariableBounds(Type that, Side side) {
-    return BoundedVariables.empty().addBounds(this, oneSideBound(side, that));
   }
 
   @Override

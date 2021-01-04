@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
 import static org.smoothbuild.util.Lists.map;
@@ -103,7 +104,9 @@ public abstract class Type {
   }
 
   public BoundedVariables inferVariableBounds(Type that, Side side) {
-    if (that.equals(side.edge())) {
+    if (this instanceof Variable variable) {
+      return BoundedVariables.empty().addBounds(variable, oneSideBound(side, that));
+    } else if (that.equals(side.edge())) {
       return inferVariableBoundFromEdge(side);
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
       return reduce(
