@@ -14,22 +14,26 @@ import static org.smoothbuild.lang.base.type.TestedType.a;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestedAssignmentSpec extends TestedAssignment {
-  public final boolean allowed;
-
-  public TestedAssignmentSpec(TestedAssignment assignment, boolean allowed) {
-    super(assignment.target, assignment.source);
-    this.allowed = allowed;
+public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed) {
+  TestedAssignmentSpec(TestedType target, TestedType source, boolean allowed) {
+    this(new TestedAssignment(target, source), allowed);
   }
 
-  TestedAssignmentSpec(TestedType target, TestedType source, boolean allowed) {
-    super(target, source);
-    this.allowed = allowed;
+  public TestedType source() {
+    return assignment.source();
+  }
+
+  public TestedType target() {
+    return assignment.target();
+  }
+
+  public String declarations() {
+    return assignment.declarations();
   }
 
   @Override
   public String toString() {
-    return super.toString() + " :" + (allowed ? "allowed" : "illegal");
+    return assignment.toString() + " :" + (allowed ? "allowed" : "illegal");
   }
 
   public static TestedAssignmentSpec illegalAssignment(TestedType target, TestedType source) {

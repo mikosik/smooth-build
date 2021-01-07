@@ -23,13 +23,13 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void value_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
+    TestedType target = testSpec.target();
+    TestedType source = testSpec.source();
     String sourceCode = unlines(
         target.name() + " result = " + source.literal() + ";",
         testSpec.declarations(),
         "Bool true;");
-    if (testSpec.allowed) {
+    if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
     } else {
@@ -42,14 +42,14 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("test_specs")
   public void function_body_type_is_assignable_to_declared_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
+    TestedType target = testSpec.target();
+    TestedType source = testSpec.source();
     String sourceCode = unlines(
         "%s myFunction(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
         testSpec.declarations(),
         "Bool true;");
-    if (testSpec.allowed) {
+    if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
     } else {
@@ -62,13 +62,13 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
   public void argument_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
-    TestedType targetType = testSpec.target;
-    TestedType sourceType = testSpec.source;
+    TestedType targetType = testSpec.target();
+    TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
         "String innerFunction(" + targetType.name() + " target);                          ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
         testSpec.declarations()));
-    if (testSpec.allowed) {
+    if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
@@ -80,13 +80,13 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("parameter_assignment_test_data")
   public void argument_type_is_assignable_to_named_parameter_type(TestedAssignmentSpec testSpec) {
-    TestedType targetType = testSpec.target;
-    TestedType sourceType = testSpec.source;
+    TestedType targetType = testSpec.target();
+    TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
         "String innerFunction(" + targetType.name() + " target);                          ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
         testSpec.declarations()));
-    if (testSpec.allowed) {
+    if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
@@ -102,13 +102,13 @@ public class AssignmentTest {
   @ParameterizedTest
   @MethodSource("without_polytypes_test_specs")
   public void default_value_type_is_assignable_to_parameter_type(TestedAssignmentSpec testSpec) {
-    TestedType target = testSpec.target;
-    TestedType source = testSpec.source;
+    TestedType target = testSpec.target();
+    TestedType source = testSpec.source();
     String sourceCode = unlines(
         "myFunction(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations(),
         "Bool true;");
-    if (testSpec.allowed) {
+    if (testSpec.allowed()) {
       module(sourceCode)
           .loadsSuccessfully();
     } else {
@@ -147,7 +147,7 @@ public class AssignmentTest {
   public static List<TestedAssignmentSpec> assignment_without_polytypes_test_specs() {
     return assignment_test_specs()
         .stream()
-        .filter(a -> !(a.target.type().isPolytype() || a.source.type().isPolytype()))
+        .filter(a -> !(a.target().type().isPolytype() || a.source().type().isPolytype()))
         .collect(toList());
   }
 

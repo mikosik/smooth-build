@@ -6,11 +6,11 @@ import org.smoothbuild.lang.base.type.TestedAssignment;
 
 public class ParameterDefaultValueConversionTest extends AbstractConversionTestCase {
   @Override
-  protected String createTestScript(TestedAssignment testSpec) {
+  protected String createTestScript(TestedAssignment spec) {
     return unlines(
-        "  fun(" + testSpec.target.name() + " param = " + testSpec.source.literal() + ") = param; ",
+        "  fun(" + spec.target().name() + " param = " + spec.source().literal() + ") = param; ",
         "  result = fun();  ",
-        testSpec.declarations()
+        spec.declarations()
     );
   }
 }
