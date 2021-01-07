@@ -26,7 +26,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
     createUserModule(createTestScript(testSpec));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
-    Object expected = testSpec.source.value();
+    Object expected = testSpec.source().value();
 
     // Currently it is not possible to read artifact of a struct so we are not testing that.
     if (expected != null) {
