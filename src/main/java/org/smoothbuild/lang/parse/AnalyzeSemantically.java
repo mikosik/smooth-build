@@ -15,9 +15,9 @@ import java.util.Set;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.MemoryLogger;
-import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.Scope;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -25,12 +25,13 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
+import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.Named;
 import org.smoothbuild.lang.parse.ast.NamedNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
@@ -110,15 +111,12 @@ public class AnalyzeSemantically {
         String name = ref.name();
         if (scope.contains(name)) {
           Named named = scope.get(name);
-          if (named instanceof ValueNode value) {
-            ref.setTarget(value);
-          } else if (named instanceof Value value) {
-            ref.setTarget(value);
+          if (named instanceof ReferencableNode referencable) {
+            ref.setTarget(referencable);
+          } else if (named instanceof Referencable referencable) {
+            ref.setTarget(referencable);
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
-          } else if (named instanceof CallableNode || named instanceof Callable) {
-            logger.log(parseError(ref.location(), "`" + name
-                + "` is a function and cannot be accessed as a value."));
           } else {
             throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
           }
@@ -184,8 +182,11 @@ public class AnalyzeSemantically {
       }
 
       private void assertTypeIsDefined(TypeNode type) {
-        if (type.isArray()) {
-          assertTypeIsDefined(((ArrayTypeNode) type).elementType());
+        if (type instanceof ArrayTypeNode array) {
+          assertTypeIsDefined(array.elementType());
+        } else if (type instanceof FunctionTypeNode function) {
+          assertTypeIsDefined(function.resultType());
+          function.parameterTypes().forEach(this::assertTypeIsDefined);
         } else if (!isDefinedType(type)) {
           logger.log(parseError(type.location(), "Undefined type " + type.q() + "."));
         }

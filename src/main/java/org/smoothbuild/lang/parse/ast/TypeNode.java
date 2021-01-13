@@ -12,10 +12,6 @@ public class TypeNode extends NamedNode {
     super(name, location);
   }
 
-  public boolean isArray() {
-    return this instanceof ArrayTypeNode;
-  }
-
   public boolean isNothing() {
     return name().equals(nothing().name());
   }

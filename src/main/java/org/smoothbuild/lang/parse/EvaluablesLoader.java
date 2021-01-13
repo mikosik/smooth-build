@@ -13,6 +13,7 @@ import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
+import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -76,11 +77,12 @@ public class EvaluablesLoader {
     }
 
     public Callable loadFunction() {
-      Type resultType = referencable.type().get();
       String name = referencable.name();
-      ImmutableList<Item> parameters = map(((FuncNode) referencable).params(), this::createParameter);
+      FuncNode funcNode = (FuncNode) referencable;
+      ImmutableList<Item> parameters = map(funcNode.params(), this::createParameter);
       functionParameters = parameters.stream().collect(toImmutableMap(Item::name, Item::type));
-      return new Function(resultType, name, parameters, bodyExpression(), referencable.location());
+      return new Function(
+          funcNode.resultType().get(), name, parameters, bodyExpression(), referencable.location());
     }
 
     private Optional<Expression> bodyExpression() {
@@ -129,11 +131,11 @@ public class EvaluablesLoader {
       if (target instanceof ItemNode) {
         String name = ref.name();
         return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
-      } else if (target instanceof ValueNode) {
-        Value value = (Value) find(ref.name());
+      } else if (target instanceof ReferencableNode) {
+        Referencable value = (Referencable) find(ref.name());
         return value.createReferenceExpression(ref.location());
-      } else if (target instanceof Value value) {
-        return value.createReferenceExpression(ref.location());
+      } else if (target instanceof Referencable referencable) {
+        return referencable.createReferenceExpression(ref.location());
       } else {
         throw new RuntimeException("Unexpected case: " + target.getClass().getCanonicalName());
       }

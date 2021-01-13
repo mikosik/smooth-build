@@ -22,6 +22,8 @@ import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.TypeVisitor;
 import org.smoothbuild.lang.base.type.Variable;
 
+import com.google.common.collect.ImmutableList;
+
 public class TypeToSpecConverter extends TypeVisitor<Spec> {
   private final ObjectFactory objectFactory;
 
@@ -78,6 +80,7 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   @Override
   public Spec visit(FunctionType type) {
-    throw new UnsupportedOperationException("not yet implemented");
+    return objectFactory.tupleSpec(
+        ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }
 }

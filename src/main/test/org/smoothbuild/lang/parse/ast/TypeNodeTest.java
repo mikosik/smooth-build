@@ -8,24 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class TypeNodeTest {
   @Nested
-  class is_array {
-    @Test
-    public void normal_type_node_is_not_array() {
-      TypeNode typeNode = new TypeNode("MyType", loc());
-      assertThat(typeNode.isArray())
-          .isFalse();
-    }
-
-    @Test
-    public void type_variable_node_is_not_array() {
-      TypeNode typeNode = new TypeNode("A", loc());
-      assertThat(typeNode.isArray())
-          .isFalse();
-    }
-  }
-
-  @Nested
-  class is_polytype {
+  class _is_polytype {
     @Test
     public void node_with_type_variable_name_is_polytype() {
       TypeNode typeNode = new TypeNode("B", loc());

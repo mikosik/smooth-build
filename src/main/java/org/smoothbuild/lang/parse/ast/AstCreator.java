@@ -20,16 +20,20 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FuncContext;
+import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
+import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.ModuleLocation;
+
+import com.google.common.collect.ImmutableList;
 
 public class AstCreator {
   public static Ast fromParseTree(ModuleLocation moduleLocation, ModuleContext module) {
@@ -182,6 +186,9 @@ public class AstCreator {
         if (type instanceof ArrayTypeContext arrayType) {
           return createArrayType(arrayType);
         }
+        if (type instanceof FunctionTypeContext functionType) {
+          return createFunctionType(functionType);
+        }
         throw new RuntimeException("Illegal parse tree: " + TypeContext.class.getSimpleName()
             + " without children.");
       }
@@ -194,6 +201,20 @@ public class AstCreator {
       private TypeNode createArrayType(ArrayTypeContext arrayType) {
         TypeNode elementType = createType(arrayType.type());
         return new ArrayTypeNode(elementType, locationOf(moduleLocation, arrayType));
+      }
+
+      private TypeNode createFunctionType(FunctionTypeContext functionType) {
+        TypeNode resultType = createType(functionType.type());
+        return new FunctionTypeNode(resultType, createTypeList(functionType.typeList()),
+            locationOf(moduleLocation, functionType));
+      }
+
+      private ImmutableList<TypeNode> createTypeList(TypeListContext typeList) {
+        if (typeList != null) {
+          return map(typeList.type(), this::createType);
+        } else {
+          return ImmutableList.of();
+        }
       }
     }.visit(module);
     return new Ast(structs, referencables);

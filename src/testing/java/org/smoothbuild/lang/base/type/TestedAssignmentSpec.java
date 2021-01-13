@@ -5,13 +5,12 @@ import static org.smoothbuild.lang.base.type.TestedType.A;
 import static org.smoothbuild.lang.base.type.TestedType.ANY;
 import static org.smoothbuild.lang.base.type.TestedType.B;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
+import static org.smoothbuild.lang.base.type.TestedType.f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,23 +68,17 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     var r = new ArrayList<TestedAssignmentSpec>();
     gen(r, ANY, mAll());
     gen(r, BLOB, oneOf(BLOB, NOTHING));
-    gen(r, BOOL, oneOf(BOOL, NOTHING));
     gen(r, NOTHING, oneOf(NOTHING));
-    gen(r, STRING, oneOf(STRING, NOTHING));
     gen(r, STRUCT, oneOf(STRUCT, NOTHING));
 
     gen(r, a(ANY), TestedType::isArray, mNothing());
     gen(r, a(BLOB), oneOf(a(BLOB), a(NOTHING), NOTHING));
-    gen(r, a(BOOL), oneOf(a(BOOL), a(NOTHING), NOTHING));
     gen(r, a(NOTHING), oneOf(a(NOTHING), NOTHING));
-    gen(r, a(STRING), oneOf(a(STRING), a(NOTHING), NOTHING));
     gen(r, a(STRUCT), oneOf(a(STRUCT), a(NOTHING), NOTHING));
 
     gen(r, a2(ANY), TestedType::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
     gen(r, a2(BLOB), oneOf(a2(BLOB), a2(NOTHING), a(NOTHING), NOTHING));
-    gen(r, a2(BOOL), oneOf(a2(BOOL), a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(NOTHING), oneOf(a2(NOTHING), a(NOTHING), NOTHING));
-    gen(r, a2(STRING), oneOf(a2(STRING), a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(STRUCT), oneOf(a2(STRUCT), a2(NOTHING), a(NOTHING), NOTHING));
 
     gen(r, f(ANY),              mNothing(), mFunc(mAll()));
@@ -105,29 +98,25 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     r.addAll(List.of(
         // functions
         illegalAssignment(f(a(BLOB)), a(BLOB)),
-        illegalAssignment(f(a(BOOL)), a(BOOL)),
         illegalAssignment(f(a(NOTHING)), a(NOTHING)),
         illegalAssignment(f(a(STRUCT)), a(STRUCT)),
-        illegalAssignment(f(a(STRING)), a(STRING)),
         illegalAssignment(f(a2(BLOB)), a2(BLOB)),
-        illegalAssignment(f(a2(BOOL)), a2(BOOL)),
         illegalAssignment(f(a2(NOTHING)), a2(NOTHING)),
         illegalAssignment(f(a2(STRUCT)), a2(STRUCT)),
-        illegalAssignment(f(a2(STRING)), a2(STRING)),
 
         // functions (as function result type)
-        allowedAssignment(f(f(STRING)), f(f(STRING))),
-        allowedAssignment(f(f(STRING)), f(f(NOTHING))),
-        illegalAssignment(f(f(NOTHING)), f(f(STRING))),
+        allowedAssignment(f(f(BLOB)), f(f(BLOB))),
+        allowedAssignment(f(f(BLOB)), f(f(NOTHING))),
+        illegalAssignment(f(f(NOTHING)), f(f(BLOB))),
 
         allowedAssignment(f(f(BLOB, STRING)), f(f(BLOB, STRING))),
         illegalAssignment(f(f(BLOB, STRING)), f(f(BLOB, NOTHING))),
         allowedAssignment(f(f(BLOB, NOTHING)), f(f(BLOB, STRING))),
 
         // functions (as function result type - nested twice)
-        allowedAssignment(f(f(f(STRING))), f(f(f(STRING)))),
-        allowedAssignment(f(f(f(STRING))), f(f(f(NOTHING)))),
-        illegalAssignment(f(f(f(NOTHING))), f(f(f(STRING)))),
+        allowedAssignment(f(f(f(BLOB))), f(f(f(BLOB)))),
+        allowedAssignment(f(f(f(BLOB))), f(f(f(NOTHING)))),
+        illegalAssignment(f(f(f(NOTHING))), f(f(f(BLOB)))),
 
         allowedAssignment(f(f(f(BLOB, STRING))), f(f(f(BLOB, STRING)))),
         illegalAssignment(f(f(f(BLOB, STRING))), f(f(f(BLOB, NOTHING)))),
@@ -331,7 +320,7 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
 
   private static ImmutableList<TestedType> generateTypes(int depth) {
     Builder<TestedType> builder = ImmutableList.builder();
-    builder.addAll(ELEMENTARY_TYPES);
+    builder.add(ANY, BLOB, NOTHING, STRUCT);
     if (0 < depth) {
       List<TestedType> types = generateTypes(depth - 1);
       for (TestedType type : types) {
@@ -343,9 +332,5 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
       }
     }
     return builder.build();
-  }
-
-  private static TestedType f(TestedType resultType, TestedType... parameterTypes) {
-    return TestedType.function(resultType, parameterTypes);
   }
 }

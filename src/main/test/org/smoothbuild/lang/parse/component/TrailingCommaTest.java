@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
+import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Nested;
@@ -53,7 +54,7 @@ public class TrailingCommaTest {
   }
 
   @Nested
-  class parameter_list {
+  class _function_parameter_list {
     @Test
     public void can_have_trailing_comma() {
       module(functionDeclaration("String param1,"))
@@ -82,6 +83,40 @@ public class TrailingCommaTest {
     private String functionDeclaration(CharSequence string) {
       return """
         String myFunction(PLACEHOLDER);
+        """.replace("PLACEHOLDER", string);
+    }
+  }
+
+  @Nested
+  class _function_type_parameter_list {
+    @Test
+    public void can_have_trailing_comma() {
+      module(functionTypeDeclaration("String,"))
+          .loadsSuccessfully()
+          .containsDeclared(value(1, f(BLOB, STRING), "myValue"));
+    }
+
+    @Test
+    public void cannot_have_only_comma() {
+      module(functionTypeDeclaration(","))
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void cannot_have_leading_comma() {
+      module(functionTypeDeclaration(",String"))
+          .loadsWithProblems();
+    }
+
+    @Test
+    public void cannot_have_two_trailing_commas() {
+      module(functionTypeDeclaration("String,,"))
+          .loadsWithProblems();
+    }
+
+    private String functionTypeDeclaration(CharSequence string) {
+      return """
+        Blob(PLACEHOLDER) myValue;
         """.replace("PLACEHOLDER", string);
     }
   }

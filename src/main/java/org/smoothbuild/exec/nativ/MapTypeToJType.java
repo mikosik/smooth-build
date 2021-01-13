@@ -7,6 +7,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.TypeNames;
@@ -19,6 +20,8 @@ public class MapTypeToJType {
     } else if (type instanceof Variable) {
       return Obj.class;
     } else if (type instanceof StructType) {
+      return Tuple.class;
+    } else if (type instanceof FunctionType) {
       return Tuple.class;
     } else {
       return switch (type.name()) {

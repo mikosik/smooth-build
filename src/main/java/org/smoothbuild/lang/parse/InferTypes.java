@@ -5,14 +5,17 @@ import static java.util.Objects.requireNonNullElseGet;
 import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.smoothbuild.lang.base.type.Side.UPPER;
+import static org.smoothbuild.lang.base.type.Type.toItemSignatures;
 import static org.smoothbuild.lang.base.type.Types.array;
 import static org.smoothbuild.lang.base.type.Types.blob;
+import static org.smoothbuild.lang.base.type.Types.function;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.variable;
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +41,7 @@ import org.smoothbuild.lang.parse.ast.CallableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
+import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
@@ -75,13 +79,23 @@ public class InferTypes {
       public void visitFunc(FuncNode func) {
         visitParams(func.params());
         func.visitExpr(this);
-        func.setType(codeType(func));
+        func.setType(functionType(func));
+      }
+
+      private Optional<Type> functionType(FuncNode func) {
+        var resultType = bodyType(func);
+        var parameterSignatures = func.optParameterSignatures();
+        if (resultType.isPresent() && parameterSignatures.isPresent()) {
+          return Optional.of(function(resultType.get(), parameterSignatures.get()));
+        } else {
+          return Optional.empty();
+        }
       }
 
       @Override
       public void visitValue(ValueNode value) {
         value.visitExpr(this);
-        value.setType(codeType(value));
+        value.setType(bodyType(value));
       }
 
       @Override
@@ -89,15 +103,15 @@ public class InferTypes {
         super.visitCallable(callable);
       }
 
-      private Optional<Type> codeType(ReferencableNode referencable) {
+      private Optional<Type> bodyType(ReferencableNode referencable) {
         if (referencable.isNative()) {
-          return typeOfNativeCode(referencable);
+          return typeOfNativeBody(referencable);
         } else {
-          return typeOfDeclaredCode(referencable);
+          return typeOfDeclaredBody(referencable);
         }
       }
 
-      private Optional<Type> typeOfNativeCode(ReferencableNode referencable) {
+      private Optional<Type> typeOfNativeBody(ReferencableNode referencable) {
         if (referencable.declaresType()) {
           return createType(referencable.typeNode());
         } else {
@@ -107,7 +121,7 @@ public class InferTypes {
         }
       }
 
-      private Optional<Type> typeOfDeclaredCode(ReferencableNode referencable) {
+      private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable) {
         Optional<Type> exprType = referencable.expr().type();
         if (referencable.declaresType()) {
           Optional<Type> type = createType(referencable.typeNode());
@@ -155,9 +169,18 @@ public class InferTypes {
       private Optional<Type> createType(TypeNode type) {
         if (isVariableName(type.name())) {
           return Optional.of(variable(type.name()));
-        } else if (type.isArray()) {
-          TypeNode elementType = ((ArrayTypeNode) type).elementType();
+        } else if (type instanceof ArrayTypeNode array) {
+          TypeNode elementType = array.elementType();
           return createType(elementType).map(Types::array);
+        } else if (type instanceof FunctionTypeNode function) {
+          Optional<Type> result = createType(function.resultType());
+          var parameters = map(function.parameterTypes(), this::createType);
+          if (result.isPresent() && parameters.stream().allMatch(Optional::isPresent)) {
+            return Optional.of(function(
+                result.get(), toItemSignatures(map(parameters, Optional::get))));
+          } else {
+            return Optional.empty();
+          }
         } else {
           return Optional.of(findType(type.name()).type());
         }

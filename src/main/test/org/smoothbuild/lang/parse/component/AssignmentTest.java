@@ -15,8 +15,6 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.lang.base.type.ArrayType;
-import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.TestedAssignmentSpec;
 import org.smoothbuild.lang.base.type.TestedType;
 import org.smoothbuild.lang.base.type.Type;
@@ -37,7 +35,7 @@ public class AssignmentTest {
     } else {
       module(sourceCode)
           .loadsWithError(1, "`result` has body which type is " + source.q()
-               + " and it is not convertible to its declared type " + target.q() + ".");
+               + " and it is not convertible to its declared type " + target.qStripped() + ".");
     }
   }
 
@@ -56,8 +54,8 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`myFunction` has body which type is " + source.q()
-               + " and it is not convertible to its declared type " + target.q() + ".");
+          .loadsWithError(1, "`myFunction` has body which type is " + source.qStripped()
+               + " and it is not convertible to its declared type " + target.qStripped() + ".");
     }
   }
 
@@ -74,8 +72,8 @@ public class AssignmentTest {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
-          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.q()
-              + " to parameter `target` of type " + targetType.q() + ".");
+          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.qStripped()
+              + " to parameter `target` of type " + targetType.qStripped() + ".");
     }
   }
 
@@ -92,13 +90,13 @@ public class AssignmentTest {
       module.loadsSuccessfully();
     } else {
       module.loadsWithError(2,
-          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.q()
-              + " to parameter `target` of type " + targetType.q() + ".");
+          "In call to `innerFunction`: Cannot assign argument of type " + sourceType.qStripped()
+              + " to parameter `target` of type " + targetType.qStripped() + ".");
     }
   }
 
   private static List<TestedAssignmentSpec> parameter_assignment_test_data() {
-    return filterOutFunctions(parameter_assignment_test_specs());
+    return parameter_assignment_test_specs();
   }
 
   @ParameterizedTest
@@ -115,7 +113,7 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "Parameter `param` is of type " + target.q()
+          .loadsWithError(1, "Parameter `param` is of type " + target.qStripped()
                + " so it cannot have default value of type " + source.q() + ".");
     }
   }
@@ -136,17 +134,14 @@ public class AssignmentTest {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
-        result.add(Arguments.of(type1, type2, type1.type().mergeWith(type2.type(), UPPER)));
+        result.add(Arguments.of(
+            type1, type2, type1.strippedType().mergeWith(type2.strippedType(), UPPER)));
       }
     }
     return result;
   }
 
   private static List<TestedAssignmentSpec> without_polytypes_test_specs() {
-    return filterOutFunctions(assignment_without_polytypes_test_specs());
-  }
-
-  public static List<TestedAssignmentSpec> assignment_without_polytypes_test_specs() {
     return assignment_test_specs()
         .stream()
         .filter(a -> !(a.target().type().isPolytype() || a.source().type().isPolytype()))
@@ -154,23 +149,6 @@ public class AssignmentTest {
   }
 
   private static List<TestedAssignmentSpec> test_specs() {
-    return filterOutFunctions(assignment_test_specs());
-  }
-
-  // TODO remove once functions are implemented on language level
-  private static List<TestedAssignmentSpec> filterOutFunctions(List<TestedAssignmentSpec> specs) {
-    return specs
-        .stream()
-        .filter(t -> !isFunctionOrContainsFunction(t.source().type()))
-        .filter(t -> !isFunctionOrContainsFunction(t.target().type()))
-        .collect(toList());
-  }
-
-  private static boolean isFunctionOrContainsFunction(Type type) {
-    return type instanceof FunctionType || containsFunction(type);
-  }
-
-  private static boolean containsFunction(Type type) {
-    return type instanceof ArrayType arrayType && isFunctionOrContainsFunction(arrayType.elemType());
+    return assignment_test_specs();
   }
 }
