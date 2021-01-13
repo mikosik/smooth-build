@@ -53,19 +53,19 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
 
   public static List<TestedAssignmentSpec> assignment_test_specs() {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(assignmentsCommonForNormalCaseAndParameterAssignment());
+    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment());
     result.addAll(testSpecSpecificForNormalAssignment());
     return result;
   }
 
   public static List<TestedAssignmentSpec> parameter_assignment_test_specs() {
     var result = new ArrayList<TestedAssignmentSpec>();
-    result.addAll(assignmentsCommonForNormalCaseAndParameterAssignment());
+    result.addAll(testSpecsCommonForNormalCaseAndParameterAssignment());
     result.addAll(testSpecsSpecificForParameterAssignment());
     return result;
   }
 
-  public static List<TestedAssignmentSpec> assignmentsCommonForNormalCaseAndParameterAssignment() {
+  public static List<TestedAssignmentSpec> testSpecsCommonForNormalCaseAndParameterAssignment() {
     var r = new ArrayList<TestedAssignmentSpec>();
     gen(r, ANY, mAll());
     gen(r, BLOB, oneOf(BLOB, NOTHING));
