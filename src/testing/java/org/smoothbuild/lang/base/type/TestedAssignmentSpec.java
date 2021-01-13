@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.type.TestedType.BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.ELEMENTARY_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
 
@@ -72,21 +72,21 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
     gen(r, BOOL, oneOf(BOOL, NOTHING));
     gen(r, NOTHING, oneOf(NOTHING));
     gen(r, STRING, oneOf(STRING, NOTHING));
-    gen(r, STRUCT_WITH_STRING, oneOf(STRUCT_WITH_STRING, NOTHING));
+    gen(r, STRUCT, oneOf(STRUCT, NOTHING));
 
     gen(r, a(ANY), TestedType::isArray, mNothing());
     gen(r, a(BLOB), oneOf(a(BLOB), a(NOTHING), NOTHING));
     gen(r, a(BOOL), oneOf(a(BOOL), a(NOTHING), NOTHING));
     gen(r, a(NOTHING), oneOf(a(NOTHING), NOTHING));
     gen(r, a(STRING), oneOf(a(STRING), a(NOTHING), NOTHING));
-    gen(r, a(STRUCT_WITH_STRING), oneOf(a(STRUCT_WITH_STRING), a(NOTHING), NOTHING));
+    gen(r, a(STRUCT), oneOf(a(STRUCT), a(NOTHING), NOTHING));
 
     gen(r, a2(ANY), TestedType::isArrayOfArrays, t -> t.isArrayOf(NOTHING), mNothing());
     gen(r, a2(BLOB), oneOf(a2(BLOB), a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(BOOL), oneOf(a2(BOOL), a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(NOTHING), oneOf(a2(NOTHING), a(NOTHING), NOTHING));
     gen(r, a2(STRING), oneOf(a2(STRING), a2(NOTHING), a(NOTHING), NOTHING));
-    gen(r, a2(STRUCT_WITH_STRING), oneOf(a2(STRUCT_WITH_STRING), a2(NOTHING), a(NOTHING), NOTHING));
+    gen(r, a2(STRUCT), oneOf(a2(STRUCT), a2(NOTHING), a(NOTHING), NOTHING));
 
     gen(r, f(ANY),              mNothing(), mFunc(mAll()));
     gen(r, f(BLOB),             mNothing(), mFunc(oneOf(BLOB, NOTHING)));
@@ -107,12 +107,12 @@ public record TestedAssignmentSpec(TestedAssignment assignment, boolean allowed)
         illegalAssignment(f(a(BLOB)), a(BLOB)),
         illegalAssignment(f(a(BOOL)), a(BOOL)),
         illegalAssignment(f(a(NOTHING)), a(NOTHING)),
-        illegalAssignment(f(a(STRUCT_WITH_STRING)), a(STRUCT_WITH_STRING)),
+        illegalAssignment(f(a(STRUCT)), a(STRUCT)),
         illegalAssignment(f(a(STRING)), a(STRING)),
         illegalAssignment(f(a2(BLOB)), a2(BLOB)),
         illegalAssignment(f(a2(BOOL)), a2(BOOL)),
         illegalAssignment(f(a2(NOTHING)), a2(NOTHING)),
-        illegalAssignment(f(a2(STRUCT_WITH_STRING)), a2(STRUCT_WITH_STRING)),
+        illegalAssignment(f(a2(STRUCT)), a2(STRUCT)),
         illegalAssignment(f(a2(STRING)), a2(STRING)),
 
         // functions (as function result type)
