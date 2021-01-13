@@ -82,10 +82,10 @@ public class LoadModule {
     }
     for (EvaluableNode evaluable : ast.values()) {
       if (evaluable instanceof FuncNode func) {
-        Callable function = loadFunction(func, imports.values(), localFunctions);
+        Callable function = loadFunction(func, imports.evaluables(), localFunctions);
         localFunctions.put(function.name(), function);
       } else if (evaluable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, imports.values(), localFunctions);
+        Value value = loadValue(valueNode, imports.evaluables(), localFunctions);
         localFunctions.put(value.name(), value);
       } else {
         throw new RuntimeException("Unexpected case: " + evaluable.getClass().getCanonicalName());
