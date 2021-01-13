@@ -34,7 +34,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class LoadModule {
   public static Maybe<Definitions> loadModule(
-      Definitions imports, ModuleLocation moduleLocation, String sourceCode) {
+      Definitions imported, ModuleLocation moduleLocation, String sourceCode) {
     var result = new Maybe<Definitions>();
 
     Maybe<ModuleContext> moduleContext = parseModule(moduleLocation, sourceCode);
@@ -44,12 +44,12 @@ public class LoadModule {
     }
 
     Ast ast = fromParseTree(moduleLocation, moduleContext.value());
-    result.logAll(analyzeSemantically(imports, ast));
+    result.logAll(analyzeSemantically(imported, ast));
     if (result.hasProblems()) {
       return result;
     }
 
-    result.logAll(assignArgsToParams(ast, imports));
+    result.logAll(assignArgsToParams(ast, imported));
     if (result.hasProblems()) {
       return result;
     }
@@ -61,12 +61,12 @@ public class LoadModule {
     }
     Ast sortedAst = maybeSortedAst.value();
 
-    result.logAll(inferTypes(sortedAst, imports));
+    result.logAll(inferTypes(sortedAst, imported));
     if (result.hasProblems()) {
       return result;
     }
 
-    var declaredFunctions = loadCodes(imports, sortedAst);
+    var declaredFunctions = loadCodes(imported, sortedAst);
     var declaredStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
@@ -74,7 +74,7 @@ public class LoadModule {
     return result;
   }
 
-  private static ImmutableMap<String, Defined> loadCodes(Definitions imports, Ast ast) {
+  private static ImmutableMap<String, Defined> loadCodes(Definitions imported, Ast ast) {
     var localFunctions = new HashMap<String, Defined>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
@@ -82,10 +82,10 @@ public class LoadModule {
     }
     for (EvaluableNode evaluable : ast.values()) {
       if (evaluable instanceof FuncNode func) {
-        Callable function = loadFunction(func, imports.evaluables(), localFunctions);
+        Callable function = loadFunction(func, imported.evaluables(), localFunctions);
         localFunctions.put(function.name(), function);
       } else if (evaluable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, imports.evaluables(), localFunctions);
+        Value value = loadValue(valueNode, imported.evaluables(), localFunctions);
         localFunctions.put(value.name(), value);
       } else {
         throw new RuntimeException("Unexpected case: " + evaluable.getClass().getCanonicalName());

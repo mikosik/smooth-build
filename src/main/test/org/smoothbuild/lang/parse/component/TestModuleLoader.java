@@ -23,17 +23,17 @@ import com.google.common.collect.ImmutableMap;
 public class TestModuleLoader {
   private final String sourceCode;
   private ModuleLocation moduleLocation;
-  private Definitions imports;
+  private Definitions imported;
   private Maybe<Definitions> module;
 
   public static TestModuleLoader module(String sourceCode) {
     return new TestModuleLoader(sourceCode, moduleLocation(), baseTypeDefinitions());
   }
 
-  public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imports) {
+  public TestModuleLoader(String sourceCode, ModuleLocation moduleLocation, Definitions imported) {
     this.sourceCode = sourceCode;
     this.moduleLocation = moduleLocation;
-    this.imports = imports;
+    this.imported = imported;
   }
 
   public TestModuleLoader withImportedModuleLocation() {
@@ -46,8 +46,8 @@ public class TestModuleLoader {
     return this;
   }
 
-  public TestModuleLoader withImported(Definitions imports) {
-    this.imports = imports;
+  public TestModuleLoader withImported(Definitions imported) {
+    this.imported = imported;
     return this;
   }
 
@@ -107,7 +107,7 @@ public class TestModuleLoader {
   }
 
   private Maybe<Definitions> load() {
-    return LoadModule.loadModule(imports, moduleLocation, sourceCode);
+    return LoadModule.loadModule(imported, moduleLocation, sourceCode);
   }
 
   public static Log err(int line, String message) {
