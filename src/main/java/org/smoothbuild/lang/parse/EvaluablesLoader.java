@@ -42,7 +42,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class ValueLoader {
+public class EvaluablesLoader {
   public static Value loadValue(
       ValueNode value,
       Map<String, Defined> importedValues,

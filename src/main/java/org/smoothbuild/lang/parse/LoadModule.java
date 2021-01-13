@@ -7,8 +7,8 @@ import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically
 import static org.smoothbuild.lang.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
-import static org.smoothbuild.lang.parse.ValueLoader.loadFunction;
-import static org.smoothbuild.lang.parse.ValueLoader.loadValue;
+import static org.smoothbuild.lang.parse.EvaluablesLoader.loadFunction;
+import static org.smoothbuild.lang.parse.EvaluablesLoader.loadValue;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
 import java.util.HashMap;
