@@ -63,12 +63,12 @@ public class RuntimeController {
     return reporter.isProblemReported() ? EXIT_CODE_ERROR : EXIT_CODE_SUCCESS;
   }
 
-  private Maybe<Definitions> load(ModuleLocation info, Definitions imports) {
+  private Maybe<Definitions> load(ModuleLocation info, Definitions imported) {
     var sourceCode = readFileContent(fullPathResolver.resolve(info));
     if (sourceCode.hasProblems()) {
       return  Maybe.withLogsFrom(sourceCode);
     } else {
-      return loadModule(imports, info, sourceCode.value());
+      return loadModule(imported, info, sourceCode.value());
     }
   }
 
