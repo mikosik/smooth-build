@@ -77,9 +77,9 @@ public class NameTest {
              MyFunction() = "abc";
              """)
           .loadsWithError(1, """
-            no viable alternative at input 'MyFunction('
+            no viable alternative at input 'MyFunction()='
             MyFunction() = "abc";
-                      ^""");
+                         ^""");
     }
 
     @Test
@@ -88,9 +88,9 @@ public class NameTest {
              A() = "abc";
              """)
           .loadsWithError(1, """
-            no viable alternative at input 'A('
+            no viable alternative at input 'A()='
             A() = "abc";
-             ^""");
+                ^""");
     }
   }
 
@@ -121,7 +121,7 @@ public class NameTest {
              String myFunction(String Name);
              """)
           .loadsWithError(1, """
-              mismatched input 'Name' expecting NAME
+              mismatched input 'Name' expecting {'(', NAME}
               String myFunction(String Name);
                                        ^^^^""");
     }
@@ -132,7 +132,7 @@ public class NameTest {
              String myFunction(String A);
              """)
           .loadsWithError(1, """
-              mismatched input 'A' expecting NAME
+              mismatched input 'A' expecting {'(', NAME}
               String myFunction(String A);
                                        ^""");
     }
@@ -212,7 +212,7 @@ public class NameTest {
              }
              """)
           .loadsWithError(2, """
-              mismatched input 'Field' expecting NAME
+              mismatched input 'Field' expecting {'(', NAME}
                 String Field
                        ^^^^^""");
     }
@@ -225,7 +225,7 @@ public class NameTest {
              }
              """)
           .loadsWithError(2, """
-              mismatched input 'A' expecting NAME
+              mismatched input 'A' expecting {'(', NAME}
                 String A
                        ^""");
     }

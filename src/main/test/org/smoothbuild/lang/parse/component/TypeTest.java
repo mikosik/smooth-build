@@ -2,10 +2,12 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.base.type.TestedType.A;
+import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
+import static org.smoothbuild.lang.base.type.TestedType.f;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -285,12 +287,12 @@ public class TypeTest {
     @ArgumentsSource(FieldForbiddenTypes.class)
     public void non_first_field_cannot_declare_following_types(TestedType testedType) {
       TestModuleLoader module = module(unlines(
-          testedType.declarationsAsString(),
           "MyStruct {",
           "  String firstField,",
           "  " + testedType.name() + " field,",
-          "}"));
-      module.loadsWithError(4, "Struct field type cannot have type variable.");
+          "}",
+          testedType.declarationsAsString()));
+      module.loadsWithError(3, "Struct field type cannot have type variable.");
     }
 
     @Test
@@ -357,7 +359,9 @@ public class TypeTest {
     return List.of(
         A,
         a(A),
-        a2(A)
+        a(a(A)),
+        f(A),
+        f(BLOB, A)
     );
   }
 
@@ -383,7 +387,11 @@ public class TypeTest {
     return List.of(
         A,
         a(A),
-        a2(A)
+        a2(A),
+        f(A),
+        f(BLOB, A),
+        f(f(A)),
+        f(f(BLOB, A))
     );
   }
 }

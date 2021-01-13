@@ -21,9 +21,12 @@ argList     : arg ( ',' arg )* ','? ;
 arg         : ( NAME '=' )? expr ;
 array       : '[' ( expr (',' expr)* (',')? )?  ']' ;
 fieldRead   : '.' NAME ;
-type        : TNAME             # typeName
-            | '[' type ']'      # arrayType
+type        : TNAME                        # typeName
+            | '[' type ']'                 # arrayType
+            | type '(' typeList ')'        # functionType
             ;
+
+typeList    : ( type (',' type)* ','? )? ;
 
 NAME        : SMALL_LETTER ( IDENTIFIER_CHAR )* ;
 TNAME       : LARGE_LETTER ( IDENTIFIER_CHAR )* ;

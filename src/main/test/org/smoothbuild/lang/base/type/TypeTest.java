@@ -199,7 +199,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("isAssignableFrom_test_data")
   public void isAssignableFrom(TestedAssignmentSpec spec) {
-    assertThat(spec.target().type().isAssignableFrom(spec.source().type()))
+    assertThat(spec.target().strippedType().isAssignableFrom(spec.source().strippedType()))
         .isEqualTo(spec.allowed());
   }
 
@@ -210,7 +210,7 @@ public class TypeTest {
   @ParameterizedTest
   @MethodSource("isParamAssignableFrom_test_data")
   public void isParamAssignableFrom(TestedAssignmentSpec spec) {
-    assertThat(spec.target().type().isParamAssignableFrom(spec.source().type()))
+    assertThat(spec.target().strippedType().isParamAssignableFrom(spec.source().strippedType()))
         .isEqualTo(spec.allowed());
   }
 

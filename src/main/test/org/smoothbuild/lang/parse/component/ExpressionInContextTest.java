@@ -163,4 +163,66 @@ public class ExpressionInContextTest {
           .loadsSuccessfully();
     }
   }
+
+  @Nested
+  class function_can_be_used_as {
+    @Test
+    public void argument() {
+      module("""
+          String otherFunction();
+          String myFunction(String() param);
+          result = myFunction(otherFunction);
+          """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void array_element() {
+      module("""
+           String myFunction() = "abc";
+           result = [ myFunction ];
+           """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void parameter_default_value() {
+      module("""
+          String myFunction();
+          String otherFunction(String() value = myFunction);
+          """)
+          .loadsSuccessfully();
+    }
+  }
+
+  @Nested
+  class value_can_be_used_as {
+    @Test
+    public void argument() {
+      module("""
+          String myValue;
+          String myFunction(String param);
+          result = myFunction(myValue);
+          """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void array_element() {
+      module("""
+           String myValue;
+           result = [ myValue ];
+           """)
+          .loadsSuccessfully();
+    }
+
+    @Test
+    public void parameter_default_value() {
+      module("""
+          String myValue;
+          String myFunction(String value = myValue);
+          """)
+          .loadsSuccessfully();
+    }
+  }
 }

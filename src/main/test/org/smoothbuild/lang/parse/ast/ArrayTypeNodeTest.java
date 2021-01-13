@@ -2,29 +2,11 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 public class ArrayTypeNodeTest {
-  @Nested
-  class is_array {
-    @Test
-    public void normal_array_type_node_is_array() {
-      ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("MyType", loc()), loc());
-      assertThat(typeNode.isArray())
-          .isTrue();
-    }
-
-    @Test
-    public void polytype_array_type_node_is_array() {
-      ArrayTypeNode typeNode = new ArrayTypeNode(new TypeNode("A", loc()), loc());
-      assertThat(typeNode.isArray())
-          .isTrue();
-    }
-  }
-
   @Nested
   class is_polytype {
     @Test

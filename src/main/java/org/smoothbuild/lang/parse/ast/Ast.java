@@ -173,8 +173,11 @@ public class Ast {
       }
 
       private void addToDependencies(TypeNode type) {
-        if (type.isArray()) {
-          addToDependencies(((ArrayTypeNode) type).elementType());
+        if (type instanceof ArrayTypeNode arrayType) {
+          addToDependencies(arrayType.elementType());
+        } else if (type instanceof FunctionTypeNode functionType) {
+          addToDependencies(functionType.resultType());
+          functionType.parameterTypes().forEach(this::addToDependencies);
         } else {
           if (funcNames.contains(type.name())) {
             dependencies.add(new GraphEdge<>(type.location(), type.name()));

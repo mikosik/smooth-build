@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.CaseFormat.LOWER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
+import static org.smoothbuild.lang.base.type.Types.function;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,7 @@ public class StructNode extends NamedNode {
 
     @Override
     public Optional<Type> type() {
-      return StructNode.this.type();
+      return StructNode.this.type().map(resultType -> function(resultType, ImmutableList.of()));
     }
 
     @Override

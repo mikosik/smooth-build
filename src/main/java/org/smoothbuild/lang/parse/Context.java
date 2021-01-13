@@ -40,7 +40,7 @@ public class Context {
     }
     CallableNode node = callables.get(name);
     if (node != null) {
-      return node.type();
+      return node.resultType();
     }
     throw new RuntimeException("Couldn't find `" + name + "` function.");
   }

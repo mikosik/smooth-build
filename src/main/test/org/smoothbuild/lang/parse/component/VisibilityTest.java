@@ -16,7 +16,7 @@ public class VisibilityTest {
   }
 
   @Nested
-  class value_reference {
+  class _reference {
     @Nested
     class to_local {
       @Test
@@ -38,21 +38,39 @@ public class VisibilityTest {
       }
 
       @Test
-      public void function_fails() {
+      public void function_succeeds() {
         module("""
                String myFunction();
                result = myFunction;
                """)
-            .loadsWithError(2, "`myFunction` is a function and cannot be accessed as a value.");
+            .loadsSuccessfully();
       }
 
       @Test
-      public void constructor_fails() {
+      public void function_declared_below_succeeds() {
+        module("""
+               result = myFunction;
+               String myFunction();
+               """)
+            .loadsSuccessfully();
+      }
+
+      @Test
+      public void constructor_succeeds() {
         module("""
                MyStruct {}
                result = myStruct;
                """)
-            .loadsWithError(2, "`myStruct` is a function and cannot be accessed as a value.");
+            .loadsSuccessfully();
+      }
+
+      @Test
+      public void constructor_declared_below_succeeds() {
+        module("""
+               result = myStruct;
+               MyStruct {}
+               """)
+            .loadsSuccessfully();
       }
     }
 
@@ -73,7 +91,7 @@ public class VisibilityTest {
       }
 
       @Test
-      public void function_fails() {
+      public void function_succeeds() {
         Definitions imported = module("""
             String otherModuleFunction();
             """)
@@ -83,12 +101,11 @@ public class VisibilityTest {
                 myValue = otherModuleFunction;
                 """)
             .withImported(imported)
-            .loadsWithError(1,
-                "`otherModuleFunction` is a function and cannot be accessed as a value.");
+            .loadsSuccessfully();
       }
 
       @Test
-      public void constructor_fails() {
+      public void constructor_succeeds() {
         Definitions imported = module("""
             OtherModuleStruct{}
             """)
@@ -98,8 +115,7 @@ public class VisibilityTest {
                 myValue = otherModuleStruct;
                 """)
             .withImported(imported)
-            .loadsWithError(1,
-                "`otherModuleStruct` is a function and cannot be accessed as a value.");
+            .loadsSuccessfully();
       }
     }
 
@@ -137,6 +153,15 @@ public class VisibilityTest {
                result = myValue();
                """)
             .loadsWithError(2, "`myValue` cannot be called as it is a value.");
+      }
+
+      @Test
+      public void value_declared_below_fails() {
+        module("""
+               result = myValue();
+               String myValue;
+               """)
+            .loadsWithError(1, "`myValue` cannot be called as it is a value.");
       }
 
       @Test

@@ -17,15 +17,29 @@ public class FunctionTypeTest {
   }
 
   @Test
-  public void function_with_type_variable_result_is_polytype() {
+  public void function_with_type_variable_as_result_type_is_polytype() {
     FunctionType functionType = functionType(A);
     assertThat(functionType.isPolytype())
         .isTrue();
   }
 
   @Test
-  public void function_with_type_variable_parameter_is_polytype() {
+  public void function_with_type_variable_as_result_type_of_result_type_is_polytype() {
+    FunctionType functionType = functionType(functionType(A));
+    assertThat(functionType.isPolytype())
+        .isTrue();
+  }
+
+  @Test
+  public void function_with_type_variable_as_parameter_type_is_polytype() {
     FunctionType functionType = functionType(STRING, A);
+    assertThat(functionType.isPolytype())
+        .isTrue();
+  }
+
+  @Test
+  public void function_with_type_variable_as_parameter_type_of_parameter_type_is_polytype() {
+    FunctionType functionType = functionType(STRING, functionType(STRING, A));
     assertThat(functionType.isPolytype())
         .isTrue();
   }

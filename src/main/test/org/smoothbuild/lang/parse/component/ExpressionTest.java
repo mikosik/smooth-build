@@ -16,6 +16,7 @@ import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
+import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,17 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsDeclared(function(1, STRING, "myFunction"));
+  }
+
+  @Test
+  public void function_reference() {
+    module("""
+          String myFunction();
+          String() result =
+            myFunction;
+          """)
+        .loadsSuccessfully()
+        .containsDeclared(value(2, f(STRING), "result", reference(3, f(STRING), "myFunction")));
   }
 
   @Test
