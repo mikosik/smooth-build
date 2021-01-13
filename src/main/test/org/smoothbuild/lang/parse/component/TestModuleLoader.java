@@ -60,7 +60,7 @@ public class TestModuleLoader {
 
   public void containsDeclared(Defined expected) {
     String name = expected.name();
-    ImmutableMap<String, Defined> values = module.value().values();
+    ImmutableMap<String, Defined> values = module.value().evaluables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(values)
         .containsKey(name);

@@ -87,7 +87,7 @@ public class AnalyzeSemantically {
   }
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    var importedScope = new Scope<Named>(imported.values());
+    var importedScope = new Scope<Named>(imported.evaluables());
     Scope<Named> localScope = new Scope<>(importedScope, ast.valuesMap());
 
     new AstVisitor() {
@@ -210,7 +210,7 @@ public class AnalyzeSemantically {
 
     for (Named named : nameds) {
       logIfDuplicate(logger, imported.types(), named);
-      logIfDuplicate(logger, imported.values(), named);
+      logIfDuplicate(logger, imported.evaluables(), named);
     }
     Map<String, Named> checked = new HashMap<>();
     for (Named named : nameds) {
