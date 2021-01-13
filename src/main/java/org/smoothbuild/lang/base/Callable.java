@@ -2,9 +2,6 @@ package org.smoothbuild.lang.base;
 
 import static java.util.Objects.requireNonNull;
 import static org.smoothbuild.lang.base.Item.toItemSignatures;
-import static org.smoothbuild.util.Lists.map;
-
-import java.util.List;
 
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;
@@ -46,10 +43,6 @@ public abstract class Callable extends Defined {
 
   public ImmutableList<Item> parameters() {
     return parameters;
-  }
-
-  public List<Type> parameterTypes() {
-    return map(parameters, Item::type);
   }
 
   public boolean canBeCalledArgless() {
