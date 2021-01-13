@@ -9,7 +9,7 @@ import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.a;
@@ -385,7 +385,7 @@ public class TypeTest {
         a(STRING),
         a(STRUCT_WITH_BLOB),
         a(STRUCT_WITH_BOOL),
-        a(STRUCT_WITH_STRING),
+        a(STRUCT),
         a(a(ANY)),
         a(a(BLOB)),
         a(a(BOOL)),
@@ -393,7 +393,7 @@ public class TypeTest {
         a(a(STRING)),
         a(a(STRUCT_WITH_BLOB)),
         a(a(STRUCT_WITH_BOOL)),
-        a(a(STRUCT_WITH_STRING))
+        a(a(STRUCT))
     );
   }
 

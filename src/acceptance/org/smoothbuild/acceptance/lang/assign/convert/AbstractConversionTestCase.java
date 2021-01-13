@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
 import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_STRING;
+import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(STRING, STRING),
 
         // Struct
-        allowedConversion(STRUCT_WITH_STRING, STRUCT_WITH_STRING),
+        allowedConversion(STRUCT, STRUCT),
 
         // [Blob]
         allowedConversion(a(BLOB), a(BLOB)),
@@ -69,8 +69,8 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(a(STRING), a(STRING)),
 
         // [Struct]
-        allowedConversion(a(STRUCT_WITH_STRING), a(NOTHING)),
-        allowedConversion(a(STRUCT_WITH_STRING), a(STRUCT_WITH_STRING)),
+        allowedConversion(a(STRUCT), a(NOTHING)),
+        allowedConversion(a(STRUCT), a(STRUCT)),
 
         // [[Blob]]
         allowedConversion(a(a(BLOB)), a(NOTHING)),
@@ -96,10 +96,10 @@ public abstract class AbstractConversionTestCase extends AcceptanceTestCase {
         allowedConversion(a(a(STRING)), a(a(STRING))),
 
         // [[Struct]]
-        allowedConversion(a(a(STRUCT_WITH_STRING)), a(NOTHING)),
+        allowedConversion(a(a(STRUCT)), a(NOTHING)),
 
-        allowedConversion(a(a(STRUCT_WITH_STRING)), a(a(NOTHING))),
-        allowedConversion(a(a(STRUCT_WITH_STRING)), a(a(STRUCT_WITH_STRING)))
+        allowedConversion(a(a(STRUCT)), a(a(NOTHING))),
+        allowedConversion(a(a(STRUCT)), a(a(STRUCT)))
     );
   }
 

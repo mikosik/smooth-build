@@ -66,6 +66,12 @@ public class TestedType {
       "\"abc\"",
       "abc"
   );
+  public static final TestedType STRUCT = new TestedType(
+      struct("Person", list(new ItemSignature(string(), "name", Optional.empty()))),
+      """
+          person("John")""",
+      null,
+      Set.of("Person{ String name }"));
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
       struct("Data", list(new ItemSignature(blob(), "value", Optional.empty()))),
       "data(0xAB)",
@@ -76,12 +82,6 @@ public class TestedType {
       "flag(true)",
       null,
       Set.of("Flag{ Bool value }"));
-  public static final TestedType STRUCT_WITH_STRING = new TestedType(
-      struct("Person", list(new ItemSignature(string(), "name", Optional.empty()))),
-      """
-          person("John")""",
-      null,
-      Set.of("Person{ String name }"));
 
   public static final ImmutableList<TestedType> ELEMENTARY_TYPES = ImmutableList.of(
       ANY,
@@ -89,7 +89,7 @@ public class TestedType {
       BOOL,
       NOTHING,
       STRING,
-      STRUCT_WITH_STRING,
+      STRUCT,
       A);
 
   public static final List<TestedType> TESTED_MONOTYPES = ImmutableList.of(
@@ -100,7 +100,7 @@ public class TestedType {
       STRING,
       STRUCT_WITH_BLOB,
       STRUCT_WITH_BOOL,
-      STRUCT_WITH_STRING,
+      STRUCT,
       a(ANY),
       a(BLOB),
       a(BOOL),
@@ -108,7 +108,7 @@ public class TestedType {
       a(STRING),
       a(STRUCT_WITH_BLOB),
       a(STRUCT_WITH_BOOL),
-      a(STRUCT_WITH_STRING),
+      a(STRUCT),
       a(a(ANY)),
       a(a(BLOB)),
       a(a(BOOL)),
@@ -116,7 +116,7 @@ public class TestedType {
       a(a(STRING)),
       a(a(STRUCT_WITH_BLOB)),
       a(a(STRUCT_WITH_BOOL)),
-      a(a(STRUCT_WITH_STRING))
+      a(a(STRUCT))
   );
 
   public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
