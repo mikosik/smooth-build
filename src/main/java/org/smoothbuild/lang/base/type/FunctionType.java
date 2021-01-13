@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.util.Lists.map;
 
+import java.util.List;
+
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -44,6 +46,10 @@ public class FunctionType extends Type {
 
   public ImmutableList<ItemSignature> parameters() {
     return parameters;
+  }
+
+  public List<Type> parameterTypes() {
+    return map(parameters, ItemSignature::type);
   }
 
   @Override
