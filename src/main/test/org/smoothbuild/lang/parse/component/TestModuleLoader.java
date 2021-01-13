@@ -58,13 +58,13 @@ public class TestModuleLoader {
     return this;
   }
 
-  public void containsEvaluable(Declared expected) {
+  public void containsDeclared(Declared expected) {
     String name = expected.name();
-    ImmutableMap<String, Declared> evaluables = module.value().evaluables();
+    ImmutableMap<String, Declared> values = module.value().values();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(evaluables)
+        .that(values)
         .containsKey(name);
-    Declared actual = evaluables.get(name);
+    Declared actual = values.get(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
@@ -72,7 +72,7 @@ public class TestModuleLoader {
   public void containsType(Type expected) {
     String name = expected.name();
     ImmutableMap<String, Declared> types = module.value().types();
-    assertWithMessage("Module evaluables doesn't contain '" + name + "' type.")
+    assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types)
         .containsKey(name);
     Type actual = types.get(name).type();

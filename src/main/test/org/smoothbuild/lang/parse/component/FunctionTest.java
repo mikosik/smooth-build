@@ -17,7 +17,7 @@ public class FunctionTest {
           String nonDefault);
         """)
         .loadsSuccessfully()
-        .containsEvaluable(function(1, STRING, "myFunction",
+        .containsDeclared(function(1, STRING, "myFunction",
             parameter(2, STRING, "default", string(2, "value")),
             parameter(3, STRING, "nonDefault")));
   }

@@ -24,7 +24,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(arrayLiteral("0x07,"))
           .loadsSuccessfully()
-          .containsEvaluable(value(1, a(BLOB), "result", array(1, BLOB, blob(1, 7))));
+          .containsDeclared(value(1, a(BLOB), "result", array(1, BLOB, blob(1, 7))));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
-          .containsEvaluable(function(1, STRING, "myFunction", parameter(1, STRING, "param1")));
+          .containsDeclared(function(1, STRING, "myFunction", parameter(1, STRING, "param1")));
     }
 
     @Test
@@ -127,7 +127,7 @@ public class TrailingCommaTest {
       Function function = function(1, BLOB, "myFunction", parameter(1, BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
-          .containsEvaluable(value(2, BLOB, "result", call(2, BLOB, function, blob(2, 7))));
+          .containsDeclared(value(2, BLOB, "result", call(2, BLOB, function, blob(2, 7))));
     }
 
     @Test

@@ -22,9 +22,9 @@ public class Context {
   }
 
   public ImmutableList<ItemSignature> parametersOf(String name) {
-    Declared evaluable = imported.evaluables().get(name);
-    if (evaluable != null) {
-      return ((Callable) evaluable).type().parameters();
+    Declared declared = imported.values().get(name);
+    if (declared != null) {
+      return ((Callable) declared).type().parameters();
     }
     CallableNode node = callables.get(name);
     if (node != null) {
@@ -34,7 +34,7 @@ public class Context {
   }
 
   public Optional<Type> resultTypeOf(String name) {
-    Callable callable = (Callable) imported.evaluables().get(name);
+    Callable callable = (Callable) imported.values().get(name);
     if (callable != null) {
       return Optional.of(callable.resultType());
     }

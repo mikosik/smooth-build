@@ -15,13 +15,13 @@ import org.smoothbuild.lang.base.Value;
 public class FindValues {
   public static Optional<List<Value>> findValues(Reporter reporter, Definitions definitions,
       List<String> names) {
-    var evaluables = definitions.evaluables();
+    var values = definitions.values();
     List<Value> callablesToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      Declared evaluable = evaluables.get(name);
-      if (evaluable != null) {
-        if (evaluable instanceof Value value) {
+      Declared declared = values.get(name);
+      if (declared != null) {
+        if (declared instanceof Value value) {
           callablesToRun.add(value);
         } else {
           logs.add(error(

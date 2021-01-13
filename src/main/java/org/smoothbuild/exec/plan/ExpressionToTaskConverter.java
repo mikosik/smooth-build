@@ -94,7 +94,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
 
   @Override
   public Task visit(ValueReferenceExpression expression) throws ExpressionVisitorException {
-    Value value = (Value) definitions.evaluables().get(expression.name());
+    Value value = (Value) definitions.values().get(expression.name());
     if (value.body().isPresent()) {
       Task task = value.body().get().visit(this);
       Task convertedTask = convertIfNeeded(task, value.type());

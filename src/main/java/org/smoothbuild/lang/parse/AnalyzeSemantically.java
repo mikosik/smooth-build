@@ -87,8 +87,8 @@ public class AnalyzeSemantically {
   }
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    var importedScope = new Scope<Named>(imported.evaluables());
-    Scope<Named> localScope = new Scope<>(importedScope, ast.evaluablesMap());
+    var importedScope = new Scope<Named>(imported.values());
+    Scope<Named> localScope = new Scope<>(importedScope, ast.valuesMap());
 
     new AstVisitor() {
       Scope<Named> scope = localScope;
@@ -205,12 +205,12 @@ public class AnalyzeSemantically {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(map(ast.structs(), StructNode::constructor));
-    nameds.addAll(ast.evaluables());
+    nameds.addAll(ast.values());
     nameds.sort(comparing(n -> n.location().line()));
 
     for (Named named : nameds) {
       logIfDuplicate(logger, imported.types(), named);
-      logIfDuplicate(logger, imported.evaluables(), named);
+      logIfDuplicate(logger, imported.values(), named);
     }
     Map<String, Named> checked = new HashMap<>();
     for (Named named : nameds) {
