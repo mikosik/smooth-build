@@ -42,32 +42,32 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class EvaluableLoader {
+public class ValueLoader {
   public static Value loadValue(
       ValueNode value,
-      Map<String, Declared> importedEvaluables,
-      Map<String, Declared> localEvaluables) {
-    return new EvaluableSupplier(value, localEvaluables, importedEvaluables).loadValue();
+      Map<String, Declared> importedValues,
+      Map<String, Declared> localValues) {
+    return new ValueSupplier(value, localValues, importedValues).loadValue();
   }
 
   public static Callable loadFunction(
       FuncNode func,
-      Map<String, Declared> importedEvaluables,
-      Map<String, Declared> localEvaluables) {
-    return new EvaluableSupplier(func, localEvaluables, importedEvaluables).loadFunction();
+      Map<String, Declared> importedValues,
+      Map<String, Declared> localValues) {
+    return new ValueSupplier(func, localValues, importedValues).loadFunction();
   }
 
-  private static class EvaluableSupplier {
+  private static class ValueSupplier {
     private final EvaluableNode evaluable;
-    private final Map<String, Declared> localEvaluables;
-    private final Map<String, Declared> importedEvaluables;
+    private final Map<String, Declared> localValues;
+    private final Map<String, Declared> importedValues;
     private ImmutableMap<String, Type> functionParameters;
 
-    public EvaluableSupplier(EvaluableNode evaluable, Map<String, Declared> localEvaluables,
-        Map<String, Declared> importedEvaluables) {
+    public ValueSupplier(EvaluableNode evaluable, Map<String, Declared> localValues,
+        Map<String, Declared> importedValues) {
       this.evaluable = evaluable;
-      this.localEvaluables = localEvaluables;
-      this.importedEvaluables = importedEvaluables;
+      this.localValues = localValues;
+      this.importedValues = importedValues;
     }
 
     public Value loadValue() {
@@ -145,7 +145,7 @@ public class EvaluableLoader {
     }
 
     private Declared find(String name) {
-      return requireNonNullElseGet(localEvaluables.get(name), () -> importedEvaluables.get(name));
+      return requireNonNullElseGet(localValues.get(name), () -> importedValues.get(name));
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {

@@ -35,7 +35,7 @@ public class Ast {
     this.evaluables = ImmutableList.copyOf(evaluables);
   }
 
-  public ImmutableList<EvaluableNode> evaluables() {
+  public ImmutableList<EvaluableNode> values() {
     return evaluables;
   }
 
@@ -43,7 +43,7 @@ public class Ast {
     return structs;
   }
 
-  public ImmutableMap<String, EvaluableNode> evaluablesMap() {
+  public ImmutableMap<String, EvaluableNode> valuesMap() {
     if (evaluablesMap == null) {
       evaluablesMap = createEvaluablesMap();
     }

@@ -31,7 +31,7 @@ public class ExpressionTest {
           String result;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, STRING, "result"));
+        .containsDeclared(value(1, STRING, "result"));
   }
 
   @Test
@@ -42,7 +42,7 @@ public class ExpressionTest {
             myValue;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(2, STRING, "result", valueRef(3, STRING, "myValue")));
+        .containsDeclared(value(2, STRING, "result", valueRef(3, STRING, "myValue")));
   }
 
   @Test
@@ -51,7 +51,7 @@ public class ExpressionTest {
           String myFunction();
           """)
         .loadsSuccessfully()
-        .containsEvaluable(function(1, STRING, "myFunction"));
+        .containsDeclared(function(1, STRING, "myFunction"));
   }
 
   @Test
@@ -61,7 +61,7 @@ public class ExpressionTest {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(function(1, BLOB, "myFunction", blob(2, 7)));
+        .containsDeclared(function(1, BLOB, "myFunction", blob(2, 7)));
   }
 
   @Test
@@ -71,7 +71,7 @@ public class ExpressionTest {
             Blob param1);
           """)
         .loadsSuccessfully()
-        .containsEvaluable(function(1, STRING, "myFunction", parameter(2, BLOB, "param1")));
+        .containsDeclared(function(1, STRING, "myFunction", parameter(2, BLOB, "param1")));
   }
 
   @Test
@@ -81,7 +81,7 @@ public class ExpressionTest {
             = param1;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(function(
+        .containsDeclared(function(
             1, BLOB, "myFunction", parameterRef(BLOB, "param1", 2), parameter(1, BLOB, "param1")));
   }
 
@@ -93,7 +93,7 @@ public class ExpressionTest {
               0x07);
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             function(1, STRING, "myFunction", parameter(2, BLOB, "param1", blob(3, 7))));
   }
 
@@ -104,7 +104,7 @@ public class ExpressionTest {
           result = myFunction();
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             value(2, STRING, "result", call(2, STRING, function(1, STRING, "myFunction"))));
   }
 
@@ -117,7 +117,7 @@ public class ExpressionTest {
             0x07);
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
@@ -130,7 +130,7 @@ public class ExpressionTest {
             0x07);
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
@@ -141,7 +141,7 @@ public class ExpressionTest {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, BLOB, "result", blob(2, 7)));
+        .containsDeclared(value(1, BLOB, "result", blob(2, 7)));
   }
 
   @Test
@@ -151,7 +151,7 @@ public class ExpressionTest {
             "abc";
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, STRING, "result", string(2, "abc")));
+        .containsDeclared(value(1, STRING, "result", string(2, "abc")));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class ExpressionTest {
           ];
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             value(1, a(BLOB), "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
   }
 
@@ -181,7 +181,7 @@ public class ExpressionTest {
             .field;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(
+        .containsDeclared(
             value(5, STRING, "result", fieldRead(6, field, valueRef(5, myStruct, "struct"))));
   }
 
@@ -191,7 +191,7 @@ public class ExpressionTest {
           [String] result;
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(1, a(STRING), "result"));
+        .containsDeclared(value(1, a(STRING), "result"));
   }
 
   @Test
@@ -215,7 +215,7 @@ public class ExpressionTest {
           }
           """)
         .loadsSuccessfully()
-        .containsEvaluable(constr);
+        .containsDeclared(constr);
   }
 
   @Test
@@ -230,6 +230,6 @@ public class ExpressionTest {
             "aaa");
           """)
         .loadsSuccessfully()
-        .containsEvaluable(value(4, struct, "result", call(4, struct, constr, string(5, "aaa"))));
+        .containsDeclared(value(4, struct, "result", call(4, struct, constr, string(5, "aaa"))));
   }
 }

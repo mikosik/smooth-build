@@ -46,14 +46,14 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  private Native loadNativeImpl(Declared evaluable) throws LoadingNativeImplException {
-    Path path = pathResolver.resolve(evaluable.location().module().toNative());
-    Map<String, Native> natives = nativesInJar(path, evaluable.name());
-    Native nativ = natives.get(evaluable.name());
+  private Native loadNativeImpl(Declared declared) throws LoadingNativeImplException {
+    Path path = pathResolver.resolve(declared.location().module().toNative());
+    Map<String, Native> natives = nativesInJar(path, declared.name());
+    Native nativ = natives.get(declared.name());
     if (nativ == null) {
-      throw newException(evaluable, "Error loading native implementation for `"
-          + evaluable.name() + "`. Jar '" + path + "' does not contain implementation for `"
-          + evaluable.name() + "`. It contains {" + join(",", natives.keySet()) + "}.");
+      throw newException(declared, "Error loading native implementation for `"
+          + declared.name() + "`. Jar '" + path + "' does not contain implementation for `"
+          + declared.name() + "`. It contains {" + join(",", natives.keySet()) + "}.");
     }
     return nativ;
   }
@@ -77,12 +77,12 @@ public class NativeImplLoader {
     return nativesInJar;
   }
 
-  private void nativeResultMatchesDeclared(Declared evaluable, Native nativ, Type resultType)
+  private void nativeResultMatchesDeclared(Declared declared, Native nativ, Type resultType)
       throws LoadingNativeImplException {
     Method method = nativ.method();
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
-      throw newException(evaluable, evaluable.q() + " declares type " + resultType.q()
+      throw newException(declared, declared.q() + " declares type " + resultType.q()
           + " so its native implementation result type must be "
           + mapTypeToJType(resultType).getCanonicalName() + " but it is "
           + resultJType.getCanonicalName() + ".");
@@ -122,7 +122,7 @@ public class NativeImplLoader {
     }
   }
 
-  private static LoadingNativeImplException newException(Declared evaluable, String message) {
-    return new LoadingNativeImplException(evaluable.location().toString() + ": " + message);
+  private static LoadingNativeImplException newException(Declared declared, String message) {
+    return new LoadingNativeImplException(declared.location().toString() + ": " + message);
   }
 }

@@ -20,7 +20,7 @@ public class ListRunner {
 
   public int run() {
     return runtimeController.setUpRuntimeAndRun(defintions -> defintions
-        .evaluables()
+        .values()
         .values()
         .stream()
         .filter(f -> f.location().module().space().equals(USER))

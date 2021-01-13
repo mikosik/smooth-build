@@ -10,7 +10,7 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitEvaluables(ast.evaluables());
+    visitEvaluables(ast.values());
     visitEvaluables(map(ast.structs(), StructNode::constructor));
   }
 
