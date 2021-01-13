@@ -9,8 +9,8 @@ import org.smoothbuild.lang.base.type.Type;
 import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
-    ImmutableMap<String, Declared> types,
-    ImmutableMap<String, Declared> values) {
+    ImmutableMap<String, Defined> types,
+    ImmutableMap<String, Defined> values) {
 
   public static Definitions empty() {
     return new Definitions(ImmutableMap.of(), ImmutableMap.of());
@@ -18,11 +18,11 @@ public record Definitions(
 
   public static Definitions union(Definitions first, Definitions second) {
     return new Definitions(
-        ImmutableMap.<String, Declared>builder()
+        ImmutableMap.<String, Defined>builder()
             .putAll(first.types)
             .putAll(second.types)
             .build(),
-        ImmutableMap.<String, Declared>builder()
+        ImmutableMap.<String, Defined>builder()
             .putAll(first.values)
             .putAll(second.values)
             .build()
@@ -30,9 +30,9 @@ public record Definitions(
   }
 
   public static Definitions baseTypeDefinitions() {
-    ImmutableMap<String, Declared> baseTypes =
+    ImmutableMap<String, Defined> baseTypes =
         BASE_TYPES.stream()
-            .collect(toImmutableMap(Type::name, t -> new Declared(t, t.name(), internal())));
+            .collect(toImmutableMap(Type::name, t -> new Defined(t, t.name(), internal())));
     return new Definitions(baseTypes, ImmutableMap.of());
   }
 }

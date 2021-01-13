@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.type.Types.struct;
 
 import com.google.common.collect.ImmutableList;
 
-public class Struct extends Declared {
+public class Struct extends Defined {
   private final ImmutableList<Item> fields;
 
   public Struct(String name, ImmutableList<Item> fields, Location location) {

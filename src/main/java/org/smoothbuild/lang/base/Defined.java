@@ -8,12 +8,12 @@ import org.smoothbuild.lang.parse.ast.Named;
 /**
  * This class and all its subclasses are immutable.
  */
-public class Declared implements Named {
+public class Defined implements Named {
   private final Type type;
   private final Location location;
   private final String name;
 
-  public Declared(Type type, String name, Location location) {
+  public Defined(Type type, String name, Location location) {
     this.type = requireNonNull(type);
     this.location = requireNonNull(location);
     this.name = requireNonNull(name);

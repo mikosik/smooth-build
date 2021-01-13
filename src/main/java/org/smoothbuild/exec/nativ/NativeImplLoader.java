@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.install.FullPathResolver;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
@@ -46,14 +46,14 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  private Native loadNativeImpl(Declared declared) throws LoadingNativeImplException {
-    Path path = pathResolver.resolve(declared.location().module().toNative());
-    Map<String, Native> natives = nativesInJar(path, declared.name());
-    Native nativ = natives.get(declared.name());
+  private Native loadNativeImpl(Defined defined) throws LoadingNativeImplException {
+    Path path = pathResolver.resolve(defined.location().module().toNative());
+    Map<String, Native> natives = nativesInJar(path, defined.name());
+    Native nativ = natives.get(defined.name());
     if (nativ == null) {
-      throw newException(declared, "Error loading native implementation for `"
-          + declared.name() + "`. Jar '" + path + "' does not contain implementation for `"
-          + declared.name() + "`. It contains {" + join(",", natives.keySet()) + "}.");
+      throw newException(defined, "Error loading native implementation for `"
+          + defined.name() + "`. Jar '" + path + "' does not contain implementation for `"
+          + defined.name() + "`. It contains {" + join(",", natives.keySet()) + "}.");
     }
     return nativ;
   }
@@ -77,12 +77,12 @@ public class NativeImplLoader {
     return nativesInJar;
   }
 
-  private void nativeResultMatchesDeclared(Declared declared, Native nativ, Type resultType)
+  private void nativeResultMatchesDeclared(Defined defined, Native nativ, Type resultType)
       throws LoadingNativeImplException {
     Method method = nativ.method();
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
-      throw newException(declared, declared.q() + " declares type " + resultType.q()
+      throw newException(defined, defined.q() + " declares type " + resultType.q()
           + " so its native implementation result type must be "
           + mapTypeToJType(resultType).getCanonicalName() + " but it is "
           + resultJType.getCanonicalName() + ".");
@@ -122,7 +122,7 @@ public class NativeImplLoader {
     }
   }
 
-  private static LoadingNativeImplException newException(Declared declared, String message) {
-    return new LoadingNativeImplException(declared.location().toString() + ": " + message);
+  private static LoadingNativeImplException newException(Defined defined, String message) {
+    return new LoadingNativeImplException(defined.location().toString() + ": " + message);
   }
 }
