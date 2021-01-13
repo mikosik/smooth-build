@@ -16,7 +16,7 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -48,9 +48,9 @@ public class AssignArgsToParams {
   public static ImmutableList<AParam> parameters(
       CallNode call, Definitions imported, ImmutableMap<String, CallableNode> callables) {
     String name = call.calledName();
-    Declared declared = imported.values().get(name);
-    if (declared != null) {
-      return ((Callable) declared).type().parameters()
+    Defined defined = imported.values().get(name);
+    if (defined != null) {
+      return ((Callable) defined).type().parameters()
           .stream()
           .map(p -> new AParam(p.name().get(), p.defaultValueType().isPresent()))
           .collect(toImmutableList());

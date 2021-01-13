@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Value;
 
@@ -19,9 +19,9 @@ public class FindValues {
     List<Value> callablesToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
-      Declared declared = values.get(name);
-      if (declared != null) {
-        if (declared instanceof Value value) {
+      Defined defined = values.get(name);
+      if (defined != null) {
+        if (defined instanceof Value value) {
           callablesToRun.add(value);
         } else {
           logs.add(error(

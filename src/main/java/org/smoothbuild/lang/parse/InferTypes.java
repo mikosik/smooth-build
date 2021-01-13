@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.MemoryLogger;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Struct;
@@ -163,12 +163,12 @@ public class InferTypes {
         }
       }
 
-      private Declared findType(String name) {
-        Declared type = imported.types().get(name);
+      private Defined findType(String name) {
+        Defined type = imported.types().get(name);
         return requireNonNullElseGet(type, () -> findStruct(name));
       }
 
-      private Declared findStruct(String name) {
+      private Defined findStruct(String name) {
         StructNode structNode = ast.structsMap().get(name);
         if (structNode == null) {
           throw new RuntimeException(

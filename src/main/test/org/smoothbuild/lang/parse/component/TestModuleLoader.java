@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.type.Type;
@@ -58,20 +58,20 @@ public class TestModuleLoader {
     return this;
   }
 
-  public void containsDeclared(Declared expected) {
+  public void containsDeclared(Defined expected) {
     String name = expected.name();
-    ImmutableMap<String, Declared> values = module.value().values();
+    ImmutableMap<String, Defined> values = module.value().values();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(values)
         .containsKey(name);
-    Declared actual = values.get(name);
+    Defined actual = values.get(name);
     assertThat(actual)
         .isEqualTo(expected);
   }
 
   public void containsType(Type expected) {
     String name = expected.name();
-    ImmutableMap<String, Declared> types = module.value().types();
+    ImmutableMap<String, Defined> types = module.value().types();
     assertWithMessage("Module doesn't contain value with '" + name + "' type.")
         .that(types)
         .containsKey(name);

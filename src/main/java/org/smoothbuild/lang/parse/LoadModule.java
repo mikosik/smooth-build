@@ -17,7 +17,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
@@ -69,13 +69,13 @@ public class LoadModule {
     var declaredFunctions = loadCodes(imports, sortedAst);
     var declaredStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
-        .collect(toImmutableMap(Declared::name, d -> (Declared) d));
+        .collect(toImmutableMap(Defined::name, d -> (Defined) d));
     result.setValue(new Definitions(declaredStructs, declaredFunctions));
     return result;
   }
 
-  private static ImmutableMap<String, Declared> loadCodes(Definitions imports, Ast ast) {
-    var localFunctions = new HashMap<String, Declared>();
+  private static ImmutableMap<String, Defined> loadCodes(Definitions imports, Ast ast) {
+    var localFunctions = new HashMap<String, Defined>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);

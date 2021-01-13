@@ -6,7 +6,7 @@ import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.Struct;
 import org.smoothbuild.lang.base.type.Type;
@@ -42,7 +42,7 @@ public class StructNode extends NamedNode {
 
   public void setStruct(Optional<Struct> struct) {
     this.struct = struct;
-    setType(struct.map(Declared::type));
+    setType(struct.map(Defined::type));
   }
 
   public class ConstructorNode extends CallableNode {

@@ -5,7 +5,7 @@ import static org.smoothbuild.lang.base.Space.USER;
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Value;
 
 public class ListRunner {
@@ -25,7 +25,7 @@ public class ListRunner {
         .stream()
         .filter(f -> f.location().module().space().equals(USER))
         .filter(Value.class::isInstance)
-        .map(Declared::name)
+        .map(Defined::name)
         .sorted()
         .forEach(console::println));
   }

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Declared;
+import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.Value;
@@ -45,26 +45,26 @@ import com.google.common.collect.ImmutableMap;
 public class ValueLoader {
   public static Value loadValue(
       ValueNode value,
-      Map<String, Declared> importedValues,
-      Map<String, Declared> localValues) {
+      Map<String, Defined> importedValues,
+      Map<String, Defined> localValues) {
     return new ValueSupplier(value, localValues, importedValues).loadValue();
   }
 
   public static Callable loadFunction(
       FuncNode func,
-      Map<String, Declared> importedValues,
-      Map<String, Declared> localValues) {
+      Map<String, Defined> importedValues,
+      Map<String, Defined> localValues) {
     return new ValueSupplier(func, localValues, importedValues).loadFunction();
   }
 
   private static class ValueSupplier {
     private final EvaluableNode evaluable;
-    private final Map<String, Declared> localValues;
-    private final Map<String, Declared> importedValues;
+    private final Map<String, Defined> localValues;
+    private final Map<String, Defined> importedValues;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ValueSupplier(EvaluableNode evaluable, Map<String, Declared> localValues,
-        Map<String, Declared> importedValues) {
+    public ValueSupplier(EvaluableNode evaluable, Map<String, Defined> localValues,
+        Map<String, Defined> importedValues) {
       this.evaluable = evaluable;
       this.localValues = localValues;
       this.importedValues = importedValues;
@@ -144,7 +144,7 @@ public class ValueLoader {
       return callable.createCallExpression(argExpressions, call.location());
     }
 
-    private Declared find(String name) {
+    private Defined find(String name) {
       return requireNonNullElseGet(localValues.get(name), () -> importedValues.get(name));
     }
 
