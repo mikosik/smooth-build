@@ -5,6 +5,8 @@ import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import org.smoothbuild.lang.base.Location;
 
+import com.google.common.collect.ImmutableSet;
+
 public class TypeNode extends NamedNode {
   public TypeNode(String name, Location location) {
     super(name, location);
@@ -22,7 +24,11 @@ public class TypeNode extends NamedNode {
     return isVariableName(name());
   }
 
-  public TypeNode coreType() {
-    return this;
+  public ImmutableSet<TypeNode> variables() {
+    if (isVariableName(name())) {
+      return ImmutableSet.of(this);
+    } else {
+      return ImmutableSet.of();
+    }
   }
 }

@@ -207,7 +207,7 @@ public class TypeTest {
         module("""
             A myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined type variable `A`. " +
+            .loadsWithError(1, "Undefined type variable(s) `A`. " +
                 "Only type variables used in declaration of function parameters can be used here.");
       }
 
@@ -216,7 +216,7 @@ public class TypeTest {
         module("""
             [A] myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined type variable `A`. " +
+            .loadsWithError(1, "Undefined type variable(s) `A`. " +
                 "Only type variables used in declaration of function parameters can be used here.");
       }
 

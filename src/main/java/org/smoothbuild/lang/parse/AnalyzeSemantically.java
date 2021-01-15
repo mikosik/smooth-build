@@ -1,13 +1,17 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -310,21 +314,22 @@ public class AnalyzeSemantically {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        if (func.declaresType()
-            && func.typeNode().isPolytype()
-            && !hasParamWithCoreTypeEqualToResultCoreType(func)) {
-          logger.log(parseError(func.typeNode(), "Undefined type variable "
-              + func.typeNode().coreType().q()
-              + ". Only type variables used in declaration of function parameters "
-              + "can be used here."));
+        if (func.declaresType()) {
+          var variablesInResult = func.typeNode().variables();
+          var variablesInParameters = func.params()
+              .stream()
+              .map(p -> p.typeNode().variables())
+              .flatMap(Collection::stream)
+              .collect(toImmutableSet());
+          if (!variablesInParameters.containsAll(variablesInResult)) {
+            HashSet<TypeNode> variables = new HashSet<>(variablesInResult);
+            variables.removeAll(variablesInParameters);
+            logger.log(parseError(func.typeNode(), "Undefined type variable(s) "
+                + variables.stream().map(NamedNode::q).collect(joining(", "))
+                + ". Only type variables used in declaration of function parameters "
+                + "can be used here."));
+          }
         }
-      }
-
-      private boolean hasParamWithCoreTypeEqualToResultCoreType(FuncNode func) {
-        String name = func.typeNode().coreType().name();
-        return func.params()
-            .stream()
-            .anyMatch(p -> p.typeNode().coreType().name().equals(name));
       }
     }.visitAst(ast);
   }

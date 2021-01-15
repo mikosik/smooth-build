@@ -2,6 +2,8 @@ package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.Location;
 
+import com.google.common.collect.ImmutableSet;
+
 public class ArrayTypeNode extends TypeNode {
   private final TypeNode elementType;
 
@@ -16,8 +18,8 @@ public class ArrayTypeNode extends TypeNode {
   }
 
   @Override
-  public TypeNode coreType() {
-    return elementType.coreType();
+  public ImmutableSet<TypeNode> variables() {
+    return elementType.variables();
   }
 
   public TypeNode elementType() {
