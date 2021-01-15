@@ -24,8 +24,8 @@ import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
@@ -80,15 +80,15 @@ public class LoadModule {
       Constructor constructor = loadConstructor(struct);
       localFunctions.put(constructor.name(), constructor);
     }
-    for (EvaluableNode evaluable : ast.values()) {
-      if (evaluable instanceof FuncNode func) {
-        Callable function = loadFunction(func, imported.evaluables(), localFunctions);
+    for (ReferencableNode referencable : ast.referencable()) {
+      if (referencable instanceof FuncNode func) {
+        Callable function = loadFunction(func, imported.referencables(), localFunctions);
         localFunctions.put(function.name(), function);
-      } else if (evaluable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, imported.evaluables(), localFunctions);
+      } else if (referencable instanceof ValueNode valueNode) {
+        Value value = loadValue(valueNode, imported.referencables(), localFunctions);
         localFunctions.put(value.name(), value);
       } else {
-        throw new RuntimeException("Unexpected case: " + evaluable.getClass().getCanonicalName());
+        throw new RuntimeException("Unexpected case: " + referencable.getClass().getCanonicalName());
       }
     }
     return ImmutableMap.copyOf(localFunctions);

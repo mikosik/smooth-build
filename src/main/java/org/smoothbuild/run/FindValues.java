@@ -15,7 +15,7 @@ import org.smoothbuild.lang.base.Value;
 public class FindValues {
   public static Optional<List<Value>> findValues(Reporter reporter, Definitions definitions,
       List<String> names) {
-    var values = definitions.evaluables();
+    var values = definitions.referencables();
     List<Value> callablesToRun = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {

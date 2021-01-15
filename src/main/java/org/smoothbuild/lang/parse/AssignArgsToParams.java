@@ -48,7 +48,7 @@ public class AssignArgsToParams {
   public static ImmutableList<AParam> parameters(
       CallNode call, Definitions imported, ImmutableMap<String, CallableNode> callables) {
     String name = call.calledName();
-    Defined defined = imported.evaluables().get(name);
+    Defined defined = imported.referencables().get(name);
     if (defined != null) {
       return ((Callable) defined).type().parameters()
           .stream()

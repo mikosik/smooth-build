@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableMap;
 
 public record Definitions(
     ImmutableMap<String, Defined> types,
-    ImmutableMap<String, Defined> evaluables) {
+    ImmutableMap<String, Defined> referencables) {
 
   public static Definitions empty() {
     return new Definitions(ImmutableMap.of(), ImmutableMap.of());
@@ -23,8 +23,8 @@ public record Definitions(
             .putAll(second.types)
             .build(),
         ImmutableMap.<String, Defined>builder()
-            .putAll(first.evaluables)
-            .putAll(second.evaluables)
+            .putAll(first.referencables)
+            .putAll(second.referencables)
             .build()
     );
   }
