@@ -42,12 +42,18 @@ public class TypeNodeTest {
   }
 
   @Nested
-  class core_type {
+  class _variables {
     @Test
-    public void type_node_core_type_is_that_node() {
+    public void contains_this_when_it_is_a_variable() {
+      TypeNode typeNode = new TypeNode("A", loc());
+      assertThat(typeNode.variables())
+          .containsExactly(typeNode);
+    }
+    @Test
+    public void is_empty_when_type_node_is_not_a_variable() {
       TypeNode typeNode = new TypeNode("MyType", loc());
-      assertThat(typeNode.coreType())
-          .isEqualTo(typeNode);
+      assertThat(typeNode.variables())
+          .isEmpty();
     }
   }
 }

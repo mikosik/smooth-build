@@ -66,22 +66,39 @@ public class ArrayTypeNodeTest {
   }
 
   @Nested
-  class core_type {
+  class _variables {
     @Test
-    public void array_type_node_core_type_is_element_node() {
-      TypeNode elementTypeNode = new TypeNode("MyType", internal());
+    public void _of_array_node_contains_only_element_node_when_it_is_a_variable() {
+      TypeNode elementTypeNode = new TypeNode("A", internal());
       TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
-      assertThat(typeNode.coreType())
-          .isEqualTo(elementTypeNode);
+      assertThat(typeNode.variables())
+          .containsExactly(elementTypeNode);
     }
 
     @Test
-    public void array_of_array_type_node_core_type_is_element_node() {
+    public void _of_array_node_is_empty_when_its_element_is_not_a_variable() {
       TypeNode elementTypeNode = new TypeNode("MyType", internal());
-      TypeNode typeNode = new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()),
-          internal());
-      assertThat(typeNode.coreType())
-          .isEqualTo(elementTypeNode);
+      TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
+      assertThat(typeNode.variables())
+          .isEmpty();
+    }
+
+    @Test
+    public void of_array_of_array_contains_only_deepest_element_node_when_it_is_a_variable() {
+      TypeNode elementTypeNode = new TypeNode("A", internal());
+      TypeNode typeNode =
+          new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
+      assertThat(typeNode.variables())
+          .containsExactly(elementTypeNode);
+    }
+
+    @Test
+    public void of_array_of_array_is_empty_when_its_deepest_element_node_is_not_a_variable() {
+      TypeNode elementTypeNode = new TypeNode("MyType", internal());
+      TypeNode typeNode =
+          new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
+      assertThat(typeNode.variables())
+          .isEmpty();
     }
   }
 }
