@@ -25,39 +25,39 @@ import com.google.common.collect.ImmutableMap;
 
 public class Ast {
   private final ImmutableList<StructNode> structs;
-  private final ImmutableList<EvaluableNode> evaluables;
+  private final ImmutableList<ReferencableNode> referencables;
   private ImmutableMap<String, CallableNode> callablesMap;
-  private ImmutableMap<String, EvaluableNode> evaluablesMap;
+  private ImmutableMap<String, ReferencableNode> referencablesMap;
   private ImmutableMap<String, StructNode> structsMap;
 
-  public Ast(List<StructNode> structs, List<EvaluableNode> evaluables) {
+  public Ast(List<StructNode> structs, List<ReferencableNode> referencables) {
     this.structs = ImmutableList.copyOf(structs);
-    this.evaluables = ImmutableList.copyOf(evaluables);
+    this.referencables = ImmutableList.copyOf(referencables);
   }
 
-  public ImmutableList<EvaluableNode> values() {
-    return evaluables;
+  public ImmutableList<ReferencableNode> referencable() {
+    return referencables;
   }
 
   public ImmutableList<StructNode> structs() {
     return structs;
   }
 
-  public ImmutableMap<String, EvaluableNode> valuesMap() {
-    if (evaluablesMap == null) {
-      evaluablesMap = createEvaluablesMap();
+  public ImmutableMap<String, ReferencableNode> referencablesMap() {
+    if (referencablesMap == null) {
+      referencablesMap = createReferencablesMap();
     }
-    return evaluablesMap;
+    return referencablesMap;
   }
 
-  private ImmutableMap<String, EvaluableNode> createEvaluablesMap() {
-    var result = new HashMap<String, EvaluableNode>();
+  private ImmutableMap<String, ReferencableNode> createReferencablesMap() {
+    var result = new HashMap<String, ReferencableNode>();
     new AstVisitor() {
       @Override
-      public void visitEvaluable(EvaluableNode evaluable) {
-        super.visitEvaluable(evaluable);
-        if (!result.containsKey(evaluable.name())) {
-          result.put(evaluable.name(), evaluable);
+      public void visitReferencable(ReferencableNode referencable) {
+        super.visitReferencable(referencable);
+        if (!result.containsKey(referencable.name())) {
+          result.put(referencable.name(), referencable);
         }
       }
     }.visitAst(this);
@@ -112,26 +112,27 @@ public class Ast {
       reportCycle(result,"Type hierarchy" , sortedTypes.cycle());
       return result;
     }
-    var sortedEvaluables = sortEvaluablesByDependencies();
-    if (sortedEvaluables.sorted() == null) {
-      reportCycle(result, "Dependency graph", sortedEvaluables.cycle());
+    var sortedReferencables = sortReferencablesByDependencies();
+    if (sortedReferencables.sorted() == null) {
+      reportCycle(result, "Dependency graph", sortedReferencables.cycle());
       return result;
     }
-    result.setValue(new Ast(sortedTypes.valuesReversed(), sortedEvaluables.valuesReversed()));
+    result.setValue(new Ast(sortedTypes.valuesReversed(), sortedReferencables.valuesReversed()));
     return result;
   }
 
-  private TopologicalSortingResult<String, EvaluableNode, Location> sortEvaluablesByDependencies() {
+  private TopologicalSortingResult<String, ReferencableNode, Location>
+      sortReferencablesByDependencies() {
     HashSet<String> names = new HashSet<>();
-    evaluables.forEach(v -> names.add(v.name()));
+    referencables.forEach(v -> names.add(v.name()));
 
-    HashSet<GraphNode<String, EvaluableNode, Location>> nodes = new HashSet<>();
-    nodes.addAll(map(evaluables, value -> evaluableNodeToGraphNode(value, names)));
+    HashSet<GraphNode<String, ReferencableNode, Location>> nodes = new HashSet<>();
+    nodes.addAll(map(referencables, value -> referencableNodeToGraphNode(value, names)));
     return sortTopologically(nodes);
   }
 
-  private static GraphNode<String, EvaluableNode, Location> evaluableNodeToGraphNode(
-      EvaluableNode evaluable, Set<String> names) {
+  private static GraphNode<String, ReferencableNode, Location> referencableNodeToGraphNode(
+      ReferencableNode referencable, Set<String> names) {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
@@ -149,8 +150,8 @@ public class Ast {
           dependencies.add(new GraphEdge<>(ref.location(), ref.name()));
         }
       }
-    }.visitEvaluable(evaluable);
-    return new GraphNode<>(evaluable.name(), evaluable, ImmutableList.copyOf(dependencies));
+    }.visitReferencable(referencable);
+    return new GraphNode<>(referencable.name(), referencable, ImmutableList.copyOf(dependencies));
   }
 
   private TopologicalSortingResult<String, StructNode, Location> sortStructsByDependencies() {

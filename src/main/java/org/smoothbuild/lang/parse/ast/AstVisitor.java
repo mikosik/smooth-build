@@ -10,8 +10,8 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitEvaluables(ast.values());
-    visitEvaluables(map(ast.structs(), StructNode::constructor));
+    visitReferencable(ast.referencable());
+    visitReferencable(map(ast.structs(), StructNode::constructor));
   }
 
   public void visitStructs(List<StructNode> structs) {
@@ -38,20 +38,20 @@ public class AstVisitor {
     visitType(field.typeNode());
   }
 
-  public void visitEvaluables(List<EvaluableNode> evaluable) {
-    evaluable.forEach(this::visitEvaluable);
+  public void visitReferencable(List<ReferencableNode> referencable) {
+    referencable.forEach(this::visitReferencable);
   }
 
-  public void visitEvaluable(EvaluableNode evaluable) {
-    if (evaluable instanceof FuncNode func) {
+  public void visitReferencable(ReferencableNode referencable) {
+    if (referencable instanceof FuncNode func) {
       visitFunc(func);
-    } else if (evaluable instanceof ValueNode value) {
+    } else if (referencable instanceof ValueNode value) {
       visitValue(value);
-    } else if (evaluable instanceof ConstructorNode constructor) {
+    } else if (referencable instanceof ConstructorNode constructor) {
       visitConstructor(constructor);
     } else {
       throw new RuntimeException(
-          "Didn't expect instance of " + evaluable.getClass().getCanonicalName());
+          "Didn't expect instance of " + referencable.getClass().getCanonicalName());
     }
   }
 

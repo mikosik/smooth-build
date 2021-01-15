@@ -9,7 +9,7 @@ import org.smoothbuild.lang.base.type.ItemSignature;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallableNode extends EvaluableNode {
+public class CallableNode extends ReferencableNode {
   private final List<ItemNode> params;
 
   public CallableNode(TypeNode typeNode, String name, ExprNode exprNode, List<ItemNode> params,

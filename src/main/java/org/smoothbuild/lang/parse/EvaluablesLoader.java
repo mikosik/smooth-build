@@ -28,13 +28,13 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.RefTarget;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 
@@ -58,33 +58,33 @@ public class EvaluablesLoader {
   }
 
   private static class ValueSupplier {
-    private final EvaluableNode evaluable;
+    private final ReferencableNode referencable;
     private final Map<String, Defined> localValues;
     private final Map<String, Defined> importedValues;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ValueSupplier(EvaluableNode evaluable, Map<String, Defined> localValues,
+    public ValueSupplier(ReferencableNode referencable, Map<String, Defined> localValues,
         Map<String, Defined> importedValues) {
-      this.evaluable = evaluable;
+      this.referencable = referencable;
       this.localValues = localValues;
       this.importedValues = importedValues;
     }
 
     public Value loadValue() {
-      return new Value(evaluable.type().get(), evaluable.name(),
-          bodyExpression(), evaluable.location());
+      return new Value(referencable.type().get(), referencable.name(),
+          bodyExpression(), referencable.location());
     }
 
     public Callable loadFunction() {
-      Type resultType = evaluable.type().get();
-      String name = evaluable.name();
-      ImmutableList<Item> parameters = map(((FuncNode) evaluable).params(), this::createParameter);
+      Type resultType = referencable.type().get();
+      String name = referencable.name();
+      ImmutableList<Item> parameters = map(((FuncNode) referencable).params(), this::createParameter);
       functionParameters = parameters.stream().collect(toImmutableMap(Item::name, Item::type));
-      return new Function(resultType, name, parameters, bodyExpression(), evaluable.location());
+      return new Function(resultType, name, parameters, bodyExpression(), referencable.location());
     }
 
     private Optional<Expression> bodyExpression() {
-      return evaluable.isNative() ? empty() : Optional.of(createExpression(evaluable.expr()));
+      return referencable.isNative() ? empty() : Optional.of(createExpression(referencable.expr()));
     }
 
     private Item createParameter(ItemNode param) {

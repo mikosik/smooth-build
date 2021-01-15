@@ -35,12 +35,12 @@ import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
-import org.smoothbuild.lang.parse.ast.EvaluableNode;
 import org.smoothbuild.lang.parse.ast.ExprNode;
 import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
@@ -89,31 +89,31 @@ public class InferTypes {
         super.visitCallable(callable);
       }
 
-      private Optional<Type> codeType(EvaluableNode evaluable) {
-        if (evaluable.isNative()) {
-          return typeOfNativeCode(evaluable);
+      private Optional<Type> codeType(ReferencableNode referencable) {
+        if (referencable.isNative()) {
+          return typeOfNativeCode(referencable);
         } else {
-          return typeOfDeclaredCode(evaluable);
+          return typeOfDeclaredCode(referencable);
         }
       }
 
-      private Optional<Type> typeOfNativeCode(EvaluableNode evaluable) {
-        if (evaluable.declaresType()) {
-          return createType(evaluable.typeNode());
+      private Optional<Type> typeOfNativeCode(ReferencableNode referencable) {
+        if (referencable.declaresType()) {
+          return createType(referencable.typeNode());
         } else {
           logger.log(parseError(
-              evaluable, evaluable.q() + " is native so it should have type declaration."));
+              referencable, referencable.q() + " is native so it should have type declaration."));
           return empty();
         }
       }
 
-      private Optional<Type> typeOfDeclaredCode(EvaluableNode evaluable) {
-        Optional<Type> exprType = evaluable.expr().type();
-        if (evaluable.declaresType()) {
-          Optional<Type> type = createType(evaluable.typeNode());
+      private Optional<Type> typeOfDeclaredCode(ReferencableNode referencable) {
+        Optional<Type> exprType = referencable.expr().type();
+        if (referencable.declaresType()) {
+          Optional<Type> type = createType(referencable.typeNode());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
-              logger.log(parseError(evaluable, "`" + evaluable.name()
+              logger.log(parseError(referencable, "`" + referencable.name()
                   + "` has body which type is " + et.q()
                   + " and it is not convertible to its declared type " + t.q()
                   + "."));

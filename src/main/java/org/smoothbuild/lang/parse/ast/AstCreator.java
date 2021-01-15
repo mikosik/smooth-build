@@ -34,7 +34,7 @@ import org.smoothbuild.lang.base.ModuleLocation;
 public class AstCreator {
   public static Ast fromParseTree(ModuleLocation moduleLocation, ModuleContext module) {
     List<StructNode> structs = new ArrayList<>();
-    List<EvaluableNode> evaluables = new ArrayList<>();
+    List<ReferencableNode> referencables = new ArrayList<>();
     new SmoothBaseVisitor<Void>() {
       @Override
       public Void visitStruct(StructContext struct) {
@@ -70,7 +70,7 @@ public class AstCreator {
         String name = nameNode.getText();
         ExprNode expr = value.expr() == null ? null : createExpr(value.expr());
         visitChildren(value);
-        evaluables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameNode)));
+        referencables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameNode)));
         return null;
       }
 
@@ -82,7 +82,7 @@ public class AstCreator {
         List<ItemNode> params = createParams(func.paramList());
         ExprNode expr = func.expr() == null ? null : createExpr(func.expr());
         visitChildren(func);
-        evaluables.add(
+        referencables.add(
             new FuncNode(type, name, params, expr, locationOf(moduleLocation, nameNode)));
         return null;
       }
@@ -196,6 +196,6 @@ public class AstCreator {
         return new ArrayTypeNode(elementType, locationOf(moduleLocation, arrayType));
       }
     }.visit(module);
-    return new Ast(structs, evaluables);
+    return new Ast(structs, referencables);
   }
 }

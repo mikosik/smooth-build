@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.Location;
 import org.smoothbuild.lang.base.type.Type;
 
-public class EvaluableNode extends NamedNode implements RefTarget {
+public class ReferencableNode extends NamedNode implements RefTarget {
   private final TypeNode typeNode;
   private final ExprNode expr;
 
-  public EvaluableNode(TypeNode typeNode, String name, ExprNode expr, Location location) {
+  public ReferencableNode(TypeNode typeNode, String name, ExprNode expr, Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.expr = expr;
@@ -50,7 +50,7 @@ public class EvaluableNode extends NamedNode implements RefTarget {
 
   @Override
   public final boolean equals(Object object) {
-    if (object instanceof EvaluableNode that) {
+    if (object instanceof ReferencableNode that) {
       return this.name().equals(that.name());
     }
     return false;
