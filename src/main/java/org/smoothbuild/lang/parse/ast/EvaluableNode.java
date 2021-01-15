@@ -1,8 +1,11 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.Location;
+import java.util.Optional;
 
-public class EvaluableNode extends NamedNode {
+import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.type.Type;
+
+public class EvaluableNode extends NamedNode implements RefTarget {
   private final TypeNode typeNode;
   private final ExprNode expr;
 
@@ -38,6 +41,11 @@ public class EvaluableNode extends NamedNode {
 
   public ExprNode expr() {
     return expr;
+  }
+
+  @Override
+  public Optional<Type> inferredType() {
+    return type();
   }
 
   @Override
