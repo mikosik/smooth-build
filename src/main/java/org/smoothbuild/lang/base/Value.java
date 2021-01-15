@@ -5,12 +5,11 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.ValueReferenceExpression;
 
 /**
  * This class is immutable.
  */
-public class Value extends Defined {
+public class Value extends Referencable {
   private final Optional<Expression> body;
 
   public Value(Type type, String name, Optional<Expression> body, Location location) {
@@ -20,10 +19,6 @@ public class Value extends Defined {
 
   public Optional<Expression> body() {
     return body;
-  }
-
-  public Expression createReferenceExpression(Location location) {
-    return new ValueReferenceExpression(name(), type(), location);
   }
 
   @Override

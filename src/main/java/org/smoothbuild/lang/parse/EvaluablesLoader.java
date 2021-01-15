@@ -34,9 +34,9 @@ import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
+import org.smoothbuild.lang.parse.ast.RefTarget;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.lang.parse.ast.ValueTarget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -125,16 +125,17 @@ public class EvaluablesLoader {
     }
 
     private Expression createReference(RefNode ref) {
-      if (ref.target() instanceof ItemNode) {
+      RefTarget target = ref.target();
+      if (target instanceof ItemNode) {
         String name = ref.name();
         return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
-      } else if (ref.target() instanceof ValueNode) {
+      } else if (target instanceof ValueNode) {
         Value value = (Value) find(ref.name());
         return value.createReferenceExpression(ref.location());
-      } else if (ref.target() instanceof ValueTarget valueTarget) {
-        return  valueTarget.value().createReferenceExpression(ref.location());
+      } else if (target instanceof Value value) {
+        return value.createReferenceExpression(ref.location());
       } else {
-        throw new RuntimeException("Unexpected case: " + ref.getClass().getCanonicalName());
+        throw new RuntimeException("Unexpected case: " + target.getClass().getCanonicalName());
       }
     }
 

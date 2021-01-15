@@ -40,7 +40,6 @@ import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
-import org.smoothbuild.lang.parse.ast.ValueTarget;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
@@ -119,7 +118,7 @@ public class AnalyzeSemantically {
           if (named instanceof ValueNode value) {
             ref.setTarget(value);
           } else if (named instanceof Value value) {
-            ref.setTarget(new ValueTarget(value));
+            ref.setTarget(value);
           } else if (named instanceof ItemNode item) {
             ref.setTarget(item);
           } else if (named instanceof CallableNode || named instanceof Callable) {
