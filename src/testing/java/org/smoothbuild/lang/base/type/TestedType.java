@@ -237,11 +237,7 @@ public class TestedType {
 
   @Override
   public String toString() {
-    return "TestedType[" +
-        "type=" + type + ", " +
-        "literal=" + literal + ", " +
-        "value=" + value + ", " +
-        "declarations=" + declarations + ']';
+    return "TestedType(" + type + ")";
   }
 
   public static TestedType function(TestedType resultType, TestedType... paramTestedTypes) {
