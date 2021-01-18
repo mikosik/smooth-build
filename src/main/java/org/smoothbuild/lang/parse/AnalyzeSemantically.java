@@ -1,17 +1,13 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +52,6 @@ public class AnalyzeSemantically {
     duplicateParamNames(logger, ast);
     structNameWithSingleCapitalLetter(logger, ast);
     firstFieldWithForbiddenType(logger, ast);
-    functionResultTypeIsNotCoreTypeOfAnyParameter(logger, ast);
     valueTypeIsPolytype(logger, ast);
     return logger.logs();
   }
@@ -302,31 +297,6 @@ public class AnalyzeSemantically {
         for (ItemNode field : fields) {
           if (isVariableName(field.typeNode().name())) {
             logger.log(parseError(field, "Struct field type cannot have type variable."));
-          }
-        }
-      }
-    }.visitAst(ast);
-  }
-
-  private static void functionResultTypeIsNotCoreTypeOfAnyParameter(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitFunc(FuncNode func) {
-        super.visitFunc(func);
-        if (func.declaresType()) {
-          var variablesInResult = func.typeNode().variables();
-          var variablesInParameters = func.params()
-              .stream()
-              .map(p -> p.typeNode().variables())
-              .flatMap(Collection::stream)
-              .collect(toImmutableSet());
-          if (!variablesInParameters.containsAll(variablesInResult)) {
-            HashSet<TypeNode> variables = new HashSet<>(variablesInResult);
-            variables.removeAll(variablesInParameters);
-            logger.log(parseError(func.typeNode(), "Undefined type variable(s) "
-                + variables.stream().map(NamedNode::q).collect(joining(", "))
-                + ". Only type variables used in declaration of function parameters "
-                + "can be used here."));
           }
         }
       }
