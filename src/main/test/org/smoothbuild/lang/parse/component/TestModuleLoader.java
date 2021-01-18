@@ -53,7 +53,8 @@ public class TestModuleLoader {
 
   public TestModuleLoader loadsSuccessfully() {
     module = load();
-    assertThat(module.logs())
+    assertWithMessage(messageWithSourceCode())
+        .that(module.logs())
         .isEmpty();
     return this;
   }
@@ -88,7 +89,8 @@ public class TestModuleLoader {
 
   public void loadsWithProblems() {
     var module = load();
-    assertThat(module.hasProblems())
+    assertWithMessage(messageWithSourceCode())
+        .that(module.hasProblems())
         .isTrue();
   }
 
@@ -102,8 +104,17 @@ public class TestModuleLoader {
 
   public void loadsWithErrors(List<Log> errors) {
     var module = load();
-    assertThat(module.logs())
+    assertWithMessage(messageWithSourceCode())
+        .that(module.logs())
         .containsExactlyElementsIn(errors);
+  }
+
+  private String messageWithSourceCode() {
+    String message = "For source code = "
+        + "\n====================\n"
+        + sourceCode
+        + "\n====================\n";
+    return message;
   }
 
   private Maybe<Definitions> load() {
