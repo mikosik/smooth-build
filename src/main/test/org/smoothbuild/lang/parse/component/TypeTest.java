@@ -171,7 +171,7 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_polytype_result_when_some_param_has_such_type() {
+      public void can_declare_polytype_result_when_some_param_has_its_variable_as_type() {
         module("""
             A testIdentity(A param);
             """)
@@ -179,7 +179,7 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_polytype_result_when_some_param_has_such_core_type() {
+      public void can_declare_polytype_result_when_some_param_is_polytype_with_its_variable() {
         module("""
             A myFunction([A] param);
             """)
@@ -187,7 +187,7 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_polytype_array_result_when_some_param_has_such_type() {
+      public void can_declare_polytype_array_result_when_some_param_has_its_variable_as_type() {
         module("""
             [A] myFunction(A param);
             """)
@@ -195,7 +195,7 @@ public class TypeTest {
       }
 
       @Test
-      public void can_declare_polytype_array_result_when_some_param_has_such_core_type() {
+      public void can_declare_polytype_array_result_when_some_param_is_polytype_with_its_variable() {
         module("""
             [A] myFunction([A] param);
             """)
@@ -203,21 +203,19 @@ public class TypeTest {
       }
 
       @Test
-      public void cannot_declare_polytype_result_when_no_param_has_such_core_type() {
+      public void can_declare_polytype_result_when_no_param_has_such_variable() {
         module("""
             A myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined type variable(s) `A`. " +
-                "Only type variables used in declaration of function parameters can be used here.");
+            .loadsSuccessfully();
       }
 
       @Test
-      public void cannot_declare_polytype_array_result_when_no_param_has_such_core_type() {
+      public void can_declare_polytype_array_result_when_no_param_has_such_variable() {
         module("""
             [A] myFunction([B] param);
             """)
-            .loadsWithError(1, "Undefined type variable(s) `A`. " +
-                "Only type variables used in declaration of function parameters can be used here.");
+            .loadsSuccessfully();
       }
 
       @Test
@@ -327,7 +325,7 @@ public class TypeTest {
     }
 
     @Test
-    public void cannot_declare_array_type_which_core_type_encloses_it() {
+    public void cannot_declare_array_type_which_element_type_encloses_it() {
       module("""
              MyStruct {
                String firstField,
