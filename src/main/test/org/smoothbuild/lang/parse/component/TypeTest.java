@@ -2,17 +2,10 @@ package org.smoothbuild.lang.parse.component;
 
 import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.base.type.TestedType.A;
-import static org.smoothbuild.lang.base.type.TestedType.ANY;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.BOOL;
-import static org.smoothbuild.lang.base.type.TestedType.NOTHING;
-import static org.smoothbuild.lang.base.type.TestedType.STRING;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BLOB;
-import static org.smoothbuild.lang.base.type.TestedType.STRUCT_WITH_BOOL;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.a;
+import static org.smoothbuild.lang.base.type.TestedType.a2;
 import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -273,13 +266,7 @@ public class TypeTest {
           "MyStruct {",
           "  " + testedType.name() + " field,",
           "}"));
-      if (testedType.name().startsWith("[")) {
-        module.loadsWithError(3, "First field of struct cannot have array type.");
-      } else if (testedType.name().equals("Nothing")) {
-        module.loadsWithError(3, "First field of struct cannot have 'Nothing' type.");
-      } else {
-        module.loadsWithError(3, "Struct field type cannot have type variable.");
-      }
+      module.loadsWithError(3, "Struct field type cannot have type variable.");
     }
 
     @ParameterizedTest
@@ -303,13 +290,7 @@ public class TypeTest {
           "  String firstField,",
           "  " + testedType.name() + " field,",
           "}"));
-      if (testedType.name().startsWith("[")) {
-        module.loadsWithError(4, "First field of struct cannot have array type.");
-      } else if (testedType.name().equals("Nothing")) {
-        module.loadsWithError(4, "First field of struct cannot have 'Nothing' type.");
-      } else {
-        module.loadsWithError(4, "Struct field type cannot have type variable.");
-      }
+      module.loadsWithError(4, "Struct field type cannot have type variable.");
     }
 
     @Test
@@ -375,23 +356,8 @@ public class TypeTest {
   private static List<TestedType> firstFieldForbiddenTypes() {
     return List.of(
         A,
-        NOTHING,
-        a(ANY),
-        a(BLOB),
-        a(BOOL),
-        a(NOTHING),
-        a(STRING),
-        a(STRUCT_WITH_BLOB),
-        a(STRUCT_WITH_BOOL),
-        a(STRUCT),
-        a(a(ANY)),
-        a(a(BLOB)),
-        a(a(BOOL)),
-        a(a(NOTHING)),
-        a(a(STRING)),
-        a(a(STRUCT_WITH_BLOB)),
-        a(a(STRUCT_WITH_BOOL)),
-        a(a(STRUCT))
+        a(A),
+        a2(A)
     );
   }
 
@@ -414,6 +380,10 @@ public class TypeTest {
   }
 
   private static List<TestedType> fieldForbiddenTypes() {
-    return List.of(A);
+    return List.of(
+        A,
+        a(A),
+        a2(A)
+    );
   }
 }

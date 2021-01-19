@@ -39,6 +39,18 @@ public class CycleTest {
               Type hierarchy contains cycle:
               myBuild.smooth:2: MyStruct -> MyStruct""");
     }
+
+    @Test
+    public void struct_through_array() {
+      module("""
+             MyStruct {
+               [MyStruct] myField
+             }
+             """)
+          .loadsWithError("""
+              Type hierarchy contains cycle:
+              myBuild.smooth:2: MyStruct -> MyStruct""");
+    }
   }
 
   @Nested
@@ -97,6 +109,22 @@ public class CycleTest {
              }
              MyStruct2 {
                MyStruct1 myField
+             }
+             """)
+          .loadsWithError("""
+              Type hierarchy contains cycle:
+              myBuild.smooth:2: MyStruct1 -> MyStruct2
+              myBuild.smooth:5: MyStruct2 -> MyStruct1""");
+    }
+
+    @Test
+    public void struct_struct_through_array() {
+      module("""
+             MyStruct1 {
+               [MyStruct2] myField
+             }
+             MyStruct2 {
+               [MyStruct1] myField
              }
              """)
           .loadsWithError("""
@@ -165,16 +193,16 @@ public class CycleTest {
     }
 
     @Test
-    public void struct_struct_struct() {
+    public void struct_struct_struct_through_array() {
       module("""
              MyStruct1 {
-               MyStruct2 myField
+               [MyStruct2] myField
              }
              MyStruct2 {
-               MyStruct3 myField
+               [MyStruct3] myField
              }
              MyStruct3 {
-               MyStruct1 myField
+               [MyStruct1] myField
              }
              """)
           .loadsWithError("""
