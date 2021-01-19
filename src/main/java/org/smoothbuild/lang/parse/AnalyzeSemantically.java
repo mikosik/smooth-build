@@ -51,7 +51,7 @@ public class AnalyzeSemantically {
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
     structNameWithSingleCapitalLetter(logger, ast);
-    firstFieldWithForbiddenType(logger, ast);
+    polytypeField(logger, ast);
     valueTypeIsPolytype(logger, ast);
     return logger.logs();
   }
@@ -278,24 +278,14 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void firstFieldWithForbiddenType(Logger logger, Ast ast) {
+  private static void polytypeField(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         List<ItemNode> fields = struct.fields();
-        if (!fields.isEmpty()) {
-          ItemNode field = fields.get(0);
-          TypeNode type = field.typeNode();
-          if (type.isArray()) {
-            logger.log(parseError(field, "First field of struct cannot have array type."));
-          }
-          if (type.isNothing()) {
-            logger.log(parseError(field, "First field of struct cannot have 'Nothing' type."));
-          }
-        }
         for (ItemNode field : fields) {
-          if (isVariableName(field.typeNode().name())) {
+          if (field.typeNode().isPolytype()) {
             logger.log(parseError(field, "Struct field type cannot have type variable."));
           }
         }
