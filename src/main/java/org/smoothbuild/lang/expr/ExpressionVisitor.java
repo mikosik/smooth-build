@@ -3,7 +3,7 @@ package org.smoothbuild.lang.expr;
 public interface ExpressionVisitor<T> {
   public T visit(FieldReadExpression expression) throws ExpressionVisitorException;
 
-  public T visit(ValueReferenceExpression expression) throws ExpressionVisitorException;
+  public T visit(ReferenceExpression expression) throws ExpressionVisitorException;
 
   public T visit(ParameterReferenceExpression expression) throws ExpressionVisitorException;
 

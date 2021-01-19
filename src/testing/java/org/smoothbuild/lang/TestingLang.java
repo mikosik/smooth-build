@@ -20,8 +20,8 @@ import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
+import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
-import org.smoothbuild.lang.expr.ValueReferenceExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -41,8 +41,8 @@ public class TestingLang {
         Types.array(elemType), ImmutableList.copyOf(expressions), loc(line));
   }
 
-  public static ValueReferenceExpression valueRef(int line, Type type, String name) {
-    return new ValueReferenceExpression(name, type, loc(line));
+  public static ReferenceExpression reference(int line, Type type, String name) {
+    return new ReferenceExpression(name, type, loc(line));
   }
 
   public static ParameterReferenceExpression parameterRef(Type type, String name, int line) {

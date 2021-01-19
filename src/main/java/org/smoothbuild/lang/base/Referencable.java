@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.ValueReferenceExpression;
+import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.parse.ast.RefTarget;
 
 public class Referencable extends Defined implements RefTarget {
@@ -13,7 +13,7 @@ public class Referencable extends Defined implements RefTarget {
   }
 
   public Expression createReferenceExpression(Location location) {
-    return new ValueReferenceExpression(name(), type(), location);
+    return new ReferenceExpression(name(), type(), location);
   }
 
   @Override
