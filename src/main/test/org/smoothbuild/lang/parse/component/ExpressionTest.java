@@ -8,10 +8,10 @@ import static org.smoothbuild.lang.TestingLang.fieldRead;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
+import static org.smoothbuild.lang.TestingLang.reference;
 import static org.smoothbuild.lang.TestingLang.string;
 import static org.smoothbuild.lang.TestingLang.struct;
 import static org.smoothbuild.lang.TestingLang.value;
-import static org.smoothbuild.lang.TestingLang.valueRef;
 import static org.smoothbuild.lang.base.type.TestingItemSignature.itemSignature;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
@@ -42,7 +42,7 @@ public class ExpressionTest {
             myValue;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(2, STRING, "result", valueRef(3, STRING, "myValue")));
+        .containsDeclared(value(2, STRING, "result", reference(3, STRING, "myValue")));
   }
 
   @Test
@@ -182,7 +182,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsDeclared(
-            value(5, STRING, "result", fieldRead(6, field, valueRef(5, myStruct, "struct"))));
+            value(5, STRING, "result", fieldRead(6, field, reference(5, myStruct, "struct"))));
   }
 
   @Test

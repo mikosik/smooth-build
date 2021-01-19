@@ -59,8 +59,8 @@ import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
+import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
-import org.smoothbuild.lang.expr.ValueReferenceExpression;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -93,17 +93,17 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ValueReferenceExpression expression) throws ExpressionVisitorException {
-    Value value = (Value) definitions.referencables().get(expression.name());
+  public Task visit(ReferenceExpression reference) throws ExpressionVisitorException {
+    Value value = (Value) definitions.referencables().get(reference.name());
     if (value.body().isPresent()) {
       Task task = value.body().get().visit(this);
       Task convertedTask = convertIfNeeded(task, value.type());
-      return new VirtualTask(value.extendedName(), convertedTask, VALUE, expression.location());
+      return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
     } else {
       Native nativ = loadNative(value);
       Algorithm algorithm = new CallNativeAlgorithm(value.type().visit(toSpecConverter), nativ);
       return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
-          ImmutableList.of(), expression.location(), nativ.cacheable());
+          ImmutableList.of(), reference.location(), nativ.cacheable());
     }
   }
 
