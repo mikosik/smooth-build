@@ -14,6 +14,7 @@ import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -23,6 +24,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
+import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.ArrayNode;
@@ -33,7 +35,6 @@ import org.smoothbuild.lang.parse.ast.FieldReadNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
-import org.smoothbuild.lang.parse.ast.RefTarget;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
@@ -126,18 +127,12 @@ public class LoadReferencable {
     }
 
     private Expression createReference(RefNode ref) {
-      RefTarget target = ref.target();
+      ReferencableLike target = ref.target();
       if (target instanceof ItemNode) {
         String name = ref.name();
         return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
-      } else if (target instanceof ReferencableNode) {
-        Referencable value = (Referencable) find(ref.name());
-        return value.createReferenceExpression(ref.location());
-      } else if (target instanceof Referencable referencable) {
-        return referencable.createReferenceExpression(ref.location());
-      } else {
-        throw new RuntimeException("Unexpected case: " + target.getClass().getCanonicalName());
       }
+      return new ReferenceExpression(ref.name(), target.inferredType().get(), ref.location());
     }
 
     private Expression createCall(CallNode call) {

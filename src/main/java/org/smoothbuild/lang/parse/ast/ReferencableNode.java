@@ -3,9 +3,10 @@ package org.smoothbuild.lang.parse.ast;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Type;
 
-public class ReferencableNode extends NamedNode implements RefTarget {
+public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> expr;
 
