@@ -78,7 +78,7 @@ public class InferTypes {
       @Override
       public void visitFunc(FuncNode func) {
         visitParams(func.params());
-        func.visitExpr(this);
+        func.expr().ifPresent(this::visitExpr);
         func.setType(functionType(func));
       }
 
@@ -94,7 +94,7 @@ public class InferTypes {
 
       @Override
       public void visitValue(ValueNode value) {
-        value.visitExpr(this);
+        value.expr().ifPresent(this::visitExpr);
         value.setType(bodyType(value));
       }
 
