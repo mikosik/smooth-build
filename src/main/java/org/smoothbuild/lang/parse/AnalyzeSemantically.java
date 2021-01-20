@@ -158,17 +158,13 @@ public class AnalyzeSemantically {
       @Override
       public void visitFunc(FuncNode func) {
         super.visitFunc(func);
-        if (func.declaresType()) {
-          assertTypeIsDefined(func.typeNode());
-        }
+        func.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
       public void visitValue(ValueNode value) {
         super.visitValue(value);
-        if (value.declaresType()) {
-          assertTypeIsDefined(value.typeNode());
-        }
+        value.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
@@ -299,9 +295,11 @@ public class AnalyzeSemantically {
       @Override
       public void visitValue(ValueNode value) {
         super.visitValue(value);
-        if (value.declaresType() && value.typeNode().isPolytype()) {
-          logger.log(parseError(value.typeNode(), "Value type cannot have type variables."));
-        }
+        value.typeNode().ifPresent(typeNode -> {
+          if (typeNode.isPolytype()) {
+            logger.log(parseError(typeNode, "Value type cannot have type variables."));
+          }
+        });
       }
     }.visitAst(ast);
   }
