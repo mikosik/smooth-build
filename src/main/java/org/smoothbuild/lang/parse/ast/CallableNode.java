@@ -15,8 +15,8 @@ import com.google.common.collect.ImmutableList;
 public class CallableNode extends ReferencableNode {
   private final List<ItemNode> params;
 
-  public CallableNode(TypeNode typeNode, String name, ExprNode exprNode, List<ItemNode> params,
-      Location location) {
+  public CallableNode(TypeNode typeNode, String name, Optional<ExprNode> exprNode,
+      List<ItemNode> params, Location location) {
     super(typeNode, name, exprNode, location);
     this.params = ImmutableList.copyOf(params);
   }

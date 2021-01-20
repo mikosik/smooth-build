@@ -110,8 +110,8 @@ public class AstCreator {
         return new ItemNode(type, name, defaultValue, location);
       }
 
-      private ExprNode createExprSane(ExprContext expr) {
-        return expr == null ? null : createExpr(expr);
+      private Optional<ExprNode> createExprSane(ExprContext expr) {
+        return expr == null ? Optional.empty() : Optional.of(createExpr(expr));
       }
 
       private ExprNode createExpr(ExprContext expr) {
