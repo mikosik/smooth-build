@@ -49,7 +49,7 @@ public class StructNode extends NamedNode {
   public class ConstructorNode extends CallableNode {
     public ConstructorNode(String structName, List<ItemNode> params, Location location) {
       super(new TypeNode(structName, location), UPPER_CAMEL.to(LOWER_CAMEL, structName),
-          null, params, location);
+          Optional.empty(), params, location);
     }
 
     @Override

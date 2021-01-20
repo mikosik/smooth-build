@@ -2,7 +2,6 @@ package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Objects.requireNonNullElseGet;
-import static java.util.Optional.empty;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
@@ -86,7 +85,7 @@ public class LoadReferencable {
     }
 
     private Optional<Expression> bodyExpression() {
-      return referencable.isNative() ? empty() : Optional.of(createExpression(referencable.expr()));
+      return referencable.expr().map(this::createExpression);
     }
 
     private Item createParameter(ItemNode param) {

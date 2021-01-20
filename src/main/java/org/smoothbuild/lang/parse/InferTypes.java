@@ -104,25 +104,15 @@ public class InferTypes {
       }
 
       private Optional<Type> bodyType(ReferencableNode referencable) {
-        if (referencable.isNative()) {
+        if (referencable.expr().isPresent()) {
+          return typeOfDeclaredBody(referencable, referencable.expr().get());
+        } else {
           return typeOfNativeBody(referencable);
-        } else {
-          return typeOfDeclaredBody(referencable);
         }
       }
 
-      private Optional<Type> typeOfNativeBody(ReferencableNode referencable) {
-        if (referencable.declaresType()) {
-          return createType(referencable.typeNode());
-        } else {
-          logger.log(parseError(
-              referencable, referencable.q() + " is native so it should have type declaration."));
-          return empty();
-        }
-      }
-
-      private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable) {
-        Optional<Type> exprType = referencable.expr().type();
+      private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable, ExprNode exprNode) {
+        Optional<Type> exprType = exprNode.type();
         if (referencable.declaresType()) {
           Optional<Type> type = createType(referencable.typeNode());
           type.ifPresent(t -> exprType.ifPresent(et -> {
@@ -136,6 +126,16 @@ public class InferTypes {
           return type;
         } else {
           return exprType;
+        }
+      }
+
+      private Optional<Type> typeOfNativeBody(ReferencableNode referencable) {
+        if (referencable.declaresType()) {
+          return createType(referencable.typeNode());
+        } else {
+          logger.log(parseError(
+              referencable, referencable.q() + " is native so it should have type declaration."));
+          return empty();
         }
       }
 
