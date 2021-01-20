@@ -15,6 +15,7 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
 
@@ -61,11 +62,11 @@ public class TestModuleLoader {
 
   public void containsDeclared(Defined expected) {
     String name = expected.name();
-    ImmutableMap<String, Defined> values = module.value().referencables();
+    ImmutableMap<String, Referencable> referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
-        .that(values)
+        .that(referencables)
         .containsKey(name);
-    Defined actual = values.get(name);
+    Defined actual = referencables.get(name);
     assertThat(actual)
         .isEqualTo(expected);
   }

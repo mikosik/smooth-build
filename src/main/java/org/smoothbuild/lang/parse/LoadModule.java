@@ -21,6 +21,7 @@ import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
@@ -74,24 +75,24 @@ public class LoadModule {
     return result;
   }
 
-  private static ImmutableMap<String, Defined> loadCodes(Definitions imported, Ast ast) {
-    var localFunctions = new HashMap<String, Defined>();
+  private static ImmutableMap<String, Referencable> loadCodes(Definitions imported, Ast ast) {
+    var local = new HashMap<String, Referencable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
-      localFunctions.put(constructor.name(), constructor);
+      local.put(constructor.name(), constructor);
     }
     for (ReferencableNode referencable : ast.referencable()) {
       if (referencable instanceof FuncNode func) {
-        Callable function = loadFunction(func, imported.referencables(), localFunctions);
-        localFunctions.put(function.name(), function);
+        Callable function = loadFunction(func, imported.referencables(), local);
+        local.put(function.name(), function);
       } else if (referencable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, imported.referencables(), localFunctions);
-        localFunctions.put(value.name(), value);
+        Value value = loadValue(valueNode, imported.referencables(), local);
+        local.put(value.name(), value);
       } else {
         throw new RuntimeException("Unexpected case: " + referencable.getClass().getCanonicalName());
       }
     }
-    return ImmutableMap.copyOf(localFunctions);
+    return ImmutableMap.copyOf(local);
   }
 
   private static Constructor loadConstructor(StructNode struct) {

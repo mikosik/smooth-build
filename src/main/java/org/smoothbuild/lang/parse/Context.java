@@ -3,8 +3,8 @@ package org.smoothbuild.lang.parse;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.CallableNode;
@@ -22,9 +22,9 @@ public class Context {
   }
 
   public ImmutableList<ItemSignature> parametersOf(String name) {
-    Defined defined = imported.referencables().get(name);
-    if (defined != null) {
-      return ((Callable) defined).type().parameters();
+    Referencable referencable = imported.referencables().get(name);
+    if (referencable != null) {
+      return ((Callable) referencable).type().parameters();
     }
     CallableNode node = callables.get(name);
     if (node != null) {

@@ -46,34 +46,34 @@ import com.google.common.collect.ImmutableMap;
 public class EvaluablesLoader {
   public static Value loadValue(
       ValueNode value,
-      Map<String, Defined> importedValues,
-      Map<String, Defined> localValues) {
+      Map<String, Referencable> importedValues,
+      Map<String, Referencable> localValues) {
     return new ValueSupplier(value, localValues, importedValues).loadValue();
   }
 
   public static Callable loadFunction(
       FuncNode func,
-      Map<String, Defined> importedValues,
-      Map<String, Defined> localValues) {
+      Map<String, Referencable> importedValues,
+      Map<String, Referencable> localValues) {
     return new ValueSupplier(func, localValues, importedValues).loadFunction();
   }
 
   private static class ValueSupplier {
     private final ReferencableNode referencable;
-    private final Map<String, Defined> localValues;
-    private final Map<String, Defined> importedValues;
+    private final Map<String, Referencable> local;
+    private final Map<String, Referencable> imported;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ValueSupplier(ReferencableNode referencable, Map<String, Defined> localValues,
-        Map<String, Defined> importedValues) {
+    public ValueSupplier(ReferencableNode referencable, Map<String, Referencable> local,
+        Map<String, Referencable> imported) {
       this.referencable = referencable;
-      this.localValues = localValues;
-      this.importedValues = importedValues;
+      this.local = local;
+      this.imported = imported;
     }
 
     public Value loadValue() {
-      return new Value(referencable.type().get(), referencable.name(),
-          bodyExpression(), referencable.location());
+      return new Value(referencable.type().get(), referencable.name(), bodyExpression(),
+          referencable.location());
     }
 
     public Callable loadFunction() {
@@ -148,7 +148,7 @@ public class EvaluablesLoader {
     }
 
     private Defined find(String name) {
-      return requireNonNullElseGet(localValues.get(name), () -> importedValues.get(name));
+      return requireNonNullElseGet(local.get(name), () -> imported.get(name));
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
