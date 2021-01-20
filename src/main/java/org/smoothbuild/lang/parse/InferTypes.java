@@ -249,7 +249,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        final Context context = new Context(imported, ast.callablesMap());
+        Context context = new Context(imported, ast.referencablesMap());
         Maybe<Type> type = inferCallType(
             call, context.resultTypeOf(call.calledName()), context.parametersOf(call.calledName()));
         call.setType(ofNullable(type.value()));
