@@ -43,28 +43,28 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
-public class EvaluablesLoader {
+public class LoadReferencable {
   public static Value loadValue(
       ValueNode value,
       Map<String, Referencable> importedValues,
       Map<String, Referencable> localValues) {
-    return new ValueSupplier(value, localValues, importedValues).loadValue();
+    return new ReferencableSupplier(value, localValues, importedValues).loadValue();
   }
 
-  public static Callable loadFunction(
+  public static Function loadFunction(
       FuncNode func,
       Map<String, Referencable> importedValues,
       Map<String, Referencable> localValues) {
-    return new ValueSupplier(func, localValues, importedValues).loadFunction();
+    return new ReferencableSupplier(func, localValues, importedValues).loadFunction();
   }
 
-  private static class ValueSupplier {
+  private static class ReferencableSupplier {
     private final ReferencableNode referencable;
     private final Map<String, Referencable> local;
     private final Map<String, Referencable> imported;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ValueSupplier(ReferencableNode referencable, Map<String, Referencable> local,
+    public ReferencableSupplier(ReferencableNode referencable, Map<String, Referencable> local,
         Map<String, Referencable> imported) {
       this.referencable = referencable;
       this.local = local;
@@ -76,7 +76,7 @@ public class EvaluablesLoader {
           referencable.location());
     }
 
-    public Callable loadFunction() {
+    public Function loadFunction() {
       String name = referencable.name();
       FuncNode funcNode = (FuncNode) referencable;
       ImmutableList<Item> parameters = map(funcNode.params(), this::createParameter);
