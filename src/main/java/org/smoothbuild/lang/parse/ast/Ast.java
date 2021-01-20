@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableMap;
 public class Ast {
   private final ImmutableList<StructNode> structs;
   private final ImmutableList<ReferencableNode> referencables;
-  private ImmutableMap<String, CallableNode> callablesMap;
   private ImmutableMap<String, ReferencableNode> referencablesMap;
   private ImmutableMap<String, StructNode> structsMap;
 
@@ -63,29 +62,6 @@ public class Ast {
     }.visitAst(this);
     return ImmutableMap.copyOf(result);
   }
-
-
-  public ImmutableMap<String, CallableNode> callablesMap() {
-    if (callablesMap == null) {
-      callablesMap = createCallablesMap();
-    }
-    return callablesMap;
-  }
-
-  private ImmutableMap<String, CallableNode> createCallablesMap() {
-    var result = new HashMap<String, CallableNode>();
-    new AstVisitor() {
-      @Override
-      public void visitCallable(CallableNode callable) {
-        super.visitCallable(callable);
-        if (!result.containsKey(callable.name())) {
-          result.put(callable.name(), callable);
-        }
-      }
-    }.visitAst(this);
-    return ImmutableMap.copyOf(result);
-  }
-
 
   public ImmutableMap<String, StructNode> structsMap() {
     if (structsMap == null) {

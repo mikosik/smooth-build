@@ -23,6 +23,7 @@ import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.CallableNode;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -34,7 +35,7 @@ public class AssignArgsToParams {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        List<AParam> parameters = parameters(call, imported, ast.callablesMap());
+        List<AParam> parameters = parameters(call, imported, ast.referencablesMap());
         var assigned = assigned(call, parameters);
         logger.logAllFrom(assigned);
         if (!assigned.hasProblems()) {
@@ -46,7 +47,7 @@ public class AssignArgsToParams {
   }
 
   public static ImmutableList<AParam> parameters(
-      CallNode call, Definitions imported, ImmutableMap<String, CallableNode> callables) {
+      CallNode call, Definitions imported, ImmutableMap<String, ReferencableNode> referencables) {
     String name = call.calledName();
     Referencable referencable = imported.referencables().get(name);
     if (referencable != null) {
@@ -55,9 +56,8 @@ public class AssignArgsToParams {
           .map(p -> new AParam(p.name().get(), p.defaultValueType().isPresent()))
           .collect(toImmutableList());
     }
-    CallableNode node = callables.get(name);
-    if (node != null) {
-      return node.params()
+    if (referencables.get(name) instanceof CallableNode callable) {
+      return callable.params()
           .stream()
           .map(p -> new AParam(p.name(), p.defaultValue().isPresent()))
           .collect(toImmutableList());
