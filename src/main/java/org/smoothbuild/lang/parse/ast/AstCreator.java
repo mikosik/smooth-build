@@ -69,25 +69,26 @@ public class AstCreator {
 
       @Override
       public Void visitValue(ValueContext value) {
-        TypeNode type = value.type() == null ? null : createType(value.type());
         TerminalNode nameNode = value.NAME();
-        String name = nameNode.getText();
-        ExprNode expr = value.expr() == null ? null : createExpr(value.expr());
-        visitChildren(value);
-        referencables.add(new ValueNode(type, name, expr, locationOf(moduleLocation, nameNode)));
+        referencables.add(
+            new ValueNode(
+                createTypeSane(value.type()),
+                nameNode.getText(),
+                createExprSane(value.expr()),
+                locationOf(moduleLocation, nameNode)));
         return null;
       }
 
       @Override
       public Void visitFunc(FuncContext func) {
-        TypeNode type = func.type() == null ? null : createType(func.type());
         TerminalNode nameNode = func.NAME();
-        String name = nameNode.getText();
-        List<ItemNode> params = createParams(func.paramList());
-        ExprNode expr = func.expr() == null ? null : createExpr(func.expr());
-        visitChildren(func);
         referencables.add(
-            new FuncNode(type, name, params, expr, locationOf(moduleLocation, nameNode)));
+            new FuncNode(
+                createTypeSane(func.type()),
+                nameNode.getText(),
+                createParams(func.paramList()),
+                createExprSane(func.expr()),
+                locationOf(moduleLocation, nameNode)));
         return null;
       }
 
@@ -107,6 +108,10 @@ public class AstCreator {
         Location location = locationOf(moduleLocation, param);
         Optional<ExprNode> defaultValue = Optional.ofNullable(param.expr()).map(this::createExpr);
         return new ItemNode(type, name, defaultValue, location);
+      }
+
+      private ExprNode createExprSane(ExprContext expr) {
+        return expr == null ? null : createExpr(expr);
       }
 
       private ExprNode createExpr(ExprContext expr) {
@@ -177,6 +182,10 @@ public class AstCreator {
           }
         }
         return result;
+      }
+
+      private TypeNode createTypeSane(TypeContext type) {
+        return type == null ? null : createType(type);
       }
 
       private TypeNode createType(TypeContext type) {
