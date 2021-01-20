@@ -7,9 +7,9 @@ import static org.smoothbuild.lang.base.type.Types.function;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Defined;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.Struct;
+import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Struct;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;

@@ -2,8 +2,8 @@ package org.smoothbuild.lang.parse;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.define.Callable;
+import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.CallableNode;

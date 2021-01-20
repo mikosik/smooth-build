@@ -20,8 +20,8 @@ import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Constructor;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 

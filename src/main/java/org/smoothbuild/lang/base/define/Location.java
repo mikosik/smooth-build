@@ -1,9 +1,9 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.lang.base.Space.INTERNAL;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.INTERNAL;
+import static org.smoothbuild.lang.base.define.Space.USER;
 
 /**
  * This class is immutable.

@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 
 public class ValueNode extends ReferencableNode {
   public ValueNode(

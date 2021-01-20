@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Nested;

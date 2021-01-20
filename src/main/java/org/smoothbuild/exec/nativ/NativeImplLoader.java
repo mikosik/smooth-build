@@ -16,10 +16,10 @@ import javax.inject.Singleton;
 
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.install.FullPathResolver;
-import org.smoothbuild.lang.base.Defined;
-import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
 
 @Singleton

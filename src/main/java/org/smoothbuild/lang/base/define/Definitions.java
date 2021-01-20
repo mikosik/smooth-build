@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 
 import org.smoothbuild.lang.base.type.Type;

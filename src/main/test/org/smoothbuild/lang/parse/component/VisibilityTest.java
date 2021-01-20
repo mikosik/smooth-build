@@ -4,7 +4,7 @@ import static org.smoothbuild.lang.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.define.Definitions;
 
 public class VisibilityTest {
   @Test

@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Referencable;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.Value;
 
 public class FindReferencables {
   public static Optional<List<Value>> findReferencables(

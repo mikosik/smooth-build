@@ -2,7 +2,7 @@ package org.smoothbuild.lang.parse.ast;
 
 import static com.google.common.base.Preconditions.checkState;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 public class ArgNode extends NamedNode {

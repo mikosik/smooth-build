@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.Hex;
 

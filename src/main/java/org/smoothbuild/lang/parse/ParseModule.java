@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.parse;
 
 import static java.lang.String.join;
-import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.define.Location.location;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Antlr.errorLine;
@@ -24,8 +24,8 @@ import org.smoothbuild.antlr.lang.SmoothParser;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class ParseModule {
   public static Maybe<ModuleContext> parseModule(ModuleLocation info, String sourceCode) {

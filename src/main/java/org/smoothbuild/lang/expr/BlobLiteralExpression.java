@@ -2,7 +2,7 @@ package org.smoothbuild.lang.expr;
 
 import static org.smoothbuild.lang.base.type.Types.blob;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 import okio.ByteString;

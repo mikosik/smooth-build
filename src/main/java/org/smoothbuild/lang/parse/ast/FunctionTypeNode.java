@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

@@ -1,12 +1,12 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.lang.base.ModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
 
 import java.nio.file.Path;
 import java.util.List;
 
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class InstallationPaths {
   private static final String LIB_DIR_NAME = "lib";

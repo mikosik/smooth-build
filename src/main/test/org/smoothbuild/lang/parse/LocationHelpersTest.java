@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.lang.parse.LocationHelpers.locationOf;
 
 import java.nio.file.Path;
@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class LocationHelpersTest {
   @Test

@@ -1,7 +1,7 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
 import static java.util.Objects.requireNonNull;
-import static org.smoothbuild.lang.base.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.Type;

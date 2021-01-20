@@ -2,8 +2,8 @@ package org.smoothbuild.install;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.lang.base.ModuleLocation;
-import org.smoothbuild.lang.base.Space;
+import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.Space;
 
 import com.google.common.collect.ImmutableMap;
 

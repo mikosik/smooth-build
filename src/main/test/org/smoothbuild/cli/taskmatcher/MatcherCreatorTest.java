@@ -33,7 +33,7 @@ import org.smoothbuild.cli.console.Level;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.TaskKind;
-import org.smoothbuild.lang.base.Space;
+import org.smoothbuild.lang.base.define.Space;
 
 import picocli.CommandLine.TypeConversionException;
 

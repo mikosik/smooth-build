@@ -10,7 +10,7 @@ import java.util.Properties;
 import javax.inject.Inject;
 
 import org.smoothbuild.db.hashed.Hash;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 import com.google.common.collect.ImmutableList;
 
