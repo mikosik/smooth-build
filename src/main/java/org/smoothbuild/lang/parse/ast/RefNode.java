@@ -1,10 +1,11 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.like.ReferencableLike;
 
 public class RefNode extends ExprNode {
   private final String name;
-  private RefTarget target;
+  private ReferencableLike target;
 
   public RefNode(String name, Location location) {
     super(location);
@@ -15,11 +16,11 @@ public class RefNode extends ExprNode {
     return name;
   }
 
-  public void setTarget(RefTarget target) {
+  public void setTarget(ReferencableLike target) {
     this.target = target;
   }
 
-  public RefTarget target() {
+  public ReferencableLike target() {
     return target;
   }
 }

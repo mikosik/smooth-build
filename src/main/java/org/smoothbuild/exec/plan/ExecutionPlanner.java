@@ -15,6 +15,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
+import org.smoothbuild.lang.expr.ReferenceExpression;
 
 public class ExecutionPlanner {
   private final ExpressionToTaskConverterProvider converterProvider;
@@ -35,7 +36,8 @@ public class ExecutionPlanner {
   }
 
   private Task createPlan(Value value, ExpressionToTaskConverter converter) {
-    Expression expression = value.createReferenceExpression(commandLineLocation());
+    Expression expression = new ReferenceExpression(
+        value.name(), value.type(), commandLineLocation());
     return createPlan(value.name(), expression, converter);
   }
 
