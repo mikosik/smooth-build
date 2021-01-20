@@ -16,16 +16,8 @@ public class ReferencableNode extends NamedNode implements RefTarget {
     this.expr = expr;
   }
 
-  public void visitType(AstVisitor astVisitor) {
-    typeNode.ifPresent(astVisitor::visitType);
-  }
-
   public Optional<TypeNode> typeNode() {
     return typeNode;
-  }
-
-  public void visitExpr(AstVisitor astVisitor) {
-    expr.ifPresent(astVisitor::visitExpr);
   }
 
   public Optional<ExprNode> expr() {

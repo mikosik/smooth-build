@@ -93,13 +93,13 @@ public class AnalyzeSemantically {
       Scope<Named> scope = localScope;
       @Override
       public void visitFunc(FuncNode func) {
-        func.visitType(this);
+        func.typeNode().ifPresent(this::visitType);
 
         var nameToParam = func.params()
             .stream()
             .collect(toImmutableMap(NamedNode::name, p -> p, (a, b) -> a));
         scope = new Scope<>(scope, nameToParam);
-        func.visitExpr(this);
+        func.expr().ifPresent(this::visitExpr);
         scope = scope.outerScope();
 
         visitCallable(func);

@@ -56,13 +56,13 @@ public class AstVisitor {
   }
 
   public void visitValue(ValueNode value) {
-    value.visitType(this);
-    value.visitExpr(this);
+    value.typeNode().ifPresent(this::visitType);
+    value.expr().ifPresent(this::visitExpr);
   }
 
   public void visitFunc(FuncNode func) {
-    func.visitType(this);
-    func.visitExpr(this);
+    func.typeNode().ifPresent(this::visitType);
+    func.expr().ifPresent(this::visitExpr);
     visitCallable(func);
   }
 
