@@ -67,15 +67,15 @@ public class LoadModule {
       return result;
     }
 
-    var declaredFunctions = loadCodes(imported, sortedAst);
-    var declaredStructs = sortedAst.structs().stream()
+    var referencables = loadReferencables(imported, sortedAst);
+    var definedStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
-    result.setValue(new Definitions(declaredStructs, declaredFunctions));
+    result.setValue(new Definitions(definedStructs, referencables));
     return result;
   }
 
-  private static ImmutableMap<String, Referencable> loadCodes(Definitions imported, Ast ast) {
+  private static ImmutableMap<String, Referencable> loadReferencables(Definitions imported, Ast ast) {
     var local = new HashMap<String, Referencable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(struct);
