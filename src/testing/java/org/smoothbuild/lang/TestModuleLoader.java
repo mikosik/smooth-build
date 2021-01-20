@@ -3,19 +3,19 @@ package org.smoothbuild.lang;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.lang.base.Definitions.baseTypeDefinitions;
-import static org.smoothbuild.lang.base.TestingModuleLocation.BUILD_FILE_PATH;
-import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
-import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Definitions.baseTypeDefinitions;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.BUILD_FILE_PATH;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.importedModuleLocation;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.moduleLocation;
 
 import java.util.List;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.Defined;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.ModuleLocation;
-import org.smoothbuild.lang.base.Referencable;
+import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.LoadModule;
 

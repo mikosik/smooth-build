@@ -6,8 +6,8 @@ import static org.smoothbuild.SmoothConstants.EXIT_CODE_ERROR;
 import static org.smoothbuild.SmoothConstants.EXIT_CODE_SUCCESS;
 import static org.smoothbuild.install.InstallationPaths.standardLibraryModuleLocations;
 import static org.smoothbuild.install.ProjectPaths.USER_MODULE_FILE_NAME;
-import static org.smoothbuild.lang.base.ModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.lang.parse.LoadModule.loadModule;
 
 import java.io.IOException;
@@ -21,8 +21,8 @@ import org.smoothbuild.SmoothConstants;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.install.FullPathResolver;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 import com.google.common.collect.ImmutableList;
 

@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
 public enum Space {
   USER("prj"),

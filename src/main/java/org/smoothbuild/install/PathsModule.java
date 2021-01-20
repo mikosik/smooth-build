@@ -1,11 +1,11 @@
 package org.smoothbuild.install;
 
-import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.lang.base.define.Space.USER;
 
 import java.nio.file.Path;
 
-import org.smoothbuild.lang.base.Space;
+import org.smoothbuild.lang.base.define.Space;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.AbstractModule;

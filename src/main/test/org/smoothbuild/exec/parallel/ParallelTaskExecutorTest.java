@@ -14,7 +14,7 @@ import static org.smoothbuild.cli.console.Log.error;
 import static org.smoothbuild.exec.compute.ResultSource.CACHE;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
-import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 

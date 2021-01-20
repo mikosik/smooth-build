@@ -1,9 +1,9 @@
 package org.smoothbuild.testing.common;
 
-import static org.smoothbuild.lang.base.Location.location;
-import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Location.location;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.moduleLocation;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 
 public class TestingLocation {
   public static Location loc() {

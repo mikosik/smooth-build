@@ -30,8 +30,8 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 import com.google.common.collect.ImmutableList;
 

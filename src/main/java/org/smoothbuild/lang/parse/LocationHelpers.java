@@ -1,12 +1,12 @@
 package org.smoothbuild.lang.parse;
 
-import static org.smoothbuild.lang.base.Location.location;
+import static org.smoothbuild.lang.base.define.Location.location;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.smoothbuild.lang.base.Location;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class LocationHelpers {
   public static Location locationOf(

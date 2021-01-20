@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.Item.toItemSignatures;
+import static org.smoothbuild.lang.base.define.Item.toItemSignatures;
 import static org.smoothbuild.lang.base.type.Types.struct;
 
 import com.google.common.collect.ImmutableList;

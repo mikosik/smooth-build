@@ -3,7 +3,7 @@ package org.smoothbuild.exec.compute;
 import java.util.List;
 
 import org.smoothbuild.exec.algorithm.Algorithm;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 public abstract class ComputableTask extends Task {

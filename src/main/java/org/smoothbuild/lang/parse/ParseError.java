@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse;
 import static org.smoothbuild.cli.console.Log.error;
 
 import org.smoothbuild.cli.console.Log;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.parse.ast.Node;
 
 public class ParseError {

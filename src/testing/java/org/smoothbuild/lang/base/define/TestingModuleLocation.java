@@ -1,6 +1,6 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.USER;
 
 import java.nio.file.Path;
 

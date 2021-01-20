@@ -1,15 +1,15 @@
 package org.smoothbuild;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.ModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.base.Space.STANDARD_LIBRARY;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Location.internal;
+import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
+import static org.smoothbuild.lang.base.define.Space.USER;
 
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 import com.google.common.testing.EqualsTester;
 

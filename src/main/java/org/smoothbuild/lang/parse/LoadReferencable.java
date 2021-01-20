@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Defined;
-import org.smoothbuild.lang.base.Function;
-import org.smoothbuild.lang.base.Item;
-import org.smoothbuild.lang.base.Referencable;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Callable;
+import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;

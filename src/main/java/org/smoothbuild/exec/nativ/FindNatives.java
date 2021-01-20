@@ -3,7 +3,7 @@ package org.smoothbuild.exec.nativ;
 import static okio.Okio.buffer;
 import static okio.Okio.source;
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.lang.base.Names.isLegalName;
+import static org.smoothbuild.lang.base.define.Names.isLegalName;
 import static org.smoothbuild.util.reflect.ClassLoaders.jarClassLoader;
 import static org.smoothbuild.util.reflect.Classes.CLASS_FILE_EXTENSION;
 import static org.smoothbuild.util.reflect.Classes.binaryPathToBinaryName;

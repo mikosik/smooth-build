@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.ast;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 
 public class FieldReadNode extends ExprNode {
   private final ExprNode expr;

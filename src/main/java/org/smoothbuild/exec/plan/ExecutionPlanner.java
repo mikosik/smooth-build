@@ -2,7 +2,7 @@ package org.smoothbuild.exec.plan;
 
 import static java.util.stream.Collectors.toList;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.lang.base.Location.commandLineLocation;
+import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -11,8 +11,8 @@ import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 

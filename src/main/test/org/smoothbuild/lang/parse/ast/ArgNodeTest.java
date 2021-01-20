@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.lang.base.Location.internal;
+import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 

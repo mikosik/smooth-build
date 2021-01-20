@@ -1,12 +1,12 @@
 package org.smoothbuild.run;
 
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Space.USER;
 
 import javax.inject.Inject;
 
 import org.smoothbuild.cli.console.Console;
-import org.smoothbuild.lang.base.Defined;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Defined;
+import org.smoothbuild.lang.base.define.Value;
 
 public class ListRunner {
   private final Console console;

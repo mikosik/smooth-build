@@ -1,7 +1,7 @@
 package org.smoothbuild.lang.expr;
 
-import org.smoothbuild.lang.base.Callable;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Callable;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;

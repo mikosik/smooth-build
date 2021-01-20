@@ -18,8 +18,8 @@ import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor;
 import org.smoothbuild.exec.plan.ExecutionPlanner;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.Value;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.Value;
 
 public class ArtifactBuilder {
   private static final String SAVING_ARTIFACT_PHASE = "Saving artifact(s)";

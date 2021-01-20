@@ -5,7 +5,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;

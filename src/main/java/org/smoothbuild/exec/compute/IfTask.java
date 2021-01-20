@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.base.Input.input;
-import static org.smoothbuild.lang.base.Callable.PARENTHESES;
+import static org.smoothbuild.lang.base.define.Callable.PARENTHESES;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,7 +12,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;

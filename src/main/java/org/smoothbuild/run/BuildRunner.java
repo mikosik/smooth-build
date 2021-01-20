@@ -17,7 +17,7 @@ import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.exec.artifact.ArtifactBuilder;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.define.Definitions;
 
 public class BuildRunner {
   private final Console console;

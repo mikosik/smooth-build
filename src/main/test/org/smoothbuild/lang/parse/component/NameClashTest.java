@@ -2,15 +2,15 @@ package org.smoothbuild.lang.parse.component;
 
 import static org.smoothbuild.lang.TestModuleLoader.err;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
-import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.importedModuleLocation;
+import static org.smoothbuild.lang.base.define.TestingModuleLocation.moduleLocation;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Definitions;
-import org.smoothbuild.lang.base.ModuleLocation;
+import org.smoothbuild.lang.base.define.Definitions;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class NameClashTest {
   @Nested

@@ -1,10 +1,10 @@
-package org.smoothbuild.lang.base;
+package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.Location.commandLineLocation;
-import static org.smoothbuild.lang.base.Location.internal;
-import static org.smoothbuild.lang.base.Location.location;
-import static org.smoothbuild.lang.base.Space.USER;
+import static org.smoothbuild.lang.base.define.Location.commandLineLocation;
+import static org.smoothbuild.lang.base.define.Location.internal;
+import static org.smoothbuild.lang.base.define.Location.location;
+import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
 import java.nio.file.Path;

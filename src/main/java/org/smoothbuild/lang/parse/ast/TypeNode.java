@@ -3,7 +3,7 @@ package org.smoothbuild.lang.parse.ast;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
-import org.smoothbuild.lang.base.Location;
+import org.smoothbuild.lang.base.define.Location;
 
 import com.google.common.collect.ImmutableSet;
 

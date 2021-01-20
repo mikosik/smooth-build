@@ -16,7 +16,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.base.Function;
+import org.smoothbuild.lang.base.define.Function;
 
 public class TrailingCommaTest {
   @Nested
