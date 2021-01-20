@@ -12,17 +12,17 @@ import org.smoothbuild.lang.base.Definitions;
 import org.smoothbuild.lang.base.Referencable;
 import org.smoothbuild.lang.base.Value;
 
-public class FindValues {
-  public static Optional<List<Value>> findValues(Reporter reporter, Definitions definitions,
-      List<String> names) {
+public class FindReferencables {
+  public static Optional<List<Value>> findReferencables(
+      Reporter reporter, Definitions definitions, List<String> names) {
     var values = definitions.referencables();
-    List<Value> callablesToRun = new ArrayList<>();
+    List<Value> referencables = new ArrayList<>();
     List<Log> logs = new ArrayList<>();
     for (String name : names) {
       Referencable referencable = values.get(name);
       if (referencable != null) {
         if (referencable instanceof Value value) {
-          callablesToRun.add(value);
+          referencables.add(value);
         } else {
           logs.add(error(
               "`" + name + "` cannot be calculated as it is not a value but a function."));
@@ -34,7 +34,7 @@ public class FindValues {
     }
     reporter.report("Validating arguments", logs);
     if (logs.isEmpty()) {
-      return Optional.of(callablesToRun);
+      return Optional.of(referencables);
     } else {
       return Optional.empty();
     }
