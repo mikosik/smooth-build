@@ -5,9 +5,9 @@ import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.AssignArgsToParams.assignArgsToParams;
-import static org.smoothbuild.lang.parse.EvaluablesLoader.loadFunction;
-import static org.smoothbuild.lang.parse.EvaluablesLoader.loadValue;
 import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
+import static org.smoothbuild.lang.parse.LoadReferencable.loadFunction;
+import static org.smoothbuild.lang.parse.LoadReferencable.loadValue;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
@@ -15,10 +15,10 @@ import java.util.HashMap;
 
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.lang.base.Callable;
 import org.smoothbuild.lang.base.Constructor;
 import org.smoothbuild.lang.base.Defined;
 import org.smoothbuild.lang.base.Definitions;
+import org.smoothbuild.lang.base.Function;
 import org.smoothbuild.lang.base.Item;
 import org.smoothbuild.lang.base.ModuleLocation;
 import org.smoothbuild.lang.base.Referencable;
@@ -83,7 +83,7 @@ public class LoadModule {
     }
     for (ReferencableNode referencable : ast.referencable()) {
       if (referencable instanceof FuncNode func) {
-        Callable function = loadFunction(func, imported.referencables(), local);
+        Function function = loadFunction(func, imported.referencables(), local);
         local.put(function.name(), function);
       } else if (referencable instanceof ValueNode valueNode) {
         Value value = loadValue(valueNode, imported.referencables(), local);
