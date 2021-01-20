@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.parse.component;
 
 import static java.util.function.Predicate.not;
+import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.type.TestedType.A;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
@@ -8,7 +9,6 @@ import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
 import static org.smoothbuild.lang.base.type.TestedType.a;
 import static org.smoothbuild.lang.base.type.TestedType.a2;
 import static org.smoothbuild.lang.base.type.TestedType.f;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 import static org.smoothbuild.util.Strings.unlines;
 
 import java.util.List;
@@ -21,6 +21,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.smoothbuild.lang.TestModuleLoader;
 import org.smoothbuild.lang.base.type.TestedType;
 
 public class TypeTest {

@@ -1,8 +1,8 @@
 package org.smoothbuild.lang.parse.component;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.err;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
+import static org.smoothbuild.lang.TestModuleLoader.err;
+import static org.smoothbuild.lang.TestModuleLoader.module;
 
 import java.util.List;
 import java.util.stream.Stream;

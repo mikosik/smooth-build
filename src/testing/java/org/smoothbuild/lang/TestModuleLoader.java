@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.parse.component;
+package org.smoothbuild.lang;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;

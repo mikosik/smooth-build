@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.parse.component;
 
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
+import static org.smoothbuild.lang.TestModuleLoader.module;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

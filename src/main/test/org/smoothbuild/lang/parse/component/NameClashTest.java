@@ -1,9 +1,9 @@
 package org.smoothbuild.lang.parse.component;
 
+import static org.smoothbuild.lang.TestModuleLoader.err;
+import static org.smoothbuild.lang.TestModuleLoader.module;
 import static org.smoothbuild.lang.base.TestingModuleLocation.importedModuleLocation;
 import static org.smoothbuild.lang.base.TestingModuleLocation.moduleLocation;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.err;
-import static org.smoothbuild.lang.parse.component.TestModuleLoader.module;
 
 import java.util.List;
 
