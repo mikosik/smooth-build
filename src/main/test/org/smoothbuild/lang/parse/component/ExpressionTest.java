@@ -183,7 +183,7 @@ public class ExpressionTest {
   @Test
   public void field_read() {
     ItemSignature field = itemSignature(STRING, "field");
-    StructType myStruct = struct(1, "MyStruct", field);
+    StructType myStruct = struct("MyStruct", field);
     module("""
           MyStruct {
             String field,
@@ -214,12 +214,12 @@ public class ExpressionTest {
           }
           """)
         .loadsSuccessfully()
-        .containsType(struct(1, "MyStruct", itemSignature(STRING, "field")));
+        .containsType(struct("MyStruct", itemSignature(STRING, "field")));
   }
 
   @Test
   public void constructor() {
-    StructType struct = struct(1, "MyStruct", itemSignature(STRING, "field"));
+    StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
     Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {
@@ -232,7 +232,7 @@ public class ExpressionTest {
 
   @Test
   public void constructor_call_with_argument() {
-    StructType struct = struct(1, "MyStruct", itemSignature(STRING, "field"));
+    StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
     Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
     module("""
           MyStruct {

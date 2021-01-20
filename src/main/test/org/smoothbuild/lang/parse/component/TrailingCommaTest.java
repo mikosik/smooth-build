@@ -127,7 +127,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(structDeclaration("String field,"))
           .loadsSuccessfully()
-          .containsType(struct(1, "MyStruct", itemSignature(STRING, "field")));
+          .containsType(struct("MyStruct", itemSignature(STRING, "field")));
     }
 
     @Test

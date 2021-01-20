@@ -86,7 +86,7 @@ public class TestingLang {
     return new Value(type, name, expression, loc(line));
   }
 
-  public static StructType struct(int line, String name, ItemSignature field) {
+  public static StructType struct(String name, ItemSignature field) {
     return Types.struct(name, List.of(field));
   }
 
