@@ -113,8 +113,8 @@ public class InferTypes {
 
       private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable, ExprNode exprNode) {
         Optional<Type> exprType = exprNode.type();
-        if (referencable.declaresType()) {
-          Optional<Type> type = createType(referencable.typeNode());
+        if (referencable.typeNode().isPresent()) {
+          Optional<Type> type = createType(referencable.typeNode().get());
           type.ifPresent(t -> exprType.ifPresent(et -> {
             if (!t.isAssignableFrom(et)) {
               logger.log(parseError(referencable, "`" + referencable.name()
@@ -130,8 +130,8 @@ public class InferTypes {
       }
 
       private Optional<Type> typeOfNativeBody(ReferencableNode referencable) {
-        if (referencable.declaresType()) {
-          return createType(referencable.typeNode());
+        if (referencable.typeNode().isPresent()) {
+          return createType(referencable.typeNode().get());
         } else {
           logger.log(parseError(
               referencable, referencable.q() + " is native so it should have type declaration."));

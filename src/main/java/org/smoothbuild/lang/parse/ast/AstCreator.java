@@ -184,8 +184,8 @@ public class AstCreator {
         return result;
       }
 
-      private TypeNode createTypeSane(TypeContext type) {
-        return type == null ? null : createType(type);
+      private Optional<TypeNode> createTypeSane(TypeContext type) {
+        return type == null ? Optional.empty() : Optional.of(createType(type));
       }
 
       private TypeNode createType(TypeContext type) {
