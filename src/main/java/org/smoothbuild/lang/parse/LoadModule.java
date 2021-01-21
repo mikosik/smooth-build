@@ -6,8 +6,7 @@ import static java.util.Optional.empty;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
 import static org.smoothbuild.lang.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
-import static org.smoothbuild.lang.parse.LoadReferencable.loadFunction;
-import static org.smoothbuild.lang.parse.LoadReferencable.loadValue;
+import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
 import static org.smoothbuild.lang.parse.ast.AstCreator.fromParseTree;
 
@@ -18,17 +17,13 @@ import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModuleLocation;
 import org.smoothbuild.lang.base.define.Referencable;
-import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
-import org.smoothbuild.lang.parse.ast.ValueNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -83,15 +78,7 @@ public class LoadModule {
     }
     Context context = new Context(imported, local);
     for (ReferencableNode referencable : ast.referencable()) {
-      if (referencable instanceof FuncNode func) {
-        Function function = loadFunction(func, context);
-        local.put(function.name(), function);
-      } else if (referencable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, context);
-        local.put(value.name(), value);
-      } else {
-        throw new RuntimeException("Unexpected case: " + referencable.getClass().getCanonicalName());
-      }
+      local.put(referencable.name(), loadReferencable(referencable, context));
     }
     return ImmutableMap.copyOf(local);
   }

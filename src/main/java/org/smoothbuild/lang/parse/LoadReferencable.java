@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.CallableLike;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -34,50 +35,60 @@ import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
 import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
-import org.smoothbuild.lang.parse.ast.ValueNode;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Value loadValue(ValueNode value, Context context) {
-    return new ReferencableSupplier(value, context).loadValue();
+  public static Referencable loadReferencable(ReferencableNode referencableNode, Context context) {
+    if (referencableNode instanceof FuncNode funcNode) {
+      return loadFunction(funcNode, context);
+    } else {
+      return loadValue(referencableNode, context);
+    }
   }
 
-  public static Function loadFunction(FuncNode func, Context context) {
-    return new ReferencableSupplier(func, context).loadFunction();
+  private static Value loadValue(ReferencableNode referencableNode, Context context) {
+    ExpressionLoader loader = new ExpressionLoader(context, ImmutableMap.of());
+    return new Value(
+        referencableNode.type().get(),
+        referencableNode.name(),
+        loader.bodyExpression(referencableNode),
+        referencableNode.location());
   }
 
-  private static class ReferencableSupplier {
-    private final ReferencableNode referencable;
+  private static Function loadFunction(FuncNode funcNode, Context context) {
+    ImmutableList<Item> parameters = loadParameters(funcNode, context);
+    ExpressionLoader loader = new ExpressionLoader(context,
+        parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
+    return new Function(
+        funcNode.resultType().get(),
+        funcNode.name(),
+        parameters,
+        loader.bodyExpression(funcNode),
+        funcNode.location());
+  }
+
+  private static ImmutableList<Item> loadParameters(FuncNode funcNode, Context context) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(context, ImmutableMap.of());
+    return map(funcNode.params(), parameterLoader::createParameter);
+  }
+
+  private static class ExpressionLoader {
     private final Context context;
-    private ImmutableMap<String, Type> functionParameters;
+    private final ImmutableMap<String, Type> functionParameters;
 
-    public ReferencableSupplier(ReferencableNode referencable, Context context) {
+    public ExpressionLoader(Context context, ImmutableMap<String, Type> functionParameters) {
       this.context = context;
-      this.referencable = referencable;
+      this.functionParameters = functionParameters;
     }
 
-    public Value loadValue() {
-      return new Value(referencable.type().get(), referencable.name(), bodyExpression(),
-          referencable.location());
-    }
-
-    public Function loadFunction() {
-      String name = referencable.name();
-      FuncNode funcNode = (FuncNode) referencable;
-      ImmutableList<Item> parameters = map(funcNode.params(), this::createParameter);
-      functionParameters = parameters.stream().collect(toImmutableMap(Item::name, Item::type));
-      return new Function(
-          funcNode.resultType().get(), name, parameters, bodyExpression(), referencable.location());
-    }
-
-    private Optional<Expression> bodyExpression() {
+    public Optional<Expression> bodyExpression(ReferencableNode referencable) {
       return referencable.expr().map(this::createExpression);
     }
 
-    private Item createParameter(ItemNode param) {
+    public Item createParameter(ItemNode param) {
       Type type = param.typeNode().type().get();
       String name = param.name();
       Optional<Expression> defaultValue = param.defaultValue()
