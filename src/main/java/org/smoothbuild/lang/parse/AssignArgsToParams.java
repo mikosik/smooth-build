@@ -15,28 +15,24 @@ import java.util.Map;
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
 import org.smoothbuild.cli.console.MemoryLogger;
-import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.like.ItemLike;
 import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.CallNode;
-import org.smoothbuild.lang.parse.ast.CallableNode;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 public class AssignArgsToParams {
   public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
+    Context context = new Context(imported, ast.referencablesMap());
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        List<AParam> parameters = parameters(call, imported, ast.referencablesMap());
-        var assigned = assigned(call, parameters);
+        var assigned = assigned(call, context.parameterLikesOf(call.calledName()));
         logger.logAllFrom(assigned);
         if (!assigned.hasProblems()) {
           call.setAssignedArgs(assigned.value());
@@ -46,27 +42,7 @@ public class AssignArgsToParams {
     return logger.logs();
   }
 
-  public static ImmutableList<AParam> parameters(
-      CallNode call, Definitions imported, ImmutableMap<String, ReferencableNode> referencables) {
-    String name = call.calledName();
-    Referencable referencable = imported.referencables().get(name);
-    if (referencable != null) {
-      return ((Callable) referencable).type().parameters()
-          .stream()
-          .map(p -> new AParam(p.name().get(), p.defaultValueType().isPresent()))
-          .collect(toImmutableList());
-    }
-    if (referencables.get(name) instanceof CallableNode callable) {
-      return callable.params()
-          .stream()
-          .map(p -> new AParam(p.name(), p.defaultValue().isPresent()))
-          .collect(toImmutableList());
-    }
-    throw new RuntimeException("Couldn't find `" + call.calledName() + "` function.");
-  }
-
-  private static Maybe<List<ArgNode>> assigned(
-      CallNode call, List<AParam> parameters) {
+  private static Maybe<List<ArgNode>> assigned(CallNode call, List<? extends ItemLike> parameters) {
     var result = new Maybe<List<ArgNode>>();
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
@@ -94,7 +70,7 @@ public class AssignArgsToParams {
   }
 
   private static List<ArgNode> assignedArgs(
-      CallNode call, List<AParam> parameters, Map<String, Integer> nameToIndex) {
+      CallNode call, List<? extends ItemLike> parameters, Map<String, Integer> nameToIndex) {
     List<ArgNode> args = call.args();
     List<ArgNode> assignedList = asList(new ArgNode[parameters.size()]);
     for (int i = 0; i < args.size(); i++) {
@@ -119,7 +95,7 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findTooManyPositionalArgumentsError(
-      CallNode call, List<ArgNode> positionalArguments, List<AParam> parameters) {
+      CallNode call, List<ArgNode> positionalArguments, List<? extends ItemLike> parameters) {
     if (parameters.size() < positionalArguments.size()) {
       return List.of(parseError(call, inCallToPrefix(call) + "Too many positional arguments."));
     }
@@ -137,7 +113,7 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallNode call, List<ArgNode> positionalArguments, List<AParam> parameters) {
+      CallNode call, List<ArgNode> positionalArguments, List<? extends ItemLike> parameters) {
     var names = new HashSet<String>();
     parameters.stream()
         .limit(positionalArguments.size())
@@ -151,21 +127,21 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findUnassignedParametersWithoutDefaultValuesErrors(CallNode call,
-      List<ArgNode> assignedList, List<AParam> parameters) {
+      List<ArgNode> assignedList, List<? extends ItemLike> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i) == null)
         .mapToObj(parameters::get)
-        .filter(p -> !p.hasDefault())
+        .filter(p -> !p.hasDefaultValue())
         .map(p -> parameterMustBeSpecifiedError(call, p))
         .collect(toList());
   }
 
-  private static Log parameterMustBeSpecifiedError(CallNode call, AParam param) {
+  private static Log parameterMustBeSpecifiedError(CallNode call, ItemLike param) {
     return parseError(call, inCallToPrefix(call) + "Parameter `" + param.name() +
         "` must be specified.");
   }
 
-  private static Map<String, Integer> nameToIndex(List<AParam> parameters) {
+  private static Map<String, Integer> nameToIndex(List<? extends ItemLike> parameters) {
     return range(0, parameters.size())
         .boxed()
         .collect(toMap(i -> parameters.get(i).name(), i -> i));
@@ -173,12 +149,5 @@ public class AssignArgsToParams {
 
   private static String inCallToPrefix(CallNode call) {
     return "In call to `" + call.calledName() + "`: ";
-  }
-
-  private record AParam(String name, boolean hasDefault) {
-    @Override
-    public String toString() {
-      return "`" + name + "`";
-    }
   }
 }

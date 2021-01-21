@@ -6,6 +6,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.like.ItemLike;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.Expression;
@@ -17,7 +18,7 @@ import com.google.common.collect.ImmutableList;
  *
  * This class is immutable.
  */
-public record Item(Type type, String name, Optional<Expression> defaultValue) {
+public record Item(Type type, String name, Optional<Expression> defaultValue) implements ItemLike {
   public Item {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
@@ -26,6 +27,11 @@ public record Item(Type type, String name, Optional<Expression> defaultValue) {
 
   public ItemSignature signature() {
     return new ItemSignature(type, Optional.of(name), defaultValue.map(Expression::type));
+  }
+
+  @Override
+  public boolean hasDefaultValue() {
+    return defaultValue.isPresent();
   }
 
   @Override
