@@ -21,13 +21,8 @@ public class NamedNode extends Node implements Named {
 
   @Override
   public boolean equals(Object object) {
-    if (object == null) {
-      return false;
-    }
-    if (!(object instanceof NamedNode that)) {
-      return false;
-    }
-    return this.name.equals(that.name);
+    return object instanceof NamedNode that
+        && this.name.equals(that.name);
   }
 
   @Override

@@ -22,17 +22,15 @@ public class Value extends Referencable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object object) {
+    if (this == object) {
       return true;
     }
-    if (o instanceof Value that) {
-      return this.type().equals(that.type())
-          && this.name().equals(that.name())
-          && this.body().equals(that.body())
-          && this.location().equals(that.location());
-    }
-    return false;
+    return object instanceof Value that
+        && this.type().equals(that.type())
+        && this.name().equals(that.name())
+        && this.body().equals(that.body())
+        && this.location().equals(that.location());
   }
 
   @Override

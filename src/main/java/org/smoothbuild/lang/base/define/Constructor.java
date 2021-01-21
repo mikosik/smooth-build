@@ -23,17 +23,15 @@ public class Constructor extends Callable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
+  public boolean equals(Object object) {
+    if (this == object) {
       return true;
     }
-    if (o instanceof Constructor that) {
-      return this.resultType().equals(that.resultType())
-          && this.name().equals(that.name())
-          && this.parameters().equals(that.parameters())
-          && this.location().equals(that.location());
-    }
-    return false;
+    return object instanceof Constructor that
+        && this.resultType().equals(that.resultType())
+        && this.name().equals(that.name())
+        && this.parameters().equals(that.parameters())
+        && this.location().equals(that.location());
   }
 
   @Override

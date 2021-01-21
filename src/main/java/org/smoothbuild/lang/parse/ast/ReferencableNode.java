@@ -32,10 +32,8 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
 
   @Override
   public final boolean equals(Object object) {
-    if (object instanceof ReferencableNode that) {
-      return this.name().equals(that.name());
-    }
-    return false;
+    return object instanceof ReferencableNode that
+        && this.name().equals(that.name());
   }
 
   @Override
