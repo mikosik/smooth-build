@@ -111,7 +111,7 @@ public class AnalyzeSemantically {
         if (scope.contains(name)) {
           Named named = scope.get(name);
           if (named instanceof ReferencableLike referencable) {
-            ref.setTarget(referencable);
+            ref.setReferenced(referencable);
           } else {
             throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
           }

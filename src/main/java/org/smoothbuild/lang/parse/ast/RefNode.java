@@ -5,7 +5,7 @@ import org.smoothbuild.lang.base.like.ReferencableLike;
 
 public class RefNode extends ExprNode {
   private final String name;
-  private ReferencableLike target;
+  private ReferencableLike referenced;
 
   public RefNode(String name, Location location) {
     super(location);
@@ -16,11 +16,11 @@ public class RefNode extends ExprNode {
     return name;
   }
 
-  public void setTarget(ReferencableLike target) {
-    this.target = target;
+  public void setReferenced(ReferencableLike referenced) {
+    this.referenced = referenced;
   }
 
-  public ReferencableLike target() {
-    return target;
+  public ReferencableLike referenced() {
+    return referenced;
   }
 }
