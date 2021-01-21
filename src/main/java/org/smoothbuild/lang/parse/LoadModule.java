@@ -81,12 +81,13 @@ public class LoadModule {
       Constructor constructor = loadConstructor(struct);
       local.put(constructor.name(), constructor);
     }
+    Context context = new Context(imported, local);
     for (ReferencableNode referencable : ast.referencable()) {
       if (referencable instanceof FuncNode func) {
-        Function function = loadFunction(func, imported.referencables(), local);
+        Function function = loadFunction(func, context);
         local.put(function.name(), function);
       } else if (referencable instanceof ValueNode valueNode) {
-        Value value = loadValue(valueNode, imported.referencables(), local);
+        Value value = loadValue(valueNode, context);
         local.put(value.name(), value);
       } else {
         throw new RuntimeException("Unexpected case: " + referencable.getClass().getCanonicalName());
