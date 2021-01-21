@@ -62,11 +62,9 @@ public class FunctionType extends Type {
     if (this == object) {
       return true;
     }
-    if (object instanceof FunctionType that) {
-      return result.equals(that.result)
-          && parameters.equals(that.parameters);
-    }
-    return false;
+    return object instanceof FunctionType that
+        && result.equals(that.result)
+        && parameters.equals(that.parameters);
   }
 
   private static String createName(Type resultType, ImmutableList<ItemSignature> parameters) {

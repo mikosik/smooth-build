@@ -67,7 +67,7 @@ public abstract class Type {
 
   private boolean inequalParam(Type that, Side side) {
     return inequalByEdgeCases(that, side)
-        || ((this instanceof Variable) && (side == LOWER || that instanceof Variable))
+        || (this instanceof Variable && (side == LOWER || that instanceof Variable))
         || inequalByConstruction(that, side, s -> (a, b) -> a.inequalParam(b, s));
   }
 
@@ -166,10 +166,8 @@ public abstract class Type {
     if (this == object) {
       return true;
     }
-    if (object instanceof Type that) {
-      return this.name().equals(that.name());
-    }
-    return false;
+    return object instanceof Type that
+        && this.name().equals(that.name());
   }
 
   @Override

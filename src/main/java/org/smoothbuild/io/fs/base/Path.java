@@ -144,10 +144,8 @@ public class Path {
     if (this == object) {
       return true;
     }
-    if (object instanceof Path that) {
-      return this.value.equals(that.value);
-    }
-    return false;
+    return object instanceof Path that
+        && this.value.equals(that.value);
   }
 
   @Override

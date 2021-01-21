@@ -214,14 +214,12 @@ public class SortTopologically {
     }
 
     @Override
-    public boolean equals(Object o) {
-      if (this == o) {
+    public boolean equals(Object object) {
+      if (this == object) {
         return true;
       }
-      if (o instanceof Node<?, ?, ?> that) {
-        return this.node.equals(that.node);
-      }
-      return false;
+      return object instanceof Node<?, ?, ?> that
+          && this.node.equals(that.node);
     }
   }
 

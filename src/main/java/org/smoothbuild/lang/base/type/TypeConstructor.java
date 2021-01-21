@@ -36,13 +36,10 @@ public class TypeConstructor {
 
   @Override
   public boolean equals(Object object) {
-    if (object instanceof TypeConstructor that) {
-      return name.equals(that.name)
-          && contravariantSize == that.contravariantSize
-          && covariantSize == that.covariantSize;
-    } else {
-      return false;
-    }
+    return object instanceof TypeConstructor that
+        && name.equals(that.name)
+        && contravariantSize == that.contravariantSize
+        && covariantSize == that.covariantSize;
   }
 
   @Override

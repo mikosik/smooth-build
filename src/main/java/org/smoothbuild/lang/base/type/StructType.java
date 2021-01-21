@@ -57,10 +57,8 @@ public class StructType extends Type {
     if (this == object) {
       return true;
     }
-    if (object instanceof StructType thatStruct) {
-      return this.name().equals(thatStruct.name())
-          && this.fields.equals(thatStruct.fields);
-    }
-    return false;
+    return object instanceof StructType thatStruct
+        && this.name().equals(thatStruct.name())
+        && this.fields.equals(thatStruct.fields);
   }
 }

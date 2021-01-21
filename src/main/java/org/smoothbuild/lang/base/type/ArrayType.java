@@ -35,9 +35,7 @@ public class ArrayType extends Type {
     if (this == object) {
       return true;
     }
-    if (object instanceof ArrayType thatArray) {
-      return this.elemType().equals(thatArray.elemType());
-    }
-    return false;
+    return object instanceof ArrayType thatArray
+        && this.elemType().equals(thatArray.elemType());
   }
 }
