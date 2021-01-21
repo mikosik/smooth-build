@@ -48,27 +48,27 @@ public class LoadReferencable {
       ValueNode value,
       Map<String, Referencable> importedValues,
       Map<String, Referencable> localValues) {
-    return new ReferencableSupplier(value, localValues, importedValues).loadValue();
+    return new ReferencableSupplier(value, importedValues, localValues).loadValue();
   }
 
   public static Function loadFunction(
       FuncNode func,
       Map<String, Referencable> importedValues,
       Map<String, Referencable> localValues) {
-    return new ReferencableSupplier(func, localValues, importedValues).loadFunction();
+    return new ReferencableSupplier(func, importedValues, localValues).loadFunction();
   }
 
   private static class ReferencableSupplier {
     private final ReferencableNode referencable;
-    private final Map<String, Referencable> local;
     private final Map<String, Referencable> imported;
+    private final Map<String, Referencable> local;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ReferencableSupplier(ReferencableNode referencable, Map<String, Referencable> local,
-        Map<String, Referencable> imported) {
+    public ReferencableSupplier(ReferencableNode referencable, Map<String, Referencable> imported,
+        Map<String, Referencable> local) {
       this.referencable = referencable;
-      this.local = local;
       this.imported = imported;
+      this.local = local;
     }
 
     public Value loadValue() {
