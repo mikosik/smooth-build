@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.like.CallableLike;
+import org.smoothbuild.lang.base.like.ItemLike;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public class CallableNode extends ReferencableNode {
-  private final List<ItemNode> params;
+public class CallableNode extends ReferencableNode implements CallableLike {
+  private final ImmutableList<ItemNode> params;
 
   public CallableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
       List<ItemNode> params, Location location) {
@@ -21,10 +23,16 @@ public class CallableNode extends ReferencableNode {
     this.params = ImmutableList.copyOf(params);
   }
 
-  public List<ItemNode> params() {
+  public ImmutableList<ItemNode> params() {
     return params;
   }
 
+  @Override
+  public ImmutableList<? extends ItemLike> parameterLikes() {
+    return params;
+  }
+
+  @Override
   public ImmutableList<ItemSignature> parameterSignatures() {
     return map(params(), paramNode -> paramNode.itemSignature().get());
   }
@@ -40,5 +48,10 @@ public class CallableNode extends ReferencableNode {
 
   public Optional<Type> resultType() {
     return type().map(f -> ((FunctionType) f).resultType());
+  }
+
+  @Override
+  public Optional<Type> inferredResultType() {
+    return resultType();
   }
 }
