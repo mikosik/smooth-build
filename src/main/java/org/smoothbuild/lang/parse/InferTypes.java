@@ -259,7 +259,7 @@ public class InferTypes {
       @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
-        ref.setType(ref.target().inferredType());
+        ref.setType(ref.referenced().inferredType());
       }
 
       @Override

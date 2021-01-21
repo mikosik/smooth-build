@@ -115,12 +115,12 @@ public class LoadReferencable {
     }
 
     private Expression createReference(RefNode ref) {
-      ReferencableLike target = ref.target();
-      if (target instanceof ItemNode) {
+      ReferencableLike referenced = ref.referenced();
+      if (referenced instanceof ItemNode) {
         String name = ref.name();
         return new ParameterReferenceExpression(functionParameters.get(name), name, ref.location());
       }
-      return new ReferenceExpression(ref.name(), target.inferredType().get(), ref.location());
+      return new ReferenceExpression(ref.name(), referenced.inferredType().get(), ref.location());
     }
 
     private Expression createCall(CallNode call) {
