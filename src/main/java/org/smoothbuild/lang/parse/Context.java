@@ -2,6 +2,7 @@ package org.smoothbuild.lang.parse;
 
 import static java.util.Objects.requireNonNullElseGet;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Definitions;
@@ -10,12 +11,18 @@ import org.smoothbuild.lang.base.like.ItemLike;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.parse.ast.ReferencableNode;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
-public record Context(Definitions imported, ImmutableMap<String, ReferencableNode> referencables) {
+public class Context {
+  private final Definitions imported;
+  private final Map<String, ? extends ReferencableLike> referencables;
+
+  public Context(Definitions imported, Map<String, ? extends ReferencableLike> referencables) {
+    this.imported = imported;
+    this.referencables = referencables;
+  }
+
   public ImmutableList<ItemSignature> parametersOf(String name) {
     return findCallableLike(name).parameterSignatures();
   }
@@ -32,7 +39,7 @@ public record Context(Definitions imported, ImmutableMap<String, ReferencableNod
     return (CallableLike) findReferencableLike(name);
   }
 
-  private ReferencableLike findReferencableLike(String name) {
+  public ReferencableLike findReferencableLike(String name) {
     return requireNonNullElseGet(
         imported.referencables().get(name),
         () -> referencables.get(name));

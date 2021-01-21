@@ -1,19 +1,16 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static java.util.Objects.requireNonNullElseGet;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.smoothbuild.lang.base.define.Callable;
-import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.base.like.CallableLike;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -44,31 +41,22 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Value loadValue(
-      ValueNode value,
-      Map<String, Referencable> importedValues,
-      Map<String, Referencable> localValues) {
-    return new ReferencableSupplier(value, importedValues, localValues).loadValue();
+  public static Value loadValue(ValueNode value, Context context) {
+    return new ReferencableSupplier(value, context).loadValue();
   }
 
-  public static Function loadFunction(
-      FuncNode func,
-      Map<String, Referencable> importedValues,
-      Map<String, Referencable> localValues) {
-    return new ReferencableSupplier(func, importedValues, localValues).loadFunction();
+  public static Function loadFunction(FuncNode func, Context context) {
+    return new ReferencableSupplier(func, context).loadFunction();
   }
 
   private static class ReferencableSupplier {
     private final ReferencableNode referencable;
-    private final Map<String, Referencable> imported;
-    private final Map<String, Referencable> local;
+    private final Context context;
     private ImmutableMap<String, Type> functionParameters;
 
-    public ReferencableSupplier(ReferencableNode referencable, Map<String, Referencable> imported,
-        Map<String, Referencable> local) {
+    public ReferencableSupplier(ReferencableNode referencable, Context context) {
+      this.context = context;
       this.referencable = referencable;
-      this.imported = imported;
-      this.local = local;
     }
 
     public Value loadValue() {
@@ -141,8 +129,8 @@ public class LoadReferencable {
       return callable.createCallExpression(argExpressions, call.location());
     }
 
-    private Defined find(String name) {
-      return requireNonNullElseGet(local.get(name), () -> imported.get(name));
+    private CallableLike find(String name) {
+      return (CallableLike) context.findReferencableLike(name);
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
