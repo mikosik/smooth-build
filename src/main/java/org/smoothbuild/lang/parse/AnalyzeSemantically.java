@@ -85,18 +85,18 @@ public class AnalyzeSemantically {
   }
 
   private static void resolveReferences(Logger logger, Definitions imported, Ast ast) {
-    var importedScope = new Scope<Named>(imported.referencables());
-    Scope<Named> localScope = new Scope<>(importedScope, ast.referencablesMap());
+    var importedScope = new Scope<ReferencableLike>(imported.referencables());
+    Scope<ReferencableLike> localScope = new Scope<>(importedScope, ast.referencablesMap());
 
     new AstVisitor() {
-      Scope<Named> scope = localScope;
+      Scope<ReferencableLike> scope = localScope;
       @Override
       public void visitFunc(FuncNode func) {
         func.typeNode().ifPresent(this::visitType);
 
         var nameToParam = func.params()
             .stream()
-            .collect(toImmutableMap(NamedNode::name, p -> p, (a, b) -> a));
+            .collect(toImmutableMap(ReferencableLike::name, p -> p, (a, b) -> a));
         scope = new Scope<>(scope, nameToParam);
         func.expr().ifPresent(this::visitExpr);
         scope = scope.outerScope();
@@ -109,12 +109,7 @@ public class AnalyzeSemantically {
         super.visitRef(ref);
         String name = ref.name();
         if (scope.contains(name)) {
-          Named named = scope.get(name);
-          if (named instanceof ReferencableLike referencable) {
-            ref.setReferenced(referencable);
-          } else {
-            throw new RuntimeException("unexpected case: " + named.getClass().getCanonicalName());
-          }
+          ref.setReferenced(scope.get(name));
         } else {
           logger.log(parseError(ref.location(), "`" + name + "` is undefined."));
         }
@@ -125,11 +120,11 @@ public class AnalyzeSemantically {
         super.visitCall(call);
         String name = call.calledName();
         if (scope.contains(name)) {
-          Named named = scope.get(name);
-          if (named instanceof ItemNode) {
+          ReferencableLike referencable = scope.get(name);
+          if (referencable instanceof ItemNode) {
             logger.log(parseError(call.location(), "Parameter `" + name
                 + "` cannot be called as it is not a function."));
-          } else if (named instanceof ValueNode || named instanceof Value) {
+          } else if (referencable instanceof ValueNode || referencable instanceof Value) {
             logger.log(parseError(call.location(), "`" + name
                 + "` cannot be called as it is a value."));
           }
