@@ -28,6 +28,10 @@ import com.google.common.collect.ImmutableList;
 import okio.ByteString;
 
 public class TestingLang {
+  public static BlobLiteralExpression blob(int data) {
+    return blob(1, data);
+  }
+
   public static BlobLiteralExpression blob(int line, int data) {
     return new BlobLiteralExpression(ByteString.of((byte) data), loc(line));
   }
@@ -45,7 +49,11 @@ public class TestingLang {
     return new ReferenceExpression(name, type, loc(line));
   }
 
-  public static ParameterReferenceExpression parameterRef(Type type, String name, int line) {
+  public static ParameterReferenceExpression parameterRef(Type type, String name) {
+    return parameterRef(1, type, name);
+  }
+
+  public static ParameterReferenceExpression parameterRef(int line, Type type, String name) {
     return new ParameterReferenceExpression(type, name, loc(line));
   }
 
@@ -54,13 +62,25 @@ public class TestingLang {
     return new FieldReadExpression(field, expression, loc(line));
   }
 
+  public static CallExpression call(Type type, Callable callable, Expression... arguments) {
+    return call(1, type, callable, arguments);
+  }
+
   public static CallExpression call(
       int line, Type type, Callable callable, Expression... arguments) {
     return new CallExpression(type, callable, ImmutableList.copyOf(arguments), loc(line));
   }
 
+  public static Function function(Type type, String name, Item... parameters) {
+    return function(1, type, name, parameters);
+  }
+
   public static Function function(int line, Type type, String name, Item... parameters) {
     return function(line, type, name, parameters, Optional.empty());
+  }
+
+  public static Function function(Type type, String name, Expression body, Item... parameters) {
+    return function(1, type, name, body, parameters);
   }
 
   public static Function function(int line, Type type, String name, Expression body,
@@ -92,6 +112,10 @@ public class TestingLang {
 
   public static Constructor constr(int line, Type resultType, String name, Item... parameters) {
     return new Constructor(resultType, name, ImmutableList.copyOf(parameters), loc(line));
+  }
+
+  public static Item parameter(Type type, String name) {
+    return parameter(1, type, name, Optional.empty());
   }
 
   public static Item parameter(int line, Type type, String name) {

@@ -94,7 +94,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsDeclared(function(
-            1, BLOB, "myFunction", parameterRef(BLOB, "param1", 2), parameter(1, BLOB, "param1")));
+            1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
   }
 
   @Test
