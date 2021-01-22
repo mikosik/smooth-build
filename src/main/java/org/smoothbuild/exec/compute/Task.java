@@ -58,7 +58,7 @@ public abstract class Task {
 
   public abstract Feeder<Obj> startComputation(Worker worker);
 
-  public static List<Type> taskTypes(List<Task> tasks) {
+  public static List<Type> toTypes(List<Task> tasks) {
     return map(tasks, Task::type);
   }
 
