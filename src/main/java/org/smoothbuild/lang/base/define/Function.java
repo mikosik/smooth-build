@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
-import static org.smoothbuild.util.Lists.map;
+import static org.smoothbuild.lang.expr.Expression.toTypes;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -39,7 +39,7 @@ public class Function extends Callable {
 
   private Type inferResultType(ImmutableList<Expression> arguments) {
     var variableToBounds =
-        inferVariableBounds(type().parameterTypes(), map(arguments, Expression::type), LOWER);
+        inferVariableBounds(type().parameterTypes(), toTypes(arguments), LOWER);
     return resultType().mapVariables(variableToBounds, LOWER);
   }
 
