@@ -1,5 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
+import static org.smoothbuild.lang.base.type.BoundedVariables.reduce;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
@@ -127,14 +128,6 @@ public abstract class Type {
     return reduce(
         map(covariants, t -> t.inferVariableBounds(side.edge(), side)),
         map(contravariants, t -> t.inferVariableBounds(reversed.edge(), reversed)));
-  }
-
-  private BoundedVariables reduce(List<BoundedVariables> listA, List<BoundedVariables> listB) {
-    return reduce(listA).mergeWith(reduce(listB));
-  }
-
-  private static BoundedVariables reduce(List<BoundedVariables> list) {
-    return list.stream().reduce(BoundedVariables.empty(), BoundedVariables::mergeWith);
   }
 
   public Type mergeWith(Type that, Side direction) {
