@@ -16,7 +16,6 @@ import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -66,37 +65,37 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
-public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
+public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<Task>, Task> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final NativeImplLoader nativeImplLoader;
-  private Scope<Task> scope;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
       NativeImplLoader nativeImplLoader) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
-    this.scope = new Scope<>(Map.of());
     this.nativeImplLoader = nativeImplLoader;
   }
 
   @Override
-  public Task visit(FieldReadExpression expression) throws ExpressionVisitorException {
+  public Task visit(Scope<Task> scope, FieldReadExpression expression)
+      throws ExpressionVisitorException {
     ItemSignature field = expression.field();
     StructType structType = (StructType) expression.expression().type();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
         structType.fieldIndex(field.name().get()), field.type().visit(toSpecConverter));
-    List<Task> children = childrenTasks(expression.expression());
+    List<Task> children = childrenTasks(scope, expression.expression());
     return new NormalTask(CALL, field.type(), "." + field.name().get(), algorithm, children,
         expression.location(), true);
   }
 
   @Override
-  public Task visit(ReferenceExpression reference) throws ExpressionVisitorException {
+  public Task visit(Scope<Task> scope, ReferenceExpression reference)
+      throws ExpressionVisitorException {
     Value value = (Value) definitions.referencables().get(reference.name());
     if (value.body().isPresent()) {
-      Task task = value.body().get().visit(this);
+      Task task = value.body().get().visit(scope, this);
       Task convertedTask = convertIfNeeded(task, value.type());
       return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
     } else {
@@ -116,47 +115,48 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ParameterReferenceExpression expression) {
+  public Task visit(Scope<Task> scope, ParameterReferenceExpression expression) {
     return scope.get(expression.name());
   }
 
   @Override
-  public Task visit(CallExpression expression) throws ExpressionVisitorException {
+  public Task visit(Scope<Task> scope, CallExpression expression)
+      throws ExpressionVisitorException {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
-      List<Task> arguments = childrenTasks(expression.arguments());
+      List<Task> arguments = childrenTasks(scope, expression.arguments());
       var variableToBounds =
           inferVariableBounds(function.type().parameterTypes(), toTypes(arguments), LOWER);
       Type actualResultType = function.resultType().mapVariables(variableToBounds, LOWER);
 
       if (function.body().isPresent()) {
-        return taskForDefinedFunction(actualResultType, function, arguments, expression.location());
+        return taskForDefinedFunction(
+            scope, actualResultType, function, arguments, expression.location());
       } else {
         return taskForNativeFunction(arguments, function, variableToBounds, actualResultType,
             expression.location());
       }
     } else if (callable instanceof Constructor constructor) {
-      return taskForConstructorCall(constructor, expression);
+      return taskForConstructorCall(scope, constructor, expression);
     } else {
       throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
     }
   }
 
-  private Task taskForConstructorCall(Constructor constructor, CallExpression expression)
-      throws ExpressionVisitorException {
+  private Task taskForConstructorCall(Scope<Task> scope, Constructor constructor,
+      CallExpression expression) throws ExpressionVisitorException {
     Type resultType = constructor.type().resultType();
     TupleSpec type = (TupleSpec) resultType.visit(toSpecConverter);
     Algorithm algorithm = new CreateTupleAlgorithm(type);
-    List<Task> dependencies = childrenTasks(expression.arguments());
+    List<Task> dependencies = childrenTasks(scope, expression.arguments());
     return new NormalTask(CALL, resultType, constructor.extendedName(), algorithm,
         dependencies, expression.location(), true);
   }
 
-  private Task taskForDefinedFunction(Type actualResultType, Function function,
+  private Task taskForDefinedFunction(Scope<Task> scope, Type actualResultType, Function function,
       List<Task> arguments, Location location) throws ExpressionVisitorException {
-    scope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    Task definedCallTask = function.body().get().visit(this);
-    scope = scope.outerScope();
+    Scope<Task> newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
+    Task definedCallTask = function.body().get().visit(newScope, this);
     Task task = convertIfNeeded(definedCallTask, actualResultType);
     return new VirtualTask(function.extendedName(), task, CALL, location);
   }
@@ -204,8 +204,9 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(ArrayLiteralExpression expression) throws ExpressionVisitorException {
-    List<Task> elements = childrenTasks(expression.elements());
+  public Task visit(Scope<Task> scope, ArrayLiteralExpression expression)
+      throws ExpressionVisitorException {
+    List<Task> elements = childrenTasks(scope, expression.elements());
     ArrayType actualType = arrayType(elements, expression.type());
 
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
@@ -228,7 +229,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(BlobLiteralExpression expression) {
+  public Task visit(Scope<Task> scope, BlobLiteralExpression expression) {
     var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
@@ -236,24 +237,25 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
   }
 
   @Override
-  public Task visit(StringLiteralExpression expression) {
+  public Task visit(Scope<Task> scope, StringLiteralExpression expression) {
     var stringType = toSpecConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
         ImmutableList.of(), expression.location(), true);
   }
 
-  private List<Task> childrenTasks(List<Expression> children) throws ExpressionVisitorException {
+  private List<Task> childrenTasks(Scope<Task> scope, List<Expression> children)
+      throws ExpressionVisitorException {
     ImmutableList.Builder<Task> builder = ImmutableList.builder();
     for (Expression child : children) {
-      builder.add(child.visit(this));
+      builder.add(child.visit(scope, this));
     }
     return builder.build();
   }
 
-  private ImmutableList<Task> childrenTasks(Expression expression)
+  private ImmutableList<Task> childrenTasks(Scope<Task> scope, Expression expression)
       throws ExpressionVisitorException {
-    return ImmutableList.of(expression.visit(this));
+    return ImmutableList.of(expression.visit(scope, this));
   }
 
   private Task convertIfNeeded(Task task, Type requiredType) {
