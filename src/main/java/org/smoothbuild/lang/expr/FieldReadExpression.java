@@ -12,7 +12,8 @@ public record FieldReadExpression(ItemSignature field, Expression expression, Lo
   }
 
   @Override
-  public <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException {
-    return visitor.visit(this);
+  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor)
+      throws ExpressionVisitorException {
+    return visitor.visit(context, this);
   }
 }

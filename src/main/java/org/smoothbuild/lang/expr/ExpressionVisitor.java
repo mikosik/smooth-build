@@ -1,17 +1,24 @@
 package org.smoothbuild.lang.expr;
 
-public interface ExpressionVisitor<T> {
-  public T visit(FieldReadExpression expression) throws ExpressionVisitorException;
+public interface ExpressionVisitor<C, T> {
+  public T visit(C context, FieldReadExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(ReferenceExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, ReferenceExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(ParameterReferenceExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, ParameterReferenceExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(CallExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, CallExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(ArrayLiteralExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, ArrayLiteralExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(BlobLiteralExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, BlobLiteralExpression expression)
+      throws ExpressionVisitorException;
 
-  public T visit(StringLiteralExpression expression) throws ExpressionVisitorException;
+  public T visit(C context, StringLiteralExpression expression)
+      throws ExpressionVisitorException;
 }

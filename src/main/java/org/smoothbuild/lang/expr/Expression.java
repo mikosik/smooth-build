@@ -14,7 +14,8 @@ import com.google.common.collect.ImmutableList;
 public interface Expression {
   public Type type();
 
-  public abstract <T> T visit(ExpressionVisitor<T> visitor) throws ExpressionVisitorException;
+  public abstract <C, T> T visit(C context, ExpressionVisitor<C, T> visitor)
+      throws ExpressionVisitorException;
 
   public static ImmutableList<Type> toTypes(List<? extends Expression> expressions) {
     return map(expressions, Expression::type);
