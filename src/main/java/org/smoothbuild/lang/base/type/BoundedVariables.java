@@ -1,6 +1,7 @@
 package org.smoothbuild.lang.base.type;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 import com.google.common.collect.ImmutableMap;
@@ -71,5 +72,14 @@ public record BoundedVariables(ImmutableMap<Variable, Bounds> boundsMap) {
     return boundsMap.values()
         .stream()
         .allMatch(Bounds::areConsistent);
+  }
+
+  public static BoundedVariables reduce(List<BoundedVariables> listA,
+      List<BoundedVariables> listB) {
+    return reduce(listA).mergeWith(reduce(listB));
+  }
+
+  public static BoundedVariables reduce(List<BoundedVariables> list) {
+    return list.stream().reduce(BoundedVariables.empty(), BoundedVariables::mergeWith);
   }
 }
