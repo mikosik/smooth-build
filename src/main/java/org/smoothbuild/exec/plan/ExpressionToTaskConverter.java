@@ -1,7 +1,7 @@
 package org.smoothbuild.exec.plan;
 
 import static org.smoothbuild.exec.compute.IfTask.IF_FUNCTION_NAME;
-import static org.smoothbuild.exec.compute.Task.taskTypes;
+import static org.smoothbuild.exec.compute.Task.toTypes;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.exec.compute.TaskKind.CONVERSION;
 import static org.smoothbuild.exec.compute.TaskKind.LITERAL;
@@ -126,7 +126,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Task> {
     if (callable instanceof Function function) {
       List<Task> arguments = childrenTasks(expression.arguments());
       var variableToBounds =
-          inferVariableBounds(function.type().parameterTypes(), taskTypes(arguments), LOWER);
+          inferVariableBounds(function.type().parameterTypes(), toTypes(arguments), LOWER);
       Type actualResultType = function.resultType().mapVariables(variableToBounds, LOWER);
 
       if (function.body().isPresent()) {
