@@ -169,6 +169,12 @@ public class ListsTest {
       assertThat(zip(List.of("a", "b"), List.of("1", "2"), (String a, String b) -> a + b))
           .isEqualTo(List.of("a1", "b2"));
     }
+
+    @Test
+    public void different_type_lists_elements_are_zipped_together() {
+      assertThat(zip(List.of("a", "b"), List.of(1, 2), (String a, Integer b) -> a + b))
+          .isEqualTo(List.of("a1", "b2"));
+    }
   }
 
   @Nested
