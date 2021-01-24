@@ -74,12 +74,11 @@ public record BoundedVariables(ImmutableMap<Variable, Bounds> boundsMap) {
         .allMatch(Bounds::areConsistent);
   }
 
-  public static BoundedVariables reduce(List<BoundedVariables> listA,
-      List<BoundedVariables> listB) {
-    return reduce(listA).mergeWith(reduce(listB));
+  public static BoundedVariables merge(List<BoundedVariables> listA, List<BoundedVariables> listB) {
+    return merge(listA).mergeWith(merge(listB));
   }
 
-  public static BoundedVariables reduce(List<BoundedVariables> list) {
+  public static BoundedVariables merge(List<BoundedVariables> list) {
     return list.stream().reduce(BoundedVariables.empty(), BoundedVariables::mergeWith);
   }
 }
