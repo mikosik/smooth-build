@@ -1,6 +1,6 @@
 package org.smoothbuild.lang.base.type;
 
-import static org.smoothbuild.lang.base.type.BoundedVariables.reduce;
+import static org.smoothbuild.lang.base.type.BoundedVariables.merge;
 import static org.smoothbuild.lang.base.type.Bounds.oneSideBound;
 import static org.smoothbuild.lang.base.type.Side.LOWER;
 import static org.smoothbuild.util.Lists.allMatch;
@@ -102,7 +102,7 @@ public abstract class Type {
 
   public static BoundedVariables inferVariableBounds(
       List<Type> typesA, List<Type> typesB, Side side) {
-    return reduce(zip(typesA, typesB, inferFunction(side)));
+    return BoundedVariables.merge(zip(typesA, typesB, inferFunction(side)));
   }
 
   public BoundedVariables inferVariableBounds(Type that, Side side) {
@@ -111,7 +111,7 @@ public abstract class Type {
     } else if (that.equals(side.edge())) {
       return inferVariableBoundFromEdge(side);
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
-      return reduce(
+      return merge(
           zip(covariants, that.covariants, inferFunction(side)),
           zip(contravariants, that.contravariants, inferFunction(side.reversed())));
     } else {
@@ -125,7 +125,7 @@ public abstract class Type {
 
   private BoundedVariables inferVariableBoundFromEdge(Side side) {
     Side reversed = side.reversed();
-    return reduce(
+    return merge(
         map(covariants, t -> t.inferVariableBounds(side.edge(), side)),
         map(contravariants, t -> t.inferVariableBounds(reversed.edge(), reversed)));
   }
