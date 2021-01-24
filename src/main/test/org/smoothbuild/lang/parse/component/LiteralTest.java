@@ -107,8 +107,16 @@ public class LiteralTest {
         module("""
              result = "\\A";
              """)
-            .loadsWithError(1,
-                "Illegal escape sequence. Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+            .loadsWithError(1, "Illegal escape sequence at char index = 1. "
+                + "Legal sequences are: \\t \\b \\n \\r \\f \\\" \\\\.");
+      }
+
+      @Test
+      public void has_escape_sequence_without_code() {
+        module("""
+             result = "\\";
+             """)
+            .loadsWithError(1, "Missing escape code after backslash \\ at char index = 0.");
       }
     }
   }
