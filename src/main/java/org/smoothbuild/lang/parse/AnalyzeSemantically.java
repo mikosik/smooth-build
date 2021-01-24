@@ -17,7 +17,6 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Scope;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
@@ -37,6 +36,7 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
 import org.smoothbuild.util.DecodingHexException;
+import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
 
