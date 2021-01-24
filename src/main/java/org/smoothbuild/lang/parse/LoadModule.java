@@ -76,9 +76,9 @@ public class LoadModule {
       Constructor constructor = loadConstructor(struct);
       local.put(constructor.name(), constructor);
     }
-    Context context = new Context(imported, local);
+    Referencables referencables = new Referencables(imported, local);
     for (ReferencableNode referencable : ast.referencable()) {
-      local.put(referencable.name(), loadReferencable(referencable, context));
+      local.put(referencable.name(), loadReferencable(referencable, referencables));
     }
     return ImmutableMap.copyOf(local);
   }

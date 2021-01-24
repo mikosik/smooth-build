@@ -14,13 +14,13 @@ import org.smoothbuild.lang.base.type.Type;
 
 import com.google.common.collect.ImmutableList;
 
-public class Context {
+public class Referencables {
   private final Definitions imported;
-  private final Map<String, ? extends ReferencableLike> referencables;
+  private final Map<String, ? extends ReferencableLike> local;
 
-  public Context(Definitions imported, Map<String, ? extends ReferencableLike> referencables) {
+  public Referencables(Definitions imported, Map<String, ? extends ReferencableLike> local) {
     this.imported = imported;
-    this.referencables = referencables;
+    this.local = local;
   }
 
   public ImmutableList<ItemSignature> parametersOf(String name) {
@@ -42,6 +42,6 @@ public class Context {
   public ReferencableLike findReferencableLike(String name) {
     return requireNonNullElseGet(
         imported.referencables().get(name),
-        () -> referencables.get(name));
+        () -> local.get(name));
   }
 }

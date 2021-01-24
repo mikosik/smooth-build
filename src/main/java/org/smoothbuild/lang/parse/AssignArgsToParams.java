@@ -27,12 +27,12 @@ import com.google.common.collect.ImmutableList;
 public class AssignArgsToParams {
   public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
-    Context context = new Context(imported, ast.referencablesMap());
+    Referencables referencables = new Referencables(imported, ast.referencablesMap());
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        var assigned = assigned(call, context.parameterLikesOf(call.calledName()));
+        var assigned = assigned(call, referencables.parameterLikesOf(call.calledName()));
         logger.logAllFrom(assigned);
         if (!assigned.hasProblems()) {
           call.setAssignedArgs(assigned.value());
