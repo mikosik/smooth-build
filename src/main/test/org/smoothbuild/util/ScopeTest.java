@@ -1,4 +1,4 @@
-package org.smoothbuild.lang.base.define;
+package org.smoothbuild.util;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;

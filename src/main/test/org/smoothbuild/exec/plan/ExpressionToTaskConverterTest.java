@@ -22,10 +22,10 @@ import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
-import org.smoothbuild.lang.base.define.Scope;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.testing.TestingContext;
+import org.smoothbuild.util.Scope;
 
 import com.google.common.collect.ImmutableList;
 
