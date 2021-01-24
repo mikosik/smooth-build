@@ -41,16 +41,17 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Referencable loadReferencable(ReferencableNode referencableNode, Context context) {
+  public static Referencable loadReferencable(
+      ReferencableNode referencableNode, Referencables referencables) {
     if (referencableNode instanceof FuncNode funcNode) {
-      return loadFunction(funcNode, context);
+      return loadFunction(funcNode, referencables);
     } else {
-      return loadValue(referencableNode, context);
+      return loadValue(referencableNode, referencables);
     }
   }
 
-  private static Value loadValue(ReferencableNode referencableNode, Context context) {
-    ExpressionLoader loader = new ExpressionLoader(context, ImmutableMap.of());
+  private static Value loadValue(ReferencableNode referencableNode, Referencables referencables) {
+    ExpressionLoader loader = new ExpressionLoader(referencables, ImmutableMap.of());
     return new Value(
         referencableNode.type().get(),
         referencableNode.name(),
@@ -58,9 +59,9 @@ public class LoadReferencable {
         referencableNode.location());
   }
 
-  private static Function loadFunction(FuncNode funcNode, Context context) {
-    ImmutableList<Item> parameters = loadParameters(funcNode, context);
-    ExpressionLoader loader = new ExpressionLoader(context,
+  private static Function loadFunction(FuncNode funcNode, Referencables referencables) {
+    ImmutableList<Item> parameters = loadParameters(funcNode, referencables);
+    ExpressionLoader loader = new ExpressionLoader(referencables,
         parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
     return new Function(
         funcNode.resultType().get(),
@@ -70,17 +71,19 @@ public class LoadReferencable {
         funcNode.location());
   }
 
-  private static ImmutableList<Item> loadParameters(FuncNode funcNode, Context context) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(context, ImmutableMap.of());
+  private static ImmutableList<Item> loadParameters(
+      FuncNode funcNode, Referencables referencables) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(referencables, ImmutableMap.of());
     return map(funcNode.params(), parameterLoader::createParameter);
   }
 
   private static class ExpressionLoader {
-    private final Context context;
+    private final Referencables referencables;
     private final ImmutableMap<String, Type> functionParameters;
 
-    public ExpressionLoader(Context context, ImmutableMap<String, Type> functionParameters) {
-      this.context = context;
+    public ExpressionLoader(
+        Referencables referencables, ImmutableMap<String, Type> functionParameters) {
+      this.referencables = referencables;
       this.functionParameters = functionParameters;
     }
 
@@ -141,7 +144,7 @@ public class LoadReferencable {
     }
 
     private CallableLike find(String name) {
-      return (CallableLike) context.findReferencableLike(name);
+      return (CallableLike) referencables.findReferencableLike(name);
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {
