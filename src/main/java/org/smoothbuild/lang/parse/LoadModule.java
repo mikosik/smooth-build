@@ -76,7 +76,7 @@ public class LoadModule {
       Constructor constructor = loadConstructor(struct);
       local.put(constructor.name(), constructor);
     }
-    Referencables referencables = new Referencables(imported, local);
+    Referencables referencables = new Referencables(imported.referencables(), local);
     for (ReferencableNode referencable : ast.referencable()) {
       local.put(referencable.name(), loadReferencable(referencable, referencables));
     }
