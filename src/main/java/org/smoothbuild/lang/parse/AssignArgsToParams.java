@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 public class AssignArgsToParams {
   public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
-    Referencables referencables = new Referencables(imported, ast.referencablesMap());
+    var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
     new AstVisitor(){
       @Override
       public void visitCall(CallNode call) {

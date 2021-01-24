@@ -249,7 +249,7 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        Referencables referencables = new Referencables(imported, ast.referencablesMap());
+        var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
         String name = call.calledName();
         Maybe<Type> type = inferCallType(
             call, referencables.resultTypeOf(name), referencables.parametersOf(name));
