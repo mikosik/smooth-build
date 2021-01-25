@@ -1,9 +1,11 @@
 package org.smoothbuild.lang.parse;
 
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static java.lang.String.join;
 import static java.util.Comparator.comparing;
 import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
+import static org.smoothbuild.lang.parse.ast.FunctionTypeNode.countFunctionVariables;
 import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
@@ -30,15 +32,19 @@ import org.smoothbuild.lang.parse.ast.ItemNode;
 import org.smoothbuild.lang.parse.ast.Named;
 import org.smoothbuild.lang.parse.ast.NamedNode;
 import org.smoothbuild.lang.parse.ast.RefNode;
+import org.smoothbuild.lang.parse.ast.ReferencableNode;
 import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+import org.smoothbuild.util.CountersMap;
 import org.smoothbuild.util.DecodingHexException;
 import org.smoothbuild.util.Scope;
 import org.smoothbuild.util.Sets;
 import org.smoothbuild.util.UnescapingFailedException;
+
+import com.google.common.collect.ImmutableList;
 
 public class AnalyzeSemantically {
   public static List<Log> analyzeSemantically(Definitions imported, Ast ast) {
@@ -51,8 +57,7 @@ public class AnalyzeSemantically {
     duplicateFieldNames(logger, ast);
     duplicateParamNames(logger, ast);
     structNameWithSingleCapitalLetter(logger, ast);
-    polytypeField(logger, ast);
-    valueTypeIsPolytype(logger, ast);
+    illegalPolytypes(logger, ast);
     return logger.logs();
   }
 
@@ -265,31 +270,48 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void polytypeField(Logger logger, Ast ast) {
+  private static void illegalPolytypes(Logger logger, Ast ast) {
     new AstVisitor() {
+      @Override
+      public void visitValue(ValueNode value) {
+        super.visitValue(value);
+        if (value.typeNode().isPresent()) {
+          logErrorIfNeeded(value, value.typeNode().get().variablesUsedOnce());
+        }
+      }
+
+      @Override
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
+        if (func.typeNode().isPresent()) {
+          var counters = new CountersMap<String>();
+          countFunctionVariables(counters, func.typeNode().get(),
+              map(func.params(), itemNode -> itemNode.typeNode().get()));
+          logErrorIfNeeded(func, counters.keysWithCounter(1));
+        }
+      }
+
       @Override
       public void visitStruct(StructNode struct) {
         super.visitStruct(struct);
         List<ItemNode> fields = struct.fields();
         for (ItemNode field : fields) {
-          if (field.typeNode().get().isPolytype()) {
-            logger.log(parseError(field, "Struct field type cannot have type variable."));
-          }
+          logErrorIfNeeded(field, field.typeNode().get().variablesUsedOnce());
         }
       }
-    }.visitAst(ast);
-  }
 
-  private static void valueTypeIsPolytype(Logger logger, Ast ast) {
-    new AstVisitor() {
-      @Override
-      public void visitValue(ValueNode value) {
-        super.visitValue(value);
-        value.typeNode().ifPresent(typeNode -> {
-          if (typeNode.isPolytype()) {
-            logger.log(parseError(typeNode, "Value type cannot have type variables."));
-          }
-        });
+      private void logErrorIfNeeded(
+          ReferencableNode node, ImmutableList<String> variablesUsedOnce) {
+        if (!variablesUsedOnce.isEmpty()) {
+          logError(node, variablesUsedOnce);
+        }
+      }
+
+      private void logError(ReferencableNode node, List<String> variablesUsedOnce) {
+        logger.log(parseError(node.typeNode().get(), "Type variable(s) "
+            + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
+            + " are used once in declaration of " + node.q()
+            + ". This means each one can be replaced with `Any`."));
       }
     }.visitAst(ast);
   }

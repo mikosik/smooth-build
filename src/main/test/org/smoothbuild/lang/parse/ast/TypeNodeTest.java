@@ -27,15 +27,15 @@ public class TypeNodeTest {
   @Nested
   class _variables {
     @Test
-    public void contains_this_when_it_is_a_variable() {
+    public void type_node_which_is_a_variable() {
       TypeNode typeNode = new TypeNode("A", loc());
-      assertThat(typeNode.variables())
-          .containsExactly(typeNode);
+      assertThat(typeNode.variablesUsedOnce())
+          .containsExactly("A");
     }
     @Test
-    public void is_empty_when_type_node_is_not_a_variable() {
+    public void type_node_which_is_not_a_variable() {
       TypeNode typeNode = new TypeNode("MyType", loc());
-      assertThat(typeNode.variables())
+      assertThat(typeNode.variablesUsedOnce())
           .isEmpty();
     }
   }

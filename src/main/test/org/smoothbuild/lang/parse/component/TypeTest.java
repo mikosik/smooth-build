@@ -1,17 +1,11 @@
 package org.smoothbuild.lang.parse.component;
 
-import static java.util.function.Predicate.not;
 import static org.smoothbuild.lang.TestModuleLoader.module;
-import static org.smoothbuild.lang.base.type.TestedType.A;
-import static org.smoothbuild.lang.base.type.TestedType.BLOB;
+import static org.smoothbuild.lang.base.type.TestedType.TESTED_INVALID_POLYTYPES;
 import static org.smoothbuild.lang.base.type.TestedType.TESTED_MONOTYPES;
-import static org.smoothbuild.lang.base.type.TestedType.TESTED_TYPES;
-import static org.smoothbuild.lang.base.type.TestedType.a;
-import static org.smoothbuild.lang.base.type.TestedType.a2;
-import static org.smoothbuild.lang.base.type.TestedType.f;
+import static org.smoothbuild.lang.base.type.TestedType.TESTED_VALID_POLYTYPES;
 import static org.smoothbuild.util.Strings.unlines;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
@@ -111,25 +105,28 @@ public class TypeTest {
     @ArgumentsSource(TestedMonotypes.class)
     public void can_declare_monotype(TestedType type) {
       module(unlines(
-          type.declarationsAsString(),
+          type.typeDeclarationsAsString(),
           type.name() + " myValue;"))
           .loadsSuccessfully();
     }
 
-    @Test
-    public void cannot_declare_its_type_as_type_variable() {
-      module("""
-             A myValue;
-             """)
-          .loadsWithError(1, "Value type cannot have type variables.");
+    @ParameterizedTest
+    @ArgumentsSource(TestedValidPolytypes.class)
+    public void can_declare_valid_polytype(TestedType type) {
+      module(unlines(
+          type.typeDeclarationsAsString(),
+          type.name() + " myValue;"))
+          .loadsSuccessfully();
     }
 
-    @Test
-    public void cannot_declare_its_type_as_array_type_with_type_variable() {
-      module("""
-             [A] myValue;
-             """)
-          .loadsWithError(1, "Value type cannot have type variables.");
+    @ParameterizedTest
+    @ArgumentsSource(TestedInvalidPolytypes.class)
+    public void cannot_declare_invalid_polytype(TestedType type) {
+      module(unlines(
+          type.name() + " myValue;",
+          type.typeDeclarationsAsString()))
+          .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myValue`." +
+              " This means each one can be replaced with `Any`.");
     }
 
     @Test
@@ -159,59 +156,30 @@ public class TypeTest {
     class result {
       @ParameterizedTest
       @ArgumentsSource(TestedMonotypes.class)
-      public void can_declare_monotype_result(TestedType type) {
+      public void can_declare_monotype(TestedType type) {
         module(unlines(
             type.declarationsAsString(),
             type.name() + " myFunction();"))
             .loadsSuccessfully();
       }
 
-      @Test
-      public void can_declare_polytype_result_when_some_param_has_its_variable_as_type() {
-        module("""
-            A testIdentity(A param);
-            """)
+      @ParameterizedTest
+      @ArgumentsSource(TestedValidPolytypes.class)
+      public void can_declare_valid_polytype(TestedType type) {
+        module(unlines(
+            type.typeDeclarationsAsString(),
+            type.name() + " myFunction();"))
             .loadsSuccessfully();
       }
 
-      @Test
-      public void can_declare_polytype_result_when_some_param_is_polytype_with_its_variable() {
-        module("""
-            A myFunction([A] param);
-            """)
-            .loadsSuccessfully();
-      }
-
-      @Test
-      public void can_declare_polytype_array_result_when_some_param_has_its_variable_as_type() {
-        module("""
-            [A] myFunction(A param);
-            """)
-            .loadsSuccessfully();
-      }
-
-      @Test
-      public void can_declare_polytype_array_result_when_some_param_is_polytype_with_its_variable() {
-        module("""
-            [A] myFunction([A] param);
-            """)
-            .loadsSuccessfully();
-      }
-
-      @Test
-      public void can_declare_polytype_result_when_no_param_has_such_variable() {
-        module("""
-            A myFunction([B] param);
-            """)
-            .loadsSuccessfully();
-      }
-
-      @Test
-      public void can_declare_polytype_array_result_when_no_param_has_such_variable() {
-        module("""
-            [A] myFunction([B] param);
-            """)
-            .loadsSuccessfully();
+      @ParameterizedTest
+      @ArgumentsSource(TestedInvalidPolytypes.class)
+      public void cannot_declare_invalid_polytype(TestedType type) {
+        module(unlines(
+            type.name() + " myFunction();",
+            type.typeDeclarationsAsString()))
+            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunction`."
+                + " This means each one can be replaced with `Any`.");
       }
 
       @Test
@@ -238,23 +206,61 @@ public class TypeTest {
     @Nested
     class parameter {
       @ParameterizedTest
-      @ArgumentsSource(TestedTypes.class)
-      public void can_declare_any_type(TestedType type) {
+      @ArgumentsSource(TestedMonotypes.class)
+      public void can_declare_monotype(TestedType type) {
         module(unlines(
-            type.declarationsAsString(),
+            type.typeDeclarationsAsString(),
             "String myFunction(" + type.name() + " param);"))
             .loadsSuccessfully();
       }
+
+      @ParameterizedTest
+      @ArgumentsSource(TestedValidPolytypes.class)
+      public void can_declare_valid_polytype(TestedType type) {
+        module(unlines(
+            type.typeDeclarationsAsString(),
+            "String myFunction(" + type.name() + " param);"))
+            .loadsSuccessfully();
+      }
+
+      @ParameterizedTest
+      @ArgumentsSource(TestedInvalidPolytypes.class)
+      public void cannot_declare_invalid_polytype(TestedType type) {
+        module(unlines(
+            "String myFunction(" + type.name() + " param);",
+            type.typeDeclarationsAsString()))
+            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunction`."
+                + " This means each one can be replaced with `Any`.");
+      }
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(TestedInvalidPolytypes.class)
+    public void can_declare_invalid_polytype_when_param_has_such_type(TestedType type) {
+      module(unlines(
+          type.name() + " myFunction(" + type.name() + " param);",
+          type.typeDeclarationsAsString()))
+          .loadsSuccessfully();
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(TestedInvalidPolytypes.class)
+    public void can_declare_invalid_polytype_param_when_some_other_param_has_such_type(
+        TestedType type) {
+      module(unlines(
+          "Blob myFunction(" + type.name() + " param, " + type.name() + " param2);",
+          type.typeDeclarationsAsString()))
+          .loadsSuccessfully();
     }
   }
 
   @Nested
   class field {
     @ParameterizedTest
-    @ArgumentsSource(FirstFieldAllowedTypes.class)
-    public void first_field_can_declare_following_types(TestedType testedType) {
+    @ArgumentsSource(TestedMonotypes.class)
+    public void can_declare_monotype(TestedType testedType) {
       module(unlines(
-          testedType.declarationsAsString(),
+          testedType.typeDeclarationsAsString(),
           "MyStruct {",
           "  " + testedType.name() + " field,",
           "}"))
@@ -262,38 +268,26 @@ public class TypeTest {
     }
 
     @ParameterizedTest
-    @ArgumentsSource(FirstFieldForbiddenTypes.class)
-    public void first_field_cannot_declare_following_types(TestedType testedType) {
+    @ArgumentsSource(TestedValidPolytypes.class)
+    public void can_declare_valid_polytype(TestedType testedType) {
+      module(unlines(
+          testedType.typeDeclarationsAsString(),
+          "MyStruct {",
+          "  " + testedType.name() + " field,",
+          "}"))
+          .loadsSuccessfully();
+    }
+
+    @ParameterizedTest
+    @ArgumentsSource(TestedInvalidPolytypes.class)
+    public void cannot_declare_invalid_polytype(TestedType testedType) {
       TestModuleLoader module = module(unlines(
-          testedType.declarationsAsString(),
+          testedType.typeDeclarationsAsString(),
           "MyStruct {",
           "  " + testedType.name() + " field,",
           "}"));
-      module.loadsWithError(3, "Struct field type cannot have type variable.");
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FieldAllowedTypes.class)
-    public void non_first_field_can_declare_monotype(TestedType testedType) {
-      module(unlines(
-          testedType.declarationsAsString(),
-          "MyStruct {",
-          "  String firstField,",
-          "  " + testedType.name() + " secondField,",
-          "}"))
-          .loadsSuccessfully();
-    }
-
-    @ParameterizedTest
-    @ArgumentsSource(FieldForbiddenTypes.class)
-    public void non_first_field_cannot_declare_following_types(TestedType testedType) {
-      TestModuleLoader module = module(unlines(
-          "MyStruct {",
-          "  String firstField,",
-          "  " + testedType.name() + " field,",
-          "}",
-          testedType.declarationsAsString()));
-      module.loadsWithError(3, "Struct field type cannot have type variable.");
+      module.loadsWithError(3, "Type variable(s) `A` are used once in declaration of `field`. " +
+          "This means each one can be replaced with `Any`.");
     }
 
     @Test
@@ -309,7 +303,7 @@ public class TypeTest {
     }
 
     @Test
-    public void cannot_declare_array_type_which_element_type_encloses_it() {
+    public void cannot_declare_array_type_which_core_type_encloses_it() {
       module("""
              MyStruct {
                String firstField,
@@ -330,69 +324,19 @@ public class TypeTest {
     }
   }
 
-  private static class TestedTypes implements ArgumentsProvider {
+  private static class TestedValidPolytypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return TESTED_TYPES.stream()
+      return TESTED_VALID_POLYTYPES.stream()
           .map(Arguments::of);
     }
   }
 
-  private static class FirstFieldAllowedTypes implements ArgumentsProvider {
+  private static class TestedInvalidPolytypes implements ArgumentsProvider {
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
-      List<TestedType> forbidden = firstFieldForbiddenTypes();
-      return TESTED_MONOTYPES
-          .stream()
-          .filter(not(forbidden::contains))
+      return TESTED_INVALID_POLYTYPES.stream()
           .map(Arguments::of);
     }
-  }
-
-  private static class FirstFieldForbiddenTypes implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return firstFieldForbiddenTypes().stream().map(Arguments::of);
-    }
-  }
-
-  private static List<TestedType> firstFieldForbiddenTypes() {
-    return List.of(
-        A,
-        a(A),
-        a(a(A)),
-        f(A),
-        f(BLOB, A)
-    );
-  }
-
-  private static class FieldAllowedTypes implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      List<TestedType> forbidden = fieldForbiddenTypes();
-      return TESTED_MONOTYPES
-          .stream()
-          .filter(not(forbidden::contains))
-          .map(Arguments::of);
-    }
-  }
-
-  private static class FieldForbiddenTypes implements ArgumentsProvider {
-    @Override
-    public Stream<Arguments> provideArguments(ExtensionContext context) {
-      return fieldForbiddenTypes().stream().map(Arguments::of);
-    }
-  }
-
-  private static List<TestedType> fieldForbiddenTypes() {
-    return List.of(
-        A,
-        a(A),
-        a2(A),
-        f(A),
-        f(BLOB, A),
-        f(f(A)),
-        f(f(BLOB, A))
-    );
   }
 }

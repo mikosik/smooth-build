@@ -1,8 +1,7 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
-
-import com.google.common.collect.ImmutableSet;
+import org.smoothbuild.util.CountersMap;
 
 public class ArrayTypeNode extends TypeNode {
   private final TypeNode elementType;
@@ -18,8 +17,8 @@ public class ArrayTypeNode extends TypeNode {
   }
 
   @Override
-  public ImmutableSet<TypeNode> variables() {
-    return elementType.variables();
+  public void countVariables(CountersMap<String> countersMap) {
+    elementType.countVariables(countersMap);
   }
 
   public TypeNode elementType() {

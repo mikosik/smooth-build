@@ -4,8 +4,9 @@ import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.util.CountersMap;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 
 public class TypeNode extends NamedNode {
   public TypeNode(String name, Location location) {
@@ -20,11 +21,15 @@ public class TypeNode extends NamedNode {
     return isVariableName(name());
   }
 
-  public ImmutableSet<TypeNode> variables() {
+  public ImmutableList<String> variablesUsedOnce() {
+    var counters = new CountersMap<String>();
+    countVariables(counters);
+    return counters.keysWithCounter(1);
+  }
+
+  public void countVariables(CountersMap<String> countersMap) {
     if (isVariableName(name())) {
-      return ImmutableSet.of(this);
-    } else {
-      return ImmutableSet.of();
+      countersMap.increment(name());
     }
   }
 }

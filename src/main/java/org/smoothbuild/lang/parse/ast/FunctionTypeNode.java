@@ -1,10 +1,9 @@
 package org.smoothbuild.lang.parse.ast;
 
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.util.CountersMap;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
 
 public class FunctionTypeNode extends TypeNode {
   private final TypeNode resultType;
@@ -23,13 +22,14 @@ public class FunctionTypeNode extends TypeNode {
   }
 
   @Override
-  public ImmutableSet<TypeNode> variables() {
-    Builder<TypeNode> builder = ImmutableSet.builder();
-    builder.addAll(resultType.variables());
-    parameterTypes.stream()
-        .map(TypeNode::variables)
-        .forEach(builder::addAll);
-    return builder.build();
+  public void countVariables(CountersMap<String> countersMap) {
+    countFunctionVariables(countersMap, resultType, parameterTypes);
+  }
+
+  public static void countFunctionVariables(CountersMap<String> countersMap, TypeNode resultType,
+      ImmutableList<TypeNode> parameterTypes) {
+    resultType.countVariables(countersMap);
+    parameterTypes.forEach(p -> p.countVariables(countersMap));
   }
 
   public TypeNode resultType() {
