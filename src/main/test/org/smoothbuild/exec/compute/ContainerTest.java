@@ -3,8 +3,8 @@ package org.smoothbuild.exec.compute;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smoothbuild.exec.base.MessageStruct.severity;
-import static org.smoothbuild.exec.base.MessageStruct.text;
+import static org.smoothbuild.exec.base.MessageTuple.severity;
+import static org.smoothbuild.exec.base.MessageTuple.text;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.base.Tuple;

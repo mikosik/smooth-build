@@ -13,7 +13,7 @@ import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
-public class MessageStruct {
+public class MessageTuple {
   private static final Set<String> SEVERITIES = Set.of(ERROR.name(), WARNING.name(), INFO.name());
   private static final int TEXT_INDEX = 0;
   private static final int SEVERITY_INDEX = 1;
