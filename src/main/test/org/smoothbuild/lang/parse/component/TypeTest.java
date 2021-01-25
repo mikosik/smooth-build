@@ -314,6 +314,30 @@ public class TypeTest {
               Type hierarchy contains cycle:
               myBuild.smooth:3: MyStruct -> MyStruct""");
     }
+
+    @Test
+    public void cannot_declare_function_which_result_type_encloses_it() {
+      module("""
+             MyStruct {
+               MyStruct() field
+             }
+             """)
+          .loadsWithError("""
+              Type hierarchy contains cycle:
+              myBuild.smooth:2: MyStruct -> MyStruct""");
+    }
+
+    @Test
+    public void cannot_declare_function_which_parameter_type_encloses_it() {
+      module("""
+             MyStruct {
+               Blob(MyStruct) field
+             }
+             """)
+          .loadsWithError("""
+              Type hierarchy contains cycle:
+              myBuild.smooth:2: MyStruct -> MyStruct""");
+    }
   }
 
   private static class TestedMonotypes implements ArgumentsProvider {
