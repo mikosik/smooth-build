@@ -48,38 +48,38 @@ public class ArrayTypeNodeTest {
   }
 
   @Nested
-  class _variables {
+  class _variables_used_once {
     @Test
-    public void _of_array_node_contains_only_element_node_when_it_is_a_variable() {
+    public void array_node_which_element_is_a_variable() {
       TypeNode elementTypeNode = new TypeNode("A", internal());
       TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
-      assertThat(typeNode.variables())
-          .containsExactly(elementTypeNode);
+      assertThat(typeNode.variablesUsedOnce())
+          .containsExactly("A");
     }
 
     @Test
-    public void _of_array_node_is_empty_when_its_element_is_not_a_variable() {
+    public void array_node_which_element_is_not_a_variable() {
       TypeNode elementTypeNode = new TypeNode("MyType", internal());
       TypeNode typeNode = new ArrayTypeNode(elementTypeNode, internal());
-      assertThat(typeNode.variables())
+      assertThat(typeNode.variablesUsedOnce())
           .isEmpty();
     }
 
     @Test
-    public void of_array_of_array_contains_only_deepest_element_node_when_it_is_a_variable() {
+    public void array_of_array_which_element_is_a_variable() {
       TypeNode elementTypeNode = new TypeNode("A", internal());
       TypeNode typeNode =
           new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
-      assertThat(typeNode.variables())
-          .containsExactly(elementTypeNode);
+      assertThat(typeNode.variablesUsedOnce())
+          .containsExactly("A");
     }
 
     @Test
-    public void of_array_of_array_is_empty_when_its_deepest_element_node_is_not_a_variable() {
+    public void array_of_array_which_element_is_not_a_variable() {
       TypeNode elementTypeNode = new TypeNode("MyType", internal());
       TypeNode typeNode =
           new ArrayTypeNode(new ArrayTypeNode(elementTypeNode, internal()), internal());
-      assertThat(typeNode.variables())
+      assertThat(typeNode.variablesUsedOnce())
           .isEmpty();
     }
   }

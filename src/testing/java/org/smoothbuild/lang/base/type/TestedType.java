@@ -127,15 +127,39 @@ public class TestedType {
       f(BLOB, f(NOTHING))
   );
 
+  /**
+   * Polytypes that can be used in any place. Each variable in such a polytype occurs more than
+   * once.
+   */
+  public static final List<TestedType> TESTED_VALID_POLYTYPES = ImmutableList.of(
+      a(f(A, A)),
+      a(a(f(A, A))),
+      f(A, A),
+      f(A, a(A)),
+      f(f(A), f(A)),
+      f(f(A), a(A)),
+      f(f(A, A)),
+      f(BOOL, f(A, A))
+  );
+
+  /**
+   * Polytypes that can be used in any place. Each variable in such a polytype occurs exactly once.
+   */
+  public static final List<TestedType> TESTED_INVALID_POLYTYPES = ImmutableList.of(
+      A,
+      a(A),
+      a(a(A)),
+      f(A),
+      f(BOOL, A),
+      f(f(A)),
+      f(BOOL, f(A)),
+      f(BOOL, f(BOOL, A))
+  );
+
   public static final List<TestedType> TESTED_TYPES = ImmutableList.<TestedType>builder()
       .addAll(TESTED_MONOTYPES)
-      .add(A)
-      .add(a(A))
-      .add(a(a(A)))
-      .add(f(A))
-      .add(f(f(A)))
-      .add(f(A, B))
-      .add(f(A, f(B)))
+      .addAll(TESTED_VALID_POLYTYPES)
+      .addAll(TESTED_INVALID_POLYTYPES)
       .build();
 
   public static TestedType a2(TestedType type) {
@@ -242,6 +266,10 @@ public class TestedType {
 
   public String declarationsAsString() {
     return join("\n", allDeclarations);
+  }
+
+  public String typeDeclarationsAsString() {
+    return join("\n", typeDeclarations);
   }
 
   public boolean isArrayOf(TestedType elem) {

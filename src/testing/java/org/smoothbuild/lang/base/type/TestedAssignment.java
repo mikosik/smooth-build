@@ -8,6 +8,10 @@ public record TestedAssignment(TestedType target, TestedType source) {
     return join("\n", union(target.declarations(), source.declarations()));
   }
 
+  public String typeDeclarations() {
+    return join("\n", union(target.typeDeclarations(), source.typeDeclarations()));
+  }
+
   @Override
   public String toString() {
     return target.name() + " <- " + source.name();

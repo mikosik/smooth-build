@@ -48,7 +48,7 @@ public class AssignmentTest {
     String sourceCode = unlines(
         "%s myFunction(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
-        testSpec.declarations(),
+        testSpec.typeDeclarations(),
         "Bool true;");
     if (testSpec.allowed()) {
       module(sourceCode)
@@ -66,9 +66,9 @@ public class AssignmentTest {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
-        "String innerFunction(" + targetType.name() + " target);                          ",
+        targetType.name() + " innerFunction(" + targetType.name() + " target);     ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
-        testSpec.declarations()));
+        testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
@@ -84,9 +84,9 @@ public class AssignmentTest {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
-        "String innerFunction(" + targetType.name() + " target);                          ",
+        targetType.name() + " innerFunction(" + targetType.name() + " target);            ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
-        testSpec.declarations()));
+        testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {

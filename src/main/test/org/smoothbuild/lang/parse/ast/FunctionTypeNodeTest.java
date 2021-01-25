@@ -67,27 +67,40 @@ public class FunctionTypeNodeTest {
     public void function_without_variables() {
       TypeNode function = new FunctionTypeNode(
           normalType(), ImmutableList.of(normalType()), internal());
-      assertThat(function.variables())
+      assertThat(function.variablesUsedOnce())
           .isEmpty();
     }
 
     @Test
-    public void function_with_variables() {
+    public void function_with_variable_in_result_type() {
       TypeNode function = new FunctionTypeNode(
-          variable("A"), ImmutableList.of(variable("B"), variable("C")), internal());
-      assertThat(function.variables())
-          .containsExactly(variable("A"), variable("B"), variable("C"));
+          variable("A"), ImmutableList.of(normalType()), internal());
+      assertThat(function.variablesUsedOnce())
+          .containsExactly("A");
     }
 
     @Test
-    public void function_with_variables_at_depth_2() {
-      TypeNode result = new FunctionTypeNode(
-          variable("A"), ImmutableList.of(normalType()), internal());
-      TypeNode param = new FunctionTypeNode(
-          normalType(), ImmutableList.of(variable("B")), internal());
-      TypeNode function = new FunctionTypeNode(result, ImmutableList.of(param), internal());
-      assertThat(function.variables())
-          .containsExactly(variable("A"), variable("B"));
+    public void function_with_variable_in_parameter_type() {
+      TypeNode function = new FunctionTypeNode(
+          normalType(), ImmutableList.of(variable("A")), internal());
+      assertThat(function.variablesUsedOnce())
+          .containsExactly("A");
+    }
+
+    @Test
+    public void function_with_same_variable_in_result_type_and_parameter_type() {
+      TypeNode function = new FunctionTypeNode(
+          variable("A"), ImmutableList.of(variable("A")), internal());
+      assertThat(function.variablesUsedOnce())
+          .isEmpty();
+    }
+
+    @Test
+    public void function_with_same_variable_in_two_parameter_types() {
+      TypeNode function = new FunctionTypeNode(
+          normalType(), ImmutableList.of(variable("A"), variable("A")), internal());
+      assertThat(function.variablesUsedOnce())
+          .isEmpty();
     }
   }
 
