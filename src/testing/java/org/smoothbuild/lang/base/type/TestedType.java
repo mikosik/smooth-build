@@ -44,8 +44,8 @@ public class TestedType {
       any(),
       "createAny()",
       null,
-      Set.of("Any createAny() = \"abc\";")
-  );
+      Set.of(),
+      Set.of("Any createAny() = \"abc\";"));
   public static final TestedType BLOB = new TestedType(
       blob(),
       "0x" + encodeString("xyz", US_ASCII).hex(),
@@ -58,9 +58,9 @@ public class TestedType {
   );
   public static final TestedType NOTHING = new TestedType(
       nothing(),
-      """
-          reportError("e")""",
+      "reportError(\"e\")",
       null,
+      Set.of(),
       Set.of("Nothing reportError(String message);"));
   public static final TestedType STRING = new TestedType(
       string(),
@@ -69,20 +69,25 @@ public class TestedType {
   );
   public static final TestedType STRUCT = new TestedType(
       struct("Person", list(new ItemSignature(string(), "name", Optional.empty()))),
-      """
-          person("John")""",
+      "person(\"John\")",
       null,
-      Set.of("Person{ String name }"));
+      Set.of("Person{ String name }"),
+      Set.of()
+  );
   public static final TestedType STRUCT_WITH_BLOB = new TestedType(
       struct("Data", list(new ItemSignature(blob(), "value", Optional.empty()))),
       "data(0xAB)",
       null,
-      Set.of("Data{ Blob value }"));
+      Set.of("Data{ Blob value }"),
+      Set.of()
+  );
   public static final TestedType STRUCT_WITH_BOOL = new TestedType(
       struct("Flag", list(new ItemSignature(bool(), "value", Optional.empty()))),
       "flag(true)",
       null,
-      Set.of("Flag{ Bool value }"));
+      Set.of("Flag{ Bool value }"),
+      Set.of()
+  );
 
   public static final ImmutableList<TestedType> ELEMENTARY_TYPES = ImmutableList.of(
       ANY,
@@ -145,6 +150,7 @@ public class TestedType {
           Types.array(nothing()),
           "[]",
           list(),
+          Set.of(),
           Set.of()
       );
     } else {
@@ -160,7 +166,8 @@ public class TestedType {
         Types.array(type.strippedType),
         "[" + type.literal + "]",
         value,
-        type.declarations
+        type.typeDeclarations(),
+        type.declarations()
     );
   }
 
@@ -168,23 +175,33 @@ public class TestedType {
   private final Type strippedType;
   private final String literal;
   private final Object value;
-  private final Set<String> declarations;
+  private final Set<String> typeDeclarations;
+  private final Set<String> allDeclarations;
 
   public TestedType(Type type, String literal, Object value) {
-    this(type, type, literal, value, Set.of());
+    this(type, type, literal, value, Set.of(), Set.of());
   }
 
-  public TestedType(Type type, String literal, Object value, Set<String> declarations) {
-    this(type, type, literal, value, declarations);
+  public TestedType(Type type, String literal, Object value, Set<String> typeDeclarations,
+      Set<String> instanceDeclarations) {
+    this(type, type, literal, value, typeDeclarations,
+        unionOf(typeDeclarations, instanceDeclarations));
+  }
+
+  private static ImmutableSet<String> unionOf(Set<String> typeDeclarations,
+      Set<String> instanceDeclarations) {
+    return ImmutableSet.<String>builder()
+        .addAll(typeDeclarations).addAll(instanceDeclarations).build();
   }
 
   public TestedType(Type type, Type strippedType, String literal, Object value,
-      Set<String> declarations) {
+      Set<String> typeDeclarations, Set<String> allDeclarations) {
     this.type = type;
     this.strippedType = strippedType;
     this.literal = literal;
     this.value = value;
-    this.declarations = declarations;
+    this.typeDeclarations = typeDeclarations;
+    this.allDeclarations = allDeclarations;
   }
 
   public Type type() {
@@ -204,7 +221,11 @@ public class TestedType {
   }
 
   public Set<String> declarations() {
-    return declarations;
+    return allDeclarations;
+  }
+
+  public Set<String> typeDeclarations() {
+    return typeDeclarations;
   }
 
   public String name() {
@@ -220,7 +241,7 @@ public class TestedType {
   }
 
   public String declarationsAsString() {
-    return join("\n", declarations);
+    return join("\n", allDeclarations);
   }
 
   public boolean isArrayOf(TestedType elem) {
@@ -251,12 +272,12 @@ public class TestedType {
     return Objects.equals(this.type, that.type) &&
         Objects.equals(this.literal, that.literal) &&
         Objects.equals(this.value, that.value) &&
-        Objects.equals(this.declarations, that.declarations);
+        Objects.equals(this.allDeclarations, that.allDeclarations);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(type, literal, value, declarations);
+    return Objects.hash(type, literal, value, allDeclarations);
   }
 
   @Override
@@ -282,6 +303,12 @@ public class TestedType {
             .flatMap(t -> t.declarations().stream())
             .collect(toList()))
         .build();
+    Set<String> typeDeclarations = ImmutableSet.<String>builder()
+        .addAll(strippedResultType.typeDeclarations())
+        .addAll(strippedParams.stream()
+            .flatMap(t -> t.typeDeclarations().stream())
+            .collect(toList()))
+        .build();
     return new TestedFunctionType(
         strippedResultType,
         ImmutableList.copyOf(strippedParams),
@@ -289,6 +316,7 @@ public class TestedType {
         Types.function(strippedResultType.strippedType, toUnnamedSignatures(strippedParams)),
         name,
         null,
+        typeDeclarations,
         declarations
     );
   }
@@ -302,6 +330,7 @@ public class TestedType {
           strippedType, strippedType,
           function.literal(),
           function.value(),
+          function.typeDeclarations(),
           function.declarations()
       );
     } else {
@@ -341,8 +370,8 @@ public class TestedType {
 
     public TestedFunctionType(TestedType resultType, ImmutableList<TestedType> parameters,
         FunctionType type, FunctionType strippedType, String literal,
-        Object value, Set<String> declarations) {
-      super(type, strippedType, literal, value, declarations);
+        Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
+      super(type, strippedType, literal, value, typeDeclarations, allDeclarations);
       this.resultType = resultType;
       this.parameters = parameters;
     }
@@ -366,8 +395,8 @@ public class TestedType {
     public final TestedType elemType;
 
     public TestedArrayType(TestedType elemType, Type type, Type strippedType, String literal,
-        Object value, Set<String> declarations) {
-      super(type, strippedType, literal, value, declarations);
+        Object value, Set<String> typeDeclarations, Set<String> allDeclarations) {
+      super(type, strippedType, literal, value, typeDeclarations, allDeclarations);
       this.elemType = elemType;
     }
 
