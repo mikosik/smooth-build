@@ -5,7 +5,7 @@ import static org.smoothbuild.cli.console.Level.INFO;
 import static org.smoothbuild.cli.console.Level.WARNING;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.base.MessageStruct;
+import org.smoothbuild.exec.base.MessageTuple;
 import org.smoothbuild.testing.TestingContext;
 
 import com.google.common.truth.Truth;
@@ -23,25 +23,25 @@ public class ObjectFactoryTest extends TestingContext {
 
   @Test
   public void error_severity_is_error() {
-    Truth.assertThat(MessageStruct.severity(objectFactory().errorMessage("text")))
+    Truth.assertThat(MessageTuple.severity(objectFactory().errorMessage("text")))
         .isEqualTo(ERROR.name());
   }
 
   @Test
   public void warning_severity_is_warning() {
-    Truth.assertThat(MessageStruct.severity(objectFactory().warningMessage("text")))
+    Truth.assertThat(MessageTuple.severity(objectFactory().warningMessage("text")))
         .isEqualTo(WARNING.name());
   }
 
   @Test
   public void info_severity_is_info() {
-    Truth.assertThat(MessageStruct.severity(objectFactory().infoMessage("text")))
+    Truth.assertThat(MessageTuple.severity(objectFactory().infoMessage("text")))
         .isEqualTo(INFO.name());
   }
 
   @Test
   public void text_returns_text() {
-    Truth.assertThat(MessageStruct.text(objectFactory().errorMessage("text")))
+    Truth.assertThat(MessageTuple.text(objectFactory().errorMessage("text")))
         .isEqualTo("text");
   }
 }
