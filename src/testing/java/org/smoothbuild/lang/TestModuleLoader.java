@@ -60,13 +60,13 @@ public class TestModuleLoader {
     return this;
   }
 
-  public void containsDeclared(Defined expected) {
+  public void containsReferencable(Referencable expected) {
     String name = expected.name();
     ImmutableMap<String, Referencable> referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables)
         .containsKey(name);
-    Defined actual = referencables.get(name);
+    Referencable actual = referencables.get(name);
     assertThat(actual)
         .isEqualTo(expected);
   }

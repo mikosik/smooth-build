@@ -17,7 +17,7 @@ public class FunctionTest {
           String nonDefault);
         """)
         .loadsSuccessfully()
-        .containsDeclared(function(1, STRING, "myFunction",
+        .containsReferencable(function(1, STRING, "myFunction",
             parameter(2, STRING, "default", string(2, "value")),
             parameter(3, STRING, "nonDefault")));
   }
