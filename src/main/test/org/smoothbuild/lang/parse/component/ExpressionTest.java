@@ -32,7 +32,7 @@ public class ExpressionTest {
           String result;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(1, STRING, "result"));
+        .containsReferencable(value(1, STRING, "result"));
   }
 
   @Test
@@ -43,7 +43,7 @@ public class ExpressionTest {
             myValue;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(2, STRING, "result", reference(3, STRING, "myValue")));
+        .containsReferencable(value(2, STRING, "result", reference(3, STRING, "myValue")));
   }
 
   @Test
@@ -52,7 +52,7 @@ public class ExpressionTest {
           String myFunction();
           """)
         .loadsSuccessfully()
-        .containsDeclared(function(1, STRING, "myFunction"));
+        .containsReferencable(function(1, STRING, "myFunction"));
   }
 
   @Test
@@ -63,7 +63,7 @@ public class ExpressionTest {
             myFunction;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(2, f(STRING), "result", reference(3, f(STRING), "myFunction")));
+        .containsReferencable(value(2, f(STRING), "result", reference(3, f(STRING), "myFunction")));
   }
 
   @Test
@@ -73,7 +73,7 @@ public class ExpressionTest {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsDeclared(function(1, BLOB, "myFunction", blob(2, 7)));
+        .containsReferencable(function(1, BLOB, "myFunction", blob(2, 7)));
   }
 
   @Test
@@ -83,7 +83,7 @@ public class ExpressionTest {
             Blob param1);
           """)
         .loadsSuccessfully()
-        .containsDeclared(function(1, STRING, "myFunction", parameter(2, BLOB, "param1")));
+        .containsReferencable(function(1, STRING, "myFunction", parameter(2, BLOB, "param1")));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class ExpressionTest {
             = param1;
           """)
         .loadsSuccessfully()
-        .containsDeclared(function(
+        .containsReferencable(function(
             1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
   }
 
@@ -105,7 +105,7 @@ public class ExpressionTest {
               0x07);
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             function(1, STRING, "myFunction", parameter(2, BLOB, "param1", blob(3, 7))));
   }
 
@@ -116,7 +116,7 @@ public class ExpressionTest {
           result = myFunction();
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             value(2, STRING, "result", call(2, STRING, function(1, STRING, "myFunction"))));
   }
 
@@ -129,7 +129,7 @@ public class ExpressionTest {
             0x07);
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
@@ -142,7 +142,7 @@ public class ExpressionTest {
             0x07);
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             value(2, STRING, "result", call(2, STRING, function, blob(3, 7))));
   }
 
@@ -153,7 +153,7 @@ public class ExpressionTest {
             0x07;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(1, BLOB, "result", blob(2, 7)));
+        .containsReferencable(value(1, BLOB, "result", blob(2, 7)));
   }
 
   @Test
@@ -163,7 +163,7 @@ public class ExpressionTest {
             "abc";
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(1, STRING, "result", string(2, "abc")));
+        .containsReferencable(value(1, STRING, "result", string(2, "abc")));
   }
 
   @Test
@@ -176,7 +176,7 @@ public class ExpressionTest {
           ];
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             value(1, a(BLOB), "result", array(2, BLOB, blob(3, 7), blob(4, 8))));
   }
 
@@ -193,7 +193,7 @@ public class ExpressionTest {
             .field;
           """)
         .loadsSuccessfully()
-        .containsDeclared(
+        .containsReferencable(
             value(5, STRING, "result", fieldRead(6, field, reference(5, myStruct, "struct"))));
   }
 
@@ -203,7 +203,7 @@ public class ExpressionTest {
           [String] result;
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(1, a(STRING), "result"));
+        .containsReferencable(value(1, a(STRING), "result"));
   }
 
   @Test
@@ -227,7 +227,7 @@ public class ExpressionTest {
           }
           """)
         .loadsSuccessfully()
-        .containsDeclared(constr);
+        .containsReferencable(constr);
   }
 
   @Test
@@ -242,6 +242,6 @@ public class ExpressionTest {
             "aaa");
           """)
         .loadsSuccessfully()
-        .containsDeclared(value(4, struct, "result", call(4, struct, constr, string(5, "aaa"))));
+        .containsReferencable(value(4, struct, "result", call(4, struct, constr, string(5, "aaa"))));
   }
 }
