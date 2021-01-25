@@ -4,11 +4,6 @@ File {
   String path,
 }
 
-Message {
-  String text,
-  String severity,
-}
-
 Bool true;
 
 Bool false;
