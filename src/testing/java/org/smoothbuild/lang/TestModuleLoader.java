@@ -62,13 +62,24 @@ public class TestModuleLoader {
 
   public void containsReferencable(Referencable expected) {
     String name = expected.name();
+    Referencable actual = assertContainsReferencable(name);
+    assertThat(actual)
+        .isEqualTo(expected);
+  }
+
+  public void containsReferencableWithType(String name, Type expectedType) {
+    Referencable referencable = assertContainsReferencable(name);
+    assertThat(referencable.type())
+        .isEqualTo(expectedType);
+  }
+
+  private Referencable assertContainsReferencable(String name) {
     ImmutableMap<String, Referencable> referencables = module.value().referencables();
     assertWithMessage("Module doesn't contain '" + name + "'.")
         .that(referencables)
         .containsKey(name);
     Referencable actual = referencables.get(name);
-    assertThat(actual)
-        .isEqualTo(expected);
+    return actual;
   }
 
   public void containsType(Type expected) {
