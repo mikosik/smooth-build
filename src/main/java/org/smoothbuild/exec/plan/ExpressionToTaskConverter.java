@@ -16,6 +16,7 @@ import static org.smoothbuild.util.Lists.zip;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -218,7 +219,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   public Task visit(Scope<TaskSupplier> scope, ArrayLiteralExpression expression)
       throws ExpressionVisitorException {
     List<Task> elements = childrenTasks(scope, expression.elements());
-    ArrayType actualType = arrayType(elements, expression.type());
+    ArrayType actualType = arrayType(elements).orElse(expression.type());
 
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
@@ -230,13 +231,12 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     return map(elements, t -> convertIfNeeded(t, type));
   }
 
-  private ArrayType arrayType(List<Task> elements, ArrayType arrayType) {
+  private Optional<ArrayType> arrayType(List<Task> elements) {
     return elements
         .stream()
         .map(Task::type)
         .reduce((typeA, typeB) -> typeA.mergeWith(typeB, UPPER))
-        .map(Types::array)
-        .orElse(arrayType);
+        .map(Types::array);
   }
 
   @Override
