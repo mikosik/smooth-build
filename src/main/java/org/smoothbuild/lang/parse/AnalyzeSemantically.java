@@ -159,12 +159,12 @@ public class AnalyzeSemantically {
 
       @Override
       public void visitParam(int index, ItemNode param) {
-        assertTypeIsDefined(param.typeNode());
+        param.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       @Override
       public void visitField(ItemNode field) {
-        assertTypeIsDefined(field.typeNode());
+        field.typeNode().ifPresent(this::assertTypeIsDefined);
       }
 
       private void assertTypeIsDefined(TypeNode type) {
@@ -272,7 +272,7 @@ public class AnalyzeSemantically {
         super.visitStruct(struct);
         List<ItemNode> fields = struct.fields();
         for (ItemNode field : fields) {
-          if (field.typeNode().isPolytype()) {
+          if (field.typeNode().get().isPolytype()) {
             logger.log(parseError(field, "Struct field type cannot have type variable."));
           }
         }

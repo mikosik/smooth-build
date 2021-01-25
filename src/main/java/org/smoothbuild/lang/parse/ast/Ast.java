@@ -145,7 +145,7 @@ public class Ast {
       @Override
       public void visitField(ItemNode field) {
         super.visitField(field);
-        addToDependencies(field.typeNode());
+        field.typeNode().ifPresent(this::addToDependencies);
       }
 
       private void addToDependencies(TypeNode type) {

@@ -92,9 +92,9 @@ public class LoadReferencable {
     }
 
     public Item createParameter(ItemNode param) {
-      Type type = param.typeNode().type().get();
+      Type type = param.typeNode().get().type().get();
       String name = param.name();
-      Optional<Expression> defaultValue = param.defaultValue()
+      Optional<Expression> defaultValue = param.expr()
           .map(this::createExpression);
       return new Item(type, name, defaultValue);
     }
