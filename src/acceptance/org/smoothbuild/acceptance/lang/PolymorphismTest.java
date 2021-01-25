@@ -9,6 +9,19 @@ import org.smoothbuild.acceptance.testing.Flatten;
 
 public class PolymorphismTest extends AcceptanceTestCase {
   @Test
+  public void single_element_array() throws Exception {
+    createNativeJar(Flatten.class);
+    createUserModule("""
+            [E] testSingleElement(E element) = [ element ];
+            result = testSingleElement("abc");
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertThat(stringifiedArtifact("result"))
+        .isEqualTo(list("abc"));
+  }
+
+  @Test
   public void flatten_1() throws Exception {
     createNativeJar(Flatten.class);
     createUserModule("""
