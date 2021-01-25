@@ -35,7 +35,7 @@ public class AstVisitor {
   }
 
   public void visitField(ItemNode field) {
-    visitType(field.typeNode());
+    field.typeNode().ifPresent(this::visitType);
   }
 
   public void visitReferencable(List<ReferencableNode> referencable) {
@@ -71,8 +71,8 @@ public class AstVisitor {
   }
 
   public void visitParam(int index, ItemNode param) {
-    visitType(param.typeNode());
-    param.defaultValue().ifPresent(this::visitExpr);
+    param.typeNode().ifPresent(this::visitType);
+    param.expr().ifPresent(this::visitExpr);
   }
 
   public void visitType(TypeNode type) {}

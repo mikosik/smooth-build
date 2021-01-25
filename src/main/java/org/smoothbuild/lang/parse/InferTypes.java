@@ -72,7 +72,7 @@ public class InferTypes {
       @Override
       public void visitField(ItemNode fieldNode) {
         super.visitField(fieldNode);
-        fieldNode.setType(fieldNode.typeNode().type());
+        fieldNode.setType(fieldNode.typeNode().get().type());
       }
 
       @Override
@@ -142,11 +142,11 @@ public class InferTypes {
       @Override
       public void visitParam(int index, ItemNode param) {
         super.visitParam(index, param);
-        Optional<Type> optType = param.typeNode().type();
+        Optional<Type> optType = param.typeNode().get().type();
         param.setType(optType);
         if (optType.isPresent()) {
           Type type = optType.get();
-          var optDefaultValue = param.defaultValue();
+          var optDefaultValue = param.expr();
           if (optDefaultValue.isPresent()) {
             var optDefaultValueType = optDefaultValue.get().type();
             if (optDefaultValueType.isPresent()) {

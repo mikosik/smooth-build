@@ -8,36 +8,23 @@ import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
 
-public class ItemNode extends NamedNode implements ReferencableLike, ItemLike {
-  private final TypeNode typeNode;
-  private final Optional<ExprNode> defaultValue;
+public class ItemNode extends ReferencableNode implements ReferencableLike, ItemLike {
   private Optional<ItemSignature> signature;
 
-  public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> defaultValue,
-      Location location) {
-    super(name, location);
-    this.typeNode = typeNode;
-    this.defaultValue = defaultValue;
+  public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> expr, Location location) {
+    super(Optional.of(typeNode), name, expr, location);
   }
 
   @Override
   public void setType(Optional<Type> type) {
     super.setType(type);
     signature = type()
-        .map(t -> new ItemSignature(t, Optional.of(name()), defaultValue.flatMap(Node::type)));
-  }
-
-  public TypeNode typeNode() {
-    return typeNode;
-  }
-
-  public Optional<ExprNode> defaultValue() {
-    return defaultValue;
+        .map(t -> new ItemSignature(t, Optional.of(name()), expr().flatMap(Node::type)));
   }
 
   @Override
   public boolean hasDefaultValue() {
-    return defaultValue.isPresent();
+    return expr().isPresent();
   }
 
   public Optional<ItemSignature> itemSignature() {
