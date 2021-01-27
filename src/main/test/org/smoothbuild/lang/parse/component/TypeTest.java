@@ -20,86 +20,6 @@ import org.smoothbuild.lang.base.type.TestedType;
 
 public class TypeTest {
   @Nested
-  class _type_declared_below {
-    @Test
-    public void struct_can_be_used_as_field_type() {
-      module("""
-             ReferencingStruct {
-               MyStruct field
-             }
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void struct_can_be_used_as_field_arrayed_type() {
-      module("""
-             ReferencingStruct {
-               String firstField,
-               [MyStruct] field
-             }
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void value_can_be_used_as_its_type() {
-      module("""
-             MyStruct myValue;
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void value_can_be_used_as_its_arrayed_type() {
-      module("""
-             [MyStruct] myValue;
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void function_can_be_used_as_parameter_type() {
-      module("""
-             String myFunction(MyStruct param);
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void function_can_be_used_as_parameter_arrayed_type() {
-      module("""
-             String myFunction([MyStruct] param);
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void function_can_be_used_as_result_type() {
-      module("""
-             MyStruct myFunction(String param);
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-
-    @Test
-    public void function_can_be_used_as_arrayed_result_type() {
-      module("""
-             [MyStruct] myFunction(String param);
-             MyStruct {}
-             """)
-          .loadsSuccessfully();
-    }
-  }
-
-  @Nested
   class value {
     @ParameterizedTest
     @ArgumentsSource(TestedMonotypes.class)
@@ -337,6 +257,43 @@ public class TypeTest {
           .loadsWithError("""
               Type hierarchy contains cycle:
               myBuild.smooth:2: MyStruct -> MyStruct""");
+    }
+  }
+
+  @Nested
+  class undefined_declared_as_a_type_of {
+    @Test
+    public void value() {
+      module("""
+             Undefined myValue;
+             """)
+          .loadsWithError(1, "Undefined type `Undefined`.");
+    }
+
+    @Test
+    public void function() {
+      module("""
+             Undefined myFunction();
+             """)
+          .loadsWithError(1, "Undefined type `Undefined`.");
+    }
+
+    @Test
+    public void parameter() {
+      module("""
+             String myFunction(Undefined param);
+             """)
+          .loadsWithError(1, "Undefined type `Undefined`.");
+    }
+
+    @Test
+    public void field() {
+      module("""
+             MyStruct {
+               Undefined field
+             }
+             """)
+          .loadsWithError(2, "Undefined type `Undefined`.");
     }
   }
 
