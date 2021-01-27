@@ -35,7 +35,7 @@ public class AssignmentTest {
           .loadsSuccessfully();
     } else {
       module(sourceCode)
-          .loadsWithError(1, "`result` has body which type is " + source.q()
+          .loadsWithError(1, "`result` has body which type is " + source.qStripped()
                + " and it is not convertible to its declared type " + target.qStripped() + ".");
     }
   }

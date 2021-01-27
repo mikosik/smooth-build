@@ -138,7 +138,7 @@ public abstract class Type {
     } else if (reversedEdge.equals(this)) {
       return that;
     } else if (this.equals(that)) {
-      return this;
+      return this.strip();
     } else if (this.typeConstructor.equals(that.typeConstructor)) {
       var covar = zip(covariants, that.covariants, mergeWithFunction(direction));
       var contravar = zip(contravariants, that.contravariants, mergeWithFunction(reversed));
@@ -150,6 +150,18 @@ public abstract class Type {
 
   private static BiFunction<Type, Type, Type> mergeWithFunction(Side direction) {
     return (a, b) -> a.mergeWith(b, direction);
+  }
+
+  public Type strip() {
+    if (this instanceof FunctionType || this instanceof ArrayType) {
+      return typeConstructor.construct(stripTypes(this.covariants), stripTypes(contravariants));
+    } else {
+      return this;
+    }
+  }
+
+  private ImmutableList<Type> stripTypes(ImmutableList<Type> types) {
+    return map(types, Type::strip);
   }
 
   public abstract <T> T visit(TypeVisitor<T> visitor);

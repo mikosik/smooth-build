@@ -67,7 +67,19 @@ public class TestingTypes {
     return Types.array(elemType);
   }
 
+  public static FunctionType f(Type resultType) {
+    return Types.function(resultType, list());
+  }
+
   public static FunctionType f(Type resultType, Type... paramTypes) {
     return Types.function(resultType, toItemSignatures(list(paramTypes)));
+  }
+
+  public static FunctionType f(Type resultType, ItemSignature... params) {
+    return Types.function(resultType, list(params));
+  }
+
+  public static ItemSignature item(Type type, String name) {
+    return new ItemSignature(type, name, Optional.empty());
   }
 }
