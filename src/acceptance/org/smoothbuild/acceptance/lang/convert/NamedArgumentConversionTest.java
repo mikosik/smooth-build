@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.lang.assign.convert;
+package org.smoothbuild.acceptance.lang.convert;
 
 import static org.smoothbuild.util.Strings.unlines;
 
