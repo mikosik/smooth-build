@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Definitions;
 
-public class VisibilityTest {
+public class ReferenceTest {
   @Test
   public void reference_in_default_value_expression_to_other_parameter_fails() {
     module("""
@@ -274,43 +274,6 @@ public class VisibilityTest {
                """)
             .loadsWithError(1, "`undefinedFunction` is undefined.");
       }
-    }
-  }
-
-  @Nested
-  class undefined_declared_as_a_type_of {
-    @Test
-    public void value() {
-      module("""
-             Undefined myValue;
-             """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
-    }
-
-    @Test
-    public void function() {
-      module("""
-             Undefined myFunction();
-             """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
-    }
-
-    @Test
-    public void parameter() {
-      module("""
-             String myFunction(Undefined param);
-             """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
-    }
-
-    @Test
-    public void field() {
-      module("""
-             MyStruct {
-               Undefined field
-             }
-             """)
-          .loadsWithError(2, "Undefined type `Undefined`.");
     }
   }
 }
