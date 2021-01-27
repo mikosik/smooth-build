@@ -53,6 +53,7 @@ import org.smoothbuild.lang.parse.ast.ValueNode;
 public class InferTypes {
   public static List<Log> inferTypes(Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
+    var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -249,7 +250,6 @@ public class InferTypes {
       @Override
       public void visitCall(CallNode call) {
         super.visitCall(call);
-        var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
         String name = call.calledName();
         Maybe<Type> type = inferCallType(
             call, referencables.resultTypeOf(name), referencables.parametersOf(name));
