@@ -1,4 +1,4 @@
-package org.smoothbuild.acceptance.lang.assign.convert;
+package org.smoothbuild.acceptance.lang.convert;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.base.type.TestedType.BLOB;
