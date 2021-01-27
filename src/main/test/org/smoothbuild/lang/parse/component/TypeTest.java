@@ -303,7 +303,7 @@ public class TypeTest {
     }
 
     @Test
-    public void cannot_declare_array_type_which_core_type_encloses_it() {
+    public void cannot_declare_array_type_which_element_type_encloses_it() {
       module("""
              MyStruct {
                String firstField,
