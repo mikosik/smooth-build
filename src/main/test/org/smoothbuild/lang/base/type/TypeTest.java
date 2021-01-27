@@ -27,12 +27,14 @@ import static org.smoothbuild.lang.base.type.TestingTypes.STRING_MAP_FUNCTION;
 import static org.smoothbuild.lang.base.type.TestingTypes.X;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
+import static org.smoothbuild.lang.base.type.TestingTypes.item;
 import static org.smoothbuild.lang.base.type.Types.BASE_TYPES;
 import static org.smoothbuild.lang.base.type.Types.function;
 import static org.smoothbuild.lang.base.type.Types.struct;
 import static org.smoothbuild.lang.base.type.constraint.TestingBoundedVariables.bv;
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.Lists.map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1579,7 +1581,9 @@ public class TypeTest {
         arguments(a(f(BLOB, BOOL)), a(f(BLOB, BOOL)), a(f(BLOB, BOOL))),
         arguments(a(f(BLOB, BOOL)), a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING))),
 
-        arguments(a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)))
+        arguments(a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING))),
+
+        arguments(a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, BLOB)))
     );
   }
 
@@ -2834,7 +2838,9 @@ public class TypeTest {
         arguments(a(f(BLOB, BOOL)), a(f(BLOB, BOOL)), a(f(BLOB, BOOL))),
         arguments(a(f(BLOB, BOOL)), a(f(BLOB, NOTHING)), a(f(BLOB, BOOL))),
 
-        arguments(a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)))
+        arguments(a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING)), a(f(BLOB, NOTHING))),
+
+        arguments(a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, BLOB)))
     );
   }
 
@@ -2853,6 +2859,37 @@ public class TypeTest {
       result.add(arguments(a(a(a(type))), a(a(type))));
     }
     return result;
+  }
+
+  @ParameterizedTest
+  @MethodSource("strip_test_data")
+  public void strip(Type type, Type expected) {
+    assertThat(type.strip())
+        .isEqualTo(expected);
+  }
+
+  public static List<Arguments> strip_test_data() {
+    ImmutableList<Type> unchangedByStripping = ImmutableList.<Type>builder()
+        .addAll(BASE_TYPES)
+        .add(PERSON)
+        .add(f(BLOB))
+        .add(f(BLOB, BLOB))
+        .add(f(f(BLOB), BLOB))
+        .add(f(BLOB, f(BLOB)))
+        .build();
+    ImmutableList<Type> unchanged = ImmutableList.<Type>builder()
+        .addAll(map(unchangedByStripping, t -> t))
+        .addAll(map(unchangedByStripping, t -> a(t)))
+        .addAll(map(unchangedByStripping, t -> a(a(t))))
+        .build();
+
+    return ImmutableList.<Arguments>builder()
+        .addAll(map(unchanged, t -> Arguments.of(t, t)))
+        .add(Arguments.of(f(BLOB, item(BLOB, "p")), f(BLOB, BLOB)))
+        .add(Arguments.of(f(f(BLOB, item(BLOB, "p")), BLOB), f(f(BLOB, BLOB), BLOB)))
+        .add(Arguments.of(f(BLOB, f(BLOB, item(BLOB, "p"))), f(BLOB, f(BLOB, BLOB))))
+        .add(Arguments.of(a(f(BLOB, item(BLOB, "p"))), a(f(BLOB, BLOB))))
+        .build();
   }
 
   @Test

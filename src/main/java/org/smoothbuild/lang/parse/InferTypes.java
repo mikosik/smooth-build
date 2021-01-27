@@ -113,7 +113,7 @@ public class InferTypes {
       }
 
       private Optional<Type> typeOfDeclaredBody(ReferencableNode referencable, ExprNode exprNode) {
-        Optional<Type> exprType = exprNode.type();
+        Optional<Type> exprType = exprNode.type().map(Type::strip);
         if (referencable.typeNode().isPresent()) {
           Optional<Type> type = createType(referencable.typeNode().get());
           type.ifPresent(t -> exprType.ifPresent(et -> {

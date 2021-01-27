@@ -69,7 +69,7 @@ public class InferCallType {
       if (arg == null) {
         assigned.add(parameters.get(i).defaultValueType());
       } else {
-        assigned.add(arg.type());
+        assigned.add(arg.type().map(Type::strip));
       }
     }
     return assigned;
