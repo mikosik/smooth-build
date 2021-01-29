@@ -12,14 +12,15 @@ public class FunctionTest {
   @Test
   public void default_parameter_before_non_default_is_allowed() {
     module("""
+        @Native("Impl.met")
         String myFunction(
           String default = "value",
           String nonDefault);
         """)
         .loadsSuccessfully()
-        .containsReferencable(function(1, STRING, "myFunction",
-            parameter(2, STRING, "default", string(2, "value")),
-            parameter(3, STRING, "nonDefault")));
+        .containsReferencable(function(2, STRING, "myFunction", "Impl.met",
+            parameter(3, STRING, "default", string(3, "value")),
+            parameter(4, STRING, "nonDefault")));
   }
 
   @Test

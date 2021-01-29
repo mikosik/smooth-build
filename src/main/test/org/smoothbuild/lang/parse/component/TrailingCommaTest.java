@@ -59,7 +59,8 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
-          .containsReferencable(function(1, STRING, "myFunction", parameter(1, STRING, "param1")));
+          .containsReferencable(function(2, STRING, "myFunction", "Impl.met", parameter(2, STRING,
+              "param1")));
     }
 
     @Test
@@ -82,6 +83,7 @@ public class TrailingCommaTest {
 
     private String functionDeclaration(CharSequence string) {
       return """
+        @Native("Impl.met")
         String myFunction(PLACEHOLDER);
         """.replace("PLACEHOLDER", string);
     }
@@ -93,7 +95,7 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionTypeDeclaration("String,"))
           .loadsSuccessfully()
-          .containsReferencable(value(1, f(BLOB, STRING), "myValue"));
+          .containsReferencable(value(2, f(BLOB, STRING), "myValue", "Impl.met"));
     }
 
     @Test
@@ -116,6 +118,7 @@ public class TrailingCommaTest {
 
     private String functionTypeDeclaration(CharSequence string) {
       return """
+        @Native("Impl.met")
         Blob(PLACEHOLDER) myValue;
         """.replace("PLACEHOLDER", string);
     }
@@ -159,10 +162,10 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      Function function = function(1, BLOB, "myFunction", parameter(1, BLOB, "blob"));
+      Function function = function(2, BLOB, "myFunction", "Impl.met", parameter(1, BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
-          .containsReferencable(value(2, BLOB, "result", call(2, BLOB, function, blob(2, 7))));
+          .containsReferencable(value(3, BLOB, "result", call(3, BLOB, function, blob(3, 7))));
     }
 
     @Test
@@ -185,6 +188,7 @@ public class TrailingCommaTest {
 
     private String functionCall(CharSequence string) {
       return """
+        @Native("Impl.met")
         Blob myFunction(Blob blob);
         result = myFunction(PLACEHOLDER);
         """.replace("PLACEHOLDER", string);

@@ -12,7 +12,7 @@ public class ItemNode extends ReferencableNode implements ReferencableLike, Item
   private Optional<ItemSignature> signature;
 
   public ItemNode(TypeNode typeNode, String name, Optional<ExprNode> expr, Location location) {
-    super(Optional.of(typeNode), name, expr, location);
+    super(Optional.of(typeNode), name, expr, Optional.empty(), location);
   }
 
   @Override

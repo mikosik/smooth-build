@@ -10,6 +10,7 @@ import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
 import static org.smoothbuild.lang.TestingLang.parameterRef;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
+import static org.smoothbuild.plugin.Caching.Level.DISK;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.Map;
@@ -66,9 +67,9 @@ public class ExpressionToTaskConverterTest extends TestingContext {
     CallExpression myFunctionCall = call(BLOB, myFunction, nativeCall);
 
     when(nativeImplLoader.loadNative(nativeFunction))
-        .thenReturn(new Native("name", null, true, null));
+        .thenReturn(new Native(null, DISK, null));
     when(nativeImplLoader.loadNative(twoBlobsEater))
-        .thenReturn(new Native("name", null, true, null));
+        .thenReturn(new Native(null, DISK, null));
 
     converter.visit(new Scope<>(Map.of()), myFunctionCall);
 

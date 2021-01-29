@@ -1,5 +1,8 @@
 package org.smoothbuild.exec.compute;
 
+import static org.smoothbuild.plugin.Caching.Level.DISK;
+import static org.smoothbuild.plugin.Caching.Level.NONE;
+
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -13,6 +16,7 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.base.Output;
+import org.smoothbuild.plugin.Caching.Level;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 /**
@@ -38,7 +42,9 @@ public class Computer {
     Algorithm algorithm = task.algorithm();
     Hash hash = computationHash(algorithm, input);
     FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();
-    FeedingConsumer<Computed> prevFeeder = feeders.putIfAbsent(hash, newFeeder);
+    Level caching = task.cachingLevel();
+    FeedingConsumer<Computed> prevFeeder =
+        caching == NONE ? null : feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
       prevFeeder
           .chain((computed) -> new Computed(computed.computed(), ResultSource.CACHE))
@@ -51,7 +57,7 @@ public class Computer {
         feeders.remove(hash);
       } else {
         MaybeOutput result = doCompute(algorithm, input);
-        boolean cacheOnDisk = task.cacheable() && result.hasOutput();
+        boolean cacheOnDisk = caching == DISK && result.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, result.output());
         }

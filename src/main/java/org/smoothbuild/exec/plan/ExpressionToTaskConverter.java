@@ -10,6 +10,7 @@ import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.plugin.Caching.Level.DISK;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -39,10 +40,12 @@ import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
@@ -88,22 +91,23 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
         structType.fieldIndex(field.name().get()), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(scope, expression.expression());
     return new NormalTask(CALL, field.type(), "." + field.name().get(), algorithm, children,
-        expression.location(), true);
+        expression.location(), DISK);
   }
 
   @Override
   public Task visit(Scope<TaskSupplier> scope, ReferenceExpression reference)
       throws ExpressionVisitorException {
     Value value = (Value) definitions.referencables().get(reference.name());
-    if (value.body().isPresent()) {
-      Task task = value.body().get().visit(scope, this);
+    if (value.body() instanceof DefinedBody body) {
+      Task task = body.expression().visit(scope, this);
       Task convertedTask = convertIfNeeded(task, value.type());
       return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
     } else {
       Native nativ = loadNative(value);
-      Algorithm algorithm = new CallNativeAlgorithm(value.type().visit(toSpecConverter), nativ);
+      Algorithm algorithm = new CallNativeAlgorithm(
+          value.type().visit(toSpecConverter), value.name(), nativ);
       return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
-          ImmutableList.of(), reference.location(), nativ.cacheable());
+          ImmutableList.of(), reference.location(), nativ.cachingLevel());
     }
   }
 
@@ -111,7 +115,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     try {
       return nativeImplLoader.loadNative(value);
     } catch (LoadingNativeImplException e) {
-      throw new ExpressionVisitorException(e.getMessage(), e);
+      throw chainLoadNativeImplException(value, e);
     }
   }
 
@@ -130,7 +134,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       var variables = inferVariableBounds(function.type().parameterTypes(), argumentTypes, LOWER);
       Type actualResultType = function.resultType().mapVariables(variables, LOWER);
 
-      if (function.body().isPresent()) {
+      if (function.body() instanceof DefinedBody) {
         var arguments = childrenTaskSuppliers(scope, expression.arguments(), argumentTypes);
         return taskForDefinedFunction(
             scope, actualResultType, function, arguments, expression.location());
@@ -153,14 +157,15 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(scope, expression.arguments());
     return new NormalTask(CALL, resultType, constructor.extendedName(), algorithm,
-        dependencies, expression.location(), true);
+        dependencies, expression.location(), DISK);
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
       Function function, List<TaskSupplier> arguments, Location location)
       throws ExpressionVisitorException {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    Task callTask = function.body().get().visit(newScope, this);
+    DefinedBody body = (DefinedBody) function.body();
+    Task callTask = body.expression().visit(newScope, this);
     Task task = convertIfNeeded(callTask, actualResultType);
     return new VirtualTask(function.extendedName(), task, CALL, location);
   }
@@ -169,15 +174,16 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       BoundedVariables variables, Type actualResultType, Location location)
       throws ExpressionVisitorException {
     Native nativ = loadNative(function);
-    Algorithm algorithm = new CallNativeAlgorithm(actualResultType.visit(toSpecConverter), nativ);
+    Algorithm algorithm = new CallNativeAlgorithm(
+        actualResultType.visit(toSpecConverter), function.name(), nativ);
     ImmutableList<Type> actualParameterTypes =
         map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
     List<Task> dependencies = convertedArguments(actualParameterTypes, arguments);
     if (function.name().equals(IF_FUNCTION_NAME)) {
-      return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cacheable());
+      return new IfTask(actualResultType, algorithm, dependencies, location, nativ.cachingLevel());
     } else {
       return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
-          dependencies, location, nativ.cacheable());
+          dependencies, location, nativ.cachingLevel());
     }
   }
 
@@ -202,8 +208,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     try {
       return nativeImplLoader.loadNative(function);
     } catch (LoadingNativeImplException e) {
-      throw new ExpressionVisitorException(e.getMessage(), e);
+      throw chainLoadNativeImplException(function, e);
     }
+  }
+
+  private ExpressionVisitorException chainLoadNativeImplException(Referencable function,
+      LoadingNativeImplException e) {
+    return new ExpressionVisitorException(
+        function.location().toString() + ": " + e.getMessage(), e);
   }
 
   private List<Task> convertedArguments(List<Type> actualParameterTypes, List<Task> arguments) {
@@ -224,7 +236,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
-        expression.location(), true);
+        expression.location(), DISK);
   }
 
   private List<Task> convertedElements(Type type, List<Task> elements) {
@@ -244,7 +256,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
-        ImmutableList.of(), expression.location(), true);
+        ImmutableList.of(), expression.location(), DISK);
   }
 
   @Override
@@ -252,7 +264,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var stringType = toSpecConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
-        ImmutableList.of(), expression.location(), true);
+        ImmutableList.of(), expression.location(), DISK);
   }
 
   private ImmutableList<TaskSupplier> childrenTaskSuppliers(Scope<TaskSupplier> scope,
@@ -288,6 +300,6 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
     List<Task> dependencies = list(task);
     return new NormalTask(
-        CONVERSION, requiredType, description, algorithm, dependencies, task.location(), true);
+        CONVERSION, requiredType, description, algorithm, dependencies, task.location(), DISK);
   }
 }

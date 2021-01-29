@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.cli.command;
 
+import static java.lang.String.format;
 import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
 
 import org.junit.jupiter.api.Nested;
@@ -35,10 +36,11 @@ public class PlanCommandTest {
     @Test
     public void native_value_reference() throws Exception {
       this.createNativeJar(ReturnAbc.class);
-      createUserModule("""
-              String returnAbc;
-              result = returnAbc;
-              """);
+      createUserModule(format("""
+            @Native("%s.function")
+            String returnAbc;
+            result = returnAbc;
+            """, ReturnAbc.class.getCanonicalName()));
       runSmoothTree("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
@@ -65,10 +67,11 @@ public class PlanCommandTest {
     @Test
     public void native_function_call_with_argument() throws Exception {
       this.createNativeJar(OneStringParameter.class);
-      createUserModule("""
-              String oneStringParameter(String value);
-              result = oneStringParameter("abc");
-              """);
+      createUserModule(format("""
+            @Native("%s.function")
+            String oneStringParameter(String value);
+            result = oneStringParameter("abc");
+            """, OneStringParameter.class.getCanonicalName()));
       runSmoothTree("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""

@@ -9,7 +9,7 @@ import org.smoothbuild.acceptance.AcceptanceTestCase;
 
 public class TrueTest extends AcceptanceTestCase {
   @Test
-  public void true_function() throws IOException {
+  public void true_value() throws IOException {
     createUserModule("""
             result = true;
             """);

@@ -29,6 +29,7 @@ public class AssignmentTest {
     String sourceCode = unlines(
         target.name() + " result = " + source.literal() + ";",
         testSpec.declarations(),
+        "@Native(\"impl\")",
         "Bool true;");
     if (testSpec.allowed()) {
       module(sourceCode)
@@ -49,6 +50,7 @@ public class AssignmentTest {
         "%s myFunction(%s param, %s probablyPolytype) = param;"
             .formatted(target.name(), source.name(), target.name()),
         testSpec.typeDeclarations(),
+        "@Native(\"impl\")",
         "Bool true;");
     if (testSpec.allowed()) {
       module(sourceCode)
@@ -66,13 +68,14 @@ public class AssignmentTest {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
+        "@Native(\"impl\")",
         targetType.name() + " innerFunction(" + targetType.name() + " target);     ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      module.loadsWithError(2,
+      module.loadsWithError(3,
           "In call to `innerFunction`: Cannot assign argument of type " + sourceType.qStripped()
               + " to parameter `target` of type " + targetType.qStripped() + ".");
     }
@@ -84,13 +87,14 @@ public class AssignmentTest {
     TestedType targetType = testSpec.target();
     TestedType sourceType = testSpec.source();
     TestModuleLoader module = module(unlines(
+        "@Native(\"impl\")",
         targetType.name() + " innerFunction(" + targetType.name() + " target);            ",
         "outerFunction(" + sourceType.name() + " source) = innerFunction(target=source);  ",
         testSpec.typeDeclarations()));
     if (testSpec.allowed()) {
       module.loadsSuccessfully();
     } else {
-      module.loadsWithError(2,
+      module.loadsWithError(3,
           "In call to `innerFunction`: Cannot assign argument of type " + sourceType.qStripped()
               + " to parameter `target` of type " + targetType.qStripped() + ".");
     }
@@ -108,6 +112,7 @@ public class AssignmentTest {
     String sourceCode = unlines(
         "myFunction(" + target.name() + " param = " + source.literal() + ") = param; ",
         testSpec.declarations(),
+        "@Native(\"impl\")",
         "Bool true;");
     if (testSpec.allowed()) {
       module(sourceCode)
@@ -126,6 +131,7 @@ public class AssignmentTest {
     String sourceCode = unlines(
         "[" + joinType.name() + "] result = [" + type1.literal() + ", " + type2.literal() + "];",
         join("\n", union(type1.declarations(), type2.declarations())),
+        "@Native(\"impl\")",
         "Bool true;");
     module(sourceCode)
         .loadsSuccessfully();

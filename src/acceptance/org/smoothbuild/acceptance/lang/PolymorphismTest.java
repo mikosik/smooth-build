@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -24,10 +25,11 @@ public class PolymorphismTest extends AcceptanceTestCase {
   @Test
   public void flatten_1() throws Exception {
     createNativeJar(Flatten.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ 'aa' ], [ 'bb', 'cc' ] ]);
-            """);
+            """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -37,10 +39,11 @@ public class PolymorphismTest extends AcceptanceTestCase {
   @Test
   public void flatten_sample_2() throws Exception {
     createNativeJar(Flatten.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [E] testFlatten([[E]] array);
             result = testFlatten(array = [ [ [ 'aa' ], [ 'bb', 'cc' ] ] ]);
-            """);
+            """, Flatten.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))

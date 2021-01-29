@@ -27,14 +27,12 @@ import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 import com.google.common.collect.Streams;
 
 public class JunitFunction {
-  @NativeImplementation("junit")
-  public static Str junit(NativeApi nativeApi, Tuple tests, Array deps, Str include)
+  public static Str function(NativeApi nativeApi, Tuple tests, Array deps, Str include)
       throws IOException {
 
     try {

@@ -61,7 +61,7 @@ public class TestedType {
       "reportError(\"e\")",
       null,
       Set.of(),
-      Set.of("Nothing reportError(String message);"));
+      Set.of("@Native(\"impl\") Nothing reportError(String message);"));
   public static final TestedType STRING = new TestedType(
       string(),
       "\"abc\"",
@@ -320,7 +320,7 @@ public class TestedType {
         .collect(toImmutableList());
     var parameters = toSignatures(strippedParams);
     String name = "f" + UNIQUE_IDENTIFIER.getAndIncrement();
-    String declaration = "%s %s(%s);".formatted(
+    String declaration = "@Native(\"impl\") %s %s(%s);".formatted(
         strippedResultType.strippedType.name(),
         name,
         join(",", map(parameters, ItemSignature::toString)));

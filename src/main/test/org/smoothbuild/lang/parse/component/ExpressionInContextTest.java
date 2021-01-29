@@ -11,6 +11,7 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+          @Native("impl")
           String myFunction(Blob param);
           result = myFunction(0x01);
           """)
@@ -28,6 +29,7 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
+        @Native("impl")
         String myFunction(Blob value = 0x01);
         """)
           .loadsSuccessfully();
@@ -39,6 +41,7 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+        @Native("impl")
         String myFunction(String param);
         result = myFunction("abc");
         """)
@@ -56,6 +59,7 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
+        @Native("impl")
         String myFunction(String value = "abc");
         """)
           .loadsSuccessfully();
@@ -71,6 +75,7 @@ public class ExpressionInContextTest {
           String field,
         }
         myValue = myStruct("abc");
+        @Native("impl")
         String myFunction(String param);
         result = myFunction(myValue.field);
         """)
@@ -96,6 +101,7 @@ public class ExpressionInContextTest {
           String field,
         }
         value = myStruct("abc");
+        @Native("impl")
         String myFunction(String value = value.field);
         """)
           .loadsSuccessfully();
@@ -107,7 +113,9 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+          @Native("impl")
           A myIdentity(A value);
+          @Native("impl")
           String myFunction(String param);
           result = myFunction("abc" | myIdentity());
           """)
@@ -127,6 +135,7 @@ public class ExpressionInContextTest {
     public void parameter_default_value() {
       module("""
           String myIdentity(String string) = string;
+          @Native("impl")
           String myFunction(String param = "abc" | myIdentity());
           """)
           .loadsSuccessfully();
@@ -138,7 +147,9 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+        @Native("impl")
         String otherFunction();
+        @Native("impl")
         String myFunction(String param);
         result = myFunction(otherFunction());
         """)
@@ -157,8 +168,10 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
+        @Native("impl")
         String myFunction();
-        String otherFunction(String value = myFunction());
+        @Native("impl")
+         String otherFunction(String value = myFunction());
         """)
           .loadsSuccessfully();
     }
@@ -169,7 +182,9 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+          @Native("Impl.met")
           String otherFunction();
+          @Native("Impl.met")
           String myFunction(String() param);
           result = myFunction(otherFunction);
           """)
@@ -188,7 +203,9 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
+          @Native("Impl.met")
           String myFunction();
+          @Native("Impl.met")
           String otherFunction(String() value = myFunction);
           """)
           .loadsSuccessfully();
@@ -200,7 +217,9 @@ public class ExpressionInContextTest {
     @Test
     public void argument() {
       module("""
+          @Native("Impl.met")
           String myValue;
+          @Native("Impl.met")
           String myFunction(String param);
           result = myFunction(myValue);
           """)
@@ -210,6 +229,7 @@ public class ExpressionInContextTest {
     @Test
     public void array_element() {
       module("""
+           @Native("Impl.met")
            String myValue;
            result = [ myValue ];
            """)
@@ -219,7 +239,9 @@ public class ExpressionInContextTest {
     @Test
     public void parameter_default_value() {
       module("""
+          @Native("Impl.met")
           String myValue;
+          @Native("Impl.met")
           String myFunction(String value = myValue);
           """)
           .loadsSuccessfully();

@@ -5,18 +5,19 @@ import java.util.List;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.plugin.Caching.Level;
 
 public abstract class ComputableTask extends Task {
   private final TaskKind kind;
   private final Algorithm algorithm;
-  private final boolean cacheable;
+  private final Level cachingLevel;
 
   public ComputableTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends Task> dependencies, Location location, boolean cacheable) {
+      List<? extends Task> dependencies, Location location, Level cachingLevel) {
     super(type, name, dependencies, location);
     this.kind = kind;
     this.algorithm = algorithm;
-    this.cacheable = cacheable;
+    this.cachingLevel = cachingLevel;
   }
 
   @Override
@@ -28,8 +29,8 @@ public abstract class ComputableTask extends Task {
     return algorithm;
   }
 
-  public boolean cacheable() {
-    return cacheable;
+  public Level cachingLevel() {
+    return cachingLevel;
   }
 
   @Override

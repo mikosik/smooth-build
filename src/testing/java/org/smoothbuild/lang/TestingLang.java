@@ -5,10 +5,13 @@ import static org.smoothbuild.testing.common.TestingLocation.loc;
 import java.util.List;
 import java.util.Optional;
 
+import org.smoothbuild.lang.base.define.Body;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
+import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
+import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -72,11 +75,12 @@ public class TestingLang {
   }
 
   public static Function function(Type type, String name, Item... parameters) {
-    return function(1, type, name, parameters);
+    return function(1, type, name, "Impl.met", parameters);
   }
 
-  public static Function function(int line, Type type, String name, Item... parameters) {
-    return function(line, type, name, parameters, Optional.empty());
+  public static Function function(int line, Type type, String name, String implementedBy,
+      Item... parameters) {
+    return function(line, type, name, new NativeBody(implementedBy), parameters);
   }
 
   public static Function function(Type type, String name, Expression body, Item... parameters) {
@@ -85,25 +89,20 @@ public class TestingLang {
 
   public static Function function(int line, Type type, String name, Expression body,
       Item... parameters) {
-    return function(line, type, name, parameters, Optional.of(body));
+    return function(line, type, name, new DefinedBody(body), parameters);
   }
 
-  private static Function function(int line, Type type, String name, Item[] parameters,
-      Optional<Expression> body) {
+  private static Function function(int line, Type type, String name,
+      Body body, Item... parameters) {
     return new Function(type, name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
-  public static Value value(int line, Type type, String name) {
-    return value(line, type, name, Optional.empty());
+  public static Value value(int line, Type type, String name, String implementedBy) {
+    return new Value(type, name, new NativeBody(implementedBy), loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {
-    return value(line, type, name, Optional.of(expression));
-  }
-
-  private static Value value(int line, Type type, String name,
-      Optional<Expression> expression) {
-    return new Value(type, name, expression, loc(line));
+    return new Value(type, name, new DefinedBody(expression), loc(line));
   }
 
   public static StructType struct(String name, ItemSignature field) {

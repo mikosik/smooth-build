@@ -12,12 +12,10 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.NativeImplementation;
 import org.smoothbuild.slib.file.match.IllegalPathPatternException;
 
 public class FilterFunction {
-  @NativeImplementation("filter")
-  public static Array filter(NativeApi nativeApi, Array files, Str pattern) {
+  public static Array function(NativeApi nativeApi, Array files, Str pattern) {
     Predicate<Path> filter;
     try {
       filter = pathMatcher(pattern.jValue());

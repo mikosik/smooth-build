@@ -1,23 +1,21 @@
 package org.smoothbuild.lang.base.define;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.Expression;
 
 /**
  * This class is immutable.
  */
 public class Value extends Referencable {
-  private final Optional<Expression> body;
+  private final Body body;
 
-  public Value(Type type, String name, Optional<Expression> body, Location location) {
+  public Value(Type type, String name, Body body, Location location) {
     super(type, name, location);
     this.body = body;
   }
 
-  public Optional<Expression> body() {
+  public Body body() {
     return body;
   }
 
@@ -40,7 +38,7 @@ public class Value extends Referencable {
 
   @Override
   public String toString() {
-    return "Value(`" + type().name() + " " + name() + " = " + body + "`)";
+    return "Value(`" + type().name() + " " + name() + " = " + body + "`) @" + location();
   }
 }
 

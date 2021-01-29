@@ -32,6 +32,7 @@ public class InferenceTest {
   @Test
   public void function_reference() {
     module("""
+        @Native("Impl.met")
         String myFunction(Blob param);
         myValue = myFunction;
         """)
@@ -42,6 +43,7 @@ public class InferenceTest {
   @Test
   public void argless_function_call() {
     module("""
+        @Native("Impl.met")
         String myFunction();
         myValue = myFunction();
         """)
@@ -73,6 +75,7 @@ public class InferenceTest {
   public void generic_function_with_monotype_function_argument() {
     module("""
         A myIdentity(A a) = a;
+        @Native("Impl.met")
         Blob myOtherFunction(String s);
         myValue = myIdentity(myOtherFunction);
         """)
@@ -104,6 +107,7 @@ public class InferenceTest {
   public void generic_function_with_polytype_function_argument() {
     module("""
         A myIdentity(A a) = a;
+        @Native("Impl.met")
         B myOtherFunction(B b);
         myFunction() = myIdentity(myOtherFunction);
         """)

@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.lang;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
@@ -51,10 +52,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_0() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = []);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -64,10 +66,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_1() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = [ "bbb" ]);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -77,10 +80,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_2() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [ "aaa" ], second = []);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -90,10 +94,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_3() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             result = testConcat(first = [], second = [ "bbb" ]);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -103,11 +108,12 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_5() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             wrapper([Nothing] f, [[A]] s) = testConcat(first = f, second = s);
             result = wrapper(f = [], s = [ [ "aaa" ] ]);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -117,12 +123,13 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_concat_function_6() throws Exception {
     createNativeJar(Concat.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testConcat([A] first, [A] second);
             [A] testConcatW([A] f, [A] s) = testConcat(first = f, second = s);
             wrapper([Nothing] f, [[A]] s) = testConcatW(f = f, s = s);
             result = wrapper(f = [], s = [ [ "aaa" ] ]);
-            """);
+            """, Concat.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -134,10 +141,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_append_function_0() throws Exception {
     createNativeJar(Append.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testAppend([A] array, A element);
             result = testAppend(array = [], element = "bbb");
-            """);
+            """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -147,10 +155,11 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_append_function_1() throws Exception {
     createNativeJar(Append.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testAppend([A] array, A element);
             result = testAppend(array = [ "aaa" ], element = "bbb");
-            """);
+            """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))
@@ -161,14 +170,15 @@ public class InferenceTest extends AcceptanceTestCase {
   @Test
   public void infer_actual_type_of_parameters_in_append_function_3() throws Exception {
     createNativeJar(Append.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             [A] testAppend([A] array, A element);
             StringStruct {
               String value
             }
             [String] emptyStringArray = [];
             result = testAppend(emptyStringArray, "bbb");
-            """);
+            """, Append.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(stringifiedArtifact("result"))

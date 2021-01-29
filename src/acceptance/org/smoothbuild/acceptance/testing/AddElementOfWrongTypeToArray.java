@@ -4,11 +4,9 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.ArrayBuilder;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.NativeImplementation;
 
 public class AddElementOfWrongTypeToArray {
-  @NativeImplementation("addElementOfWrongTypeToArray")
-  public static Array addElementOfWrongTypeToArray(NativeApi nativeApi) {
+  public static Array function(NativeApi nativeApi) {
     ArrayBuilder arrayBuilder = nativeApi.factory().arrayBuilder(nativeApi.factory().blobSpec());
     Str string = nativeApi.factory().string("abc");
     arrayBuilder.add(string);

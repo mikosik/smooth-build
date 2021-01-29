@@ -180,11 +180,12 @@ public class NameClashTest {
     @Test
     public void other_parameter() {
       module("""
+             @Native("impl")
              String myFunction(
                String param,
                String param);    
                """)
-          .loadsWithError(3, alreadyDefinedIn(moduleLocation(), 2, "param"));
+          .loadsWithError(4, alreadyDefinedIn(moduleLocation(), 3, "param"));
     }
   }
 

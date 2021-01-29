@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface NativeImplementation {
-  String value();
-
-  boolean cacheable() default true;
+public @interface Caching {
+  Level level();
+  public enum Level { DISK, MEMORY, NONE}
 }

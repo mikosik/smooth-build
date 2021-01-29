@@ -19,17 +19,16 @@ import org.smoothbuild.antlr.lang.SmoothParser.ExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
-import org.smoothbuild.antlr.lang.SmoothParser.FuncContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
+import org.smoothbuild.antlr.lang.SmoothParser.RefContext;
 import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
-import org.smoothbuild.antlr.lang.SmoothParser.ValueContext;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModuleLocation;
 
@@ -68,28 +67,27 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitValue(ValueContext value) {
-        TerminalNode nameNode = value.NAME();
-        referencables.add(
-            new ValueNode(
-                createTypeSane(value.type()),
-                nameNode.getText(),
-                createExprSane(value.expr()),
-                locationOf(moduleLocation, nameNode)));
+      public Void visitRef(RefContext func) {
+        TerminalNode nameNode = func.NAME();
+        visitChildren(func);
+        Optional<TypeNode> type = createTypeSane(func.type());
+        String name = nameNode.getText();
+        Optional<ExprNode> expr = createExprSane(func.expr());
+        Optional<String> implementedBy = createImplementedBySane(func.STRING());
+        Location location = locationOf(moduleLocation, nameNode);
+        if (func.p == null) {
+          referencables.add(new ValueNode(type, name, expr, implementedBy, location));
+        } else {
+          List<ItemNode> params = createParams(func.paramList());
+          referencables.add(new FuncNode(type, name, params, expr, implementedBy, location));
+        }
         return null;
       }
 
-      @Override
-      public Void visitFunc(FuncContext func) {
-        TerminalNode nameNode = func.NAME();
-        referencables.add(
-            new FuncNode(
-                createTypeSane(func.type()),
-                nameNode.getText(),
-                createParams(func.paramList()),
-                createExprSane(func.expr()),
-                locationOf(moduleLocation, nameNode)));
-        return null;
+      private Optional<String> createImplementedBySane(TerminalNode implPath) {
+        return implPath == null
+            ? Optional.empty()
+            : Optional.of(unquote(implPath.getText()));
       }
 
       private List<ItemNode> createParams(ParamListContext paramList) {
@@ -158,7 +156,7 @@ public class AstCreator {
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();
-          return new StringNode(quotedString.substring(1, quotedString.length() - 1),
+          return new StringNode(unquote(quotedString),
               locationOf(moduleLocation, expr));
         }
         if (expr.BLOB() != null) {
@@ -227,5 +225,9 @@ public class AstCreator {
       }
     }.visit(module);
     return new Ast(structs, referencables);
+  }
+
+  private static String unquote(String quotedString) {
+    return quotedString.substring(1, quotedString.length() - 1);
   }
 }
