@@ -19,11 +19,9 @@ import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.NativeImplementation;
 
 public class JavacFunction {
-  @NativeImplementation("javac_")
-  public static Array javac_(NativeApi nativeApi, Array srcs, Array libs, Array options)
+  public static Array function(NativeApi nativeApi, Array srcs, Array libs, Array options)
       throws IOException {
     return new Worker(nativeApi, srcs, libs, options).execute();
   }

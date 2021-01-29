@@ -7,7 +7,7 @@ import org.smoothbuild.lang.base.define.Location;
 
 public class FuncNode extends CallableNode {
   public FuncNode(Optional<TypeNode> type, String name, List<ItemNode> params,
-      Optional<ExprNode> expr, Location location) {
-    super(type, name, expr, params, location);
+      Optional<ExprNode> expr, Optional<String> implementedBy, Location location) {
+    super(type, name, expr, params, implementedBy, location);
   }
 }

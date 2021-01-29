@@ -40,6 +40,7 @@ public class FunctionTest extends AcceptanceTestCase {
     public void is_not_evaluated_when_not_needed() throws Exception {
       createNativeJar(ThrowException.class);
       createUserModule("""
+          @Native("impl")
           Nothing throwException();
           func(String withDefault = throwException()) = withDefault;
           result = func("def");
@@ -138,6 +139,7 @@ public class FunctionTest extends AcceptanceTestCase {
   public void argument_is_not_evaluated_when_assigned_to_not_used_parameter() throws Exception {
     createNativeJar(ThrowException.class);
     createUserModule("""
+            @Native("impl")
             Nothing throwException();
             func(String notUsedParameter) = "abc";
             result = func(throwException());

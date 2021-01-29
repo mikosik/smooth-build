@@ -134,8 +134,8 @@ public class InferTypes {
         if (referencable.typeNode().isPresent()) {
           return createType(referencable.typeNode().get());
         } else {
-          logger.log(parseError(
-              referencable, referencable.q() + " is native so it should have type declaration."));
+          logger.log(parseError(referencable, referencable.q()
+              + " is native so it should have declared result type."));
           return empty();
         }
       }

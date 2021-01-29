@@ -9,12 +9,15 @@ import org.smoothbuild.lang.base.type.Type;
 public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> expr;
+  private final Optional<String> implementedBy;
 
   public ReferencableNode(
-      Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr, Location location) {
+      Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr,
+      Optional<String> implementedBy, Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.expr = expr;
+    this.implementedBy = implementedBy;
   }
 
   public Optional<TypeNode> typeNode() {
@@ -23,6 +26,10 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
 
   public Optional<ExprNode> expr() {
     return expr;
+  }
+
+  public Optional<String> implementedBy() {
+    return implementedBy;
   }
 
   @Override

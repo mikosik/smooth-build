@@ -58,6 +58,7 @@ public class AnalyzeSemantically {
     duplicateParamNames(logger, ast);
     structNameWithSingleCapitalLetter(logger, ast);
     illegalPolytypes(logger, ast);
+    assertReferencableHasBodyOrIsNative(logger, ast);
     return logger.logs();
   }
 
@@ -312,6 +313,32 @@ public class AnalyzeSemantically {
             + join(", ", map(variablesUsedOnce, v -> "`" + v + "`"))
             + " are used once in declaration of " + node.q()
             + ". This means each one can be replaced with `Any`."));
+      }
+    }.visitAst(ast);
+  }
+
+  private static void assertReferencableHasBodyOrIsNative(Logger logger, Ast ast) {
+    new AstVisitor() {
+      @Override
+      public void visitFunc(FuncNode func) {
+        super.visitFunc(func);
+        check(func, "function");
+      }
+
+      @Override
+      public void visitValue(ValueNode value) {
+        super.visitValue(value);
+        check(value, "value");
+      }
+
+      private void check(ReferencableNode referencable, String referencableKind) {
+        if (referencable.implementedBy().isPresent() && referencable.expr().isPresent()) {
+          logger.log(parseError(referencable, "Native " + referencableKind + " cannot have body."));
+        }
+        if (referencable.implementedBy().isEmpty() && referencable.expr().isEmpty()) {
+          logger.log(parseError(referencable,
+              "Non native " + referencableKind + " cannot have empty body."));
+        }
       }
     }.visitAst(ast);
   }

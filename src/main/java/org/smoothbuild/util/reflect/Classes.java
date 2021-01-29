@@ -19,6 +19,15 @@ import okio.ByteString;
 public class Classes {
   public static final String CLASS_FILE_EXTENSION = ".class";
 
+  public static Class<?> loadClass(Path jarPath, String binaryName) throws ClassNotFoundException {
+    return jarClassLoader(jarPath).loadClass(binaryName);
+  }
+
+  private static ClassLoader jarClassLoader(Path jar) {
+    ClassLoader parentClassLoader = Classes.class.getClassLoader();
+    return ClassLoaders.jarClassLoader(parentClassLoader, jar);
+  }
+
   public static String binaryPath(Class<?> clazz) {
     return clazz.getName().replace('.', '/') + CLASS_FILE_EXTENSION;
   }

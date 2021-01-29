@@ -34,6 +34,7 @@ public class DeclarationOrderTest {
     @Test
     public void value_can_be_used_as_its_type() {
       module("""
+             @Native("Impl.met")
              MyStruct myValue;
              MyStruct {}
              """)
@@ -43,6 +44,7 @@ public class DeclarationOrderTest {
     @Test
     public void value_can_be_used_as_its_arrayed_type() {
       module("""
+             @Native("Impl.met")
              [MyStruct] myValue;
              MyStruct {}
              """)
@@ -52,6 +54,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_parameter_type() {
       module("""
+             @Native("Impl.met")
              String myFunction(MyStruct param);
              MyStruct {}
              """)
@@ -61,6 +64,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_parameter_arrayed_type() {
       module("""
+             @Native("Impl.met")
              String myFunction([MyStruct] param);
              MyStruct {}
              """)
@@ -70,6 +74,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_result_type() {
       module("""
+             @Native("Impl.met")
              MyStruct myFunction(String param);
              MyStruct {}
              """)
@@ -79,6 +84,7 @@ public class DeclarationOrderTest {
     @Test
     public void function_can_be_used_as_arrayed_result_type() {
       module("""
+             @Native("Impl.met")
              [MyStruct] myFunction(String param);
              MyStruct {}
              """)

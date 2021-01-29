@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.cli;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.smoothbuild.util.Strings.unlines;
 
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -49,29 +49,29 @@ public class LoggingTest extends AcceptanceTestCase {
 
   private static void createModuleWithError(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportError.class);
-    testCase.createUserModule(unlines(
-        "Nothing reportError(String message);",
-        "result = reportError('" + LOG_MESSAGE + "');",
-        ""
-    ));
+    testCase.createUserModule(format("""
+            @Native("%s.function")
+            Nothing reportError(String message);
+            result = reportError("%s");
+            """, ReportError.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithWarning(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportWarning.class);
-    testCase.createUserModule(unlines(
-        "String reportWarning(String message);",
-        "result = reportWarning('" + LOG_MESSAGE + "');",
-        ""
-    ));
+    testCase.createUserModule(format("""
+            @Native("%s.function")
+            String reportWarning(String message);
+            result = reportWarning("%s");
+            """, ReportWarning.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   private static void createModuleWithInfo(AcceptanceTestCase testCase) throws IOException {
     testCase.createNativeJar(ReportInfo.class);
-    testCase.createUserModule(unlines(
-        "String reportInfo(String message);",
-        "result = reportInfo('" + LOG_MESSAGE + "');",
-        ""
-    ));
+    testCase.createUserModule(format("""
+            @Native("%s.function")
+            String reportInfo(String message);
+            result = reportInfo("%s");
+            """, ReportInfo.class.getCanonicalName(), LOG_MESSAGE));
   }
 
   @FunctionalInterface

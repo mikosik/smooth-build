@@ -7,11 +7,9 @@ import java.io.IOException;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.plugin.NativeApi;
-import org.smoothbuild.plugin.NativeImplementation;
 
 public class ToBlobFunction {
-  @NativeImplementation("toBlob")
-  public static Blob toBlob(NativeApi nativeApi, Str string) throws IOException {
+  public static Blob function(NativeApi nativeApi, Str string) throws IOException {
     return stringToBlob(nativeApi, string);
   }
 

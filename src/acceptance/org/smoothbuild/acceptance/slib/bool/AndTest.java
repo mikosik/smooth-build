@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.slib.bool;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 
 import java.io.IOException;
 
@@ -56,10 +57,11 @@ public class AndTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_first_is_false() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             Nothing throwException();
             result = and(false, throwException());
-            """);
+            """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactAsBoolean("result"))

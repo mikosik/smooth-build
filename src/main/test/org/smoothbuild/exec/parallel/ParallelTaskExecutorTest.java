@@ -16,6 +16,7 @@ import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
+import static org.smoothbuild.plugin.Caching.Level.DISK;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -237,7 +238,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(CALL, STRING, "task-name", algorithm, dependencies, internal(), true);
+    return new NormalTask(CALL, STRING, "task-name", algorithm, dependencies, internal(), DISK);
   }
 
   private static Output toSString(NativeApi nativeApi, int i) {

@@ -1,6 +1,7 @@
 package org.smoothbuild.acceptance.slib.common;
 
 import static com.google.common.truth.Truth.assertThat;
+import static java.lang.String.format;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,11 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             Nothing throwException();
             result = if(false, throwException(), 'else clause');
-            """);
+            """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -46,10 +48,11 @@ public class IfTest extends AcceptanceTestCase {
   @Test
   public void second_value_should_not_be_evaluated_when_condition_is_true() throws Exception {
     createNativeJar(ThrowException.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             Nothing throwException();
             result = if(true, 'then clause', throwException());
-            """);
+            """, ThrowException.class.getCanonicalName()));
     runSmoothBuild("result");
     assertFinishedWithSuccess();
     assertThat(artifactFileContentAsString("result"))
@@ -61,10 +64,11 @@ public class IfTest extends AcceptanceTestCase {
     @Test
     public void first_value_should_not_be_evaluated_when_condition_is_false() throws Exception {
       createNativeJar(ThrowException.class);
-      createUserModule("""
+      createUserModule(format("""
+            @Native("%s.function")
             Nothing throwException();
             result = if(true, if(false, throwException(), 'else clause'), 'ignored');
-            """);
+            """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
@@ -75,10 +79,11 @@ public class IfTest extends AcceptanceTestCase {
     public void second_value_should_not_be_evaluated_when_condition_is_true()
         throws Exception {
       createNativeJar(ThrowException.class);
-      createUserModule("""
+      createUserModule(format("""
+            @Native("%s.function")
             Nothing throwException();
             result = if(true, if(true, 'then clause', throwException()), 'ignored');
-            """);
+            """, ThrowException.class.getCanonicalName()));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))

@@ -22,6 +22,7 @@ public class ReferenceTest {
       @Test
       public void value_succeeds() {
         module("""
+               @Native("impl")
                String myValue;
                result = myValue;
                """)
@@ -32,6 +33,7 @@ public class ReferenceTest {
       public void value_declared_below_succeeds() {
         module("""
                result = myValue;
+               @Native("impl")
                String myValue;
                """)
             .loadsSuccessfully();
@@ -40,6 +42,7 @@ public class ReferenceTest {
       @Test
       public void function_succeeds() {
         module("""
+               @Native("impl")
                String myFunction();
                result = myFunction;
                """)
@@ -50,6 +53,7 @@ public class ReferenceTest {
       public void function_declared_below_succeeds() {
         module("""
                result = myFunction;
+               @Native("Impl.met")
                String myFunction();
                """)
             .loadsSuccessfully();
@@ -79,6 +83,7 @@ public class ReferenceTest {
       @Test
       public void value_succeeds() {
         Definitions imported = module("""
+            @Native("impl")
             String otherModuleValue;
             """)
             .loadsSuccessfully()
@@ -93,6 +98,7 @@ public class ReferenceTest {
       @Test
       public void function_succeeds() {
         Definitions imported = module("""
+            @Native("impl")
             String otherModuleFunction();
             """)
             .loadsSuccessfully()
@@ -149,16 +155,18 @@ public class ReferenceTest {
       @Test
       public void value_fails() {
         module("""
+               @Native("impl")
                String myValue;
                result = myValue();
                """)
-            .loadsWithError(2, "`myValue` cannot be called as it is a value.");
+            .loadsWithError(3, "`myValue` cannot be called as it is a value.");
       }
 
       @Test
       public void value_declared_below_fails() {
         module("""
                result = myValue();
+               @Native("Impl.met")
                String myValue;
                """)
             .loadsWithError(1, "`myValue` cannot be called as it is a value.");
@@ -167,6 +175,7 @@ public class ReferenceTest {
       @Test
       public void function_succeeds() {
         module("""
+               @Native("impl")
                String myFunction();
                result = myFunction();
                """)
@@ -177,6 +186,7 @@ public class ReferenceTest {
       public void function_declared_below_succeeds() {
         module("""
                result = myFunction();
+               @Native("impl")
                String myFunction();
                """)
             .loadsSuccessfully();
@@ -206,6 +216,7 @@ public class ReferenceTest {
       @Test
       public void value_fails() {
         Definitions imported = module("""
+            @Native("impl")
             String otherModuleValue;
             """)
             .loadsSuccessfully()
@@ -220,6 +231,7 @@ public class ReferenceTest {
       @Test
       public void function_succeeds() {
         Definitions imported = module("""
+            @Native("impl")
             String otherModuleFunction();
             """)
             .loadsSuccessfully()

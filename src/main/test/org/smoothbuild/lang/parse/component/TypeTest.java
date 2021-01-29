@@ -25,8 +25,9 @@ public class TypeTest {
     @ArgumentsSource(TestedMonotypes.class)
     public void can_declare_monotype(TestedType type) {
       module(unlines(
-          type.typeDeclarationsAsString(),
-          type.name() + " myValue;"))
+          "@Native(\"Impl.met\")",
+          type.name() + " myValue;",
+          type.typeDeclarationsAsString()))
           .loadsSuccessfully();
     }
 
@@ -34,8 +35,9 @@ public class TypeTest {
     @ArgumentsSource(TestedValidPolytypes.class)
     public void can_declare_valid_polytype(TestedType type) {
       module(unlines(
-          type.typeDeclarationsAsString(),
-          type.name() + " myValue;"))
+          "@Native(\"Impl.met\")",
+          type.name() + " myValue;",
+          type.typeDeclarationsAsString()))
           .loadsSuccessfully();
     }
 
@@ -43,15 +45,17 @@ public class TypeTest {
     @ArgumentsSource(TestedInvalidPolytypes.class)
     public void cannot_declare_invalid_polytype(TestedType type) {
       module(unlines(
+          "@Native(\"Impl.met\")",
           type.name() + " myValue;",
           type.typeDeclarationsAsString()))
-          .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myValue`." +
+          .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myValue`." +
               " This means each one can be replaced with `Any`.");
     }
 
     @Test
     public void can_declare_type_which_is_supertype_of_its_body_type() {
       module("""
+           @Native("impl")
            Nothing nothing;
            String myValue = nothing;
            """)
@@ -61,11 +65,12 @@ public class TypeTest {
     @Test
     public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_is_convertible() {
       module("""
+           @Native("impl")
            Nothing nothing;
            String myValue = nothing;
            Nothing result = myValue;
          """)
-          .loadsWithError(3, "`result` has body which type is `String` and it is not "
+          .loadsWithError(4, "`result` has body which type is `String` and it is not "
               + "convertible to its declared type `Nothing`.");
     }
   }
@@ -78,8 +83,9 @@ public class TypeTest {
       @ArgumentsSource(TestedMonotypes.class)
       public void can_declare_monotype(TestedType type) {
         module(unlines(
-            type.declarationsAsString(),
-            type.name() + " myFunction();"))
+            "@Native(\"impl\")",
+            type.name() + " myFunction();",
+            type.declarationsAsString()))
             .loadsSuccessfully();
       }
 
@@ -87,8 +93,9 @@ public class TypeTest {
       @ArgumentsSource(TestedValidPolytypes.class)
       public void can_declare_valid_polytype(TestedType type) {
         module(unlines(
-            type.typeDeclarationsAsString(),
-            type.name() + " myFunction();"))
+            "@Native(\"impl\")",
+            type.name() + " myFunction();",
+            type.typeDeclarationsAsString()))
             .loadsSuccessfully();
       }
 
@@ -96,15 +103,17 @@ public class TypeTest {
       @ArgumentsSource(TestedInvalidPolytypes.class)
       public void cannot_declare_invalid_polytype(TestedType type) {
         module(unlines(
+            "@Native(\"impl\")",
             type.name() + " myFunction();",
             type.typeDeclarationsAsString()))
-            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunction`."
+            .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunction`."
                 + " This means each one can be replaced with `Any`.");
       }
 
       @Test
       public void can_declare_result_type_which_is_supertype_of_function_expression() {
         module("""
+            @Native("impl")
             Nothing nothing;
             String myFunction() = nothing;
             """)
@@ -114,11 +123,12 @@ public class TypeTest {
       @Test
       public void cannot_be_assigned_to_non_convertible_type_even_when_its_body_type_is_convertible() {
         module("""
+            @Native("impl")
             Nothing nothing;
             String myFunction() = nothing;
             Nothing result = myFunction();
             """)
-            .loadsWithError(3, "`result` has body which type is `String` and it is not "
+            .loadsWithError(4, "`result` has body which type is `String` and it is not "
                 + "convertible to its declared type `Nothing`.");
       }
     }
@@ -129,8 +139,9 @@ public class TypeTest {
       @ArgumentsSource(TestedMonotypes.class)
       public void can_declare_monotype(TestedType type) {
         module(unlines(
-            type.typeDeclarationsAsString(),
-            "String myFunction(" + type.name() + " param);"))
+            "@Native(\"Impl.met\")",
+            "String myFunction(" + type.name() + " param);",
+            type.typeDeclarationsAsString()))
             .loadsSuccessfully();
       }
 
@@ -138,8 +149,9 @@ public class TypeTest {
       @ArgumentsSource(TestedValidPolytypes.class)
       public void can_declare_valid_polytype(TestedType type) {
         module(unlines(
-            type.typeDeclarationsAsString(),
-            "String myFunction(" + type.name() + " param);"))
+            "@Native(\"Impl.met\")",
+            "String myFunction(" + type.name() + " param);",
+            type.typeDeclarationsAsString()))
             .loadsSuccessfully();
       }
 
@@ -147,9 +159,10 @@ public class TypeTest {
       @ArgumentsSource(TestedInvalidPolytypes.class)
       public void cannot_declare_invalid_polytype(TestedType type) {
         module(unlines(
+            "@Native(\"Impl.met\")",
             "String myFunction(" + type.name() + " param);",
             type.typeDeclarationsAsString()))
-            .loadsWithError(1, "Type variable(s) `A` are used once in declaration of `myFunction`."
+            .loadsWithError(2, "Type variable(s) `A` are used once in declaration of `myFunction`."
                 + " This means each one can be replaced with `Any`.");
       }
     }
@@ -158,6 +171,7 @@ public class TypeTest {
     @ArgumentsSource(TestedInvalidPolytypes.class)
     public void can_declare_invalid_polytype_when_param_has_such_type(TestedType type) {
       module(unlines(
+          "@Native(\"Impl.met\")",
           type.name() + " myFunction(" + type.name() + " param);",
           type.typeDeclarationsAsString()))
           .loadsSuccessfully();
@@ -168,6 +182,7 @@ public class TypeTest {
     public void can_declare_invalid_polytype_param_when_some_other_param_has_such_type(
         TestedType type) {
       module(unlines(
+          "@Native(\"Impl.met\")",
           "Blob myFunction(" + type.name() + " param, " + type.name() + " param2);",
           type.typeDeclarationsAsString()))
           .loadsSuccessfully();
@@ -265,25 +280,28 @@ public class TypeTest {
     @Test
     public void value() {
       module("""
+             @Native("Impl.met")
              Undefined myValue;
              """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
+          .loadsWithError(2, "Undefined type `Undefined`.");
     }
 
     @Test
-    public void function() {
+    public void function_result() {
       module("""
+             @Native("Impl.met")
              Undefined myFunction();
              """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
+          .loadsWithError(2, "Undefined type `Undefined`.");
     }
 
     @Test
     public void parameter() {
       module("""
+             @Native("Impl.met")
              String myFunction(Undefined param);
              """)
-          .loadsWithError(1, "Undefined type `Undefined`.");
+          .loadsWithError(2, "Undefined type `Undefined`.");
     }
 
     @Test

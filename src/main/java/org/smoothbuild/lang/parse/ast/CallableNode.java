@@ -18,8 +18,8 @@ public class CallableNode extends ReferencableNode implements CallableLike {
   private final ImmutableList<ItemNode> params;
 
   public CallableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
-      List<ItemNode> params, Location location) {
-    super(typeNode, name, exprNode, location);
+      List<ItemNode> params, Optional<String> implementedBy, Location location) {
+    super(typeNode, name, exprNode, implementedBy, location);
     this.params = ImmutableList.copyOf(params);
   }
 

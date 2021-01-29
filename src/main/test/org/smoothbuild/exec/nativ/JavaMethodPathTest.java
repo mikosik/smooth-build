@@ -14,7 +14,7 @@ public class JavaMethodPathTest {
   public void path_with_dot_at_the_beginning(String path) {
     assertCall(() -> JavaMethodPath.parse(path))
         .throwsException(new JavaMethodPathParsingException("Illegal path to java method. " +
-            "Expected <binary class name>.<method name>, but was `" + path + "`"));
+            "Expected <binary class name>.<method name>, but was `" + path + "`."));
   }
 
   private static List<String> illegal_path_test_data() {

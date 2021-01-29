@@ -7,7 +7,6 @@ import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.expr.Expression.toTypes;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.expr.CallExpression;
@@ -19,15 +18,15 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Function extends Callable {
-  private final Optional<Expression> body;
+  private final Body body;
 
   public Function(Type resultType, String name, ImmutableList<Item> parameters,
-      Optional<Expression> body, Location location) {
+      Body body, Location location) {
     super(resultType, name, parameters, location);
     this.body = requireNonNull(body);
   }
 
-  public Optional<Expression> body() {
+  public Body body() {
     return body;
   }
 

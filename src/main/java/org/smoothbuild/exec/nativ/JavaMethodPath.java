@@ -5,7 +5,7 @@ public record JavaMethodPath(String classBinaryName, String methodName) {
     int index = path.lastIndexOf(".");
     if (index == -1 || index == 0 || index == path.length() - 1) {
       throw new JavaMethodPathParsingException("Illegal path to java method. Expected <binary " +
-          "class name>.<method name>, but was `" + path + "`");
+          "class name>.<method name>, but was `" + path + "`.");
     } else {
       return new JavaMethodPath(path.substring(0, index), path.substring(index + 1));
     }
@@ -13,7 +13,7 @@ public record JavaMethodPath(String classBinaryName, String methodName) {
 
   @Override
   public String toString() {
-    return  classBinaryName + '.' + methodName;
+    return classBinaryName + '.' + methodName;
   }
 
   public static class JavaMethodPathParsingException extends Exception {

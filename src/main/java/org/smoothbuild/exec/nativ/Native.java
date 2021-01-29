@@ -4,30 +4,25 @@ import java.lang.reflect.Method;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.util.JarFile;
+import org.smoothbuild.plugin.Caching.Level;
 
 public class Native {
-  private final String name;
   private final Method method;
-  private final boolean cacheable;
+  private final Level cachingLevel;
   private final JarFile jarFile;
 
-  public Native(String name, Method method, boolean cacheable, JarFile jarFile) {
-    this.name = name;
+  public Native(Method method, Level cachingLevel, JarFile jarFile) {
     this.method = method;
-    this.cacheable = cacheable;
+    this.cachingLevel = cachingLevel;
     this.jarFile = jarFile;
-  }
-
-  public String name() {
-    return name;
   }
 
   public Method method() {
     return method;
   }
 
-  public boolean cacheable() {
-    return cacheable;
+  public Level cachingLevel() {
+    return cachingLevel;
   }
 
   public Hash hash() {

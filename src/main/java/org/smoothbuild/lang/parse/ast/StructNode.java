@@ -48,8 +48,13 @@ public class StructNode extends NamedNode {
 
   public class ConstructorNode extends CallableNode {
     public ConstructorNode(String structName, List<ItemNode> params, Location location) {
-      super(Optional.of(new TypeNode(structName, location)),
-          UPPER_CAMEL.to(LOWER_CAMEL, structName), Optional.empty(), params, location);
+      super(
+          Optional.of(new TypeNode(structName, location)),
+          UPPER_CAMEL.to(LOWER_CAMEL, structName),
+          Optional.empty(),
+          params,
+          Optional.empty(),
+          location);
     }
 
     @Override

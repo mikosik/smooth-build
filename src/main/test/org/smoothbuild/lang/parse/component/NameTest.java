@@ -77,9 +77,9 @@ public class NameTest {
              MyFunction() = "abc";
              """)
           .loadsWithError(1, """
-            no viable alternative at input 'MyFunction()='
-            MyFunction() = "abc";
-                         ^""");
+                missing NAME at '='
+                MyFunction() = "abc";
+                             ^""");
     }
 
     @Test
@@ -88,9 +88,9 @@ public class NameTest {
              A() = "abc";
              """)
           .loadsWithError(1, """
-            no viable alternative at input 'A()='
-            A() = "abc";
-                ^""");
+              missing NAME at '='
+              A() = "abc";
+                  ^""");
     }
   }
 
@@ -99,6 +99,7 @@ public class NameTest {
     @Test
     public void with_normal_name() {
       module("""
+             @Native("impl")
              String myFunction(String name);
              """)
           .loadsSuccessfully();
@@ -165,9 +166,9 @@ public class NameTest {
              myStruct{}
              """)
           .loadsWithError(1, """
-            no viable alternative at input 'myStruct{'
-            myStruct{}
-                    ^""");
+              mismatched input '{' expecting {'(', '=', ';'}
+              myStruct{}
+                      ^""");
     }
 
     @Test

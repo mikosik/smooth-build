@@ -16,10 +16,12 @@ import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm implements Algorithm {
   private final Spec spec;
+  private final String referencableName;
   private final Native nativ;
 
-  public CallNativeAlgorithm(Spec spec, Native nativ) {
+  public CallNativeAlgorithm(Spec spec, String referencableName, Native nativ) {
     this.spec = spec;
+    this.referencableName = referencableName;
     this.nativ = nativ;
   }
 
@@ -40,13 +42,13 @@ public class CallNativeAlgorithm implements Algorithm {
           .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("`" + nativ.name()
+          nativeApi.log().error("`" + referencableName
               + "` has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!spec.equals(result.spec())) {
-        nativeApi.log().error("`" + nativ.name()
+        nativeApi.log().error("`" + referencableName
             + "` has faulty native implementation: Its declared result spec == " + spec.name()
             + " but it returned object with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
@@ -55,7 +57,7 @@ public class CallNativeAlgorithm implements Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("`" + nativ.name()
+      throw new NativeCallException("`" + referencableName
           + "` threw java exception from its native code.", e.getCause());
     }
   }

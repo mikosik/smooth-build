@@ -4,10 +4,13 @@ File {
   String path,
 }
 
+@Native("org.smoothbuild.slib.bool.TrueValue.value")
 Bool true;
 
+@Native("org.smoothbuild.slib.bool.FalseValue.value")
 Bool false;
 
+@Native("org.smoothbuild.slib.bool.NotFunction.function")
 Bool not(
   Bool value,
 );
@@ -22,35 +25,42 @@ Bool or(
   Bool second,
 ) = if (first, true, second);
 
+@Native("org.smoothbuild.slib.common.EqualFunction.function")
 Bool equal(
   A first,
   A second,
 );
 
+@Native("org.smoothbuild.slib.common.IfFunction.function")
 A if(
   Bool condition,
   A thenValue,
   A elseValue,
 );
 
+@Native("org.smoothbuild.slib.common.ConcatFunction.function")
 [A] concat(
   [A] array1,
   [A] array2,
 );
 
+@Native("org.smoothbuild.slib.file.ProjectFileFunction.function")
 File projectFile(
   String path,
 );
 
+@Native("org.smoothbuild.slib.file.ProjectFilesFunction.function")
 [File] projectFiles(
   String dir,
 );
 
+@Native("org.smoothbuild.slib.file.FilterFunction.function")
 [File] filter(
   [File] files,
   String pattern,
 );
 
+@Native("org.smoothbuild.slib.java.JarFunction.function")
 Blob jar(
   [File] files,
   Blob manifest = 0x,
@@ -67,34 +77,41 @@ Blob jar(
     libs = libs,
     options = concat(["-source", source, "-target", target], options));
 
+@Native("org.smoothbuild.slib.java.javac.JavacFunction.function")
 [File] javac_(
   [File] srcs,
   [File] libs = [],
   [String] options = [],
 );
 
+@Native("org.smoothbuild.slib.java.junit.JunitFunction.function")
 String junit(
   File tests,
   [File] deps = [],
   String include = "**Test.class",
 );
 
+@Native("org.smoothbuild.slib.string.ToBlobFunction.function")
 Blob toBlob(
   String string,
 );
 
+@Native("org.smoothbuild.slib.blob.ToStringFunction.function")
 String toString(
   Blob blob,
 );
 
+@Native("org.smoothbuild.slib.java.UnjarFunction.function")
 [File] unjar(
   Blob jar,
 );
 
+@Native("org.smoothbuild.slib.compress.UnzipFunction.function")
 [File] unzip(
   Blob blob,
 );
 
+@Native("org.smoothbuild.slib.compress.ZipFunction.function")
 Blob zip(
   [File] files,
 );

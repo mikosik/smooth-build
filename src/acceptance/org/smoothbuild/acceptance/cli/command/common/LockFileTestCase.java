@@ -1,5 +1,6 @@
 package org.smoothbuild.acceptance.cli.command.common;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.smoothbuild.util.Strings.unlines;
 
@@ -17,10 +18,11 @@ public abstract class LockFileTestCase extends AcceptanceTestCase {
   public void command_fails_when_lock_file_is_already_acquired() throws IOException,
       InterruptedException {
     createNativeJar(Sleep3s.class);
-    createUserModule("""
+    createUserModule(format("""
+            @Native("%s.function")
             String sleep3s();
             result = sleep3s();
-            """);
+            """, Sleep3s.class.getCanonicalName()));
 
     AcceptanceTestCase otherTest = new AcceptanceTestCase() {};
     otherTest.init(projectDirAbsolutePath());

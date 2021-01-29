@@ -1,11 +1,10 @@
 grammar Smooth;
 
-module      : ( struct | value | func )* EOF ;
+module      : ( struct | ref )* EOF ;
 struct      : TNAME '{' fieldList? '}' ;
 fieldList   : field ( ',' field )* ','? ;
 field       : type NAME ;
-value       : type? NAME ('=' expr)? ';' ;
-func        : type? NAME '(' paramList? ')' ('=' expr)? ';' ;
+ref         : ('@Native(' STRING ')')? type? NAME (p='(' paramList? ')')? ('=' expr)? ';' ;
 paramList   : param ( ',' param )* ','? ;
 param       : type NAME ( '=' expr )? ;
 expr        : nonPipeExpr ( p+='|' call )* ;
