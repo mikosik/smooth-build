@@ -3,8 +3,8 @@ package org.smoothbuild.exec.compute;
 import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
 import static org.smoothbuild.exec.base.MessageTuple.isValidSeverity;
 import static org.smoothbuild.exec.base.MessageTuple.severity;
+import static org.smoothbuild.exec.compute.ComputationCacheException.computationCacheException;
 import static org.smoothbuild.exec.compute.ComputationCacheException.corruptedValueException;
-import static org.smoothbuild.exec.compute.ComputationCacheException.outputDbException;
 import static org.smoothbuild.install.ProjectPaths.COMPUTATION_CACHE_PATH;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class ComputationCache {
         sink.write(output.value().hash());
       }
     } catch (IOException e) {
-      throw outputDbException(e);
+      throw computationCacheException(e);
     }
   }
 
@@ -95,7 +95,7 @@ public class ComputationCache {
         return new Output(object, messages);
       }
     } catch (IOException e) {
-      throw outputDbException(e);
+      throw computationCacheException(e);
     }
   }
 
