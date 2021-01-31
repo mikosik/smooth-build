@@ -46,7 +46,7 @@ public class TestingContext {
   private Container container;
   private ObjectFactory objectFactory;
   private ComputationCache computationCache;
-  private FileSystem outputDbFileSystem;
+  private FileSystem computationCacheFileSystem;
   private ObjectDb objectDb;
   private HashedDb hashedDb;
   private FileSystem hashedDbFileSystem;
@@ -60,7 +60,7 @@ public class TestingContext {
 
   public Computer computer() {
     if (computer == null) {
-      computer = new Computer(outputDb(), Hash.of(123), Providers.of(newContainer()));
+      computer = new Computer(computationCache(), Hash.of(123), Providers.of(newContainer()));
     }
     return computer;
   }
@@ -90,18 +90,19 @@ public class TestingContext {
     return objectDb;
   }
 
-  public ComputationCache outputDb() {
+  public ComputationCache computationCache() {
     if (computationCache == null) {
-      computationCache = new ComputationCache(outputDbFileSystem(), objectDb(), objectFactory());
+      computationCache = new ComputationCache(
+          computationCacheFileSystem(), objectDb(), objectFactory());
     }
     return computationCache;
   }
 
-  public FileSystem outputDbFileSystem() {
-    if (outputDbFileSystem == null) {
-      outputDbFileSystem = new MemoryFileSystem();
+  public FileSystem computationCacheFileSystem() {
+    if (computationCacheFileSystem == null) {
+      computationCacheFileSystem = new MemoryFileSystem();
     }
-    return outputDbFileSystem;
+    return computationCacheFileSystem;
   }
 
   public ObjectDb objectDbOther() {
