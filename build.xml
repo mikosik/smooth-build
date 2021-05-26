@@ -134,7 +134,7 @@
 
     <target name="compile.main.java" depends="generate-lang-parser, generate-task-filter-parser">
         <javac destdir="${dir.build.class.main.java}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -161,7 +161,7 @@
 
     <target name="compile.slib.java" depends="compile.main.java">
         <javac destdir="${dir.build.class.slib.java}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -189,7 +189,7 @@
 
     <target name="compile.testing.java" depends="compile.main.java">
         <javac destdir="${dir.build.class.testing.java}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -228,7 +228,7 @@
 
     <target name="compile.main.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.main.test}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -255,7 +255,7 @@
 
     <target name="compile.slib.test" depends="compile.slib.java, compile.testing.java">
         <javac destdir="${dir.build.class.slib.test}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -281,7 +281,7 @@
 
     <target name="compile.testing.test" depends="compile.testing.java">
         <javac destdir="${dir.build.class.testing.test}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">
@@ -308,7 +308,7 @@
 
     <target name="compile.acceptance.tests" depends="compile.testing.java">
         <javac destdir="${dir.build.class.acceptance}"
-               source="14"
+               source="15"
                debug="true"
                includeantruntime="false"
                debuglevel="lines,vars,source">

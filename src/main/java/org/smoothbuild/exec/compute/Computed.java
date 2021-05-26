@@ -6,7 +6,7 @@ import org.smoothbuild.exec.base.MaybeOutput;
 
 public record Computed(MaybeOutput maybeOutput, ResultSource resultSource) {
 
-  public Computed {
+  public Computed(MaybeOutput maybeOutput, ResultSource resultSource) {
     this.maybeOutput = requireNonNull(maybeOutput);
     this.resultSource = requireNonNull(resultSource);
   }

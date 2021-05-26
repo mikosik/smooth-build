@@ -7,7 +7,7 @@ import org.smoothbuild.util.MemoizingSupplier;
 import org.smoothbuild.util.ThrowingSupplier;
 
 public record TaskSupplier(Type type, ThrowingSupplier<Task, ExpressionVisitorException> supplier) {
-  public TaskSupplier {
+  public TaskSupplier(Type type, ThrowingSupplier<Task, ExpressionVisitorException> supplier) {
     this.type = type;
     this.supplier = new MemoizingSupplier<>(supplier);
   }

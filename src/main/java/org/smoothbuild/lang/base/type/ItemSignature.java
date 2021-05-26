@@ -17,7 +17,7 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     this(type, Optional.of(name), defaultValueType);
   }
 
-  public ItemSignature {
+  public ItemSignature(Type type, Optional<String> name, Optional<Type> defaultValueType) {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
     this.defaultValueType = requireNonNull(defaultValueType);

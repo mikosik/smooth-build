@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public record Item(Type type, String name, Optional<Expression> defaultValue) implements ItemLike {
-  public Item {
+  public Item(Type type, String name, Optional<Expression> defaultValue) {
     this.type = requireNonNull(type);
     this.name = requireNonNull(name);
     this.defaultValue = requireNonNull(defaultValue);

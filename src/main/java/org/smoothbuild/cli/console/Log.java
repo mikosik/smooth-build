@@ -10,7 +10,7 @@ import static org.smoothbuild.cli.console.Level.WARNING;
 import java.util.List;
 
 public record Log(Level level, String message) {
-  public Log {
+  public Log(Level level, String message) {
     this.level = requireNonNull(level);
     this.message = requireNonNull(message);
   }

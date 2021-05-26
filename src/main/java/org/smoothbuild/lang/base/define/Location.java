@@ -23,8 +23,9 @@ public record Location(ModuleLocation moduleLocation, int line) {
     return new Location(moduleLocation, line);
   }
 
-  public Location {
+  public Location(ModuleLocation moduleLocation, int line) {
     this.moduleLocation = requireNonNull(moduleLocation);
+    this.line = line;
   }
 
   public ModuleLocation module() {
