@@ -22,7 +22,7 @@
     <orderEntry type="library" name="com.google.guava:guava-testlib" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio:2.7.0" level="project" />
     <orderEntry type="library" name="org.antlr:antlr4:4.8-1" level="project" />
-    <orderEntry type="library" name="com.google.inject:guice:4.2.3" level="project" />
+    <orderEntry type="library" name="com.google.inject:guice" level="project" />
     <orderEntry type="library" name="com.google.truth:truth:1.0.1" level="project" />
     <orderEntry type="library" name="org.mockito:mockito-core:3.3.3" level="project" />
     <orderEntry type="library" name="info.picocli:picocli:4.4.0" level="project" />
