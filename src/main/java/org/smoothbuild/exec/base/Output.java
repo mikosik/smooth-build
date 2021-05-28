@@ -16,6 +16,7 @@ public record Output(Obj value, Array messages) {
     return value != null;
   }
 
+  @Override
   public Obj value() {
     checkState(hasValue(), "Output does not contain value.");
     return value;
