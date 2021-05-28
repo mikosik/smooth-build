@@ -3,7 +3,6 @@ package org.smoothbuild.exec.parallel;
 import java.util.function.Consumer;
 
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.util.concurrent.SoftTerminationExecutor;
@@ -25,9 +24,8 @@ public class ResultHandler implements Consumer<Computed> {
   @Override
   public void accept(Computed computed) {
     reporter.report(task, computed);
-    MaybeOutput result = computed.computed();
-    if (result.hasOutputWithValue()) {
-      consumer.accept(result.output().value());
+    if (computed.hasOutputWithValue()) {
+      consumer.accept(computed.output().value());
     } else {
       jobExecutor.terminate();
     }

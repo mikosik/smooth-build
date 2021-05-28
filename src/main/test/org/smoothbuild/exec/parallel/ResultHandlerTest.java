@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
-import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.Task;
@@ -73,20 +72,20 @@ public class ResultHandlerTest {
     @Test
     public void object_is_not_forwarded_to_consumer() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), DISK));
+      resultHandler.accept(new Computed(new ArithmeticException(), DISK));
       verifyNoInteractions(consumer);
     }
 
     @Test
     public void executor_is_stopped() {
       ResultHandler resultHandler = new ResultHandler(task(), consumer, reporter, executor);
-      resultHandler.accept(new Computed(new MaybeOutput(new ArithmeticException()), DISK));
+      resultHandler.accept(new Computed(new ArithmeticException(), DISK));
       verify(executor, only()).terminate();
     }
   }
 
   private Computed maybeComputed(Obj object) {
-    return new Computed(new MaybeOutput(output(object)), DISK);
+    return new Computed(output(object), DISK);
   }
 
   private static Output output(Obj object) {
