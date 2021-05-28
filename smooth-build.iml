@@ -20,7 +20,7 @@
     <orderEntry type="library" name="org.junit.platform:junit-platform-launcher" level="project" />
     <orderEntry type="library" name="com.google.guava:guava" level="project" />
     <orderEntry type="library" name="com.google.guava:guava-testlib" level="project" />
-    <orderEntry type="library" name="com.squareup.okio:okio:2.7.0" level="project" />
+    <orderEntry type="library" name="com.squareup.okio:okio" level="project" />
     <orderEntry type="library" name="org.antlr:antlr4:4.8-1" level="project" />
     <orderEntry type="library" name="com.google.inject:guice" level="project" />
     <orderEntry type="library" name="com.google.truth:truth" level="project" />
