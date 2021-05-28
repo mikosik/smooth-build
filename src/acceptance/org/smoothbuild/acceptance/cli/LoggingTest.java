@@ -15,11 +15,11 @@ import org.smoothbuild.acceptance.testing.ReportInfo;
 import org.smoothbuild.acceptance.testing.ReportWarning;
 
 public class LoggingTest extends AcceptanceTestCase {
-  private static final String LOG_MESSAGE = "WARNING: my-warning-message";
+  private static final String LOG_MESSAGE = "WARNING: my-message-to-log";
 
   @ParameterizedTest
   @MethodSource("test_cases")
-  public void name(
+  public void log_level_option_filters_logs_below_threshold(
       TestCaseInitializer userModuleCreator, String logLevel, boolean logShown) throws Throwable {
     userModuleCreator.initialize(this);
     runSmoothBuild("--log-level=" + logLevel, "result");
