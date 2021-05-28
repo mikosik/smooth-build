@@ -18,7 +18,6 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.SandboxHash;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
-import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
@@ -57,15 +56,15 @@ public class Computer {
       newFeeder.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         Output output = computationCache.read(hash, algorithm.outputSpec());
-        newFeeder.accept(new Computed(new MaybeOutput(output), DISK));
+        newFeeder.accept(new Computed(output, DISK));
         feeders.remove(hash);
       } else {
-        MaybeOutput result = doCompute(algorithm, input);
-        boolean cacheOnDisk = cachingScope == MACHINE && result.hasOutput();
+        Computed computed = runAlgorithm(algorithm, input);
+        boolean cacheOnDisk = cachingScope == MACHINE && computed.hasOutput();
         if (cacheOnDisk) {
-          computationCache.write(hash, result.output());
+          computationCache.write(hash, computed.output());
         }
-        newFeeder.accept(new Computed(result, EXECUTION));
+        newFeeder.accept(computed);
         if (cacheOnDisk) {
           feeders.remove(hash);
         }
@@ -75,17 +74,20 @@ public class Computer {
 
   private static Computed computedFromCache(Scope caching, Computed computed) {
     return new Computed(
-        computed.computed(),
+        computed.output(),
+        computed.exception(),
         computed.resultSource() == EXECUTION && caching == BUILD_RUN ? MEMORY : DISK);
   }
 
-  private MaybeOutput doCompute(Algorithm algorithm, Input input) throws IOException {
+  private Computed runAlgorithm(Algorithm algorithm, Input input) throws IOException {
     try (Container container = containerProvider.get()) {
+      Output output;
       try {
-        return new MaybeOutput(algorithm.run(input, container));
+        output = algorithm.run(input, container);
       } catch (Exception e) {
-        return new MaybeOutput(e);
+        return new Computed(e, EXECUTION);
       }
+      return new Computed(output, EXECUTION);
     }
   }
 

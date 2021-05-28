@@ -18,7 +18,6 @@ import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Reporter;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.compute.Computed;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
@@ -37,13 +36,12 @@ public class ExecutionReporter {
   }
 
   public void report(Task task, Computed computed) {
-    MaybeOutput maybeOutput = computed.computed();
     ResultSource resultSource = computed.resultSource();
-    if (maybeOutput.hasOutput()) {
-      print(task, resultSource, maybeOutput.output().messages());
+    if (computed.hasOutput()) {
+      print(task, resultSource, computed.output().messages());
     } else {
       Log error = error(
-          "Execution failed with:\n" + getStackTraceAsString(maybeOutput.exception()));
+          "Execution failed with:\n" + getStackTraceAsString(computed.exception()));
       print(task, resultSource, List.of(error));
     }
   }
