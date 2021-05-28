@@ -46,10 +46,10 @@
     <property name="lib.kotlin-stdlib" value="${dir.lib}/ivy/kotlin-stdlib-1.3.70.jar"/>
     <property name="lib.kotlin-stdlib-common"
               value="${dir.lib}/ivy/kotlin-stdlib-common-1.3.70.jar"/>
-    <property name="lib.mockito" value="${dir.lib}/ivy/mockito-core-3.3.3.jar"/>
-    <property name="lib.byte-buddy" value="${dir.lib}/ivy/byte-buddy-1.10.5.jar"/>
-    <property name="lib.byte-buddy-agent" value="${dir.lib}/ivy/byte-buddy-agent-1.10.5.jar"/>
-    <property name="lib.objenesis" value="${dir.lib}/ivy/objenesis-2.6.jar"/>
+    <property name="lib.mockito" value="${dir.lib}/ivy/mockito-core-3.10.0.jar"/>
+    <property name="lib.byte-buddy" value="${dir.lib}/ivy/byte-buddy-1.11.0.jar"/>
+    <property name="lib.byte-buddy-agent" value="${dir.lib}/ivy/byte-buddy-agent-1.11.0.jar"/>
+    <property name="lib.objenesis" value="${dir.lib}/ivy/objenesis-3.2.jar"/>
     <property name="lib.okio" value="${dir.lib}/ivy/okio-2.7.0.jar"/>
     <property name="lib.stringtemplate4" value="${dir.lib}/ivy/ST4-4.3.jar"/>
     <property name="lib.truth" value="${dir.lib}/ivy/truth-1.1.3.jar"/>

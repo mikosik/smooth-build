@@ -24,7 +24,7 @@
     <orderEntry type="library" name="org.antlr:antlr4:4.8-1" level="project" />
     <orderEntry type="library" name="com.google.inject:guice" level="project" />
     <orderEntry type="library" name="com.google.truth:truth" level="project" />
-    <orderEntry type="library" name="org.mockito:mockito-core:3.3.3" level="project" />
+    <orderEntry type="library" name="org.mockito:mockito-core" level="project" />
     <orderEntry type="library" name="info.picocli:picocli:4.4.0" level="project" />
   </component>
 </module>
