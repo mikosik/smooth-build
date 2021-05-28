@@ -1,7 +1,11 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.plugin.Caching.Level.DISK;
-import static org.smoothbuild.plugin.Caching.Level.NONE;
+import static org.smoothbuild.exec.compute.ResultSource.DISK;
+import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
+import static org.smoothbuild.plugin.Caching.Scope.BUILD_RUN;
+import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
+import static org.smoothbuild.plugin.Caching.Scope.NONE;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +20,7 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.MaybeOutput;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.plugin.Caching.Level;
+import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 /**
@@ -42,31 +46,37 @@ public class Computer {
     Algorithm algorithm = task.algorithm();
     Hash hash = computationHash(algorithm, input);
     FeedingConsumer<Computed> newFeeder = new FeedingConsumer<>();
-    Level caching = task.cachingLevel();
+    Scope cachingScope = task.cachingScope();
     FeedingConsumer<Computed> prevFeeder =
-        caching == NONE ? null : feeders.putIfAbsent(hash, newFeeder);
+        cachingScope == NONE ? null : feeders.putIfAbsent(hash, newFeeder);
     if (prevFeeder != null) {
       prevFeeder
-          .chain((computed) -> new Computed(computed.computed(), ResultSource.CACHE))
+          .chain((computed) -> computedFromCache(cachingScope, computed))
           .addConsumer(consumer);
     } else {
       newFeeder.addConsumer(consumer);
       if (computationCache.contains(hash)) {
         Output output = computationCache.read(hash, algorithm.outputSpec());
-        newFeeder.accept(new Computed(new MaybeOutput(output), ResultSource.CACHE));
+        newFeeder.accept(new Computed(new MaybeOutput(output), DISK));
         feeders.remove(hash);
       } else {
         MaybeOutput result = doCompute(algorithm, input);
-        boolean cacheOnDisk = caching == DISK && result.hasOutput();
+        boolean cacheOnDisk = cachingScope == MACHINE && result.hasOutput();
         if (cacheOnDisk) {
           computationCache.write(hash, result.output());
         }
-        newFeeder.accept(new Computed(result, ResultSource.EXECUTION));
+        newFeeder.accept(new Computed(result, EXECUTION));
         if (cacheOnDisk) {
           feeders.remove(hash);
         }
       }
     }
+  }
+
+  private static Computed computedFromCache(Scope caching, Computed computed) {
+    return new Computed(
+        computed.computed(),
+        computed.resultSource() == EXECUTION && caching == BUILD_RUN ? MEMORY : DISK);
   }
 
   private MaybeOutput doCompute(Algorithm algorithm, Input input) throws IOException {

@@ -10,7 +10,7 @@ import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
-import static org.smoothbuild.plugin.Caching.Level.DISK;
+import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -91,7 +91,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
         structType.fieldIndex(field.name().get()), field.type().visit(toSpecConverter));
     List<Task> children = childrenTasks(scope, expression.expression());
     return new NormalTask(CALL, field.type(), "." + field.name().get(), algorithm, children,
-        expression.location(), DISK);
+        expression.location(), MACHINE);
   }
 
   @Override
@@ -157,7 +157,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new CreateTupleAlgorithm(type);
     List<Task> dependencies = childrenTasks(scope, expression.arguments());
     return new NormalTask(CALL, resultType, constructor.extendedName(), algorithm,
-        dependencies, expression.location(), DISK);
+        dependencies, expression.location(), MACHINE);
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
@@ -236,7 +236,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new CreateArrayAlgorithm(toSpecConverter.visit(actualType));
     List<Task> convertedElements = convertedElements(actualType.elemType(), elements);
     return new NormalTask(LITERAL, actualType, actualType.name(), algorithm, convertedElements,
-        expression.location(), DISK);
+        expression.location(), MACHINE);
   }
 
   private List<Task> convertedElements(Type type, List<Task> elements) {
@@ -256,7 +256,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
     return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
-        ImmutableList.of(), expression.location(), DISK);
+        ImmutableList.of(), expression.location(), MACHINE);
   }
 
   @Override
@@ -264,7 +264,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var stringType = toSpecConverter.visit(string());
     var algorithm = new FixedStringAlgorithm(stringType, expression.string());
     return new NormalTask(LITERAL, string(), algorithm.shortedString(), algorithm,
-        ImmutableList.of(), expression.location(), DISK);
+        ImmutableList.of(), expression.location(), MACHINE);
   }
 
   private ImmutableList<TaskSupplier> childrenTaskSuppliers(Scope<TaskSupplier> scope,
@@ -300,6 +300,6 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     Algorithm algorithm = new ConvertAlgorithm(requiredType.visit(toSpecConverter));
     List<Task> dependencies = list(task);
     return new NormalTask(
-        CONVERSION, requiredType, description, algorithm, dependencies, task.location(), DISK);
+        CONVERSION, requiredType, description, algorithm, dependencies, task.location(), MACHINE);
   }
 }
