@@ -198,7 +198,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         sleep1000ms();
-        return toSString(nativeApi, counter.getAndIncrement());
+        return toStr(nativeApi, counter.getAndIncrement());
       }
     };
   }
@@ -207,7 +207,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new TestAlgorithm(Hash.of(5)) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
-        return toSString(nativeApi, counter.getAndIncrement());
+        return toStr(nativeApi, counter.getAndIncrement());
       }
     };
   }
@@ -219,7 +219,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
       public Output run(Input input, NativeApi nativeApi) {
         write.incrementAndGet();
         sleep1000ms();
-        return toSString(nativeApi, read.get());
+        return toStr(nativeApi, read.get());
       }
     };
   }
@@ -241,7 +241,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return new NormalTask(CALL, STRING, "task-name", algorithm, dependencies, internal(), DISK);
   }
 
-  private static Output toSString(NativeApi nativeApi, int i) {
+  private static Output toStr(NativeApi nativeApi, int i) {
     return new Output(nativeApi.factory().string(Integer.toString(i)), nativeApi.messages());
   }
 
