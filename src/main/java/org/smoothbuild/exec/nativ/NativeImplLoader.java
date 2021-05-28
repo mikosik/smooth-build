@@ -3,7 +3,7 @@ package org.smoothbuild.exec.nativ;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.exec.nativ.MapTypeToJType.mapTypeToJType;
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.plugin.Caching.Level.DISK;
+import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.getAnnotation;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
@@ -33,7 +33,7 @@ import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.plugin.Caching;
-import org.smoothbuild.plugin.Caching.Level;
+import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.plugin.NativeApi;
 
 @Singleton
@@ -79,8 +79,8 @@ public class NativeImplLoader {
     Native nativ = cache.get(key);
     if (nativ == null) {
       Method method = findMethod(referencable, jarFile, path);
-      Level cachingLevel = getAnnotation(method, Caching.class).map(Caching::level).orElse(DISK);
-      nativ = new Native(method, cachingLevel, jarFile);
+      Scope cachingScope = getAnnotation(method, Caching.class).map(Caching::scope).orElse(MACHINE);
+      nativ = new Native(method, cachingScope, jarFile);
       cache.put(key, nativ);
     }
     return nativ;

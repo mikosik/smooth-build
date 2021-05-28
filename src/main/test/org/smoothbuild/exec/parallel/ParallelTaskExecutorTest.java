@@ -11,12 +11,14 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.smoothbuild.cli.console.Log.error;
-import static org.smoothbuild.exec.compute.ResultSource.CACHE;
+import static org.smoothbuild.exec.compute.ResultSource.DISK;
 import static org.smoothbuild.exec.compute.ResultSource.EXECUTION;
+import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.plugin.Caching.Level.DISK;
+import static org.smoothbuild.plugin.Caching.Scope.BUILD_RUN;
+import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.smoothbuild.cli.console.Reporter;
@@ -40,6 +43,7 @@ import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
+import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -106,7 +110,58 @@ public class ParallelTaskExecutorTest extends TestingContext {
         .collect(toList());
 
     assertThat(reportedSources)
-        .containsExactly(CACHE, CACHE, CACHE, EXECUTION);
+        .containsExactly(DISK, DISK, DISK, EXECUTION);
+  }
+
+  @Nested
+  class _result_source_for_cached_computation_with_caching_scope_equal_ {
+    @Test
+    public void buildrun_is_memory()
+        throws Exception {
+      parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
+      AtomicInteger counter = new AtomicInteger();
+      Task task1 = task(sleepGetIncrementAlgorithm(counter), BUILD_RUN);
+      Task task2 = task(sleepGetIncrementAlgorithm(counter), BUILD_RUN);
+      Task task = concat(task1, task2);
+
+      assertThat(executeSingleTask(task))
+          .isEqualTo(string("(0,0)"));
+
+      ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+      verify(reporter, times(1)).report(eq(task1), captor.capture());
+      verify(reporter, times(1)).report(eq(task2), captor.capture());
+      List<ResultSource> reportedSources = captor.getAllValues()
+          .stream()
+          .map(Computed::resultSource)
+          .collect(toList());
+
+      assertThat(reportedSources)
+          .containsExactly(MEMORY, EXECUTION);
+    }
+
+    @Test
+    public void machine_is_disk()
+        throws Exception {
+      parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
+      AtomicInteger counter = new AtomicInteger();
+      Task task1 = task(sleepGetIncrementAlgorithm(counter), MACHINE);
+      Task task2 = task(sleepGetIncrementAlgorithm(counter), MACHINE);
+      Task task = concat(task1, task2);
+
+      assertThat(executeSingleTask(task))
+          .isEqualTo(string("(0,0)"));
+
+      ArgumentCaptor<Computed> captor = ArgumentCaptor.forClass(Computed.class);
+      verify(reporter, times(1)).report(eq(task1), captor.capture());
+      verify(reporter, times(1)).report(eq(task2), captor.capture());
+      List<ResultSource> reportedSources = captor.getAllValues()
+          .stream()
+          .map(Computed::resultSource)
+          .collect(toList());
+
+      assertThat(reportedSources)
+          .containsExactly(DISK, EXECUTION);
+    }
   }
 
   @Test
@@ -157,7 +212,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Task concat(Task... dependencies) {
-    return task(concatAlgorithm(), list(dependencies));
+    return task(concatAlgorithm(), list(dependencies), MACHINE);
   }
 
   private Algorithm concatAlgorithm() {
@@ -234,11 +289,16 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Task task(Algorithm algorithm) {
-    return task(algorithm, ImmutableList.of());
+    return task(algorithm, MACHINE);
   }
 
-  private static Task task(Algorithm algorithm, List<Task> dependencies) {
-    return new NormalTask(CALL, STRING, "task-name", algorithm, dependencies, internal(), DISK);
+  private Task task(Algorithm algorithm, Scope cachingScope) {
+    return task(algorithm, ImmutableList.of(), cachingScope);
+  }
+
+  private static Task task(Algorithm algorithm, List<Task> dependencies, Scope cachingScope) {
+    return new NormalTask(
+        CALL, STRING, "task-name", algorithm, dependencies, internal(), cachingScope);
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {

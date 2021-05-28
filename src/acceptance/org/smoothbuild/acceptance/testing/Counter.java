@@ -1,6 +1,6 @@
 package org.smoothbuild.acceptance.testing;
 
-import static org.smoothbuild.plugin.Caching.Level.NONE;
+import static org.smoothbuild.plugin.Caching.Scope.NONE;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,7 +11,7 @@ import org.smoothbuild.plugin.NativeApi;
 public class Counter {
   private static final AtomicInteger COUNTER = new AtomicInteger();
 
-  @Caching(level = NONE)
+  @Caching(scope = NONE)
   public static Str function(NativeApi nativeApi) {
     return nativeApi.factory().string(Integer.toString(COUNTER.incrementAndGet()));
   }

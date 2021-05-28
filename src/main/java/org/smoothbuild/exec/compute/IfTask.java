@@ -14,7 +14,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.plugin.Caching.Level;
+import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -24,9 +24,9 @@ public class IfTask extends ComputableTask {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfTask(Type type, Algorithm algorithm, List<? extends Task> dependencies,
-      Location location, Level cachingLevel) {
+      Location location, Scope cachingScope) {
     super(TaskKind.CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location,
-        cachingLevel);
+        cachingScope);
   }
 
   @Override

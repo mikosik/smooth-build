@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Caching {
-  Level level();
-  public enum Level { DISK, MEMORY, NONE}
+  Scope scope();
+  public enum Scope { NONE, BUILD_RUN, MACHINE}
 }
