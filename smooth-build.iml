@@ -21,7 +21,7 @@
     <orderEntry type="library" name="com.google.guava:guava" level="project" />
     <orderEntry type="library" name="com.google.guava:guava-testlib" level="project" />
     <orderEntry type="library" name="com.squareup.okio:okio" level="project" />
-    <orderEntry type="library" name="org.antlr:antlr4:4.8-1" level="project" />
+    <orderEntry type="library" name="org.antlr:antlr" level="project" />
     <orderEntry type="library" name="com.google.inject:guice" level="project" />
     <orderEntry type="library" name="com.google.truth:truth" level="project" />
     <orderEntry type="library" name="org.mockito:mockito-core" level="project" />
