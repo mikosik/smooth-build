@@ -13,6 +13,6 @@
         <dependency org="org.mockito" name="mockito-core" rev="3.10.0"/>
         <dependency org="com.squareup.okio" name="okio" rev="2.10.0"/>
         <dependency org="org.antlr" name="antlr4" rev="4.8-1"/>
-        <dependency org="info.picocli" name="picocli" rev="4.4.0" />
+        <dependency org="info.picocli" name="picocli" rev="4.6.1" />
     </dependencies>
 </ivy-module>
