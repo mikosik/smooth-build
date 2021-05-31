@@ -7,18 +7,22 @@ import org.smoothbuild.lang.base.define.Location;
 import com.google.common.collect.ImmutableList;
 
 public class CallNode extends ExprNode {
-  private final String name;
+  private final RefNode ref;
   private final List<ArgNode> args;
   private List<ArgNode> assignedArgs;
 
-  public CallNode(String name, List<ArgNode> args, Location location) {
+  public CallNode(RefNode ref, List<ArgNode> args, Location location) {
     super(location);
-    this.name = name;
+    this.ref = ref;
     this.args = ImmutableList.copyOf(args);
   }
 
+  public RefNode ref() {
+    return ref;
+  }
+
   public String calledName() {
-    return name;
+    return ref.name();
   }
 
   public List<ArgNode> args() {

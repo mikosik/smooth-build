@@ -28,7 +28,6 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Struct;
-import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -257,8 +256,7 @@ public class InferTypes {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         String name = call.calledName();
-        ReferencableLike called = referencables.findReferencableLike(name);
-        Optional<Type> calledType = called.inferredType();
+        Optional<Type> calledType = call.ref().referenced().inferredType();
         if (calledType.isPresent()) {
           Type type1 = calledType.get();
           if (type1 instanceof FunctionType functionType) {

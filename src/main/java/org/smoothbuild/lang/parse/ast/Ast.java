@@ -112,14 +112,6 @@ public class Ast {
     Set<GraphEdge<Location, String>> dependencies = new HashSet<>();
     new AstVisitor() {
       @Override
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        if (names.contains(call.calledName())) {
-          dependencies.add(new GraphEdge<>(call.location(), call.calledName()));
-        }
-      }
-
-      @Override
       public void visitRef(RefNode ref) {
         super.visitRef(ref);
         if (names.contains(ref.name())) {

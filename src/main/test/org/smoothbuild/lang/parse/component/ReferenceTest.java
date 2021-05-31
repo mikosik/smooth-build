@@ -159,7 +159,7 @@ public class ReferenceTest {
                String myValue;
                result = myValue();
                """)
-            .loadsWithError(3, "`myValue` cannot be called as it is a value.");
+            .loadsWithError(3, "`myValue` cannot be called as it is not a function.");
       }
 
       @Test
@@ -169,7 +169,7 @@ public class ReferenceTest {
                @Native("Impl.met")
                String myValue;
                """)
-            .loadsWithError(1, "`myValue` cannot be called as it is a value.");
+            .loadsWithError(1, "`myValue` cannot be called as it is not a function.");
       }
 
       @Test
@@ -225,7 +225,7 @@ public class ReferenceTest {
                result = otherModuleValue();
                """)
             .withImported(imported)
-            .loadsWithError(1, "`otherModuleValue` cannot be called as it is a value.");
+            .loadsWithError(1, "`otherModuleValue` cannot be called as it is not a function.");
       }
 
       @Test
@@ -265,7 +265,7 @@ public class ReferenceTest {
         module("""
                myFunction(String param) = param();
                """)
-            .loadsWithError(1, "Parameter `param` cannot be called as it is not a function.");
+            .loadsWithError(1, "`param` cannot be called as it is not a function.");
       }
     }
 
