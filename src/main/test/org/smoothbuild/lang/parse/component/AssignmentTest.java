@@ -137,7 +137,7 @@ public class AssignmentTest {
         .loadsSuccessfully();
   }
 
-  public static List<Arguments> array_element_assignment_test_specs() {
+  private static List<Arguments> array_element_assignment_test_specs() {
     ArrayList<Arguments> result = new ArrayList<>();
     for (TestedType type1 : TestedType.TESTED_MONOTYPES) {
       for (TestedType type2 : TestedType.TESTED_MONOTYPES) {
