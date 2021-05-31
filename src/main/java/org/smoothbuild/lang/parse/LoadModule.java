@@ -4,7 +4,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static java.util.Optional.empty;
 import static org.smoothbuild.lang.parse.AnalyzeSemantically.analyzeSemantically;
-import static org.smoothbuild.lang.parse.AssignArgsToParams.assignArgsToParams;
 import static org.smoothbuild.lang.parse.InferTypes.inferTypes;
 import static org.smoothbuild.lang.parse.LoadReferencable.loadReferencable;
 import static org.smoothbuild.lang.parse.ParseModule.parseModule;
@@ -41,11 +40,6 @@ public class LoadModule {
 
     Ast ast = fromParseTree(moduleLocation, moduleContext.value());
     result.logAll(analyzeSemantically(imported, ast));
-    if (result.hasProblems()) {
-      return result;
-    }
-
-    result.logAll(assignArgsToParams(ast, imported));
     if (result.hasProblems()) {
       return result;
     }
