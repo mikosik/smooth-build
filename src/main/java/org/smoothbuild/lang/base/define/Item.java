@@ -40,7 +40,7 @@ public record Item(Type type, String name, Optional<Expression> defaultValue) im
   }
 
   private String defaultValueToString() {
-    return defaultValue.map(v -> " = " + v.toString()).orElse("");
+    return defaultValue.map(v -> " = " + v).orElse("");
   }
 
   public static ImmutableList<ItemSignature> toItemSignatures(List<Item> items) {
