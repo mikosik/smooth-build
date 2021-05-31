@@ -130,7 +130,7 @@ public class AstCreator {
         List<ArgNode> args = new ArrayList<>();
         args.add(new ArgNode(null, result, location));
         args.addAll(argList);
-        return new CallNode(calledName.getText(), args, locationOf(moduleLocation, calledName));
+        return new CallNode(newRefNode(calledName), args, locationOf(moduleLocation, calledName));
       }
 
       private ExprNode createNonPipeExpr(NonPipeExprContext expr) {
@@ -148,11 +148,10 @@ public class AstCreator {
           CallContext call = expr.call();
           Location location = locationOf(moduleLocation, call);
           List<ArgNode> args = createArgList(call.argList());
-          return new CallNode(call.NAME().getText(), args, location);
+          return new CallNode(newRefNode(call.NAME()), args, location);
         }
         if (expr.NAME() != null) {
-          TerminalNode name = expr.NAME();
-          return new RefNode(name.getText(), locationOf(moduleLocation, name));
+          return newRefNode(expr.NAME());
         }
         if (expr.STRING() != null) {
           String quotedString = expr.STRING().getText();
@@ -165,6 +164,10 @@ public class AstCreator {
         }
         throw new RuntimeException("Illegal parse tree: " + NonPipeExprContext.class.getSimpleName()
             + " without children.");
+      }
+
+      private RefNode newRefNode(TerminalNode name) {
+        return new RefNode(name.getText(), locationOf(moduleLocation, name));
       }
 
       private List<ArgNode> createArgList(ArgListContext argList) {

@@ -19,13 +19,11 @@ import org.smoothbuild.cli.console.Logger;
 import org.smoothbuild.cli.console.MemoryLogger;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Location;
-import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.parse.ast.ArrayTypeNode;
 import org.smoothbuild.lang.parse.ast.Ast;
 import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.BlobNode;
-import org.smoothbuild.lang.parse.ast.CallNode;
 import org.smoothbuild.lang.parse.ast.FuncNode;
 import org.smoothbuild.lang.parse.ast.FunctionTypeNode;
 import org.smoothbuild.lang.parse.ast.ItemNode;
@@ -118,24 +116,6 @@ public class AnalyzeSemantically {
           ref.setReferenced(scope.get(name));
         } else {
           logger.log(parseError(ref.location(), "`" + name + "` is undefined."));
-        }
-      }
-
-      @Override
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        String name = call.calledName();
-        if (scope.contains(name)) {
-          ReferencableLike referencable = scope.get(name);
-          if (referencable instanceof ItemNode) {
-            logger.log(parseError(call.location(), "Parameter `" + name
-                + "` cannot be called as it is not a function."));
-          } else if (referencable instanceof ValueNode || referencable instanceof Value) {
-            logger.log(parseError(call.location(), "`" + name
-                + "` cannot be called as it is a value."));
-          }
-        } else {
-          logger.log(parseError(call.location(), "`" + name + "` is undefined."));
         }
       }
     }.visitAst(ast);
