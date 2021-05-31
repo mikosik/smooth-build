@@ -18,7 +18,7 @@ public class ReferenceTest {
   @Nested
   class _reference {
     @Nested
-    class to_local {
+    class _to_local {
       @Test
       public void value_succeeds() {
         module("""
@@ -79,7 +79,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_imported {
+    class _to_imported {
       @Test
       public void value_succeeds() {
         Definitions imported = module("""
@@ -126,7 +126,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_parameter {
+    class _to_parameter {
       @Test
       public void succeeds() {
         module("""
@@ -137,7 +137,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_undefined_value {
+    class _to_undefined_value {
       @Test
       public void fails() {
         module("""
@@ -149,9 +149,9 @@ public class ReferenceTest {
   }
 
   @Nested
-  class call {
+  class _call {
     @Nested
-    class to_local {
+    class _to_local {
       @Test
       public void value_fails() {
         module("""
@@ -212,7 +212,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_imported {
+    class _to_imported {
       @Test
       public void value_fails() {
         Definitions imported = module("""
@@ -259,7 +259,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_parameter {
+    class _to_parameter {
       @Test
       public void fails() {
         module("""
@@ -270,7 +270,7 @@ public class ReferenceTest {
     }
 
     @Nested
-    class to_undefined_function {
+    class _to_undefined_function {
       @Test
       public void without_arguments_fails() {
         module("""
