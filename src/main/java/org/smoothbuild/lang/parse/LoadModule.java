@@ -63,7 +63,7 @@ public class LoadModule {
       return maybeLogs(logBuffer);
     }
 
-    var referencables = loadReferencables(path, imported, sortedAst);
+    var referencables = loadReferencables(path, sortedAst);
     var definedStructs = sortedAst.structs().stream()
         .map(structNode -> structNode.struct().get())
         .collect(toImmutableMap(Defined::name, d -> (Defined) d));
@@ -73,15 +73,14 @@ public class LoadModule {
   }
 
   private static ImmutableMap<String, Referencable> loadReferencables(
-      ModulePath path, Definitions imported, Ast ast) {
+      ModulePath path, Ast ast) {
     var local = new HashMap<String, Referencable>();
     for (StructNode struct : ast.structs()) {
       Constructor constructor = loadConstructor(path, struct);
       local.put(constructor.name(), constructor);
     }
-    Referencables referencables = new Referencables(imported.referencables(), local);
     for (ReferencableNode referencable : ast.referencable()) {
-      local.put(referencable.name(), loadReferencable(path, referencable, referencables));
+      local.put(referencable.name(), loadReferencable(path, referencable));
     }
     return ImmutableMap.copyOf(local);
   }

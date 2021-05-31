@@ -6,7 +6,6 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.ModulePath;
 import org.smoothbuild.lang.base.define.RealFunction;
@@ -43,18 +42,16 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 
 public class LoadReferencable {
-  public static Referencable loadReferencable(ModulePath path, ReferencableNode referencableNode,
-      Referencables referencables) {
+  public static Referencable loadReferencable(ModulePath path, ReferencableNode referencableNode) {
     if (referencableNode instanceof RealFuncNode realFuncNode) {
-      return loadFunction(path, realFuncNode, referencables);
+      return loadFunction(path, realFuncNode);
     } else {
-      return loadValue(path, referencableNode, referencables);
+      return loadValue(path, referencableNode);
     }
   }
 
-  private static Value loadValue(
-      ModulePath path, ReferencableNode referencableNode, Referencables referencables) {
-    ExpressionLoader loader = new ExpressionLoader(referencables, ImmutableMap.of());
+  private static Value loadValue(ModulePath path, ReferencableNode referencableNode) {
+    ExpressionLoader loader = new ExpressionLoader(ImmutableMap.of());
     return new Value(
         referencableNode.type().get(),
         path,
@@ -63,10 +60,9 @@ public class LoadReferencable {
         referencableNode.location());
   }
 
-  private static RealFunction loadFunction(ModulePath path, RealFuncNode realFuncNode,
-      Referencables referencables) {
-    ImmutableList<Item> parameters = loadParameters(realFuncNode, referencables);
-    ExpressionLoader loader = new ExpressionLoader(referencables,
+  private static RealFunction loadFunction(ModulePath path, RealFuncNode realFuncNode) {
+    ImmutableList<Item> parameters = loadParameters(realFuncNode);
+    ExpressionLoader loader = new ExpressionLoader(
         parameters.stream().collect(toImmutableMap(Item::name, Item::type)));
     return new RealFunction(
         realFuncNode.resultType().get(),
@@ -78,18 +74,15 @@ public class LoadReferencable {
   }
 
   private static ImmutableList<Item> loadParameters(
-      RealFuncNode realFuncNode, Referencables referencables) {
-    ExpressionLoader parameterLoader = new ExpressionLoader(referencables, ImmutableMap.of());
+      RealFuncNode realFuncNode) {
+    ExpressionLoader parameterLoader = new ExpressionLoader(ImmutableMap.of());
     return map(realFuncNode.params(), parameterLoader::createParameter);
   }
 
   private static class ExpressionLoader {
-    private final Referencables referencables;
     private final ImmutableMap<String, Type> functionParameters;
 
-    public ExpressionLoader(
-        Referencables referencables, ImmutableMap<String, Type> functionParameters) {
-      this.referencables = referencables;
+    public ExpressionLoader(ImmutableMap<String, Type> functionParameters) {
       this.functionParameters = functionParameters;
     }
 
@@ -148,16 +141,11 @@ public class LoadReferencable {
     }
 
     private Expression createCall(CallNode call) {
-      Function function = find(call.called().name());
-      ImmutableList<Optional<Expression>> argumentExpressions = createArgumentExpressions(call);
-      Type resultType = function.type().inferResultType(createArgumentTypes(call));
-      ReferenceExpression reference = new ReferenceExpression(
-          call.called().name(), function.type(), call.location());
-      return new CallExpression(resultType, reference, argumentExpressions, call.location());
-    }
-
-    private Function find(String name) {
-      return (Function) referencables.findReferencableLike(name);
+      Expression called = createExpression(call.called());
+      var argumentExpressions = createArgumentExpressions(call);
+      var functionType = ((FunctionType) called.type());
+      var resultType = functionType.inferResultType(createArgumentTypes(call));
+      return new CallExpression(resultType, called, argumentExpressions, call.location());
     }
 
     private ImmutableList<Optional<Expression>> createArgumentExpressions(CallNode call) {
