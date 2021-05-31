@@ -14,7 +14,6 @@ import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
-import org.smoothbuild.lang.base.like.CallableLike;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.ItemSignature;
@@ -145,13 +144,13 @@ public class LoadReferencable {
     }
 
     private Expression createCall(CallNode call) {
-      Callable callable = (Callable) find(call.calledName());
+      Callable callable = find(call.calledName());
       ImmutableList<Expression> argExpressions = createArgumentExpressions(call, callable);
       return callable.createCallExpression(argExpressions, call.location());
     }
 
-    private CallableLike find(String name) {
-      return (CallableLike) referencables.findReferencableLike(name);
+    private Callable find(String name) {
+      return (Callable) referencables.findReferencableLike(name);
     }
 
     private ImmutableList<Expression> createArgumentExpressions(CallNode call, Callable callable) {

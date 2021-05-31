@@ -13,6 +13,7 @@ import static org.smoothbuild.lang.base.type.Types.isVariableName;
 import static org.smoothbuild.lang.base.type.Types.nothing;
 import static org.smoothbuild.lang.base.type.Types.string;
 import static org.smoothbuild.lang.base.type.Types.variable;
+import static org.smoothbuild.lang.parse.InferArgsToParamsAssignment.inferArgsToParamsAssignment;
 import static org.smoothbuild.lang.parse.InferCallType.inferCallType;
 import static org.smoothbuild.lang.parse.ParseError.parseError;
 import static org.smoothbuild.util.Lists.map;
@@ -27,6 +28,9 @@ import org.smoothbuild.lang.base.define.Defined;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Struct;
+import org.smoothbuild.lang.base.like.ReferencableLike;
+import org.smoothbuild.lang.base.type.FunctionType;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.lang.base.type.Types;
@@ -49,6 +53,8 @@ import org.smoothbuild.lang.parse.ast.StringNode;
 import org.smoothbuild.lang.parse.ast.StructNode;
 import org.smoothbuild.lang.parse.ast.TypeNode;
 import org.smoothbuild.lang.parse.ast.ValueNode;
+
+import com.google.common.collect.ImmutableList;
 
 public class InferTypes {
   public static List<Log> inferTypes(Ast ast, Definitions imported) {
@@ -251,10 +257,30 @@ public class InferTypes {
       public void visitCall(CallNode call) {
         super.visitCall(call);
         String name = call.calledName();
-        Maybe<Type> type = inferCallType(
-            call, referencables.resultTypeOf(name), referencables.parametersOf(name));
-        call.setType(ofNullable(type.value()));
-        logger.logAllFrom(type);
+        ReferencableLike called = referencables.findReferencableLike(name);
+        Optional<Type> calledType = called.inferredType();
+        if (calledType.isPresent()) {
+          Type type1 = calledType.get();
+          if (type1 instanceof FunctionType functionType) {
+            ImmutableList<ItemSignature> parameters = functionType.parameters();
+            Maybe<List<ArgNode>> args = inferArgsToParamsAssignment(call, parameters);
+            if (args.hasProblems()) {
+              logger.logAllFrom(args);
+              call.setType(Optional.empty());
+            } else {
+              call.setAssignedArgs(args.value());
+              Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
+              logger.logAllFrom(type);
+              call.setType(ofNullable(type.value()));
+            }
+          } else {
+            logger.log(parseError(
+                call.location(), "`" + name + "`" + " cannot be called as it is not a function."));
+            call.setType(Optional.empty());
+          }
+        } else {
+          call.setType(Optional.empty());
+        }
       }
 
       @Override

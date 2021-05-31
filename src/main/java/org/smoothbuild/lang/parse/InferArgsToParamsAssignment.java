@@ -14,35 +14,15 @@ import java.util.Map;
 
 import org.smoothbuild.cli.console.Log;
 import org.smoothbuild.cli.console.Maybe;
-import org.smoothbuild.cli.console.MemoryLogger;
-import org.smoothbuild.lang.base.define.Definitions;
-import org.smoothbuild.lang.base.like.ItemLike;
+import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.parse.ast.ArgNode;
-import org.smoothbuild.lang.parse.ast.Ast;
-import org.smoothbuild.lang.parse.ast.AstVisitor;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
 import com.google.common.collect.ImmutableList;
 
-public class AssignArgsToParams {
-  public static List<Log> assignArgsToParams(Ast ast, Definitions imported) {
-    var logger = new MemoryLogger();
-    var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
-    new AstVisitor(){
-      @Override
-      public void visitCall(CallNode call) {
-        super.visitCall(call);
-        var assigned = assigned(call, referencables.parameterLikesOf(call.calledName()));
-        logger.logAllFrom(assigned);
-        if (!assigned.hasProblems()) {
-          call.setAssignedArgs(assigned.value());
-        }
-      }
-    }.visitAst(ast);
-    return logger.logs();
-  }
-
-  private static Maybe<List<ArgNode>> assigned(CallNode call, List<? extends ItemLike> parameters) {
+public class InferArgsToParamsAssignment {
+  public static Maybe<List<ArgNode>> inferArgsToParamsAssignment(
+      CallNode call, List<ItemSignature> parameters) {
     var result = new Maybe<List<ArgNode>>();
     var nameToIndex = nameToIndex(parameters);
     ImmutableList<ArgNode> positionalArguments = leadingPositionalArguments(call);
@@ -70,7 +50,7 @@ public class AssignArgsToParams {
   }
 
   private static List<ArgNode> assignedArgs(
-      CallNode call, List<? extends ItemLike> parameters, Map<String, Integer> nameToIndex) {
+      CallNode call, List<ItemSignature> parameters, Map<String, Integer> nameToIndex) {
     List<ArgNode> args = call.args();
     List<ArgNode> assignedList = asList(new ArgNode[parameters.size()]);
     for (int i = 0; i < args.size(); i++) {
@@ -95,7 +75,7 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findTooManyPositionalArgumentsError(
-      CallNode call, List<ArgNode> positionalArguments, List<? extends ItemLike> parameters) {
+      CallNode call, List<ArgNode> positionalArguments, List<ItemSignature> parameters) {
     if (parameters.size() < positionalArguments.size()) {
       return List.of(parseError(call, inCallToPrefix(call) + "Too many positional arguments."));
     }
@@ -113,11 +93,11 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findDuplicateAssignmentErrors(
-      CallNode call, List<ArgNode> positionalArguments, List<? extends ItemLike> parameters) {
+      CallNode call, List<ArgNode> positionalArguments, List<ItemSignature> parameters) {
     var names = new HashSet<String>();
     parameters.stream()
         .limit(positionalArguments.size())
-        .forEach(p -> names.add(p.name()));
+        .forEach(p -> names.add(p.name().get()));
     return call.args()
         .stream()
         .filter(ArgNode::declaresName)
@@ -127,7 +107,7 @@ public class AssignArgsToParams {
   }
 
   private static List<Log> findUnassignedParametersWithoutDefaultValuesErrors(CallNode call,
-      List<ArgNode> assignedList, List<? extends ItemLike> parameters) {
+      List<ArgNode> assignedList, List<ItemSignature> parameters) {
     return range(0, assignedList.size())
         .filter(i -> assignedList.get(i) == null)
         .mapToObj(parameters::get)
@@ -136,15 +116,15 @@ public class AssignArgsToParams {
         .collect(toList());
   }
 
-  private static Log parameterMustBeSpecifiedError(CallNode call, ItemLike param) {
-    return parseError(call, inCallToPrefix(call) + "Parameter `" + param.name() +
+  private static Log parameterMustBeSpecifiedError(CallNode call, ItemSignature param) {
+    return parseError(call, inCallToPrefix(call) + "Parameter `" + param.name().get() +
         "` must be specified.");
   }
 
-  private static Map<String, Integer> nameToIndex(List<? extends ItemLike> parameters) {
+  private static Map<String, Integer> nameToIndex(List<ItemSignature> parameters) {
     return range(0, parameters.size())
         .boxed()
-        .collect(toMap(i -> parameters.get(i).name(), i -> i));
+        .collect(toMap(i -> parameters.get(i).name().get(), i -> i));
   }
 
   private static String inCallToPrefix(CallNode call) {

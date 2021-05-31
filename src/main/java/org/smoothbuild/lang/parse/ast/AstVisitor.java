@@ -10,8 +10,8 @@ import org.smoothbuild.lang.parse.ast.StructNode.ConstructorNode;
 public class AstVisitor {
   public void visitAst(Ast ast) {
     visitStructs(ast.structs());
-    visitReferencable(ast.referencable());
     visitReferencable(map(ast.structs(), StructNode::constructor));
+    visitReferencable(ast.referencable());
   }
 
   public void visitStructs(List<StructNode> structs) {

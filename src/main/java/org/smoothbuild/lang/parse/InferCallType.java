@@ -19,7 +19,7 @@ import org.smoothbuild.lang.parse.ast.ArgNode;
 import org.smoothbuild.lang.parse.ast.CallNode;
 
 public class InferCallType {
-  public static Maybe<Type> inferCallType(CallNode call, Optional<Type> resultType,
+  public static Maybe<Type> inferCallType(CallNode call, Type resultType,
       List<ItemSignature> parameters) {
     Maybe<Type> result = new Maybe<>();
     List<ArgNode> assignedArgs = call.assignedArgs();
@@ -33,7 +33,7 @@ public class InferCallType {
           map(parameters, ItemSignature::type),
           map(assignedTypes, Optional::get),
           LOWER);
-      resultType.ifPresent(type -> result.setValue(type.mapVariables(variableToBounds, LOWER)));
+      result.setValue(resultType.mapVariables(variableToBounds, LOWER));
     }
     return result;
   }

@@ -23,6 +23,10 @@ public record ItemSignature(Type type, Optional<String> name, Optional<Type> def
     this.defaultValueType = requireNonNull(defaultValueType);
   }
 
+  public boolean hasDefaultValue() {
+    return defaultValueType.isPresent();
+  }
+
   /**
    * @return name of this parameter inside backticks.
    */
