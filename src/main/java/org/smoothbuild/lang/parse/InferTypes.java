@@ -58,7 +58,6 @@ import com.google.common.collect.ImmutableList;
 public class InferTypes {
   public static List<Log> inferTypes(Ast ast, Definitions imported) {
     var logger = new MemoryLogger();
-    var referencables = new Referencables(imported.referencables(), ast.referencablesMap());
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -257,26 +256,23 @@ public class InferTypes {
         super.visitCall(call);
         String name = call.calledName();
         Optional<Type> calledType = call.ref().referenced().inferredType();
-        if (calledType.isPresent()) {
-          Type type1 = calledType.get();
-          if (type1 instanceof FunctionType functionType) {
-            ImmutableList<ItemSignature> parameters = functionType.parameters();
-            Maybe<List<ArgNode>> args = inferArgsToParamsAssignment(call, parameters);
-            if (args.hasProblems()) {
-              logger.logAllFrom(args);
-              call.setType(Optional.empty());
-            } else {
-              call.setAssignedArgs(args.value());
-              Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
-              logger.logAllFrom(type);
-              call.setType(ofNullable(type.value()));
-            }
-          } else {
-            logger.log(parseError(
-                call.location(), "`" + name + "`" + " cannot be called as it is not a function."));
+        if (calledType.isEmpty()) {
+          call.setType(Optional.empty());
+        } else if (calledType.get() instanceof FunctionType functionType) {
+          ImmutableList<ItemSignature> parameters = functionType.parameters();
+          Maybe<List<ArgNode>> args = inferArgsToParamsAssignment(call, parameters);
+          if (args.hasProblems()) {
+            logger.logAllFrom(args);
             call.setType(Optional.empty());
+          } else {
+            call.setAssignedArgs(args.value());
+            Maybe<Type> type = inferCallType(call, functionType.resultType(), parameters);
+            logger.logAllFrom(type);
+            call.setType(ofNullable(type.value()));
           }
         } else {
+          logger.log(parseError(call.location(),
+              "`" + name + "`" + " cannot be called as it is not a function."));
           call.setType(Optional.empty());
         }
       }
