@@ -5,7 +5,6 @@ import static java.lang.String.format;
 import static java.util.regex.Pattern.DOTALL;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 import org.smoothbuild.acceptance.testing.AddElementOfWrongTypeToArray;
 import org.smoothbuild.acceptance.testing.BrokenIdentity;
-import org.smoothbuild.acceptance.testing.Counter;
 import org.smoothbuild.acceptance.testing.EmptyStringArray;
 import org.smoothbuild.acceptance.testing.NonPublicMethod;
 import org.smoothbuild.acceptance.testing.NonStaticMethod;
@@ -49,26 +47,6 @@ public class NativeTest extends AcceptanceTestCase {
       assertFinishedWithSuccess();
       assertThat(artifactFileContentAsString("result"))
           .isEqualTo("abc");
-    }
-
-    @Test
-    public void java_method_instance_is_cached() throws Exception {
-      // This test can fail only when run from build script in full-binary mode.
-      // Running it from IDE (single-jvm) will make Counter class available to AppClassLoader that
-      // runs junit framework and tests. Each Method instance will reference the same instance of
-      // Counter's Class<?> loaded by AppClassLoader.
-      createNativeJar(Counter.class);
-      createUserModule(format("""
-            @Native("%s.function")
-            String counter1;
-            @Native("%s.function")
-            String counter2;
-            result = [counter1, counter2];
-            """, Counter.class.getCanonicalName(), Counter.class.getCanonicalName()));
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      assertThat((List<Object>) stringifiedArtifact("result"))
-          .containsExactly("1", "2");
     }
 
     @Test

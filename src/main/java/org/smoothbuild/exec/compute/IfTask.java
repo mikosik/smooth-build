@@ -1,6 +1,7 @@
 package org.smoothbuild.exec.compute;
 
 import static org.smoothbuild.exec.base.Input.input;
+import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Callable.PARENTHESES;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -24,9 +24,8 @@ public class IfTask extends ComputableTask {
   public static final String IF_FUNCTION_NAME = "if";
 
   public IfTask(Type type, Algorithm algorithm, List<? extends Task> dependencies,
-      Location location, Scope cachingScope) {
-    super(TaskKind.CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location,
-        cachingScope);
+      Location location) {
+    super(CALL, type, IF_FUNCTION_NAME + PARENTHESES, algorithm, dependencies, location);
   }
 
   @Override

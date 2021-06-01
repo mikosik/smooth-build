@@ -10,6 +10,7 @@ import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Value;
@@ -80,7 +81,13 @@ public class TestingLang {
 
   public static Function function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
-    return function(line, type, name, new NativeBody(implementedBy), parameters);
+    return function(line, type, name, new ImplementedBy(implementedBy, true), parameters);
+  }
+
+  public static Function function(int line, Type type, String name, ImplementedBy implementedBy,
+      Item... parameters) {
+    NativeBody nativeBody = new NativeBody(implementedBy);
+    return function(line, type, name, nativeBody, parameters);
   }
 
   public static Function function(Type type, String name, Expression body, Item... parameters) {
@@ -98,7 +105,8 @@ public class TestingLang {
   }
 
   public static Value value(int line, Type type, String name, String implementedBy) {
-    return new Value(type, name, new NativeBody(implementedBy), loc(line));
+    NativeBody nativeBody = new NativeBody(new ImplementedBy(implementedBy, true));
+    return new Value(type, name, nativeBody, loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {

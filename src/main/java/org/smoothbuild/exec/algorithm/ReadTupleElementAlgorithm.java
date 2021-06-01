@@ -13,7 +13,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 import com.google.common.collect.ImmutableList;
 
-public class ReadTupleElementAlgorithm implements Algorithm {
+public class ReadTupleElementAlgorithm extends Algorithm {
   private final int elementIndex;
   private final Spec spec;
 

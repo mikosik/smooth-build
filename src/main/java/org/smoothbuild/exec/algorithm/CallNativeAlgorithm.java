@@ -14,12 +14,14 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.plugin.NativeApi;
 
-public class CallNativeAlgorithm implements Algorithm {
+public class CallNativeAlgorithm extends Algorithm {
   private final Spec outputSpec;
   private final String referencableName;
   private final Native nativ;
 
-  public CallNativeAlgorithm(Spec outputSpec, String referencableName, Native nativ) {
+  public CallNativeAlgorithm(Spec outputSpec, String referencableName, Native nativ,
+      boolean isPure) {
+    super(isPure);
     this.outputSpec = outputSpec;
     this.referencableName = referencableName;
     this.nativ = nativ;
@@ -27,7 +29,7 @@ public class CallNativeAlgorithm implements Algorithm {
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(nativ);
+    return callNativeAlgorithmHash(nativ, referencableName);
   }
 
   @Override

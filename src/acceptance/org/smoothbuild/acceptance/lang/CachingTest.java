@@ -7,22 +7,20 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
-import org.smoothbuild.acceptance.testing.CacheableRandom;
-import org.smoothbuild.acceptance.testing.CachingMemoryRandom;
-import org.smoothbuild.acceptance.testing.CachingNoneRandom;
+import org.smoothbuild.acceptance.testing.Random;
 
 public class CachingTest extends AcceptanceTestCase {
   @Nested
-  class _result_from_referencable_with_ {
+  class _result_from_referencable_which_is_ {
     @ParameterizedTest
     @ValueSource(strings = {"", "()"})
-    public void disk_level_caching_is_cached_on_disk(String functionOrValue) throws Exception {
-      createNativeJar(CacheableRandom.class);
+    public void pure_is_cached_on_disk(String functionOrValue) throws Exception {
+      createNativeJar(Random.class);
       createUserModule(format("""
             @Native("%s.function")
-            String cacheableRandom%s;
-            result = cacheableRandom%s;
-            """, CacheableRandom.class.getCanonicalName(), functionOrValue, functionOrValue));
+            String cachedRandom%s;
+            result = cachedRandom%s;
+            """, Random.class.getCanonicalName(), functionOrValue, functionOrValue));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       String resultFromFirstRun = artifactFileContentAsString("result");
@@ -36,14 +34,14 @@ public class CachingTest extends AcceptanceTestCase {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "()"})
-    public void memory_level_caching_is_cached(String functionOrValue) throws Exception {
-      createNativeJar(CachingMemoryRandom.class);
+    public void impure_is_cached_in_single_build(String functionOrValue) throws Exception {
+      createNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s.function")
-            String cachingMemoryRandom%s;
-            resultA = cachingMemoryRandom%s;
-            resultB = cachingMemoryRandom%s;
-            """, CachingMemoryRandom.class.getCanonicalName(), functionOrValue, functionOrValue,
+            @Native("%s.function", IMPURE)
+            String cachedInMemoryRandom%s;
+            resultA = cachedInMemoryRandom%s;
+            resultB = cachedInMemoryRandom%s;
+            """, Random.class.getCanonicalName(), functionOrValue, functionOrValue,
           functionOrValue));
       runSmoothBuild("resultA", "resultB");
       assertFinishedWithSuccess();
@@ -54,14 +52,14 @@ public class CachingTest extends AcceptanceTestCase {
 
     @ParameterizedTest
     @ValueSource(strings = {"", "()"})
-    public void memory_level_caching_is_not_cached_on_disk(String functionOrValue)
+    public void impure_is_not_cached_on_disk(String functionOrValue)
         throws Exception {
-      createNativeJar(CachingMemoryRandom.class);
+      createNativeJar(Random.class);
       createUserModule(format("""
-            @Native("%s.function")
-            String cachingMemoryRandom%s;
-            result = cachingMemoryRandom%s;
-            """, CachingMemoryRandom.class.getCanonicalName(), functionOrValue, functionOrValue));
+            @Native("%s.function", IMPURE)
+            String cachedInMemoryRandom%s;
+            result = cachedInMemoryRandom%s;
+            """, Random.class.getCanonicalName(), functionOrValue, functionOrValue));
       runSmoothBuild("result");
       assertFinishedWithSuccess();
       String resultFromFirstRun = artifactFileContentAsString("result");
@@ -72,44 +70,36 @@ public class CachingTest extends AcceptanceTestCase {
       assertThat(resultFromSecondRun)
           .isNotEqualTo(resultFromFirstRun);
     }
+  }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"", "()"})
-    public void none_level_caching_is_not_cached_in_memory(String functionOrValue)
-        throws Exception {
-      createNativeJar(CachingNoneRandom.class);
-      createUserModule(format("""
+  @ParameterizedTest
+  @ValueSource(strings = {"", "()"})
+  public void native_can_implement_two_things_each_with_different_pureness(
+      String functionOrValue) throws Exception {
+    createNativeJar(Random.class);
+    createUserModule(format("""
             @Native("%s.function")
-            String cachingNoneRandom%s;
-            resultA = cachingNoneRandom%s;
-            resultB = cachingNoneRandom%s;
-            """, CachingNoneRandom.class.getCanonicalName(), functionOrValue, functionOrValue,
-          functionOrValue));
-      runSmoothBuild("resultA", "resultB");
-      assertFinishedWithSuccess();
+            String cachingRandom%s;
+            @Native("%s.function", IMPURE)
+            String notCachingRandom%s;
+            caching = cachingRandom%s;
+            notCaching = notCachingRandom%s;
+            """, Random.class.getCanonicalName(), functionOrValue,
+        Random.class.getCanonicalName(), functionOrValue, functionOrValue, functionOrValue));
 
-      assertThat(artifactFileContentAsString("resultA"))
-          .isNotEqualTo(artifactFileContentAsString("resultB"));
-    }
+    runSmoothBuild("caching", "notCaching");
+    assertFinishedWithSuccess();
+    String cachingA = artifactFileContentAsString("caching");
+    String notCachingA = artifactFileContentAsString("notCaching");
 
-    @ParameterizedTest
-    @ValueSource(strings = {"", "()"})
-    public void none_level_caching_is_not_cached_on_disk(String functionOrValue) throws Exception {
-      createNativeJar(CachingNoneRandom.class);
-      createUserModule(format("""
-            @Native("%s.function")
-            String cachingNoneRandom%s;
-            result = cachingNoneRandom%s;
-            """, CachingNoneRandom.class.getCanonicalName(), functionOrValue, functionOrValue));
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromFirstRun = artifactFileContentAsString("result");
-      runSmoothBuild("result");
-      assertFinishedWithSuccess();
-      String resultFromSecondRun = artifactFileContentAsString("result");
+    runSmoothBuild("caching", "notCaching");
+    assertFinishedWithSuccess();
+    String cachingB = artifactFileContentAsString("caching");
+    String notCachingB = artifactFileContentAsString("notCaching");
 
-      assertThat(resultFromSecondRun)
-          .isNotEqualTo(resultFromFirstRun);
-    }
+    assertThat(cachingA).isEqualTo(cachingB);
+    assertThat(cachingA).isNotEqualTo(notCachingA);
+    assertThat(cachingA).isNotEqualTo(notCachingB);
+    assertThat(notCachingA).isNotEqualTo(notCachingB);
   }
 }

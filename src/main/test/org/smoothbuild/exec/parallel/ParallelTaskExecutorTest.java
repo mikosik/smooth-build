@@ -17,8 +17,6 @@ import static org.smoothbuild.exec.compute.ResultSource.MEMORY;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
-import static org.smoothbuild.plugin.Caching.Scope.BUILD_RUN;
-import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
 import static org.smoothbuild.util.Lists.list;
 
 import java.util.List;
@@ -43,7 +41,6 @@ import org.smoothbuild.exec.compute.Computer;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.ResultSource;
 import org.smoothbuild.exec.compute.Task;
-import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -114,14 +111,14 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   @Nested
-  class _result_source_for_cached_computation_with_caching_scope_equal_ {
+  class _result_source_for_computation_of_ {
     @Test
-    public void buildrun_is_memory()
+    public void impure_function_is_memory()
         throws Exception {
       parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
       AtomicInteger counter = new AtomicInteger();
-      Task task1 = task(sleepGetIncrementAlgorithm(counter), BUILD_RUN);
-      Task task2 = task(sleepGetIncrementAlgorithm(counter), BUILD_RUN);
+      Task task1 = task(sleepGetIncrementAlgorithm(counter, false));
+      Task task2 = task(sleepGetIncrementAlgorithm(counter, false));
       Task task = concat(task1, task2);
 
       assertThat(executeSingleTask(task))
@@ -140,12 +137,12 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     @Test
-    public void machine_is_disk()
+    public void pure_function_is_disk()
         throws Exception {
       parallelTaskExecutor = new ParallelTaskExecutor(computer(), reporter, 2);
       AtomicInteger counter = new AtomicInteger();
-      Task task1 = task(sleepGetIncrementAlgorithm(counter), MACHINE);
-      Task task2 = task(sleepGetIncrementAlgorithm(counter), MACHINE);
+      Task task1 = task(sleepGetIncrementAlgorithm(counter));
+      Task task2 = task(sleepGetIncrementAlgorithm(counter));
       Task task = concat(task1, task2);
 
       assertThat(executeSingleTask(task))
@@ -212,7 +209,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Task concat(Task... dependencies) {
-    return task(concatAlgorithm(), list(dependencies), MACHINE);
+    return task(concatAlgorithm(), list(dependencies));
   }
 
   private Algorithm concatAlgorithm() {
@@ -249,7 +246,11 @@ public class ParallelTaskExecutorTest extends TestingContext {
   }
 
   private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter) {
-    return new TestAlgorithm(Hash.of(4)) {
+    return sleepGetIncrementAlgorithm(counter, true);
+  }
+
+  private Algorithm sleepGetIncrementAlgorithm(AtomicInteger counter, boolean isPure) {
+    return new TestAlgorithm(Hash.of(4), isPure) {
       @Override
       public Output run(Input input, NativeApi nativeApi) {
         sleep1000ms();
@@ -288,17 +289,13 @@ public class ParallelTaskExecutorTest extends TestingContext {
     return parallelTaskExecutor.executeAll(list(task)).get(task);
   }
 
-  private Task task(Algorithm algorithm) {
-    return task(algorithm, MACHINE);
+  private static Task task(Algorithm algorithm) {
+    return task(algorithm, ImmutableList.of());
   }
 
-  private Task task(Algorithm algorithm, Scope cachingScope) {
-    return task(algorithm, ImmutableList.of(), cachingScope);
-  }
-
-  private static Task task(Algorithm algorithm, List<Task> dependencies, Scope cachingScope) {
+  private static Task task(Algorithm algorithm, List<Task> dependencies) {
     return new NormalTask(
-        CALL, STRING, "task-name", algorithm, dependencies, internal(), cachingScope);
+        CALL, STRING, "task-name", algorithm, dependencies, internal());
   }
 
   private static Output toStr(NativeApi nativeApi, int i) {
@@ -313,10 +310,15 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
   }
 
-  private abstract class TestAlgorithm implements Algorithm {
+  private abstract class TestAlgorithm extends Algorithm {
     private final Hash hash;
 
     protected TestAlgorithm(Hash hash) {
+      this(hash, true);
+    }
+
+    protected TestAlgorithm(Hash hash, boolean isPure) {
+      super(isPure);
       this.hash = hash;
     }
 

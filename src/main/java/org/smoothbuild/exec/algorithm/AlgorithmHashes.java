@@ -12,8 +12,8 @@ public class AlgorithmHashes {
     return hash(0);
   }
 
-  public static Hash callNativeAlgorithmHash(Native nativ) {
-    return hash(1, nativ.hash());
+  public static Hash callNativeAlgorithmHash(Native nativ, String referencableName) {
+    return hash(1, Hash.of(nativ.hash(), Hash.of(referencableName)));
   }
 
   public static Hash convertAlgorithmHash(Spec destinationSpec) {

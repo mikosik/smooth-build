@@ -12,7 +12,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
-public class FixedStringAlgorithm implements Algorithm {
+public class FixedStringAlgorithm extends Algorithm {
   private final StringSpec stringSpec;
   private final String string;
   private final String shortedString;

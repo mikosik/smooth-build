@@ -44,12 +44,12 @@ A if(
   [A] array2,
 );
 
-@Native("org.smoothbuild.slib.file.ProjectFileFunction.function")
+@Native("org.smoothbuild.slib.file.ProjectFileFunction.function", IMPURE)
 File projectFile(
   String path,
 );
 
-@Native("org.smoothbuild.slib.file.ProjectFilesFunction.function")
+@Native("org.smoothbuild.slib.file.ProjectFilesFunction.function", IMPURE)
 [File] projectFiles(
   String dir,
 );

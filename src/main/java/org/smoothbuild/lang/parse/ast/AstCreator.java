@@ -21,6 +21,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.FieldListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FieldReadContext;
 import org.smoothbuild.antlr.lang.SmoothParser.FunctionTypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ModuleContext;
+import org.smoothbuild.antlr.lang.SmoothParser.NatContext;
 import org.smoothbuild.antlr.lang.SmoothParser.NonPipeExprContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamContext;
 import org.smoothbuild.antlr.lang.SmoothParser.ParamListContext;
@@ -29,6 +30,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
+import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModuleLocation;
 
@@ -67,27 +69,35 @@ public class AstCreator {
       }
 
       @Override
-      public Void visitRef(RefContext func) {
-        TerminalNode nameNode = func.NAME();
-        visitChildren(func);
-        Optional<TypeNode> type = createTypeSane(func.type());
+      public Void visitRef(RefContext ref) {
+        TerminalNode nameNode = ref.NAME();
+        visitChildren(ref);
+        Optional<TypeNode> type = createTypeSane(ref.type());
         String name = nameNode.getText();
-        Optional<ExprNode> expr = createExprSane(func.expr());
-        Optional<String> implementedBy = createImplementedBySane(func.STRING());
+        Optional<ExprNode> expr = createExprSane(ref.expr());
+        Optional<ImplementedBy> implementedBy = createImplementedBySane(ref.nat());
         Location location = locationOf(moduleLocation, nameNode);
-        if (func.p == null) {
+        if (ref.p == null) {
           referencables.add(new ValueNode(type, name, expr, implementedBy, location));
         } else {
-          List<ItemNode> params = createParams(func.paramList());
+          List<ItemNode> params = createParams(ref.paramList());
           referencables.add(new FuncNode(type, name, params, expr, implementedBy, location));
         }
         return null;
       }
 
-      private Optional<String> createImplementedBySane(TerminalNode implPath) {
-        return implPath == null
-            ? Optional.empty()
-            : Optional.of(unquote(implPath.getText()));
+      private Optional<ImplementedBy> createImplementedBySane(NatContext atNative) {
+        if (atNative == null) {
+          return Optional.empty();
+        } else {
+          return Optional.of(new ImplementedBy(
+              unquote(atNative.STRING().getText()),
+              isPure(atNative)));
+        }
+      }
+
+      private boolean isPure(NatContext atNative) {
+        return atNative.pure != null || atNative.impure == null;
       }
 
       private List<ItemNode> createParams(ParamListContext paramList) {
