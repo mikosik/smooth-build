@@ -15,7 +15,7 @@ import org.smoothbuild.plugin.NativeApi;
 
 import okio.ByteString;
 
-public class FixedBlobAlgorithm implements Algorithm {
+public class FixedBlobAlgorithm extends Algorithm {
   private final BlobSpec blobSpec;
   private final ByteString byteString;
   private final String shortedString;

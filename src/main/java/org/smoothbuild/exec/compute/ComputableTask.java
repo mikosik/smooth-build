@@ -5,19 +5,16 @@ import java.util.List;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.plugin.Caching.Scope;
 
 public abstract class ComputableTask extends Task {
   private final TaskKind kind;
   private final Algorithm algorithm;
-  private final Scope cachingScope;
 
   public ComputableTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends Task> dependencies, Location location, Scope cachingScope) {
+      List<? extends Task> dependencies, Location location) {
     super(type, name, dependencies, location);
     this.kind = kind;
     this.algorithm = algorithm;
-    this.cachingScope = cachingScope;
   }
 
   @Override
@@ -27,10 +24,6 @@ public abstract class ComputableTask extends Task {
 
   public Algorithm algorithm() {
     return algorithm;
-  }
-
-  public Scope cachingScope() {
-    return cachingScope;
   }
 
   @Override

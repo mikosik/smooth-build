@@ -1,12 +1,10 @@
 package org.smoothbuild.acceptance.testing;
 
-import java.util.Random;
-
 import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.plugin.NativeApi;
 
-public class CacheableRandom {
+public class Random {
   public static Str function(NativeApi nativeApi) {
-    return nativeApi.factory().string(Integer.toString(new Random().nextInt()));
+    return nativeApi.factory().string(Integer.toString(new java.util.Random().nextInt()));
   }
 }

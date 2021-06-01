@@ -3,9 +3,7 @@ package org.smoothbuild.exec.nativ;
 import static java.util.Arrays.stream;
 import static org.smoothbuild.exec.nativ.MapTypeToJType.mapTypeToJType;
 import static org.smoothbuild.io.util.JarFile.jarFile;
-import static org.smoothbuild.plugin.Caching.Scope.MACHINE;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
-import static org.smoothbuild.util.reflect.Methods.getAnnotation;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
@@ -32,8 +30,6 @@ import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.plugin.Caching;
-import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.plugin.NativeApi;
 
 @Singleton
@@ -48,7 +44,8 @@ public class NativeImplLoader {
   }
 
   public synchronized Native loadNative(Function function) throws LoadingNativeImplException {
-    JavaMethodPath path = parseMethodPath(function, ((NativeBody) function.body()).implementedBy());
+    String pathString = ((NativeBody) function.body()).implementedBy().path();
+    JavaMethodPath path = parseMethodPath(function, pathString);
     Native nativ = loadNativeImpl(function, path);
     assertNativeResultMatchesDeclared(function, nativ, function.type().resultType(), path);
     assertNativeParameterTypesMatchesFuncParameters(nativ, function, path);
@@ -56,7 +53,8 @@ public class NativeImplLoader {
   }
 
   public synchronized Native loadNative(Value value) throws LoadingNativeImplException {
-    JavaMethodPath path = parseMethodPath(value, ((NativeBody) value.body()).implementedBy());
+    String pathString = ((NativeBody) value.body()).implementedBy().path();
+    JavaMethodPath path = parseMethodPath(value, pathString);
     Native nativ = loadNativeImpl(value, path);
     assertNativeResultMatchesDeclared(value, nativ, value.type(), path);
     assertNativeHasOneParameter(nativ, value, path);
@@ -79,8 +77,7 @@ public class NativeImplLoader {
     Native nativ = cache.get(key);
     if (nativ == null) {
       Method method = findMethod(referencable, jarFile, path);
-      Scope cachingScope = getAnnotation(method, Caching.class).map(Caching::scope).orElse(MACHINE);
-      nativ = new Native(method, cachingScope, jarFile);
+      nativ = new Native(method, jarFile);
       cache.put(key, nativ);
     }
     return nativ;

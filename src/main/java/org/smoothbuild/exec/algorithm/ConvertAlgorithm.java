@@ -13,7 +13,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
-public class ConvertAlgorithm implements Algorithm {
+public class ConvertAlgorithm extends Algorithm {
   private final Spec destinationSpec;
 
   public ConvertAlgorithm(Spec destinationSpec) {

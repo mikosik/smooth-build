@@ -2,7 +2,6 @@ package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
 import static org.smoothbuild.io.fs.base.RecursivePathsIterator.recursivePathsIterator;
-import static org.smoothbuild.plugin.Caching.Scope.BUILD_RUN;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
@@ -15,10 +14,8 @@ import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
 import org.smoothbuild.io.fs.base.PathIterator;
 import org.smoothbuild.io.fs.base.PathState;
-import org.smoothbuild.plugin.Caching;
 
 public class ProjectFilesFunction {
-  @Caching(scope = BUILD_RUN)
   public static Array function(Container container, Str dir) throws IOException {
     Path path = validatedProjectPath(container, "dir", dir);
     if (path == null) {

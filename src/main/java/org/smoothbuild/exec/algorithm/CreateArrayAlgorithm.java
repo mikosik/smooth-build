@@ -10,7 +10,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
-public class CreateArrayAlgorithm implements Algorithm {
+public class CreateArrayAlgorithm extends Algorithm {
   private final ArraySpec arraySpec;
 
   public CreateArrayAlgorithm(ArraySpec arraySpec) {

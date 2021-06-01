@@ -22,6 +22,7 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 
@@ -81,6 +82,28 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction", "Impl.met"));
+  }
+
+  @Test
+  public void native_impure_function() {
+    module("""
+          @Native("Impl.met", IMPURE)
+          String myFunction();
+          """)
+        .loadsSuccessfully()
+        .containsReferencable(function(
+            2, STRING, "myFunction", new ImplementedBy("Impl.met", false)));
+  }
+
+  @Test
+  public void native_explicitly_pure_function() {
+    module("""
+          @Native("Impl.met", PURE)
+          String myFunction();
+          """)
+        .loadsSuccessfully()
+        .containsReferencable(function(
+            2, STRING, "myFunction", new ImplementedBy("Impl.met", true)));
   }
 
   @Test

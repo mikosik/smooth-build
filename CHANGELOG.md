@@ -3,6 +3,7 @@ Change Log
 
 Version 0.20.0 (??????????)
 
+ * changed smooth language: added PURE/IMPURE attribute to @Native annotation
  * changed smooth language: added `Any` type
  * changed smooth language: parameters with default values are no longer required to be placed at the end of parameter list
  * changed smooth language: removed automatic conversions

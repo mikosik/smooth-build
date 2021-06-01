@@ -31,7 +31,7 @@ public class AlgorithmHashesTest extends TestingContext {
     TupleSpec constructedType = tupleSpec(list());
 
     hashes.add(arrayAlgorithmHash());
-    hashes.add(callNativeAlgorithmHash(nativ));
+    hashes.add(callNativeAlgorithmHash(nativ, "referencableName"));
     hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(tupleAlgorithmHash(constructedType));
     hashes.add(readTupleElementAlgorithmHash(0));
@@ -47,8 +47,16 @@ public class AlgorithmHashesTest extends TestingContext {
     Native native1 = nativeWithHash(Hash.of(1));
     Native native2 = nativeWithHash(Hash.of(2));
 
-    assertThat(callNativeAlgorithmHash(native1))
-        .isNotEqualTo(callNativeAlgorithmHash(native2));
+    assertThat(callNativeAlgorithmHash(native1, "referencableName"))
+        .isNotEqualTo(callNativeAlgorithmHash(native2, "referencableName"));
+  }
+
+  @Test
+  public void call_native_algorithm_has_different_hash_for_different_referencable_names() {
+    Native nativ = nativeWithHash(Hash.of(1));
+
+    assertThat(callNativeAlgorithmHash(nativ, "referencableName1"))
+        .isNotEqualTo(callNativeAlgorithmHash(nativ, "referencableName2"));
   }
 
   @Test

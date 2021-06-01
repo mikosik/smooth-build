@@ -10,7 +10,7 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
-public class CreateTupleAlgorithm implements Algorithm {
+public class CreateTupleAlgorithm extends Algorithm {
   private final TupleSpec constructedType;
 
   public CreateTupleAlgorithm(TupleSpec constructedType) {

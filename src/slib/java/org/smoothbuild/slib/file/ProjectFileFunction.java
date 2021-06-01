@@ -1,7 +1,6 @@
 package org.smoothbuild.slib.file;
 
 import static org.smoothbuild.install.ProjectPaths.SMOOTH_DIR;
-import static org.smoothbuild.plugin.Caching.Scope.BUILD_RUN;
 import static org.smoothbuild.slib.file.PathArgValidator.validatedProjectPath;
 
 import java.io.IOException;
@@ -11,10 +10,8 @@ import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
-import org.smoothbuild.plugin.Caching;
 
 public class ProjectFileFunction {
-  @Caching(scope = BUILD_RUN)
   public static Tuple function(Container container, Str path) throws IOException {
     Path validatedPath = validatedProjectPath(container, "path", path);
     if (validatedPath == null) {

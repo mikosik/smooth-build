@@ -6,10 +6,24 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
-public interface Algorithm {
-  public Hash hash();
+public abstract class Algorithm {
+  private final boolean isPure;
 
-  public Spec outputSpec();
+  protected Algorithm() {
+    this.isPure = true;
+  }
 
-  public Output run(Input input, NativeApi nativeApi) throws Exception;
+  protected Algorithm(boolean isPure) {
+    this.isPure = isPure;
+  }
+
+  public boolean isPure() {
+    return isPure;
+  }
+
+  public abstract Hash hash();
+
+  public abstract Spec outputSpec();
+
+  public abstract Output run(Input input, NativeApi nativeApi) throws Exception;
 }

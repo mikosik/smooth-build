@@ -12,7 +12,6 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.plugin.Caching.Scope;
 import org.smoothbuild.util.concurrent.Feeder;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
@@ -20,8 +19,8 @@ import com.google.common.collect.ImmutableList;
 
 public class NormalTask extends ComputableTask {
   public NormalTask(TaskKind kind, Type type, String name, Algorithm algorithm,
-      List<? extends Task> dependencies, Location location, Scope cachingScope) {
-    super(kind, type, name, algorithm, dependencies, location, cachingScope);
+      List<? extends Task> dependencies, Location location) {
+    super(kind, type, name, algorithm, dependencies, location);
   }
 
   @Override
