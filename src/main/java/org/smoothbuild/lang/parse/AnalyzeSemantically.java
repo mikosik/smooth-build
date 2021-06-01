@@ -50,13 +50,13 @@ public class AnalyzeSemantically {
     unescapeStringLiterals(logger, ast);
     decodeBlobLiterals(logger, ast);
     resolveReferences(logger, imported, ast);
-    undefinedTypes(logger, imported, ast);
-    duplicateGlobalNames(logger, imported, ast);
-    duplicateFieldNames(logger, ast);
-    duplicateParamNames(logger, ast);
-    structNameWithSingleCapitalLetter(logger, ast);
-    illegalPolytypes(logger, ast);
-    assertReferencableHasBodyOrIsNative(logger, ast);
+    detectUndefinedTypes(logger, imported, ast);
+    detectDuplicateGlobalNames(logger, imported, ast);
+    detectDuplicateFieldNames(logger, ast);
+    detectDuplicateParamNames(logger, ast);
+    detectStructNameWithSingleCapitalLetter(logger, ast);
+    detectIllegalPolytypes(logger, ast);
+    detectNativesWithBodyAndNonNativesWithoutBody(logger, ast);
     return logger.logs();
   }
 
@@ -121,7 +121,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void undefinedTypes(Logger logger, Definitions imported, Ast ast) {
+  private static void detectUndefinedTypes(Logger logger, Definitions imported, Ast ast) {
     Set<String> structNames = Sets.map(ast.structs(), NamedNode::name);
     new AstVisitor() {
       @Override
@@ -172,7 +172,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void duplicateGlobalNames(Logger logger, Definitions imported, Ast ast) {
+  private static void detectDuplicateGlobalNames(Logger logger, Definitions imported, Ast ast) {
     List<Named> nameds = new ArrayList<>();
     nameds.addAll(ast.structs());
     nameds.addAll(map(ast.structs(), StructNode::constructor));
@@ -200,7 +200,7 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void duplicateFieldNames(Logger logger, Ast ast) {
+  private static void detectDuplicateFieldNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitFields(List<ItemNode> fields) {
@@ -210,7 +210,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void duplicateParamNames(Logger logger, Ast ast) {
+  private static void detectDuplicateParamNames(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitParams(List<ItemNode> params) {
@@ -238,7 +238,7 @@ public class AnalyzeSemantically {
     }
   }
 
-  private static void structNameWithSingleCapitalLetter(Logger logger, Ast ast) {
+  private static void detectStructNameWithSingleCapitalLetter(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitStruct(StructNode struct) {
@@ -251,7 +251,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void illegalPolytypes(Logger logger, Ast ast) {
+  private static void detectIllegalPolytypes(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitValue(ValueNode value) {
@@ -297,7 +297,7 @@ public class AnalyzeSemantically {
     }.visitAst(ast);
   }
 
-  private static void assertReferencableHasBodyOrIsNative(Logger logger, Ast ast) {
+  private static void detectNativesWithBodyAndNonNativesWithoutBody(Logger logger, Ast ast) {
     new AstVisitor() {
       @Override
       public void visitFunc(FuncNode func) {
