@@ -122,24 +122,19 @@ public class TestingLang {
   }
 
   public static Item parameter(Type type, String name) {
-    return parameter(1, type, name, Optional.empty());
+    return parameter(type, name, Optional.empty());
   }
 
-  public static Item parameter(int line, Type type, String name) {
-    return parameter(line, type, name, Optional.empty());
+  public static Item parameter(Type type, String name, Expression defaultValue) {
+    return parameter(type, name, Optional.of(defaultValue));
   }
 
-  public static Item parameter(int line, Type type, String name,
-      Expression defaultValue) {
-    return parameter(line, type, name, Optional.of(defaultValue));
-  }
-
-  private static Item parameter(int line, Type type, String name,
+  private static Item parameter(Type type, String name,
       Optional<Expression> defaultValue) {
     return new Item(type, name, defaultValue);
   }
 
-  public static Item field(int line, Type type, String name) {
+  public static Item field(Type type, String name) {
     return new Item(type, name, Optional.empty());
   }
 }

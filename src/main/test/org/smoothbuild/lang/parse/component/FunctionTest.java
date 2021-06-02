@@ -19,8 +19,8 @@ public class FunctionTest {
         """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction", "Impl.met",
-            parameter(3, STRING, "default", string(3, "value")),
-            parameter(4, STRING, "nonDefault")));
+            parameter(STRING, "default", string(3, "value")),
+            parameter(STRING, "nonDefault")));
   }
 
   @Test
