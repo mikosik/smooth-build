@@ -8,7 +8,7 @@
    Each element has the same type which is known as array's element type.
  - __base type__ - Unstructured type that is built into language.
    Base type cannot be declared by user.
-   They include `Blob`, `Bool`, `Nothing` `String`.
+   They include `Any`, `Blob`, `Bool`, `Nothing` `String`.
  - __default value__ - Value assigned to function parameter upon its declaration.
    Function can be called without specifying such parameter in which case default value
    will be assigned to it.
