@@ -163,7 +163,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(2, STRING, "myFunction", "Impl.met",
-            parameter(3, BLOB, "param1")));
+            parameter(BLOB, "param1")));
   }
 
   @Test
@@ -174,7 +174,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(1, BLOB, "param1")));
+            1, BLOB, "myFunction", parameterRef(2, BLOB, "param1"), parameter(BLOB, "param1")));
   }
 
   @Test
@@ -187,8 +187,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(
-            function(2, STRING, "myFunction", "Impl.met", parameter(3, BLOB, "param1",
-                blob(4, 7))));
+            function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1", blob(4, 7))));
   }
 
   @Test
@@ -206,7 +205,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_argument() {
-    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(1, BLOB, "param1"));
+    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
     module("""
           @Native("Impl.met")
           String myFunction(Blob param1);
@@ -220,7 +219,7 @@ public class ExpressionTest {
 
   @Test
   public void function_call_with_named_argument() {
-    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(2, BLOB, "param1"));
+    Function function = function(2, STRING, "myFunction", "Impl.met", parameter(BLOB, "param1"));
     module("""
           @Native("Impl.met")
           String myFunction(Blob param1);
@@ -307,7 +306,7 @@ public class ExpressionTest {
   @Test
   public void constructor() {
     StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
-    Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
+    Constructor constr = constr(1, struct, "myStruct", parameter(STRING, "field"));
     module("""
           MyStruct {
             String field
@@ -320,7 +319,7 @@ public class ExpressionTest {
   @Test
   public void constructor_call_with_argument() {
     StructType struct = struct("MyStruct", itemSignature(STRING, "field"));
-    Constructor constr = constr(1, struct, "myStruct", parameter(2, STRING, "field"));
+    Constructor constr = constr(1, struct, "myStruct", parameter(STRING, "field"));
     module("""
           MyStruct {
             String field

@@ -59,8 +59,8 @@ public class TrailingCommaTest {
     public void can_have_trailing_comma() {
       module(functionDeclaration("String param1,"))
           .loadsSuccessfully()
-          .containsReferencable(function(2, STRING, "myFunction", "Impl.met", parameter(2, STRING,
-              "param1")));
+          .containsReferencable(
+              function(2, STRING, "myFunction", "Impl.met", parameter(STRING, "param1")));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class TrailingCommaTest {
   class argument_list {
     @Test
     public void can_have_trailing_comma() {
-      Function function = function(2, BLOB, "myFunction", "Impl.met", parameter(1, BLOB, "blob"));
+      Function function = function(2, BLOB, "myFunction", "Impl.met", parameter(BLOB, "blob"));
       module(functionCall("0x07,"))
           .loadsSuccessfully()
           .containsReferencable(value(3, BLOB, "result", call(3, BLOB, function, blob(3, 7))));
