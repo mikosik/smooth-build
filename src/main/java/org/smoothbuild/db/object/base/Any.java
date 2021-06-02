@@ -22,7 +22,7 @@ public class Any extends Obj {
 
   @Override
   public String valueToString() {
-    return "Any??";
+    return "Any(" + wrappedHash() + ")";
   }
 }
 

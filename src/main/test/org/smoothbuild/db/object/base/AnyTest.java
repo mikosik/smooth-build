@@ -75,8 +75,9 @@ public class AnyTest extends TestingContext {
 
   @Test
   public void to_string() {
-    Any any = any(Hash.of(1234));
+    Hash wrappedHash = Hash.of(1234);
+    Any any = any(wrappedHash);
     assertThat(any.toString())
-        .isEqualTo("Any??:" + any.hash());
+        .isEqualTo("Any(" + wrappedHash + "):" + any.hash());
   }
 }
