@@ -364,6 +364,5 @@ Person {
 This works the same when defining function parameters, arguments in function call,
 elements in array literal.
 If you format your code so each such element is on separate line
-and use trailing comma
-then it's much easier to reorder such elements.
+and use trailing comma then it's much easier to reorder such elements.
 Such a change is also more readable in version control.
