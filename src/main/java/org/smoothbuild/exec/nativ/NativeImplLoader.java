@@ -2,16 +2,12 @@ package org.smoothbuild.exec.nativ;
 
 import static java.util.Arrays.stream;
 import static org.smoothbuild.exec.nativ.MapTypeToJType.mapTypeToJType;
-import static org.smoothbuild.io.util.JarFile.jarFile;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,11 +18,9 @@ import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
 import org.smoothbuild.exec.nativ.JavaMethodPath.JavaMethodPathParsingException;
-import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
@@ -34,28 +28,32 @@ import org.smoothbuild.plugin.NativeApi;
 
 @Singleton
 public class NativeImplLoader {
-  private final FullPathResolver pathResolver;
-  private final HashMap<CacheKey, Native> cache;
+  private final HashMap<CacheKey, Native> nativeCache;
+  private final HashMap<Hash, JarFile> jarFileCache;
 
   @Inject
-  public NativeImplLoader(FullPathResolver pathResolver) {
-    this.pathResolver = pathResolver;
-    this.cache = new HashMap<>();
+  public NativeImplLoader() {
+    this.nativeCache = new HashMap<>();
+    this.jarFileCache = new HashMap<>();
   }
 
-  public synchronized Native loadNative(Function function) throws LoadingNativeImplException {
-    String pathString = ((NativeBody) function.body()).implementedBy().path();
-    JavaMethodPath path = parseMethodPath(function, pathString);
-    Native nativ = loadNativeImpl(function, path);
+  public synchronized void storeJarFile(JarFile jarFile) {
+    jarFileCache.put(jarFile.hash(), jarFile);
+  }
+
+  public synchronized Native loadNative(Function function, String methodPath, Hash contentHash)
+      throws LoadingNativeImplException {
+    JavaMethodPath path = parseMethodPath(function, methodPath);
+    Native nativ = loadNativeImpl(function, path, contentHash);
     assertNativeResultMatchesDeclared(function, nativ, function.type().resultType(), path);
     assertNativeParameterTypesMatchesFuncParameters(nativ, function, path);
     return nativ;
   }
 
-  public synchronized Native loadNative(Value value) throws LoadingNativeImplException {
-    String pathString = ((NativeBody) value.body()).implementedBy().path();
-    JavaMethodPath path = parseMethodPath(value, pathString);
-    Native nativ = loadNativeImpl(value, path);
+  public synchronized Native loadNative(Value value, String methodPath, Hash contentHash)
+      throws LoadingNativeImplException {
+    JavaMethodPath path = parseMethodPath(value, methodPath);
+    Native nativ = loadNativeImpl(value, path, contentHash);
     assertNativeResultMatchesDeclared(value, nativ, value.type(), path);
     assertNativeHasOneParameter(nativ, value, path);
     return nativ;
@@ -70,29 +68,17 @@ public class NativeImplLoader {
     }
   }
 
-  private Native loadNativeImpl(Referencable referencable, JavaMethodPath path)
+  private Native loadNativeImpl(Referencable referencable, JavaMethodPath path, Hash contentHash)
       throws LoadingNativeImplException {
-    JarFile jarFile = jarFileChained(referencable, path);
+    JarFile jarFile = jarFileCache.get(contentHash);
     CacheKey key = new CacheKey(jarFile, path.toString());
-    Native nativ = cache.get(key);
+    Native nativ = nativeCache.get(key);
     if (nativ == null) {
       Method method = findMethod(referencable, jarFile, path);
       nativ = new Native(method, jarFile);
-      cache.put(key, nativ);
+      nativeCache.put(key, nativ);
     }
     return nativ;
-  }
-
-  private JarFile jarFileChained(Referencable referencable, JavaMethodPath path)
-      throws LoadingNativeImplException {
-    Path jarPath = pathResolver.resolve(referencable.location().module().toNative());
-    try {
-      return jarFile(jarPath);
-    } catch (FileNotFoundException e) {
-      throw newLoadingException(referencable, path, "Cannot find file '" + jarPath + "'.", e);
-    } catch (IOException e) {
-      throw newLoadingException(referencable, path, "Error reading file '" + jarPath + "'.", e);
-    }
   }
 
   private Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
@@ -127,8 +113,9 @@ public class NativeImplLoader {
     try {
       return loadClass(jarFile.path(), methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
-      throw newInvalidPathException(referencable, methodPath, "Class '"
-          + methodPath.classBinaryName() + "' does not exist in jar '" + jarFile.path() + "'.");
+      throw newInvalidPathException(referencable, methodPath,
+          "Class '" + methodPath.classBinaryName() + "' does not exist in jar '"
+          + jarFile.location().prefixedPath() + "'.");
     }
   }
 

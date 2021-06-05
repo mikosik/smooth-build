@@ -66,7 +66,7 @@ public class PlanCommandTest {
 
     @Test
     public void native_function_call_with_argument() throws Exception {
-      this.createNativeJar(OneStringParameter.class);
+      createNativeJar(OneStringParameter.class);
       createUserModule(format("""
             @Native("%s.function")
             String oneStringParameter(String value);
@@ -77,6 +77,9 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String oneStringParameter()
+              String(String value) _native_function
+                String "org.smoothbuild.acceptance.testing."...
+                Blob _native_module('{prj}/build.jar')
               String "abc"
           """);
     }

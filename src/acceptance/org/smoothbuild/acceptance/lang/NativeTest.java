@@ -57,8 +57,7 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("myValue");
       assertFinishedWithError();
-      assertSysOutContains(errorLoadingMessage("myValue", "MissingClass.function",
-          "Cannot find file '" + buildJarPath() + "'."));
+      assertSysOutContains("Error reading file '{prj}/build.jar'.");
     }
 
     @Test
@@ -103,7 +102,7 @@ public class NativeTest extends AcceptanceTestCase {
         runSmoothBuild("result");
         assertFinishedWithError();
         assertSysOutContains(invalidNativePathMessage("returnAbc", "org.smoothbuild.Missing.method",
-            "Class 'org.smoothbuild.Missing' does not exist in jar '" + buildJarPath() + "'."));
+            "Class 'org.smoothbuild.Missing' does not exist in jar '{prj}/build.jar'."));
       }
 
       @Nested
@@ -367,8 +366,7 @@ public class NativeTest extends AcceptanceTestCase {
             """);
       runSmoothBuild("result");
       assertFinishedWithError();
-      assertSysOutContains(errorLoadingMessage("myFunction", "MissingClass.method",
-          "Cannot find file '" + buildJarPath() + "'."));
+      assertSysOutContains("Error reading file '{prj}/build.jar'.");
     }
 
     @Test

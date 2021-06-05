@@ -80,6 +80,10 @@ public class TypeToSpecConverter extends TypeVisitor<Spec> {
 
   @Override
   public Spec visit(FunctionType type) {
+    return nativeCodeSpec();
+  }
+
+  public TupleSpec nativeCodeSpec() {
     return objectFactory.tupleSpec(
         ImmutableList.of(objectFactory.stringSpec(), objectFactory.blobSpec()));
   }

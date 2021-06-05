@@ -1,24 +1,25 @@
 package org.smoothbuild.exec.algorithm;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.arrayAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.convertAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedBlobAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.fixedStringAlgorithmHash;
+import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readFileContentAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.readTupleElementAlgorithmHash;
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.tupleAlgorithmHash;
+import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.util.Lists.list;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.TupleSpec;
-import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.testing.TestingContext;
 
 import okio.ByteString;
@@ -27,36 +28,25 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    Native nativ = nativeWithHash(Hash.of(0));
     TupleSpec constructedType = tupleSpec(list());
 
     hashes.add(arrayAlgorithmHash());
-    hashes.add(callNativeAlgorithmHash(nativ, "referencableName"));
+    hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(tupleAlgorithmHash(constructedType));
     hashes.add(readTupleElementAlgorithmHash(0));
     hashes.add(fixedStringAlgorithmHash("abc"));
     hashes.add(fixedBlobAlgorithmHash(ByteString.of((byte) 0xAB)));
+    hashes.add(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("abc"))));
 
     assertThat(hashes.size())
-        .isEqualTo(7);
-  }
-
-  @Test
-  public void call_native_algorithm_has_different_hash_for_different_natives() {
-    Native native1 = nativeWithHash(Hash.of(1));
-    Native native2 = nativeWithHash(Hash.of(2));
-
-    assertThat(callNativeAlgorithmHash(native1, "referencableName"))
-        .isNotEqualTo(callNativeAlgorithmHash(native2, "referencableName"));
+        .isEqualTo(8);
   }
 
   @Test
   public void call_native_algorithm_has_different_hash_for_different_referencable_names() {
-    Native nativ = nativeWithHash(Hash.of(1));
-
-    assertThat(callNativeAlgorithmHash(nativ, "referencableName1"))
-        .isNotEqualTo(callNativeAlgorithmHash(nativ, "referencableName2"));
+    assertThat(callNativeAlgorithmHash("referencableName1"))
+        .isNotEqualTo(callNativeAlgorithmHash("referencableName2"));
   }
 
   @Test
@@ -92,9 +82,9 @@ public class AlgorithmHashesTest extends TestingContext {
         .isNotEqualTo(fixedBlobAlgorithmHash(ByteString.of((byte) 2)));
   }
 
-  private static Native nativeWithHash(Hash hash) {
-    Native nativ = mock(Native.class);
-    when(nativ.hash()).thenReturn(hash);
-    return nativ;
+  @Test
+  public void read_file_content_algorithm_has_different_hash_for_different_modules() {
+    assertThat(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("abc"))))
+        .isNotEqualTo(readFileContentAlgorithmHash(moduleLocation(USER, Path.of("def"))));
   }
 }

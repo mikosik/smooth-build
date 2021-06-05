@@ -1,13 +1,16 @@
 package org.smoothbuild.exec.compute;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
 import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
+import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
+import static org.smoothbuild.lang.base.define.Space.USER;
 import static org.smoothbuild.util.Lists.list;
+
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
@@ -17,10 +20,11 @@ import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.nativ.Native;
+import org.smoothbuild.lang.base.type.TestingTypes;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -77,18 +81,20 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), "name", mockNative(), true);
+    Algorithm algorithm = new CallNativeAlgorithm(
+        null, stringSpec(), function(TestingTypes.STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("48cacf152c032cb117fc835fef8024660f281e4a"));
+        .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
   }
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), "name", mockNative(), true);
+    Algorithm algorithm = new CallNativeAlgorithm(
+        null, stringSpec(), function(TestingTypes.STRING, "name"), true);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("816fee20334a12c3e827179a7c03701c287688aa"));
+        .isEqualTo(Hash.decode("995de0b5317252aa56dc55f49d1d2b043500e8c4"));
   }
 
   @Test
@@ -131,6 +137,24 @@ public class ComputationHashTest extends TestingContext {
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));
   }
 
+  @Test
+  public void hash_of_computation_with_read_file_content_algorithm_and_empty_input_is_stable() {
+    Algorithm algorithm = new ReadFileContentAlgorithm(
+        null, moduleLocation(USER, Path.of("abc")), null, null);
+    Input input = input(list());
+    assertThat(computationHash(Hash.of(13), algorithm, input))
+        .isEqualTo(Hash.decode("ec008449a75038ffa0a81c6deccfa6068dfcb852"));
+  }
+
+  @Test
+  public void hash_of_computation_with_read_file_content_algorithm_and_non_empty_input_is_stable() {
+    Algorithm algorithm = new ReadFileContentAlgorithm(
+        null, moduleLocation(USER, Path.of("abc")), null, null);
+    Input input = input(list(string("abc"), string("def")));
+    assertThat(computationHash(Hash.of(13), algorithm, input))
+        .isEqualTo(Hash.decode("480aa6dc1679071d2c6dbaf66bd6f4d463411c8b"));
+  }
+
   private static Algorithm computation(Hash hash) {
     return new Algorithm(null) {
       @Override
@@ -148,11 +172,5 @@ public class ComputationHashTest extends TestingContext {
         return null;
       }
     };
-  }
-
-  private static Native mockNative() {
-    Native nativ = mock(Native.class);
-    when(nativ.hash()).thenReturn(Hash.of(33));
-    return nativ;
   }
 }
