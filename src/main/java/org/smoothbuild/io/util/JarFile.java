@@ -1,20 +1,18 @@
 package org.smoothbuild.io.util;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 public class JarFile {
-  private final Path path;
+  private final ModuleLocation moduleLocation;
+  private final Path resolvedPath;
   private final Hash hash;
 
-  public static JarFile jarFile(Path path) throws IOException {
-    return new JarFile(path, Hash.of(path));
-  }
-
-  public JarFile(Path path, Hash hash) {
-    this.path = path;
+  public JarFile(ModuleLocation moduleLocation, Path resolvedPath, Hash hash) {
+    this.moduleLocation = moduleLocation;
+    this.resolvedPath = resolvedPath;
     this.hash = hash;
   }
 
@@ -22,7 +20,11 @@ public class JarFile {
     return hash;
   }
 
+  public ModuleLocation location() {
+    return moduleLocation;
+  }
+
   public Path path() {
-    return path;
+    return resolvedPath;
   }
 }

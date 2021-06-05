@@ -1,10 +1,6 @@
 package org.smoothbuild.exec.plan;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static com.google.common.truth.Truth.assertThat;
 import static org.smoothbuild.lang.TestingLang.call;
 import static org.smoothbuild.lang.TestingLang.function;
 import static org.smoothbuild.lang.TestingLang.parameter;
@@ -12,17 +8,18 @@ import static org.smoothbuild.lang.TestingLang.parameterRef;
 import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.exec.nativ.LoadingNativeImplException;
-import org.smoothbuild.exec.nativ.Native;
-import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.expr.CallExpression;
+import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
@@ -30,51 +27,58 @@ import org.smoothbuild.util.Scope;
 import com.google.common.collect.ImmutableList;
 
 public class ExpressionToTaskConverterTest extends TestingContext {
-  private NativeImplLoader nativeImplLoader;
   private ExpressionToTaskConverter converter;
 
   @BeforeEach
   public void beforeEach() {
-    nativeImplLoader = mock(NativeImplLoader.class);
-    converter = new ExpressionToTaskConverter(
-        Definitions.empty(), objectFactory(), nativeImplLoader);
+    converter = new ExpressionToTaskConverter(Definitions.empty(), objectFactory(), null, null);
   }
 
   @Test
   public void task_for_unused_arguments_are_not_created() throws ExpressionVisitorException {
-    Function nativeFunction = function(BLOB, "nativeFunction");
-    CallExpression nativeCall = call(BLOB, nativeFunction);
-    Function function = function(BLOB, "myFunction", TestingLang.blob(33), parameter(BLOB, "p"));
-    CallExpression call = new CallExpression(BLOB, function, ImmutableList.of(nativeCall), loc());
+    Expression blobLiteral = TestingLang.blob(0x22);
+    Function function = function(BLOB, "myFunction", TestingLang.blob(0x33), parameter(BLOB, "p"));
+    CallExpression call = new CallExpression(BLOB, function, ImmutableList.of(blobLiteral), loc());
 
-    converter.visit(new Scope<>(Map.of()), call);
+    Task rootTask = converter.visit(new Scope<>(Map.of()), call);
 
-    verifyNoInteractions(nativeImplLoader);
+    assertThat(findTasks(rootTask, "0x22"))
+        .hasSize(0);
+    assertThat(findTasks(rootTask, "0x33"))
+        .hasSize(1);
   }
 
   @Test
   public void only_one_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice()
-      throws ExpressionVisitorException, LoadingNativeImplException {
-    Function nativeFunction = function(BLOB, "nativeFunction");
+      throws ExpressionVisitorException {
     Function twoBlobsEater = function(
-        BLOB, "twoBlobsEater", parameter(BLOB, "param"), parameter(BLOB, "param2"));
+        BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
 
     CallExpression twoBlobsEaterCall = call(
         BLOB, twoBlobsEater, parameterRef(BLOB, "param"), parameterRef(BLOB, "param"));
     Function myFunction = function(BLOB, "myFunction", twoBlobsEaterCall, parameter(BLOB, "param"));
-    CallExpression nativeCall = call(BLOB, nativeFunction);
-    CallExpression myFunctionCall = call(BLOB, myFunction, nativeCall);
 
-    when(nativeImplLoader.loadNative(nativeFunction))
-        .thenReturn(new Native(null, null));
-    when(nativeImplLoader.loadNative(twoBlobsEater))
-        .thenReturn(new Native(null, null));
+    CallExpression myFunctionCall = call(BLOB, myFunction, TestingLang.blob(0x17));
 
-    converter.visit(new Scope<>(Map.of()), myFunctionCall);
+    Task task = converter.visit(new Scope<>(Map.of()), myFunctionCall);
 
-    verify(nativeImplLoader, times(1))
-        .loadNative(twoBlobsEater);
-    verify(nativeImplLoader, times(1))
-        .loadNative(nativeFunction);
+    List<Task> found = findTasks(task, "0x17");
+    assertThat(found)
+        .hasSize(2);
+    assertThat(found.get(0))
+        .isSameInstanceAs(found.get(1));
+  }
+
+  private static List<Task> findTasks(Task task, String name) {
+    ArrayList<Task> result = new ArrayList<>();
+    findTasksRecursive(task, name, result);
+    return result;
+  }
+
+  private static void findTasksRecursive(Task task, String name, ArrayList<Task> result) {
+    if (task.name().equals(name)) {
+      result.add(task);
+    }
+    task.dependencies().forEach(t -> findTasksRecursive(t, name, result));
   }
 }

@@ -21,13 +21,11 @@ import static org.smoothbuild.lang.base.type.TestingTypes.f;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Test;
-import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
-import org.smoothbuild.testing.common.TestingLocation;
 
 public class ExpressionTest {
   @Test
