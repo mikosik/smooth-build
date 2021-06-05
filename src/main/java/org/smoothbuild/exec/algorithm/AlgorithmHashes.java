@@ -1,5 +1,7 @@
 package org.smoothbuild.exec.algorithm;
 
+import java.nio.file.Path;
+
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.nativ.Native;
@@ -13,6 +15,11 @@ public class AlgorithmHashes {
 
   public static Hash callNativeAlgorithmHash(Native nativ, String referencableName) {
     return hash(1, Hash.of(nativ.hash(), Hash.of(referencableName)));
+  }
+
+  // TODO test it
+  public static Hash readFileContentAlgorithmHash(String jdkPathString) {
+    return hash(1, Hash.of(jdkPathString));
   }
 
   public static Hash convertAlgorithmHash(Spec destinationSpec) {

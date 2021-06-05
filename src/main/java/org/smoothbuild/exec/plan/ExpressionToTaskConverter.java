@@ -26,9 +26,11 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
+import org.smoothbuild.exec.algorithm.CreateNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
+import org.smoothbuild.exec.algorithm.ReadFileContentAlogirthm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
@@ -44,6 +46,7 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
@@ -63,6 +66,7 @@ import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.Scope;
 
 import com.google.common.collect.ImmutableList;
@@ -174,6 +178,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   private Task taskForNativeFunction(List<Task> arguments, Function function,
       BoundedVariables variables, Type actualResultType, Location location)
       throws ExpressionVisitorException {
+    var createNativeAlgorithm = new CreateNativeAlgorithm(
+        toSpecConverter.visit(function.type()),
+        ((NativeBody) function.body()).implementedBy().path(),
+        function.location().module().toNative()
+        );
+
+    Task nativeObj = createNativeObjTask((NativeBody) function.body(), function.location().moduleLocation());
+
     Native nativ = loadNative(function);
     boolean isPure = ((NativeBody) function.body()).implementedBy().isPure();
     Algorithm algorithm = new CallNativeAlgorithm(
@@ -187,6 +199,25 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
           dependencies, location);
     }
+  }
+
+  private Task createNativeObjTask(NativeBody body, ModuleLocation moduleLocation) {
+    var contentAlogirthm = new ReadFileContentAlogirthm(
+        toSpecConverter.visit(blob()), moduleLocation.toNative().path());
+
+    // TODO replace CALL with NATIVE (add cmd-line options and documentation)
+    // TODO continue here
+    return new NormalTask(CALL, blob(), function.extendedName(), contentAlogirthm,
+        list(), location);
+
+
+    var createNativeAlgorithm = new CreateNativeAlgorithm(
+        toSpecConverter.nativeObjSpec(),
+        ((NativeBody) function.body()).implementedBy().path(),
+        function.location().module().toNative()
+    );
+
+    return null;
   }
 
   private static ImmutableMap<String, TaskSupplier> nameToArgumentMap(
