@@ -92,7 +92,8 @@ public class AstCreator {
         } else {
           return Optional.of(new ImplementedBy(
               unquote(atNative.STRING().getText()),
-              isPure(atNative)));
+              isPure(atNative),
+              locationOf(moduleLocation, atNative)));
         }
       }
 

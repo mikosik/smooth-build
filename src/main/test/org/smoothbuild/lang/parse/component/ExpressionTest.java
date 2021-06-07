@@ -18,13 +18,16 @@ import static org.smoothbuild.lang.base.type.TestingTypes.BLOB;
 import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.lang.base.type.TestingTypes.a;
 import static org.smoothbuild.lang.base.type.TestingTypes.f;
+import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import org.junit.jupiter.api.Test;
+import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
+import org.smoothbuild.testing.common.TestingLocation;
 
 public class ExpressionTest {
   @Test
@@ -92,7 +95,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            2, STRING, "myFunction", new ImplementedBy("Impl.met", false)));
+            2, STRING, "myFunction", new ImplementedBy("Impl.met", false, loc(1))));
   }
 
   @Test
@@ -103,7 +106,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            2, STRING, "myFunction", new ImplementedBy("Impl.met", true)));
+            2, STRING, "myFunction", new ImplementedBy("Impl.met", true, loc(1))));
   }
 
   @Test

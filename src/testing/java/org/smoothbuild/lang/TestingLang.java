@@ -1,5 +1,6 @@
 package org.smoothbuild.lang;
 
+import static java.lang.Math.max;
 import static org.smoothbuild.testing.common.TestingLocation.loc;
 
 import java.util.List;
@@ -81,7 +82,8 @@ public class TestingLang {
 
   public static Function function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
-    return function(line, type, name, new ImplementedBy(implementedBy, true), parameters);
+    return function(
+        line, type, name, new ImplementedBy(implementedBy, true, loc(max(line -1, 1))), parameters);
   }
 
   public static Function function(int line, Type type, String name, ImplementedBy implementedBy,
@@ -105,7 +107,7 @@ public class TestingLang {
   }
 
   public static Value value(int line, Type type, String name, String implementedBy) {
-    NativeBody nativeBody = new NativeBody(new ImplementedBy(implementedBy, true));
+    NativeBody nativeBody = new NativeBody(new ImplementedBy(implementedBy, true, loc(line -1)));
     return new Value(type, name, nativeBody, loc(line));
   }
 
