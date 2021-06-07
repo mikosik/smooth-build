@@ -1,5 +1,6 @@
 package org.smoothbuild.exec.plan;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -16,9 +17,12 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.TestingLang;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
@@ -31,13 +35,15 @@ import com.google.common.collect.ImmutableList;
 
 public class ExpressionToTaskConverterTest extends TestingContext {
   private NativeImplLoader nativeImplLoader;
+  private FullPathResolver fullPathResolver;
   private ExpressionToTaskConverter converter;
 
   @BeforeEach
   public void beforeEach() {
     nativeImplLoader = mock(NativeImplLoader.class);
+    fullPathResolver = mock(FullPathResolver.class);
     converter = new ExpressionToTaskConverter(
-        Definitions.empty(), objectFactory(), nativeImplLoader);
+        Definitions.empty(), objectFactory(), nativeImplLoader, fullPathResolver);
   }
 
   @Test
@@ -65,16 +71,16 @@ public class ExpressionToTaskConverterTest extends TestingContext {
     CallExpression nativeCall = call(BLOB, nativeFunction);
     CallExpression myFunctionCall = call(BLOB, myFunction, nativeCall);
 
-    when(nativeImplLoader.loadNative(nativeFunction))
+    when(nativeImplLoader.loadNative(nativeFunction, anyString(), Mockito.any(Hash.class)))
         .thenReturn(new Native(null, null));
-    when(nativeImplLoader.loadNative(twoBlobsEater))
+    when(nativeImplLoader.loadNative(twoBlobsEater, anyString(), Mockito.any(Hash.class)))
         .thenReturn(new Native(null, null));
 
     converter.visit(new Scope<>(Map.of()), myFunctionCall);
 
     verify(nativeImplLoader, times(1))
-        .loadNative(twoBlobsEater);
+        .loadNative(twoBlobsEater, anyString(), Mockito.any(Hash.class));
     verify(nativeImplLoader, times(1))
-        .loadNative(nativeFunction);
+        .loadNative(nativeFunction, anyString(), Mockito.any(Hash.class));
   }
 }

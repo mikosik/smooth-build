@@ -1,10 +1,8 @@
 package org.smoothbuild.exec.algorithm;
 
-import java.nio.file.Path;
-
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.exec.nativ.Native;
+import org.smoothbuild.lang.base.define.ModuleLocation;
 
 import okio.ByteString;
 
@@ -13,13 +11,15 @@ public class AlgorithmHashes {
     return hash(0);
   }
 
-  public static Hash callNativeAlgorithmHash(Native nativ, String referencableName) {
-    return hash(1, Hash.of(nativ.hash(), Hash.of(referencableName)));
+  public static Hash callNativeAlgorithmHash(String referencableName) {
+    return hash(1, Hash.of(referencableName));
   }
 
   // TODO test it
-  public static Hash readFileContentAlgorithmHash(String jdkPathString) {
-    return hash(1, Hash.of(jdkPathString));
+  // TODO fix 17
+  public static Hash readFileContentAlgorithmHash(ModuleLocation moduleLocation) {
+    return hash(17, Hash.of(
+        Hash.of(moduleLocation.path().toString()), Hash.of(moduleLocation.space().toString())));
   }
 
   public static Hash convertAlgorithmHash(Spec destinationSpec) {

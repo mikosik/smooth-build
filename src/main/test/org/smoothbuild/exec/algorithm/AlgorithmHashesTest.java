@@ -27,11 +27,10 @@ public class AlgorithmHashesTest extends TestingContext {
   @Test
   public void each_algorithm_has_different_hash() {
     Set<Hash> hashes = new HashSet<>();
-    Native nativ = nativeWithHash(Hash.of(0));
     TupleSpec constructedType = tupleSpec(list());
 
     hashes.add(arrayAlgorithmHash());
-    hashes.add(callNativeAlgorithmHash(nativ, "referencableName"));
+    hashes.add(callNativeAlgorithmHash("referencableName"));
     hashes.add(convertAlgorithmHash(stringSpec()));
     hashes.add(tupleAlgorithmHash(constructedType));
     hashes.add(readTupleElementAlgorithmHash(0));
@@ -43,20 +42,9 @@ public class AlgorithmHashesTest extends TestingContext {
   }
 
   @Test
-  public void call_native_algorithm_has_different_hash_for_different_natives() {
-    Native native1 = nativeWithHash(Hash.of(1));
-    Native native2 = nativeWithHash(Hash.of(2));
-
-    assertThat(callNativeAlgorithmHash(native1, "referencableName"))
-        .isNotEqualTo(callNativeAlgorithmHash(native2, "referencableName"));
-  }
-
-  @Test
   public void call_native_algorithm_has_different_hash_for_different_referencable_names() {
-    Native nativ = nativeWithHash(Hash.of(1));
-
-    assertThat(callNativeAlgorithmHash(nativ, "referencableName1"))
-        .isNotEqualTo(callNativeAlgorithmHash(nativ, "referencableName2"));
+    assertThat(callNativeAlgorithmHash("referencableName1"))
+        .isNotEqualTo(callNativeAlgorithmHash("referencableName2"));
   }
 
   @Test

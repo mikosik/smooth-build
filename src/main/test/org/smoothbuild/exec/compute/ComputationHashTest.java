@@ -4,14 +4,16 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smoothbuild.db.object.spec.TestingSpecs.PERSON;
-import static org.smoothbuild.db.object.spec.TestingSpecs.STRING;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.Computer.computationHash;
+import static org.smoothbuild.lang.TestingLang.function;
+import static org.smoothbuild.lang.base.type.TestingTypes.STRING;
 import static org.smoothbuild.util.Lists.list;
 
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.db.object.spec.TestingSpecs;
 import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
@@ -21,6 +23,7 @@ import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.exec.nativ.Native;
+import org.smoothbuild.lang.base.type.TestingTypes;
 import org.smoothbuild.plugin.NativeApi;
 import org.smoothbuild.testing.TestingContext;
 
@@ -77,7 +80,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), "name", mockNative(), true);
+    Algorithm algorithm = new CallNativeAlgorithm(
+        null, stringSpec(), function(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("48cacf152c032cb117fc835fef8024660f281e4a"));
@@ -85,7 +89,8 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_native_call_algorithm_and_non_empty_input_is_stable() {
-    Algorithm algorithm = new CallNativeAlgorithm(stringSpec(), "name", mockNative(), true);
+    Algorithm algorithm = new CallNativeAlgorithm(
+        null, stringSpec(), function(STRING, "name"), true);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("816fee20334a12c3e827179a7c03701c287688aa"));
@@ -125,7 +130,7 @@ public class ComputationHashTest extends TestingContext {
 
   @Test
   public void hash_of_computation_with_read_tuple_element_algorithm_and_one_element_input_is_stable() {
-    Algorithm algorithm = new ReadTupleElementAlgorithm(0, STRING);
+    Algorithm algorithm = new ReadTupleElementAlgorithm(0, TestingSpecs.STRING);
     Input input = input(list(string("abc")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
         .isEqualTo(Hash.decode("5291ac7b7c636d511423afcd63dbe8a65f4cb3d7"));

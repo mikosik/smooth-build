@@ -7,43 +7,53 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.base.Obj;
+import org.smoothbuild.db.object.base.Str;
+import org.smoothbuild.db.object.base.Tuple;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
+import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
+import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.lang.base.define.Function;
+import org.smoothbuild.lang.base.define.Referencable;
+import org.smoothbuild.lang.base.define.Value;
+import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm extends Algorithm {
-  private final String referencableName;
-  private final Native nativ;
+  private final NativeImplLoader nativeImplLoader;
+  private final Referencable referencable;
 
-  public CallNativeAlgorithm(Spec outputSpec, String referencableName, Native nativ,
-      boolean isPure) {
+  public CallNativeAlgorithm(NativeImplLoader nativeImplLoader, Spec outputSpec,
+      Referencable referencable, boolean isPure) {
     super(outputSpec, isPure);
-    this.referencableName = referencableName;
-    this.nativ = nativ;
+    this.nativeImplLoader = nativeImplLoader;
+    this.referencable = referencable;
   }
 
   @Override
   public Hash hash() {
-    return callNativeAlgorithmHash(nativ, referencableName);
+    return callNativeAlgorithmHash(referencable.name());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
+    Native nativ = loadNative((Tuple) input.objects().get(0));
     try {
       Obj result = (Obj) nativ.method()
           .invoke(null, createArguments(nativeApi, input.objects()));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
-          nativeApi.log().error("`" + referencableName
+          nativeApi.log().error("`" + referencable.name()
               + "` has faulty native implementation: it returned `null` but logged no error.");
         }
         return new Output(null, nativeApi.messages());
       }
       if (!outputSpec().equals(result.spec())) {
-        nativeApi.log().error("`" + referencableName
+        nativeApi.log().error("`" + referencable.name()
             + "` has faulty native implementation: Its declared result spec == "
             + outputSpec().name()
             + " but it returned object with spec == " + result.spec().name() + ".");
@@ -53,9 +63,37 @@ public class CallNativeAlgorithm extends Algorithm {
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     } catch (InvocationTargetException e) {
-      throw new NativeCallException("`" + referencableName
+      throw new NativeCallException("`" + referencable.name()
           + "` threw java exception from its native code.", e.getCause());
     }
+  }
+
+  private Native loadNative(Tuple value) throws ExpressionVisitorException {
+    // TODO continue here ReadFileContentAlgorithm should cache inside some map
+    // a link `hash of NativeTuple -> jdkPath on disk from where we read it`
+    // or
+    // a link `hash of NativeTuple.content -> jdkPath on disk from where we read it`
+    // This should be kept in NativeImplLoader as it calculates JarFile hash so it can
+    // reuse content.hash()
+    Blob content = (Blob) value.get(1);
+
+    try {
+      if (referencable instanceof Function function) {
+        return nativeImplLoader.loadNative(
+            function, ((Str) value.get(0)).jValue(), content.hash());
+      } else {
+        return nativeImplLoader.loadNative(
+            (Value) referencable, ((Str) value.get(0)).jValue(), content.hash());
+      }
+    } catch (LoadingNativeImplException e) {
+      throw chainLoadNativeImplException(referencable, e);
+    }
+  }
+
+  private ExpressionVisitorException chainLoadNativeImplException(Referencable referencable,
+      LoadingNativeImplException e) {
+    return new ExpressionVisitorException(
+        referencable.location().toString() + ": " + e.getMessage(), e);
   }
 
   private static Object[] createArguments(NativeApi nativeApi, List<Obj> arguments) {

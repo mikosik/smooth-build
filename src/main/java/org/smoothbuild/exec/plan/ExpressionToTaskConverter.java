@@ -14,7 +14,6 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,19 +26,17 @@ import org.smoothbuild.exec.algorithm.Algorithm;
 import org.smoothbuild.exec.algorithm.CallNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.ConvertAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateArrayAlgorithm;
-import org.smoothbuild.exec.algorithm.CreateNativeAlgorithm;
 import org.smoothbuild.exec.algorithm.CreateTupleAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedBlobAlgorithm;
 import org.smoothbuild.exec.algorithm.FixedStringAlgorithm;
-import org.smoothbuild.exec.algorithm.ReadFileContentAlogirthm;
+import org.smoothbuild.exec.algorithm.ReadFileContentAlgorithm;
 import org.smoothbuild.exec.algorithm.ReadTupleElementAlgorithm;
 import org.smoothbuild.exec.compute.IfTask;
 import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.VirtualTask;
-import org.smoothbuild.exec.nativ.LoadingNativeImplException;
-import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedBody;
@@ -74,17 +71,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
+// TODO ExpressionVisitorException is not needed at all
 public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSupplier>, Task> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
   private final NativeImplLoader nativeImplLoader;
+  private final FullPathResolver pathResolver;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
-      NativeImplLoader nativeImplLoader) {
+      NativeImplLoader nativeImplLoader, FullPathResolver pathResolver) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
     this.nativeImplLoader = nativeImplLoader;
+    this.pathResolver = pathResolver;
   }
 
   @Override
@@ -108,20 +108,15 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       Task convertedTask = convertIfNeeded(task, value.type());
       return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
     } else {
-      Native nativ = loadNative(value);
+      // TODO copy pasted (and simplified) from taskForNativeFunction()
+      Task nativeObj = createNativeObjTask((NativeBody) value.body(), value);
       boolean isPure = ((NativeBody) value.body()).implementedBy().isPure();
-      Algorithm algorithm = new CallNativeAlgorithm(
-          value.type().visit(toSpecConverter), value.name(), nativ, isPure);
-      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
-          ImmutableList.of(), reference.location());
-    }
-  }
+      Algorithm algorithm = new CallNativeAlgorithm(nativeImplLoader,
+          value.type().visit(toSpecConverter), value, isPure);
+      List<Task> dependencies = list(nativeObj);
 
-  private Native loadNative(Value value) throws ExpressionVisitorException {
-    try {
-      return nativeImplLoader.loadNative(value);
-    } catch (LoadingNativeImplException e) {
-      throw chainLoadNativeImplException(value, e);
+      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
+          dependencies, reference.location());
     }
   }
 
@@ -150,18 +145,19 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
             expression.location());
       }
     } else if (callable instanceof Constructor constructor) {
-      return taskForConstructorCall(constructor.type().resultType(), constructor.extendedName(),
-          childrenTasks(scope, expression.arguments()), expression.location()
-      );
+      Type resultType = constructor.type().resultType();
+      TupleSpec tupleSpec = (TupleSpec) resultType.visit(toSpecConverter);
+      List<Task> dependencies = childrenTasks(scope, expression.arguments());
+      return taskForConstructorCall(
+          resultType, tupleSpec, constructor.extendedName(), dependencies, expression.location());
     } else {
       throw new RuntimeException("Unexpected case: " + callable.getClass().getCanonicalName());
     }
   }
 
-  private Task taskForConstructorCall(
-      Type resultType, String name, List<Task> dependencies, Location location) {
-    TupleSpec type = (TupleSpec) resultType.visit(toSpecConverter);
-    Algorithm algorithm = new CreateTupleAlgorithm(type);
+  private Task taskForConstructorCall(Type resultType, TupleSpec tupleSpec, String name,
+      List<Task> dependencies, Location location) {
+    Algorithm algorithm = new CreateTupleAlgorithm(tupleSpec);
     return new NormalTask(CALL, resultType, name, algorithm, dependencies, location);
   }
 
@@ -176,23 +172,21 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   private Task taskForNativeFunction(List<Task> arguments, Function function,
-      BoundedVariables variables, Type actualResultType, Location location)
-      throws ExpressionVisitorException {
-    var createNativeAlgorithm = new CreateNativeAlgorithm(
-        toSpecConverter.visit(function.type()),
-        ((NativeBody) function.body()).implementedBy().path(),
-        function.location().module().toNative()
-        );
+      BoundedVariables variables, Type actualResultType, Location location) {
 
     Task nativeObj = createNativeObjTask((NativeBody) function.body(), function);
 
-    Native nativ = loadNative(function);
     boolean isPure = ((NativeBody) function.body()).implementedBy().isPure();
-    Algorithm algorithm = new CallNativeAlgorithm(
-        actualResultType.visit(toSpecConverter), function.name(), nativ, isPure);
+    Algorithm algorithm = new CallNativeAlgorithm(nativeImplLoader,
+        actualResultType.visit(toSpecConverter), function, isPure);
     ImmutableList<Type> actualParameterTypes =
         map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
-    List<Task> dependencies = convertedArguments(actualParameterTypes, arguments);
+    List<Task> functionArgTasks = convertedArguments(actualParameterTypes, arguments);
+    List<Task> dependencies =
+        ImmutableList.<Task>builder()
+            .add(nativeObj)
+            .addAll(functionArgTasks)
+            .build();
     if (function.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, location);
     } else {
@@ -201,9 +195,10 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     }
   }
 
-  private Task createNativeObjTask(NativeBody body, Function function) {
-    Path jdkPath = function.location().moduleLocation().toNative().path();
-    var contentAlgorithm = new ReadFileContentAlogirthm(toSpecConverter.visit(blob()), jdkPath);
+  private Task createNativeObjTask(NativeBody body, Referencable referencable) {
+    ModuleLocation module = referencable.location().moduleLocation().toNative();
+    var contentAlgorithm = new ReadFileContentAlgorithm(
+        toSpecConverter.visit(blob()), module, nativeImplLoader, pathResolver);
 
     // TODO replace CALL with NATIVE (add cmd-line options and documentation)
     // TODO replace "JAR" with `JAR("path limited with elipsis")`
@@ -212,8 +207,11 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
         CALL, blob(), "JAR", contentAlgorithm, list(), implementedBy.location());
     var methodPathTask = fixedStringTask(implementedBy.path(), implementedBy.location());
 
-    return taskForConstructorCall(function.type(), "NATIVE", list(methodPathTask, contentTask),
-        function.location());
+    // TODO this is tricky, add comments: function.type() which is smooth type is represented
+    // by TupleSpec = .nativeObjectSpec()
+    return taskForConstructorCall(referencable.type(), toSpecConverter.nativeObjSpec(), "NATIVE",
+        list(methodPathTask, contentTask), referencable.location()
+    );
   }
 
   private static ImmutableMap<String, TaskSupplier> nameToArgumentMap(
@@ -231,20 +229,6 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     } else {
       return expression.type();
     }
-  }
-
-  private Native loadNative(Function function) throws ExpressionVisitorException {
-    try {
-      return nativeImplLoader.loadNative(function);
-    } catch (LoadingNativeImplException e) {
-      throw chainLoadNativeImplException(function, e);
-    }
-  }
-
-  private ExpressionVisitorException chainLoadNativeImplException(Referencable function,
-      LoadingNativeImplException e) {
-    return new ExpressionVisitorException(
-        function.location().toString() + ": " + e.getMessage(), e);
   }
 
   private List<Task> convertedArguments(List<Type> actualParameterTypes, List<Task> arguments) {

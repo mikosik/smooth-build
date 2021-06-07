@@ -59,14 +59,14 @@ public class IfTask extends ComputableTask {
   }
 
   private Task conditionTask() {
-    return dependencies().get(0);
-  }
-
-  private Task thenTask() {
     return dependencies().get(1);
   }
 
-  private Task elseTask() {
+  private Task thenTask() {
     return dependencies().get(2);
+  }
+
+  private Task elseTask() {
+    return dependencies().get(3);
   }
 }
