@@ -14,28 +14,21 @@ import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class ConvertAlgorithm extends Algorithm {
-  private final Spec destinationSpec;
-
-  public ConvertAlgorithm(Spec destinationSpec) {
-    this.destinationSpec = destinationSpec;
+  public ConvertAlgorithm(Spec outputSpec) {
+    super(outputSpec);
   }
 
   @Override
   public Hash hash() {
-    return convertAlgorithmHash(destinationSpec);
-  }
-
-  @Override
-  public Spec outputSpec() {
-    return destinationSpec;
+    return convertAlgorithmHash(outputSpec());
   }
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
     assertThat(input.objects().size() == 1);
     Obj obj = input.objects().get(0);
-    assertThat(!destinationSpec.equals(obj.spec()));
-    return new Output(convert(destinationSpec, obj, nativeApi), nativeApi.messages());
+    assertThat(!outputSpec().equals(obj.spec()));
+    return new Output(convert(outputSpec(), obj, nativeApi), nativeApi.messages());
   }
 
   private static Obj convert(Spec destinationSpec, Obj obj, NativeApi nativeApi) {

@@ -6,19 +6,17 @@ import static org.smoothbuild.util.Strings.escapedAndLimitedWithEllipsis;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Str;
-import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.db.object.spec.StringSpec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
 
 public class FixedStringAlgorithm extends Algorithm {
-  private final StringSpec stringSpec;
   private final String string;
   private final String shortedString;
 
   public FixedStringAlgorithm(StringSpec stringSpec, String string) {
-    this.stringSpec = stringSpec;
+    super(stringSpec);
     this.string = string;
     this.shortedString = escapedAndLimitedWithEllipsis(string, NAME_LENGTH_LIMIT);
   }
@@ -30,11 +28,6 @@ public class FixedStringAlgorithm extends Algorithm {
   @Override
   public Hash hash() {
     return fixedStringAlgorithmHash(string);
-  }
-
-  @Override
-  public Spec outputSpec() {
-    return stringSpec;
   }
 
   @Override
