@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.spec.BlobSpec;
-import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
 import org.smoothbuild.plugin.NativeApi;
@@ -16,12 +15,11 @@ import org.smoothbuild.plugin.NativeApi;
 import okio.ByteString;
 
 public class FixedBlobAlgorithm extends Algorithm {
-  private final BlobSpec blobSpec;
   private final ByteString byteString;
   private final String shortedString;
 
   public FixedBlobAlgorithm(BlobSpec blobSpec, ByteString byteString) {
-    this.blobSpec = blobSpec;
+    super(blobSpec);
     this.byteString = byteString;
     this.shortedString = toStringLimitedWithEllipsis(byteString, NAME_LENGTH_LIMIT);
   }
@@ -42,11 +40,6 @@ public class FixedBlobAlgorithm extends Algorithm {
   @Override
   public Hash hash() {
     return fixedBlobAlgorithmHash(byteString);
-  }
-
-  @Override
-  public Spec outputSpec() {
-    return blobSpec;
   }
 
   @Override

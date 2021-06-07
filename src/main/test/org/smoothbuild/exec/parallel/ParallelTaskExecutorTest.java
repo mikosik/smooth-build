@@ -318,7 +318,7 @@ public class ParallelTaskExecutorTest extends TestingContext {
     }
 
     protected TestAlgorithm(Hash hash, boolean isPure) {
-      super(isPure);
+      super(stringSpec(), isPure);
       this.hash = hash;
     }
 

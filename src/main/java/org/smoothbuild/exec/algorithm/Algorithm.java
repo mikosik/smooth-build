@@ -8,13 +8,19 @@ import org.smoothbuild.plugin.NativeApi;
 
 public abstract class Algorithm {
   private final boolean isPure;
+  private final Spec outputSpec;
 
-  protected Algorithm() {
-    this.isPure = true;
+  protected Algorithm(Spec outputSpec) {
+    this(outputSpec, true);
   }
 
-  protected Algorithm(boolean isPure) {
+  protected Algorithm(Spec outputSpec, boolean isPure) {
+    this.outputSpec = outputSpec;
     this.isPure = isPure;
+  }
+
+  public Spec outputSpec() {
+    return outputSpec;
   }
 
   public boolean isPure() {
@@ -22,8 +28,6 @@ public abstract class Algorithm {
   }
 
   public abstract Hash hash();
-
-  public abstract Spec outputSpec();
 
   public abstract Output run(Input input, NativeApi nativeApi) throws Exception;
 }

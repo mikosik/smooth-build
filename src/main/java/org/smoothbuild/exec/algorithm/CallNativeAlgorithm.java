@@ -15,14 +15,12 @@ import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.plugin.NativeApi;
 
 public class CallNativeAlgorithm extends Algorithm {
-  private final Spec outputSpec;
   private final String referencableName;
   private final Native nativ;
 
   public CallNativeAlgorithm(Spec outputSpec, String referencableName, Native nativ,
       boolean isPure) {
-    super(isPure);
-    this.outputSpec = outputSpec;
+    super(outputSpec, isPure);
     this.referencableName = referencableName;
     this.nativ = nativ;
   }
@@ -30,11 +28,6 @@ public class CallNativeAlgorithm extends Algorithm {
   @Override
   public Hash hash() {
     return callNativeAlgorithmHash(nativ, referencableName);
-  }
-
-  @Override
-  public Spec outputSpec() {
-    return outputSpec;
   }
 
   @Override
@@ -49,9 +42,10 @@ public class CallNativeAlgorithm extends Algorithm {
         }
         return new Output(null, nativeApi.messages());
       }
-      if (!outputSpec.equals(result.spec())) {
+      if (!outputSpec().equals(result.spec())) {
         nativeApi.log().error("`" + referencableName
-            + "` has faulty native implementation: Its declared result spec == " + outputSpec.name()
+            + "` has faulty native implementation: Its declared result spec == "
+            + outputSpec().name()
             + " but it returned object with spec == " + result.spec().name() + ".");
         return new Output(null, nativeApi.messages());
       }

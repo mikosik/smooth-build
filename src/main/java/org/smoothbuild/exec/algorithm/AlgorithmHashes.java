@@ -2,7 +2,6 @@ package org.smoothbuild.exec.algorithm;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.spec.Spec;
-import org.smoothbuild.db.object.spec.TupleSpec;
 import org.smoothbuild.exec.nativ.Native;
 
 import okio.ByteString;
@@ -20,7 +19,7 @@ public class AlgorithmHashes {
     return hash(2, destinationSpec.hash());
   }
 
-  public static Hash tupleAlgorithmHash(TupleSpec type) {
+  public static Hash tupleAlgorithmHash(Spec type) {
     return hash(3, type.hash());
   }
 

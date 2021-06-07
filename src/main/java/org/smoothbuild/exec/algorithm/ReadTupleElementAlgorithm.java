@@ -17,19 +17,15 @@ public class ReadTupleElementAlgorithm extends Algorithm {
   private final int elementIndex;
   private final Spec spec;
 
-  public ReadTupleElementAlgorithm(int elementIndex, Spec spec) {
+  public ReadTupleElementAlgorithm(int elementIndex, Spec outputSpec) {
+    super(outputSpec);
     this.elementIndex = elementIndex;
-    this.spec = spec;
+    this.spec = outputSpec;
   }
 
   @Override
   public Hash hash() {
     return readTupleElementAlgorithmHash(elementIndex);
-  }
-
-  @Override
-  public Spec outputSpec() {
-    return spec;
   }
 
   @Override

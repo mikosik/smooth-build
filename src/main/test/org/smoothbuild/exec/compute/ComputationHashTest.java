@@ -132,7 +132,7 @@ public class ComputationHashTest extends TestingContext {
   }
 
   private static Algorithm computation(Hash hash) {
-    return new Algorithm() {
+    return new Algorithm(null) {
       @Override
       public Hash hash() {
         return hash;
