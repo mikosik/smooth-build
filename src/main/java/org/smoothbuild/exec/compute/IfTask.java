@@ -3,6 +3,8 @@ package org.smoothbuild.exec.compute;
 import static org.smoothbuild.exec.base.Input.input;
 import static org.smoothbuild.exec.compute.TaskKind.CALL;
 import static org.smoothbuild.lang.base.define.Callable.PARENTHESES;
+import static org.smoothbuild.util.Lists.list;
+import static org.smoothbuild.util.concurrent.Feeders.runWhenAllAvailable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,7 +17,9 @@ import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.parallel.ParallelTaskExecutor.Worker;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.util.Lists;
 import org.smoothbuild.util.concurrent.Feeder;
+import org.smoothbuild.util.concurrent.Feeders;
 import org.smoothbuild.util.concurrent.FeedingConsumer;
 
 import com.google.common.collect.ImmutableList;
@@ -32,9 +36,11 @@ public class IfTask extends ComputableTask {
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> ifResult = new FeedingConsumer<>();
     Feeder<Obj> conditionResult = conditionTask().startComputation(worker);
-    Consumer<Obj> ifEnqueuer = ifEnqueuer(worker, ifResult, conditionResult);
+    Feeder<Obj> nativeResult = nativeObjTask().startComputation(worker);
+    Consumer<Obj> ifEnqueuer = ifEnqueuer(worker, ifResult, nativeResult, conditionResult);
     Consumer<Obj> thenOrElseEnqueuer = thenOrElseEnqueuer(worker, ifEnqueuer);
-    conditionResult.addConsumer(thenOrElseEnqueuer);
+    runWhenAllAvailable(list(conditionResult, nativeResult),
+        () -> thenOrElseEnqueuer.accept(conditionResult.get()));
     return ifResult;
   }
 
@@ -47,15 +53,21 @@ public class IfTask extends ComputableTask {
   }
 
   private Consumer<Obj> ifEnqueuer(Worker worker, Consumer<Obj> ifResultConsumer,
-      Supplier<Obj> conditionResult) {
+      Supplier<Obj> nativeObjResult, Supplier<Obj> conditionResult) {
     return thenOrElseResult -> {
+      Obj nativeObjValue = nativeObjResult.get();
       Obj conditionValue = conditionResult.get();
 
       // Only one of then/else values will be used and it will be used twice.
       // This way TaskExecutor can calculate task hash and use it for caching.
-      Input input = input(ImmutableList.of(conditionValue, thenOrElseResult, thenOrElseResult));
+      Input input = input(ImmutableList.of(
+          nativeObjValue, conditionValue, thenOrElseResult, thenOrElseResult));
       worker.enqueueComputation(this, input, ifResultConsumer);
     };
+  }
+
+  private Task nativeObjTask() {
+    return dependencies().get(0);
   }
 
   private Task conditionTask() {

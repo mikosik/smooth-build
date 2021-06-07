@@ -1,6 +1,8 @@
 package org.smoothbuild.exec.plan;
 
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.smoothbuild.db.hashed.Hash;
+import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.nativ.LoadingNativeImplException;
 import org.smoothbuild.exec.nativ.Native;
 import org.smoothbuild.exec.nativ.NativeImplLoader;
@@ -71,16 +74,16 @@ public class ExpressionToTaskConverterTest extends TestingContext {
     CallExpression nativeCall = call(BLOB, nativeFunction);
     CallExpression myFunctionCall = call(BLOB, myFunction, nativeCall);
 
-    when(nativeImplLoader.loadNative(nativeFunction, anyString(), Mockito.any(Hash.class)))
+    when(nativeImplLoader.loadNative(same(nativeFunction), anyString(), Mockito.any(Hash.class)))
         .thenReturn(new Native(null, null));
-    when(nativeImplLoader.loadNative(twoBlobsEater, anyString(), Mockito.any(Hash.class)))
+    when(nativeImplLoader.loadNative(same(twoBlobsEater), anyString(), Mockito.any(Hash.class)))
         .thenReturn(new Native(null, null));
 
     converter.visit(new Scope<>(Map.of()), myFunctionCall);
 
     verify(nativeImplLoader, times(1))
-        .loadNative(twoBlobsEater, anyString(), Mockito.any(Hash.class));
+        .loadNative(same(twoBlobsEater), anyString(), Mockito.any(Hash.class));
     verify(nativeImplLoader, times(1))
-        .loadNative(nativeFunction, anyString(), Mockito.any(Hash.class));
+        .loadNative(same(nativeFunction), anyString(), Mockito.any(Hash.class));
   }
 }

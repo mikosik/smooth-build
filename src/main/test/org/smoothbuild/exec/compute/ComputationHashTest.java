@@ -84,7 +84,7 @@ public class ComputationHashTest extends TestingContext {
         null, stringSpec(), function(STRING, "name"), true);
     Input input = input(list());
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("48cacf152c032cb117fc835fef8024660f281e4a"));
+        .isEqualTo(Hash.decode("fa404053c470625cc32d666d02acd1cc634e2bb5"));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class ComputationHashTest extends TestingContext {
         null, stringSpec(), function(STRING, "name"), true);
     Input input = input(list(string("abc"), string("def")));
     assertThat(computationHash(Hash.of(13), algorithm, input))
-        .isEqualTo(Hash.decode("816fee20334a12c3e827179a7c03701c287688aa"));
+        .isEqualTo(Hash.decode("995de0b5317252aa56dc55f49d1d2b043500e8c4"));
   }
 
   @Test

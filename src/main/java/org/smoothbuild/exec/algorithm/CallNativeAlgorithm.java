@@ -23,6 +23,8 @@ import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.plugin.NativeApi;
 
+import com.google.common.collect.ImmutableList;
+
 public class CallNativeAlgorithm extends Algorithm {
   private final NativeImplLoader nativeImplLoader;
   private final Referencable referencable;
@@ -43,8 +45,9 @@ public class CallNativeAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     Native nativ = loadNative((Tuple) input.objects().get(0));
     try {
+      ImmutableList<Obj> nativeArgs = skipFirstArgument(input.objects());
       Obj result = (Obj) nativ.method()
-          .invoke(null, createArguments(nativeApi, input.objects()));
+          .invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + referencable.name()
@@ -68,22 +71,18 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private Native loadNative(Tuple value) throws ExpressionVisitorException {
-    // TODO continue here ReadFileContentAlgorithm should cache inside some map
-    // a link `hash of NativeTuple -> jdkPath on disk from where we read it`
-    // or
-    // a link `hash of NativeTuple.content -> jdkPath on disk from where we read it`
-    // This should be kept in NativeImplLoader as it calculates JarFile hash so it can
-    // reuse content.hash()
-    Blob content = (Blob) value.get(1);
+  private static ImmutableList<Obj> skipFirstArgument(ImmutableList<Obj> objs) {
+    return objs.subList(1, objs.size());
+  }
 
+  private Native loadNative(Tuple value) throws ExpressionVisitorException {
+    Blob content = (Blob) value.get(1);
+    String methodPath = ((Str) value.get(0)).jValue();
     try {
       if (referencable instanceof Function function) {
-        return nativeImplLoader.loadNative(
-            function, ((Str) value.get(0)).jValue(), content.hash());
+        return nativeImplLoader.loadNative(function, methodPath, content.hash());
       } else {
-        return nativeImplLoader.loadNative(
-            (Value) referencable, ((Str) value.get(0)).jValue(), content.hash());
+        return nativeImplLoader.loadNative((Value) referencable, methodPath, content.hash());
       }
     } catch (LoadingNativeImplException e) {
       throw chainLoadNativeImplException(referencable, e);
