@@ -1,7 +1,6 @@
 package org.smoothbuild.lang.base.define;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.smoothbuild.lang.base.define.Location.internal;
 import static org.smoothbuild.lang.base.define.ModuleLocation.moduleLocation;
 import static org.smoothbuild.lang.base.define.Space.STANDARD_LIBRARY;
 import static org.smoothbuild.lang.base.define.Space.USER;
@@ -16,10 +15,6 @@ public class ModuleLocationTest {
   @Test
   public void equals_and_hash_code() {
     EqualsTester tester = new EqualsTester();
-
-    tester.addEqualityGroup(
-        internal(),
-        internal());
     tester.addEqualityGroup(
         moduleLocation(USER, Path.of("abc")),
         moduleLocation(USER, Path.of("abc")));
@@ -29,6 +24,23 @@ public class ModuleLocationTest {
     tester.addEqualityGroup(
         moduleLocation(STANDARD_LIBRARY, Path.of("abc")),
         moduleLocation(STANDARD_LIBRARY, Path.of("abc")));
+
+    tester.testEquals();
+  }
+
+  @Test
+  public void hash() {
+    EqualsTester tester = new EqualsTester();
+
+    tester.addEqualityGroup(
+        moduleLocation(USER, Path.of("abc")).hash(),
+        moduleLocation(USER, Path.of("abc")).hash());
+    tester.addEqualityGroup(
+        moduleLocation(USER, Path.of("def")).hash(),
+        moduleLocation(USER, Path.of("def")).hash());
+    tester.addEqualityGroup(
+        moduleLocation(STANDARD_LIBRARY, Path.of("abc")).hash(),
+        moduleLocation(STANDARD_LIBRARY, Path.of("abc")).hash());
 
     tester.testEquals();
   }
