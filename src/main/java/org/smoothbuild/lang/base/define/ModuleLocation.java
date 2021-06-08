@@ -4,6 +4,7 @@ import static org.smoothbuild.util.io.Paths.changeExtension;
 
 import java.nio.file.Path;
 
+import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.util.io.Paths;
 
 /**
@@ -30,5 +31,9 @@ public record ModuleLocation(Space space, Path path) {
   @Override
   public String toString() {
     return prefixedPath();
+  }
+
+  public Hash hash() {
+    return Hash.of(Hash.of(path.toString()), Hash.of(space.name()));
   }
 }
