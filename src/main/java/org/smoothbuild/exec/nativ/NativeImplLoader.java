@@ -174,18 +174,13 @@ public class NativeImplLoader {
 
   private static LoadingNativeImplException newInvalidPathException(
       Referencable referencable, JavaMethodPath path, String message) {
-    return newLoadingException(
-        referencable, path, "Invalid native path `" + path + "`: " + message, null);
+    return newLoadingException(referencable, path.toString(),
+        "Invalid native path `" + path + "`: " + message, null);
   }
 
   private static LoadingNativeImplException newLoadingException(
       Referencable referencable, JavaMethodPath path, String message) {
-    return newLoadingException(referencable, path, message, null);
-  }
-
-  private static LoadingNativeImplException newLoadingException(
-      Referencable referencable, JavaMethodPath path, String message, Exception e) {
-    return newLoadingException(referencable, path.toString(), message, e);
+    return newLoadingException(referencable, path.toString(), message, null);
   }
 
   private static LoadingNativeImplException newLoadingException(Referencable referencable,
