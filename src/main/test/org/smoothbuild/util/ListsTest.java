@@ -51,25 +51,52 @@ public class ListsTest {
 
   @Nested
   class concat {
-    @Test
-    public void with_empty(){
-      assertThat(concat(new ArrayList<>(), "element"))
-          .containsExactly("element");
+    @Nested
+    class _single_first {
+      @Test
+      public void with_empty(){
+        assertThat(concat("element", new ArrayList<>()))
+            .containsExactly("element");
+      }
+
+      @Test
+      public void with_non_empty(){
+        assertThat(concat("first", asList("second")))
+            .containsExactly("first", "second")
+            .inOrder();
+      }
+
+      @Test
+      public void concat_doesnt_modify_list(){
+        List<String> list = asList("second");
+        concat("first", list);
+        assertThat(list)
+            .containsExactly("second");
+      }
     }
 
-    @Test
-    public void with_non_empty(){
-      assertThat(concat(asList("first"), "second"))
-          .containsExactly("first", "second")
-          .inOrder();
-    }
+    @Nested
+    class _single_last {
+      @Test
+      public void with_empty(){
+        assertThat(concat(new ArrayList<>(), "element"))
+            .containsExactly("element");
+      }
 
-    @Test
-    public void concat_doesnt_modify_list(){
-      List<String> list = asList("first");
-      concat(list, "second");
-      assertThat(list)
-          .containsExactly("first");
+      @Test
+      public void with_non_empty(){
+        assertThat(concat(asList("first"), "second"))
+            .containsExactly("first", "second")
+            .inOrder();
+      }
+
+      @Test
+      public void concat_doesnt_modify_list(){
+        List<String> list = asList("first");
+        concat(list, "second");
+        assertThat(list)
+            .containsExactly("first");
+      }
     }
   }
 
