@@ -1,18 +1,19 @@
 package org.smoothbuild.exec.plan;
 
+
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.lang.base.type.Type;
-import org.smoothbuild.lang.expr.ExpressionVisitorException;
-import org.smoothbuild.util.MemoizingSupplier;
-import org.smoothbuild.util.ThrowingSupplier;
 
-public record TaskSupplier(Type type, ThrowingSupplier<Task, ExpressionVisitorException> supplier) {
-  public TaskSupplier(Type type, ThrowingSupplier<Task, ExpressionVisitorException> supplier) {
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+
+public record TaskSupplier(Type type, Supplier<Task> supplier) {
+  public TaskSupplier(Type type, Supplier<Task> supplier) {
     this.type = type;
-    this.supplier = new MemoizingSupplier<>(supplier);
+    this.supplier = Suppliers.memoize(supplier);
   }
 
-  public Task getTask() throws ExpressionVisitorException {
+  public Task getTask() {
     return supplier.get();
   }
 }
