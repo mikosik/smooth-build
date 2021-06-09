@@ -28,10 +28,6 @@ public record Location(ModuleLocation moduleLocation, int line) {
     this.line = line;
   }
 
-  public ModuleLocation module() {
-    return moduleLocation;
-  }
-
   @Override
   public String toString() {
     if (moduleLocation.space() == INTERNAL) {

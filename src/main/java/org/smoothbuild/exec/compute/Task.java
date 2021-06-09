@@ -45,7 +45,7 @@ public abstract class Task {
   }
 
   public Space space() {
-    return location.module().space();
+    return location.moduleLocation().space();
   }
 
   public String name() {
