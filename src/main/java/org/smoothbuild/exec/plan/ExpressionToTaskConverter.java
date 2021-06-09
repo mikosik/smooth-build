@@ -62,7 +62,6 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
-import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.lang.expr.FieldReadExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
@@ -89,8 +88,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, FieldReadExpression expression)
-      throws ExpressionVisitorException {
+  public Task visit(Scope<TaskSupplier> scope, FieldReadExpression expression) {
     ItemSignature field = expression.field();
     StructType structType = (StructType) expression.expression().type();
     Algorithm algorithm = new ReadTupleElementAlgorithm(
@@ -101,8 +99,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ReferenceExpression reference)
-      throws ExpressionVisitorException {
+  public Task visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
     Value value = (Value) definitions.referencables().get(reference.name());
     if (value.body() instanceof DefinedBody body) {
       Task task = body.expression().visit(scope, this);
@@ -120,14 +117,12 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ParameterReferenceExpression expression)
-      throws ExpressionVisitorException {
+  public Task visit(Scope<TaskSupplier> scope, ParameterReferenceExpression expression) {
     return scope.get(expression.name()).getTask();
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, CallExpression expression)
-      throws ExpressionVisitorException {
+  public Task visit(Scope<TaskSupplier> scope, CallExpression expression) {
     Callable callable = expression.callable();
     if (callable instanceof Function function) {
       var argumentTypes = map(expression.arguments(), e -> expressionType(scope, e));
@@ -161,8 +156,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
-      Function function, List<TaskSupplier> arguments, Location location)
-      throws ExpressionVisitorException {
+      Function function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     DefinedBody body = (DefinedBody) function.body();
     Task callTask = body.expression().visit(newScope, this);
@@ -235,8 +229,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   @Override
-  public Task visit(Scope<TaskSupplier> scope, ArrayLiteralExpression expression)
-      throws ExpressionVisitorException {
+  public Task visit(Scope<TaskSupplier> scope, ArrayLiteralExpression expression) {
     List<Task> elements = childrenTasks(scope, expression.elements());
     ArrayType actualType = arrayType(elements).orElse(expression.type());
 
@@ -284,8 +277,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
         (e, t) -> new TaskSupplier(t, () -> e.visit(scope, this)));
   }
 
-  private List<Task> childrenTasks(Scope<TaskSupplier> scope, List<Expression> children)
-      throws ExpressionVisitorException {
+  private List<Task> childrenTasks(Scope<TaskSupplier> scope, List<Expression> children) {
     ImmutableList.Builder<Task> builder = ImmutableList.builder();
     for (Expression child : children) {
       builder.add(child.visit(scope, this));
@@ -293,8 +285,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     return builder.build();
   }
 
-  private ImmutableList<Task> childrenTasks(Scope<TaskSupplier> scope, Expression expression)
-      throws ExpressionVisitorException {
+  private ImmutableList<Task> childrenTasks(Scope<TaskSupplier> scope, Expression expression) {
     return ImmutableList.of(expression.visit(scope, this));
   }
 

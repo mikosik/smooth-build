@@ -6,8 +6,7 @@ import org.smoothbuild.lang.base.type.Type;
 public record ParameterReferenceExpression(Type type, String name, Location location)
     implements Expression {
   @Override
-  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor)
-      throws ExpressionVisitorException {
+  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {
     return visitor.visit(context, this);
   }
 }

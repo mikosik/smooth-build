@@ -20,7 +20,6 @@ import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
-import org.smoothbuild.lang.expr.ExpressionVisitorException;
 import org.smoothbuild.testing.TestingContext;
 import org.smoothbuild.util.Scope;
 
@@ -35,7 +34,7 @@ public class ExpressionToTaskConverterTest extends TestingContext {
   }
 
   @Test
-  public void task_for_unused_arguments_are_not_created() throws ExpressionVisitorException {
+  public void task_for_unused_arguments_are_not_created() {
     Expression blobLiteral = TestingLang.blob(0x22);
     Function function = function(BLOB, "myFunction", TestingLang.blob(0x33), parameter(BLOB, "p"));
     CallExpression call = new CallExpression(BLOB, function, ImmutableList.of(blobLiteral), loc());
@@ -49,8 +48,7 @@ public class ExpressionToTaskConverterTest extends TestingContext {
   }
 
   @Test
-  public void only_one_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice()
-      throws ExpressionVisitorException {
+  public void only_one_task_is_created_for_argument_assigned_to_parameter_that_is_used_twice() {
     Function twoBlobsEater = function(
         BLOB, "twoBlobsEater", parameter(BLOB, "a"), parameter(BLOB, "b"));
 

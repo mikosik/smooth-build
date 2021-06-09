@@ -14,8 +14,7 @@ public record BlobLiteralExpression(ByteString byteString, Location location) im
   }
 
   @Override
-  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor)
-      throws ExpressionVisitorException {
+  public <C, T> T visit(C context, ExpressionVisitor<C, T> visitor) {
     return visitor.visit(context, this);
   }
 
