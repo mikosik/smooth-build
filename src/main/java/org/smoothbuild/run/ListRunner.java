@@ -23,7 +23,7 @@ public class ListRunner {
         .referencables()
         .values()
         .stream()
-        .filter(f -> f.location().module().space().equals(USER))
+        .filter(f -> f.location().moduleLocation().space().equals(USER))
         .filter(Value.class::isInstance)
         .map(Defined::name)
         .sorted()
