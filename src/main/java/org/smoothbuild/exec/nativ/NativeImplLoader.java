@@ -185,8 +185,8 @@ public class NativeImplLoader {
 
   private static LoadingNativeImplException newLoadingException(Referencable referencable,
       String path, String message, Exception e) {
-    return new LoadingNativeImplException("Error loading native implementation for `"
-        + referencable.name() + "` specified as `" + path + "`: " + message, e);
+    return new LoadingNativeImplException("Error loading native implementation for "
+        + referencable.q() + " specified as `" + path + "`: " + message, e);
   }
 
   private static record CacheKey(Hash jarFileHash, String path) {
