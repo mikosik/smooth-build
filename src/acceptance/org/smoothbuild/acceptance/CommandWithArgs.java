@@ -34,7 +34,7 @@ public class CommandWithArgs {
     return new CommandWithArgs(ListCommand.NAME, args);
   }
 
-  public static CommandWithArgs treeCommand(String... args) {
+  public static CommandWithArgs planCommand(String... args) {
     return new CommandWithArgs(PlanCommand.NAME, args);
   }
 
