@@ -18,7 +18,7 @@ import static org.smoothbuild.acceptance.CommandWithArgs.buildCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.cleanCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.helpCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.listCommand;
-import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.planCommand;
 import static org.smoothbuild.acceptance.CommandWithArgs.versionCommand;
 import static org.smoothbuild.cli.console.Reporter.prefixMultiline;
 import static org.smoothbuild.install.ProjectPaths.ARTIFACTS_PATH;
@@ -129,8 +129,8 @@ public abstract class AcceptanceTestCase {
     runSmooth(listCommand(args));
   }
 
-  public void runSmoothTree(String... args) {
-    runSmooth(treeCommand(args));
+  public void runSmoothPlan(String... args) {
+    runSmooth(planCommand(args));
   }
 
   public void runSmoothVersion(String... args) {

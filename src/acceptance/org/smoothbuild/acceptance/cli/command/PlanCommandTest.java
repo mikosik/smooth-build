@@ -1,7 +1,7 @@
 package org.smoothbuild.acceptance.cli.command;
 
 import static java.lang.String.format;
-import static org.smoothbuild.acceptance.CommandWithArgs.treeCommand;
+import static org.smoothbuild.acceptance.CommandWithArgs.planCommand;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class PlanCommandTest {
               myValue = "abc";
               result = myValue;
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
@@ -41,7 +41,7 @@ public class PlanCommandTest {
             String returnAbc;
             result = returnAbc;
             """, ReturnAbc.class.getCanonicalName()));
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
@@ -55,7 +55,7 @@ public class PlanCommandTest {
               myFunction(String element) = element;
               result = myFunction("abc");
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
@@ -72,7 +72,7 @@ public class PlanCommandTest {
             String oneStringParameter(String value);
             result = oneStringParameter("abc");
             """, OneStringParameter.class.getCanonicalName()));
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
@@ -92,7 +92,7 @@ public class PlanCommandTest {
               }
               result = myStruct("abc");
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           MyStruct result
@@ -109,7 +109,7 @@ public class PlanCommandTest {
               }
               result = myStruct("abc").field;
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
           String result
@@ -124,7 +124,7 @@ public class PlanCommandTest {
       createUserModule("""
               result = [ "abc", "def"];
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               [String] result
@@ -139,7 +139,7 @@ public class PlanCommandTest {
       createUserModule("""
               result = "abc";
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               String result
@@ -152,7 +152,7 @@ public class PlanCommandTest {
       createUserModule("""
               result = "01234567890123456789012345678901234567890123456789";
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               String result
@@ -165,7 +165,7 @@ public class PlanCommandTest {
       createUserModule("""
               result = 0x01;
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               Blob result
@@ -178,7 +178,7 @@ public class PlanCommandTest {
       createUserModule("""
               result = 0x01234567890ABCDEF789012345678901234567890123456789;
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               Blob result
@@ -191,7 +191,7 @@ public class PlanCommandTest {
       createUserModule("""
               [String] result = [];
               """);
-      runSmoothTree("result");
+      runSmoothPlan("result");
       assertFinishedWithSuccess();
       assertSysOutContains("""
               [String] result
@@ -205,7 +205,7 @@ public class PlanCommandTest {
   class DefaultModule extends DefaultModuleTestCase {
     @Override
     protected CommandWithArgs commandNameWithArgument() {
-      return treeCommand("result");
+      return planCommand("result");
     }
   }
 
@@ -213,7 +213,7 @@ public class PlanCommandTest {
   class LockFile extends LockFileTestCase {
     @Override
     protected CommandWithArgs commandNameWithArgument() {
-      return treeCommand("result");
+      return planCommand("result");
     }
   }
 
@@ -234,7 +234,7 @@ public class PlanCommandTest {
   class LogLevelOption extends LogLevelOptionTestCase {
     @Override
     protected void whenSmoothCommandWithOption(String option) {
-      runSmooth(treeCommand(option, "result"));
+      runSmooth(planCommand(option, "result"));
     }
   }
 }
