@@ -10,6 +10,7 @@ import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.mapM;
 import static org.smoothbuild.util.Lists.sane;
+import static org.smoothbuild.util.Lists.skipFirst;
 import static org.smoothbuild.util.Lists.zip;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.function.BiFunction;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.ImmutableList;
 
 public class ListsTest {
   @Nested
@@ -97,6 +100,35 @@ public class ListsTest {
         assertThat(list)
             .containsExactly("first");
       }
+    }
+  }
+
+
+  @Nested
+  class _skip_first {
+    @Test
+    public void returns_empty_for_single_element_list(){
+      assertThat(skipFirst(ImmutableList.of("first")))
+          .isEmpty();
+    }
+
+    @Test
+    public void returns_elements_without_first(){
+      assertThat(skipFirst(ImmutableList.of("first", "second", "third")))
+          .isEqualTo(ImmutableList.of("second", "third"));
+    }
+
+    @Test
+    public void returns_empty_list_when_predicate_is_always_false(){
+      assertThat(filter(asList("first", "second", "third"), x -> false))
+          .isEmpty();
+    }
+
+    @Test
+    public void leaves_only_elements_matching_predicate(){
+      assertThat(filter(asList("first", "second", "third"), s -> s.startsWith("s")))
+          .containsExactly("second")
+          .inOrder();
     }
   }
 
