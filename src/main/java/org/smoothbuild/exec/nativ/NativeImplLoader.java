@@ -26,6 +26,9 @@ import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.plugin.NativeApi;
 
+/**
+ * This class is thread-safe.
+ */
 @Singleton
 public class NativeImplLoader {
   private final HashMap<CacheKey, Native> nativeCache;
@@ -59,7 +62,7 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  private JavaMethodPath parseMethodPath(Referencable referencable, String path)
+  private static JavaMethodPath parseMethodPath(Referencable referencable, String path)
       throws LoadingNativeImplException {
     try {
       return JavaMethodPath.parse(path);
@@ -81,7 +84,7 @@ public class NativeImplLoader {
     return nativ;
   }
 
-  private Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
+  private static Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
       throws LoadingNativeImplException {
     Method method = findClassMethod(referencable, jarFile, path);
     if (!isPublic(method)) {
@@ -97,7 +100,7 @@ public class NativeImplLoader {
     }
   }
 
-  private Method findClassMethod(Referencable referencable, JarFile jarFile,
+  private static Method findClassMethod(Referencable referencable, JarFile jarFile,
       JavaMethodPath methodPath) throws LoadingNativeImplException {
     String methodName = methodPath.methodName();
     Class<?> clazz = findClass(referencable, jarFile, methodPath);
@@ -108,8 +111,8 @@ public class NativeImplLoader {
             clazz.getCanonicalName() + "' does not have '" + methodName + "' method."));
   }
 
-  private Class<?> findClass(Referencable referencable, JarFile jarFile, JavaMethodPath methodPath)
-      throws LoadingNativeImplException {
+  private static Class<?> findClass(Referencable referencable, JarFile jarFile,
+      JavaMethodPath methodPath) throws LoadingNativeImplException {
     try {
       return loadClass(jarFile.path(), methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
@@ -124,7 +127,7 @@ public class NativeImplLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private void assertNativeResultMatchesDeclared(Referencable referencable, Native nativ,
+  private static void assertNativeResultMatchesDeclared(Referencable referencable, Native nativ,
       Type resultType, JavaMethodPath path) throws LoadingNativeImplException {
     Method method = nativ.method();
     Class<?> resultJType = method.getReturnType();
@@ -136,8 +139,8 @@ public class NativeImplLoader {
     }
   }
 
-  private void assertNativeParameterTypesMatchesFuncParameters(Native nativ, Function function,
-      JavaMethodPath path) throws LoadingNativeImplException {
+  private static void assertNativeParameterTypesMatchesFuncParameters(
+      Native nativ, Function function, JavaMethodPath path) throws LoadingNativeImplException {
     Parameter[] nativeParams = nativ.method().getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
@@ -160,7 +163,7 @@ public class NativeImplLoader {
     }
   }
 
-  private void assertNativeHasOneParameter(Native nativ, Value value, JavaMethodPath path)
+  private static void assertNativeHasOneParameter(Native nativ, Value value, JavaMethodPath path)
       throws LoadingNativeImplException {
     int paramCount = nativ.method().getParameters().length;
     if (paramCount != 1) {
