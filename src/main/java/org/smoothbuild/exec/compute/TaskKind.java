@@ -4,5 +4,6 @@ public enum TaskKind {
   CALL,
   CONVERSION,
   LITERAL,
+  NATIVE,
   VALUE
 }
