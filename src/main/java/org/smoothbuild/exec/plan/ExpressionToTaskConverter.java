@@ -255,8 +255,8 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   public Task visit(Scope<TaskSupplier> scope, BlobLiteralExpression expression) {
     var blobSpec = toSpecConverter.visit(blob());
     var algorithm = new FixedBlobAlgorithm(blobSpec, expression.byteString());
-    return new NormalTask(LITERAL, blob(), algorithm.shortedLiteral(), algorithm,
-        ImmutableList.of(), expression.location());
+    return new NormalTask(
+        LITERAL, blob(), algorithm.shortedLiteral(), algorithm, list(), expression.location());
   }
 
   @Override
@@ -286,7 +286,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   }
 
   private ImmutableList<Task> childrenTasks(Scope<TaskSupplier> scope, Expression expression) {
-    return ImmutableList.of(expression.visit(scope, this));
+    return list(expression.visit(scope, this));
   }
 
   private Task convertIfNeeded(Task task, Type requiredType) {
