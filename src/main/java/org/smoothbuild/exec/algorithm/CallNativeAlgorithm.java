@@ -2,6 +2,7 @@ package org.smoothbuild.exec.algorithm;
 
 import static org.smoothbuild.exec.algorithm.AlgorithmHashes.callNativeAlgorithmHash;
 import static org.smoothbuild.exec.base.MessageTuple.containsErrors;
+import static org.smoothbuild.util.Lists.skipFirst;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class CallNativeAlgorithm extends Algorithm {
   public Output run(Input input, NativeApi nativeApi) throws Exception {
     Native nativ = loadNative((Tuple) input.objects().get(0));
     try {
-      ImmutableList<Obj> nativeArgs = skipFirstArgument(input.objects());
+      ImmutableList<Obj> nativeArgs = skipFirst(input.objects());
       Obj result = (Obj) nativ.method()
           .invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
@@ -68,10 +69,6 @@ public class CallNativeAlgorithm extends Algorithm {
       throw new NativeCallException("`" + referencable.name()
           + "` threw java exception from its native code.", e.getCause());
     }
-  }
-
-  private static ImmutableList<Obj> skipFirstArgument(ImmutableList<Obj> objs) {
-    return objs.subList(1, objs.size());
   }
 
   private Native loadNative(Tuple nativeCode) throws LoadingNativeImplException {
