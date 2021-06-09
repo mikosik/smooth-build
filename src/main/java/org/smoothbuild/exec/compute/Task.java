@@ -1,7 +1,5 @@
 package org.smoothbuild.exec.compute;
 
-import static org.smoothbuild.util.Lists.map;
-
 import java.util.List;
 
 import org.smoothbuild.db.object.base.Obj;
@@ -57,10 +55,6 @@ public abstract class Task {
   }
 
   public abstract Feeder<Obj> startComputation(Worker worker);
-
-  public static List<Type> toTypes(List<Task> tasks) {
-    return map(tasks, Task::type);
-  }
 
   public abstract TaskKind kind();
 }
