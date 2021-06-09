@@ -32,9 +32,9 @@ public class FixedStringAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) {
-    Str rstring = nativeApi
+    Str str = nativeApi
         .factory()
-        .string(this.string);
-    return new Output(rstring, nativeApi.messages());
+        .string(string);
+    return new Output(str, nativeApi.messages());
   }
 }
