@@ -114,7 +114,7 @@ public class NativeImplLoader {
   private static Class<?> findClass(Referencable referencable, JarFile jarFile,
       JavaMethodPath methodPath) throws LoadingNativeImplException {
     try {
-      return loadClass(jarFile.path(), methodPath.classBinaryName());
+      return loadClass(jarFile.resolvedPath(), methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
       throw newInvalidPathException(referencable, methodPath,
           "Class '" + methodPath.classBinaryName() + "' does not exist in jar '"
