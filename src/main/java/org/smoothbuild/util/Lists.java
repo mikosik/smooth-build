@@ -18,10 +18,18 @@ public class Lists {
     return ImmutableList.copyOf(elements);
   }
 
-  public static <E> List<E> concat(List<E> list, E element) {
-    List<E> result = new ArrayList<>(list);
-    result.add(element);
-    return result;
+  public static <E> ImmutableList<E> concat(E element, List<E> list) {
+    return ImmutableList.<E>builder()
+        .add(element)
+        .addAll(list)
+        .build();
+  }
+
+  public static <E> ImmutableList<E> concat(List<E> list, E element) {
+    return ImmutableList.<E>builder()
+        .addAll(list)
+        .add(element)
+        .build();
   }
 
   public static <E> ImmutableList<E> filter(List<E> list, Predicate<? super E> predicate) {
