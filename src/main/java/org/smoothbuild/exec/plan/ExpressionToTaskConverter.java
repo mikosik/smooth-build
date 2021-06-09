@@ -11,6 +11,7 @@ import static org.smoothbuild.lang.base.type.Side.UPPER;
 import static org.smoothbuild.lang.base.type.Type.inferVariableBounds;
 import static org.smoothbuild.lang.base.type.Types.blob;
 import static org.smoothbuild.lang.base.type.Types.string;
+import static org.smoothbuild.util.Lists.concat;
 import static org.smoothbuild.util.Lists.list;
 import static org.smoothbuild.util.Lists.map;
 import static org.smoothbuild.util.Lists.zip;
@@ -170,13 +171,9 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     boolean isPure = ((NativeBody) function.body()).implementedBy().isPure();
     Algorithm algorithm = new CallNativeAlgorithm(nativeImplLoader,
         actualResultType.visit(toSpecConverter), function, isPure);
-    ImmutableList<Type> actualParameterTypes =
-        map(function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
-    List<Task> functionArgTasks = convertedArguments(actualParameterTypes, arguments);
-    List<Task> dependencies = ImmutableList.<Task>builder()
-        .add(nativeCode)
-        .addAll(functionArgTasks)
-        .build();
+    var actualParameterTypes = map(
+        function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
+    var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
     if (function.name().equals(IF_FUNCTION_NAME)) {
       return new IfTask(actualResultType, algorithm, dependencies, location);
     } else {
