@@ -5,7 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class AFileTest extends AcceptanceTestCase {
+public class ProjectFileTest extends AcceptanceTestCase {
   @Test
   public void file_from_smooth_dir_causes_error() throws Exception {
     createFile(".smooth/file.txt", "abc");
