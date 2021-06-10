@@ -44,10 +44,10 @@ public class NativeLoader {
     jarFileCache.put(jarFile.hash(), jarFile);
   }
 
-  public synchronized Native loadNative(Function function, String methodPath, Hash contentHash)
+  public synchronized Native loadNative(Function function, String methodPath, Hash jarHash)
       throws LoadingNativeException {
     JavaMethodPath path = parseMethodPath(function, methodPath);
-    Native nativ = loadNativeImpl(function, path, contentHash);
+    Native nativ = loadNativeImpl(function, path, jarHash);
     assertNativeResultMatchesDeclared(function, nativ, function.type().resultType(), path);
     assertNativeParameterTypesMatchesFuncParameters(nativ, function, path);
     return nativ;
