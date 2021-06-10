@@ -38,7 +38,7 @@ import org.smoothbuild.exec.compute.NormalTask;
 import org.smoothbuild.exec.compute.Task;
 import org.smoothbuild.exec.compute.TaskKind;
 import org.smoothbuild.exec.compute.VirtualTask;
-import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.exec.nativ.NativeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
@@ -76,15 +76,15 @@ import com.google.common.collect.ImmutableMap.Builder;
 public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSupplier>, Task> {
   private final Definitions definitions;
   private final TypeToSpecConverter toSpecConverter;
-  private final NativeImplLoader nativeImplLoader;
+  private final NativeLoader nativeLoader;
   private final FullPathResolver pathResolver;
 
   @Inject
   public ExpressionToTaskConverter(Definitions definitions, ObjectFactory objectFactory,
-      NativeImplLoader nativeImplLoader, FullPathResolver pathResolver) {
+      NativeLoader nativeLoader, FullPathResolver pathResolver) {
     this.toSpecConverter = new TypeToSpecConverter(objectFactory);
     this.definitions = definitions;
-    this.nativeImplLoader = nativeImplLoader;
+    this.nativeLoader = nativeLoader;
     this.pathResolver = pathResolver;
   }
 
@@ -109,7 +109,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     } else {
       Task nativeCode = createNativeCodeTask((NativeBody) value.body(), value);
       boolean isPure = ((NativeBody) value.body()).implementedBy().isPure();
-      Algorithm algorithm = new CallNativeAlgorithm(nativeImplLoader,
+      Algorithm algorithm = new CallNativeAlgorithm(nativeLoader,
           value.type().visit(toSpecConverter), value, isPure);
       List<Task> dependencies = list(nativeCode);
       return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
@@ -169,7 +169,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       BoundedVariables variables, Type actualResultType, Location location) {
     Task nativeCode = createNativeCodeTask((NativeBody) function.body(), function);
     boolean isPure = ((NativeBody) function.body()).implementedBy().isPure();
-    Algorithm algorithm = new CallNativeAlgorithm(nativeImplLoader,
+    Algorithm algorithm = new CallNativeAlgorithm(nativeLoader,
         actualResultType.visit(toSpecConverter), function, isPure);
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
@@ -185,7 +185,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   private Task createNativeCodeTask(NativeBody body, Referencable referencable) {
     ModuleLocation module = referencable.location().moduleLocation().toNative();
     var contentAlgorithm = new ReadFileContentAlgorithm(
-        toSpecConverter.visit(blob()), module, nativeImplLoader, pathResolver);
+        toSpecConverter.visit(blob()), module, nativeLoader, pathResolver);
 
     ImplementedBy implementedBy = body.implementedBy();
     String name = "_native_module('" + module.prefixedPath() + "')";

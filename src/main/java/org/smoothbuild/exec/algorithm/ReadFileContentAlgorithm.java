@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.exec.nativ.NativeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.ModuleLocation;
@@ -22,14 +22,14 @@ import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
   private final ModuleLocation moduleLocation;
-  private final NativeImplLoader nativeImplLoader;
+  private final NativeLoader nativeLoader;
   private final FullPathResolver pathResolver;
 
   public ReadFileContentAlgorithm(Spec spec, ModuleLocation moduleLocation,
-      NativeImplLoader nativeImplLoader, FullPathResolver pathResolver) {
+      NativeLoader nativeLoader, FullPathResolver pathResolver) {
     super(spec, false);
     this.moduleLocation = moduleLocation;
-    this.nativeImplLoader = nativeImplLoader;
+    this.nativeLoader = nativeLoader;
     this.pathResolver = pathResolver;
   }
 
@@ -45,7 +45,7 @@ public class ReadFileContentAlgorithm extends Algorithm {
     if (content == null) {
       return new Output(null, nativeApi.messages());
     }
-    nativeImplLoader.storeJarFile(new JarFile(moduleLocation, resolvedJarPath, content.hash()));
+    nativeLoader.storeJarFile(new JarFile(moduleLocation, resolvedJarPath, content.hash()));
     return new Output(content, nativeApi.messages());
   }
 

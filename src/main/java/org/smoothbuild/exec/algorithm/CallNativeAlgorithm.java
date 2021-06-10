@@ -15,9 +15,9 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.NativeCodeTuple;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.nativ.LoadingNativeImplException;
+import org.smoothbuild.exec.nativ.LoadingNativeException;
 import org.smoothbuild.exec.nativ.Native;
-import org.smoothbuild.exec.nativ.NativeImplLoader;
+import org.smoothbuild.exec.nativ.NativeLoader;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
@@ -26,13 +26,13 @@ import org.smoothbuild.plugin.NativeApi;
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
-  private final NativeImplLoader nativeImplLoader;
+  private final NativeLoader nativeLoader;
   private final Referencable referencable;
 
-  public CallNativeAlgorithm(NativeImplLoader nativeImplLoader, Spec outputSpec,
+  public CallNativeAlgorithm(NativeLoader nativeLoader, Spec outputSpec,
       Referencable referencable, boolean isPure) {
     super(outputSpec, isPure);
-    this.nativeImplLoader = nativeImplLoader;
+    this.nativeLoader = nativeLoader;
     this.referencable = referencable;
   }
 
@@ -71,13 +71,13 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private Native loadNative(Tuple nativeCode) throws LoadingNativeImplException {
+  private Native loadNative(Tuple nativeCode) throws LoadingNativeException {
     Blob content = NativeCodeTuple.content(nativeCode);
     String methodPath = NativeCodeTuple.methodPath(nativeCode).jValue();
     if (referencable instanceof Function function) {
-      return nativeImplLoader.loadNative(function, methodPath, content.hash());
+      return nativeLoader.loadNative(function, methodPath, content.hash());
     } else {
-      return nativeImplLoader.loadNative((Value) referencable, methodPath, content.hash());
+      return nativeLoader.loadNative((Value) referencable, methodPath, content.hash());
     }
   }
 
