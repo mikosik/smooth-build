@@ -5,19 +5,7 @@ import java.lang.reflect.Method;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.util.JarFile;
 
-public class JavaCode {
-  private final Method method;
-  private final JarFile jarFile;
-
-  public JavaCode(Method method, JarFile jarFile) {
-    this.method = method;
-    this.jarFile = jarFile;
-  }
-
-  public Method method() {
-    return method;
-  }
-
+public record JavaCode(Method method, JarFile jarFile) {
   public Hash hash() {
     return Hash.of(
         jarFile.hash(),
