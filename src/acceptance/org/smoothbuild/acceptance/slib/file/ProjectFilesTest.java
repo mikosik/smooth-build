@@ -6,7 +6,7 @@ import static org.smoothbuild.install.ProjectPaths.USER_MODULE_PATH;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.acceptance.AcceptanceTestCase;
 
-public class FilesTest extends AcceptanceTestCase {
+public class ProjectFilesTest extends AcceptanceTestCase {
   @Test
   public void listing_files_from_smooth_dir_causes_error() throws Exception {
     createUserModule("""
