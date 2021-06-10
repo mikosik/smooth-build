@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.nativ;
+package org.smoothbuild.exec.java;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

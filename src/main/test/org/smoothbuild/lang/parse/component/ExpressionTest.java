@@ -23,7 +23,7 @@ import static org.smoothbuild.testing.common.TestingLocation.loc;
 import org.junit.jupiter.api.Test;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.Function;
-import org.smoothbuild.lang.base.define.ImplementedBy;
+import org.smoothbuild.lang.base.define.Native;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
 
@@ -93,7 +93,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            2, STRING, "myFunction", new ImplementedBy("Impl.met", false, loc(1))));
+            2, STRING, "myFunction", new Native("Impl.met", false, loc(1))));
   }
 
   @Test
@@ -104,7 +104,7 @@ public class ExpressionTest {
           """)
         .loadsSuccessfully()
         .containsReferencable(function(
-            2, STRING, "myFunction", new ImplementedBy("Impl.met", true, loc(1))));
+            2, STRING, "myFunction", new Native("Impl.met", true, loc(1))));
   }
 
   @Test

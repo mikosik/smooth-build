@@ -11,7 +11,6 @@ import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.NativeBody;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.like.ReferencableLike;
@@ -90,8 +89,8 @@ public class LoadReferencable {
     }
 
     private Body bodyExpression(ReferencableNode referencable) {
-      if (referencable.implementedBy().isPresent()) {
-        return new NativeBody(referencable.implementedBy().get());
+      if (referencable.nativ().isPresent()) {
+        return referencable.nativ().get();
       } else {
         return new DefinedBody(createExpression(referencable.expr().get()));
       }

@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.nativ;
+package org.smoothbuild.exec.java;
 
 public record JavaMethodPath(String classBinaryName, String methodName) {
   public static JavaMethodPath parse(String path) throws JavaMethodPathParsingException {

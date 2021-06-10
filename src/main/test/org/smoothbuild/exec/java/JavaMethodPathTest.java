@@ -1,4 +1,4 @@
-package org.smoothbuild.exec.nativ;
+package org.smoothbuild.exec.java;
 
 import static org.smoothbuild.testing.common.AssertCall.assertCall;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.smoothbuild.exec.nativ.JavaMethodPath.JavaMethodPathParsingException;
+import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
 
 public class JavaMethodPathTest {
   @ParameterizedTest

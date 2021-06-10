@@ -15,9 +15,9 @@ import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.NativeCodeTuple;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.nativ.LoadingNativeException;
-import org.smoothbuild.exec.nativ.Native;
-import org.smoothbuild.exec.nativ.NativeLoader;
+import org.smoothbuild.exec.java.JavaCode;
+import org.smoothbuild.exec.java.JavaCodeLoader;
+import org.smoothbuild.exec.java.LoadingJavaCodeException;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
@@ -26,13 +26,13 @@ import org.smoothbuild.plugin.NativeApi;
 import com.google.common.collect.ImmutableList;
 
 public class CallNativeAlgorithm extends Algorithm {
-  private final NativeLoader nativeLoader;
+  private final JavaCodeLoader javaCodeLoader;
   private final Referencable referencable;
 
-  public CallNativeAlgorithm(NativeLoader nativeLoader, Spec outputSpec,
+  public CallNativeAlgorithm(JavaCodeLoader javaCodeLoader, Spec outputSpec,
       Referencable referencable, boolean isPure) {
     super(outputSpec, isPure);
-    this.nativeLoader = nativeLoader;
+    this.javaCodeLoader = javaCodeLoader;
     this.referencable = referencable;
   }
 
@@ -43,11 +43,10 @@ public class CallNativeAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws Exception {
-    Native nativ = loadNative((Tuple) input.objects().get(0));
+    JavaCode javaCode = loadJavaCode((Tuple) input.objects().get(0));
     try {
       ImmutableList<Obj> nativeArgs = skipFirst(input.objects());
-      Obj result = (Obj) nativ.method()
-          .invoke(null, createArguments(nativeApi, nativeArgs));
+      Obj result = (Obj) javaCode.method().invoke(null, createArguments(nativeApi, nativeArgs));
       if (result == null) {
         if (!containsErrors(nativeApi.messages())) {
           nativeApi.log().error("`" + referencable.name()
@@ -71,13 +70,13 @@ public class CallNativeAlgorithm extends Algorithm {
     }
   }
 
-  private Native loadNative(Tuple nativeCode) throws LoadingNativeException {
+  private JavaCode loadJavaCode(Tuple nativeCode) throws LoadingJavaCodeException {
     Blob content = NativeCodeTuple.content(nativeCode);
     String methodPath = NativeCodeTuple.methodPath(nativeCode).jValue();
     if (referencable instanceof Function function) {
-      return nativeLoader.loadNative(function, methodPath, content.hash());
+      return javaCodeLoader.load(function, methodPath, content.hash());
     } else {
-      return nativeLoader.loadNative((Value) referencable, methodPath, content.hash());
+      return javaCodeLoader.load((Value) referencable, methodPath, content.hash());
     }
   }
 
