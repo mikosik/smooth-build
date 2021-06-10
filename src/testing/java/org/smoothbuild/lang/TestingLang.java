@@ -11,9 +11,8 @@ import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
 import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
-import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.NativeBody;
+import org.smoothbuild.lang.base.define.Native;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -83,13 +82,7 @@ public class TestingLang {
   public static Function function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
     return function(
-        line, type, name, new ImplementedBy(implementedBy, true, loc(max(line -1, 1))), parameters);
-  }
-
-  public static Function function(int line, Type type, String name, ImplementedBy implementedBy,
-      Item... parameters) {
-    NativeBody nativeBody = new NativeBody(implementedBy);
-    return function(line, type, name, nativeBody, parameters);
+        line, type, name, new Native(implementedBy, true, loc(max(line -1, 1))), parameters);
   }
 
   public static Function function(Type type, String name, Expression body, Item... parameters) {
@@ -101,14 +94,14 @@ public class TestingLang {
     return function(line, type, name, new DefinedBody(body), parameters);
   }
 
-  private static Function function(int line, Type type, String name,
+  public static Function function(int line, Type type, String name,
       Body body, Item... parameters) {
     return new Function(type, name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
   public static Value value(int line, Type type, String name, String implementedBy) {
-    NativeBody nativeBody = new NativeBody(new ImplementedBy(implementedBy, true, loc(line -1)));
-    return new Value(type, name, nativeBody, loc(line));
+    Native nativ = new Native(implementedBy, true, loc(line -1));
+    return new Value(type, name, nativ, loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {

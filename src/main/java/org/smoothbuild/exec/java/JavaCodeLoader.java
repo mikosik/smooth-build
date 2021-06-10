@@ -1,7 +1,7 @@
-package org.smoothbuild.exec.nativ;
+package org.smoothbuild.exec.java;
 
 import static java.util.Arrays.stream;
-import static org.smoothbuild.exec.nativ.MapTypeToJType.mapTypeToJType;
+import static org.smoothbuild.exec.java.MapTypeToJType.mapTypeToJType;
 import static org.smoothbuild.util.reflect.Classes.loadClass;
 import static org.smoothbuild.util.reflect.Methods.isPublic;
 import static org.smoothbuild.util.reflect.Methods.isStatic;
@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.exec.compute.Container;
-import org.smoothbuild.exec.nativ.JavaMethodPath.JavaMethodPathParsingException;
+import org.smoothbuild.exec.java.JavaMethodPath.JavaMethodPathParsingException;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
@@ -30,13 +30,13 @@ import org.smoothbuild.plugin.NativeApi;
  * This class is thread-safe.
  */
 @Singleton
-public class NativeLoader {
-  private final HashMap<CacheKey, Native> nativeCache;
+public class JavaCodeLoader {
+  private final HashMap<CacheKey, JavaCode> javaCodeCache;
   private final HashMap<Hash, JarFile> jarFileCache;
 
   @Inject
-  public NativeLoader() {
-    this.nativeCache = new HashMap<>();
+  public JavaCodeLoader() {
+    this.javaCodeCache = new HashMap<>();
     this.jarFileCache = new HashMap<>();
   }
 
@@ -44,26 +44,26 @@ public class NativeLoader {
     jarFileCache.put(jarFile.hash(), jarFile);
   }
 
-  public synchronized Native loadNative(Function function, String methodPath, Hash jarHash)
-      throws LoadingNativeException {
+  public synchronized JavaCode load(Function function, String methodPath, Hash jarHash)
+      throws LoadingJavaCodeException {
     JavaMethodPath path = parseMethodPath(function, methodPath);
-    Native nativ = loadNativeImpl(function, path, jarHash);
-    assertNativeResultMatchesDeclared(function, nativ, function.type().resultType(), path);
-    assertNativeParameterTypesMatchesFuncParameters(nativ, function, path);
-    return nativ;
+    JavaCode javaCode = loadNativeImpl(function, path, jarHash);
+    assertNativeResultMatchesDeclared(function, javaCode, function.type().resultType(), path);
+    assertNativeParameterTypesMatchesFuncParameters(javaCode, function, path);
+    return javaCode;
   }
 
-  public synchronized Native loadNative(Value value, String methodPath, Hash contentHash)
-      throws LoadingNativeException {
+  public synchronized JavaCode load(Value value, String methodPath, Hash contentHash)
+      throws LoadingJavaCodeException {
     JavaMethodPath path = parseMethodPath(value, methodPath);
-    Native nativ = loadNativeImpl(value, path, contentHash);
-    assertNativeResultMatchesDeclared(value, nativ, value.type(), path);
-    assertNativeHasOneParameter(nativ, value, path);
-    return nativ;
+    JavaCode javaCode = loadNativeImpl(value, path, contentHash);
+    assertNativeResultMatchesDeclared(value, javaCode, value.type(), path);
+    assertNativeHasOneParameter(javaCode, value, path);
+    return javaCode;
   }
 
   private static JavaMethodPath parseMethodPath(Referencable referencable, String path)
-      throws LoadingNativeException {
+      throws LoadingJavaCodeException {
     try {
       return JavaMethodPath.parse(path);
     } catch (JavaMethodPathParsingException e) {
@@ -71,21 +71,21 @@ public class NativeLoader {
     }
   }
 
-  private Native loadNativeImpl(Referencable referencable, JavaMethodPath path, Hash contentHash)
-      throws LoadingNativeException {
+  private JavaCode loadNativeImpl(Referencable referencable, JavaMethodPath path, Hash contentHash)
+      throws LoadingJavaCodeException {
     JarFile jarFile = jarFileCache.get(contentHash);
     CacheKey key = new CacheKey(jarFile, path.toString());
-    Native nativ = nativeCache.get(key);
+    JavaCode nativ = javaCodeCache.get(key);
     if (nativ == null) {
       Method method = findMethod(referencable, jarFile, path);
-      nativ = new Native(method, jarFile);
-      nativeCache.put(key, nativ);
+      nativ = new JavaCode(method, jarFile);
+      javaCodeCache.put(key, nativ);
     }
     return nativ;
   }
 
   private static Method findMethod(Referencable referencable, JarFile jarFile, JavaMethodPath path)
-      throws LoadingNativeException {
+      throws LoadingJavaCodeException {
     Method method = findClassMethod(referencable, jarFile, path);
     if (!isPublic(method)) {
       throw newLoadingException(referencable, path, "Providing method is not public.");
@@ -101,7 +101,7 @@ public class NativeLoader {
   }
 
   private static Method findClassMethod(Referencable referencable, JarFile jarFile,
-      JavaMethodPath methodPath) throws LoadingNativeException {
+      JavaMethodPath methodPath) throws LoadingJavaCodeException {
     String methodName = methodPath.methodName();
     Class<?> clazz = findClass(referencable, jarFile, methodPath);
     return stream(clazz.getDeclaredMethods())
@@ -112,7 +112,7 @@ public class NativeLoader {
   }
 
   private static Class<?> findClass(Referencable referencable, JarFile jarFile,
-      JavaMethodPath methodPath) throws LoadingNativeException {
+      JavaMethodPath methodPath) throws LoadingJavaCodeException {
     try {
       return loadClass(jarFile.resolvedPath(), methodPath.classBinaryName());
     } catch (ClassNotFoundException e) {
@@ -127,9 +127,9 @@ public class NativeLoader {
     return types.length != 0 && (types[0] == NativeApi.class || types[0] == Container.class);
   }
 
-  private static void assertNativeResultMatchesDeclared(Referencable referencable, Native nativ,
-      Type resultType, JavaMethodPath path) throws LoadingNativeException {
-    Method method = nativ.method();
+  private static void assertNativeResultMatchesDeclared(Referencable referencable,
+      JavaCode javaCode, Type resultType, JavaMethodPath path) throws LoadingJavaCodeException {
+    Method method = javaCode.method();
     Class<?> resultJType = method.getReturnType();
     if (!mapTypeToJType(resultType).equals(resultJType)) {
       throw newLoadingException(referencable, path, referencable.q() + " declares type " + resultType.q()
@@ -140,8 +140,8 @@ public class NativeLoader {
   }
 
   private static void assertNativeParameterTypesMatchesFuncParameters(
-      Native nativ, Function function, JavaMethodPath path) throws LoadingNativeException {
-    Parameter[] nativeParams = nativ.method().getParameters();
+      JavaCode javaCode, Function function, JavaMethodPath path) throws LoadingJavaCodeException {
+    Parameter[] nativeParams = javaCode.method().getParameters();
     List<Item> params = function.parameters();
     if (params.size() != nativeParams.length - 1) {
       throw newLoadingException(function, path, "Function " + function.q() + " has "
@@ -163,29 +163,29 @@ public class NativeLoader {
     }
   }
 
-  private static void assertNativeHasOneParameter(Native nativ, Value value, JavaMethodPath path)
-      throws LoadingNativeException {
-    int paramCount = nativ.method().getParameters().length;
+  private static void assertNativeHasOneParameter(
+      JavaCode javaCode, Value value, JavaMethodPath path) throws LoadingJavaCodeException {
+    int paramCount = javaCode.method().getParameters().length;
     if (paramCount != 1) {
       throw newLoadingException(value, path, value.q()
           + " has native implementation that has too many parameter(s) = " + paramCount);
     }
   }
 
-  private static LoadingNativeException newInvalidPathException(
+  private static LoadingJavaCodeException newInvalidPathException(
       Referencable referencable, JavaMethodPath path, String message) {
     return newLoadingException(referencable, path.toString(),
         "Invalid native path `" + path + "`: " + message, null);
   }
 
-  private static LoadingNativeException newLoadingException(
+  private static LoadingJavaCodeException newLoadingException(
       Referencable referencable, JavaMethodPath path, String message) {
     return newLoadingException(referencable, path.toString(), message, null);
   }
 
-  private static LoadingNativeException newLoadingException(Referencable referencable,
+  private static LoadingJavaCodeException newLoadingException(Referencable referencable,
       String path, String message, Exception e) {
-    return new LoadingNativeException("Error loading native implementation for "
+    return new LoadingJavaCodeException("Error loading native implementation for "
         + referencable.q() + " specified as `" + path + "`: " + message, e);
   }
 

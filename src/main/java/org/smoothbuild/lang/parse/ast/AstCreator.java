@@ -30,9 +30,9 @@ import org.smoothbuild.antlr.lang.SmoothParser.StructContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
-import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModuleLocation;
+import org.smoothbuild.lang.base.define.Native;
 
 import com.google.common.collect.ImmutableList;
 
@@ -75,25 +75,25 @@ public class AstCreator {
         Optional<TypeNode> type = createTypeSane(ref.type());
         String name = nameNode.getText();
         Optional<ExprNode> expr = createExprSane(ref.expr());
-        Optional<ImplementedBy> implementedBy = createImplementedBySane(ref.nat());
+        Optional<Native> nativ = createNativeSane(ref.nat());
         Location location = locationOf(moduleLocation, nameNode);
         if (ref.p == null) {
-          referencables.add(new ValueNode(type, name, expr, implementedBy, location));
+          referencables.add(new ValueNode(type, name, expr, nativ, location));
         } else {
           List<ItemNode> params = createParams(ref.paramList());
-          referencables.add(new FuncNode(type, name, params, expr, implementedBy, location));
+          referencables.add(new FuncNode(type, name, params, expr, nativ, location));
         }
         return null;
       }
 
-      private Optional<ImplementedBy> createImplementedBySane(NatContext atNative) {
-        if (atNative == null) {
+      private Optional<Native> createNativeSane(NatContext nativ) {
+        if (nativ == null) {
           return Optional.empty();
         } else {
-          return Optional.of(new ImplementedBy(
-              unquote(atNative.STRING().getText()),
-              isPure(atNative),
-              locationOf(moduleLocation, atNative)));
+          return Optional.of(new Native(
+              unquote(nativ.STRING().getText()),
+              isPure(nativ),
+              locationOf(moduleLocation, nativ)));
         }
       }
 

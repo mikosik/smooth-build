@@ -11,7 +11,7 @@ import org.smoothbuild.db.object.base.Blob;
 import org.smoothbuild.db.object.spec.Spec;
 import org.smoothbuild.exec.base.Input;
 import org.smoothbuild.exec.base.Output;
-import org.smoothbuild.exec.nativ.NativeLoader;
+import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.io.util.JarFile;
 import org.smoothbuild.lang.base.define.ModuleLocation;
@@ -22,15 +22,15 @@ import okio.Okio;
 
 public class ReadFileContentAlgorithm extends Algorithm {
   private final ModuleLocation moduleLocation;
-  private final NativeLoader nativeLoader;
-  private final FullPathResolver pathResolver;
+  private final JavaCodeLoader javaCodeLoader;
+  private final FullPathResolver fullPathResolver;
 
   public ReadFileContentAlgorithm(Spec spec, ModuleLocation moduleLocation,
-      NativeLoader nativeLoader, FullPathResolver pathResolver) {
+      JavaCodeLoader javaCodeLoader, FullPathResolver fullPathResolver) {
     super(spec, false);
     this.moduleLocation = moduleLocation;
-    this.nativeLoader = nativeLoader;
-    this.pathResolver = pathResolver;
+    this.javaCodeLoader = javaCodeLoader;
+    this.fullPathResolver = fullPathResolver;
   }
 
   @Override
@@ -40,12 +40,12 @@ public class ReadFileContentAlgorithm extends Algorithm {
 
   @Override
   public Output run(Input input, NativeApi nativeApi) throws IOException {
-    Path resolvedJarPath = pathResolver.resolve(moduleLocation.toNative());
+    Path resolvedJarPath = fullPathResolver.resolve(moduleLocation.toNative());
     Blob content = createContent(nativeApi, resolvedJarPath);
     if (content == null) {
       return new Output(null, nativeApi.messages());
     }
-    nativeLoader.storeJarFile(new JarFile(moduleLocation, resolvedJarPath, content.hash()));
+    javaCodeLoader.storeJarFile(new JarFile(moduleLocation, resolvedJarPath, content.hash()));
     return new Output(content, nativeApi.messages());
   }
 

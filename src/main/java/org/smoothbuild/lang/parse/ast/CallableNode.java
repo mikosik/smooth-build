@@ -5,8 +5,8 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Native;
 import org.smoothbuild.lang.base.type.FunctionType;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.Type;
@@ -17,8 +17,8 @@ public class CallableNode extends ReferencableNode {
   private final ImmutableList<ItemNode> params;
 
   public CallableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> exprNode,
-      List<ItemNode> params, Optional<ImplementedBy> implementedBy, Location location) {
-    super(typeNode, name, exprNode, implementedBy, location);
+      List<ItemNode> params, Optional<Native> nativ, Location location) {
+    super(typeNode, name, exprNode, nativ, location);
     this.params = ImmutableList.copyOf(params);
   }
 

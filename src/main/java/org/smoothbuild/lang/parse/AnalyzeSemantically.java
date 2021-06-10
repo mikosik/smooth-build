@@ -312,10 +312,10 @@ public class AnalyzeSemantically {
       }
 
       private void check(ReferencableNode referencable, String referencableKind) {
-        if (referencable.implementedBy().isPresent() && referencable.expr().isPresent()) {
+        if (referencable.nativ().isPresent() && referencable.expr().isPresent()) {
           logger.log(parseError(referencable, "Native " + referencableKind + " cannot have body."));
         }
-        if (referencable.implementedBy().isEmpty() && referencable.expr().isEmpty()) {
+        if (referencable.nativ().isEmpty() && referencable.expr().isEmpty()) {
           logger.log(parseError(referencable,
               "Non native " + referencableKind + " cannot have empty body."));
         }

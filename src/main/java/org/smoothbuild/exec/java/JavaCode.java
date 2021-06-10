@@ -1,15 +1,15 @@
-package org.smoothbuild.exec.nativ;
+package org.smoothbuild.exec.java;
 
 import java.lang.reflect.Method;
 
 import org.smoothbuild.db.hashed.Hash;
 import org.smoothbuild.io.util.JarFile;
 
-public class Native {
+public class JavaCode {
   private final Method method;
   private final JarFile jarFile;
 
-  public Native(Method method, JarFile jarFile) {
+  public JavaCode(Method method, JarFile jarFile) {
     this.method = method;
     this.jarFile = jarFile;
   }

@@ -2,23 +2,22 @@ package org.smoothbuild.lang.parse.ast;
 
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.ImplementedBy;
 import org.smoothbuild.lang.base.define.Location;
+import org.smoothbuild.lang.base.define.Native;
 import org.smoothbuild.lang.base.like.ReferencableLike;
 import org.smoothbuild.lang.base.type.Type;
 
 public class ReferencableNode extends NamedNode implements ReferencableLike {
   private final Optional<TypeNode> typeNode;
   private final Optional<ExprNode> expr;
-  private final Optional<ImplementedBy> implementedBy;
+  private final Optional<Native> nativ;
 
-  public ReferencableNode(
-      Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr,
-      Optional<ImplementedBy> implementedBy, Location location) {
+  public ReferencableNode(Optional<TypeNode> typeNode, String name, Optional<ExprNode> expr,
+      Optional<Native> nativ, Location location) {
     super(name, location);
     this.typeNode = typeNode;
     this.expr = expr;
-    this.implementedBy = implementedBy;
+    this.nativ = nativ;
   }
 
   public Optional<TypeNode> typeNode() {
@@ -29,8 +28,8 @@ public class ReferencableNode extends NamedNode implements ReferencableLike {
     return expr;
   }
 
-  public Optional<ImplementedBy> implementedBy() {
-    return implementedBy;
+  public Optional<Native> nativ() {
+    return nativ;
   }
 
   @Override
