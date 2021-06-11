@@ -24,9 +24,9 @@ public class VirtualTask extends Task {
   public Feeder<Obj> startComputation(Worker worker) {
     FeedingConsumer<Obj> result = new FeedingConsumer<>();
     task.startComputation(worker).addConsumer(
-        sObject -> {
+        obj -> {
           worker.reporter().print(this, ResultSource.GROUP, List.of());
-          result.accept(sObject);
+          result.accept(obj);
         });
     return result;
   }
