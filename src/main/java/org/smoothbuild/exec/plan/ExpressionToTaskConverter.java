@@ -42,14 +42,11 @@ import org.smoothbuild.exec.java.JavaCodeLoader;
 import org.smoothbuild.install.FullPathResolver;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Definitions;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModuleLocation;
-import org.smoothbuild.lang.base.define.Native;
-import org.smoothbuild.lang.base.define.Referencable;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ArrayType;
 import org.smoothbuild.lang.base.type.BoundedVariables;
@@ -63,6 +60,7 @@ import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.ExpressionVisitor;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
@@ -101,19 +99,16 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   @Override
   public Task visit(Scope<TaskSupplier> scope, ReferenceExpression reference) {
     Value value = (Value) definitions.referencables().get(reference.name());
-    if (value.body() instanceof DefinedBody body) {
-      Task task = body.expression().visit(scope, this);
+    if (value.body() instanceof NativeExpression nativ) {
+      Algorithm algorithm = new CallNativeAlgorithm(
+          javaCodeLoader, value.type().visit(toSpecConverter), value, nativ.isPure());
+      Task nativeCode = visit(scope, nativ);
+      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
+          list(nativeCode), reference.location());
+    } else {
+      Task task = value.body().visit(scope, this);
       Task convertedTask = convertIfNeeded(task, value.type());
       return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
-    } else {
-      Native body = (Native) value.body();
-      Task nativeCode = createNativeCodeTask(body, value);
-      boolean isPure = body.isPure();
-      Algorithm algorithm = new CallNativeAlgorithm(
-          javaCodeLoader, value.type().visit(toSpecConverter), value, isPure);
-      List<Task> dependencies = list(nativeCode);
-      return new NormalTask(VALUE, value.type(), value.extendedName(), algorithm,
-          dependencies, reference.location());
     }
   }
 
@@ -130,14 +125,14 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       var variables = inferVariableBounds(function.type().parameterTypes(), argumentTypes, LOWER);
       Type actualResultType = function.resultType().mapVariables(variables, LOWER);
 
-      if (function.body() instanceof DefinedBody) {
+      if (function.body() instanceof NativeExpression nativ) {
+        var arguments = childrenTasks(scope, expression.arguments());
+        return taskForNativeFunction(scope, arguments, function, nativ, variables, actualResultType,
+            expression.location());
+      } else {
         var arguments = childrenTaskSuppliers(scope, expression.arguments(), argumentTypes);
         return taskForDefinedFunction(
             scope, actualResultType, function, arguments, expression.location());
-      } else {
-        var arguments = childrenTasks(scope, expression.arguments());
-        return taskForNativeFunction(arguments, function, variables, actualResultType,
-            expression.location());
       }
     } else if (callable instanceof Constructor constructor) {
       Type resultType = constructor.type().resultType();
@@ -159,19 +154,17 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   private Task taskForDefinedFunction(Scope<TaskSupplier> scope, Type actualResultType,
       Function function, List<TaskSupplier> arguments, Location location) {
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
-    DefinedBody body = (DefinedBody) function.body();
-    Task callTask = body.expression().visit(newScope, this);
+    Task callTask = function.body().visit(newScope, this);
     Task task = convertIfNeeded(callTask, actualResultType);
     return new VirtualTask(function.extendedName(), task, CALL, location);
   }
 
-  private Task taskForNativeFunction(List<Task> arguments, Function function,
-      BoundedVariables variables, Type actualResultType, Location location) {
-    Native body = (Native) function.body();
-    Task nativeCode = createNativeCodeTask(body, function);
-    boolean isPure = body.isPure();
+  private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<Task> arguments,
+      Function function, NativeExpression nativ, BoundedVariables variables, Type actualResultType,
+      Location location) {
+    Task nativeCode = visit(scope, nativ);
     Algorithm algorithm = new CallNativeAlgorithm(
-        javaCodeLoader, actualResultType.visit(toSpecConverter), function, isPure);
+        javaCodeLoader, actualResultType.visit(toSpecConverter), function, nativ.isPure());
     var actualParameterTypes = map(
         function.type().parameterTypes(), t -> t.mapVariables(variables, LOWER));
     var dependencies = concat(nativeCode, convertedArguments(actualParameterTypes, arguments));
@@ -181,22 +174,6 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
       return new NormalTask(CALL, actualResultType, function.extendedName(), algorithm,
           dependencies, location);
     }
-  }
-
-  private Task createNativeCodeTask(Native nativ, Referencable referencable) {
-    ModuleLocation module = referencable.location().moduleLocation().toNative();
-    var contentAlgorithm = new ReadFileContentAlgorithm(
-        toSpecConverter.visit(blob()), module, javaCodeLoader, fullPathResolver);
-
-    String name = "_native_module('" + module.prefixedPath() + "')";
-    var contentTask = new NormalTask(
-        NATIVE, blob(), name, contentAlgorithm, list(), nativ.location());
-    var methodPathTask = fixedStringTask(nativ.path(), nativ.location());
-
-    return taskForConstructorCall(
-        NATIVE, referencable.type(), toSpecConverter.nativeCodeSpec(), "_native_function",
-        list(methodPathTask, contentTask), referencable.location()
-    );
   }
 
   private static ImmutableMap<String, TaskSupplier> nameToArgumentMap(
@@ -259,6 +236,22 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
   @Override
   public Task visit(Scope<TaskSupplier> scope, StringLiteralExpression expression) {
     return fixedStringTask(expression.string(), expression.location());
+  }
+
+  @Override
+  public Task visit(Scope<TaskSupplier> context, NativeExpression expression) {
+    ModuleLocation module = expression.location().moduleLocation().toNative();
+    var contentAlgorithm = new ReadFileContentAlgorithm(
+        toSpecConverter.visit(blob()), module, javaCodeLoader, fullPathResolver);
+
+    String name = "_native_module('" + module.prefixedPath() + "')";
+    var contentTask = new NormalTask(
+        NATIVE, blob(), name, contentAlgorithm, list(), expression.location());
+    var methodPathTask = fixedStringTask(expression.path(), expression.location());
+
+    return taskForConstructorCall(
+        NATIVE, expression.type(), toSpecConverter.nativeCodeSpec(), "_native_function",
+        list(methodPathTask, contentTask), expression.location());
   }
 
   private NormalTask fixedStringTask(String string, Location location) {

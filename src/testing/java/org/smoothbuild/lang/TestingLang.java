@@ -6,13 +6,10 @@ import static org.smoothbuild.testing.common.TestingLocation.loc;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Body;
 import org.smoothbuild.lang.base.define.Callable;
 import org.smoothbuild.lang.base.define.Constructor;
-import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
-import org.smoothbuild.lang.base.define.Native;
 import org.smoothbuild.lang.base.define.Value;
 import org.smoothbuild.lang.base.type.ItemSignature;
 import org.smoothbuild.lang.base.type.StructType;
@@ -23,6 +20,7 @@ import org.smoothbuild.lang.expr.BlobLiteralExpression;
 import org.smoothbuild.lang.expr.CallExpression;
 import org.smoothbuild.lang.expr.Expression;
 import org.smoothbuild.lang.expr.FieldReadExpression;
+import org.smoothbuild.lang.expr.NativeExpression;
 import org.smoothbuild.lang.expr.ParameterReferenceExpression;
 import org.smoothbuild.lang.expr.ReferenceExpression;
 import org.smoothbuild.lang.expr.StringLiteralExpression;
@@ -82,7 +80,7 @@ public class TestingLang {
   public static Function function(int line, Type type, String name, String implementedBy,
       Item... parameters) {
     return function(
-        line, type, name, new Native(implementedBy, true, loc(max(line -1, 1))), parameters);
+        line, type, name, new NativeExpression(implementedBy, true, loc(max(line -1, 1))), parameters);
   }
 
   public static Function function(Type type, String name, Expression body, Item... parameters) {
@@ -91,21 +89,16 @@ public class TestingLang {
 
   public static Function function(int line, Type type, String name, Expression body,
       Item... parameters) {
-    return function(line, type, name, new DefinedBody(body), parameters);
-  }
-
-  public static Function function(int line, Type type, String name,
-      Body body, Item... parameters) {
     return new Function(type, name, ImmutableList.copyOf(parameters), body, loc(line));
   }
 
   public static Value value(int line, Type type, String name, String implementedBy) {
-    Native nativ = new Native(implementedBy, true, loc(line -1));
+    NativeExpression nativ = new NativeExpression(implementedBy, true, loc(line -1));
     return new Value(type, name, nativ, loc(line));
   }
 
   public static Value value(int line, Type type, String name, Expression expression) {
-    return new Value(type, name, new DefinedBody(expression), loc(line));
+    return new Value(type, name, expression, loc(line));
   }
 
   public static StructType struct(String name, ItemSignature field) {

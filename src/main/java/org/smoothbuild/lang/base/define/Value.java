@@ -3,19 +3,20 @@ package org.smoothbuild.lang.base.define;
 import java.util.Objects;
 
 import org.smoothbuild.lang.base.type.Type;
+import org.smoothbuild.lang.expr.Expression;
 
 /**
  * This class is immutable.
  */
 public class Value extends Referencable {
-  private final Body body;
+  private final Expression body;
 
-  public Value(Type type, String name, Body body, Location location) {
+  public Value(Type type, String name, Expression body, Location location) {
     super(type, name, location);
     this.body = body;
   }
 
-  public Body body() {
+  public Expression body() {
     return body;
   }
 

@@ -14,4 +14,6 @@ public interface ExpressionVisitor<C, T> {
   public T visit(C context, BlobLiteralExpression expression);
 
   public T visit(C context, StringLiteralExpression expression);
+
+  public T visit(C context, NativeExpression expression);
 }
