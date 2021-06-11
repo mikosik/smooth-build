@@ -46,6 +46,9 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String returnAbc
+              Native _native_function
+                String "org.smoothbuild.acceptance.testing."...
+                Blob _native_module('{prj}/build.jar')
           """);
     }
 
@@ -77,7 +80,7 @@ public class PlanCommandTest {
       assertSysOutContains("""
           String result
             String oneStringParameter()
-              String(String value) _native_function
+              Native _native_function
                 String "org.smoothbuild.acceptance.testing."...
                 Blob _native_module('{prj}/build.jar')
               String "abc"

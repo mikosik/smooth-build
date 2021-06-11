@@ -18,15 +18,15 @@ import com.google.common.collect.ImmutableList;
  * This class is immutable.
  */
 public class Function extends Callable {
-  private final Body body;
+  private final Expression body;
 
-  public Function(Type resultType, String name, ImmutableList<Item> parameters,
-      Body body, Location location) {
+  public Function(Type resultType, String name, ImmutableList<Item> parameters, Expression body,
+      Location location) {
     super(resultType, name, parameters, location);
     this.body = requireNonNull(body);
   }
 
-  public Body body() {
+  public Expression body() {
     return body;
   }
 

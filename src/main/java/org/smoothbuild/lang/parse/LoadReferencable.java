@@ -6,9 +6,7 @@ import static org.smoothbuild.util.Lists.map;
 import java.util.List;
 import java.util.Optional;
 
-import org.smoothbuild.lang.base.define.Body;
 import org.smoothbuild.lang.base.define.Callable;
-import org.smoothbuild.lang.base.define.DefinedBody;
 import org.smoothbuild.lang.base.define.Function;
 import org.smoothbuild.lang.base.define.Item;
 import org.smoothbuild.lang.base.define.Referencable;
@@ -88,11 +86,11 @@ public class LoadReferencable {
       this.functionParameters = functionParameters;
     }
 
-    private Body bodyExpression(ReferencableNode referencable) {
+    private Expression bodyExpression(ReferencableNode referencable) {
       if (referencable.nativ().isPresent()) {
         return referencable.nativ().get();
       } else {
-        return new DefinedBody(createExpression(referencable.expr().get()));
+        return createExpression(referencable.expr().get());
       }
     }
 

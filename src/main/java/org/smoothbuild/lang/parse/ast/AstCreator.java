@@ -32,7 +32,7 @@ import org.smoothbuild.antlr.lang.SmoothParser.TypeListContext;
 import org.smoothbuild.antlr.lang.SmoothParser.TypeNameContext;
 import org.smoothbuild.lang.base.define.Location;
 import org.smoothbuild.lang.base.define.ModuleLocation;
-import org.smoothbuild.lang.base.define.Native;
+import org.smoothbuild.lang.expr.NativeExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -75,7 +75,7 @@ public class AstCreator {
         Optional<TypeNode> type = createTypeSane(ref.type());
         String name = nameNode.getText();
         Optional<ExprNode> expr = createExprSane(ref.expr());
-        Optional<Native> nativ = createNativeSane(ref.nat());
+        Optional<NativeExpression> nativ = createNativeSane(ref.nat());
         Location location = locationOf(moduleLocation, nameNode);
         if (ref.p == null) {
           referencables.add(new ValueNode(type, name, expr, nativ, location));
@@ -86,11 +86,11 @@ public class AstCreator {
         return null;
       }
 
-      private Optional<Native> createNativeSane(NatContext nativ) {
+      private Optional<NativeExpression> createNativeSane(NatContext nativ) {
         if (nativ == null) {
           return Optional.empty();
         } else {
-          return Optional.of(new Native(
+          return Optional.of(new NativeExpression(
               unquote(nativ.STRING().getText()),
               isPure(nativ),
               locationOf(moduleLocation, nativ)));
