@@ -16,10 +16,11 @@ import javax.inject.Inject;
 import org.smoothbuild.db.object.base.Array;
 import org.smoothbuild.db.object.base.Obj;
 import org.smoothbuild.db.object.base.Tuple;
-import org.smoothbuild.db.object.db.ObjectFactory;
-import org.smoothbuild.db.object.spec.Spec;
+import org.smoothbuild.exec.base.FileStruct;
 import org.smoothbuild.io.fs.base.FileSystem;
 import org.smoothbuild.io.fs.base.Path;
+import org.smoothbuild.lang.base.type.ArrayType;
+import org.smoothbuild.lang.base.type.Type;
 import org.smoothbuild.util.DuplicatesDetector;
 
 /**
@@ -27,19 +28,18 @@ import org.smoothbuild.util.DuplicatesDetector;
  */
 public class ArtifactSaver {
   private final FileSystem fileSystem;
-  private final ObjectFactory objectFactory;
 
   @Inject
-  public ArtifactSaver(FileSystem fileSystem, ObjectFactory objectFactory) {
+  public ArtifactSaver(FileSystem fileSystem) {
     this.fileSystem = fileSystem;
-    this.objectFactory = objectFactory;
   }
 
-  public Path save(String name, Obj object) throws IOException, DuplicatedPathsException {
+  public Path save(Type type, String name, Obj object)
+      throws IOException, DuplicatedPathsException {
     Path artifactPath = artifactPath(name);
-    if (object instanceof Array array) {
-      return saveArray(artifactPath, array);
-    } else if (object.spec().equals(objectFactory.fileSpec())) {
+    if (type instanceof ArrayType arrayType) {
+      return saveArray(arrayType, artifactPath, (Array) object);
+    } else if (type.name().equals(FileStruct.NAME)) {
       return saveFile(artifactPath, (Tuple) object);
     } else {
       return saveBaseObject(artifactPath, object);
@@ -51,16 +51,17 @@ public class ArtifactSaver {
     return artifactPath.append(fileObjectPath(file));
   }
 
-  private Path saveArray(Path artifactPath, Array array) throws IOException, DuplicatedPathsException {
-    Spec elemSpec = array.spec().elemSpec();
+  private Path saveArray(ArrayType arrayType, Path artifactPath,
+      Array array) throws IOException, DuplicatedPathsException {
     fileSystem.createDir(artifactPath);
-    if (elemSpec.isArray()) {
+    Type elemType = arrayType.elemType();
+    if (elemType instanceof ArrayType elemArrayType) {
       int i = 0;
       for (Array element : array.asIterable(Array.class)) {
-        saveArray(artifactPath.appendPart(Integer.toString(i)), element);
+        saveArray(elemArrayType, artifactPath.appendPart(Integer.toString(i)), element);
         i++;
       }
-    } else if (elemSpec.equals(objectFactory.fileSpec())) {
+    } else if (elemType.name().equals(FileStruct.NAME)) {
       saveFileArray(artifactPath, array.asIterable(Tuple.class));
     } else {
       saveObjectArray(artifactPath, array);
