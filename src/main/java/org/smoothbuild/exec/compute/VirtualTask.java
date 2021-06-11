@@ -12,12 +12,10 @@ import com.google.common.collect.ImmutableList;
 
 public class VirtualTask extends Task {
   private final Task task;
-  private final TaskKind kind;
 
-  public VirtualTask(String name, Task task, TaskKind kind, Location location) {
-    super(task.type(), name, ImmutableList.of(task), location);
+  public VirtualTask(TaskKind kind, String name, Task task, Location location) {
+    super(kind, task.type(), name, ImmutableList.of(task), location);
     this.task = task;
-    this.kind = kind;
   }
 
   @Override
@@ -29,10 +27,5 @@ public class VirtualTask extends Task {
           result.accept(obj);
         });
     return result;
-  }
-
-  @Override
-  public TaskKind kind() {
-    return kind;
   }
 }

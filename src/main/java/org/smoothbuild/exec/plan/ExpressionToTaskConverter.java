@@ -108,7 +108,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     } else {
       Task task = value.body().visit(scope, this);
       Task convertedTask = convertIfNeeded(task, value.type());
-      return new VirtualTask(value.extendedName(), convertedTask, VALUE, reference.location());
+      return new VirtualTask(VALUE, value.extendedName(), convertedTask, reference.location());
     }
   }
 
@@ -156,7 +156,7 @@ public class ExpressionToTaskConverter implements ExpressionVisitor<Scope<TaskSu
     var newScope = new Scope<>(scope, nameToArgumentMap(function.parameters(), arguments));
     Task callTask = function.body().visit(newScope, this);
     Task task = convertIfNeeded(callTask, actualResultType);
-    return new VirtualTask(function.extendedName(), task, CALL, location);
+    return new VirtualTask(CALL, function.extendedName(), task, location);
   }
 
   private Task taskForNativeFunction(Scope<TaskSupplier> scope, List<Task> arguments,
