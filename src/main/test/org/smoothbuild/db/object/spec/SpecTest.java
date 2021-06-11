@@ -105,38 +105,6 @@ public class SpecTest {
   }
 
   @ParameterizedTest
-  @MethodSource("isArray_test_data")
-  public void isArray(Spec spec, boolean expected) {
-    assertThat(spec.isArray())
-        .isEqualTo(expected);
-  }
-
-  public static List<Arguments> isArray_test_data() {
-    return List.of(
-        arguments(ANY, false),
-        arguments(BOOL, false),
-        arguments(STRING, false),
-        arguments(BLOB, false),
-        arguments(NOTHING, false),
-        arguments(PERSON, false),
-
-        arguments(ARRAY_ANY, true),
-        arguments(ARRAY_STRING, true),
-        arguments(ARRAY_BOOL, true),
-        arguments(ARRAY_BLOB, true),
-        arguments(ARRAY_NOTHING, true),
-        arguments(ARRAY_PERSON, true),
-
-        arguments(ARRAY2_ANY, true),
-        arguments(ARRAY2_BOOL, true),
-        arguments(ARRAY2_STRING, true),
-        arguments(ARRAY2_BLOB, true),
-        arguments(ARRAY2_NOTHING, true),
-        arguments(ARRAY2_PERSON, true)
-    );
-  }
-
-  @ParameterizedTest
   @MethodSource("elem_spec_test_data")
   public void elemSpec(ArraySpec spec, Spec expected) {
     assertThat(spec.elemSpec())

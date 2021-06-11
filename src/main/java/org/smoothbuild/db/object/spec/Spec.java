@@ -57,10 +57,6 @@ public abstract class Spec {
     return kind.jType();
   }
 
-  public boolean isArray() {
-    return this instanceof ArraySpec;
-  }
-
   public boolean isNothing() {
     return kind == SpecKind.NOTHING;
   }
