@@ -60,6 +60,22 @@ public class ArtifactTest extends AcceptanceTestCase {
   }
 
   @Test
+  public void storing_struct_with_same_fields_as_file_is_not_using_path_as_artifact_name()
+      throws Exception {
+    createUserModule("""
+            NotAFile {
+              Blob content,
+              String path,
+            }
+            
+            result = notAFile(0x41, "file.txt");
+            """);
+    runSmoothBuild("result");
+    assertFinishedWithSuccess();
+    assertSysOutContains("result -> '.smooth/artifacts/result'");
+  }
+
+  @Test
   public void store_empty_array_of_bools_artifact() throws Exception {
     createUserModule("""
             [Bool] result = [];

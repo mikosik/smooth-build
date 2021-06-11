@@ -5,6 +5,7 @@ import org.smoothbuild.db.object.base.Str;
 import org.smoothbuild.db.object.base.Tuple;
 
 public class FileStruct {
+  public static final String NAME = "File";
   private static final int CONTENT_INDEX = 0;
   private static final int PATH_INDEX = 1;
 
